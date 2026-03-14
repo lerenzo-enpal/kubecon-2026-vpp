@@ -14,11 +14,15 @@ function toXY(lat, lon, mapX, mapY, mapW, mapH) {
 
   let drawW, drawH, offsetX, offsetY;
   if (canvasAspect > geoAspect) {
+    // Canvas wider than geo — fit to height, push RIGHT (flush right edge)
     drawH = mapH; drawW = drawH * geoAspect;
-    offsetX = mapX + (mapW - drawW) / 2; offsetY = mapY;
+    offsetX = mapX + mapW - drawW; // right-align
+    offsetY = mapY;
   } else {
+    // Canvas taller — fit to width, center vertically
     drawW = mapW; drawH = drawW / geoAspect;
-    offsetX = mapX; offsetY = mapY + (mapH - drawH) / 2;
+    offsetX = mapX;
+    offsetY = mapY + (mapH - drawH) / 2;
   }
   return {
     x: offsetX + ((lon - lonMin) / (lonMax - lonMin)) * drawW,
@@ -122,8 +126,8 @@ export default function TexasCascade({ width = 960, height = 560 }) {
     activeStepRef.current = -1;
   };
 
-  // Map dimensions — right half of page, full height, flush to right edge
-  const mapW = Math.floor(width * 0.55);
+  // Map: right-aligned, full height, flush to right edge of canvas
+  const mapW = Math.floor(width * 0.56);
   const mapH = height;
   const mapLeft = width - mapW;
   const timelineRight = mapLeft - 14;
