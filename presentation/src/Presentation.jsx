@@ -16,15 +16,46 @@ const theme = {
 };
 
 const bg = colors.bg;
+const pad = '36px 56px';
 
-// Global slide number template
-const slideTemplate = ({ slideNumber, numberOfSlides }) => (
-  <div style={{
-    position: 'absolute', bottom: 12, right: 20,
-    fontSize: '11px', fontFamily: '"JetBrains Mono", monospace',
-    color: colors.textDim + '60',
-  }}>
-    {slideNumber} / {numberOfSlides}
+// Section ranges (slide numbers are 1-indexed)
+const SECTIONS = [
+  { from: 1, to: 2, name: '' },
+  { from: 3, to: 11, name: 'The Grid' },
+  { from: 12, to: 17, name: 'The Renewable Revolution' },
+  { from: 18, to: 25, name: 'The Virtual Power Plant' },
+  { from: 26, to: 31, name: 'Resilience' },
+];
+
+const slideTemplate = ({ slideNumber, numberOfSlides }) => {
+  const section = SECTIONS.find(s => slideNumber >= s.from && slideNumber <= s.to);
+  const label = section?.name;
+  return (
+    <div style={{
+      position: 'absolute', bottom: 12, right: 20,
+      fontSize: '11px', fontFamily: '"JetBrains Mono", monospace',
+      color: colors.textDim + '60', display: 'flex', gap: 8, alignItems: 'center',
+    }}>
+      {label && <span style={{ color: colors.textDim + '40' }}>{label}</span>}
+      <span>{slideNumber} / {numberOfSlides}</span>
+    </div>
+  );
+};
+
+// Consistent heading style
+const H = ({ children, color = colors.primary, size = '40px', center = false }) => (
+  <div style={{ fontSize: size, fontWeight: 800, color, fontFamily: '"Inter"', textShadow: `0 0 40px ${color}35`, lineHeight: 1.15, marginBottom: 8, textAlign: center ? 'center' : 'left' }}>{children}</div>
+);
+const P = ({ children, color = colors.textMuted, size = '18px', center = false, style = {} }) => (
+  <div style={{ fontSize: size, color, fontFamily: '"Inter"', lineHeight: 1.5, marginBottom: 10, textAlign: center ? 'center' : 'left', ...style }}>{children}</div>
+);
+const Badge = ({ children, color }) => (
+  <div style={{ display: 'inline-block', padding: '3px 10px', borderRadius: 14, fontSize: '11px', fontWeight: 600, fontFamily: '"JetBrains Mono"', background: `${color}18`, color, border: `1px solid ${color}30`, marginBottom: 8 }}>{children}</div>
+);
+const StatBox = ({ n, l, c }) => (
+  <div style={{ background: colors.surface, border: `1px solid ${colors.surfaceLight}`, borderRadius: 10, padding: '18px 14px', textAlign: 'center', flex: 1 }}>
+    <div style={{ fontSize: '28px', fontWeight: 800, fontFamily: '"JetBrains Mono"', color: c, textShadow: `0 0 20px ${c}25` }}>{n}</div>
+    <div style={{ fontSize: '10px', color: colors.textMuted, marginTop: 4, fontFamily: '"Inter"', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{l}</div>
   </div>
 );
 
@@ -33,9 +64,8 @@ export default function Presentation() {
     <Deck theme={theme} template={slideTemplate}>
 
       {/* 0: Title Slide */}
-      <Slide backgroundColor={bg} padding="40px 60px">
+      <Slide backgroundColor={bg} padding={pad}>
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', textAlign: 'center', position: 'relative' }}>
-          {/* Static Texas grid map background */}
           <div style={{ position: 'absolute', top: '-10%', right: '-15%', width: '80%', height: '120%', pointerEvents: 'none' }}>
             <StaticTexasGrid width={700} height={700} opacity={0.12} />
           </div>
@@ -58,22 +88,54 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* ═══════ ACT 1: "4 MINUTES FROM DARKNESS" ═══════ */}
+      {/* 1: Agenda */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%' }}>
+          <H size="36px">Agenda</H>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20, marginTop: 24 }}>
+            {[
+              { num: '01', title: 'The Grid', sub: 'How the world\'s largest machine works — and how it fails', color: colors.danger, time: '~10 min' },
+              { num: '02', title: 'The Renewable Revolution', sub: 'Why cheap clean energy creates expensive new problems', color: colors.accent, time: '~7 min' },
+              { num: '03', title: 'The Virtual Power Plant', sub: 'Software that turns millions of devices into grid infrastructure', color: colors.primary, time: '~10 min' },
+              { num: '04', title: 'Resilience', sub: 'What the future grid looks like — and why you already know how to build it', color: colors.success, time: '~3 min' },
+            ].map(s => (
+              <div key={s.num} style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+                <div style={{ fontSize: '28px', fontWeight: 800, fontFamily: '"JetBrains Mono"', color: s.color, minWidth: 48, textAlign: 'right' }}>{s.num}</div>
+                <div style={{ borderLeft: `2px solid ${s.color}40`, paddingLeft: 20, flex: 1 }}>
+                  <div style={{ fontSize: '22px', fontWeight: 700, color: colors.text, fontFamily: '"Inter"' }}>{s.title}</div>
+                  <div style={{ fontSize: '14px', color: colors.textMuted, fontFamily: '"Inter"', marginTop: 2 }}>{s.sub}</div>
+                </div>
+                <div style={{ fontSize: '12px', color: colors.textDim, fontFamily: '"JetBrains Mono"' }}>{s.time}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Slide>
 
-      {/* 1: Texas Cascade — Split Layout */}
+      {/* ═══════ ACT 1: THE GRID ═══════ */}
+
+      {/* Section Title: The Grid */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', textAlign: 'center' }}>
+          <div style={{ fontSize: '14px', fontWeight: 600, color: colors.danger, fontFamily: '"JetBrains Mono"', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 16 }}>Part I</div>
+          <H size="54px" center color={colors.danger}>The Grid</H>
+          <P size="20px" center>The world's largest machine — and why it keeps failing</P>
+        </div>
+      </Slide>
+
+      {/* Texas Cascade */}
       <Slide backgroundColor="#050810" padding="8px 10px">
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
-          <div style={{ display: 'inline-block', padding: '2px 8px', borderRadius: 12, fontSize: '10px', fontWeight: 600, fontFamily: '"JetBrains Mono"', background: `${colors.danger}18`, color: colors.danger, border: `1px solid ${colors.danger}30` }}>FEB 15, 2021</div>
+          <Badge color={colors.danger}>FEB 15, 2021</Badge>
           <div style={{ fontSize: '16px', fontWeight: 700, color: colors.danger, fontFamily: '"Inter"' }}>Winter Storm Uri — Cascading Grid Failure</div>
         </div>
         <TexasCascade width={980} height={580} />
       </Slide>
 
-      {/* 2: Texas — The Numbers */}
-      <Slide backgroundColor={bg} padding="40px 60px">
+      {/* 2: Texas Numbers */}
+      <Slide backgroundColor={bg} padding={pad}>
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%' }}>
-          {/* Hero quote */}
-          <div style={{ padding: '24px 0 20px', borderLeft: `3px solid ${colors.danger}`, paddingLeft: 24 }}>
+          <div style={{ padding: '20px 0 16px', borderLeft: `3px solid ${colors.danger}`, paddingLeft: 24 }}>
             <div style={{ fontSize: '28px', fontWeight: 300, color: colors.text, fontFamily: '"Inter"', lineHeight: 1.6 }}>
               "The Texas grid was <span style={{ color: colors.danger, fontWeight: 700 }}>4 minutes and 37 seconds</span> from total collapse."
             </div>
@@ -81,23 +143,17 @@ export default function Presentation() {
               A cold restart would have taken weeks. Maybe months.
             </div>
           </div>
-
-          {/* Stats row — animated counters */}
-          <div style={{ display: 'flex', gap: 20, margin: '20px 0' }}>
+          <div style={{ display: 'flex', gap: 20, margin: '16px 0' }}>
             <AnimatedStat target="4:37" label="from total collapse" color={colors.danger} delay={0} duration={1200} />
             <AnimatedStat target="246" label="people dead" color={colors.danger} delay={300} duration={1000} />
             <AnimatedStat target="$195B" label="in damage" color={colors.accent} delay={600} duration={1400} />
             <AnimatedStat target="4.5M" label="homes dark" color={colors.textMuted} delay={900} duration={1100} />
           </div>
-
-          {/* Human cost */}
           <div style={{ fontSize: '19px', color: colors.text, fontFamily: '"Inter"', lineHeight: 1.8 }}>
             Wholesale electricity spiked to <span style={{ color: colors.danger, fontWeight: 600 }}>$9,000/MWh</span> — a <span style={{ color: colors.danger, fontWeight: 600 }}>180x</span> increase.
             <br />Families received <span style={{ color: colors.danger, fontWeight: 600 }}>$7,000 bills</span> in a single week. Their provider — Griddy — went bankrupt.
           </div>
-
-          {/* Closing question */}
-          <div style={{ marginTop: 16, paddingTop: 16, borderTop: `1px solid ${colors.surfaceLight}` }}>
+          <div style={{ paddingTop: 14, borderTop: `1px solid ${colors.surfaceLight}` }}>
             <div style={{ fontSize: '20px', color: colors.primary, fontFamily: '"Inter"', fontWeight: 500 }}>
               How did the most energy-rich state in America come this close to total infrastructure failure?
             </div>
@@ -105,11 +161,11 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 3: Why Texas Failed — The Death Spiral */}
-      <Slide backgroundColor={bg}>
-        <Heading fontSize="40px" color={colors.danger}>Why Texas Failed</Heading>
-        <Text fontSize="17px" color={colors.textMuted}>The gas-electric death spiral — a cascading feedback loop.</Text>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '16px 0', gap: 8 }}>
+      {/* 3: Why Texas Failed */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <H color={colors.danger}>Why Texas Failed</H>
+        <P>The gas-electric death spiral — a cascading feedback loop.</P>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, margin: '12px 0' }}>
           {[
             { text: 'Extreme cold hits Texas', color: colors.primary, icon: '1' },
             { text: 'Generators freeze and trip offline', color: colors.accent, icon: '2' },
@@ -118,56 +174,39 @@ export default function Presentation() {
             { text: 'Gas supply drops — more generators lose fuel and trip', color: colors.danger, icon: '5' },
             { text: 'More load shedding needed — cycle accelerates', color: colors.danger, icon: '\u21bb' },
           ].map((step, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, width: '100%', maxWidth: 620 }}>
-              <div style={{ width: 32, height: 32, borderRadius: 8, background: `${step.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: 800, color: step.color, fontFamily: '"JetBrains Mono"', flexShrink: 0 }}>{step.icon}</div>
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ width: 30, height: 30, borderRadius: 8, background: `${step.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 800, color: step.color, fontFamily: '"JetBrains Mono"', flexShrink: 0 }}>{step.icon}</div>
               <div style={{ fontSize: '15px', color: colors.text, fontFamily: '"Inter"', fontWeight: i >= 3 ? 600 : 400 }}>{step.text}</div>
-              {i < 5 && <div style={{ position: 'absolute', left: '50%', marginLeft: -200 }} />}
             </div>
           ))}
         </div>
-        <div style={{ display: 'flex', gap: 16, justifyContent: 'center', marginTop: 8 }}>
-          {[
-            { n: '52,000 MW', l: 'offline (of 107K total)', c: colors.danger },
-            { n: 'Isolated', l: 'no grid interconnection', c: colors.accent },
-            { n: '42 hrs', l: 'average outage duration', c: colors.textMuted },
-          ].map(s => (
-            <div key={s.l} style={{ background: colors.surface, border: `1px solid ${colors.surfaceLight}`, borderRadius: 8, padding: '12px 14px', textAlign: 'center', flex: 1 }}>
-              <div style={{ fontSize: '22px', fontWeight: 800, fontFamily: '"JetBrains Mono"', color: s.c }}>{s.n}</div>
-              <div style={{ fontSize: '10px', color: colors.textMuted, marginTop: 2, fontFamily: '"Inter"', textTransform: 'uppercase' }}>{s.l}</div>
-            </div>
-          ))}
+        <div style={{ display: 'flex', gap: 16, marginTop: 12 }}>
+          <StatBox n="52,000 MW" l="offline (of 107K total)" c={colors.danger} />
+          <StatBox n="Isolated" l="no grid interconnection" c={colors.accent} />
+          <StatBox n="42 hrs" l="average outage duration" c={colors.textMuted} />
         </div>
       </Slide>
 
-      {/* 5: The Grid — Interactive Frequency */}
-      <Slide backgroundColor={bg}>
+      {/* 4: Frequency Demo */}
+      <Slide backgroundColor={bg} padding="24px 40px">
         <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-          <div style={{ marginBottom: 8 }}>
-            <Heading fontSize="38px" color={colors.primary} margin="0 0 4px 0">The Grid: A Balancing Act</Heading>
-            <Text fontSize="16px" color={colors.textMuted} margin="0">Supply and demand must match every second. Click the scenarios to see what happens when they don't.</Text>
-          </div>
+          <H>The Grid: A Balancing Act</H>
+          <P size="15px">Supply and demand must match every second. Click the scenarios to see what happens when they don't.</P>
           <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <FrequencyDemo width={900} height={340} />
           </div>
-          <div style={{ display: 'flex', gap: 14, justifyContent: 'center', marginTop: 8 }}>
-            {[
-              { n: '60.000 Hz', l: 'US Target (50 Hz in EU)', c: colors.primary },
-              { n: '107 GW', l: 'ERCOT Total Capacity', c: colors.secondary },
-              { n: '0 buffer', l: 'No Grid Storage', c: colors.accent },
-            ].map(s => (
-              <div key={s.l} style={{ background: colors.surface, border: `1px solid ${colors.surfaceLight}`, borderRadius: 8, padding: '12px 16px', textAlign: 'center', flex: 1 }}>
-                <div style={{ fontSize: '22px', fontWeight: 800, fontFamily: '"JetBrains Mono"', color: s.c }}>{s.n}</div>
-                <div style={{ fontSize: '10px', color: colors.textMuted, marginTop: 2, fontFamily: '"Inter"', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{s.l}</div>
-              </div>
-            ))}
+          <div style={{ display: 'flex', gap: 14 }}>
+            <StatBox n="60.000 Hz" l="US Target (50 Hz in EU)" c={colors.primary} />
+            <StatBox n="107 GW" l="ERCOT Total Capacity" c={colors.secondary} />
+            <StatBox n="0 buffer" l="No Grid Storage" c={colors.accent} />
           </div>
         </div>
       </Slide>
 
-      {/* 6: How the Grid Was Built */}
-      <Slide backgroundColor={bg}>
-        <Heading fontSize="42px" color={colors.primary}>Designed for a Different World</Heading>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, margin: '16px 0' }}>
+      {/* 5: How Grid Was Built */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <H>Designed for a Different World</H>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, margin: '24px 0' }}>
           {[
             { l: 'Power Plants', s: 'Few, large', c: colors.accent },
             { l: 'Transmission', s: 'High voltage', c: colors.secondary },
@@ -175,21 +214,21 @@ export default function Presentation() {
             { l: 'Homes', s: 'Passive', c: colors.textDim },
           ].map((x, i) => (
             <React.Fragment key={i}>
-              <div style={{ background: colors.surface, border: `1px solid ${x.c}30`, borderRadius: 10, padding: '16px 14px', textAlign: 'center', width: 140 }}>
-                <div style={{ fontSize: '15px', fontWeight: 600, color: colors.text, fontFamily: '"Inter"' }}>{x.l}</div>
-                <div style={{ fontSize: '12px', color: colors.textMuted, fontFamily: '"Inter"', marginTop: 4 }}>{x.s}</div>
+              <div style={{ background: colors.surface, border: `1px solid ${x.c}30`, borderRadius: 10, padding: '20px 16px', textAlign: 'center', flex: 1 }}>
+                <div style={{ fontSize: '16px', fontWeight: 600, color: colors.text, fontFamily: '"Inter"' }}>{x.l}</div>
+                <div style={{ fontSize: '13px', color: colors.textMuted, fontFamily: '"Inter"', marginTop: 4 }}>{x.s}</div>
               </div>
               {i < 3 && <div style={{ fontSize: '20px', color: colors.textDim, fontFamily: '"JetBrains Mono"' }}>{'\u2192'}</div>}
             </React.Fragment>
           ))}
         </div>
-        <Text fontSize="19px" color={colors.textMuted} fontStyle="italic">"Built in the 1950s. One-directional. No flexibility."</Text>
+        <P size="20px" style={{ fontStyle: 'italic', marginTop: 12 }}>"Built in the 1950s. One-directional. No flexibility."</P>
       </Slide>
 
-      {/* 7: It Keeps Happening */}
-      <Slide backgroundColor={bg}>
-        <Heading fontSize="38px" color={colors.danger}>It Keeps Happening</Heading>
-        <div style={{ display: 'flex', gap: 32, marginTop: 8 }}>
+      {/* 6: It Keeps Happening */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <H color={colors.danger}>It Keeps Happening</H>
+        <div style={{ display: 'flex', gap: 40, marginTop: 16 }}>
           <div style={{ flex: 1 }}>
             {[
               { y: '2003', e: 'Italy Blackout', i: '56M people' },
@@ -197,11 +236,11 @@ export default function Presentation() {
               { y: '2016', e: 'South Australia', i: 'Entire state' },
               { y: '2021', e: 'Texas ERCOT', i: '4.5M homes, 240+ deaths' },
             ].map(t => (
-              <div key={t.y+t.e} style={{ display: 'flex', gap: 12, marginBottom: 10 }}>
-                <div style={{ fontFamily: '"JetBrains Mono"', fontSize: '14px', fontWeight: 700, color: colors.danger, minWidth: 42 }}>{t.y}</div>
+              <div key={t.y+t.e} style={{ display: 'flex', gap: 14, marginBottom: 14 }}>
+                <div style={{ fontFamily: '"JetBrains Mono"', fontSize: '15px', fontWeight: 700, color: colors.danger, minWidth: 46 }}>{t.y}</div>
                 <div>
-                  <div style={{ fontSize: '15px', fontWeight: 600, color: colors.text, fontFamily: '"Inter"' }}>{t.e}</div>
-                  <div style={{ fontSize: '12px', color: colors.textMuted, fontFamily: '"Inter"' }}>{t.i}</div>
+                  <div style={{ fontSize: '16px', fontWeight: 600, color: colors.text, fontFamily: '"Inter"' }}>{t.e}</div>
+                  <div style={{ fontSize: '13px', color: colors.textMuted, fontFamily: '"Inter"' }}>{t.i}</div>
                 </div>
               </div>
             ))}
@@ -213,11 +252,11 @@ export default function Presentation() {
               { y: '2025', e: 'Berlin Arson (x3)', i: '45K+ homes', c: colors.accent },
               { y: '2026', e: 'Berlin Teltow Canal', i: '4-day outage', c: colors.primary },
             ].map(t => (
-              <div key={t.y+t.e} style={{ display: 'flex', gap: 12, marginBottom: 10 }}>
-                <div style={{ fontFamily: '"JetBrains Mono"', fontSize: '14px', fontWeight: 700, color: t.c || colors.danger, minWidth: 42 }}>{t.y}</div>
+              <div key={t.y+t.e} style={{ display: 'flex', gap: 14, marginBottom: 14 }}>
+                <div style={{ fontFamily: '"JetBrains Mono"', fontSize: '15px', fontWeight: 700, color: t.c || colors.danger, minWidth: 46 }}>{t.y}</div>
                 <div>
-                  <div style={{ fontSize: '15px', fontWeight: 600, color: colors.text, fontFamily: '"Inter"' }}>{t.e}</div>
-                  <div style={{ fontSize: '12px', color: colors.textMuted, fontFamily: '"Inter"' }}>{t.i}</div>
+                  <div style={{ fontSize: '16px', fontWeight: 600, color: colors.text, fontFamily: '"Inter"' }}>{t.e}</div>
+                  <div style={{ fontSize: '13px', color: colors.textMuted, fontFamily: '"Inter"' }}>{t.i}</div>
                 </div>
               </div>
             ))}
@@ -225,147 +264,140 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 8: Common Pattern */}
-      <Slide backgroundColor={bg}>
-        <Heading fontSize="38px" color={colors.primary}>Every Cascade Shares Three Properties</Heading>
-        <div style={{ display: 'flex', gap: 16, justifyContent: 'center', marginTop: 8 }}>
+      {/* 7: Common Pattern */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <H>Every Cascade Shares Three Properties</H>
+        <div style={{ display: 'flex', gap: 20, marginTop: 20 }}>
           {[
             { n: '1', t: 'Tightly Coupled', d: 'Centralized with single points of failure', c: colors.danger },
             { n: '2', t: 'No Local Reserves', d: 'No distributed storage to absorb shocks', c: colors.accent },
             { n: '3', t: 'Blind Operators', d: 'Degraded system-wide observability', c: colors.secondary },
           ].map(i => (
-            <div key={i.n} style={{ background: colors.surface, border: `1px solid ${i.c}25`, borderRadius: 12, padding: '22px 18px', flex: 1, maxWidth: 230 }}>
-              <div style={{ width: 36, height: 36, borderRadius: 10, background: `${i.c}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', fontWeight: 800, color: i.c, fontFamily: '"JetBrains Mono"', marginBottom: 10 }}>{i.n}</div>
-              <div style={{ fontSize: '17px', fontWeight: 700, color: colors.text, fontFamily: '"Inter"', marginBottom: 6 }}>{i.t}</div>
-              <div style={{ fontSize: '13px', color: colors.textMuted, fontFamily: '"Inter"', lineHeight: 1.4 }}>{i.d}</div>
+            <div key={i.n} style={{ background: colors.surface, border: `1px solid ${i.c}25`, borderRadius: 12, padding: '24px 20px', flex: 1 }}>
+              <div style={{ width: 38, height: 38, borderRadius: 10, background: `${i.c}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', fontWeight: 800, color: i.c, fontFamily: '"JetBrains Mono"', marginBottom: 12 }}>{i.n}</div>
+              <div style={{ fontSize: '18px', fontWeight: 700, color: colors.text, fontFamily: '"Inter"', marginBottom: 8 }}>{i.t}</div>
+              <div style={{ fontSize: '14px', color: colors.textMuted, fontFamily: '"Inter"', lineHeight: 1.5 }}>{i.d}</div>
             </div>
           ))}
         </div>
       </Slide>
 
-      {/* 9: Bridge — Grid Needs Flexibility */}
-      <Slide backgroundColor={bg}>
-        <div style={{ textAlign: 'center', maxWidth: 700, margin: '0 auto' }}>
+      {/* 8: Bridge */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', textAlign: 'center' }}>
           <div style={{ fontSize: '28px', fontWeight: 600, color: colors.text, fontFamily: '"Inter"', lineHeight: 1.7, marginBottom: 28 }}>
             Every one of these failures shares one root cause:
           </div>
-          <div style={{ fontSize: '48px', fontWeight: 800, color: colors.danger, fontFamily: '"Inter"', textShadow: `0 0 40px ${colors.danger}30`, marginBottom: 32 }}>
+          <div style={{ fontSize: '52px', fontWeight: 800, color: colors.danger, fontFamily: '"Inter"', textShadow: `0 0 40px ${colors.danger}30`, marginBottom: 36 }}>
             No flexibility.
           </div>
-          <div style={{ fontSize: '22px', fontWeight: 400, color: colors.textMuted, fontFamily: '"Inter"', lineHeight: 1.6 }}>
+          <div style={{ fontSize: '22px', color: colors.textMuted, fontFamily: '"Inter"', lineHeight: 1.6 }}>
             Now imagine adding the most variable energy source in history.
           </div>
         </div>
       </Slide>
 
-      {/* ═══════ ACT 2: "RENEWABLES CHANGE EVERYTHING" ═══════ */}
+      {/* ═══════ ACT 2: THE RENEWABLE REVOLUTION ═══════ */}
 
-      {/* 9: Section Divider */}
-      <Slide backgroundColor={bg}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '14px', fontWeight: 600, color: colors.primary, fontFamily: '"JetBrains Mono"', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 12 }}>Part II</div>
-          <Heading fontSize="50px" color={colors.primary}>Renewables Change Everything</Heading>
-          <Text fontSize="20px" color={colors.textMuted}>Inevitable, amazing — and a whole new kind of problem</Text>
+      <Slide backgroundColor={bg} padding={pad}>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', textAlign: 'center' }}>
+          <div style={{ fontSize: '14px', fontWeight: 600, color: colors.accent, fontFamily: '"JetBrains Mono"', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 16 }}>Part II</div>
+          <H size="50px" center color={colors.accent}>The Renewable Revolution</H>
+          <P size="20px" center>Inevitable, amazing — and a whole new kind of problem</P>
         </div>
       </Slide>
 
-      {/* 10: The Renewable Explosion */}
-      <Slide backgroundColor={bg}>
-        <Heading fontSize="40px" color={colors.primary} margin="0 0 8px 0">The Renewable Explosion</Heading>
-        <Text fontSize="16px" color={colors.textMuted} margin="0 0 12px 0">Germany's electricity from renewables — this is not slowing down.</Text>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <RenewableGrowthChart width={860} height={350} />
+      {/* 10: Renewable Growth */}
+      <Slide backgroundColor={bg} padding="24px 40px">
+        <H>The Renewable Explosion</H>
+        <P size="15px">Germany's electricity from renewables — this is not slowing down.</P>
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'center', marginTop: 8 }}>
+          <RenewableGrowthChart width={880} height={370} />
         </div>
       </Slide>
 
-      {/* 11: The Duck Curve */}
-      <Slide backgroundColor={bg}>
-        <Heading fontSize="40px" color={colors.primary} margin="0 0 8px 0">The Duck Curve Problem</Heading>
-        <Text fontSize="16px" color={colors.textMuted} margin="0 0 12px 0">Solar floods the grid midday. Demand ramps steeply at sunset. The grid can't cope.</Text>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <DuckCurveChart width={860} height={340} />
+      {/* 11: Duck Curve */}
+      <Slide backgroundColor={bg} padding="24px 40px">
+        <H>The Duck Curve Problem</H>
+        <P size="15px">Solar floods the grid midday. Demand ramps steeply at sunset. The grid can't cope.</P>
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'center', marginTop: 8 }}>
+          <DuckCurveChart width={880} height={360} />
         </div>
       </Slide>
 
       {/* 12: Negative Prices */}
-      <Slide backgroundColor={bg}>
-        <Heading fontSize="42px" color={colors.accent}>Energy Being Thrown Away</Heading>
-        <Text fontSize="18px" color={colors.textMuted}>When supply exceeds demand, electricity prices go <span style={{ color: colors.accent, fontWeight: 600 }}>negative</span>. Generators pay to stay on. Solar gets curtailed. Clean energy — wasted.</Text>
-        <div style={{ display: 'flex', gap: 16, margin: '20px 0', justifyContent: 'center' }}>
+      <Slide backgroundColor={bg} padding={pad}>
+        <H color={colors.accent}>Energy Being Thrown Away</H>
+        <P>When supply exceeds demand, prices go <span style={{ color: colors.accent, fontWeight: 600 }}>negative</span>. Solar gets curtailed. Clean energy — wasted.</P>
+        <div style={{ display: 'flex', gap: 16, margin: '24px 0' }}>
           {[
-            { n: '139', l: 'Negative price hours (2021)', c: colors.textDim },
-            { n: '211', l: 'Negative price hours (2022)', c: colors.textMuted },
-            { n: '301', l: 'Negative price hours (2023)', c: colors.accent },
+            { n: '139', l: 'Neg. price hours (2021)', c: colors.textDim },
+            { n: '211', l: 'Neg. price hours (2022)', c: colors.textMuted },
+            { n: '301', l: 'Neg. price hours (2023)', c: colors.accent },
             { n: '400+', l: 'Trending (2024)', c: colors.danger },
-          ].map(s => (
-            <div key={s.l} style={{ background: colors.surface, border: `1px solid ${colors.surfaceLight}`, borderRadius: 10, padding: '16px 14px', textAlign: 'center', flex: 1 }}>
-              <div style={{ fontSize: '30px', fontWeight: 800, fontFamily: '"JetBrains Mono"', color: s.c }}>{s.n}</div>
-              <div style={{ fontSize: '10px', color: colors.textMuted, marginTop: 4, fontFamily: '"Inter"', textTransform: 'uppercase' }}>{s.l}</div>
-            </div>
-          ))}
+          ].map(s => <StatBox key={s.l} n={s.n} l={s.l} c={s.c} />)}
         </div>
-        <Text fontSize="16px" color={colors.textDim}>Germany — Fraunhofer ISE data</Text>
+        <P size="14px" color={colors.textDim}>Germany — Fraunhofer ISE data</P>
       </Slide>
 
-      {/* 13: What If You Could Shift the Load? */}
-      <Slide backgroundColor={bg}>
-        <Heading fontSize="40px" color={colors.success} margin="0 0 8px 0">What If You Could Shift the Load?</Heading>
-        <Text fontSize="16px" color={colors.textMuted} margin="0 0 12px 0">Batteries absorb midday solar. Discharge in the evening. The duck curve flattens. Click "With VPP" below.</Text>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <DuckCurveChart width={860} height={340} />
+      {/* 13: Load Shifting */}
+      <Slide backgroundColor={bg} padding="24px 40px">
+        <H color={colors.success}>What If You Could Shift the Load?</H>
+        <P size="15px">Batteries absorb midday solar. Discharge in the evening. Click "With VPP" below.</P>
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'center', marginTop: 8 }}>
+          <DuckCurveChart width={880} height={360} />
         </div>
       </Slide>
 
       {/* 14: Consumers Become Infrastructure */}
-      <Slide backgroundColor={bg}>
-        <div style={{ textAlign: 'center', maxWidth: 700, margin: '0 auto' }}>
-          <Heading fontSize="42px" color={colors.primary}>Consumers Become Infrastructure</Heading>
-          <div style={{ fontSize: '21px', color: colors.text, fontFamily: '"Inter"', lineHeight: 1.7, marginTop: 8 }}>
+      <Slide backgroundColor={bg} padding={pad}>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', textAlign: 'center' }}>
+          <H size="42px" center>Consumers Become Infrastructure</H>
+          <div style={{ fontSize: '21px', color: colors.text, fontFamily: '"Inter"', lineHeight: 1.7, marginTop: 12, maxWidth: 700 }}>
             Homes with solar and batteries can <span style={{ color: colors.solar, fontWeight: 600 }}>charge</span>, <span style={{ color: colors.success, fontWeight: 600 }}>export</span>, and <span style={{ color: colors.primary, fontWeight: 600 }}>shift consumption</span>.
           </div>
-          <div style={{ fontSize: '20px', color: colors.textMuted, fontFamily: '"Inter"', lineHeight: 1.7, marginTop: 16 }}>
+          <div style={{ fontSize: '20px', color: colors.textMuted, fontFamily: '"Inter"', lineHeight: 1.8, marginTop: 20, maxWidth: 700 }}>
             Your roof becomes a power plant.<br />
             Your garage becomes a grid asset.<br />
             Your house becomes a node in the largest distributed system ever built.
           </div>
-          <div style={{ fontSize: '19px', color: colors.primary, fontFamily: '"Inter"', fontWeight: 600, marginTop: 28, textShadow: `0 0 30px ${colors.primary}30` }}>
+          <div style={{ fontSize: '19px', color: colors.primary, fontFamily: '"Inter"', fontWeight: 600, marginTop: 32, textShadow: `0 0 30px ${colors.primary}30` }}>
             But coordinating millions of these devices? That's a distributed systems problem.
           </div>
         </div>
       </Slide>
 
-      {/* ═══════ ACT 3: "THE VIRTUAL POWER PLANT" ═══════ */}
+      {/* ═══════ ACT 3: THE VIRTUAL POWER PLANT ═══════ */}
 
-      {/* 15: Section Divider */}
-      <Slide backgroundColor={bg}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '14px', fontWeight: 600, color: colors.primary, fontFamily: '"JetBrains Mono"', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 12 }}>Part III</div>
-          <Heading fontSize="50px" color={colors.primary}>The Virtual Power Plant</Heading>
-          <Text fontSize="20px" color={colors.textMuted}>Software that turns distributed energy into grid infrastructure</Text>
+      <Slide backgroundColor={bg} padding={pad}>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', textAlign: 'center' }}>
+          <div style={{ fontSize: '14px', fontWeight: 600, color: colors.primary, fontFamily: '"JetBrains Mono"', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 16 }}>Part III</div>
+          <H size="50px" center>The Virtual Power Plant</H>
+          <P size="20px" center>Software that turns distributed energy into grid infrastructure</P>
         </div>
       </Slide>
 
       {/* 16: What Is a VPP? */}
-      <Slide backgroundColor={bg}>
-        <Heading fontSize="42px" color={colors.primary}>What Is a Virtual Power Plant?</Heading>
-        <Text fontSize="19px" color={colors.text}>Software that <span style={{ color: colors.primary, fontWeight: 600 }}>aggregates</span> distributed energy resources and <span style={{ color: colors.success, fontWeight: 600 }}>operates</span> them as a coordinated power plant.</Text>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginTop: 12 }}>
-          <div style={{ background: colors.surface, borderRadius: 10, padding: '14px', border: `1px solid ${colors.surfaceLight}` }}>
+      <Slide backgroundColor={bg} padding={pad}>
+        <H>What Is a Virtual Power Plant?</H>
+        <P size="19px" color={colors.text}>Software that <span style={{ color: colors.primary, fontWeight: 600 }}>aggregates</span> distributed energy resources and <span style={{ color: colors.success, fontWeight: 600 }}>operates</span> them as a coordinated power plant.</P>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, marginTop: 20 }}>
+          <div style={{ background: colors.surface, borderRadius: 10, padding: '16px', border: `1px solid ${colors.surfaceLight}` }}>
             {['Solar Panels', 'Home Batteries', 'EV Chargers', 'Heat Pumps'].map((a, i) => (
-              <div key={a} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, fontSize: '13px', color: colors.text, fontFamily: '"Inter"' }}>
+              <div key={a} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, fontSize: '14px', color: colors.text, fontFamily: '"Inter"' }}>
                 <div style={{ width: 8, height: 8, borderRadius: '50%', background: [colors.solar, colors.success, colors.primary, colors.secondary][i] }} />{a}
               </div>
             ))}
           </div>
-          <div style={{ fontSize: '20px', color: colors.primary, fontFamily: '"JetBrains Mono"' }}>{'\u2192'}</div>
-          <div style={{ background: `${colors.primary}08`, borderRadius: 12, padding: '20px 24px', border: `1px solid ${colors.primary}30`, textAlign: 'center' }}>
-            <div style={{ fontSize: '16px', fontWeight: 700, color: colors.primary, fontFamily: '"Inter"' }}>Cloud Platform</div>
-            <div style={{ fontSize: '11px', color: colors.textMuted, fontFamily: '"JetBrains Mono"', marginTop: 6 }}>Kubernetes + Dapr<br />Event-driven control</div>
+          <div style={{ fontSize: '22px', color: colors.primary, fontFamily: '"JetBrains Mono"' }}>{'\u2192'}</div>
+          <div style={{ background: `${colors.primary}08`, borderRadius: 12, padding: '22px 28px', border: `1px solid ${colors.primary}30`, textAlign: 'center' }}>
+            <div style={{ fontSize: '17px', fontWeight: 700, color: colors.primary, fontFamily: '"Inter"' }}>Cloud Platform</div>
+            <div style={{ fontSize: '12px', color: colors.textMuted, fontFamily: '"JetBrains Mono"', marginTop: 6 }}>Kubernetes + Dapr<br />Event-driven control</div>
           </div>
-          <div style={{ fontSize: '20px', color: colors.primary, fontFamily: '"JetBrains Mono"' }}>{'\u2192'}</div>
-          <div style={{ background: colors.surface, borderRadius: 10, padding: '14px', border: `1px solid ${colors.surfaceLight}` }}>
+          <div style={{ fontSize: '22px', color: colors.primary, fontFamily: '"JetBrains Mono"' }}>{'\u2192'}</div>
+          <div style={{ background: colors.surface, borderRadius: 10, padding: '16px', border: `1px solid ${colors.surfaceLight}` }}>
             {['Frequency Regulation', 'Peak Shaving', 'Energy Arbitrage', 'Demand Response'].map((s, i) => (
-              <div key={s} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, fontSize: '13px', color: colors.text, fontFamily: '"Inter"' }}>
+              <div key={s} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, fontSize: '14px', color: colors.text, fontFamily: '"Inter"' }}>
                 <div style={{ width: 8, height: 8, borderRadius: '50%', background: [colors.danger, colors.accent, colors.success, colors.primary][i] }} />{s}
               </div>
             ))}
@@ -374,124 +406,160 @@ export default function Presentation() {
       </Slide>
 
       {/* 17: Fastest Power Plant */}
-      <Slide backgroundColor={bg}>
-        <Heading fontSize="42px" color={colors.primary}>The Fastest Power Plant</Heading>
-        <div style={{ maxWidth: 620, marginTop: 8 }}>
+      <Slide backgroundColor={bg} padding={pad}>
+        <H>The Fastest Power Plant</H>
+        <div style={{ marginTop: 16 }}>
           {[
             { l: 'Coal', v: '2-6 hours', c: colors.textDim, w: 90 },
             { l: 'Gas Turbine', v: '10-30 min', c: '#fb923c', w: 45 },
             { l: 'Hydro', v: '15-30 sec', c: '#60a5fa', w: 12 },
             { l: 'Battery', v: '140 ms', c: colors.success, w: 2 },
           ].map(r => (
-            <div key={r.l} style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 10 }}>
-              <div style={{ width: 100, fontSize: '14px', fontWeight: 500, color: colors.textMuted, fontFamily: '"Inter"', textAlign: 'right' }}>{r.l}</div>
-              <div style={{ height: 26, width: `${r.w}%`, background: `linear-gradient(90deg, ${r.c}30, ${r.c}80)`, borderRadius: 5, display: 'flex', alignItems: 'center', paddingLeft: 10 }}>
-                <span style={{ fontFamily: '"JetBrains Mono"', fontSize: '12px', fontWeight: 600, color: colors.text }}>{r.v}</span>
+            <div key={r.l} style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 12 }}>
+              <div style={{ width: 110, fontSize: '15px', fontWeight: 500, color: colors.textMuted, fontFamily: '"Inter"', textAlign: 'right' }}>{r.l}</div>
+              <div style={{ height: 30, width: `${r.w}%`, background: `linear-gradient(90deg, ${r.c}30, ${r.c}80)`, borderRadius: 6, display: 'flex', alignItems: 'center', paddingLeft: 12 }}>
+                <span style={{ fontFamily: '"JetBrains Mono"', fontSize: '13px', fontWeight: 600, color: colors.text }}>{r.v}</span>
               </div>
             </div>
           ))}
         </div>
-        <div style={{ marginTop: 16, padding: '14px 20px', background: `${colors.success}08`, border: `1px solid ${colors.success}25`, borderRadius: 10, maxWidth: 620 }}>
-          <div style={{ fontSize: '17px', fontWeight: 600, color: colors.success, fontFamily: '"Inter"' }}>A battery responds before a gas turbine even knows there's an emergency.</div>
+        <div style={{ marginTop: 20, padding: '16px 22px', background: `${colors.success}08`, border: `1px solid ${colors.success}25`, borderRadius: 10 }}>
+          <div style={{ fontSize: '18px', fontWeight: 600, color: colors.success, fontFamily: '"Inter"' }}>A battery responds before a gas turbine even knows there's an emergency.</div>
         </div>
       </Slide>
 
-      {/* 18: Hornsdale Proof */}
-      <Slide backgroundColor={bg}>
-        <div style={{ display: 'inline-block', padding: '4px 12px', borderRadius: 20, fontSize: '13px', fontWeight: 600, fontFamily: '"JetBrains Mono"', background: `${colors.success}18`, color: colors.success, border: `1px solid ${colors.success}30`, marginBottom: 8 }}>PROOF</div>
-        <Heading fontSize="38px" color={colors.success}>Hornsdale, December 2017</Heading>
-        <Text fontSize="17px" color={colors.textMuted}>560 MW generator trips. Frequency plunging.</Text>
-        <div style={{ margin: '10px 0' }}><FrequencyLine width={800} height={150} collapse={true} vppSave={true} /></div>
-        <div style={{ display: 'flex', gap: 16, justifyContent: 'center' }}>
-          {[
-            { n: '140ms', l: 'Battery Response', c: colors.success },
-            { n: '28sec', l: 'Gas Response', c: '#fb923c' },
-            { n: '8sec', l: 'Margin to Blackout', c: colors.danger },
-          ].map(s => (
-            <div key={s.l} style={{ background: colors.surface, border: `1px solid ${colors.surfaceLight}`, borderRadius: 10, padding: '16px 14px', textAlign: 'center', flex: 1 }}>
-              <div style={{ fontSize: '28px', fontWeight: 800, fontFamily: '"JetBrains Mono"', color: s.c }}>{s.n}</div>
-              <div style={{ fontSize: '10px', color: colors.textMuted, marginTop: 4, fontFamily: '"Inter"', textTransform: 'uppercase' }}>{s.l}</div>
-            </div>
-          ))}
+      {/* 18: Hornsdale */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <Badge color={colors.success}>PROOF</Badge>
+        <H color={colors.success}>Hornsdale, December 2017</H>
+        <P>560 MW generator trips. Frequency plunging.</P>
+        <div style={{ margin: '12px 0', display: 'flex', justifyContent: 'center' }}><FrequencyLine width={820} height={160} collapse={true} vppSave={true} /></div>
+        <div style={{ display: 'flex', gap: 16 }}>
+          <StatBox n="140ms" l="Battery Response" c={colors.success} />
+          <StatBox n="28sec" l="Gas Response" c="#fb923c" />
+          <StatBox n="8sec" l="Margin to Blackout" c={colors.danger} />
         </div>
       </Slide>
 
-      {/* 19: SA VPP Proof */}
-      <Slide backgroundColor={bg}>
-        <div style={{ display: 'inline-block', padding: '4px 12px', borderRadius: 20, fontSize: '13px', fontWeight: 600, fontFamily: '"JetBrains Mono"', background: `${colors.success}18`, color: colors.success, border: `1px solid ${colors.success}30`, marginBottom: 8 }}>PROOF</div>
-        <Heading fontSize="38px" color={colors.success}>SA Virtual Power Plant, 2019</Heading>
-        <Text fontSize="17px" color={colors.textMuted}>748 MW coal plant trips. 1,100 homes respond autonomously.</Text>
-        <div style={{ display: 'flex', gap: 16, justifyContent: 'center', margin: '14px 0' }}>
-          {[
-            { n: '1,100', l: 'Homes Responded', c: colors.success },
-            { n: '2%', l: 'of Planned Fleet', c: colors.primary },
-            { n: '0', l: 'Humans Involved', c: colors.accent },
-          ].map(s => (
-            <div key={s.l} style={{ background: colors.surface, border: `1px solid ${colors.surfaceLight}`, borderRadius: 10, padding: '18px 14px', textAlign: 'center', flex: 1 }}>
-              <div style={{ fontSize: '32px', fontWeight: 800, fontFamily: '"JetBrains Mono"', color: s.c }}>{s.n}</div>
-              <div style={{ fontSize: '11px', color: colors.textMuted, marginTop: 4, fontFamily: '"Inter"', textTransform: 'uppercase' }}>{s.l}</div>
-            </div>
-          ))}
+      {/* 19: SA VPP */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <Badge color={colors.success}>PROOF</Badge>
+        <H color={colors.success}>SA Virtual Power Plant, 2019</H>
+        <P>748 MW coal plant trips. 1,100 homes respond autonomously.</P>
+        <div style={{ display: 'flex', gap: 16, margin: '20px 0' }}>
+          <StatBox n="1,100" l="Homes Responded" c={colors.success} />
+          <StatBox n="2%" l="of Planned Fleet" c={colors.primary} />
+          <StatBox n="0" l="Humans Involved" c={colors.accent} />
         </div>
-        <div style={{ padding: '14px 20px', background: `${colors.success}08`, border: `1px solid ${colors.success}25`, borderRadius: 10, textAlign: 'center' }}>
-          <div style={{ fontSize: '19px', fontWeight: 600, color: colors.text, fontFamily: '"Inter"' }}>Eleven hundred homes. Acting as one. <span style={{ color: colors.success }}>Without anyone pushing a button.</span></div>
+        <div style={{ padding: '16px 22px', background: `${colors.success}08`, border: `1px solid ${colors.success}25`, borderRadius: 10, textAlign: 'center' }}>
+          <div style={{ fontSize: '20px', fontWeight: 600, color: colors.text, fontFamily: '"Inter"' }}>Eleven hundred homes. Acting as one. <span style={{ color: colors.success }}>Without anyone pushing a button.</span></div>
         </div>
       </Slide>
 
       {/* 20: KubeCon Analogy */}
-      <Slide backgroundColor={bg}>
-        <Heading fontSize="38px" color={colors.primary}>Speaking Your Language</Heading>
-        <div style={{ display: 'flex', gap: 16, alignItems: 'start', marginTop: 4 }}>
-          <div style={{ background: colors.surface, borderRadius: 10, padding: '18px', border: `1px solid ${colors.danger}20`, flex: 1 }}>
-            <div style={{ fontSize: '12px', fontWeight: 600, color: colors.danger, fontFamily: '"JetBrains Mono"', marginBottom: 10 }}>TRADITIONAL GRID</div>
+      <Slide backgroundColor={bg} padding={pad}>
+        <H>Speaking Your Language</H>
+        <div style={{ display: 'flex', gap: 20, alignItems: 'start', marginTop: 12 }}>
+          <div style={{ background: colors.surface, borderRadius: 10, padding: '20px', border: `1px solid ${colors.danger}20`, flex: 1 }}>
+            <div style={{ fontSize: '12px', fontWeight: 600, color: colors.danger, fontFamily: '"JetBrains Mono"', marginBottom: 12 }}>TRADITIONAL GRID</div>
             {['Monolith', 'Few generators', 'Manual scaling', 'Single point of failure', 'No observability'].map(x => (
-              <div key={x} style={{ fontSize: '13px', color: colors.textMuted, fontFamily: '"Inter"', padding: '4px 0', borderBottom: `1px solid ${colors.surfaceLight}` }}>{x}</div>
+              <div key={x} style={{ fontSize: '14px', color: colors.textMuted, fontFamily: '"Inter"', padding: '5px 0', borderBottom: `1px solid ${colors.surfaceLight}` }}>{x}</div>
             ))}
           </div>
-          <div style={{ paddingTop: 50, fontSize: '22px', color: colors.primary, fontFamily: '"JetBrains Mono"' }}>{'\u2192'}</div>
-          <div style={{ background: `${colors.success}06`, borderRadius: 10, padding: '18px', border: `1px solid ${colors.success}25`, flex: 1 }}>
-            <div style={{ fontSize: '12px', fontWeight: 600, color: colors.success, fontFamily: '"JetBrains Mono"', marginBottom: 10 }}>VIRTUAL POWER PLANT</div>
+          <div style={{ paddingTop: 60, fontSize: '24px', color: colors.primary, fontFamily: '"JetBrains Mono"' }}>{'\u2192'}</div>
+          <div style={{ background: `${colors.success}06`, borderRadius: 10, padding: '20px', border: `1px solid ${colors.success}25`, flex: 1 }}>
+            <div style={{ fontSize: '12px', fontWeight: 600, color: colors.success, fontFamily: '"JetBrains Mono"', marginBottom: 12 }}>VIRTUAL POWER PLANT</div>
             {['Distributed microservices', 'Millions of nodes', 'Autoscaling capacity', 'Resilient by design', 'Full observability'].map(x => (
-              <div key={x} style={{ fontSize: '13px', color: colors.text, fontFamily: '"Inter"', fontWeight: 500, padding: '4px 0', borderBottom: `1px solid ${colors.surfaceLight}` }}>{x}</div>
+              <div key={x} style={{ fontSize: '14px', color: colors.text, fontFamily: '"Inter"', fontWeight: 500, padding: '5px 0', borderBottom: `1px solid ${colors.surfaceLight}` }}>{x}</div>
             ))}
           </div>
         </div>
-        <Text fontSize="13px" color={colors.textMuted} style={{ textAlign: 'center', marginTop: 12, fontFamily: '"JetBrains Mono"' }}>Frequency = SLO &bull; Cascade = failure propagation &bull; Batteries = autoscaling</Text>
+        <P size="14px" center style={{ marginTop: 16, fontFamily: '"JetBrains Mono"' }}>Frequency = SLO &bull; Cascade = failure propagation &bull; Batteries = autoscaling</P>
       </Slide>
 
       {/* 21: Demo Without VPP */}
-      <Slide backgroundColor={bg}>
-        <div style={{ display: 'inline-block', padding: '4px 12px', borderRadius: 20, fontSize: '13px', fontWeight: 600, fontFamily: '"JetBrains Mono"', background: `${colors.danger}18`, color: colors.danger, border: `1px solid ${colors.danger}30`, marginBottom: 4 }}>LIVE SIMULATION</div>
-        <Heading fontSize="32px" color={colors.danger}>Cascading Failure — No VPP</Heading>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <CascadeSimulation width={680} height={440} withVPP={false} />
+      <Slide backgroundColor={bg} padding="16px 40px">
+        <Badge color={colors.danger}>LIVE SIMULATION</Badge>
+        <H size="34px" color={colors.danger}>Cascading Failure — No VPP</H>
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
+          <CascadeSimulation width={720} height={460} withVPP={false} />
         </div>
       </Slide>
 
       {/* 22: Demo With VPP */}
-      <Slide backgroundColor={bg}>
-        <div style={{ display: 'inline-block', padding: '4px 12px', borderRadius: 20, fontSize: '13px', fontWeight: 600, fontFamily: '"JetBrains Mono"', background: `${colors.success}18`, color: colors.success, border: `1px solid ${colors.success}30`, marginBottom: 4 }}>LIVE SIMULATION</div>
-        <Heading fontSize="32px" color={colors.success}>Same Failure — With VPP</Heading>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <CascadeSimulation width={680} height={440} withVPP={true} />
+      <Slide backgroundColor={bg} padding="16px 40px">
+        <Badge color={colors.success}>LIVE SIMULATION</Badge>
+        <H size="34px" color={colors.success}>Same Failure — With VPP</H>
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
+          <CascadeSimulation width={720} height={460} withVPP={true} />
         </div>
       </Slide>
 
-      {/* 23: Kepler — The Greenest Power Plant */}
-      <Slide backgroundColor={bg} padding="40px 60px">
+      {/* ═══════ ACT 4: RESILIENCE ═══════ */}
+
+      <Slide backgroundColor={bg} padding={pad}>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', textAlign: 'center' }}>
+          <div style={{ fontSize: '14px', fontWeight: 600, color: colors.success, fontFamily: '"JetBrains Mono"', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 16 }}>Part IV</div>
+          <H size="50px" center color={colors.success}>Resilience</H>
+          <P size="20px" center>What the future grid looks like — and why you already know how to build it</P>
+        </div>
+      </Slide>
+
+      {/* Back to Texas */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%' }}>
+          <div style={{ fontSize: '13px', fontWeight: 600, color: colors.primary, fontFamily: '"JetBrains Mono"', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 24 }}>Back to Texas</div>
+          <div style={{ fontSize: '26px', fontWeight: 400, color: colors.text, fontFamily: '"Inter"', lineHeight: 1.8 }}>
+            <div style={{ marginBottom: 20 }}>Remember those 4 minutes and 37 seconds?</div>
+            <div style={{ marginBottom: 20, color: colors.textMuted }}>
+              With 10 GW of distributed batteries responding in 140 milliseconds, there is no cascade.
+            </div>
+            <div style={{ marginBottom: 20, color: colors.textMuted }}>
+              The frequency never drops. The gas plants never need to save you.
+            </div>
+            <div style={{ color: colors.success, fontWeight: 600, textShadow: `0 0 30px ${colors.success}30` }}>
+              Because 1 million homes already did.
+            </div>
+          </div>
+        </div>
+      </Slide>
+
+      {/* 25: Future Grid */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', textAlign: 'center' }}>
+          <H size="48px" center>The Future Grid</H>
+          <P size="21px" center style={{ maxWidth: 650, marginTop: 8 }}>Millions of devices cooperating. Homes, EVs, batteries — forming distributed power plants.</P>
+          <div style={{ marginTop: 28, fontSize: '24px', fontWeight: 600, color: colors.primary, fontFamily: '"Inter"', textShadow: `0 0 30px ${colors.primary}30` }}>The grid becomes software.</div>
+          <P size="19px" center style={{ marginTop: 8 }}>And it runs on the same infrastructure you build every day.</P>
+        </div>
+      </Slide>
+
+      {/* 26: Final Takeaway */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', textAlign: 'center' }}>
+          <div style={{ fontSize: '26px', fontWeight: 600, color: colors.text, fontFamily: '"Inter"', lineHeight: 1.7, marginBottom: 28 }}>
+            Virtual Power Plants turn distributed renewable energy into <span style={{ color: colors.success }}>reliable grid infrastructure</span>.
+          </div>
+          <P size="22px" center style={{ marginBottom: 28 }}>Cloud-native systems are what make them possible.</P>
+          <div style={{ fontSize: '24px', fontWeight: 700, color: colors.primary, fontFamily: '"Inter"', textShadow: `0 0 40px ${colors.primary}30`, padding: '18px 28px', background: `${colors.primary}08`, borderRadius: 14, border: `1px solid ${colors.primary}20` }}>
+            You already know how to build the future grid.<br />
+            <span style={{ fontWeight: 400, fontSize: '20px', color: colors.textMuted }}>You just didn't know it yet.</span>
+          </div>
+        </div>
+      </Slide>
+
+      {/* Kepler — The Greenest Power Plant */}
+      <Slide backgroundColor={bg} padding={pad}>
         <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-              <div style={{ display: 'inline-block', padding: '3px 10px', borderRadius: 16, fontSize: '11px', fontWeight: 600, fontFamily: '"JetBrains Mono"', background: `${colors.success}18`, color: colors.success, border: `1px solid ${colors.success}30` }}>CNCF PROJECT</div>
-              <div style={{ fontSize: '11px', color: colors.textDim, fontFamily: '"JetBrains Mono"' }}>sustainable-computing.io</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+              <Badge color={colors.success}>CNCF PROJECT</Badge>
+              <span style={{ fontSize: '11px', color: colors.textDim, fontFamily: '"JetBrains Mono"' }}>sustainable-computing.io</span>
             </div>
-            <Heading fontSize="40px" color={colors.success} margin="0 0 8px 0">The Greenest Power Plant Runs on Kubernetes</Heading>
-            <Text fontSize="17px" color={colors.textMuted} margin="0">Kepler uses eBPF to measure per-pod energy consumption. We use it to monitor the VPP itself.</Text>
+            <H color={colors.success}>The Greenest Power Plant Runs on Kubernetes</H>
+            <P>Kepler uses eBPF to measure per-pod energy consumption. We use it to monitor the VPP itself.</P>
           </div>
-
-          {/* Mock Grafana-style dashboard */}
-          <div style={{ display: 'flex', gap: 16, margin: '16px 0' }}>
-            {/* Left: per-service power */}
+          <div style={{ display: 'flex', gap: 16, margin: '12px 0' }}>
             <div style={{ flex: 1, background: colors.surface, borderRadius: 10, padding: '16px', border: `1px solid ${colors.surfaceLight}` }}>
               <div style={{ fontSize: '10px', fontWeight: 600, color: colors.textDim, fontFamily: '"JetBrains Mono"', textTransform: 'uppercase', marginBottom: 10 }}>VPP Platform Power by Service</div>
               {[
@@ -502,24 +570,22 @@ export default function Presentation() {
                 { svc: 'scheduler', watts: 0.6, pct: 6 },
               ].map(s => (
                 <div key={s.svc} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                  <div style={{ width: 110, fontSize: '10px', color: colors.textMuted, fontFamily: '"JetBrains Mono"', textAlign: 'right' }}>{s.svc}</div>
-                  <div style={{ height: 14, width: `${s.pct}%`, background: `linear-gradient(90deg, ${colors.success}30, ${colors.success}70)`, borderRadius: 3, display: 'flex', alignItems: 'center', paddingLeft: 6 }}>
+                  <div style={{ width: 120, fontSize: '10px', color: colors.textMuted, fontFamily: '"JetBrains Mono"', textAlign: 'right' }}>{s.svc}</div>
+                  <div style={{ height: 16, width: `${s.pct}%`, background: `linear-gradient(90deg, ${colors.success}30, ${colors.success}70)`, borderRadius: 3, display: 'flex', alignItems: 'center', paddingLeft: 6 }}>
                     <span style={{ fontSize: '9px', fontFamily: '"JetBrains Mono"', color: colors.text, fontWeight: 600 }}>{s.watts}W</span>
                   </div>
                 </div>
               ))}
             </div>
-
-            {/* Right: key stats */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: 280 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: 300 }}>
               {[
                 { n: '15.1 W', l: 'Total platform power', c: colors.success, sub: 'Less than a lightbulb' },
                 { n: '0.3 mW', l: 'Per battery managed', c: colors.primary, sub: '50,000 devices' },
-                { n: '2M : 1', l: 'MW managed per W of compute', c: colors.accent, sub: 'Efficiency ratio' },
+                { n: '2M : 1', l: 'MW managed per W compute', c: colors.accent, sub: 'Efficiency ratio' },
                 { n: '~2g', l: 'CO\u2082 per hour', c: colors.textMuted, sub: 'Platform carbon footprint' },
               ].map(s => (
                 <div key={s.l} style={{ background: colors.surface, borderRadius: 8, padding: '10px 14px', border: `1px solid ${colors.surfaceLight}`, display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <div style={{ fontSize: '20px', fontWeight: 800, fontFamily: '"JetBrains Mono"', color: s.c, minWidth: 72 }}>{s.n}</div>
+                  <div style={{ fontSize: '20px', fontWeight: 800, fontFamily: '"JetBrains Mono"', color: s.c, minWidth: 76 }}>{s.n}</div>
                   <div>
                     <div style={{ fontSize: '11px', fontWeight: 600, color: colors.text, fontFamily: '"Inter"' }}>{s.l}</div>
                     <div style={{ fontSize: '9px', color: colors.textDim, fontFamily: '"Inter"' }}>{s.sub}</div>
@@ -528,68 +594,19 @@ export default function Presentation() {
               ))}
             </div>
           </div>
-
-          {/* Bottom quote */}
           <div style={{ borderTop: `1px solid ${colors.surfaceLight}`, paddingTop: 12 }}>
             <div style={{ fontSize: '16px', color: colors.text, fontFamily: '"Inter"', fontWeight: 500 }}>
-              "We built a VPP to make the grid greener. Then we used <span style={{ color: colors.success, fontWeight: 700 }}>Kepler</span> to measure the VPP itself.
-              Managing 50,000 batteries uses less power than your laptop."
-            </div>
-            <div style={{ fontSize: '12px', color: colors.textDim, fontFamily: '"JetBrains Mono"', marginTop: 4 }}>
-              kepler_container_joules_total{'{'} container_namespace="vpp" {'}'}  &bull;  Carbon-aware scheduling via KEDA + ElectricityMaps
+              "We built a VPP to make the grid greener. Then we used <span style={{ color: colors.success, fontWeight: 700 }}>Kepler</span> to measure the VPP itself. Managing 50,000 batteries uses less power than your laptop."
             </div>
           </div>
         </div>
       </Slide>
 
-      {/* ═══════ ACT 4: "THE FUTURE IS RESILIENT" ═══════ */}
-
-      {/* 23: Back to Texas */}
-      <Slide backgroundColor={bg}>
-        <div style={{ maxWidth: 750 }}>
-          <div style={{ fontSize: '13px', fontWeight: 600, color: colors.primary, fontFamily: '"JetBrains Mono"', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 20 }}>Back to Texas</div>
-          <div style={{ fontSize: '24px', fontWeight: 400, color: colors.text, fontFamily: '"Inter"', lineHeight: 1.7 }}>
-            <div style={{ marginBottom: 16 }}>Remember those 4 minutes and 37 seconds?</div>
-            <div style={{ marginBottom: 16, color: colors.textMuted }}>
-              With 10 GW of distributed batteries responding in 140 milliseconds, there is no cascade.
-            </div>
-            <div style={{ marginBottom: 16, color: colors.textMuted }}>
-              The frequency never drops. The gas plants never need to save you.
-            </div>
-            <div style={{ color: colors.success, fontWeight: 600, textShadow: `0 0 30px ${colors.success}30` }}>
-              Because 1 million homes already did.
-            </div>
-          </div>
-        </div>
-      </Slide>
-
-      {/* 24: Future Grid */}
-      <Slide backgroundColor={bg}>
-        <div style={{ textAlign: 'center' }}>
-          <Heading fontSize="46px" color={colors.primary}>The Future Grid</Heading>
-          <Text fontSize="20px" color={colors.textMuted}>Millions of devices cooperating. Homes, EVs, batteries — forming distributed power plants.</Text>
-          <div style={{ marginTop: 20, fontSize: '22px', fontWeight: 600, color: colors.primary, fontFamily: '"Inter"' }}>The grid becomes software.</div>
-          <Text fontSize="18px" color={colors.textMuted}>And it runs on the same infrastructure you build every day.</Text>
-        </div>
-      </Slide>
-
-      {/* 25: Final Takeaway */}
-      <Slide backgroundColor={bg}>
-        <div style={{ textAlign: 'center' }}>
-          <Text fontSize="24px" color={colors.text} style={{ fontWeight: 600 }}>Virtual Power Plants turn distributed renewable energy into <span style={{ color: colors.success }}>reliable grid infrastructure</span>.</Text>
-          <Text fontSize="20px" color={colors.textMuted}>Cloud-native systems are what make them possible.</Text>
-          <div style={{ fontSize: '22px', fontWeight: 700, color: colors.primary, fontFamily: '"Inter"', padding: '16px 24px', background: `${colors.primary}08`, borderRadius: 12, border: `1px solid ${colors.primary}20`, display: 'inline-block', marginTop: 16 }}>
-            You already know how to build the future grid.<br />
-            <span style={{ fontWeight: 400, fontSize: '18px', color: colors.textMuted }}>You just didn't know it yet.</span>
-          </div>
-        </div>
-      </Slide>
-
-      {/* 26: Thank You */}
-      <Slide backgroundColor={bg}>
-        <div style={{ textAlign: 'center' }}>
-          <Heading fontSize="52px" color={colors.primary}>Thank You</Heading>
-          <Text fontSize="17px" color={colors.textMuted}><span style={{ color: colors.primary, fontWeight: 600 }}>Enpal</span> — Building Europe's Largest Virtual Power Plant</Text>
+      {/* Thank You */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', textAlign: 'center' }}>
+          <H size="54px" center>Thank You</H>
+          <P size="18px" center><span style={{ color: colors.primary, fontWeight: 600 }}>Enpal</span> — Building Europe's Largest Virtual Power Plant</P>
         </div>
       </Slide>
 
