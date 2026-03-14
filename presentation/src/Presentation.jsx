@@ -15,46 +15,71 @@ const theme = {
 
 const bg = colors.bg;
 
+// Global slide number template
+const slideTemplate = ({ slideNumber, numberOfSlides }) => (
+  <div style={{
+    position: 'absolute', bottom: 12, right: 20,
+    fontSize: '11px', fontFamily: '"JetBrains Mono", monospace',
+    color: colors.textDim + '60',
+  }}>
+    {slideNumber} / {numberOfSlides}
+  </div>
+);
+
 export default function Presentation() {
   return (
-    <Deck theme={theme}>
+    <Deck theme={theme} template={slideTemplate}>
 
       {/* ═══════ ACT 1: "4 MINUTES FROM DARKNESS" ═══════ */}
 
-      {/* 1: Texas Cascade — Live Visualization */}
-      <Slide backgroundColor={bg}>
-        <div style={{ display: 'inline-block', padding: '4px 12px', borderRadius: 20, fontSize: '13px', fontWeight: 600, fontFamily: '"JetBrains Mono"', background: `${colors.danger}18`, color: colors.danger, border: `1px solid ${colors.danger}30`, marginBottom: 4 }}>FEBRUARY 15, 2021 — TEXAS</div>
-        <Heading fontSize="34px" color={colors.danger} margin="4px 0">Winter Storm Uri — Cascading Grid Failure</Heading>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <TexasCascade width={780} height={460} />
+      {/* 1: Texas Cascade — Full Screen Visualization */}
+      <Slide backgroundColor="#050810">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
+          <div style={{ display: 'inline-block', padding: '3px 10px', borderRadius: 16, fontSize: '11px', fontWeight: 600, fontFamily: '"JetBrains Mono"', background: `${colors.danger}18`, color: colors.danger, border: `1px solid ${colors.danger}30` }}>FEBRUARY 15, 2021</div>
+          <div style={{ fontSize: '20px', fontWeight: 700, color: colors.danger, fontFamily: '"Inter"' }}>Winter Storm Uri — Cascading Grid Failure</div>
         </div>
+        <TexasCascade width={940} height={540} />
       </Slide>
 
       {/* 2: Texas — The Numbers */}
-      <Slide backgroundColor={bg}>
-        <div style={{ maxWidth: 800 }}>
-          <div style={{ fontSize: '26px', fontWeight: 300, color: colors.textMuted, fontFamily: '"Inter"', lineHeight: 1.8, fontStyle: 'italic' }}>
-            "The Texas grid was 4 minutes and 37 seconds from total collapse. A cold restart would have taken weeks."
+      <Slide backgroundColor={bg} padding="40px 60px">
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%' }}>
+          {/* Hero quote */}
+          <div style={{ padding: '24px 0 20px', borderLeft: `3px solid ${colors.danger}`, paddingLeft: 24 }}>
+            <div style={{ fontSize: '28px', fontWeight: 300, color: colors.text, fontFamily: '"Inter"', lineHeight: 1.6 }}>
+              "The Texas grid was <span style={{ color: colors.danger, fontWeight: 700 }}>4 minutes and 37 seconds</span> from total collapse."
+            </div>
+            <div style={{ fontSize: '16px', color: colors.textDim, fontFamily: '"Inter"', marginTop: 8 }}>
+              A cold restart would have taken weeks. Maybe months.
+            </div>
           </div>
-          <div style={{ marginTop: 24, display: 'flex', gap: 16 }}>
+
+          {/* Stats row */}
+          <div style={{ display: 'flex', gap: 20, margin: '20px 0' }}>
             {[
               { n: '4:37', l: 'from total collapse', c: colors.danger },
               { n: '246', l: 'people dead', c: colors.danger },
               { n: '$195B', l: 'in damage', c: colors.accent },
               { n: '4.5M', l: 'homes dark', c: colors.textMuted },
             ].map(s => (
-              <div key={s.l} style={{ background: colors.surface, border: `1px solid ${s.c}25`, borderRadius: 10, padding: '16px 14px', textAlign: 'center', flex: 1 }}>
-                <div style={{ fontSize: '28px', fontWeight: 800, fontFamily: '"JetBrains Mono"', color: s.c }}>{s.n}</div>
-                <div style={{ fontSize: '10px', color: colors.textMuted, marginTop: 4, fontFamily: '"Inter"', textTransform: 'uppercase' }}>{s.l}</div>
+              <div key={s.l} style={{ background: colors.surface, border: `1px solid ${s.c}20`, borderRadius: 10, padding: '20px 16px', textAlign: 'center', flex: 1 }}>
+                <div style={{ fontSize: '34px', fontWeight: 800, fontFamily: '"JetBrains Mono"', color: s.c, textShadow: `0 0 20px ${s.c}25` }}>{s.n}</div>
+                <div style={{ fontSize: '11px', color: colors.textMuted, marginTop: 6, fontFamily: '"Inter"', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{s.l}</div>
               </div>
             ))}
           </div>
-          <div style={{ marginTop: 20, fontSize: '19px', color: colors.text, fontFamily: '"Inter"', lineHeight: 1.7 }}>
-            Power bills spiked to <span style={{ color: colors.danger, fontWeight: 600 }}>$9,000/MWh</span>. Families received <span style={{ color: colors.danger, fontWeight: 600 }}>$7,000 bills</span> in a single week.
-            One provider — Griddy — went bankrupt. 29,000 customers left with unpayable debt.
+
+          {/* Human cost */}
+          <div style={{ fontSize: '19px', color: colors.text, fontFamily: '"Inter"', lineHeight: 1.8 }}>
+            Wholesale electricity spiked to <span style={{ color: colors.danger, fontWeight: 600 }}>$9,000/MWh</span> — a <span style={{ color: colors.danger, fontWeight: 600 }}>180x</span> increase.
+            <br />Families received <span style={{ color: colors.danger, fontWeight: 600 }}>$7,000 bills</span> in a single week. Their provider — Griddy — went bankrupt.
           </div>
-          <div style={{ marginTop: 16, fontSize: '17px', color: colors.textDim, fontFamily: '"Inter"', fontStyle: 'italic' }}>
-            How did the most energy-rich state in America come this close to total infrastructure failure?
+
+          {/* Closing question */}
+          <div style={{ marginTop: 16, paddingTop: 16, borderTop: `1px solid ${colors.surfaceLight}` }}>
+            <div style={{ fontSize: '20px', color: colors.primary, fontFamily: '"Inter"', fontWeight: 500 }}>
+              How did the most energy-rich state in America come this close to total infrastructure failure?
+            </div>
           </div>
         </div>
       </Slide>

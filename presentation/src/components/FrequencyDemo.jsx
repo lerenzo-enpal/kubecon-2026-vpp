@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
+import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
 
 const SCENARIOS = [
@@ -66,13 +67,26 @@ export default function FrequencyDemo({ width = 900, height = 400 }) {
   const collapseTimeRef = useRef(null);
   const explosionParticlesRef = useRef([]);
   const glitchRef = useRef({ active: false, startTime: 0 });
-  const hackerPhaseRef = useRef(0); // 0=none, 1=explosion, 2=glitch, 3=hacker
+  const hackerPhaseRef = useRef(0);
+
+  // Restart animation when slide becomes active
+  const slideContext = useContext(SlideContext);
+  useEffect(() => {
+    if (slideContext?.isSlideActive) {
+      setScenario(0);
+      targetFreqRef.current = 50.0;
+      currentFreqRef.current = 50.0;
+      collapseTimeRef.current = null;
+      hackerPhaseRef.current = 0;
+      glitchRef.current = { active: false, startTime: 0 };
+      explosionParticlesRef.current = [];
+    }
+  }, [slideContext?.isSlideActive]);
 
   const switchScenario = (idx) => {
     setScenario(idx);
     targetFreqRef.current = SCENARIOS[idx].freq;
     if (idx < 3) {
-      // Reset collapse state when going back
       collapseTimeRef.current = null;
       hackerPhaseRef.current = 0;
       glitchRef.current = { active: false, startTime: 0 };
