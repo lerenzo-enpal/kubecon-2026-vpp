@@ -8,6 +8,7 @@ import TexasCascade from './components/TexasCascade';
 import RenewableGrowthChart from './components/RenewableGrowthChart';
 import DuckCurveChart from './components/DuckCurveChart';
 import AnimatedStat from './components/AnimatedStat';
+import StaticTexasGrid from './components/StaticTexasGrid';
 
 const theme = {
   colors: { primary: colors.text, secondary: colors.textMuted, tertiary: colors.primary },
@@ -34,12 +35,8 @@ export default function Presentation() {
       {/* 0: Title Slide */}
       <Slide backgroundColor={bg} padding="40px 60px">
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', textAlign: 'center', position: 'relative' }}>
-          {/* Faint static grid failure text */}
-          <div style={{ position: 'absolute', inset: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', opacity: 0.04, pointerEvents: 'none', overflow: 'hidden' }}>
-            <div style={{ fontFamily: '"JetBrains Mono"', fontSize: '160px', fontWeight: 900, color: colors.danger, letterSpacing: '-0.04em', lineHeight: 0.9, whiteSpace: 'nowrap' }}>
-              GRID FAILURE
-            </div>
-          </div>
+          {/* Static Texas grid map background */}
+          <StaticTexasGrid width={900} height={600} opacity={0.12} />
           <div style={{ position: 'relative', zIndex: 1 }}>
             <div style={{ fontSize: '12px', fontWeight: 600, color: colors.primary, fontFamily: '"JetBrains Mono"', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 32 }}>KubeCon + CloudNativeCon Europe 2026</div>
             <div style={{ fontSize: '56px', fontWeight: 800, color: colors.primary, fontFamily: '"Inter"', textShadow: `0 0 60px ${colors.primary}30`, lineHeight: 1.1, marginBottom: 20 }}>
@@ -475,6 +472,71 @@ export default function Presentation() {
         <Heading fontSize="32px" color={colors.success}>Same Failure — With VPP</Heading>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <CascadeSimulation width={680} height={440} withVPP={true} />
+        </div>
+      </Slide>
+
+      {/* 23: Kepler — The Greenest Power Plant */}
+      <Slide backgroundColor={bg} padding="40px 60px">
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+              <div style={{ display: 'inline-block', padding: '3px 10px', borderRadius: 16, fontSize: '11px', fontWeight: 600, fontFamily: '"JetBrains Mono"', background: `${colors.success}18`, color: colors.success, border: `1px solid ${colors.success}30` }}>CNCF PROJECT</div>
+              <div style={{ fontSize: '11px', color: colors.textDim, fontFamily: '"JetBrains Mono"' }}>sustainable-computing.io</div>
+            </div>
+            <Heading fontSize="40px" color={colors.success} margin="0 0 8px 0">The Greenest Power Plant Runs on Kubernetes</Heading>
+            <Text fontSize="17px" color={colors.textMuted} margin="0">Kepler uses eBPF to measure per-pod energy consumption. We use it to monitor the VPP itself.</Text>
+          </div>
+
+          {/* Mock Grafana-style dashboard */}
+          <div style={{ display: 'flex', gap: 16, margin: '16px 0' }}>
+            {/* Left: per-service power */}
+            <div style={{ flex: 1, background: colors.surface, borderRadius: 10, padding: '16px', border: `1px solid ${colors.surfaceLight}` }}>
+              <div style={{ fontSize: '10px', fontWeight: 600, color: colors.textDim, fontFamily: '"JetBrains Mono"', textTransform: 'uppercase', marginBottom: 10 }}>VPP Platform Power by Service</div>
+              {[
+                { svc: 'device-gateway', watts: 8.2, pct: 82 },
+                { svc: 'aggregation-engine', watts: 3.1, pct: 31 },
+                { svc: 'market-bidder', watts: 1.8, pct: 18 },
+                { svc: 'mqtt-broker', watts: 1.4, pct: 14 },
+                { svc: 'scheduler', watts: 0.6, pct: 6 },
+              ].map(s => (
+                <div key={s.svc} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                  <div style={{ width: 110, fontSize: '10px', color: colors.textMuted, fontFamily: '"JetBrains Mono"', textAlign: 'right' }}>{s.svc}</div>
+                  <div style={{ height: 14, width: `${s.pct}%`, background: `linear-gradient(90deg, ${colors.success}30, ${colors.success}70)`, borderRadius: 3, display: 'flex', alignItems: 'center', paddingLeft: 6 }}>
+                    <span style={{ fontSize: '9px', fontFamily: '"JetBrains Mono"', color: colors.text, fontWeight: 600 }}>{s.watts}W</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Right: key stats */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: 280 }}>
+              {[
+                { n: '15.1 W', l: 'Total platform power', c: colors.success, sub: 'Less than a lightbulb' },
+                { n: '0.3 mW', l: 'Per battery managed', c: colors.primary, sub: '50,000 devices' },
+                { n: '2M : 1', l: 'MW managed per W of compute', c: colors.accent, sub: 'Efficiency ratio' },
+                { n: '~2g', l: 'CO\u2082 per hour', c: colors.textMuted, sub: 'Platform carbon footprint' },
+              ].map(s => (
+                <div key={s.l} style={{ background: colors.surface, borderRadius: 8, padding: '10px 14px', border: `1px solid ${colors.surfaceLight}`, display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div style={{ fontSize: '20px', fontWeight: 800, fontFamily: '"JetBrains Mono"', color: s.c, minWidth: 72 }}>{s.n}</div>
+                  <div>
+                    <div style={{ fontSize: '11px', fontWeight: 600, color: colors.text, fontFamily: '"Inter"' }}>{s.l}</div>
+                    <div style={{ fontSize: '9px', color: colors.textDim, fontFamily: '"Inter"' }}>{s.sub}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Bottom quote */}
+          <div style={{ borderTop: `1px solid ${colors.surfaceLight}`, paddingTop: 12 }}>
+            <div style={{ fontSize: '16px', color: colors.text, fontFamily: '"Inter"', fontWeight: 500 }}>
+              "We built a VPP to make the grid greener. Then we used <span style={{ color: colors.success, fontWeight: 700 }}>Kepler</span> to measure the VPP itself.
+              Managing 50,000 batteries uses less power than your laptop."
+            </div>
+            <div style={{ fontSize: '12px', color: colors.textDim, fontFamily: '"JetBrains Mono"', marginTop: 4 }}>
+              kepler_container_joules_total{'{'} container_namespace="vpp" {'}'}  &bull;  Carbon-aware scheduling via KEDA + ElectricityMaps
+            </div>
+          </div>
         </div>
       </Slide>
 
