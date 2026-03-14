@@ -25,3 +25,7 @@ Think James Bond war room meets Bloomberg terminal. This is critical infrastruct
 - Push stat cards / metadata to edges (bottom-aligned) to leave center stage for the hero visual
 - Avoid centering everything — asymmetric layouts feel more like dashboards
 - Let animations breathe — give them the space they need to land emotionally
+
+### Workflow
+
+- **Do not commit or push unless explicitly requested by the user.** Wait for the user to review changes and ask for a commit.
