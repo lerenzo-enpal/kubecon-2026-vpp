@@ -4,6 +4,7 @@ import { colors } from './theme';
 import FrequencyLine from './components/FrequencyLine';
 import FrequencyDemo from './components/FrequencyDemo';
 import CascadeSimulation from './components/CascadeSimulation';
+import TexasCascade from './components/TexasCascade';
 import RenewableGrowthChart from './components/RenewableGrowthChart';
 import DuckCurveChart from './components/DuckCurveChart';
 
@@ -20,35 +21,45 @@ export default function Presentation() {
 
       {/* ═══════ ACT 1: "4 MINUTES FROM DARKNESS" ═══════ */}
 
-      {/* 1: Cold Open — Texas */}
+      {/* 1: Texas Cascade — Live Visualization */}
+      <Slide backgroundColor={bg}>
+        <div style={{ display: 'inline-block', padding: '4px 12px', borderRadius: 20, fontSize: '13px', fontWeight: 600, fontFamily: '"JetBrains Mono"', background: `${colors.danger}18`, color: colors.danger, border: `1px solid ${colors.danger}30`, marginBottom: 4 }}>FEBRUARY 15, 2021 — TEXAS</div>
+        <Heading fontSize="34px" color={colors.danger} margin="4px 0">Winter Storm Uri — Cascading Grid Failure</Heading>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <TexasCascade width={780} height={460} />
+        </div>
+      </Slide>
+
+      {/* 2: Texas — The Numbers */}
       <Slide backgroundColor={bg}>
         <div style={{ maxWidth: 800 }}>
           <div style={{ fontSize: '26px', fontWeight: 300, color: colors.textMuted, fontFamily: '"Inter"', lineHeight: 1.8, fontStyle: 'italic' }}>
-            "February 15, 2021. 1:51 AM. Texas. The grid frequency drops to 59.3 Hz."
+            "The Texas grid was 4 minutes and 37 seconds from total collapse. A cold restart would have taken weeks."
           </div>
-          <div style={{ marginTop: 20, fontSize: '22px', color: colors.text, fontFamily: '"Inter"', fontWeight: 500, lineHeight: 1.7 }}>
-            In 4 minutes and 37 seconds, the entire Texas power grid will collapse.
-            <br />It would take <span style={{ color: colors.danger, fontWeight: 700 }}>weeks</span> to restart.
-          </div>
-          <div style={{ marginTop: 28, display: 'flex', gap: 16 }}>
+          <div style={{ marginTop: 24, display: 'flex', gap: 16 }}>
             {[
               { n: '4:37', l: 'from total collapse', c: colors.danger },
               { n: '246', l: 'people dead', c: colors.danger },
               { n: '$195B', l: 'in damage', c: colors.accent },
+              { n: '4.5M', l: 'homes dark', c: colors.textMuted },
             ].map(s => (
               <div key={s.l} style={{ background: colors.surface, border: `1px solid ${s.c}25`, borderRadius: 10, padding: '16px 14px', textAlign: 'center', flex: 1 }}>
-                <div style={{ fontSize: '30px', fontWeight: 800, fontFamily: '"JetBrains Mono"', color: s.c }}>{s.n}</div>
-                <div style={{ fontSize: '11px', color: colors.textMuted, marginTop: 4, fontFamily: '"Inter"', textTransform: 'uppercase' }}>{s.l}</div>
+                <div style={{ fontSize: '28px', fontWeight: 800, fontFamily: '"JetBrains Mono"', color: s.c }}>{s.n}</div>
+                <div style={{ fontSize: '10px', color: colors.textMuted, marginTop: 4, fontFamily: '"Inter"', textTransform: 'uppercase' }}>{s.l}</div>
               </div>
             ))}
           </div>
-          <div style={{ marginTop: 24, fontSize: '18px', color: colors.textDim, fontFamily: '"Inter"', fontStyle: 'italic' }}>
-            The largest infrastructure failure in American history — narrowly avoided.
+          <div style={{ marginTop: 20, fontSize: '19px', color: colors.text, fontFamily: '"Inter"', lineHeight: 1.7 }}>
+            Power bills spiked to <span style={{ color: colors.danger, fontWeight: 600 }}>$9,000/MWh</span>. Families received <span style={{ color: colors.danger, fontWeight: 600 }}>$7,000 bills</span> in a single week.
+            One provider — Griddy — went bankrupt. 29,000 customers left with unpayable debt.
+          </div>
+          <div style={{ marginTop: 16, fontSize: '17px', color: colors.textDim, fontFamily: '"Inter"', fontStyle: 'italic' }}>
+            How did the most energy-rich state in America come this close to total infrastructure failure?
           </div>
         </div>
       </Slide>
 
-      {/* 2: Title */}
+      {/* 3: Title */}
       <Slide backgroundColor={bg}>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: '13px', fontWeight: 600, color: colors.primary, fontFamily: '"JetBrains Mono"', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 24 }}>KubeCon + CloudNativeCon Europe 2026</div>
@@ -61,54 +72,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 3: The Grid — Interactive Frequency */}
-      <Slide backgroundColor={bg}>
-        <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-          <div style={{ marginBottom: 8 }}>
-            <Heading fontSize="38px" color={colors.primary} margin="0 0 4px 0">The Grid: A Balancing Act</Heading>
-            <Text fontSize="16px" color={colors.textMuted} margin="0">This frequency must stay at 50 Hz. Click the scenarios to see what happens when it doesn't.</Text>
-          </div>
-          <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <FrequencyDemo width={900} height={360} />
-          </div>
-          <div style={{ display: 'flex', gap: 14, justifyContent: 'center', marginTop: 8 }}>
-            {[
-              { n: '50.000 Hz', l: 'Target Frequency', c: colors.primary },
-              { n: '400 GW', l: 'European Load', c: colors.secondary },
-              { n: '0 buffer', l: 'No Grid Storage', c: colors.accent },
-            ].map(s => (
-              <div key={s.l} style={{ background: colors.surface, border: `1px solid ${colors.surfaceLight}`, borderRadius: 8, padding: '12px 16px', textAlign: 'center', flex: 1 }}>
-                <div style={{ fontSize: '22px', fontWeight: 800, fontFamily: '"JetBrains Mono"', color: s.c }}>{s.n}</div>
-                <div style={{ fontSize: '10px', color: colors.textMuted, marginTop: 2, fontFamily: '"Inter"', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{s.l}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </Slide>
-
-      {/* 4: How the Grid Was Built */}
-      <Slide backgroundColor={bg}>
-        <Heading fontSize="42px" color={colors.primary}>Designed for a Different World</Heading>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, margin: '16px 0' }}>
-          {[
-            { l: 'Power Plants', s: 'Few, large', c: colors.accent },
-            { l: 'Transmission', s: 'High voltage', c: colors.secondary },
-            { l: 'Distribution', s: 'One-way', c: colors.primary },
-            { l: 'Homes', s: 'Passive', c: colors.textDim },
-          ].map((x, i) => (
-            <React.Fragment key={i}>
-              <div style={{ background: colors.surface, border: `1px solid ${x.c}30`, borderRadius: 10, padding: '16px 14px', textAlign: 'center', width: 140 }}>
-                <div style={{ fontSize: '15px', fontWeight: 600, color: colors.text, fontFamily: '"Inter"' }}>{x.l}</div>
-                <div style={{ fontSize: '12px', color: colors.textMuted, fontFamily: '"Inter"', marginTop: 4 }}>{x.s}</div>
-              </div>
-              {i < 3 && <div style={{ fontSize: '20px', color: colors.textDim, fontFamily: '"JetBrains Mono"' }}>{'\u2192'}</div>}
-            </React.Fragment>
-          ))}
-        </div>
-        <Text fontSize="19px" color={colors.textMuted} fontStyle="italic">"Built in the 1950s. One-directional. No flexibility."</Text>
-      </Slide>
-
-      {/* 5: Why Texas Failed — NEW */}
+      {/* 4: Why Texas Failed — The Death Spiral */}
       <Slide backgroundColor={bg}>
         <Heading fontSize="40px" color={colors.danger}>Why Texas Failed</Heading>
         <Text fontSize="17px" color={colors.textMuted}>The gas-electric death spiral — a cascading feedback loop.</Text>
@@ -142,7 +106,54 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 6: It Keeps Happening */}
+      {/* 5: The Grid — Interactive Frequency */}
+      <Slide backgroundColor={bg}>
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+          <div style={{ marginBottom: 8 }}>
+            <Heading fontSize="38px" color={colors.primary} margin="0 0 4px 0">The Grid: A Balancing Act</Heading>
+            <Text fontSize="16px" color={colors.textMuted} margin="0">Supply and demand must match every second. Click the scenarios to see what happens when they don't.</Text>
+          </div>
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <FrequencyDemo width={900} height={340} />
+          </div>
+          <div style={{ display: 'flex', gap: 14, justifyContent: 'center', marginTop: 8 }}>
+            {[
+              { n: '60.000 Hz', l: 'US Target (50 Hz in EU)', c: colors.primary },
+              { n: '107 GW', l: 'ERCOT Total Capacity', c: colors.secondary },
+              { n: '0 buffer', l: 'No Grid Storage', c: colors.accent },
+            ].map(s => (
+              <div key={s.l} style={{ background: colors.surface, border: `1px solid ${colors.surfaceLight}`, borderRadius: 8, padding: '12px 16px', textAlign: 'center', flex: 1 }}>
+                <div style={{ fontSize: '22px', fontWeight: 800, fontFamily: '"JetBrains Mono"', color: s.c }}>{s.n}</div>
+                <div style={{ fontSize: '10px', color: colors.textMuted, marginTop: 2, fontFamily: '"Inter"', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{s.l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Slide>
+
+      {/* 6: How the Grid Was Built */}
+      <Slide backgroundColor={bg}>
+        <Heading fontSize="42px" color={colors.primary}>Designed for a Different World</Heading>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, margin: '16px 0' }}>
+          {[
+            { l: 'Power Plants', s: 'Few, large', c: colors.accent },
+            { l: 'Transmission', s: 'High voltage', c: colors.secondary },
+            { l: 'Distribution', s: 'One-way', c: colors.primary },
+            { l: 'Homes', s: 'Passive', c: colors.textDim },
+          ].map((x, i) => (
+            <React.Fragment key={i}>
+              <div style={{ background: colors.surface, border: `1px solid ${x.c}30`, borderRadius: 10, padding: '16px 14px', textAlign: 'center', width: 140 }}>
+                <div style={{ fontSize: '15px', fontWeight: 600, color: colors.text, fontFamily: '"Inter"' }}>{x.l}</div>
+                <div style={{ fontSize: '12px', color: colors.textMuted, fontFamily: '"Inter"', marginTop: 4 }}>{x.s}</div>
+              </div>
+              {i < 3 && <div style={{ fontSize: '20px', color: colors.textDim, fontFamily: '"JetBrains Mono"' }}>{'\u2192'}</div>}
+            </React.Fragment>
+          ))}
+        </div>
+        <Text fontSize="19px" color={colors.textMuted} fontStyle="italic">"Built in the 1950s. One-directional. No flexibility."</Text>
+      </Slide>
+
+      {/* 7: It Keeps Happening */}
       <Slide backgroundColor={bg}>
         <Heading fontSize="38px" color={colors.danger}>It Keeps Happening</Heading>
         <div style={{ display: 'flex', gap: 32, marginTop: 8 }}>
@@ -181,7 +192,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 7: Common Pattern */}
+      {/* 8: Common Pattern */}
       <Slide backgroundColor={bg}>
         <Heading fontSize="38px" color={colors.primary}>Every Cascade Shares Three Properties</Heading>
         <div style={{ display: 'flex', gap: 16, justifyContent: 'center', marginTop: 8 }}>
@@ -199,7 +210,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 8: Bridge — Grid Needs Flexibility */}
+      {/* 9: Bridge — Grid Needs Flexibility */}
       <Slide backgroundColor={bg}>
         <div style={{ textAlign: 'center', maxWidth: 700, margin: '0 auto' }}>
           <div style={{ fontSize: '28px', fontWeight: 600, color: colors.text, fontFamily: '"Inter"', lineHeight: 1.7, marginBottom: 28 }}>
