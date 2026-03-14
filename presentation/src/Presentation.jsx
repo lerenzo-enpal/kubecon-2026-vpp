@@ -31,9 +31,37 @@ export default function Presentation() {
   return (
     <Deck theme={theme} template={slideTemplate}>
 
+      {/* 0: Title Slide */}
+      <Slide backgroundColor={bg} padding="40px 60px">
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', textAlign: 'center', position: 'relative' }}>
+          {/* Faint static grid failure text */}
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', opacity: 0.04, pointerEvents: 'none', overflow: 'hidden' }}>
+            <div style={{ fontFamily: '"JetBrains Mono"', fontSize: '160px', fontWeight: 900, color: colors.danger, letterSpacing: '-0.04em', lineHeight: 0.9, whiteSpace: 'nowrap' }}>
+              GRID FAILURE
+            </div>
+          </div>
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{ fontSize: '12px', fontWeight: 600, color: colors.primary, fontFamily: '"JetBrains Mono"', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 32 }}>KubeCon + CloudNativeCon Europe 2026</div>
+            <div style={{ fontSize: '56px', fontWeight: 800, color: colors.primary, fontFamily: '"Inter"', textShadow: `0 0 60px ${colors.primary}30`, lineHeight: 1.1, marginBottom: 20 }}>
+              What is a Virtual<br />Power Plant?
+            </div>
+            <div style={{ fontSize: '22px', color: colors.textMuted, fontFamily: '"Inter"', marginBottom: 48 }}>
+              Cloud-Native Infrastructure for the Energy Grid
+            </div>
+            <div style={{ display: 'flex', gap: 24, justifyContent: 'center', alignItems: 'center' }}>
+              <div style={{ width: 48, height: 48, borderRadius: '50%', background: `linear-gradient(135deg, ${colors.primary}30, ${colors.success}30)`, border: `1px solid ${colors.surfaceLight}` }} />
+              <div style={{ textAlign: 'left' }}>
+                <div style={{ fontSize: '18px', fontWeight: 600, color: colors.text, fontFamily: '"Inter"' }}>Enpal / Flexa</div>
+                <div style={{ fontSize: '14px', color: colors.textMuted, fontFamily: '"Inter"' }}>Building Europe's Largest Virtual Power Plant</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Slide>
+
       {/* ═══════ ACT 1: "4 MINUTES FROM DARKNESS" ═══════ */}
 
-      {/* 1: Texas Cascade — Full Screen Visualization */}
+      {/* 1: Texas Cascade — Split Layout */}
       <Slide backgroundColor="#050810">
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
           <div style={{ display: 'inline-block', padding: '3px 10px', borderRadius: 16, fontSize: '11px', fontWeight: 600, fontFamily: '"JetBrains Mono"', background: `${colors.danger}18`, color: colors.danger, border: `1px solid ${colors.danger}30` }}>FEBRUARY 15, 2021</div>
@@ -78,36 +106,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 3: Title */}
-      <Slide backgroundColor={bg} padding="40px 60px">
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', textAlign: 'center', position: 'relative' }}>
-          {/* Static grid failure background graphic */}
-          <div style={{ position: 'absolute', inset: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', opacity: 0.06, pointerEvents: 'none' }}>
-            <div style={{ fontFamily: '"JetBrains Mono"', fontSize: '140px', fontWeight: 900, color: colors.danger, letterSpacing: '-0.05em', lineHeight: 1 }}>
-              GRID<br />FAILURE
-            </div>
-          </div>
-
-          <div style={{ position: 'relative', zIndex: 1 }}>
-            <div style={{ fontSize: '12px', fontWeight: 600, color: colors.primary, fontFamily: '"JetBrains Mono"', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 28 }}>KubeCon + CloudNativeCon Europe 2026</div>
-            <div style={{ fontSize: '52px', fontWeight: 800, color: colors.primary, fontFamily: '"Inter"', textShadow: `0 0 40px ${colors.primary}40, 0 0 80px ${colors.primary}20`, lineHeight: 1.15, marginBottom: 16 }}>
-              What is a Virtual Power Plant?
-            </div>
-            <div style={{ fontSize: '24px', color: colors.textMuted, fontFamily: '"Inter"', marginBottom: 40 }}>
-              Cloud-Native Infrastructure for the Energy Grid
-            </div>
-            <div style={{ display: 'flex', gap: 24, justifyContent: 'center', alignItems: 'center' }}>
-              <div style={{ width: 48, height: 48, borderRadius: '50%', background: `linear-gradient(135deg, ${colors.primary}30, ${colors.success}30)`, border: `1px solid ${colors.surfaceLight}` }} />
-              <div style={{ textAlign: 'left' }}>
-                <div style={{ fontSize: '18px', fontWeight: 600, color: colors.text, fontFamily: '"Inter"' }}>Enpal / Flexa</div>
-                <div style={{ fontSize: '14px', color: colors.textMuted, fontFamily: '"Inter"' }}>Building Europe's Largest Virtual Power Plant</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Slide>
-
-      {/* 4: Why Texas Failed — The Death Spiral */}
+      {/* 3: Why Texas Failed — The Death Spiral */}
       <Slide backgroundColor={bg}>
         <Heading fontSize="40px" color={colors.danger}>Why Texas Failed</Heading>
         <Text fontSize="17px" color={colors.textMuted}>The gas-electric death spiral — a cascading feedback loop.</Text>
