@@ -122,11 +122,11 @@ export default function TexasCascade({ width = 960, height = 560 }) {
     activeStepRef.current = -1;
   };
 
-  // Map dimensions — flush right, max vertical space
+  // Map dimensions — right half of page, full height, flush to right edge
+  const mapW = Math.floor(width * 0.55);
   const mapH = height;
-  const mapW = Math.floor(mapH * 0.65); // Texas aspect ratio
   const mapLeft = width - mapW;
-  const timelineRight = mapLeft - 12;
+  const timelineRight = mapLeft - 14;
 
   useEffect(() => {
     const canvas = canvasRef.current;

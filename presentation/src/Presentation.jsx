@@ -50,7 +50,7 @@ export default function Presentation() {
             <div style={{ display: 'flex', gap: 24, justifyContent: 'center', alignItems: 'center' }}>
               <div style={{ width: 48, height: 48, borderRadius: '50%', background: `linear-gradient(135deg, ${colors.primary}30, ${colors.success}30)`, border: `1px solid ${colors.surfaceLight}` }} />
               <div style={{ textAlign: 'left' }}>
-                <div style={{ fontSize: '18px', fontWeight: 600, color: colors.text, fontFamily: '"Inter"' }}>Enpal / Flexa</div>
+                <div style={{ fontSize: '18px', fontWeight: 600, color: colors.text, fontFamily: '"Inter"' }}>Enpal</div>
                 <div style={{ fontSize: '14px', color: colors.textMuted, fontFamily: '"Inter"' }}>Building Europe's Largest Virtual Power Plant</div>
               </div>
             </div>
@@ -61,12 +61,12 @@ export default function Presentation() {
       {/* ═══════ ACT 1: "4 MINUTES FROM DARKNESS" ═══════ */}
 
       {/* 1: Texas Cascade — Split Layout */}
-      <Slide backgroundColor="#050810">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-          <div style={{ display: 'inline-block', padding: '3px 10px', borderRadius: 16, fontSize: '11px', fontWeight: 600, fontFamily: '"JetBrains Mono"', background: `${colors.danger}18`, color: colors.danger, border: `1px solid ${colors.danger}30` }}>FEBRUARY 15, 2021</div>
-          <div style={{ fontSize: '20px', fontWeight: 700, color: colors.danger, fontFamily: '"Inter"' }}>Winter Storm Uri — Cascading Grid Failure</div>
+      <Slide backgroundColor="#050810" padding="8px 10px">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
+          <div style={{ display: 'inline-block', padding: '2px 8px', borderRadius: 12, fontSize: '10px', fontWeight: 600, fontFamily: '"JetBrains Mono"', background: `${colors.danger}18`, color: colors.danger, border: `1px solid ${colors.danger}30` }}>FEB 15, 2021</div>
+          <div style={{ fontSize: '16px', fontWeight: 700, color: colors.danger, fontFamily: '"Inter"' }}>Winter Storm Uri — Cascading Grid Failure</div>
         </div>
-        <TexasCascade width={940} height={540} />
+        <TexasCascade width={980} height={580} />
       </Slide>
 
       {/* 2: Texas — The Numbers */}
@@ -589,7 +589,7 @@ export default function Presentation() {
       <Slide backgroundColor={bg}>
         <div style={{ textAlign: 'center' }}>
           <Heading fontSize="52px" color={colors.primary}>Thank You</Heading>
-          <Text fontSize="17px" color={colors.textMuted}><span style={{ color: colors.primary, fontWeight: 600 }}>Enpal / Flexa</span> — Building Europe's Largest Virtual Power Plant</Text>
+          <Text fontSize="17px" color={colors.textMuted}><span style={{ color: colors.primary, fontWeight: 600 }}>Enpal</span> — Building Europe's Largest Virtual Power Plant</Text>
         </div>
       </Slide>
 
