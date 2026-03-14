@@ -36,7 +36,9 @@ export default function Presentation() {
       <Slide backgroundColor={bg} padding="40px 60px">
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', textAlign: 'center', position: 'relative' }}>
           {/* Static Texas grid map background */}
-          <StaticTexasGrid width={900} height={600} opacity={0.12} />
+          <div style={{ position: 'absolute', top: '-10%', right: '-15%', width: '80%', height: '120%', pointerEvents: 'none' }}>
+            <StaticTexasGrid width={700} height={700} opacity={0.12} />
+          </div>
           <div style={{ position: 'relative', zIndex: 1 }}>
             <div style={{ fontSize: '12px', fontWeight: 600, color: colors.primary, fontFamily: '"JetBrains Mono"', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 32 }}>KubeCon + CloudNativeCon Europe 2026</div>
             <div style={{ fontSize: '56px', fontWeight: 800, color: colors.primary, fontFamily: '"Inter"', textShadow: `0 0 60px ${colors.primary}30`, lineHeight: 1.1, marginBottom: 20 }}>
