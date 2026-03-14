@@ -69,7 +69,8 @@ The current outline is solid in content but needs restructuring for maximum impa
 | 7 | The Common Pattern | "Every cascading failure shares three properties: (1) tightly coupled centralized infrastructure, (2) no local generation reserves, (3) degraded or absent system-wide observability." | 1:00 |
 | 8 | Now Add Renewables | Duck curve animation. Solar floods midday, steep ramp evening. Wind is variable. "Renewables are cheap, scalable, and essential — but they make the grid *less* predictable unless you add one thing." | 1:00 |
 
-**Transition:** "That one thing is flexibility. And flexibility at grid scale requires two components: batteries and software."
+**Transition:** "That one thing is flexibility. And 
+flexibility at grid scale requires two components: batteries and software."
 
 ### Act 2 — "Batteries Change Everything" (7 minutes)
 
