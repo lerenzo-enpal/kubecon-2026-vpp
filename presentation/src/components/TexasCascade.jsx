@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
+import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
 
 // Map lat/lon to canvas coordinates with Mercator-like correction for Texas latitudes
@@ -113,6 +114,19 @@ export default function TexasCascade({ width = 960, height = 580 }) {
   const failedRef = useRef(new Set());
   const warningRef = useRef('');
   const freqRef = useRef(60.0);
+
+  // Restart when slide becomes active
+  const slideContext = useContext(SlideContext);
+  useEffect(() => {
+    if (slideContext?.isSlideActive) {
+      phaseRef.current = 'stable';
+      setPhase('stable');
+      startTimeRef.current = null;
+      failedRef.current = new Set();
+      warningRef.current = '';
+      freqRef.current = 60.0;
+    }
+  }, [slideContext?.isSlideActive]);
 
   const reset = () => {
     phaseRef.current = 'stable';

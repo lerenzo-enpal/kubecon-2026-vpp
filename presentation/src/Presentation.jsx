@@ -7,6 +7,7 @@ import CascadeSimulation from './components/CascadeSimulation';
 import TexasCascade from './components/TexasCascade';
 import RenewableGrowthChart from './components/RenewableGrowthChart';
 import DuckCurveChart from './components/DuckCurveChart';
+import AnimatedStat from './components/AnimatedStat';
 
 const theme = {
   colors: { primary: colors.text, secondary: colors.textMuted, tertiary: colors.primary },
@@ -54,19 +55,12 @@ export default function Presentation() {
             </div>
           </div>
 
-          {/* Stats row */}
+          {/* Stats row — animated counters */}
           <div style={{ display: 'flex', gap: 20, margin: '20px 0' }}>
-            {[
-              { n: '4:37', l: 'from total collapse', c: colors.danger },
-              { n: '246', l: 'people dead', c: colors.danger },
-              { n: '$195B', l: 'in damage', c: colors.accent },
-              { n: '4.5M', l: 'homes dark', c: colors.textMuted },
-            ].map(s => (
-              <div key={s.l} style={{ background: colors.surface, border: `1px solid ${s.c}20`, borderRadius: 10, padding: '20px 16px', textAlign: 'center', flex: 1 }}>
-                <div style={{ fontSize: '34px', fontWeight: 800, fontFamily: '"JetBrains Mono"', color: s.c, textShadow: `0 0 20px ${s.c}25` }}>{s.n}</div>
-                <div style={{ fontSize: '11px', color: colors.textMuted, marginTop: 6, fontFamily: '"Inter"', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{s.l}</div>
-              </div>
-            ))}
+            <AnimatedStat target="4:37" label="from total collapse" color={colors.danger} delay={0} duration={1200} />
+            <AnimatedStat target="246" label="people dead" color={colors.danger} delay={300} duration={1000} />
+            <AnimatedStat target="$195B" label="in damage" color={colors.accent} delay={600} duration={1400} />
+            <AnimatedStat target="4.5M" label="homes dark" color={colors.textMuted} delay={900} duration={1100} />
           </div>
 
           {/* Human cost */}
@@ -85,14 +79,30 @@ export default function Presentation() {
       </Slide>
 
       {/* 3: Title */}
-      <Slide backgroundColor={bg}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '13px', fontWeight: 600, color: colors.primary, fontFamily: '"JetBrains Mono"', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 24 }}>KubeCon + CloudNativeCon Europe 2026</div>
-          <Heading fontSize="50px" color={colors.primary}>What is a Virtual Power Plant?</Heading>
-          <Text fontSize="24px" color={colors.textMuted}>Cloud-Native Infrastructure for the Energy Grid</Text>
-          <div style={{ marginTop: 32, fontSize: '17px', color: colors.text, fontFamily: '"Inter"' }}>
-            <span style={{ fontWeight: 600 }}>Enpal / Flexa</span>
-            <span style={{ color: colors.textMuted }}> — Building Europe's Largest Virtual Power Plant</span>
+      <Slide backgroundColor={bg} padding="40px 60px">
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', textAlign: 'center', position: 'relative' }}>
+          {/* Static grid failure background graphic */}
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', opacity: 0.06, pointerEvents: 'none' }}>
+            <div style={{ fontFamily: '"JetBrains Mono"', fontSize: '140px', fontWeight: 900, color: colors.danger, letterSpacing: '-0.05em', lineHeight: 1 }}>
+              GRID<br />FAILURE
+            </div>
+          </div>
+
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{ fontSize: '12px', fontWeight: 600, color: colors.primary, fontFamily: '"JetBrains Mono"', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 28 }}>KubeCon + CloudNativeCon Europe 2026</div>
+            <div style={{ fontSize: '52px', fontWeight: 800, color: colors.primary, fontFamily: '"Inter"', textShadow: `0 0 40px ${colors.primary}40, 0 0 80px ${colors.primary}20`, lineHeight: 1.15, marginBottom: 16 }}>
+              What is a Virtual Power Plant?
+            </div>
+            <div style={{ fontSize: '24px', color: colors.textMuted, fontFamily: '"Inter"', marginBottom: 40 }}>
+              Cloud-Native Infrastructure for the Energy Grid
+            </div>
+            <div style={{ display: 'flex', gap: 24, justifyContent: 'center', alignItems: 'center' }}>
+              <div style={{ width: 48, height: 48, borderRadius: '50%', background: `linear-gradient(135deg, ${colors.primary}30, ${colors.success}30)`, border: `1px solid ${colors.surfaceLight}` }} />
+              <div style={{ textAlign: 'left' }}>
+                <div style={{ fontSize: '18px', fontWeight: 600, color: colors.text, fontFamily: '"Inter"' }}>Enpal / Flexa</div>
+                <div style={{ fontSize: '14px', color: colors.textMuted, fontFamily: '"Inter"' }}>Building Europe's Largest Virtual Power Plant</div>
+              </div>
+            </div>
           </div>
         </div>
       </Slide>
