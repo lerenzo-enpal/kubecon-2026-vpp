@@ -218,7 +218,7 @@ function drawZeroBox(ctx, alpha, canvasWidth) {
 function drawCounterHUD(ctx, count, label, labelColor, alpha, width) {
   const { w: boxW, h: boxH } = ZERO_BOX; // same dimensions as zero box
   const boxX = width - boxW - 16;
-  const boxY = 12 + ZERO_BOX.h + 8;
+  const boxY = 12;
   const countStr = count.toLocaleString();
 
   ctx.save();
@@ -308,7 +308,7 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
       ctx.clearRect(0, 0, width, height);
 
       // ════════════════════════════════════════════
-      // PHASE 0: Subtle grid pulse
+      // PHASE 0: Empty — subtle grid pulse
       // ════════════════════════════════════════════
       if (step === 0) {
         ctx.save();
@@ -325,229 +325,13 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
       }
 
       // ════════════════════════════════════════════
-      // PHASE 1: Big "0" ZERO DOWNTIME
+      // PHASE 1: Wolfsburg factory appears
       // ════════════════════════════════════════════
       if (step === 1) {
-        const cx = width / 2, cy = height * 0.38;
-        const [cr, cg, cb] = hexToRgb(colors.danger);
-
-        // ── Targeting brackets — converge from edges ──
-        const bracketT = Math.min(1, elapsed / 0.3);
-        const bracketE = 1 - Math.pow(1 - bracketT, 3);
-        const tightenT = elapsed > 0.9 ? Math.min(1, (elapsed - 0.9) / 0.3) : 0;
-        const bracketBase = 140 - tightenT * 10;
-        const bracketOff = bracketBase + (1 - bracketE) * 200;
-        const bLen = 24;
-
-        ctx.save();
-        ctx.globalAlpha = bracketE * 0.6;
-        ctx.strokeStyle = colors.danger;
-        ctx.lineWidth = 2;
-        // TL
-        ctx.beginPath();
-        ctx.moveTo(cx - bracketOff, cy - bracketOff + bLen);
-        ctx.lineTo(cx - bracketOff, cy - bracketOff);
-        ctx.lineTo(cx - bracketOff + bLen, cy - bracketOff);
-        ctx.stroke();
-        // TR
-        ctx.beginPath();
-        ctx.moveTo(cx + bracketOff - bLen, cy - bracketOff);
-        ctx.lineTo(cx + bracketOff, cy - bracketOff);
-        ctx.lineTo(cx + bracketOff, cy - bracketOff + bLen);
-        ctx.stroke();
-        // BL
-        ctx.beginPath();
-        ctx.moveTo(cx - bracketOff, cy + bracketOff - bLen);
-        ctx.lineTo(cx - bracketOff, cy + bracketOff);
-        ctx.lineTo(cx - bracketOff + bLen, cy + bracketOff);
-        ctx.stroke();
-        // BR
-        ctx.beginPath();
-        ctx.moveTo(cx + bracketOff - bLen, cy + bracketOff);
-        ctx.lineTo(cx + bracketOff, cy + bracketOff);
-        ctx.lineTo(cx + bracketOff, cy + bracketOff - bLen);
-        ctx.stroke();
-        ctx.restore();
-
-        // ── Dashed crosshairs ──
-        if (bracketT > 0.3) {
-          ctx.save();
-          ctx.globalAlpha = Math.min(1, (bracketT - 0.3) / 0.5) * 0.1;
-          ctx.strokeStyle = colors.danger;
-          ctx.lineWidth = 0.5;
-          ctx.setLineDash([4, 8]);
-          ctx.beginPath(); ctx.moveTo(cx - 300, cy); ctx.lineTo(cx + 300, cy); ctx.stroke();
-          ctx.beginPath(); ctx.moveTo(cx, cy - 200); ctx.lineTo(cx, cy + 200); ctx.stroke();
-          ctx.setLineDash([]);
-          ctx.restore();
-        }
-
-        // ── Digit cascade 9→0 with chromatic aberration (0.25–0.85s) ──
-        const casStart = 0.25, casEnd = 0.85;
-        if (elapsed >= casStart && elapsed < casEnd) {
-          const casT = (elapsed - casStart) / (casEnd - casStart);
-          const digit = Math.max(0, 9 - Math.floor(casT * 10));
-          const dSize = 100 + casT * 50;
-          const aberr = 2 + casT * 6; // RGB split increases through cascade
-
-          // Red channel — shifted left
-          ctx.save();
-          ctx.font = `900 ${dSize}px "JetBrains Mono"`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.globalAlpha = 0.25 + casT * 0.15;
-          ctx.fillStyle = 'rgba(255, 60, 60, 0.7)';
-          ctx.fillText(String(digit), cx - aberr, cy);
-          ctx.restore();
-
-          // Blue channel — shifted right
-          ctx.save();
-          ctx.font = `900 ${dSize}px "JetBrains Mono"`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.globalAlpha = 0.25 + casT * 0.15;
-          ctx.fillStyle = 'rgba(60, 60, 255, 0.7)';
-          ctx.fillText(String(digit), cx + aberr, cy);
-          ctx.restore();
-
-          // Main digit — on top
-          ctx.save();
-          ctx.font = `900 ${dSize}px "JetBrains Mono"`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillStyle = `rgba(${cr},${cg},${cb},${0.4 + casT * 0.3})`;
-          ctx.shadowBlur = 15;
-          ctx.shadowColor = colors.danger;
-          ctx.fillText(String(digit), cx, cy);
-          ctx.shadowBlur = 0;
-          ctx.restore();
-
-          // Glitch lines on each digit change
-          const glitchPhase = (casT * 10) % 1;
-          if (glitchPhase < 0.2) {
-            ctx.save();
-            ctx.globalAlpha = 0.15;
-            ctx.fillStyle = colors.danger;
-            ctx.fillRect(cx - 100, cy - 25 + Math.sin(now * 0.3 + digit * 7) * 25, 200, 1.5);
-            ctx.fillRect(cx - 70, cy - 15 + Math.sin(now * 0.5 + digit * 3) * 20, 140, 1);
-            ctx.restore();
-          }
-        }
-
-        // ── Final "0" impact (0.85s+) ──
-        if (elapsed >= casEnd) {
-          const impactT = Math.min(1, (elapsed - casEnd) / 0.4);
-          const impactE = easeOutBack(impactT);
-          const zeroSize = 150 * impactE;
-          const zeroPulse = elapsed > 1.5 ? 1 + Math.sin(now / 400) * 0.02 : 1;
-
-          // Expanding impact ring
-          if (impactT < 0.8) {
-            const ringT = impactT / 0.8;
-            ctx.save();
-            ctx.globalAlpha = (1 - ringT) * 0.3;
-            ctx.strokeStyle = colors.danger;
-            ctx.lineWidth = 2 * (1 - ringT);
-            ctx.beginPath();
-            ctx.arc(cx, cy, zeroSize * 0.4 + ringT * 160, 0, Math.PI * 2);
-            ctx.stroke();
-            ctx.restore();
-          }
-
-          // Subtle glow rings
-          for (let ring = 3; ring >= 1; ring--) {
-            const rPulse = 1 + Math.sin(now / 1000 + ring) * 0.02;
-            ctx.beginPath();
-            ctx.arc(cx, cy, zeroSize * 0.5 * rPulse + ring * 25, 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(${cr},${cg},${cb},${0.04 * ring * impactE})`;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          }
-
-          // The "0"
-          ctx.save();
-          ctx.font = `900 ${zeroSize * zeroPulse}px "JetBrains Mono"`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillStyle = colors.danger;
-          ctx.shadowBlur = 40;
-          ctx.shadowColor = colors.danger;
-          ctx.fillText('0', cx, cy);
-          ctx.shadowBlur = 0;
-          ctx.restore();
-        }
-
-        // ── Screen flash on "0" impact ──
-        if (elapsed >= 0.85 && elapsed < 1.05) {
-          const flashT = (elapsed - 0.85) / 0.2;
-          ctx.save();
-          ctx.globalAlpha = (1 - flashT) * 0.12;
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(0, 0, width, height);
-          ctx.restore();
-        }
-
-        // ── "ZERO DOWNTIME" text (1.3s+) ──
-        if (elapsed > 1.3) {
-          const textT = Math.min(1, (elapsed - 1.3) / 0.5);
-          const textE = 1 - Math.pow(1 - textT, 3);
-          ctx.save();
-          ctx.globalAlpha = textE;
-          ctx.font = '600 28px "JetBrains Mono"';
-          ctx.textAlign = 'center';
-          ctx.fillStyle = colors.danger;
-          ctx.fillText('ZERO DOWNTIME', cx, cy + 105);
-          ctx.font = '20px "Inter"';
-          ctx.fillStyle = colors.textMuted;
-          ctx.fillText('This machine has never been shut down.', cx, cy + 140);
-          ctx.restore();
-        }
-      }
-
-      // ════════════════════════════════════════════
-      // PHASE 2: "0" shrinks into box → factory populates
-      // ════════════════════════════════════════════
-      if (step === 2) {
-        // Sub-phase A: shrink "0" into HUD box (0–0.8s)
-        const shrinkDur = 0.8;
-        const shrinkT = Math.min(elapsed / shrinkDur, 1);
-        const shrinkE = easeInOutCubic(shrinkT);
-
-        // Animate "0" from center to the box position (bottom)
-        const startX = width / 2, startY = height * 0.38;
-        const endX = width - 16 - ZERO_BOX.w / 2, endY = 12 + 30; // top right
-        const zeroX = startX + (endX - startX) * shrinkE;
-        const zeroY = startY + (endY - startY) * shrinkE;
-        const zeroSize = 180 * (1 - shrinkE * 0.822); // 180 → 32
-
-        if (shrinkT < 1) {
-          // Still animating — draw the shrinking "0"
-          const [dr, dg, db] = hexToRgb(colors.danger);
-          ctx.save();
-          ctx.font = `900 ${zeroSize}px "JetBrains Mono"`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillStyle = `rgba(${dr},${dg},${db},${1 - shrinkE * 0.3})`;
-          ctx.shadowBlur = 20 * (1 - shrinkE);
-          ctx.shadowColor = colors.danger;
-          ctx.fillText('0', zeroX, zeroY);
-          ctx.shadowBlur = 0;
-          ctx.restore();
-        }
-
-        // Draw "0 DOWNTIME" box (fades in as shrink completes)
-        const boxAlpha = Math.min(1, Math.max(0, (shrinkT - 0.6) / 0.4));
-        if (boxAlpha > 0) {
-          drawZeroBox(ctx, boxAlpha, width);
-        }
-
-        // Sub-phase B: factory + counter populate (after shrink, 0.9s–2.2s)
-        const factoryDelay = 0.9;
-        const factoryT = Math.max(0, Math.min(1, (elapsed - factoryDelay) / 1.3));
+        const factoryT = Math.min(1, elapsed / 1.3);
         const factoryE = easeInOutCubic(factoryT);
 
         if (factoryT > 0) {
-          // Factory in center — match phase 3's initial position
           const factoryW = 245 * factoryE;
           const factoryH = factoryW * 0.4;
           const factoryX = width / 2 - factoryW / 2;
@@ -560,13 +344,14 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
       }
 
       // ════════════════════════════════════════════
-      // PHASE 3: Zoom OUT from factory to EU grid
+      // PHASE 2: Zoom OUT from factory to EU grid
       // ════════════════════════════════════════════
-      if (step === 3) {
-        const t3 = Math.min(elapsed / 4.5, 1);
+      if (step >= 2) {
+        const isZooming = step === 2;
+        const t3 = isZooming ? Math.min(elapsed / 4.5, 1) : 1;
         const eased3 = liftoffEase(Math.min(t3, 1));
 
-        const zoomLevel = 8.0 - eased3 * 6.8; // ends at 1.2 so EU fills more space
+        const zoomLevel = 8.0 - eased3 * 6.8;
         const focusX = 0.35;
         const focusY = 0.40 + eased3 * 0.05;
         const mapXFn = (nx) => width / 2 + (nx - focusX) * width * zoomLevel;
@@ -580,7 +365,7 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
         ctx.fillRect(0, scanY, width, 2);
         ctx.restore();
 
-        // Grid connections — sweep in from center like systems coming online
+        // Grid connections
         if (t3 > 0.3) {
           const lineProgress = Math.min(1, (t3 - 0.3) / 0.45);
           const visibleLines = Math.floor(lineProgress * sortedConnections.length);
@@ -593,10 +378,8 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
             const bx = mapXFn(b.x), by = mapYFn(b.y);
             if (ax < -100 && bx < -100) continue;
             if (ax > width + 100 && bx > width + 100) continue;
-            // Each line traces from a→b
             const lineStart = li / sortedConnections.length;
             const lineDrawT = Math.min(1, (lineProgress - lineStart) * 6);
-            // Brief glow on appearance, then settle
             ctx.globalAlpha = lineDrawT < 0.4 ? 0.12 + (0.4 - lineDrawT) * 0.25 : 0.08;
             const ex = ax + (bx - ax) * lineDrawT;
             const ey = ay + (by - ay) * lineDrawT;
@@ -605,10 +388,10 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
           ctx.restore();
         }
 
-        // Country dots — appear one by one, slow then accelerating (sonar ping)
+        // Country dots
         if (t3 > 0.1) {
           const dotProgress = Math.min(1, (t3 - 0.1) / 0.7);
-          const dotEased = dotProgress * dotProgress; // ease-in: slow start, fast finish
+          const dotEased = dotProgress * dotProgress;
           const visibleDots = Math.floor(dotEased * EU_POSITIONS.length);
           ctx.save();
           ctx.fillStyle = colors.primary;
@@ -619,7 +402,6 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
             const cx = mapXFn(c.x), cy = mapYFn(c.y);
             if (cx < 0 || cx > width || cy < 0 || cy > height) continue;
             const dotT = Math.min(1, (dotEased - di / EU_POSITIONS.length) * EU_POSITIONS.length);
-            // Sonar ping: brief bright flash with glow, then settle
             const isPing = dotT < 0.3;
             ctx.globalAlpha = isPing ? 0.6 : 0.3;
             if (isPing) { ctx.shadowBlur = 6; ctx.shadowColor = colors.primary; }
@@ -646,14 +428,14 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
           });
         }
 
-        // VW Factory — shrinks earlier than liftoff easing
+        // VW Factory — shrinks as we zoom out
         const FACTORY_WORLD_W = 0.03;
-        const factoryShrink = Math.max(0.05, 1 - t3 * 3); // very fast shrink, tiny by t3=0.33
+        const factoryShrink = Math.max(0.05, 1 - t3 * 3);
         const factoryW = Math.max(8, FACTORY_WORLD_W * width * zoomLevel * factoryShrink);
         const factoryH = factoryW * 0.4;
         const factoryX = mapXFn(0.35) - factoryW / 2;
         const factoryY = mapYFn(0.40) - factoryH / 2;
-        const factoryLabelAlpha = Math.max(0, 1 - eased3 * 3); // labels gone by ~33% zoom
+        const factoryLabelAlpha = Math.max(0, 1 - eased3 * 3);
         drawFactory(ctx, factoryX, factoryY, factoryW, factoryH, Math.max(0.15, 1 - eased3 * 0.7), factoryLabelAlpha);
 
         // Grid workers
@@ -668,9 +450,6 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
           drawPerson(ctx, px, py, pSize, colors.primary, appearT * (0.5 + Math.sin(now / 800 + i * 0.3) * 0.15));
         }
 
-        // "0 DOWNTIME" box — persists from phase 2
-        drawZeroBox(ctx, 1, width);
-
         // Counter HUD — ticks from 60K to 2.3M
         const displayCount = Math.floor(60000 + eased3 * (2300000 - 60000));
         let label = "World's Largest Factory";
@@ -678,7 +457,113 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
         if (eased3 > 0.08) { label = null; }
         if (eased3 > 0.85) { label = 'European Power Grid'; labelColor = colors.primary; }
         drawCounterHUD(ctx, displayCount, label, labelColor, 1, width);
+      }
 
+      // ════════════════════════════════════════════
+      // PHASE 3: Big "0" ZERO DOWNTIME over the EU map
+      // ════════════════════════════════════════════
+      if (step === 3) {
+        const cx = width / 2, cy = height * 0.42;
+        const [cr, cg, cb] = hexToRgb(colors.danger);
+
+        // Targeting brackets — converge from edges
+        const bracketT = Math.min(1, elapsed / 0.3);
+        const bracketE = 1 - Math.pow(1 - bracketT, 3);
+        const tightenT = elapsed > 0.9 ? Math.min(1, (elapsed - 0.9) / 0.3) : 0;
+        const bracketBase = 140 - tightenT * 10;
+        const bracketOff = bracketBase + (1 - bracketE) * 200;
+        const bLen = 24;
+
+        ctx.save();
+        ctx.globalAlpha = bracketE * 0.6;
+        ctx.strokeStyle = colors.danger;
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(cx - bracketOff, cy - bracketOff + bLen); ctx.lineTo(cx - bracketOff, cy - bracketOff); ctx.lineTo(cx - bracketOff + bLen, cy - bracketOff); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx + bracketOff - bLen, cy - bracketOff); ctx.lineTo(cx + bracketOff, cy - bracketOff); ctx.lineTo(cx + bracketOff, cy - bracketOff + bLen); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx - bracketOff, cy + bracketOff - bLen); ctx.lineTo(cx - bracketOff, cy + bracketOff); ctx.lineTo(cx - bracketOff + bLen, cy + bracketOff); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx + bracketOff - bLen, cy + bracketOff); ctx.lineTo(cx + bracketOff, cy + bracketOff); ctx.lineTo(cx + bracketOff, cy + bracketOff - bLen); ctx.stroke();
+        ctx.restore();
+
+        // Dashed crosshairs
+        if (bracketT > 0.3) {
+          ctx.save();
+          ctx.globalAlpha = Math.min(1, (bracketT - 0.3) / 0.5) * 0.1;
+          ctx.strokeStyle = colors.danger;
+          ctx.lineWidth = 0.5;
+          ctx.setLineDash([4, 8]);
+          ctx.beginPath(); ctx.moveTo(cx - 300, cy); ctx.lineTo(cx + 300, cy); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(cx, cy - 200); ctx.lineTo(cx, cy + 200); ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.restore();
+        }
+
+        // Digit cascade 9→0
+        const casStart = 0.25, casEnd = 0.85;
+        if (elapsed >= casStart && elapsed < casEnd) {
+          const casT = (elapsed - casStart) / (casEnd - casStart);
+          const digit = Math.max(0, 9 - Math.floor(casT * 10));
+          const dSize = 100 + casT * 50;
+          const aberr = 2 + casT * 6;
+
+          ctx.save(); ctx.font = `900 ${dSize}px "JetBrains Mono"`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.globalAlpha = 0.25 + casT * 0.15; ctx.fillStyle = 'rgba(255, 60, 60, 0.7)'; ctx.fillText(String(digit), cx - aberr, cy); ctx.restore();
+          ctx.save(); ctx.font = `900 ${dSize}px "JetBrains Mono"`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.globalAlpha = 0.25 + casT * 0.15; ctx.fillStyle = 'rgba(60, 60, 255, 0.7)'; ctx.fillText(String(digit), cx + aberr, cy); ctx.restore();
+          ctx.save(); ctx.font = `900 ${dSize}px "JetBrains Mono"`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.fillStyle = `rgba(${cr},${cg},${cb},${0.4 + casT * 0.3})`; ctx.shadowBlur = 15; ctx.shadowColor = colors.danger;
+          ctx.fillText(String(digit), cx, cy); ctx.shadowBlur = 0; ctx.restore();
+
+          const glitchPhase = (casT * 10) % 1;
+          if (glitchPhase < 0.2) {
+            ctx.save(); ctx.globalAlpha = 0.15; ctx.fillStyle = colors.danger;
+            ctx.fillRect(cx - 100, cy - 25 + Math.sin(now * 0.3 + digit * 7) * 25, 200, 1.5);
+            ctx.fillRect(cx - 70, cy - 15 + Math.sin(now * 0.5 + digit * 3) * 20, 140, 1);
+            ctx.restore();
+          }
+        }
+
+        // Final "0" impact
+        if (elapsed >= casEnd) {
+          const impactT = Math.min(1, (elapsed - casEnd) / 0.4);
+          const impactE = easeOutBack(impactT);
+          const zeroSize = 180 * impactE;
+          const zeroPulse = elapsed > 1.5 ? 1 + Math.sin(now / 400) * 0.02 : 1;
+
+          if (impactT < 0.8) {
+            const ringT = impactT / 0.8;
+            ctx.save(); ctx.globalAlpha = (1 - ringT) * 0.3; ctx.strokeStyle = colors.danger; ctx.lineWidth = 2 * (1 - ringT);
+            ctx.beginPath(); ctx.arc(cx, cy, zeroSize * 0.4 + ringT * 160, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
+          }
+
+          for (let ring = 3; ring >= 1; ring--) {
+            const rPulse = 1 + Math.sin(now / 1000 + ring) * 0.02;
+            ctx.beginPath(); ctx.arc(cx, cy, zeroSize * 0.5 * rPulse + ring * 25, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(${cr},${cg},${cb},${0.04 * ring * impactE})`; ctx.lineWidth = 1; ctx.stroke();
+          }
+
+          ctx.save(); ctx.font = `900 ${zeroSize * zeroPulse}px "JetBrains Mono"`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.fillStyle = colors.danger; ctx.shadowBlur = 40; ctx.shadowColor = colors.danger;
+          ctx.fillText('0', cx, cy); ctx.shadowBlur = 0; ctx.restore();
+        }
+
+        // Screen flash
+        if (elapsed >= 0.85 && elapsed < 1.05) {
+          const flashT = (elapsed - 0.85) / 0.2;
+          ctx.save(); ctx.globalAlpha = (1 - flashT) * 0.12; ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, width, height); ctx.restore();
+        }
+
+        // "ZERO DOWNTIME" text
+        if (elapsed > 1.3) {
+          const textT = Math.min(1, (elapsed - 1.3) / 0.5);
+          const textE = 1 - Math.pow(1 - textT, 3);
+          ctx.save(); ctx.globalAlpha = textE;
+          ctx.font = '600 28px "JetBrains Mono"'; ctx.textAlign = 'center'; ctx.fillStyle = colors.danger;
+          ctx.fillText('ZERO DOWNTIME', cx, cy + 120);
+          ctx.font = '20px "Inter"'; ctx.fillStyle = colors.textMuted;
+          ctx.fillText('This machine has never been shut down.', cx, cy + 155);
+          ctx.restore();
+        }
       }
 
       // ── CRT vignette — dark edges, always on ──

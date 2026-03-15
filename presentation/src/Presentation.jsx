@@ -7,7 +7,7 @@ import DuckCurveChart from './components/DuckCurveChart';
 import AnimatedStat from './components/AnimatedStat';
 import StaticTexasGrid from './components/StaticTexasGrid';
 import TexasMapHUD from './components/TexasMapHUD';
-import { versionA, versionB, versionD } from './slides/GridScaleSlides';
+import { versionA, versionD } from './slides/GridScaleSlides';
 import EUGridHUD from './components/EUGridHUD';
 import DemandResponseDemo from './components/DemandResponseDemo';
 import VPPArchitecture from './components/VPPArchitecture';
@@ -240,8 +240,6 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 12: Grid Scale — Version B — DEPRECATED */}
-      {versionB()}
 
       {/* 13: Why Texas Failed */}
       <Slide backgroundColor={bg} padding={pad}>
@@ -380,29 +378,6 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 21: Energy Being Thrown Away — DEPRECATED */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col h-full" style={{ position: 'relative' }}>
-          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, pointerEvents: 'none' }}>
-            <span style={{ fontSize: '300px', fontWeight: 900, color: 'rgba(239, 68, 68, 0.3)', fontFamily: '"JetBrains Mono"' }}>&#x2715;</span>
-          </div>
-          <H color={colors.accent}>Energy Being Thrown Away</H>
-          <P>When supply exceeds demand, prices go <span className="font-semibold" style={{ color: colors.accent }}>negative</span>. Clean energy gets curtailed — paid to <em>not</em> produce.</P>
-          <div className="flex-1 flex flex-col justify-center gap-5">
-            <div className="flex gap-4 w-full">
-              <StatBox n="9.3 TWh" l="Curtailed in Germany (2024)" c={colors.danger} />
-              <StatBox n="+97%" l="Solar curtailment YoY" c={colors.accent} />
-              <StatBox n="475" l="Negative price hours (2024)" c={colors.accent} />
-            </div>
-            <div className="flex gap-4 w-full">
-              <StatBox n="3.4 TWh" l="Curtailed in California (2024)" c={colors.textMuted} />
-              <StatBox n="€3.1B" l="Annual German redispatch cost" c={colors.danger} />
-              <StatBox n="€4.2B" l="EU-wide grid congestion (2023)" c={colors.accent} />
-            </div>
-          </div>
-          <P size="20px" color={colors.textDim}>Sources: Bundesnetzagentur, Fraunhofer ISE, ACER, CAISO</P>
-        </div>
-      </Slide>
 
       {/* 23: Curtailment */}
       <Slide backgroundColor={bg} padding={pad}>
@@ -597,7 +572,9 @@ export default function Presentation() {
 
       {/* 29b: VPP Composite Playground */}
       <Slide backgroundColor={bg} padding="20px">
-        <VPPComposite />
+        <div className="w-full h-full">
+          <VPPComposite />
+        </div>
       </Slide>
 
       {/* 30: VPP Architecture Flow */}

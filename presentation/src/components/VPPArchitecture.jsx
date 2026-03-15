@@ -48,7 +48,7 @@ function getNode(id) {
   return NODES.find(n => n.id === id) || HOMES.find(h => h.id === id);
 }
 
-export default function VPPArchitecture({ width = 960, height = 440 }) {
+export default function VPPArchitecture({ width = 960, height = 440, compact = false }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const slideContext = useContext(SlideContext);
@@ -60,8 +60,8 @@ export default function VPPArchitecture({ width = 960, height = 440 }) {
     canvas.height = height * 2;
     ctx.scale(2, 2);
 
-    const nodeW = 110, nodeH = 64;
-    const homeW = 60, homeH = 46;
+    const nodeW = compact ? 70 : 110, nodeH = compact ? 36 : 64;
+    const homeW = compact ? 36 : 60, homeH = compact ? 28 : 46;
 
     // Particles flowing along edges — per-edge spawn timers
     const particles = [];
@@ -210,15 +210,15 @@ export default function VPPArchitecture({ width = 960, height = 440 }) {
         const pulse = 0.5 + 0.5 * Math.sin(now * 2 + node.x * 10);
         ctx.fillStyle = colors.surface + 'ee';
         ctx.strokeStyle = node.color + Math.round(40 + pulse * 30).toString(16).padStart(2, '0');
-        ctx.lineWidth = 1.5;
-        const r = 8;
+        ctx.lineWidth = compact ? 1 : 1.5;
+        const r = compact ? 5 : 8;
         ctx.beginPath();
         ctx.roundRect(nx, ny, nodeW, nodeH, r);
         ctx.fill();
         ctx.stroke();
 
         // Subtle glow
-        ctx.shadowBlur = 12 * pulse;
+        ctx.shadowBlur = (compact ? 6 : 12) * pulse;
         ctx.shadowColor = node.color + '40';
         ctx.beginPath();
         ctx.roundRect(nx, ny, nodeW, nodeH, r);
@@ -226,20 +226,28 @@ export default function VPPArchitecture({ width = 960, height = 440 }) {
         ctx.shadowBlur = 0;
 
         // Icon
-        ctx.font = '18px sans-serif';
+        ctx.font = compact ? '11px sans-serif' : '18px sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText(node.icon, nx + nodeW / 2, ny + 22);
+        ctx.fillText(node.icon, nx + nodeW / 2, ny + (compact ? 15 : 22));
 
-        // Label
-        ctx.font = 'bold 11px JetBrains Mono';
-        ctx.fillStyle = node.color;
-        ctx.textAlign = 'center';
-        ctx.fillText(node.label, nx + nodeW / 2, ny + 40);
+        if (!compact) {
+          // Label
+          ctx.font = 'bold 11px JetBrains Mono';
+          ctx.fillStyle = node.color;
+          ctx.textAlign = 'center';
+          ctx.fillText(node.label, nx + nodeW / 2, ny + 40);
 
-        // Sub-label
-        ctx.font = '9px JetBrains Mono';
-        ctx.fillStyle = colors.textDim + 'aa';
-        ctx.fillText(node.sub, nx + nodeW / 2, ny + 54);
+          // Sub-label
+          ctx.font = '9px JetBrains Mono';
+          ctx.fillStyle = colors.textDim + 'aa';
+          ctx.fillText(node.sub, nx + nodeW / 2, ny + 54);
+        } else {
+          // Compact: just short label
+          ctx.font = 'bold 7px JetBrains Mono';
+          ctx.fillStyle = node.color;
+          ctx.textAlign = 'center';
+          ctx.fillText(node.sub, nx + nodeW / 2, ny + 28);
+        }
       });
 
       // Draw homes
@@ -250,31 +258,35 @@ export default function VPPArchitecture({ width = 960, height = 440 }) {
         const pulse = 0.5 + 0.5 * Math.sin(now * 2.5 + i * 2);
         ctx.fillStyle = colors.surface + 'ee';
         ctx.strokeStyle = colors.success + Math.round(40 + pulse * 30).toString(16).padStart(2, '0');
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = compact ? 1 : 1.5;
         ctx.beginPath();
-        ctx.roundRect(hx, hy, homeW, homeH, 6);
+        ctx.roundRect(hx, hy, homeW, homeH, compact ? 4 : 6);
         ctx.fill();
         ctx.stroke();
 
         // House icon
-        ctx.font = '16px sans-serif';
+        ctx.font = compact ? '10px sans-serif' : '16px sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText('🏠', hx + homeW / 2, hy + 22);
+        ctx.fillText('🏠', hx + homeW / 2, hy + (compact ? 16 : 22));
 
-        // Label
-        ctx.font = '9px JetBrains Mono';
-        ctx.fillStyle = colors.success;
-        ctx.fillText(`Home ${i + 1}`, hx + homeW / 2, hy + 38);
+        if (!compact) {
+          // Label
+          ctx.font = '9px JetBrains Mono';
+          ctx.fillStyle = colors.success;
+          ctx.fillText(`Home ${i + 1}`, hx + homeW / 2, hy + 38);
+        }
       });
 
       // Flow direction labels at top
-      ctx.font = '10px JetBrains Mono';
-      ctx.fillStyle = colors.accent + '60';
-      ctx.textAlign = 'left';
-      ctx.fillText('COMMANDS →', 10, 16);
-      ctx.fillStyle = colors.success + '60';
-      ctx.textAlign = 'right';
-      ctx.fillText('← TELEMETRY', width - 10, 16);
+      if (!compact) {
+        ctx.font = '10px JetBrains Mono';
+        ctx.fillStyle = colors.accent + '60';
+        ctx.textAlign = 'left';
+        ctx.fillText('COMMANDS →', 10, 16);
+        ctx.fillStyle = colors.success + '60';
+        ctx.textAlign = 'right';
+        ctx.fillText('← TELEMETRY', width - 10, 16);
+      }
 
       if (isActive) animRef.current = requestAnimationFrame(draw);
     }
