@@ -151,6 +151,8 @@ export default function FrequencyDemo({ width = 900, height = 480 }) {
   const bannerRef = useRef({ level: 'none', clearedAt: null });
   // Latched line/readout color with 2s holdoff
   const lineColorRef = useRef({ color: colors.primary, clearedAt: null });
+  // Rolling 5s window for frequency delta display
+  const freqWindowRef = useRef([]);
 
   // Restart animation when slide becomes active
   const slideContext = useContext(SlideContext);
@@ -236,6 +238,18 @@ export default function FrequencyDemo({ width = 900, height = 480 }) {
 
       history.push(freq);
       if (history.length > historyLen) history.shift();
+
+      // Track 5s rolling window for delta display
+      const nowMs = performance.now();
+      freqWindowRef.current.push({ t: nowMs, f: freq });
+      const cutoff = nowMs - 5000;
+      while (freqWindowRef.current.length > 0 && freqWindowRef.current[0].t < cutoff) {
+        freqWindowRef.current.shift();
+      }
+      const windowVals = freqWindowRef.current.map(e => e.f);
+      const freqMax = Math.max(...windowVals);
+      const freqMin = Math.min(...windowVals);
+      const freqDelta = (freqMax - freqMin) / 2;
 
       // Smoothed frequency for all latched/hysteresis logic
       const sf = currentFreqRef.current;
@@ -549,6 +563,13 @@ export default function FrequencyDemo({ width = 900, height = 480 }) {
         ctx.fillText(`${freq.toFixed(3)} Hz`, width - 16, 40);
       }
       ctx.shadowBlur = 0;
+
+      // Delta indicator — max deviation over last 5s
+      const deltaColor = freqDelta > 0.5 ? colors.danger : freqDelta > 0.1 ? colors.accent : colors.textDim;
+      ctx.font = '16px JetBrains Mono';
+      ctx.textAlign = 'right';
+      ctx.fillStyle = deltaColor;
+      ctx.fillText(`\u0394 \u00b1${freqDelta.toFixed(3)} Hz`, width - 16, 62);
 
       // Status — latched with 2s holdoff before returning to a calmer state
       const statusZones = [

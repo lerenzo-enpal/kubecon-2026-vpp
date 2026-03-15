@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { SlideContext } from 'spectacle';
+import { SlideContext, useSteps } from 'spectacle';
 import { DeckGL } from '@deck.gl/react';
 import { FlyToInterpolator } from '@deck.gl/core';
 import { ScatterplotLayer, LineLayer, TextLayer } from '@deck.gl/layers';
@@ -132,12 +132,23 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
   // Derived — keeps all existing JSX refs working
   const running = mode !== 'idle';
 
+  // Spectacle step integration — arrow keys advance cascade
+  const { step: rawStep, placeholder } = useSteps(CASCADE.length);
+  const spectacleStep = rawStep + 1; // 0 = idle, 1..CASCADE.length = cascade steps
+  const prevSpectacleStep = useRef(0);
+
   const slideContext = useContext(SlideContext);
+  const slideActive = slideContext?.isSlideActive;
+  const wasActiveRef = useRef(false);
+
   useEffect(() => {
-    if (slideContext?.isSlideActive) {
+    if (slideActive) {
+      // Always reset when slide becomes active (entering from any direction)
       setFailed(new Set()); setMode('idle'); setElapsed(0); setActiveStep(-1);
       setStepIndex(-1); setViewState(VIEWS[variant] || VIEWS.hud);
       setBoot(0);
+      prevSpectacleStep.current = spectacleStep; // sync to current step to suppress stale triggers
+      wasActiveRef.current = true;
       const delay = setTimeout(() => {
         const start = performance.now();
         const tick = () => {
@@ -148,8 +159,51 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
         bootRef.current = requestAnimationFrame(tick);
       }, 700);
       return () => { clearTimeout(delay); cancelAnimationFrame(bootRef.current); };
+    } else {
+      wasActiveRef.current = false;
     }
-  }, [slideContext?.isSlideActive]);
+  }, [slideActive]);
+
+  // Sync Spectacle steps with cascade
+  // Forward: each arrow press triggers one cascade step
+  // Backward: reset to idle immediately (skip all intermediate steps)
+  // Skip if slide just became active (the reset effect handles that)
+  useEffect(() => {
+    if (!wasActiveRef.current) return; // not active yet, ignore
+    if (spectacleStep === prevSpectacleStep.current) return; // no change
+
+    if (spectacleStep < prevSpectacleStep.current) {
+      // Going back — reset to idle
+      setFailed(new Set()); setMode('idle'); setElapsed(0);
+      setActiveStep(-1); setStepIndex(-1);
+      setViewState({
+        ...defaultView,
+        transitionDuration: 500,
+        transitionInterpolator: new FlyToInterpolator(),
+        transitionEasing: t => 1 - Math.pow(1 - t, 3),
+      });
+    } else if (spectacleStep >= 1) {
+      const targetIdx = spectacleStep - 1;
+      if (targetIdx < CASCADE.length) {
+        setMode('stepping');
+        setStepIndex(targetIdx);
+        const nf = new Set();
+        for (let i = 0; i <= targetIdx; i++) CASCADE[i].ids.forEach(id => nf.add(id));
+        nf.delete('comanche');
+        setFailed(nf);
+        setActiveStep(targetIdx);
+        setElapsed(CASCADE[targetIdx].time + 1);
+        const target = getStepView(targetIdx, defaultView);
+        setViewState({
+          ...target,
+          transitionDuration: 800,
+          transitionInterpolator: new FlyToInterpolator(),
+          transitionEasing: t => 1 - Math.pow(1 - t, 3),
+        });
+      }
+    }
+    prevSpectacleStep.current = spectacleStep;
+  }, [spectacleStep]);
 
   // Auto-play loop — only runs in 'playing' mode
   useEffect(() => {
@@ -340,6 +394,7 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
 
   return (
     <div style={{ position: 'relative', width, height, overflow: 'hidden', background: '#020408' }}>
+      {placeholder}
       {/* ── Map ── */}
       <DeckGL
         viewState={viewState}
@@ -624,7 +679,7 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
 
           {/* ── Legend (bottom, offset from left panel) ── */}
           <div style={{
-            position: 'absolute', bottom: 16, left: 406, zIndex: 10,
+            position: 'absolute', bottom: 10, left: 10, zIndex: 10,
             display: 'flex', gap: 18,
             opacity: legendFade,
           }}>

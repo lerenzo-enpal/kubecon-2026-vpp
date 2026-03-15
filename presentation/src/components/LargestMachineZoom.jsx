@@ -95,37 +95,89 @@ function drawPerson(ctx, x, y, size, color, alpha) {
   ctx.restore();
 }
 
-// ── Minimalist factory: thin-line silhouette ──
+// ── VW Wolfsburg factory silhouette ──
+// The iconic feature is four tall smokestacks from the power plant,
+// a long low factory building, and an admin high-rise tower.
 function drawFactory(ctx, x, y, w, h, alpha, labelAlpha = 1) {
   ctx.save();
   ctx.globalAlpha = alpha;
   ctx.strokeStyle = colors.accent;
-  ctx.lineWidth = 1.5;
+  ctx.fillStyle = colors.accent;
+  ctx.lineWidth = Math.max(1, w * 0.006);
+
+  const baseY = y + h; // ground line
+
+  // Main factory building — long, low industrial block
   ctx.beginPath();
-  ctx.moveTo(x, y + h);
-  ctx.lineTo(x, y);
-  const teeth = 5, tw = w / teeth;
+  ctx.moveTo(x, baseY);
+  ctx.lineTo(x, y + h * 0.3);
+  ctx.lineTo(x + w * 0.7, y + h * 0.3);
+  ctx.lineTo(x + w * 0.7, baseY);
+  ctx.stroke();
+
+  // Roof segments on factory — subtle sawtooth
+  const roofY = y + h * 0.3;
+  const teeth = 6, tw = (w * 0.7) / teeth;
+  ctx.beginPath();
   for (let i = 0; i < teeth; i++) {
-    ctx.lineTo(x + i * tw + tw * 0.5, y - h * 0.25);
-    ctx.lineTo(x + (i + 1) * tw, y);
+    ctx.moveTo(x + i * tw, roofY);
+    ctx.lineTo(x + i * tw + tw * 0.5, roofY - h * 0.12);
+    ctx.lineTo(x + (i + 1) * tw, roofY);
   }
-  ctx.lineTo(x + w, y + h);
   ctx.stroke();
-  // Chimney
+
+  // Admin tower / high-rise — right of factory
   ctx.beginPath();
-  ctx.moveTo(x + w * 0.8, y);
-  ctx.lineTo(x + w * 0.8, y - h * 0.45);
+  ctx.moveTo(x + w * 0.72, baseY);
+  ctx.lineTo(x + w * 0.72, y + h * 0.05);
+  ctx.lineTo(x + w * 0.82, y + h * 0.05);
+  ctx.lineTo(x + w * 0.82, baseY);
   ctx.stroke();
+  // Tower windows — horizontal lines
+  const towerTop = y + h * 0.05;
+  const towerBot = baseY;
+  const windowGap = (towerBot - towerTop) / 8;
+  ctx.globalAlpha = alpha * 0.3;
+  for (let wi = 1; wi < 8; wi++) {
+    const wy = towerTop + wi * windowGap;
+    ctx.beginPath();
+    ctx.moveTo(x + w * 0.74, wy);
+    ctx.lineTo(x + w * 0.80, wy);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = alpha;
+
+  // Four smokestacks — the iconic feature, left side of power plant
+  const stackPositions = [0.08, 0.18, 0.28, 0.38];
+  const stackW = w * 0.025;
+  const stackH = h * 1.1; // taller than the building
+  stackPositions.forEach(pos => {
+    const sx = x + w * pos - stackW / 2;
+    const sy = y - stackH * 0.15;
+    // Stack body
+    ctx.beginPath();
+    ctx.moveTo(sx, baseY);
+    ctx.lineTo(sx, sy);
+    ctx.lineTo(sx + stackW, sy);
+    ctx.lineTo(sx + stackW, baseY);
+    ctx.stroke();
+    // Stack top cap — slight flare
+    ctx.beginPath();
+    ctx.moveTo(sx - stackW * 0.3, sy);
+    ctx.lineTo(sx + stackW + stackW * 0.3, sy);
+    ctx.stroke();
+  });
+
   // Labels (fade with labelAlpha)
   if (labelAlpha > 0.01) {
     ctx.globalAlpha = alpha * labelAlpha;
     ctx.fillStyle = colors.accent;
     ctx.font = `600 ${Math.max(10, w * 0.05)}px "JetBrains Mono"`;
     ctx.textAlign = 'center';
-    ctx.fillText('VW WOLFSBURG', x + w / 2, y + h + Math.max(14, w * 0.05));
+    ctx.fillText('VW WOLFSBURG', x + w / 2, baseY + Math.max(14, w * 0.05));
     ctx.font = `${Math.max(8, w * 0.035)}px "JetBrains Mono"`;
     ctx.fillStyle = colors.textDim;
-    ctx.fillText('60,000 workers  \u00b7  6.5 km\u00b2', x + w / 2, y + h + Math.max(28, w * 0.09));
+    ctx.fillText('60,000 workers  \u00b7  6.5 km\u00b2', x + w / 2, baseY + Math.max(28, w * 0.09));
   }
   ctx.restore();
 }
