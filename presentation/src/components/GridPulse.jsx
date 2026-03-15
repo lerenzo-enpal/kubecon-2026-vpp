@@ -42,6 +42,7 @@ export default function GridPulse({ width = 800, height = 400 }) {
     }
 
     const draw = () => {
+      const isActive = slideContext?.isSlideActive;
       const now = performance.now();
       ctx.clearRect(0, 0, width, height);
 
@@ -126,7 +127,7 @@ export default function GridPulse({ width = 800, height = 400 }) {
       ctx.fillStyle = colors.textDim;
       ctx.fillText('ALL NODES SYNCHRONIZED', cx, cy + 32);
 
-      animRef.current = requestAnimationFrame(draw);
+      if (isActive) animRef.current = requestAnimationFrame(draw);
     };
 
     draw();

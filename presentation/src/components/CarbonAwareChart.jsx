@@ -23,10 +23,6 @@ export default function CarbonAwareChart({ width = 880, height = 380 }) {
 
   const slideContext = useContext(SlideContext);
   useEffect(() => {
-    if (slideContext?.isSlideActive) tRef.current = 0;
-  }, [slideContext?.isSlideActive]);
-
-  useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     canvas.width = width * 2;
@@ -37,9 +33,13 @@ export default function CarbonAwareChart({ width = 880, height = 380 }) {
     const chartW = width - pad.left - pad.right;
     const chartH = height - pad.top - pad.bottom;
 
+    // Reset animation for replay when slide becomes active
+    if (slideContext?.isSlideActive) tRef.current = 0;
+
     const draw = () => {
-      tRef.current += 0.016;
-      const t = tRef.current;
+      const isActive = slideContext?.isSlideActive;
+      if (isActive) tRef.current += 0.016;
+      const t = isActive ? tRef.current : 3; // show completed chart when inactive
       const animProgress = Math.min(1, t / 3); // 3 sec to fully animate
       const ease = 1 - Math.pow(1 - animProgress, 3);
 
@@ -219,12 +219,12 @@ export default function CarbonAwareChart({ width = 880, height = 380 }) {
         ctx.fillText(item.label, lx + 16, legendY + 4);
       });
 
-      animRef.current = requestAnimationFrame(draw);
+      if (isActive) animRef.current = requestAnimationFrame(draw);
     };
 
     draw();
     return () => cancelAnimationFrame(animRef.current);
-  }, [width, height]);
+  }, [width, height, slideContext?.isSlideActive]);
 
   return (
     <canvas

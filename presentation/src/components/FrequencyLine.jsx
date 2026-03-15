@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
+import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
 
 export default function FrequencyLine({
@@ -11,6 +12,7 @@ export default function FrequencyLine({
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const tRef = useRef(0);
+  const slideContext = useContext(SlideContext);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -20,7 +22,8 @@ export default function FrequencyLine({
     ctx.scale(2, 2);
 
     const draw = () => {
-      tRef.current += 0.02;
+      const isActive = slideContext?.isSlideActive;
+      if (isActive) tRef.current += 0.02;
       const t = tRef.current;
 
       ctx.fillStyle = colors.bg;
@@ -118,12 +121,12 @@ export default function FrequencyLine({
       ctx.fillText(`${currentFreq.toFixed(3)} Hz`, width - 20, 35);
       ctx.textAlign = 'left';
 
-      animRef.current = requestAnimationFrame(draw);
+      if (isActive) animRef.current = requestAnimationFrame(draw);
     };
 
     draw();
     return () => cancelAnimationFrame(animRef.current);
-  }, [width, height, baseFreq, collapse, vppSave]);
+  }, [width, height, baseFreq, collapse, vppSave, slideContext?.isSlideActive]);
 
   return (
     <canvas

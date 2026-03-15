@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
+import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
 
 // Simplified 24-hour profiles (GW, loosely based on California/Germany patterns)
@@ -51,6 +52,7 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const tRef = useRef(0);
+  const slideContext = useContext(SlideContext);
   const [mode, setMode] = useState('without'); // 'without' | 'with'
   const blendRef = useRef(0); // 0 = without, 1 = with VPP
   const targetBlendRef = useRef(0);
@@ -76,11 +78,12 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
     const yScale = chartH / 60; // 0 to 60 GW
 
     const draw = () => {
-      tRef.current += 0.02;
+      const isActive = slideContext?.isSlideActive;
+      if (isActive) {
+        tRef.current += 0.02;
+        blendRef.current += (targetBlendRef.current - blendRef.current) * 0.04;
+      }
       const t = tRef.current;
-
-      // Animate blend
-      blendRef.current += (targetBlendRef.current - blendRef.current) * 0.04;
       const blend = blendRef.current;
 
       ctx.fillStyle = '#060a12';
@@ -279,12 +282,12 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
         ctx.fillText(item.label, lx + 16, legendY + 4);
       });
 
-      animRef.current = requestAnimationFrame(draw);
+      if (isActive) animRef.current = requestAnimationFrame(draw);
     };
 
     draw();
     return () => cancelAnimationFrame(animRef.current);
-  }, [width, height]);
+  }, [width, height, slideContext?.isSlideActive]);
 
   return (
     <div style={{ position: 'relative' }}>

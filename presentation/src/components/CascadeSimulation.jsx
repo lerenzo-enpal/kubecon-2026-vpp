@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
+import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
 
 const NODES = [
@@ -34,6 +35,7 @@ const typeColors = {
 export default function CascadeSimulation({ width = 740, height = 540, withVPP = false }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
+  const slideContext = useContext(SlideContext);
   const [phase, setPhase] = useState('stable'); // stable, trigger, cascade, (recover if VPP)
   const [freq, setFreq] = useState(50.0);
   const phaseRef = useRef('stable');
@@ -66,6 +68,7 @@ export default function CascadeSimulation({ width = 740, height = 540, withVPP =
     ctx.scale(2, 2);
 
     const draw = () => {
+      const isActive = slideContext?.isSlideActive;
       const now = performance.now();
       const elapsed = startTimeRef.current ? (now - startTimeRef.current) / 1000 : 0;
       ctx.clearRect(0, 0, width, height);
@@ -86,31 +89,33 @@ export default function CascadeSimulation({ width = 740, height = 540, withVPP =
       ctx.lineTo(280, 40);
       ctx.stroke();
 
-      // Cascade logic
-      if (phaseRef.current === 'trigger' && elapsed > 1) {
-        phaseRef.current = 'cascade';
-        setPhase('cascade');
-      }
+      // Cascade logic (only advance when active)
+      if (isActive) {
+        if (phaseRef.current === 'trigger' && elapsed > 1) {
+          phaseRef.current = 'cascade';
+          setPhase('cascade');
+        }
 
-      if (phaseRef.current === 'cascade') {
-        const cascadeOrder = ['fra', 'han', 'lei', 'stu', 'nur', 'dre', 'mun', 'ber', 'ham'];
-        const cascadeDelay = withVPP ? 4 : 1.2;
+        if (phaseRef.current === 'cascade') {
+          const cascadeOrder = ['fra', 'han', 'lei', 'stu', 'nur', 'dre', 'mun', 'ber', 'ham'];
+          const cascadeDelay = withVPP ? 4 : 1.2;
 
-        cascadeOrder.forEach((nodeId, i) => {
-          const triggerTime = 1 + (i + 1) * cascadeDelay;
-          if (!withVPP && elapsed > triggerTime && !failedRef.current.has(nodeId)) {
-            failedRef.current.add(nodeId);
+          cascadeOrder.forEach((nodeId, i) => {
+            const triggerTime = 1 + (i + 1) * cascadeDelay;
+            if (!withVPP && elapsed > triggerTime && !failedRef.current.has(nodeId)) {
+              failedRef.current.add(nodeId);
+            }
+            // Overload before failure
+            if (elapsed > triggerTime - cascadeDelay * 0.7) {
+              overloadRef.current[nodeId] = Math.min(1, (elapsed - (triggerTime - cascadeDelay * 0.7)) / (cascadeDelay * 0.5));
+            }
+          });
+
+          // With VPP: stabilize after initial impact
+          if (withVPP && elapsed > 3) {
+            phaseRef.current = 'recover';
+            setPhase('recover');
           }
-          // Overload before failure
-          if (elapsed > triggerTime - cascadeDelay * 0.7) {
-            overloadRef.current[nodeId] = Math.min(1, (elapsed - (triggerTime - cascadeDelay * 0.7)) / (cascadeDelay * 0.5));
-          }
-        });
-
-        // With VPP: stabilize after initial impact
-        if (withVPP && elapsed > 3) {
-          phaseRef.current = 'recover';
-          setPhase('recover');
         }
       }
 
@@ -129,7 +134,7 @@ export default function CascadeSimulation({ width = 740, height = 540, withVPP =
         }
       }
       currentFreq += Math.sin(now / 300) * 0.01;
-      setFreq(currentFreq);
+      if (isActive) setFreq(currentFreq);
 
       // Draw transmission lines
       LINES.forEach(([a, b]) => {
@@ -311,12 +316,12 @@ export default function CascadeSimulation({ width = 740, height = 540, withVPP =
         ctx.fillText(item.label, lx + 8, legendY + 4);
       });
 
-      animRef.current = requestAnimationFrame(draw);
+      if (isActive) animRef.current = requestAnimationFrame(draw);
     };
 
     draw();
     return () => cancelAnimationFrame(animRef.current);
-  }, [width, height, withVPP]);
+  }, [width, height, withVPP, slideContext?.isSlideActive]);
 
   return (
     <div style={{ position: 'relative' }}>

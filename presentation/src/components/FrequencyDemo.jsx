@@ -105,9 +105,12 @@ export default function FrequencyDemo({ width = 900, height = 400 }) {
     const history = new Array(historyLen).fill(50.0);
 
     const draw = () => {
-      tRef.current += 0.03;
+      const isActive = slideContext?.isSlideActive;
+      if (isActive) {
+        tRef.current += 0.03;
+        warningFlashRef.current += 0.05;
+      }
       const t = tRef.current;
-      warningFlashRef.current += 0.05;
 
       // Smooth interpolation toward target
       const target = targetFreqRef.current;
@@ -237,7 +240,7 @@ export default function FrequencyDemo({ width = 900, height = 400 }) {
           ctx.fillText('[ click STABLE to restore grid ]', width / 2, height - 14);
         }
 
-        animRef.current = requestAnimationFrame(draw);
+        if (isActive) animRef.current = requestAnimationFrame(draw);
         return;
       }
 
@@ -294,7 +297,7 @@ export default function FrequencyDemo({ width = 900, height = 400 }) {
           }
         }
 
-        animRef.current = requestAnimationFrame(draw);
+        if (isActive) animRef.current = requestAnimationFrame(draw);
         return;
       }
 
@@ -489,12 +492,12 @@ export default function FrequencyDemo({ width = 900, height = 400 }) {
         ctx.setTransform(2, 0, 0, 2, 0, 0); // reset shake
       }
 
-      animRef.current = requestAnimationFrame(draw);
+      if (isActive) animRef.current = requestAnimationFrame(draw);
     };
 
     draw();
     return () => cancelAnimationFrame(animRef.current);
-  }, [width, height]);
+  }, [width, height, slideContext?.isSlideActive]);
 
   return (
     <div style={{ position: 'relative' }}>

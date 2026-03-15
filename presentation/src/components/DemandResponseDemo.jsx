@@ -46,6 +46,7 @@ export default function DemandResponseDemo({ width = 920, height = 440 }) {
         devices.push({
           type: dt.type,
           color: dt.color,
+          rgb: hexToRgb(dt.color),
           active: false,
           activateDelay: 400 + Math.random() * 2200,
           brightness: 0.25 + Math.random() * 0.15,
@@ -79,6 +80,7 @@ export default function DemandResponseDemo({ width = 920, height = 440 }) {
     ctx.scale(2, 2);
 
     const draw = () => {
+      const isActive = slideContext?.isSlideActive;
       const now = performance.now();
       const s = stateRef.current;
       ctx.clearRect(0, 0, width, height);
@@ -202,7 +204,7 @@ export default function DemandResponseDemo({ width = 920, height = 440 }) {
 
         let alpha = d.brightness;
         let r = dotR;
-        const [cr, cg, cb] = hexToRgb(d.color);
+        const [cr, cg, cb] = d.rgb;
 
         if (s.phase === 'blackout') {
           alpha = 0.04;
@@ -259,7 +261,7 @@ export default function DemandResponseDemo({ width = 920, height = 440 }) {
         ctx.fillText('BLACKOUT', width - 24, legendY + 3);
       }
 
-      animRef.current = requestAnimationFrame(draw);
+      if (isActive) animRef.current = requestAnimationFrame(draw);
     };
 
     draw();
