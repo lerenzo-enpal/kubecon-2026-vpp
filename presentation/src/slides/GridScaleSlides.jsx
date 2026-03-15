@@ -237,11 +237,11 @@ export function versionD() {
           {/* Stat boxes at bottom — always visible */}
           <div className="flex gap-3 w-full">
             {[
-              { v: '36', u: 'countries', c: colors.primary, d: 'synced on one frequency' },
-              { v: '305K km', u: '', c: colors.primary, d: 'transmission lines' },
-              { v: '400M', u: '', c: colors.success, d: 'connected consumers' },
-              { v: '1,100 GW', u: '', c: colors.secondary, d: 'installed capacity' },
-              { v: '3,000 TWh', u: '', c: colors.accent, d: 'annual production' },
+              { v: '50', u: 'Hz', c: colors.primary, d: 'synchronized frequency' },
+              { v: '305,000', u: 'km', c: colors.primary, d: 'transmission lines' },
+              { v: '400,000,000', u: '', c: colors.success, d: 'connected consumers' },
+              { v: '1,100', u: 'GW', c: colors.secondary, d: 'installed capacity' },
+              { v: '3,000', u: 'TWh', c: colors.accent, d: 'annual production' },
             ].map((s, i) => (
               <div key={i} className="flex-1 min-w-0 rounded-lg px-4 py-4 text-center" style={{
                 background: `${colors.surface}cc`,

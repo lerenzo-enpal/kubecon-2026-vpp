@@ -8,7 +8,7 @@ const SCENARIOS = [
   {
     label: 'Generator Trip (800 MW)',
     color: 'accent',
-    timeScale: 30, // 1 real second = 30 grid seconds → ~25s real for full scenario
+    timeScale: 95, // 1 real second = 95 grid seconds → ~8s real for full scenario
     // Realistic: inertia → RoCoF → nadir at ~10s → primary arrest → secondary restore → nominal
     getFreq: (gt) => {
       if (gt < 2) return 50.0;                                             // system inertia absorbs initial shock
@@ -23,7 +23,7 @@ const SCENARIOS = [
   {
     label: '3 GW Loss of Generation',
     color: 'danger',
-    timeScale: 40, // 1 real second = 40 grid seconds → ~30s real for full scenario
+    timeScale: 150, // 1 real second = 150 grid seconds → ~8s real for full scenario
     // Severe: steep RoCoF, UFLS activates, load shedding stabilizes, slow full recovery
     getFreq: (gt) => {
       if (gt < 1) return 50.0;                                             // inertia
@@ -39,7 +39,7 @@ const SCENARIOS = [
   {
     label: 'Sudden Demand Drop (5 GW)',
     color: 'accent',
-    timeScale: 25, // 1 real second = 25 grid seconds → ~24s real
+    timeScale: 75, // 1 real second = 75 grid seconds → ~8s real
     // Over-frequency: too much supply, generators ramp down, AGC restores
     getFreq: (gt) => {
       if (gt < 1) return 50.0;                                             // inertia
@@ -54,7 +54,7 @@ const SCENARIOS = [
   {
     label: 'Cyber Attack',
     color: 'danger',
-    timeScale: 20, // 1 real second = 20 grid seconds
+    timeScale: 60, // 1 real second = 60 grid seconds
     // Coordinated SCADA compromise — cascading trips, no recovery
     getFreq: (gt) => {
       if (gt < 30) return 50.0;                                            // attacker in system, reconnaissance
@@ -129,11 +129,14 @@ const THRESHOLDS = [
 
 export default function FrequencyDemo({ width = 900, height = 480 }) {
   const canvasRef = useRef(null);
+  const hackerCanvasRef = useRef(null);
+  const hackerAnimRef = useRef(null);
   const animRef = useRef(null);
   const tRef = useRef(0);
   const targetFreqRef = useRef(50.0);
   const currentFreqRef = useRef(50.0);
   const [scenario, setScenario] = useState(-1); // -1 = stable/reset
+  const [hackerTakeover, setHackerTakeover] = useState(false);
   const scenarioStartRef = useRef(null);
   const warningFlashRef = useRef(0);
   const collapseTimeRef = useRef(null);
@@ -159,6 +162,7 @@ export default function FrequencyDemo({ width = 900, height = 480 }) {
       currentFreqRef.current = 50.0;
       collapseTimeRef.current = null;
       hackerPhaseRef.current = 0;
+      setHackerTakeover(false);
       glitchRef.current = { active: false, startTime: 0 };
       explosionParticlesRef.current = [];
       thresholdStateRef.current = THRESHOLDS.map(() => ({ crossed: false, uncrossedSince: null, highlight: 0 }));
@@ -174,6 +178,7 @@ export default function FrequencyDemo({ width = 900, height = 480 }) {
     if (idx < 3) {
       collapseTimeRef.current = null;
       hackerPhaseRef.current = 0;
+      setHackerTakeover(false);
       glitchRef.current = { active: false, startTime: 0 };
       explosionParticlesRef.current = [];
     }
@@ -290,6 +295,7 @@ export default function FrequencyDemo({ width = 900, height = 480 }) {
       if (collapseElapsed > 2 && hackerPhaseRef.current === 1) {
         hackerPhaseRef.current = 2; // glitch
         glitchRef.current = { active: true, startTime: t };
+        setHackerTakeover(true);
       }
       if (collapseElapsed > 4 && hackerPhaseRef.current === 2) {
         hackerPhaseRef.current = 3; // hacker
@@ -703,6 +709,159 @@ export default function FrequencyDemo({ width = 900, height = 480 }) {
     return () => cancelAnimationFrame(animRef.current);
   }, [width, height, slideContext?.isSlideActive, scenario]);
 
+  // Fullscreen hacker canvas animation
+  useEffect(() => {
+    if (!hackerTakeover) return;
+    const canvas = hackerCanvasRef.current;
+    if (!canvas) return;
+    const fw = window.innerWidth;
+    const fh = window.innerHeight;
+    canvas.width = fw * 2;
+    canvas.height = fh * 2;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(2, 2);
+    const startTime = performance.now() / 1000;
+
+    const drawHacker = () => {
+      const now = performance.now() / 1000;
+      const t = now - startTime;
+      const collapseElapsed = t;
+      const phase = hackerPhaseRef.current;
+
+      // GLITCH phase
+      if (phase === 2) {
+        ctx.fillStyle = '#060a12';
+        ctx.fillRect(0, 0, fw, fh);
+        const glitchIntensity = Math.min(1, t * 0.5);
+
+        for (let i = 0; i < 20 * glitchIntensity; i++) {
+          const blockH = 5 + Math.random() * 40;
+          const blockY = Math.random() * fh;
+          const shift = (Math.random() - 0.5) * 150 * glitchIntensity;
+          ctx.drawImage(canvas, 0, blockY * 2, fw * 2, blockH * 2, shift, blockY, fw, blockH);
+        }
+
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.fillStyle = `rgba(239, 68, 68, ${0.1 * glitchIntensity})`;
+        ctx.fillRect(Math.random() * 20 - 10, 0, fw, fh);
+        ctx.fillStyle = `rgba(34, 211, 238, ${0.1 * glitchIntensity})`;
+        ctx.fillRect(Math.random() * -20 + 10, 0, fw, fh);
+        ctx.globalCompositeOperation = 'source-over';
+
+        ctx.font = 'bold 42px JetBrains Mono';
+        ctx.textAlign = 'center';
+        const corruptTexts = ['SYSTEM FAILURE', 'ERR_GRID_DOWN', 'FATAL: frequency.c:47', 'segfault in power_balance()', '*** KERNEL PANIC ***'];
+        for (let i = 0; i < 5 + glitchIntensity * 8; i++) {
+          ctx.fillStyle = `rgba(239, 68, 68, ${0.3 + Math.random() * 0.5})`;
+          const txt = corruptTexts[Math.floor(Math.random() * corruptTexts.length)];
+          ctx.fillText(txt, fw / 2 + (Math.random() - 0.5) * fw * 0.6, Math.random() * fh);
+        }
+
+        const imageData = ctx.getImageData(0, 0, 20, 20);
+        for (let i = 0; i < imageData.data.length; i += 4) {
+          if (Math.random() < 0.3 * glitchIntensity) {
+            imageData.data[i] = 239; imageData.data[i + 1] = 68; imageData.data[i + 2] = 68;
+            imageData.data[i + 3] = Math.floor(Math.random() * 80);
+          }
+        }
+        for (let x = 0; x < fw * 2; x += 20) {
+          for (let y = 0; y < fh * 2; y += 20) {
+            if (Math.random() < 0.3 * glitchIntensity) ctx.putImageData(imageData, x, y);
+          }
+        }
+      }
+
+      // HACKER phase
+      if (phase === 3) {
+        ctx.fillStyle = '#020804';
+        ctx.fillRect(0, 0, fw, fh);
+
+        // Scanlines
+        for (let y = 0; y < fh; y += 3) {
+          ctx.fillStyle = `rgba(16, 185, 129, ${0.02 + Math.sin(y * 0.1 + now * 2) * 0.01})`;
+          ctx.fillRect(0, y, fw, 1);
+        }
+
+        const flicker = 0.92 + Math.random() * 0.08;
+        ctx.globalAlpha = flicker;
+
+        // ASCII art — scaled up and centered
+        const hackerFrame = HACKER_FRAMES[Math.floor(now * 2) % 2];
+        ctx.font = '20px JetBrains Mono';
+        ctx.textAlign = 'center';
+        const artStartY = fh * 0.12;
+        hackerFrame.forEach((line, i) => {
+          ctx.fillStyle = `rgba(16, 185, 129, ${0.7 + Math.sin(now * 3 + i * 0.5) * 0.3})`;
+          ctx.fillText(line, fw / 2, artStartY + i * 24);
+        });
+
+        // Taunt text
+        const hackerElapsed = collapseElapsed - 2; // offset for glitch phase
+        const tauntIdx = Math.floor(Math.max(0, hackerElapsed - 2) / 2) % TAUNT_LINES.length;
+        const tauntProgress = (Math.max(0, hackerElapsed - 2) % 2) / 2;
+        const currentTaunt = TAUNT_LINES[tauntIdx];
+        const visibleChars = Math.floor(tauntProgress * currentTaunt.length * 1.5);
+        const displayText = currentTaunt.substring(0, Math.min(visibleChars, currentTaunt.length));
+
+        ctx.font = 'bold 28px JetBrains Mono';
+        ctx.fillStyle = colors.success;
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = colors.success;
+        ctx.fillText('> ' + displayText + (Math.sin(now * 6) > 0 ? '█' : ''), fw / 2, artStartY + hackerFrame.length * 24 + 50);
+        ctx.shadowBlur = 0;
+
+        // Laughing text
+        if (hackerElapsed > 4) {
+          const laughT = hackerElapsed - 4;
+          const bounce = Math.abs(Math.sin(laughT * 4)) * 15;
+          ctx.font = `bold ${36 + Math.sin(laughT * 8) * 6}px JetBrains Mono`;
+          ctx.fillStyle = colors.success;
+          ctx.shadowBlur = 25;
+          ctx.shadowColor = colors.success;
+          ctx.textAlign = 'center';
+          const laughText = 'HA '.repeat(Math.min(Math.floor(laughT * 3) + 1, 8)).trim();
+          ctx.fillText(laughText, fw / 2 + Math.sin(laughT * 5) * 12, fh - 120 - bounce);
+          ctx.shadowBlur = 0;
+
+          ctx.font = '16px JetBrains Mono';
+          ctx.fillStyle = colors.success + '80';
+          ctx.fillText('[ grid_operator has left the chat ]', fw / 2, fh - 70);
+        }
+
+        // Matrix rain
+        ctx.font = '14px JetBrains Mono';
+        const cols = Math.ceil(fw / 40);
+        for (let col = 0; col < cols; col++) {
+          const x = col * 40;
+          const charIdx = Math.floor(now * 8 + col * 7) % 30;
+          for (let row = 0; row < 5; row++) {
+            const y = ((charIdx + row * 8) * 25) % fh;
+            const alpha = 0.05 + (row === 0 ? 0.15 : 0);
+            ctx.fillStyle = `rgba(16, 185, 129, ${alpha})`;
+            const chars = '01アイウエオカキクケコ';
+            ctx.fillText(chars[Math.floor(Math.random() * chars.length)], x, y);
+          }
+        }
+
+        ctx.globalAlpha = 1;
+
+        // Reset hint
+        const hintFlash = Math.sin(now * 2) > 0;
+        if (hintFlash) {
+          ctx.font = '14px JetBrains Mono';
+          ctx.fillStyle = colors.textDim + '60';
+          ctx.textAlign = 'center';
+          ctx.fillText('[ click RESET to restore grid ]', fw / 2, fh - 24);
+        }
+      }
+
+      hackerAnimRef.current = requestAnimationFrame(drawHacker);
+    };
+
+    drawHacker();
+    return () => cancelAnimationFrame(hackerAnimRef.current);
+  }, [hackerTakeover]);
+
   return (
     <div style={{ position: 'relative' }}>
       <canvas
@@ -713,6 +872,41 @@ export default function FrequencyDemo({ width = 900, height = 480 }) {
           /* border removed for seamless slide integration */
         }}
       />
+      {/* Fullscreen hacker takeover overlay */}
+      {hackerTakeover && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 9999,
+          pointerEvents: 'auto',
+        }}>
+          <canvas
+            ref={hackerCanvasRef}
+            style={{ width: '100%', height: '100%' }}
+          />
+          <button
+            onClick={resetToStable}
+            style={{
+              position: 'absolute',
+              bottom: 40,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              background: `${colors.primary}25`,
+              border: `1px solid ${colors.primary}`,
+              color: colors.primary,
+              padding: '8px 24px',
+              borderRadius: 8,
+              cursor: 'pointer',
+              fontSize: 14,
+              fontFamily: '"JetBrains Mono"',
+              fontWeight: 600,
+              zIndex: 10000,
+            }}
+          >
+            Reset Grid
+          </button>
+        </div>
+      )}
       <div style={{ position: 'absolute', bottom: 12, right: 12, display: 'flex', gap: 6 }}>
         {SCENARIOS.map((s, i) => {
           const isActive = scenario === i;

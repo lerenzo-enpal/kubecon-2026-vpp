@@ -31,7 +31,7 @@ export default function VPPComposite() {
   const trans = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
 
   return (
-    <div className="relative w-full h-full overflow-hidden">
+    <div className="relative w-full h-full">
       {placeholder}
 
       {/* === LAYER: How It Works (VPP Architecture) === */}
@@ -59,20 +59,21 @@ export default function VPPComposite() {
         <VPPArchitecture
           width={step === 0 ? 920 : 560}
           height={step === 0 ? 420 : 220}
+          compact={step >= 1}
         />
       </div>
 
       {/* === LAYER: Architecture Parallel === */}
-      {/* Step 1: appears center-left */}
+      {/* Step 1: appears in the middle, below the shrunken architecture */}
       <div style={{
         position: 'absolute',
         left: 20,
-        right: 380,
+        right: 20,
         transition: trans,
         opacity: step >= 1 ? 1 : 0,
         transform: step >= 1 ? 'translateX(0)' : 'translateX(-40px)',
         pointerEvents: step >= 1 ? 'auto' : 'none',
-        top: 20,
+        top: 250,
         bottom: step >= 2 ? 175 : 30,
       }}>
         <div className="text-[18px] font-bold text-hud-text font-sans mb-3">The Architecture Parallel</div>
