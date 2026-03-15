@@ -117,6 +117,9 @@ export function versionB() {
 
   return [
     <Slide key="grid-scale-b2" backgroundColor={colors.bg} padding="36px 56px">
+      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, pointerEvents: 'none' }}>
+        <span style={{ fontSize: '300px', fontWeight: 900, color: 'rgba(239, 68, 68, 0.3)', fontFamily: '"JetBrains Mono"' }}>&#x2715;</span>
+      </div>
       <style>{`
         @keyframes gridRowIn {
           0% { opacity: 0; transform: translateX(-30px); filter: blur(4px); }

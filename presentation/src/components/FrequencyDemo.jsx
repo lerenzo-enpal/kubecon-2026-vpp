@@ -56,7 +56,20 @@ const TAUNT_LINES = [
   '> transferring 400 GW to /dev/null',
 ];
 
-export default function FrequencyDemo({ width = 900, height = 400 }) {
+// Grid protection thresholds (EU ENTSO-E / UFLS standards)
+const THRESHOLDS = [
+  { freq: 51.5, label: '51.500 Hz — GENERATOR TRIP (over-frequency)', color: colors.accent, lineAlpha: '30', textAlpha: '90' },
+  { freq: 50.2, label: '50.200 Hz — PRIMARY RESERVE ACTIVATION', color: colors.primary, lineAlpha: '20', textAlpha: '70' },
+  { freq: 50.0, label: '50.000 Hz — NOMINAL', color: colors.primary, lineAlpha: '30', textAlpha: 'bb' },
+  { freq: 49.8, label: '49.800 Hz — FREQUENCY CONTAINMENT RESERVES', color: colors.primary, lineAlpha: '20', textAlpha: '70' },
+  { freq: 49.5, label: '49.500 Hz — ALERT STATE', color: colors.accent, lineAlpha: '30', textAlpha: 'aa' },
+  { freq: 49.0, label: '49.000 Hz — UFLS STAGE 1 (10% load shed)', color: colors.danger, lineAlpha: '30', textAlpha: 'bb' },
+  { freq: 48.5, label: '48.500 Hz — UFLS STAGE 2 (additional 15%)', color: colors.danger, lineAlpha: '30', textAlpha: 'bb' },
+  { freq: 48.0, label: '48.000 Hz — UFLS STAGE 3 — RELAY TRIP', color: colors.danger, lineAlpha: '40', textAlpha: 'dd' },
+  { freq: 47.5, label: '47.500 Hz — TOTAL COLLAPSE', color: colors.danger, lineAlpha: '50', textAlpha: 'ee' },
+];
+
+export default function FrequencyDemo({ width = 900, height = 480 }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const tRef = useRef(0);
@@ -68,6 +81,8 @@ export default function FrequencyDemo({ width = 900, height = 400 }) {
   const explosionParticlesRef = useRef([]);
   const glitchRef = useRef({ active: false, startTime: 0 });
   const hackerPhaseRef = useRef(0);
+  // Per-threshold highlight state: { crossed, uncrossedSince, highlight (0-1) }
+  const thresholdStateRef = useRef(THRESHOLDS.map(() => ({ crossed: false, uncrossedSince: null, highlight: 0 })));
 
   // Restart animation when slide becomes active
   const slideContext = useContext(SlideContext);
@@ -80,6 +95,7 @@ export default function FrequencyDemo({ width = 900, height = 400 }) {
       hackerPhaseRef.current = 0;
       glitchRef.current = { active: false, startTime: 0 };
       explosionParticlesRef.current = [];
+      thresholdStateRef.current = THRESHOLDS.map(() => ({ crossed: false, uncrossedSince: null, highlight: 0 }));
     }
   }, [slideContext?.isSlideActive]);
 
@@ -123,6 +139,34 @@ export default function FrequencyDemo({ width = 900, height = 400 }) {
 
       history.push(freq);
       if (history.length > historyLen) history.shift();
+
+      // Update threshold highlight state (use smoothed freq to avoid jitter)
+      const smoothFreq = currentFreqRef.current;
+      const now = performance.now() / 1000;
+      const tStates = thresholdStateRef.current;
+      for (let i = 0; i < THRESHOLDS.length; i++) {
+        const th = THRESHOLDS[i];
+        const st = tStates[i];
+        // Skip nominal line — always visible, never highlighted
+        if (th.freq === 50.0) continue;
+        // Crossed = frequency went past this threshold
+        const isCrossed = th.freq > 50.0 ? smoothFreq > th.freq : smoothFreq < th.freq;
+        if (isCrossed) {
+          st.crossed = true;
+          st.uncrossedSince = null;
+          // Fade in highlight quickly
+          st.highlight = Math.min(1, st.highlight + 0.04);
+        } else if (st.crossed) {
+          // Just uncrossed — start the 2s cooldown
+          if (st.uncrossedSince === null) st.uncrossedSince = now;
+          if (now - st.uncrossedSince > 2) {
+            // 2s passed — fade out
+            st.highlight = Math.max(0, st.highlight - 0.02);
+            if (st.highlight <= 0) { st.crossed = false; st.uncrossedSince = null; }
+          }
+          // else hold highlight steady during 2s grace period
+        }
+      }
 
       // Detect collapse trigger
       if (freq < 47.6 && !collapseTimeRef.current) {
@@ -305,8 +349,9 @@ export default function FrequencyDemo({ width = 900, height = 400 }) {
       ctx.clearRect(0, 0, width, height);
 
       const freqToY = (f) => {
-        const range = 4;
-        return height * 0.1 + (52 - f) / range * (height * 0.7);
+        const top = 52;
+        const bottom = 47;
+        return height * 0.05 + (top - f) / (top - bottom) * (height * 0.85);
       };
 
       // Danger zone bg
@@ -318,36 +363,36 @@ export default function FrequencyDemo({ width = 900, height = 400 }) {
         ctx.fillRect(0, y49, width, height - y49);
       }
 
-      // Threshold lines
-      ctx.setLineDash([4, 6]);
+      // Threshold lines — grid protection boundaries
       ctx.lineWidth = 1;
-
-      const y50 = freqToY(50.0);
-      ctx.strokeStyle = colors.primary + '25';
-      ctx.beginPath(); ctx.moveTo(60, y50); ctx.lineTo(width, y50); ctx.stroke();
-      ctx.fillStyle = colors.primary + '50';
       ctx.font = '10px JetBrains Mono';
       ctx.textAlign = 'left';
-      ctx.fillText('50.000 Hz — NOMINAL', 62, y50 - 6);
 
-      const y495 = freqToY(49.5);
-      ctx.strokeStyle = colors.accent + '25';
-      ctx.beginPath(); ctx.moveTo(60, y495); ctx.lineTo(width, y495); ctx.stroke();
-      ctx.fillStyle = colors.accent + '50';
-      ctx.fillText('49.500 Hz — PRIMARY RESERVE', 62, y495 - 6);
+      const tStatesNow = thresholdStateRef.current;
+      for (let i = 0; i < THRESHOLDS.length; i++) {
+        const th = THRESHOLDS[i];
+        const y = freqToY(th.freq);
+        if (y < 5 || y > height - 5) continue;
 
-      const y49 = freqToY(49.0);
-      ctx.strokeStyle = colors.danger + '35';
-      ctx.beginPath(); ctx.moveTo(60, y49); ctx.lineTo(width, y49); ctx.stroke();
-      ctx.fillStyle = colors.danger + '70';
-      ctx.fillText('49.000 Hz — LOAD SHEDDING', 62, y49 - 6);
+        const hl = tStatesNow[i].highlight; // 0-1
 
-      const y475 = freqToY(47.5);
-      ctx.strokeStyle = colors.danger + '50';
-      ctx.beginPath(); ctx.moveTo(60, y475); ctx.lineTo(width, y475); ctx.stroke();
-      ctx.fillStyle = colors.danger + '90';
-      ctx.fillText('47.500 Hz — TOTAL COLLAPSE', 62, y475 - 6);
+        // Line — thicker and brighter when highlighted
+        ctx.setLineDash([3, 5]);
+        const baseLineAlpha = parseInt(th.lineAlpha, 16) / 255;
+        const lineAlpha = Math.min(1, baseLineAlpha + hl * 0.6);
+        ctx.lineWidth = 1 + hl * 1.5;
+        ctx.strokeStyle = th.color + Math.round(lineAlpha * 255).toString(16).padStart(2, '0');
+        if (hl > 0.3) { ctx.shadowBlur = 8 * hl; ctx.shadowColor = th.color; }
+        ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(width, y); ctx.stroke();
+        ctx.shadowBlur = 0;
+        ctx.lineWidth = 1;
 
+        // Label — brighter when highlighted
+        const baseTextAlpha = parseInt(th.textAlpha, 16) / 255;
+        const textAlpha = Math.min(1, baseTextAlpha + hl * 0.4);
+        ctx.fillStyle = th.color + Math.round(textAlpha * 255).toString(16).padStart(2, '0');
+        ctx.fillText(th.label, 62, y - 6);
+      }
       ctx.setLineDash([]);
 
       // Frequency trace
@@ -435,7 +480,7 @@ export default function FrequencyDemo({ width = 900, height = 400 }) {
       ctx.fillStyle = colors.textDim + '60';
       ctx.font = '9px JetBrains Mono';
       ctx.textAlign = 'right';
-      for (let f = 48; f <= 52; f += 0.5) {
+      for (let f = 47.5; f <= 51.5; f += 0.5) {
         const y = freqToY(f);
         if (y > 10 && y < height - 10) ctx.fillText(f.toFixed(1), 54, y + 3);
       }

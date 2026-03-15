@@ -26,10 +26,10 @@ const pad = '36px 56px';
 // Section ranges (slide numbers are 1-indexed)
 const SECTIONS = [
   { from: 1, to: 2, name: '' },
-  { from: 3, to: 13, name: 'The Grid' },
-  { from: 14, to: 21, name: 'The Renewable Revolution' },
-  { from: 22, to: 29, name: 'The Virtual Power Plant' },
-  { from: 30, to: 34, name: 'Resilience' },
+  { from: 3, to: 15, name: 'The Grid' },
+  { from: 16, to: 22, name: 'The Renewable Revolution' },
+  { from: 23, to: 31, name: 'The Virtual Power Plant' },
+  { from: 32, to: 37, name: 'Resilience' },
 ];
 
 const slideTemplate = ({ slideNumber, numberOfSlides }) => {
@@ -64,7 +64,9 @@ export default function Presentation() {
   return (
     <Deck theme={theme} template={slideTemplate}>
 
-      {/* 0: Title Slide */}
+      {/* ═══════ OPENING ═══════ */}
+
+      {/* 1: Title Slide */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center relative">
           <div className="absolute pointer-events-none" style={{ top: '-10%', right: '-15%', width: '80%', height: '120%' }}>
@@ -89,7 +91,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 1: Agenda */}
+      {/* 2: Agenda */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center h-full">
           <H size="36px">Agenda</H>
@@ -115,7 +117,7 @@ export default function Presentation() {
 
       {/* ═══════ ACT 1: THE GRID ═══════ */}
 
-      {/* Section Title: The Grid */}
+      {/* 3: Section Title: The Grid */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[20px] font-semibold text-hud-danger font-mono tracking-[0.15em] uppercase mb-4">Part I</div>
@@ -124,14 +126,14 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* Texas Cascade — deck.gl HUD */}
+      {/* 4: Texas Cascade — deck.gl HUD */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="absolute inset-0">
           <TexasMapHUD width={1366} height={768} variant="hud" />
         </div>
       </Slide>
 
-      {/* 2: Texas Numbers */}
+      {/* 5: Texas Numbers */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-between h-full">
           <div className="py-5 pl-6" style={{ borderLeft: `3px solid ${colors.danger}` }}>
@@ -160,7 +162,89 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 3: Why Texas Failed */}
+      {/* 6: Grid Scale — Version D */}
+      {versionD()}
+
+      {/* 8: EU Grid HUD */}
+      <Slide backgroundColor="#020408" padding="0">
+        <div className="w-full h-full">
+          <EUGridHUD width="100%" height="100%" />
+        </div>
+      </Slide>
+
+      {/* 9: Frequency Demo */}
+      <Slide backgroundColor={bg} padding="20px 40px">
+        <div className="flex flex-col h-full">
+          <H>The Grid: A Balancing Act</H>
+          <P size="20px">This enormous machine maintains a constant 50 Hz frequency — supply and demand balanced every second.<br />Click the scenarios to see what happens when they don't.</P>
+          <div className="flex-1 flex justify-center items-center">
+            <FrequencyDemo width={960} height={480} />
+          </div>
+          <div className="flex justify-center">
+            <div className="rounded-[10px] text-center" style={{ width: '60%', padding: '14px 24px', background: `${colors.accent}08`, border: `1px solid ${colors.accent}20` }}>
+              <div className="text-[20px] text-hud-text font-sans">The entire European grid operates within a <span className="font-semibold" style={{ color: colors.accent }}>±0.2 Hz</span> band. Cross those thresholds and automated protection systems start disconnecting load — or generators.</div>
+            </div>
+          </div>
+        </div>
+      </Slide>
+
+      {/* ── Grid narrative continues ── */}
+
+      {/* 10: Designed for a Different World */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col h-full">
+          <H>Designed for a Different World</H>
+          <div className="flex-1 flex items-center">
+            <div className="flex items-center gap-2 w-full">
+              {[
+                { l: 'Power Plants', s: 'Few, large', c: colors.accent },
+                { l: 'Transmission', s: 'High voltage', c: colors.secondary },
+                { l: 'Distribution', s: 'One-way', c: colors.primary },
+                { l: 'Homes', s: 'Passive', c: colors.textDim },
+              ].map((x, i) => (
+                <React.Fragment key={i}>
+                  <div className="bg-hud-surface rounded-[10px] px-4 py-5 text-center flex-1" style={{ border: `1px solid ${x.c}30` }}>
+                    <div className="text-[20px] font-semibold text-hud-text font-sans">{x.l}</div>
+                    <div className="text-[20px] text-hud-text-muted font-sans mt-1">{x.s}</div>
+                  </div>
+                  {i < 3 && <div className="text-[20px] text-hud-text-dim font-mono">{'\u2192'}</div>}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+          <P size="20px" style={{ fontStyle: 'italic' }}>"Built in the 1950s. One-directional. No flexibility."</P>
+        </div>
+      </Slide>
+
+      {/* 11: The Old Playbook */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col h-full">
+          <H color={colors.accent}>The Old Playbook</H>
+          <P size="20px">Before batteries and software, this is how the grid stayed stable. Expensive, dirty, and blunt.</P>
+          <div className="flex-1 flex items-center">
+            <div className="flex gap-5 w-full">
+              {[
+                { t: 'Peaker Plants', d: '261 GW of gas turbines in the US alone — sitting idle 95% of the year. They fire up for peak demand at 2–5x the cost of baseload.', c: '#fb923c', stat: '$110–228/MWh' },
+                { t: 'Spinning Reserves', d: 'Generators running at partial load 24/7 "just in case." 15% capacity margin required. Burning fuel to produce nothing.', c: colors.accent, stat: '15% over-provisioned' },
+                { t: 'Load Shedding', d: 'The last resort: deliberate rolling blackouts. Texas 2021 shed 20 GW — the largest in US history. $80–130B in damage.', c: colors.danger, stat: '69% of Texans lost power' },
+                { t: 'Curtailment', d: 'Too much sun or wind? Turn it off. Germany wasted 19 TWh of clean energy in 2023. California curtailed 3.4M MWh in 2024.', c: colors.textDim, stat: 'EUR 3.3B/yr (DE)' },
+              ].map(i => (
+                <div key={i.t} className="bg-hud-surface rounded-xl px-4 py-5 flex-1" style={{ border: `1px solid ${i.c}25` }}>
+                  <div className="text-[20px] font-bold font-sans mb-2" style={{ color: i.c }}>{i.t}</div>
+                  <div className="text-[20px] text-hud-text-muted font-sans leading-normal mb-3">{i.d}</div>
+                  <div className="text-[20px] font-mono font-semibold" style={{ color: i.c }}>{i.stat}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <P size="20px" style={{ fontStyle: 'italic' }}>"261 GW of capacity that runs 5% of the year. Rolling blackouts as policy. Clean energy thrown away. This is the toolkit we inherited."</P>
+        </div>
+      </Slide>
+
+      {/* 12: Grid Scale — Version B — DEPRECATED */}
+      {versionB()}
+
+      {/* 13: Why Texas Failed */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H color={colors.danger}>Why Texas Failed</H>
@@ -188,102 +272,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* ── REVIEW: Grid Scale Bridge Slides ── */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col justify-center items-center h-full text-center">
-          <div className="text-[20px] font-semibold text-hud-text-dim font-mono tracking-[0.15em] uppercase mb-5">Review</div>
-          <H size="48px" center>Option A</H>
-          <P size="20px" center>"The Living Grid" — Animated EU grid map + stat comparison</P>
-        </div>
-      </Slide>
-      {versionA()}
-      {versionD()}
-      {versionB()}
-      <Slide backgroundColor="#020408" padding="0">
-        <div className="w-full h-full">
-          <EUGridHUD width="100%" height="100%" />
-        </div>
-      </Slide>
-
-      {/* 4: Frequency Demo */}
-      <Slide backgroundColor={bg} padding="20px 40px">
-        <div className="flex flex-col h-full">
-          <H>The Grid: A Balancing Act</H>
-          <P size="20px">Supply and demand must match every second. Click the scenarios to see what happens when they don't.</P>
-          <div className="flex-1 flex justify-center items-center">
-            <FrequencyDemo width={920} height={400} />
-          </div>
-          <div className="flex gap-3.5">
-            <StatBox n="50.000 Hz" l="EU Target Frequency" c={colors.primary} />
-            <StatBox n="107 GW" l="ERCOT Total Capacity" c={colors.secondary} />
-            <StatBox n="0 buffer" l="No Grid Storage" c={colors.accent} />
-          </div>
-        </div>
-      </Slide>
-
-      {/* The Old Playbook */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col h-full">
-          <H color={colors.accent}>The Old Playbook</H>
-          <P size="20px">Before batteries and software, this is how the grid stayed stable. Expensive, dirty, and blunt.</P>
-          <div className="flex-1 flex items-center">
-            <div className="flex gap-5 w-full">
-              {[
-                { t: 'Peaker Plants', d: '261 GW of gas turbines in the US alone — sitting idle 95% of the year. They fire up for peak demand at 2–5x the cost of baseload.', c: '#fb923c', stat: '$110–228/MWh' },
-                { t: 'Spinning Reserves', d: 'Generators running at partial load 24/7 "just in case." 15% capacity margin required. Burning fuel to produce nothing.', c: colors.accent, stat: '15% over-provisioned' },
-                { t: 'Load Shedding', d: 'The last resort: deliberate rolling blackouts. Texas 2021 shed 20 GW — the largest in US history. $80–130B in damage.', c: colors.danger, stat: '69% of Texans lost power' },
-                { t: 'Curtailment', d: 'Too much sun or wind? Turn it off. Germany wasted 19 TWh of clean energy in 2023. California curtailed 3.4M MWh in 2024.', c: colors.textDim, stat: 'EUR 3.3B/yr (DE)' },
-              ].map(i => (
-                <div key={i.t} className="bg-hud-surface rounded-xl px-4 py-5 flex-1" style={{ border: `1px solid ${i.c}25` }}>
-                  <div className="text-[20px] font-bold font-sans mb-2" style={{ color: i.c }}>{i.t}</div>
-                  <div className="text-[20px] text-hud-text-muted font-sans leading-normal mb-3">{i.d}</div>
-                  <div className="text-[20px] font-mono font-semibold" style={{ color: i.c }}>{i.stat}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <P size="20px" style={{ fontStyle: 'italic' }}>"261 GW of capacity that runs 5% of the year. Rolling blackouts as policy. Clean energy thrown away. This is the toolkit we inherited."</P>
-        </div>
-      </Slide>
-
-      {/* Demand Response in Action */}
-      <Slide backgroundColor={bg} padding="20px 40px">
-        <div className="flex flex-col h-full">
-          <H color={colors.success}>Demand Response in Action</H>
-          <P size="20px">Instead of building more power plants — reshape the demand. Trip a generator and watch what happens.</P>
-          <div className="flex-1 flex justify-center items-center">
-            <DemandResponseDemo width={920} height={420} />
-          </div>
-        </div>
-      </Slide>
-
-      {/* 5: How Grid Was Built */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col h-full">
-          <H>Designed for a Different World</H>
-          <div className="flex-1 flex items-center">
-            <div className="flex items-center gap-2 w-full">
-              {[
-                { l: 'Power Plants', s: 'Few, large', c: colors.accent },
-                { l: 'Transmission', s: 'High voltage', c: colors.secondary },
-                { l: 'Distribution', s: 'One-way', c: colors.primary },
-                { l: 'Homes', s: 'Passive', c: colors.textDim },
-              ].map((x, i) => (
-                <React.Fragment key={i}>
-                  <div className="bg-hud-surface rounded-[10px] px-4 py-5 text-center flex-1" style={{ border: `1px solid ${x.c}30` }}>
-                    <div className="text-[20px] font-semibold text-hud-text font-sans">{x.l}</div>
-                    <div className="text-[20px] text-hud-text-muted font-sans mt-1">{x.s}</div>
-                  </div>
-                  {i < 3 && <div className="text-[20px] text-hud-text-dim font-mono">{'\u2192'}</div>}
-                </React.Fragment>
-              ))}
-            </div>
-          </div>
-          <P size="20px" style={{ fontStyle: 'italic' }}>"Built in the 1950s. One-directional. No flexibility."</P>
-        </div>
-      </Slide>
-
-      {/* 6: It Keeps Happening */}
+      {/* 14: It Keeps Happening */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
         <H color={colors.danger}>It Keeps Happening</H>
@@ -326,7 +315,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 7: Common Pattern */}
+      {/* 15: Every Cascade Shares Three Properties */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H>Every Cascade Shares Three Properties</H>
@@ -348,7 +337,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 8: Bridge */}
+      {/* 16: No flexibility — Bridge */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[28px] font-semibold text-hud-text font-sans leading-[1.7] mb-7">
@@ -365,6 +354,18 @@ export default function Presentation() {
 
       {/* ═══════ ACT 2: THE RENEWABLE REVOLUTION ═══════ */}
 
+      {/* 17: Demand Response in Action */}
+      <Slide backgroundColor={bg} padding="20px 40px">
+        <div className="flex flex-col h-full">
+          <H color={colors.success}>Demand Response in Action</H>
+          <P size="20px">Instead of building more power plants — reshape the demand. Trip a generator and watch what happens.</P>
+          <div className="flex-1 flex justify-center items-center">
+            <DemandResponseDemo width={920} height={420} />
+          </div>
+        </div>
+      </Slide>
+
+      {/* 18: Section Title: The Renewable Revolution */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[20px] font-semibold text-hud-accent font-mono tracking-[0.15em] uppercase mb-4">Part II</div>
@@ -373,7 +374,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 10: Renewable Growth */}
+      {/* 19: Renewable Growth */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H>The Renewable Explosion</H>
@@ -384,7 +385,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 11: Duck Curve */}
+      {/* 20: Duck Curve */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H>The Duck Curve Problem</H>
@@ -395,7 +396,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* The Dunkelflaute */}
+      {/* 21: The Dunkelflaute */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H color={colors.danger}>The Dunkelflaute</H>
@@ -441,7 +442,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 12: Negative Prices */}
+      {/* 22: Negative Prices */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H color={colors.accent}>Energy Being Thrown Away</H>
@@ -460,7 +461,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* The Cost of Curtailment */}
+      {/* 23: Curtailment */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H color={colors.danger}>Clean Energy Has Outgrown the Grid</H>
@@ -494,7 +495,9 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 13: Load Shifting */}
+      {/* ═══════ ACT 3: THE VIRTUAL POWER PLANT ═══════ */}
+
+      {/* 24: Load Shifting — Duck Curve */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H color={colors.success}>What If You Could Shift the Load?</H>
@@ -505,7 +508,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* The Economics of Flexibility */}
+      {/* 25: The Economics of Flexibility */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H color={colors.success}>The Economics of Flexibility</H>
@@ -537,7 +540,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 14: Consumers Become Infrastructure */}
+      {/* 26: Consumers Become Infrastructure */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <H size="42px" center>Consumers Become Infrastructure</H>
@@ -555,8 +558,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* ═══════ ACT 3: THE VIRTUAL POWER PLANT ═══════ */}
-
+      {/* 27: Section Title: The Virtual Power Plant */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-4">Part III</div>
@@ -565,7 +567,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 16: What Is a VPP? */}
+      {/* 28: What Is a VPP? */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H>What Is a Virtual Power Plant?</H>
@@ -597,7 +599,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 17: Fastest Power Plant */}
+      {/* 29: The Fastest Power Plant */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H>The Fastest Power Plant</H>
@@ -624,9 +626,12 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 18: Hornsdale */}
+      {/* 30: Hornsdale — DEPRECATED */}
       <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full" style={{ position: 'relative' }}>
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, pointerEvents: 'none' }}>
+            <span style={{ fontSize: '300px', fontWeight: 900, color: 'rgba(239, 68, 68, 0.3)', fontFamily: '"JetBrains Mono"' }}>&#x2715;</span>
+          </div>
           <div>
             <Badge color={colors.success}>PROOF</Badge>
             <H color={colors.success}>Hornsdale, December 2017</H>
@@ -643,9 +648,12 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 19: SA VPP */}
+      {/* 31: SA VPP — DEPRECATED */}
       <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full" style={{ position: 'relative' }}>
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, pointerEvents: 'none' }}>
+            <span style={{ fontSize: '300px', fontWeight: 900, color: 'rgba(239, 68, 68, 0.3)', fontFamily: '"JetBrains Mono"' }}>&#x2715;</span>
+          </div>
           <div>
             <Badge color={colors.success}>PROOF</Badge>
             <H color={colors.success}>SA Virtual Power Plant, 2019</H>
@@ -664,7 +672,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 20: KubeCon Analogy */}
+      {/* 32: The Architecture Parallel */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H>The Architecture Parallel</H>
@@ -689,7 +697,18 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 21: Demo Without VPP */}
+      {/* ═══════ ACT 4: RESILIENCE ═══════ */}
+
+      {/* 33: Section Title: Resilience */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col justify-center items-center h-full text-center">
+          <div className="text-[20px] font-semibold text-hud-success font-mono tracking-[0.15em] uppercase mb-4">Part IV</div>
+          <H size="50px" center color={colors.success}>Resilience</H>
+          <P size="20px" center>What the future grid looks like — and why you already know how to build it</P>
+        </div>
+      </Slide>
+
+      {/* 34: Demo Without VPP */}
       <Slide backgroundColor={bg} padding="16px 40px">
         <div className="flex flex-col h-full">
           <div>
@@ -702,7 +721,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 22: Demo With VPP */}
+      {/* 35: Demo With VPP */}
       <Slide backgroundColor={bg} padding="16px 40px">
         <div className="flex flex-col h-full">
           <div>
@@ -715,17 +734,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* ═══════ ACT 4: RESILIENCE ═══════ */}
-
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col justify-center items-center h-full text-center">
-          <div className="text-[20px] font-semibold text-hud-success font-mono tracking-[0.15em] uppercase mb-4">Part IV</div>
-          <H size="50px" center color={colors.success}>Resilience</H>
-          <P size="20px" center>What the future grid looks like — and why you already know how to build it</P>
-        </div>
-      </Slide>
-
-      {/* Back to Texas */}
+      {/* 36: Back to Texas */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center h-full">
           <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-6">Back to Texas</div>
@@ -744,7 +753,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 25: Future Grid */}
+      {/* 37: The Future Grid */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <H size="48px" center>The Future Grid</H>
@@ -754,7 +763,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 26: Final Takeaway */}
+      {/* 38: Final Takeaway */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[26px] font-semibold text-hud-text font-sans leading-[1.7] mb-7">
@@ -768,7 +777,9 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* Kepler 1: Live Energy Dashboard */}
+      {/* ═══════ TECH DEEP-DIVE / CLOSING ═══════ */}
+
+      {/* 39: Kepler — Live Energy Dashboard */}
       <Slide backgroundColor={bg} padding="16px 36px">
         <div className="flex flex-col h-full">
           <div>
@@ -784,7 +795,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* Kepler 2: Carbon-Aware Scheduling */}
+      {/* 40: Carbon-Aware Scheduling */}
       <Slide backgroundColor={bg} padding="16px 36px">
         <div className="flex flex-col h-full">
           <div>
@@ -801,7 +812,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* Thank You */}
+      {/* 41: Thank You */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <H size="54px" center>Thank You</H>
