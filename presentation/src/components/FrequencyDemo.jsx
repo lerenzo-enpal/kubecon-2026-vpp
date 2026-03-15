@@ -2,58 +2,67 @@ import React, { useEffect, useRef, useState, useContext } from 'react';
 import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
 
-// Event-based scenarios — each returns a target frequency based on elapsed time (seconds)
-// Real grid dynamics: primary reserves respond in 0-30s, secondary in 30s-15min
+// Event-based scenarios — getFreq receives GRID TIME in seconds (real time × timeScale)
+// Real grid: primary reserves 0-30s, secondary 30s-15min, tertiary 15min+
 const SCENARIOS = [
   {
     label: 'Generator Trip (800 MW)',
     color: 'accent',
-    // Realistic: ~0.2 Hz nadir in 8-10s, primary reserves arrest in ~10s, secondary restores in ~60s
-    getFreq: (elapsed) => {
-      if (elapsed < 1) return 50.0;                                         // inertia holds briefly
-      if (elapsed < 4) return 50.0 - ((elapsed - 1) / 3) * 0.45;           // Rate of Change of Frequency (RoCoF)
-      if (elapsed < 8) return 49.55 - 0.05 * Math.sin((elapsed - 4) * 0.8); // nadir ~49.5, small oscillation
-      if (elapsed < 20) return 49.55 + ((elapsed - 8) / 12) * 0.35;        // secondary reserves restore
-      return 49.9;                                                           // settled near nominal
+    timeScale: 30, // 1 real second = 30 grid seconds → ~25s real for full scenario
+    // Realistic: inertia → RoCoF → nadir at ~10s → primary arrest → secondary restore → nominal
+    getFreq: (gt) => {
+      if (gt < 2) return 50.0;                                             // system inertia absorbs initial shock
+      if (gt < 10) return 50.0 - ((gt - 2) / 8) * 0.5;                   // RoCoF ~0.06 Hz/s
+      if (gt < 30) return 49.5 + 0.05 * Math.sin((gt - 10) * 0.3);       // nadir ~49.5, primary reserves arrest
+      if (gt < 120) return 49.5 + ((gt - 30) / 90) * 0.3;                // secondary reserves (aFRR) restore
+      if (gt < 600) return 49.8 + ((gt - 120) / 480) * 0.15;             // tertiary reserves, redispatch
+      if (gt < 750) return 49.95 + ((gt - 600) / 150) * 0.05;            // final settling
+      return 50.0;
     },
   },
   {
     label: '3 GW Loss of Generation',
     color: 'danger',
-    // Severe: exceeds primary reserves, UFLS Stage 1 activates, partial recovery
-    getFreq: (elapsed) => {
-      if (elapsed < 0.5) return 50.0;                                       // inertia
-      if (elapsed < 3) return 50.0 - ((elapsed - 0.5) / 2.5) * 1.1;        // steep RoCoF — 0.44 Hz/s
-      if (elapsed < 6) return 48.9 + 0.1 * Math.sin((elapsed - 3) * 1.5);  // oscillates near 48.9 (UFLS Stage 1)
-      if (elapsed < 10) return 48.9 + ((elapsed - 6) / 4) * 0.15;          // load shedding helps stabilize
-      if (elapsed < 25) return 49.05 + ((elapsed - 10) / 15) * 0.45;       // slow recovery with reserves
-      return 49.5;                                                           // settled but stressed
+    timeScale: 40, // 1 real second = 40 grid seconds → ~30s real for full scenario
+    // Severe: steep RoCoF, UFLS activates, load shedding stabilizes, slow full recovery
+    getFreq: (gt) => {
+      if (gt < 1) return 50.0;                                             // inertia
+      if (gt < 8) return 50.0 - ((gt - 1) / 7) * 1.1;                    // steep RoCoF ~0.16 Hz/s
+      if (gt < 15) return 48.9 + 0.08 * Math.sin((gt - 8) * 0.9);        // nadir ~48.9, UFLS Stage 1 trips
+      if (gt < 60) return 48.9 + ((gt - 15) / 45) * 0.3;                 // load shedding + primary reserves stabilize
+      if (gt < 300) return 49.2 + ((gt - 60) / 240) * 0.5;               // secondary + tertiary reserves
+      if (gt < 900) return 49.7 + ((gt - 300) / 600) * 0.25;             // redispatch, plants ramping up
+      if (gt < 1200) return 49.95 + ((gt - 900) / 300) * 0.05;           // final restoration
+      return 50.0;
     },
   },
   {
     label: 'Sudden Demand Drop (5 GW)',
     color: 'accent',
-    // Over-frequency event: e.g. large industrial load disconnects, frequency spikes up then recovers
-    getFreq: (elapsed) => {
-      if (elapsed < 0.5) return 50.0;                                       // inertia
-      if (elapsed < 3) return 50.0 + ((elapsed - 0.5) / 2.5) * 0.6;        // frequency rises — too much supply
-      if (elapsed < 6) return 50.6 - 0.08 * Math.sin((elapsed - 3) * 1.2); // generators start ramping down
-      if (elapsed < 12) return 50.6 - ((elapsed - 6) / 6) * 0.35;          // AGC brings it back
-      if (elapsed < 22) return 50.25 - ((elapsed - 12) / 10) * 0.25;       // settling
+    timeScale: 25, // 1 real second = 25 grid seconds → ~24s real
+    // Over-frequency: too much supply, generators ramp down, AGC restores
+    getFreq: (gt) => {
+      if (gt < 1) return 50.0;                                             // inertia
+      if (gt < 8) return 50.0 + ((gt - 1) / 7) * 0.5;                    // frequency rises — excess generation
+      if (gt < 20) return 50.5 + 0.06 * Math.sin((gt - 8) * 0.5);        // oscillation, generators start tripping
+      if (gt < 90) return 50.5 - ((gt - 20) / 70) * 0.3;                 // AGC ramps down generation
+      if (gt < 300) return 50.2 - ((gt - 90) / 210) * 0.15;              // settling
+      if (gt < 600) return 50.05 - ((gt - 300) / 300) * 0.05;            // final return
       return 50.0;
     },
   },
   {
     label: 'Cyber Attack',
     color: 'danger',
-    // Coordinated SCADA compromise — cascading trips, no recovery, triggers hacker animation
-    getFreq: (elapsed) => {
-      if (elapsed < 2) return 50.0;                                          // attacker in system, no visible effect
-      if (elapsed < 5) return 50.0 - ((elapsed - 2) / 3) * 0.5;            // first generators tripped remotely
-      if (elapsed < 8) return 49.5 - ((elapsed - 5) / 3) * 0.6;            // cascade — more trips
-      if (elapsed < 11) return 48.9 - ((elapsed - 8) / 3) * 0.7;           // reserves overwhelmed
-      if (elapsed < 14) return 48.2 - ((elapsed - 11) / 3) * 0.7;          // into collapse
-      return 47.4;                                                           // total blackout
+    timeScale: 20, // 1 real second = 20 grid seconds
+    // Coordinated SCADA compromise — cascading trips, no recovery
+    getFreq: (gt) => {
+      if (gt < 30) return 50.0;                                            // attacker in system, reconnaissance
+      if (gt < 90) return 50.0 - ((gt - 30) / 60) * 0.5;                 // first generators tripped remotely
+      if (gt < 150) return 49.5 - ((gt - 90) / 60) * 0.6;                // cascade — protection relays disabled
+      if (gt < 210) return 48.9 - ((gt - 150) / 60) * 0.7;               // reserves overwhelmed, no coordination
+      if (gt < 270) return 48.2 - ((gt - 210) / 60) * 0.8;               // into collapse
+      return 47.4;                                                         // total blackout
     },
   },
 ];
@@ -202,10 +211,13 @@ export default function FrequencyDemo({ width = 900, height = 480 }) {
       }
       const t = tRef.current;
 
-      // Update target from scenario timeline
+      // Update target from scenario timeline (grid time = real elapsed × timeScale)
+      let gridTime = 0;
       if (scenario >= 0 && scenarioStartRef.current !== null) {
-        const elapsed = performance.now() / 1000 - scenarioStartRef.current;
-        targetFreqRef.current = SCENARIOS[scenario].getFreq(elapsed);
+        const realElapsed = performance.now() / 1000 - scenarioStartRef.current;
+        const sc = SCENARIOS[scenario];
+        gridTime = realElapsed * (sc.timeScale || 1);
+        targetFreqRef.current = sc.getFreq(gridTime);
       }
 
       // Smooth interpolation toward target
@@ -573,6 +585,24 @@ export default function FrequencyDemo({ width = 900, height = 480 }) {
         ctx.fillStyle = statusColor + 'cc';
       }
       ctx.fillText(status, width - 16, 60);
+
+      // Elapsed grid time timer (top-left, under Y-axis label area)
+      if (scenario >= 0 && gridTime > 0) {
+        const totalSec = Math.floor(gridTime);
+        const mm = String(Math.floor(totalSec / 60)).padStart(2, '0');
+        const ss = String(totalSec % 60).padStart(2, '0');
+        const scLabel = SCENARIOS[scenario];
+        const timeScaleVal = scLabel.timeScale || 1;
+
+        ctx.textAlign = 'left';
+        ctx.font = 'bold 13px JetBrains Mono';
+        ctx.fillStyle = colors.textMuted + 'cc';
+        ctx.fillText(`T+${mm}:${ss}`, 10, 22);
+
+        ctx.font = '10px JetBrains Mono';
+        ctx.fillStyle = colors.textDim + '90';
+        ctx.fillText(`${timeScaleVal}× speed`, 10, 38);
+      }
 
       // Alert banners — latched with 2s holdoff (use smoothed freq)
       const rawBannerLevel = sf < 48.5 ? 'imminent' : sf < 49.0 ? 'shedding' : 'none';

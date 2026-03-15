@@ -5,12 +5,10 @@ import { colors } from '../theme';
 /**
  * LargestMachineZoom — Full-slide canvas animation (4 phases, 3 arrow presses).
  *
- * Phase 0: Subtle grid pulse, stat boxes visible at bottom
- * Phase 1: Big "0" + ZERO DOWNTIME animates in dramatically, holds
- * Phase 2: "0" shrinks into a HUD box (stays on screen).
- *          Factory + 60K counter + "World's Largest Factory" label populate.
- * Phase 3: Zoom OUT from factory to EU grid. Counter 60K→2.3M.
- *          Label transitions to "European Power Grid".
+ * Phase 0: Empty — subtle grid pulse
+ * Phase 1: Wolfsburg factory appears with 60K counter
+ * Phase 2: Zoom OUT from factory to EU grid. Counter 60K→2.3M.
+ * Phase 3: Big "0" + ZERO DOWNTIME over the whole EU map
  */
 
 const hexToRgb = (hex) => {
