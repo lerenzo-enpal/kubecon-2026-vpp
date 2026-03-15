@@ -466,6 +466,40 @@ export default function Presentation() {
         </div>
       </Slide>
 
+      {/* The Cost of Curtailment */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col h-full">
+          <H color={colors.danger}>Clean Energy Has Outgrown the Grid</H>
+          <P>Germany paid generators <span className="font-semibold" style={{ color: colors.danger }}>EUR 554 million</span> to <em>not</em> produce electricity in 2024.</P>
+          <div className="flex-1 flex flex-col justify-center gap-5">
+            <div className="flex gap-4 w-full">
+              <StatBox n="9.3 TWh" l="Renewable energy curtailed (2024)" c={colors.danger} />
+              <StatBox n="+97%" l="Solar curtailment increase YoY" c={colors.accent} />
+              <StatBox n="2.7M" l="Homes that energy could have powered" c={colors.primary} />
+            </div>
+            <div className="flex gap-5 w-full">
+              <div className="flex-1 rounded-xl p-5" style={{ background: `${colors.danger}06`, border: `1px solid ${colors.danger}20` }}>
+                <div className="text-[20px] font-semibold font-sans mb-2" style={{ color: colors.danger }}>
+                  Not just a transmission problem
+                </div>
+                <div className="text-[20px] text-hud-text-muted font-sans leading-relaxed">
+                  49% of grid congestion measures are at the <span className="text-hud-text font-semibold">local distribution level</span> — rooftop solar overwhelming neighborhood transformers. New long-distance cables don't fix this.
+                </div>
+              </div>
+              <div className="flex-1 rounded-xl p-5" style={{ background: `${colors.success}06`, border: `1px solid ${colors.success}20` }}>
+                <div className="text-[20px] font-semibold font-sans mb-2" style={{ color: colors.success }}>
+                  The missing buyer
+                </div>
+                <div className="text-[20px] text-hud-text-muted font-sans leading-relaxed">
+                  When a wind farm is curtailed, there is no local demand to absorb the excess. A VPP could charge batteries, pre-heat buildings, and shift EV charging — <span className="text-hud-text font-semibold">becoming the buyer of last resort</span>.
+                </div>
+              </div>
+            </div>
+          </div>
+          <P size="20px" color={colors.textDim}>Germany — Bundesnetzagentur 2024 data. North-south transmission bottlenecks (SuedLink delayed to 2028) account for the other 51%.</P>
+        </div>
+      </Slide>
+
       {/* 13: Load Shifting */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
