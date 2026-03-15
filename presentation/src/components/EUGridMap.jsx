@@ -73,8 +73,7 @@ export default function EUGridMap({ width = 900, height = 500 }) {
       const now = performance.now();
 
       ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = '#060a12';
-      ctx.fillRect(0, 0, width, height);
+      ctx.clearRect(0, 0, width, height);
 
       // Helper: node position to pixel
       const px = (node) => ({

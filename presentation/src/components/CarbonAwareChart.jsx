@@ -43,8 +43,7 @@ export default function CarbonAwareChart({ width = 880, height = 380 }) {
       const animProgress = Math.min(1, t / 3); // 3 sec to fully animate
       const ease = 1 - Math.pow(1 - animProgress, 3);
 
-      ctx.fillStyle = '#060a12';
-      ctx.fillRect(0, 0, width, height);
+      ctx.clearRect(0, 0, width, height);
 
       // ── Title ──
       ctx.fillStyle = colors.success;

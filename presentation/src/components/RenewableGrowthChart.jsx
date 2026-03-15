@@ -28,7 +28,7 @@ export default function RenewableGrowthChart({ width = 850, height = 360 }) {
     ctx.scale(2, 2);
 
     const padLeft = 50;
-    const padRight = 30;
+    const padRight = 150;
     const padTop = 40;
     const padBottom = 50;
     const chartW = width - padLeft - padRight;
@@ -44,8 +44,7 @@ export default function RenewableGrowthChart({ width = 850, height = 360 }) {
       const p = isActive ? progressRef.current : 1; // show completed chart when inactive
       const ease = 1 - Math.pow(1 - p, 3); // ease-out cubic
 
-      ctx.fillStyle = '#060a12';
-      ctx.fillRect(0, 0, width, height);
+      ctx.clearRect(0, 0, width, height);
 
       // Title
       ctx.fillStyle = colors.text;

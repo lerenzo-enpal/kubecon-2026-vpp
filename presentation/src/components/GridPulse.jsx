@@ -47,8 +47,7 @@ export default function GridPulse({ width = 800, height = 400 }) {
       ctx.clearRect(0, 0, width, height);
 
       // Background
-      ctx.fillStyle = '#060a12';
-      ctx.fillRect(0, 0, width, height);
+      ctx.clearRect(0, 0, width, height);
 
       // Concentric frequency rings (50 Hz pulse)
       const ringCount = 4;

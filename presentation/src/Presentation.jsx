@@ -197,13 +197,6 @@ export default function Presentation() {
         </div>
       </Slide>
       {versionA()}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col justify-center items-center h-full text-center">
-          <div className="text-[20px] font-semibold text-hud-text-dim font-mono tracking-[0.15em] uppercase mb-5">Review</div>
-          <H size="48px" center>Option B</H>
-          <P size="20px" center>"By the Numbers" — Cinematic stat reveal + grid vs. tech comparison</P>
-        </div>
-      </Slide>
       {versionB()}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
@@ -301,35 +294,35 @@ export default function Presentation() {
         <div className="flex flex-col h-full">
         <H color={colors.danger}>It Keeps Happening</H>
         <div className="flex-1 flex items-center">
-        <div className="flex gap-10 w-full">
-          <div className="flex-1">
+        <div className="flex gap-14 w-full">
+          <div className="flex-1 flex flex-col justify-between">
             {[
               { y: '2003', e: 'Italy Blackout', i: '56M people' },
               { y: '2006', e: 'European Grid Split', i: '15M affected' },
               { y: '2016', e: 'South Australia', i: 'Entire state' },
               { y: '2021', e: 'Texas ERCOT', i: '4.5M homes, 240+ deaths' },
             ].map(t => (
-              <div key={t.y+t.e} className="flex gap-3.5 mb-3.5">
-                <div className="font-mono text-[20px] font-bold text-hud-danger min-w-[46px]">{t.y}</div>
+              <div key={t.y+t.e} className="flex gap-4">
+                <div className="font-mono text-[28px] font-bold text-hud-danger min-w-[56px]">{t.y}</div>
                 <div>
-                  <div className="text-[20px] font-semibold text-hud-text font-sans">{t.e}</div>
-                  <div className="text-[20px] text-hud-text-muted font-sans">{t.i}</div>
+                  <div className="text-[26px] font-semibold text-hud-text font-sans">{t.e}</div>
+                  <div className="text-[22px] text-hud-text-muted font-sans">{t.i}</div>
                 </div>
               </div>
             ))}
           </div>
-          <div className="flex-1">
+          <div className="flex-1 flex flex-col justify-between">
             {[
               { y: '2021', e: 'Europe Grid Split', i: '1.25 Hz from collapse', c: colors.danger },
               { y: '2025', e: 'Spain/Portugal', i: '60M people', c: colors.accent },
               { y: '2025', e: 'Berlin Arson (x3)', i: '45K+ homes', c: colors.accent },
               { y: '2026', e: 'Berlin Teltow Canal', i: '4-day outage', c: colors.primary },
             ].map(t => (
-              <div key={t.y+t.e} className="flex gap-3.5 mb-3.5">
-                <div className="font-mono text-[20px] font-bold min-w-[46px]" style={{ color: t.c || colors.danger }}>{t.y}</div>
+              <div key={t.y+t.e} className="flex gap-4">
+                <div className="font-mono text-[28px] font-bold min-w-[56px]" style={{ color: t.c || colors.danger }}>{t.y}</div>
                 <div>
-                  <div className="text-[20px] font-semibold text-hud-text font-sans">{t.e}</div>
-                  <div className="text-[20px] text-hud-text-muted font-sans">{t.i}</div>
+                  <div className="text-[26px] font-semibold text-hud-text font-sans">{t.e}</div>
+                  <div className="text-[22px] text-hud-text-muted font-sans">{t.i}</div>
                 </div>
               </div>
             ))}
@@ -646,19 +639,19 @@ export default function Presentation() {
       {/* 20: KubeCon Analogy */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
-          <H>Speaking Your Language</H>
+          <H>The Architecture Parallel</H>
           <div className="flex-1 flex items-center">
             <div className="flex gap-5 items-start w-full">
               <div className="bg-hud-surface rounded-[10px] p-5 flex-1" style={{ border: `1px solid ${colors.danger}20` }}>
                 <div className="text-[20px] font-semibold font-mono mb-3" style={{ color: colors.danger }}>TRADITIONAL GRID</div>
-                {['Monolith', 'Few generators', 'Manual scaling', 'Single point of failure', 'No observability'].map(x => (
+                {['Monolithic infrastructure', 'Few large generators', 'Manual capacity planning', 'Single points of failure', 'No observability'].map(x => (
                   <div key={x} className="text-[20px] text-hud-text-muted font-sans py-[5px] border-b border-hud-surface-light">{x}</div>
                 ))}
               </div>
               <div className="pt-[60px] text-[24px] text-hud-primary font-mono">{'\u2192'}</div>
               <div className="rounded-[10px] p-5 flex-1" style={{ background: `${colors.success}06`, border: `1px solid ${colors.success}25` }}>
                 <div className="text-[20px] font-semibold font-mono mb-3" style={{ color: colors.success }}>VIRTUAL POWER PLANT</div>
-                {['Distributed microservices', 'Millions of nodes', 'Autoscaling capacity', 'Resilient by design', 'Full observability'].map(x => (
+                {['Distributed microservices', 'Millions of edge nodes', 'Horizontal autoscaling', 'Resilient by design', 'Full-stack observability'].map(x => (
                   <div key={x} className="text-[20px] text-hud-text font-sans font-medium py-[5px] border-b border-hud-surface-light">{x}</div>
                 ))}
               </div>
