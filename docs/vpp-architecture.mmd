@@ -1,0 +1,7 @@
+flowchart TD
+    A[EnergyMarket] -->|Request amount of energy| Trader(Market Trader - Entrix)
+    Trader --> VPPController(VPPController)
+    VPPController --> |KAFKA| Enpal{Enpal}
+    Enpal -->|MQTT| D[IoT - Home]
+    Enpal -->|MQTT| E[IoT - Home]
+    Enpal -->|MQTT| F[IoT - Home]
