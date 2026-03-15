@@ -295,7 +295,7 @@ export default function Presentation() {
         <H color={colors.danger}>It Keeps Happening</H>
         <div className="flex-1 flex items-center">
         <div className="flex gap-14 w-full">
-          <div className="flex-1 flex flex-col justify-between">
+          <div className="flex-1 flex flex-col gap-10 justify-center">
             {[
               { y: '2003', e: 'Italy Blackout', i: '56M people' },
               { y: '2006', e: 'European Grid Split', i: '15M affected' },
@@ -311,7 +311,7 @@ export default function Presentation() {
               </div>
             ))}
           </div>
-          <div className="flex-1 flex flex-col justify-between">
+          <div className="flex-1 flex flex-col gap-10 justify-center">
             {[
               { y: '2021', e: 'Europe Grid Split', i: '1.25 Hz from collapse', c: colors.danger },
               { y: '2025', e: 'Spain/Portugal', i: '60M people', c: colors.accent },

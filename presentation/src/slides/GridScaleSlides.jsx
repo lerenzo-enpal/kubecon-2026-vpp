@@ -98,8 +98,8 @@ export function versionB() {
   return [
     /* ── B-2: No Cache, No Buffer ── */
     <Slide key="grid-scale-b2" backgroundColor={colors.bg}>
-      <SlideContainer>
-        <div className="text-center max-w-[800px] mx-auto">
+      <SlideContainer style={{ alignItems: 'center' }}>
+        <div className="text-center max-w-[800px] w-full">
           <GlowText size="40px" style={{ textAlign: 'center', marginBottom: 32 }}>
             The Grid vs. Tech Infrastructure
           </GlowText>
