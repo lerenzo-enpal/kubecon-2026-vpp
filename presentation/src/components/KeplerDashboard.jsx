@@ -36,8 +36,7 @@ export default function KeplerDashboard({ width = 880, height = 420 }) {
       if (isActive) tRef.current += 0.016;
       const t = tRef.current;
 
-      ctx.fillStyle = '#060a12';
-      ctx.fillRect(0, 0, width, height);
+      ctx.clearRect(0, 0, width, height);
 
       // Layout: left = bar chart, right = stats + sparklines
       const chartX = 10;

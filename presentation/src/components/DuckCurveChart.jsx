@@ -86,8 +86,7 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
       const t = tRef.current;
       const blend = blendRef.current;
 
-      ctx.fillStyle = '#060a12';
-      ctx.fillRect(0, 0, width, height);
+      ctx.clearRect(0, 0, width, height);
 
       // Grid
       ctx.setLineDash([3, 5]);

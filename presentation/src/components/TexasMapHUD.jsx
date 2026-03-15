@@ -441,7 +441,7 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
             </div>
 
             {/* Timeline entries */}
-            <div style={{ flex: 1, overflowY: 'auto', padding: '8px 16px' }}>
+            <div style={{ flex: 1, overflowY: 'hidden', padding: '8px 16px' }}>
               {CASCADE.map((step, i) => {
                 const isActive = running && elapsed > step.time;
                 const isCurrent = activeStep === i;

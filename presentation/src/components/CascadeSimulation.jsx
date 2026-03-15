@@ -73,10 +73,6 @@ export default function CascadeSimulation({ width = 740, height = 540, withVPP =
       const elapsed = startTimeRef.current ? (now - startTimeRef.current) / 1000 : 0;
       ctx.clearRect(0, 0, width, height);
 
-      // Background
-      ctx.fillStyle = '#080c14';
-      ctx.fillRect(0, 0, width, height);
-
       // Germany outline (simplified)
       ctx.strokeStyle = colors.textDim + '20';
       ctx.lineWidth = 1.5;

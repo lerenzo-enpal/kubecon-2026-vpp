@@ -15,14 +15,104 @@ const hexToRgb = (hex) => {
 };
 
 const DEVICE_TYPES = [
-  { type: 'battery', color: colors.success, label: 'Battery' },
-  { type: 'heatpump', color: '#60a5fa', label: 'Heat Pump' },
-  { type: 'ev', color: colors.primary, label: 'EV' },
-  { type: 'solar', color: colors.accent, label: 'Solar' },
-  { type: 'appliance', color: colors.textMuted, label: 'Appliance' },
+  { type: 'battery', color: colors.success, label: 'Battery', icon: '🔋' },
+  { type: 'heatpump', color: '#60a5fa', label: 'Heat Pump', icon: '❄' },
+  { type: 'ev', color: colors.primary, label: 'EV', icon: '🚗' },
+  { type: 'solar', color: colors.accent, label: 'Solar', icon: '☀' },
+  { type: 'appliance', color: colors.textMuted, label: 'Appliance', icon: '🏠' },
 ];
 
 const COLS = 24, ROWS = 8;
+
+// Draw a small recognizable icon for each device type
+function drawDeviceIcon(ctx, type, x, y, size, fillColor, alpha) {
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = fillColor;
+  ctx.strokeStyle = fillColor;
+  ctx.lineWidth = 1.2;
+
+  switch (type) {
+    case 'battery': {
+      // Battery: rounded rect + nub
+      const w = size * 1.4, h = size * 0.8;
+      ctx.beginPath();
+      ctx.roundRect(x - w/2, y - h/2, w, h, 2);
+      ctx.fill();
+      ctx.fillRect(x + w/2, y - h*0.2, size*0.2, h*0.4);
+      break;
+    }
+    case 'ev': {
+      // Car: body + roof + wheels
+      const w = size * 1.4, h = size * 0.6;
+      // Body
+      ctx.beginPath();
+      ctx.roundRect(x - w/2, y - h*0.1, w, h, 2);
+      ctx.fill();
+      // Roof
+      ctx.beginPath();
+      ctx.moveTo(x - w*0.25, y - h*0.1);
+      ctx.lineTo(x - w*0.1, y - h*0.8);
+      ctx.lineTo(x + w*0.25, y - h*0.8);
+      ctx.lineTo(x + w*0.35, y - h*0.1);
+      ctx.fill();
+      // Wheels
+      ctx.fillStyle = '#0a0e17';
+      ctx.beginPath();
+      ctx.arc(x - w*0.25, y + h*0.5, size*0.18, 0, Math.PI*2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(x + w*0.25, y + h*0.5, size*0.18, 0, Math.PI*2);
+      ctx.fill();
+      break;
+    }
+    case 'heatpump': {
+      // Snowflake: 6 lines from center + small ticks
+      ctx.beginPath();
+      for (let i = 0; i < 6; i++) {
+        const angle = (i / 6) * Math.PI * 2 - Math.PI/2;
+        const len = size * 0.65;
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + Math.cos(angle) * len, y + Math.sin(angle) * len);
+      }
+      ctx.stroke();
+      // Center dot
+      ctx.beginPath();
+      ctx.arc(x, y, size * 0.15, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    }
+    case 'solar': {
+      // Sun: circle + rays
+      ctx.beginPath();
+      ctx.arc(x, y, size * 0.3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      for (let i = 0; i < 8; i++) {
+        const angle = (i / 8) * Math.PI * 2;
+        ctx.moveTo(x + Math.cos(angle) * size * 0.45, y + Math.sin(angle) * size * 0.45);
+        ctx.lineTo(x + Math.cos(angle) * size * 0.7, y + Math.sin(angle) * size * 0.7);
+      }
+      ctx.stroke();
+      break;
+    }
+    case 'appliance': {
+      // Washing machine: rect + circle window
+      const s = size * 0.9;
+      ctx.beginPath();
+      ctx.roundRect(x - s/2, y - s/2, s, s, 2);
+      ctx.fill();
+      // Door circle (darker)
+      ctx.globalAlpha = alpha * 0.4;
+      ctx.fillStyle = '#0a0e17';
+      ctx.beginPath();
+      ctx.arc(x, y + s*0.05, s*0.3, 0, Math.PI*2);
+      ctx.fill();
+      break;
+    }
+  }
+  ctx.restore();
+}
 
 export default function DemandResponseDemo({ width = 920, height = 440 }) {
   const canvasRef = useRef(null);
@@ -84,10 +174,6 @@ export default function DemandResponseDemo({ width = 920, height = 440 }) {
       const now = performance.now();
       const s = stateRef.current;
       ctx.clearRect(0, 0, width, height);
-
-      // Background
-      ctx.fillStyle = '#060a12';
-      ctx.fillRect(0, 0, width, height);
 
       // ── Update frequency ──
       if (s.phase === 'stable') {
@@ -188,7 +274,7 @@ export default function DemandResponseDemo({ width = 920, height = 440 }) {
       const gridW = width - 80;
       const cellW = gridW / COLS;
       const cellH = gridH / ROWS;
-      const dotR = Math.min(cellW, cellH) * 0.28;
+      const iconSize = Math.min(cellW, cellH) * 0.3;
 
       // Grid label
       ctx.font = '10px "JetBrains Mono"';
@@ -203,25 +289,22 @@ export default function DemandResponseDemo({ width = 920, height = 440 }) {
         const y = gridTop + row * cellH + cellH / 2;
 
         let alpha = d.brightness;
-        let r = dotR;
+        let scale = 1;
         const [cr, cg, cb] = d.rgb;
 
         if (s.phase === 'blackout') {
-          alpha = 0.04;
+          alpha = 0.06;
         } else if (d.active && s.withDR) {
-          alpha = 0.65 + Math.sin(now / 200 + i * 0.4) * 0.15;
-          r = dotR * 1.25;
+          alpha = 0.7 + Math.sin(now / 200 + i * 0.4) * 0.15;
+          scale = 1.3;
           // Glow
           ctx.beginPath();
-          ctx.arc(x, y, r + 5, 0, Math.PI * 2);
+          ctx.arc(x, y, iconSize * 1.8, 0, Math.PI * 2);
           ctx.fillStyle = `rgba(${cr},${cg},${cb},0.08)`;
           ctx.fill();
         }
 
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${cr},${cg},${cb},${alpha})`;
-        ctx.fill();
+        drawDeviceIcon(ctx, d.type, x, y, iconSize * scale, `rgb(${cr},${cg},${cb})`, alpha);
       });
 
       // ── Legend ──
@@ -231,13 +314,12 @@ export default function DemandResponseDemo({ width = 920, height = 440 }) {
       let lx = gridLeft;
       DEVICE_TYPES.forEach(dt => {
         const [cr, cg, cb] = hexToRgb(dt.color);
-        ctx.beginPath();
-        ctx.arc(lx, legendY, 4, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${cr},${cg},${cb},0.7)`;
-        ctx.fill();
+        drawDeviceIcon(ctx, dt.type, lx, legendY, 6, `rgb(${cr},${cg},${cb})`, 0.8);
         ctx.fillStyle = `${colors.textDim}90`;
-        ctx.fillText(dt.label, lx + 8, legendY + 3);
-        lx += ctx.measureText(dt.label).width + 22;
+        ctx.font = '10px "JetBrains Mono"';
+        ctx.textAlign = 'left';
+        ctx.fillText(dt.label, lx + 10, legendY + 3);
+        lx += ctx.measureText(dt.label).width + 26;
       });
 
       // ── Status ──

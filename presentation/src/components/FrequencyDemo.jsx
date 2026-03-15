@@ -302,8 +302,7 @@ export default function FrequencyDemo({ width = 900, height = 400 }) {
       }
 
       // ═══ NORMAL / PHASE 1 (explosion overlay) ═══
-      ctx.fillStyle = '#060a12';
-      ctx.fillRect(0, 0, width, height);
+      ctx.clearRect(0, 0, width, height);
 
       const freqToY = (f) => {
         const range = 4;

@@ -26,8 +26,7 @@ export default function FrequencyLine({
       if (isActive) tRef.current += 0.02;
       const t = tRef.current;
 
-      ctx.fillStyle = colors.bg;
-      ctx.fillRect(0, 0, width, height);
+      ctx.clearRect(0, 0, width, height);
 
       // Draw threshold lines
       ctx.strokeStyle = colors.danger + '40';

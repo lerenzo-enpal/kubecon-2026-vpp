@@ -28,37 +28,27 @@ export function versionA() {
         <GlowText size="40px" style={{ marginBottom: 28 }}>
           Running the Largest Machine
         </GlowText>
-        <div className="grid grid-cols-3 gap-4 max-w-[780px]">
-          <div className="bg-hud-surface rounded-xl p-5 text-center" style={{
-            border: `1px solid ${colors.primary}20`,
-          }}>
-            <div className="text-[36px] font-extrabold font-mono text-hud-primary" style={{
-              textShadow: `0 0 25px ${colors.primary}30`,
-            }}>305K km</div>
-            <div className="text-[20px] text-hud-text-muted font-sans mt-2">
-              High-voltage transmission lines
+        <div className="grid grid-cols-3 gap-4 max-w-[880px]">
+          {[
+            { v: '36', u: 'countries', c: colors.primary, d: 'synchronized to one frequency' },
+            { v: '305K km', u: '', c: colors.primary, d: 'high-voltage transmission lines' },
+            { v: '400M', u: '', c: colors.success, d: 'connected consumers' },
+            { v: '1,100 GW', u: '', c: colors.secondary, d: 'installed capacity' },
+            { v: '3,000 TWh', u: '/yr', c: colors.accent, d: 'annual electricity production' },
+          ].map((s, i) => (
+            <div key={i} className={`bg-hud-surface rounded-xl p-5 text-center ${i >= 3 ? 'col-span-1' : ''}`} style={{
+              border: `1px solid ${s.c}20`,
+              ...(i === 3 ? { marginLeft: 'auto', gridColumn: '1 / 2' } : {}),
+            }}>
+              <div className="text-[36px] font-extrabold font-mono" style={{
+                color: s.c,
+                textShadow: `0 0 25px ${s.c}30`,
+              }}>{s.v}{s.u && <span className="text-[22px] font-normal text-hud-text-muted ml-1">{s.u}</span>}</div>
+              <div className="text-[20px] text-hud-text-muted font-sans mt-2 capitalize">
+                {s.d}
+              </div>
             </div>
-          </div>
-          <div className="bg-hud-surface rounded-xl p-5 text-center" style={{
-            border: `1px solid ${colors.success}20`,
-          }}>
-            <div className="text-[36px] font-extrabold font-mono text-hud-success" style={{
-              textShadow: `0 0 25px ${colors.success}30`,
-            }}>400M</div>
-            <div className="text-[20px] text-hud-text-muted font-sans mt-2">
-              Connected consumers
-            </div>
-          </div>
-          <div className="bg-hud-surface rounded-xl p-5 text-center" style={{
-            border: `1px solid ${colors.secondary}20`,
-          }}>
-            <div className="text-[36px] font-extrabold font-mono text-hud-secondary" style={{
-              textShadow: `0 0 25px ${colors.secondary}30`,
-            }}>1,100 GW</div>
-            <div className="text-[20px] text-hud-text-muted font-sans mt-2">
-              Installed capacity
-            </div>
-          </div>
+          ))}
         </div>
         <Appear>
           <div className="mt-7 flex gap-5 max-w-[780px]">
@@ -105,64 +95,13 @@ export function versionA() {
 // Cinematic feel — numbers appear one by one, build tension
 // ═══════════════════════════════════════════════════════════════════════════
 export function versionB() {
-  const gridStats = [
-    { value: '36', unit: 'countries', color: colors.primary, detail: 'synchronized to the same frequency' },
-    { value: '305,000', unit: 'km', color: colors.primary, detail: 'of high-voltage transmission lines' },
-    { value: '400M', unit: 'people', color: colors.success, detail: 'connected consumers' },
-    { value: '1,100', unit: 'GW', color: colors.accent, detail: 'of installed generation capacity' },
-    { value: '3,000', unit: 'TWh/yr', color: colors.secondary, detail: 'of electricity produced annually' },
-    { value: '0', unit: 'storage', color: colors.danger, detail: 'buffer between supply and demand' },
-  ];
-
   return [
-    /* ── B-1: The Numbers ── */
-    <Slide key="grid-scale-b1" backgroundColor={colors.bg}>
-      <SlideContainer noGrid style={{ justifyContent: 'center' }}>
-        <div className="text-center max-w-[800px] mx-auto">
-          <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-8">
-            The Largest Machine Ever Built
-          </div>
-          <div className="grid grid-cols-3 gap-x-12 gap-y-8">
-            {gridStats.map((stat, i) => (
-              <Appear key={i}>
-                <div className="text-center">
-                  <div className="text-[44px] font-extrabold font-mono" style={{
-                    color: stat.color,
-                    textShadow: `0 0 30px ${stat.color}30`,
-                  }}>
-                    {stat.value}
-                    <span className="text-[22px] font-normal text-hud-text-muted ml-1">{stat.unit}</span>
-                  </div>
-                  <div className="text-[20px] text-hud-text-muted font-sans mt-1">
-                    {stat.detail}
-                  </div>
-                </div>
-              </Appear>
-            ))}
-          </div>
-          <Appear>
-            <div className="mt-10 text-[24px] font-semibold text-hud-text font-sans" style={{
-              textShadow: `0 0 30px ${colors.primary}20`,
-            }}>
-              And it has <span className="text-hud-primary">never</span> been turned off.
-            </div>
-          </Appear>
-        </div>
-      </SlideContainer>
-      <Notes>
-        "Let these numbers sink in. 36 countries. 305,000 kilometers of high-voltage
-        lines. 400 million people. All synchronized to the same frequency. And that last
-        one — zero storage. Every watt you produce must be consumed the instant it's
-        generated. There is no cache. No buffer. No retry. Just physics."
-      </Notes>
-    </Slide>,
-
     /* ── B-2: No Cache, No Buffer ── */
     <Slide key="grid-scale-b2" backgroundColor={colors.bg}>
       <SlideContainer>
         <div className="text-center max-w-[800px] mx-auto">
           <GlowText size="40px" style={{ textAlign: 'center', marginBottom: 32 }}>
-            The Grid vs. Your Infrastructure
+            The Grid vs. Tech Infrastructure
           </GlowText>
           <div className="text-left">
             {[
@@ -173,12 +112,12 @@ export function versionB() {
               },
               {
                 grid: 'Zero storage — no buffer between supply and demand',
-                tech: 'Your systems have caches, queues, CDNs',
+                tech: 'Software systems have caches, queues, CDNs',
                 color: colors.accent,
               },
               {
                 grid: 'Failure cascades by physics — unstoppable',
-                tech: 'Failure is contained by circuit breakers, retries',
+                tech: 'Failure is contained by circuit breakers and retries',
                 color: colors.primary,
               },
               {
@@ -210,8 +149,8 @@ export function versionB() {
         </div>
       </SlideContainer>
       <Notes>
-        "This is the key insight for this audience. You build fault-tolerant systems
-        every day. Circuit breakers, retries, caches, load balancers. The grid has NONE
+        "This is the key insight for this audience. Software engineers build fault-tolerant
+        systems every day. Circuit breakers, retries, caches, load balancers. The grid has NONE
         of that. It cascades by physics. That's why when it fails, it fails catastrophically.
         And that's why the frequency line matters so much — it's the only SLO the grid has."
       </Notes>
