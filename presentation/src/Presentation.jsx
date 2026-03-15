@@ -44,16 +44,16 @@ const slideTemplate = ({ slideNumber, numberOfSlides }) => {
 const H = ({ children, color = colors.primary, size = '40px', center = false }) => (
   <div className={`font-extrabold font-sans leading-[1.15] mb-2 ${center ? 'text-center' : 'text-left'}`} style={{ fontSize: size, color, textShadow: `0 0 40px ${color}35` }}>{children}</div>
 );
-const P = ({ children, color = colors.textMuted, size = '18px', center = false, style = {} }) => (
+const P = ({ children, color = colors.textMuted, size = '20px', center = false, style = {} }) => (
   <div className={`font-sans leading-normal mb-2.5 ${center ? 'text-center' : 'text-left'}`} style={{ fontSize: size, color, ...style }}>{children}</div>
 );
 const Badge = ({ children, color }) => (
-  <div className="inline-block px-2.5 py-[3px] rounded-[14px] text-[11px] font-semibold font-mono mb-2" style={{ background: `${color}18`, color, border: `1px solid ${color}30` }}>{children}</div>
+  <div className="inline-block px-2.5 py-[3px] rounded-[14px] text-[20px] font-semibold font-mono mb-2" style={{ background: `${color}18`, color, border: `1px solid ${color}30` }}>{children}</div>
 );
 const StatBox = ({ n, l, c }) => (
   <div className="bg-hud-surface border border-hud-surface-light rounded-[10px] px-3.5 py-[18px] text-center flex-1">
     <div className="text-[28px] font-extrabold font-mono" style={{ color: c, textShadow: `0 0 20px ${c}25` }}>{n}</div>
-    <div className="text-[10px] text-hud-text-muted mt-1 font-sans uppercase tracking-[0.04em]">{l}</div>
+    <div className="text-[20px] text-hud-text-muted mt-1 font-sans uppercase tracking-[0.04em]">{l}</div>
   </div>
 );
 
@@ -68,7 +68,7 @@ export default function Presentation() {
             <StaticTexasGrid width={700} height={700} opacity={0.12} />
           </div>
           <div className="relative z-[1]">
-            <div className="text-[12px] font-semibold text-hud-primary font-mono tracking-[0.2em] uppercase mb-8">KubeCon + CloudNativeCon Europe 2026</div>
+            <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.2em] uppercase mb-8">KubeCon + CloudNativeCon Europe 2026</div>
             <div className="text-[56px] font-extrabold font-sans leading-[1.1] mb-5" style={{ color: colors.primary, textShadow: `0 0 60px ${colors.primary}30` }}>
               What is a Virtual<br />Power Plant?
             </div>
@@ -78,8 +78,8 @@ export default function Presentation() {
             <div className="flex gap-6 justify-center items-center">
               <div className="w-12 h-12 rounded-full" style={{ background: `linear-gradient(135deg, ${colors.primary}30, ${colors.success}30)`, border: `1px solid ${colors.surfaceLight}` }} />
               <div className="text-left">
-                <div className="text-[18px] font-semibold text-hud-text font-sans">Enpal</div>
-                <div className="text-[14px] text-hud-text-muted font-sans">Building Europe's Largest Virtual Power Plant</div>
+                <div className="text-[20px] font-semibold text-hud-text font-sans">Enpal</div>
+                <div className="text-[20px] text-hud-text-muted font-sans">Building Europe's Largest Virtual Power Plant</div>
               </div>
             </div>
           </div>
@@ -101,9 +101,9 @@ export default function Presentation() {
                 <div className="text-[28px] font-extrabold font-mono min-w-[48px] text-right" style={{ color: s.color }}>{s.num}</div>
                 <div className="flex-1" style={{ borderLeft: `2px solid ${s.color}40`, paddingLeft: 20 }}>
                   <div className="text-[22px] font-bold text-hud-text font-sans">{s.title}</div>
-                  <div className="text-[14px] text-hud-text-muted font-sans mt-0.5">{s.sub}</div>
+                  <div className="text-[20px] text-hud-text-muted font-sans mt-0.5">{s.sub}</div>
                 </div>
-                <div className="text-[12px] text-hud-text-dim font-mono">{s.time}</div>
+                <div className="text-[20px] text-hud-text-dim font-mono">{s.time}</div>
               </div>
             ))}
           </div>
@@ -115,7 +115,7 @@ export default function Presentation() {
       {/* Section Title: The Grid */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
-          <div className="text-[14px] font-semibold text-hud-danger font-mono tracking-[0.15em] uppercase mb-4">Part I</div>
+          <div className="text-[20px] font-semibold text-hud-danger font-mono tracking-[0.15em] uppercase mb-4">Part I</div>
           <H size="54px" center color={colors.danger}>The Grid</H>
           <P size="20px" center>The world's largest machine — and why it keeps failing</P>
         </div>
@@ -135,7 +135,7 @@ export default function Presentation() {
             <div className="text-[28px] font-light text-hud-text font-sans leading-[1.6]">
               "The Texas grid was <span className="font-bold" style={{ color: colors.danger }}>4 minutes and 37 seconds</span> from total collapse."
             </div>
-            <div className="text-[16px] text-hud-text-dim font-sans mt-2">
+            <div className="text-[20px] text-hud-text-dim font-sans mt-2">
               A cold restart would have taken weeks. Maybe months.
             </div>
           </div>
@@ -145,7 +145,7 @@ export default function Presentation() {
             <AnimatedStat target="$195B" label="in damage" color={colors.accent} delay={600} duration={1400} />
             <AnimatedStat target="4.5M" label="homes dark" color={colors.textMuted} delay={900} duration={1100} />
           </div>
-          <div className="text-[19px] text-hud-text font-sans leading-[1.8]">
+          <div className="text-[20px] text-hud-text font-sans leading-[1.8]">
             Wholesale electricity spiked to <span className="font-semibold" style={{ color: colors.danger }}>$9,000/MWh</span> — a <span className="font-semibold" style={{ color: colors.danger }}>180x</span> increase.
             <br />Families received <span className="font-semibold" style={{ color: colors.danger }}>$7,000 bills</span> in a single week. Their provider — Griddy — went bankrupt.
           </div>
@@ -159,27 +159,29 @@ export default function Presentation() {
 
       {/* 3: Why Texas Failed */}
       <Slide backgroundColor={bg} padding={pad}>
-        <H color={colors.danger}>Why Texas Failed</H>
-        <P>The gas-electric death spiral — a cascading feedback loop.</P>
-        <div className="flex flex-col gap-2 my-3">
-          {[
-            { text: 'Extreme cold hits Texas', color: colors.primary, icon: '1' },
-            { text: 'Generators freeze and trip offline', color: colors.accent, icon: '2' },
-            { text: 'ERCOT orders emergency load shedding', color: colors.accent, icon: '3' },
-            { text: 'Load shedding cuts power to gas compressors & pipelines', color: colors.danger, icon: '4' },
-            { text: 'Gas supply drops — more generators lose fuel and trip', color: colors.danger, icon: '5' },
-            { text: 'More load shedding needed — cycle accelerates', color: colors.danger, icon: '\u21bb' },
-          ].map((step, i) => (
-            <div key={i} className="flex items-center gap-3">
-              <div className="w-[30px] h-[30px] rounded-lg flex items-center justify-center text-[13px] font-extrabold font-mono shrink-0" style={{ background: `${step.color}15`, color: step.color }}>{step.icon}</div>
-              <div className="text-[15px] text-hud-text font-sans" style={{ fontWeight: i >= 3 ? 600 : 400 }}>{step.text}</div>
-            </div>
-          ))}
-        </div>
-        <div className="flex gap-4 mt-3">
-          <StatBox n="52,000 MW" l="offline (of 107K total)" c={colors.danger} />
-          <StatBox n="Isolated" l="no grid interconnection" c={colors.accent} />
-          <StatBox n="42 hrs" l="average outage duration" c={colors.textMuted} />
+        <div className="flex flex-col h-full">
+          <H color={colors.danger}>Why Texas Failed</H>
+          <P>The gas-electric death spiral — a cascading feedback loop.</P>
+          <div className="flex flex-col flex-1 justify-center gap-4 my-4">
+            {[
+              { text: 'Extreme cold hits Texas', color: colors.primary, icon: '1' },
+              { text: 'Generators freeze and trip offline', color: colors.accent, icon: '2' },
+              { text: 'ERCOT orders emergency load shedding', color: colors.accent, icon: '3' },
+              { text: 'Load shedding cuts power to gas compressors & pipelines', color: colors.danger, icon: '4' },
+              { text: 'Gas supply drops — more generators lose fuel and trip', color: colors.danger, icon: '5' },
+              { text: 'More load shedding needed — cycle accelerates', color: colors.danger, icon: '\u21bb' },
+            ].map((step, i) => (
+              <div key={i} className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-[10px] flex items-center justify-center text-[20px] font-extrabold font-mono shrink-0" style={{ background: `${step.color}15`, color: step.color }}>{step.icon}</div>
+                <div className="text-[20px] text-hud-text font-sans" style={{ fontWeight: i >= 3 ? 600 : 400 }}>{step.text}</div>
+              </div>
+            ))}
+          </div>
+          <div className="flex gap-4">
+            <StatBox n="52,000 MW" l="offline (of 107K total)" c={colors.danger} />
+            <StatBox n="Isolated" l="no grid interconnection" c={colors.accent} />
+            <StatBox n="42 hrs" l="average outage duration" c={colors.textMuted} />
+          </div>
         </div>
       </Slide>
 
@@ -187,7 +189,7 @@ export default function Presentation() {
       <Slide backgroundColor={bg} padding="24px 40px">
         <div className="flex flex-col h-full">
           <H>The Grid: A Balancing Act</H>
-          <P size="15px">Supply and demand must match every second. Click the scenarios to see what happens when they don't.</P>
+          <P size="20px">Supply and demand must match every second. Click the scenarios to see what happens when they don't.</P>
           <div className="flex-1 flex justify-center items-center">
             <FrequencyDemo width={900} height={340} />
           </div>
@@ -211,8 +213,8 @@ export default function Presentation() {
           ].map((x, i) => (
             <React.Fragment key={i}>
               <div className="bg-hud-surface rounded-[10px] px-4 py-5 text-center flex-1" style={{ border: `1px solid ${x.c}30` }}>
-                <div className="text-[16px] font-semibold text-hud-text font-sans">{x.l}</div>
-                <div className="text-[13px] text-hud-text-muted font-sans mt-1">{x.s}</div>
+                <div className="text-[20px] font-semibold text-hud-text font-sans">{x.l}</div>
+                <div className="text-[20px] text-hud-text-muted font-sans mt-1">{x.s}</div>
               </div>
               {i < 3 && <div className="text-[20px] text-hud-text-dim font-mono">{'\u2192'}</div>}
             </React.Fragment>
@@ -233,10 +235,10 @@ export default function Presentation() {
               { y: '2021', e: 'Texas ERCOT', i: '4.5M homes, 240+ deaths' },
             ].map(t => (
               <div key={t.y+t.e} className="flex gap-3.5 mb-3.5">
-                <div className="font-mono text-[15px] font-bold text-hud-danger min-w-[46px]">{t.y}</div>
+                <div className="font-mono text-[20px] font-bold text-hud-danger min-w-[46px]">{t.y}</div>
                 <div>
-                  <div className="text-[16px] font-semibold text-hud-text font-sans">{t.e}</div>
-                  <div className="text-[13px] text-hud-text-muted font-sans">{t.i}</div>
+                  <div className="text-[20px] font-semibold text-hud-text font-sans">{t.e}</div>
+                  <div className="text-[20px] text-hud-text-muted font-sans">{t.i}</div>
                 </div>
               </div>
             ))}
@@ -249,10 +251,10 @@ export default function Presentation() {
               { y: '2026', e: 'Berlin Teltow Canal', i: '4-day outage', c: colors.primary },
             ].map(t => (
               <div key={t.y+t.e} className="flex gap-3.5 mb-3.5">
-                <div className="font-mono text-[15px] font-bold min-w-[46px]" style={{ color: t.c || colors.danger }}>{t.y}</div>
+                <div className="font-mono text-[20px] font-bold min-w-[46px]" style={{ color: t.c || colors.danger }}>{t.y}</div>
                 <div>
-                  <div className="text-[16px] font-semibold text-hud-text font-sans">{t.e}</div>
-                  <div className="text-[13px] text-hud-text-muted font-sans">{t.i}</div>
+                  <div className="text-[20px] font-semibold text-hud-text font-sans">{t.e}</div>
+                  <div className="text-[20px] text-hud-text-muted font-sans">{t.i}</div>
                 </div>
               </div>
             ))}
@@ -270,9 +272,9 @@ export default function Presentation() {
             { n: '3', t: 'Blind Operators', d: 'Degraded system-wide observability', c: colors.secondary },
           ].map(i => (
             <div key={i.n} className="bg-hud-surface rounded-xl px-5 py-6 flex-1" style={{ border: `1px solid ${i.c}25` }}>
-              <div className="w-[38px] h-[38px] rounded-[10px] flex items-center justify-center text-[18px] font-extrabold font-mono mb-3" style={{ background: `${i.c}15`, color: i.c }}>{i.n}</div>
-              <div className="text-[18px] font-bold text-hud-text font-sans mb-2">{i.t}</div>
-              <div className="text-[14px] text-hud-text-muted font-sans leading-normal">{i.d}</div>
+              <div className="w-[38px] h-[38px] rounded-[10px] flex items-center justify-center text-[20px] font-extrabold font-mono mb-3" style={{ background: `${i.c}15`, color: i.c }}>{i.n}</div>
+              <div className="text-[20px] font-bold text-hud-text font-sans mb-2">{i.t}</div>
+              <div className="text-[20px] text-hud-text-muted font-sans leading-normal">{i.d}</div>
             </div>
           ))}
         </div>
@@ -297,7 +299,7 @@ export default function Presentation() {
 
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
-          <div className="text-[14px] font-semibold text-hud-accent font-mono tracking-[0.15em] uppercase mb-4">Part II</div>
+          <div className="text-[20px] font-semibold text-hud-accent font-mono tracking-[0.15em] uppercase mb-4">Part II</div>
           <H size="50px" center color={colors.accent}>The Renewable Revolution</H>
           <P size="20px" center>Inevitable, amazing — and a whole new kind of problem</P>
         </div>
@@ -306,7 +308,7 @@ export default function Presentation() {
       {/* 10: Renewable Growth */}
       <Slide backgroundColor={bg} padding="24px 40px">
         <H>The Renewable Explosion</H>
-        <P size="15px">Germany's electricity from renewables — this is not slowing down.</P>
+        <P size="20px">Germany's electricity from renewables — this is not slowing down.</P>
         <div className="flex-1 flex justify-center mt-2">
           <RenewableGrowthChart width={880} height={370} />
         </div>
@@ -315,7 +317,7 @@ export default function Presentation() {
       {/* 11: Duck Curve */}
       <Slide backgroundColor={bg} padding="24px 40px">
         <H>The Duck Curve Problem</H>
-        <P size="15px">Solar floods the grid midday. Demand ramps steeply at sunset. The grid can't cope.</P>
+        <P size="20px">Solar floods the grid midday. Demand ramps steeply at sunset. The grid can't cope.</P>
         <div className="flex-1 flex justify-center mt-2">
           <DuckCurveChart width={880} height={360} />
         </div>
@@ -333,13 +335,13 @@ export default function Presentation() {
             { n: '400+', l: 'Trending (2024)', c: colors.danger },
           ].map(s => <StatBox key={s.l} n={s.n} l={s.l} c={s.c} />)}
         </div>
-        <P size="14px" color={colors.textDim}>Germany — Fraunhofer ISE data</P>
+        <P size="20px" color={colors.textDim}>Germany — Fraunhofer ISE data</P>
       </Slide>
 
       {/* 13: Load Shifting */}
       <Slide backgroundColor={bg} padding="24px 40px">
         <H color={colors.success}>What If You Could Shift the Load?</H>
-        <P size="15px">Batteries absorb midday solar. Discharge in the evening. Click "With VPP" below.</P>
+        <P size="20px">Batteries absorb midday solar. Discharge in the evening. Click "With VPP" below.</P>
         <div className="flex-1 flex justify-center mt-2">
           <DuckCurveChart width={880} height={360} />
         </div>
@@ -357,7 +359,7 @@ export default function Presentation() {
             Your garage becomes a grid asset.<br />
             Your house becomes a node in the largest distributed system ever built.
           </div>
-          <div className="text-[19px] font-sans font-semibold mt-8" style={{ color: colors.primary, textShadow: `0 0 30px ${colors.primary}30` }}>
+          <div className="text-[20px] font-sans font-semibold mt-8" style={{ color: colors.primary, textShadow: `0 0 30px ${colors.primary}30` }}>
             But coordinating millions of these devices? That's a distributed systems problem.
           </div>
         </div>
@@ -367,7 +369,7 @@ export default function Presentation() {
 
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
-          <div className="text-[14px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-4">Part III</div>
+          <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-4">Part III</div>
           <H size="50px" center>The Virtual Power Plant</H>
           <P size="20px" center>Software that turns distributed energy into grid infrastructure</P>
         </div>
@@ -376,24 +378,24 @@ export default function Presentation() {
       {/* 16: What Is a VPP? */}
       <Slide backgroundColor={bg} padding={pad}>
         <H>What Is a Virtual Power Plant?</H>
-        <P size="19px" color={colors.text}>Software that <span className="font-semibold" style={{ color: colors.primary }}>aggregates</span> distributed energy resources and <span className="font-semibold" style={{ color: colors.success }}>operates</span> them as a coordinated power plant.</P>
+        <P size="20px" color={colors.text}>Software that <span className="font-semibold" style={{ color: colors.primary }}>aggregates</span> distributed energy resources and <span className="font-semibold" style={{ color: colors.success }}>operates</span> them as a coordinated power plant.</P>
         <div className="flex items-center justify-center gap-3.5 mt-5">
           <div className="bg-hud-surface rounded-[10px] p-4 border border-hud-surface-light">
             {['Solar Panels', 'Home Batteries', 'EV Chargers', 'Heat Pumps'].map((a, i) => (
-              <div key={a} className="flex items-center gap-2 mb-1.5 text-[14px] text-hud-text font-sans">
+              <div key={a} className="flex items-center gap-2 mb-1.5 text-[20px] text-hud-text font-sans">
                 <div className="w-2 h-2 rounded-full" style={{ background: [colors.solar, colors.success, colors.primary, colors.secondary][i] }} />{a}
               </div>
             ))}
           </div>
           <div className="text-[22px] text-hud-primary font-mono">{'\u2192'}</div>
           <div className="rounded-xl px-7 py-[22px] text-center" style={{ background: `${colors.primary}08`, border: `1px solid ${colors.primary}30` }}>
-            <div className="text-[17px] font-bold text-hud-primary font-sans">Cloud Platform</div>
-            <div className="text-[12px] text-hud-text-muted font-mono mt-1.5">Kubernetes + Dapr<br />Event-driven control</div>
+            <div className="text-[20px] font-bold text-hud-primary font-sans">Cloud Platform</div>
+            <div className="text-[20px] text-hud-text-muted font-mono mt-1.5">Kubernetes + Dapr<br />Event-driven control</div>
           </div>
           <div className="text-[22px] text-hud-primary font-mono">{'\u2192'}</div>
           <div className="bg-hud-surface rounded-[10px] p-4 border border-hud-surface-light">
             {['Frequency Regulation', 'Peak Shaving', 'Energy Arbitrage', 'Demand Response'].map((s, i) => (
-              <div key={s} className="flex items-center gap-2 mb-1.5 text-[14px] text-hud-text font-sans">
+              <div key={s} className="flex items-center gap-2 mb-1.5 text-[20px] text-hud-text font-sans">
                 <div className="w-2 h-2 rounded-full" style={{ background: [colors.danger, colors.accent, colors.success, colors.primary][i] }} />{s}
               </div>
             ))}
@@ -412,15 +414,15 @@ export default function Presentation() {
             { l: 'Battery', v: '140 ms', c: colors.success, w: 2 },
           ].map(r => (
             <div key={r.l} className="flex items-center gap-3.5 mb-3">
-              <div className="w-[110px] text-[15px] font-medium text-hud-text-muted font-sans text-right">{r.l}</div>
+              <div className="w-[110px] text-[20px] font-medium text-hud-text-muted font-sans text-right">{r.l}</div>
               <div className="h-[30px] rounded-md flex items-center pl-3" style={{ width: `${r.w}%`, background: `linear-gradient(90deg, ${r.c}30, ${r.c}80)` }}>
-                <span className="font-mono text-[13px] font-semibold text-hud-text">{r.v}</span>
+                <span className="font-mono text-[20px] font-semibold text-hud-text">{r.v}</span>
               </div>
             </div>
           ))}
         </div>
         <div className="mt-5 rounded-[10px]" style={{ padding: '16px 22px', background: `${colors.success}08`, border: `1px solid ${colors.success}25` }}>
-          <div className="text-[18px] font-semibold font-sans" style={{ color: colors.success }}>A battery responds before a gas turbine even knows there's an emergency.</div>
+          <div className="text-[20px] font-semibold font-sans" style={{ color: colors.success }}>A battery responds before a gas turbine even knows there's an emergency.</div>
         </div>
       </Slide>
 
@@ -457,20 +459,20 @@ export default function Presentation() {
         <H>Speaking Your Language</H>
         <div className="flex gap-5 items-start mt-3">
           <div className="bg-hud-surface rounded-[10px] p-5 flex-1" style={{ border: `1px solid ${colors.danger}20` }}>
-            <div className="text-[12px] font-semibold font-mono mb-3" style={{ color: colors.danger }}>TRADITIONAL GRID</div>
+            <div className="text-[20px] font-semibold font-mono mb-3" style={{ color: colors.danger }}>TRADITIONAL GRID</div>
             {['Monolith', 'Few generators', 'Manual scaling', 'Single point of failure', 'No observability'].map(x => (
-              <div key={x} className="text-[14px] text-hud-text-muted font-sans py-[5px] border-b border-hud-surface-light">{x}</div>
+              <div key={x} className="text-[20px] text-hud-text-muted font-sans py-[5px] border-b border-hud-surface-light">{x}</div>
             ))}
           </div>
           <div className="pt-[60px] text-[24px] text-hud-primary font-mono">{'\u2192'}</div>
           <div className="rounded-[10px] p-5 flex-1" style={{ background: `${colors.success}06`, border: `1px solid ${colors.success}25` }}>
-            <div className="text-[12px] font-semibold font-mono mb-3" style={{ color: colors.success }}>VIRTUAL POWER PLANT</div>
+            <div className="text-[20px] font-semibold font-mono mb-3" style={{ color: colors.success }}>VIRTUAL POWER PLANT</div>
             {['Distributed microservices', 'Millions of nodes', 'Autoscaling capacity', 'Resilient by design', 'Full observability'].map(x => (
-              <div key={x} className="text-[14px] text-hud-text font-sans font-medium py-[5px] border-b border-hud-surface-light">{x}</div>
+              <div key={x} className="text-[20px] text-hud-text font-sans font-medium py-[5px] border-b border-hud-surface-light">{x}</div>
             ))}
           </div>
         </div>
-        <P size="14px" center style={{ marginTop: 16, fontFamily: '"JetBrains Mono"' }}>Frequency = SLO &bull; Cascade = failure propagation &bull; Batteries = autoscaling</P>
+        <P size="20px" center style={{ marginTop: 16, fontFamily: '"JetBrains Mono"' }}>Frequency = SLO &bull; Cascade = failure propagation &bull; Batteries = autoscaling</P>
       </Slide>
 
       {/* 21: Demo Without VPP */}
@@ -495,7 +497,7 @@ export default function Presentation() {
 
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
-          <div className="text-[14px] font-semibold text-hud-success font-mono tracking-[0.15em] uppercase mb-4">Part IV</div>
+          <div className="text-[20px] font-semibold text-hud-success font-mono tracking-[0.15em] uppercase mb-4">Part IV</div>
           <H size="50px" center color={colors.success}>Resilience</H>
           <P size="20px" center>What the future grid looks like — and why you already know how to build it</P>
         </div>
@@ -504,7 +506,7 @@ export default function Presentation() {
       {/* Back to Texas */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center h-full">
-          <div className="text-[13px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-6">Back to Texas</div>
+          <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-6">Back to Texas</div>
           <div className="text-[26px] font-normal text-hud-text font-sans leading-[1.8]">
             <div className="mb-5">Remember those 4 minutes and 37 seconds?</div>
             <div className="mb-5 text-hud-text-muted">
@@ -526,7 +528,7 @@ export default function Presentation() {
           <H size="48px" center>The Future Grid</H>
           <P size="21px" center style={{ maxWidth: 650, marginTop: 8 }}>Millions of devices cooperating. Homes, EVs, batteries — forming distributed power plants.</P>
           <div className="mt-7 text-[24px] font-semibold font-sans" style={{ color: colors.primary, textShadow: `0 0 30px ${colors.primary}30` }}>The grid becomes software.</div>
-          <P size="19px" center style={{ marginTop: 8 }}>And it runs on the same infrastructure you build every day.</P>
+          <P size="20px" center style={{ marginTop: 8 }}>And it runs on the same infrastructure you build every day.</P>
         </div>
       </Slide>
 
@@ -548,7 +550,7 @@ export default function Presentation() {
       <Slide backgroundColor={bg} padding="20px 36px">
         <div className="flex items-center gap-2.5 mb-1.5">
           <Badge color={colors.success}>KEPLER — CNCF</Badge>
-          <span className="text-[11px] text-hud-text-dim font-mono">Per-pod energy monitoring via eBPF</span>
+          <span className="text-[20px] text-hud-text-dim font-mono">Per-pod energy monitoring via eBPF</span>
         </div>
         <H color={colors.success} size="36px">Experiment: How Much Power Does Our VPP Use?</H>
         <div className="flex justify-center mt-2">
@@ -560,10 +562,10 @@ export default function Presentation() {
       <Slide backgroundColor={bg} padding="20px 36px">
         <div className="flex items-center gap-2.5 mb-1.5">
           <Badge color={colors.success}>KEPLER + KEDA</Badge>
-          <span className="text-[11px] text-hud-text-dim font-mono">Carbon-aware workload scheduling</span>
+          <span className="text-[20px] text-hud-text-dim font-mono">Carbon-aware workload scheduling</span>
         </div>
         <H color={colors.success} size="36px">Experiment: The VPP Practices What It Preaches</H>
-        <P size="15px">Batch jobs (model retraining, analytics) scale up when the grid is clean, scale down when it's dirty.</P>
+        <P size="20px">Batch jobs (model retraining, analytics) scale up when the grid is clean, scale down when it's dirty.</P>
         <div className="flex justify-center mt-1">
           <CarbonAwareChart width={920} height={370} />
         </div>
@@ -573,7 +575,7 @@ export default function Presentation() {
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <H size="54px" center>Thank You</H>
-          <P size="18px" center><span className="text-hud-primary font-semibold">Enpal</span> — Building Europe's Largest Virtual Power Plant</P>
+          <P size="20px" center><span className="text-hud-primary font-semibold">Enpal</span> — Building Europe's Largest Virtual Power Plant</P>
         </div>
       </Slide>
 

@@ -129,10 +129,10 @@ export function act2Slides() {
               >
                 {item.number}
               </div>
-              <div className="text-[15px] font-semibold text-hud-text font-sans mt-1.5">
+              <div className="text-[20px] font-semibold text-hud-text font-sans mt-1.5">
                 {item.label}
               </div>
-              <div className="text-[12px] text-hud-text-dim font-sans mt-1">
+              <div className="text-[20px] text-hud-text-dim font-sans mt-1">
                 {item.sub}
               </div>
             </div>
@@ -153,7 +153,7 @@ export function act2Slides() {
               <div className="text-[48px] font-extrabold text-hud-success font-mono">
                 1
               </div>
-              <div className="text-[14px] text-hud-text-muted font-sans mt-1">
+              <div className="text-[20px] text-hud-text-muted font-sans mt-1">
                 battery = 10 kWh
               </div>
             </div>
@@ -170,7 +170,7 @@ export function act2Slides() {
               >
                 100K
               </div>
-              <div className="text-[14px] text-hud-text-muted font-sans mt-1">
+              <div className="text-[20px] text-hud-text-muted font-sans mt-1">
                 batteries = 1 GWh
               </div>
             </div>

@@ -10,7 +10,7 @@ export default function StatCard({ number, label, color = colors.primary, unit =
       >
         {number}<span className="text-[22px] font-normal text-hud-text-muted">{unit}</span>
       </div>
-      <div className="text-[14px] font-medium text-hud-text-muted mt-2 font-sans uppercase tracking-[0.05em]">
+      <div className="text-[20px] font-medium text-hud-text-muted mt-2 font-sans uppercase tracking-[0.05em]">
         {label}
       </div>
     </div>
