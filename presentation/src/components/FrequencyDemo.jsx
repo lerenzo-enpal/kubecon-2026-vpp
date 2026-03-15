@@ -2,11 +2,60 @@ import React, { useEffect, useRef, useState, useContext } from 'react';
 import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
 
+// Event-based scenarios — each returns a target frequency based on elapsed time (seconds)
+// Real grid dynamics: primary reserves respond in 0-30s, secondary in 30s-15min
 const SCENARIOS = [
-  { label: 'Stable', freq: 50.0 },
-  { label: 'Stress', freq: 49.6 },
-  { label: 'Critical', freq: 49.0 },
-  { label: 'Collapse', freq: 47.5 },
+  {
+    label: 'Generator Trip (800 MW)',
+    color: 'accent',
+    // Realistic: ~0.2 Hz nadir in 8-10s, primary reserves arrest in ~10s, secondary restores in ~60s
+    getFreq: (elapsed) => {
+      if (elapsed < 1) return 50.0;                                         // inertia holds briefly
+      if (elapsed < 4) return 50.0 - ((elapsed - 1) / 3) * 0.45;           // Rate of Change of Frequency (RoCoF)
+      if (elapsed < 8) return 49.55 - 0.05 * Math.sin((elapsed - 4) * 0.8); // nadir ~49.5, small oscillation
+      if (elapsed < 20) return 49.55 + ((elapsed - 8) / 12) * 0.35;        // secondary reserves restore
+      return 49.9;                                                           // settled near nominal
+    },
+  },
+  {
+    label: '3 GW Loss of Generation',
+    color: 'danger',
+    // Severe: exceeds primary reserves, UFLS Stage 1 activates, partial recovery
+    getFreq: (elapsed) => {
+      if (elapsed < 0.5) return 50.0;                                       // inertia
+      if (elapsed < 3) return 50.0 - ((elapsed - 0.5) / 2.5) * 1.1;        // steep RoCoF — 0.44 Hz/s
+      if (elapsed < 6) return 48.9 + 0.1 * Math.sin((elapsed - 3) * 1.5);  // oscillates near 48.9 (UFLS Stage 1)
+      if (elapsed < 10) return 48.9 + ((elapsed - 6) / 4) * 0.15;          // load shedding helps stabilize
+      if (elapsed < 25) return 49.05 + ((elapsed - 10) / 15) * 0.45;       // slow recovery with reserves
+      return 49.5;                                                           // settled but stressed
+    },
+  },
+  {
+    label: 'Sudden Demand Drop (5 GW)',
+    color: 'accent',
+    // Over-frequency event: e.g. large industrial load disconnects, frequency spikes up then recovers
+    getFreq: (elapsed) => {
+      if (elapsed < 0.5) return 50.0;                                       // inertia
+      if (elapsed < 3) return 50.0 + ((elapsed - 0.5) / 2.5) * 0.6;        // frequency rises — too much supply
+      if (elapsed < 6) return 50.6 - 0.08 * Math.sin((elapsed - 3) * 1.2); // generators start ramping down
+      if (elapsed < 12) return 50.6 - ((elapsed - 6) / 6) * 0.35;          // AGC brings it back
+      if (elapsed < 22) return 50.25 - ((elapsed - 12) / 10) * 0.25;       // settling
+      return 50.0;
+    },
+  },
+  {
+    label: 'Cyber Attack',
+    color: 'danger',
+    // Coordinated SCADA compromise — cascading trips, no recovery, triggers hacker animation
+    getFreq: (elapsed) => {
+      if (elapsed < 2) return 50.0;                                          // attacker in system, no visible effect
+      if (elapsed < 5) return 50.0 - ((elapsed - 2) / 3) * 0.5;            // first generators tripped remotely
+      if (elapsed < 8) return 49.5 - ((elapsed - 5) / 3) * 0.6;            // cascade — more trips
+      if (elapsed < 11) return 48.9 - ((elapsed - 8) / 3) * 0.7;           // reserves overwhelmed
+      if (elapsed < 14) return 48.2 - ((elapsed - 11) / 3) * 0.7;          // into collapse
+      return 47.4;                                                           // total blackout
+    },
+  },
 ];
 
 const HACKER_FRAMES = [
@@ -75,7 +124,8 @@ export default function FrequencyDemo({ width = 900, height = 480 }) {
   const tRef = useRef(0);
   const targetFreqRef = useRef(50.0);
   const currentFreqRef = useRef(50.0);
-  const [scenario, setScenario] = useState(0);
+  const [scenario, setScenario] = useState(-1); // -1 = stable/reset
+  const scenarioStartRef = useRef(null);
   const warningFlashRef = useRef(0);
   const collapseTimeRef = useRef(null);
   const explosionParticlesRef = useRef([]);
@@ -94,7 +144,8 @@ export default function FrequencyDemo({ width = 900, height = 480 }) {
   const slideContext = useContext(SlideContext);
   useEffect(() => {
     if (slideContext?.isSlideActive) {
-      setScenario(0);
+      setScenario(-1);
+      scenarioStartRef.current = null;
       targetFreqRef.current = 50.0;
       currentFreqRef.current = 50.0;
       collapseTimeRef.current = null;
@@ -110,13 +161,27 @@ export default function FrequencyDemo({ width = 900, height = 480 }) {
 
   const switchScenario = (idx) => {
     setScenario(idx);
-    targetFreqRef.current = SCENARIOS[idx].freq;
+    scenarioStartRef.current = performance.now() / 1000;
     if (idx < 3) {
       collapseTimeRef.current = null;
       hackerPhaseRef.current = 0;
       glitchRef.current = { active: false, startTime: 0 };
       explosionParticlesRef.current = [];
     }
+  };
+
+  const resetToStable = () => {
+    setScenario(-1);
+    scenarioStartRef.current = null;
+    targetFreqRef.current = 50.0;
+    collapseTimeRef.current = null;
+    hackerPhaseRef.current = 0;
+    glitchRef.current = { active: false, startTime: 0 };
+    explosionParticlesRef.current = [];
+    thresholdStateRef.current = THRESHOLDS.map(() => ({ crossed: false, uncrossedSince: null, highlight: 0 }));
+    lastStatusRef.current = { text: 'GRID STABLE', color: colors.primary, severity: 0, clearedAt: null };
+    bannerRef.current = { level: 'none', clearedAt: null };
+    lineColorRef.current = { color: colors.primary, clearedAt: null };
   };
 
   useEffect(() => {
@@ -136,6 +201,12 @@ export default function FrequencyDemo({ width = 900, height = 480 }) {
         warningFlashRef.current += 0.05;
       }
       const t = tRef.current;
+
+      // Update target from scenario timeline
+      if (scenario >= 0 && scenarioStartRef.current !== null) {
+        const elapsed = performance.now() / 1000 - scenarioStartRef.current;
+        targetFreqRef.current = SCENARIOS[scenario].getFreq(elapsed);
+      }
 
       // Smooth interpolation toward target
       const target = targetFreqRef.current;
@@ -600,7 +671,7 @@ export default function FrequencyDemo({ width = 900, height = 480 }) {
 
     draw();
     return () => cancelAnimationFrame(animRef.current);
-  }, [width, height, slideContext?.isSlideActive]);
+  }, [width, height, slideContext?.isSlideActive, scenario]);
 
   return (
     <div style={{ position: 'relative' }}>
@@ -615,7 +686,7 @@ export default function FrequencyDemo({ width = 900, height = 480 }) {
       <div style={{ position: 'absolute', bottom: 12, right: 12, display: 'flex', gap: 6 }}>
         {SCENARIOS.map((s, i) => {
           const isActive = scenario === i;
-          const btnColor = i === 0 ? colors.primary : i === 1 ? colors.accent : colors.danger;
+          const btnColor = s.color === 'danger' ? colors.danger : colors.accent;
           return (
             <button
               key={s.label}
@@ -627,7 +698,7 @@ export default function FrequencyDemo({ width = 900, height = 480 }) {
                 padding: '5px 14px',
                 borderRadius: 6,
                 cursor: 'pointer',
-                fontSize: 12,
+                fontSize: 11,
                 fontFamily: '"JetBrains Mono"',
                 fontWeight: isActive ? 600 : 400,
                 transition: 'all 0.2s',
@@ -637,6 +708,23 @@ export default function FrequencyDemo({ width = 900, height = 480 }) {
             </button>
           );
         })}
+        <button
+          onClick={resetToStable}
+          style={{
+            background: scenario === -1 ? `${colors.primary}25` : colors.surface,
+            border: `1px solid ${scenario === -1 ? colors.primary : colors.surfaceLight}`,
+            color: scenario === -1 ? colors.primary : colors.textMuted,
+            padding: '5px 14px',
+            borderRadius: 6,
+            cursor: 'pointer',
+            fontSize: 11,
+            fontFamily: '"JetBrains Mono"',
+            fontWeight: scenario === -1 ? 600 : 400,
+            transition: 'all 0.2s',
+          }}
+        >
+          Reset
+        </button>
       </div>
     </div>
   );
