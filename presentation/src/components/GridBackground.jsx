@@ -3,17 +3,7 @@ import { colors } from '../theme';
 
 export default function GridBackground({ opacity = 0.06 }) {
   return (
-    <svg
-      style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        pointerEvents: 'none',
-        zIndex: 0,
-      }}
-    >
+    <svg className="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
       <defs>
         <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
           <path

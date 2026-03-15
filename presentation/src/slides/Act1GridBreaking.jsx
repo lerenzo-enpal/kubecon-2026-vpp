@@ -22,39 +22,27 @@ export function act1Slides() {
     /* ── Slide 1: Cold Open ── */
     <Slide key="cold-open" backgroundColor={colors.bg}>
       <SlideContainer noGrid style={{ justifyContent: 'center', padding: '60px 100px' }}>
-        <div style={{
-          fontSize: '28px',
-          fontWeight: 300,
-          color: colors.textMuted,
-          fontFamily: '"Inter", system-ui, sans-serif',
-          lineHeight: 1.8,
-          maxWidth: 800,
-          fontStyle: 'italic',
-        }}>
+        <div className="text-[28px] font-light text-hud-text-muted font-sans leading-[1.8] max-w-[800px] italic">
           <Appear>
-            <div style={{ marginBottom: 24 }}>
+            <div className="mb-6">
               "January 4th, 2026. 3 AM. Berlin.
             </div>
           </Appear>
           <Appear>
-            <div style={{ marginBottom: 24 }}>
+            <div className="mb-6">
               Someone sets fire to a cable duct over the Teltow Canal.
               45,000 households go dark."
             </div>
           </Appear>
           <Appear>
-            <div style={{ color: colors.text, fontStyle: 'normal', fontWeight: 500 }}>
+            <div className="text-hud-text not-italic font-medium">
               Some of those households had solar panels and batteries.
               They stayed warm. Their lights stayed on.
             </div>
           </Appear>
           <Appear>
-            <div style={{
+            <div className="not-italic font-semibold mt-8 text-[32px]" style={{
               color: colors.primary,
-              fontStyle: 'normal',
-              fontWeight: 600,
-              marginTop: 32,
-              fontSize: '32px',
               textShadow: `0 0 40px ${colors.primary}30`,
             }}>
               The difference? Software.
@@ -71,16 +59,8 @@ export function act1Slides() {
     /* ── Slide 2: Title ── */
     <Slide key="title" backgroundColor={colors.bg}>
       <SlideContainer>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{
-            fontSize: '13px',
-            fontWeight: 600,
-            color: colors.primary,
-            fontFamily: '"JetBrains Mono", monospace',
-            letterSpacing: '0.2em',
-            textTransform: 'uppercase',
-            marginBottom: 28,
-          }}>
+        <div className="text-center">
+          <div className="text-[13px] font-semibold text-hud-primary font-mono tracking-[0.2em] uppercase mb-7">
             KubeCon + CloudNativeCon Europe 2026
           </div>
           <GlowText size="52px" style={{ textAlign: 'center', marginBottom: 20 }}>
@@ -89,34 +69,16 @@ export function act1Slides() {
           <Subtitle size="26px" color={colors.textMuted}>
             Cloud-Native Infrastructure for the Energy Grid
           </Subtitle>
-          <div style={{
-            marginTop: 48,
-            display: 'flex',
-            gap: 24,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-            <div style={{
-              width: 48,
-              height: 48,
-              borderRadius: '50%',
+          <div className="mt-12 flex gap-6 justify-center items-center">
+            <div className="w-[48px] h-[48px] rounded-full" style={{
               background: `linear-gradient(135deg, ${colors.primary}30, ${colors.secondary}30)`,
               border: `1px solid ${colors.surfaceLight}`,
             }} />
-            <div style={{ textAlign: 'left' }}>
-              <div style={{
-                fontSize: '18px',
-                fontWeight: 600,
-                color: colors.text,
-                fontFamily: '"Inter", system-ui, sans-serif',
-              }}>
+            <div className="text-left">
+              <div className="text-[18px] font-semibold text-hud-text font-sans">
                 Enpal / Flexa
               </div>
-              <div style={{
-                fontSize: '14px',
-                color: colors.textMuted,
-                fontFamily: '"Inter", system-ui, sans-serif',
-              }}>
+              <div className="text-[14px] text-hud-text-muted font-sans">
                 Building Europe's Largest Virtual Power Plant
               </div>
             </div>
@@ -135,10 +97,10 @@ export function act1Slides() {
           The power grid must balance supply and demand every single second.
           If this frequency line deviates too far, everything stops.
         </Subtitle>
-        <div style={{ marginTop: 32, display: 'flex', justifyContent: 'center' }}>
+        <div className="mt-8 flex justify-center">
           <FrequencyLine width={850} height={200} />
         </div>
-        <div style={{ marginTop: 20, display: 'flex', gap: 32, justifyContent: 'center' }}>
+        <div className="mt-5 flex gap-8 justify-center">
           <StatCard number="50.000" unit=" Hz" label="Target Frequency" color={colors.primary} />
           <StatCard number="400" unit=" GW" label="European Load" color={colors.secondary} />
           <StatCard number="0" unit=" buffer" label="No Storage on Grid" color={colors.accent} />
@@ -156,46 +118,36 @@ export function act1Slides() {
         <GlowText size="44px" style={{ marginBottom: 32 }}>
           Designed for a Different World
         </GlowText>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0, marginTop: 20 }}>
+        <div className="flex items-center justify-center gap-0 mt-5">
           {designedSteps.map((item, i) => (
             <React.Fragment key={i}>
-              <div style={{
+              <div className="rounded-xl p-[24px_20px] text-center w-[160px]" style={{
                 background: colors.surface,
                 border: `1px solid ${item.color}30`,
-                borderRadius: 12,
-                padding: '24px 20px',
-                textAlign: 'center',
-                width: 160,
               }}>
-                <div style={{
-                  width: 40, height: 40, borderRadius: 10,
-                  background: `${item.color}15`, border: `1px solid ${item.color}30`,
-                  margin: '0 auto 12px',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '20px', color: item.color,
-                  fontFamily: '"JetBrains Mono", monospace', fontWeight: 700,
+                <div className="w-[40px] h-[40px] rounded-[10px] mx-auto mb-3 flex items-center justify-center text-[20px] font-mono font-bold" style={{
+                  background: `${item.color}15`,
+                  border: `1px solid ${item.color}30`,
+                  color: item.color,
                 }}>
                   ~
                 </div>
-                <div style={{ fontSize: '16px', fontWeight: 600, color: colors.text, fontFamily: '"Inter"' }}>
+                <div className="text-[16px] font-semibold text-hud-text font-sans">
                   {item.label}
                 </div>
-                <div style={{ fontSize: '13px', color: colors.textMuted, fontFamily: '"Inter"', marginTop: 4 }}>
+                <div className="text-[13px] text-hud-text-muted font-sans mt-1">
                   {item.sub}
                 </div>
               </div>
               {i < 3 && (
-                <div style={{ fontSize: '24px', color: colors.textDim, padding: '0 8px', fontFamily: '"JetBrains Mono"' }}>
+                <div className="text-[24px] text-hud-text-dim px-2 font-mono">
                   {'\u2192'}
                 </div>
               )}
             </React.Fragment>
           ))}
         </div>
-        <div style={{
-          marginTop: 36, textAlign: 'center', fontSize: '20px',
-          color: colors.textMuted, fontFamily: '"Inter"', fontStyle: 'italic',
-        }}>
+        <div className="mt-9 text-center text-[20px] text-hud-text-muted font-sans italic">
           "Built in the 1950s. One-directional. No flexibility."
         </div>
       </SlideContainer>
@@ -211,18 +163,16 @@ export function act1Slides() {
           When one node fails, load shifts to neighbors. Neighbors overload. They fail.
           The system defends itself locally while destroying itself globally.
         </Subtitle>
-        <div style={{ display: 'flex', gap: 24, marginTop: 24, justifyContent: 'center' }}>
+        <div className="flex gap-6 mt-6 justify-center">
           <StatCard number="265" label="Plants Tripped" color={colors.danger} />
           <StatCard number="50M" label="People Affected" color={colors.danger} />
           <StatCard number="$10B" label="Economic Damage" color={colors.accent} />
         </div>
-        <div style={{
-          marginTop: 20, textAlign: 'center', padding: '12px 24px',
-          background: colors.surface, borderRadius: 8, border: `1px solid ${colors.danger}20`,
-          display: 'inline-block', margin: '20px auto 0',
+        <div className="mt-5 text-center px-6 py-3 bg-hud-surface rounded-lg inline-block mx-auto" style={{
+          border: `1px solid ${colors.danger}20`,
         }}>
-          <div style={{ fontSize: '14px', color: colors.textMuted, fontFamily: '"Inter"' }}>
-            <span style={{ color: colors.danger, fontWeight: 600 }}>2003 Northeast Blackout</span>
+          <div className="text-[14px] text-hud-text-muted font-sans">
+            <span className="text-hud-danger font-semibold">2003 Northeast Blackout</span>
             {' '}&mdash; triggered by a software bug and untrimmed trees
           </div>
         </div>
@@ -235,14 +185,14 @@ export function act1Slides() {
         <GlowText size="40px" color={colors.danger} style={{ marginBottom: 28 }}>
           It Keeps Happening
         </GlowText>
-        <div style={{ display: 'flex', gap: 40 }}>
-          <div style={{ flex: 1 }}>
+        <div className="flex gap-10">
+          <div className="flex-1">
             <TimelineItem year="2003" event="Italy Blackout" impact="56 million people, 3 hours" />
             <TimelineItem year="2006" event="European Grid Split" impact="15 million affected" />
             <TimelineItem year="2016" event="South Australia Statewide Blackout" impact="Entire state" />
             <TimelineItem year="2021" event="Texas ERCOT Collapse" impact="4.5M homes, 240+ deaths, $130B" />
           </div>
-          <div style={{ flex: 1 }}>
+          <div className="flex-1">
             <TimelineItem year="2021" event="Continental Europe Grid Split" impact="48.75 Hz — 1.25 Hz from total collapse" />
             <TimelineItem year="2025" event="Spain/Portugal Blackout" impact="60 million people" color={colors.accent} />
             <TimelineItem year="2025" event="Berlin Cable Arson (x3)" impact="45,000+ homes, deaths" color={colors.accent} />
@@ -262,25 +212,22 @@ export function act1Slides() {
         <GlowText size="40px" style={{ marginBottom: 36 }}>
           Every Cascade Shares Three Properties
         </GlowText>
-        <div style={{ display: 'flex', gap: 20, justifyContent: 'center' }}>
+        <div className="flex gap-5 justify-center">
           {cascadePatterns.map((item) => (
-            <div key={item.num} style={{
-              background: colors.surface, border: `1px solid ${item.color}25`,
-              borderRadius: 16, padding: '32px 24px', flex: 1, maxWidth: 260,
+            <div key={item.num} className="rounded-2xl p-[32px_24px] flex-1 max-w-[260px]" style={{
+              background: colors.surface,
+              border: `1px solid ${item.color}25`,
             }}>
-              <div style={{
-                width: 44, height: 44, borderRadius: 12,
+              <div className="w-[44px] h-[44px] rounded-xl flex items-center justify-center text-[22px] font-extrabold font-mono mb-4" style={{
                 background: `${item.color}15`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '22px', fontWeight: 800, color: item.color,
-                fontFamily: '"JetBrains Mono"', marginBottom: 16,
+                color: item.color,
               }}>
                 {item.num}
               </div>
-              <div style={{ fontSize: '20px', fontWeight: 700, color: colors.text, fontFamily: '"Inter"', marginBottom: 8 }}>
+              <div className="text-[20px] font-bold text-hud-text font-sans mb-2">
                 {item.title}
               </div>
-              <div style={{ fontSize: '15px', color: colors.textMuted, fontFamily: '"Inter"', lineHeight: 1.5 }}>
+              <div className="text-[15px] text-hud-text-muted font-sans leading-normal">
                 {item.desc}
               </div>
             </div>
@@ -297,41 +244,37 @@ export function act1Slides() {
         </GlowText>
         <Subtitle size="20px">
           Solar and wind are cheap, scalable, and essential &mdash; but they make the grid
-          <span style={{ color: colors.accent, fontWeight: 600 }}> less predictable</span>.
+          <span className="font-semibold" style={{ color: colors.accent }}> less predictable</span>.
         </Subtitle>
-        <div style={{ marginTop: 28, display: 'flex', gap: 20, justifyContent: 'center' }}>
+        <div className="mt-7 flex gap-5 justify-center">
           {[
             { label: 'Variable', desc: 'Output changes with weather', color: colors.solar },
             { label: 'Distributed', desc: 'Millions of small sources', color: colors.success },
             { label: 'Bidirectional', desc: 'Power flows both ways now', color: colors.primary },
           ].map((item) => (
-            <div key={item.label} style={{
-              background: colors.surface, border: `1px solid ${item.color}25`,
-              borderRadius: 12, padding: '24px', flex: 1, maxWidth: 240, textAlign: 'center',
+            <div key={item.label} className="rounded-xl p-6 flex-1 max-w-[240px] text-center" style={{
+              background: colors.surface,
+              border: `1px solid ${item.color}25`,
             }}>
-              <div style={{ fontSize: '20px', fontWeight: 700, color: item.color, fontFamily: '"Inter"', marginBottom: 8 }}>
+              <div className="text-[20px] font-bold font-sans mb-2" style={{ color: item.color }}>
                 {item.label}
               </div>
-              <div style={{ fontSize: '15px', color: colors.textMuted, fontFamily: '"Inter"' }}>
+              <div className="text-[15px] text-hud-text-muted font-sans">
                 {item.desc}
               </div>
             </div>
           ))}
         </div>
-        <div style={{
-          marginTop: 32, textAlign: 'center', fontSize: '18px',
-          color: colors.textMuted, fontFamily: '"Inter"',
-        }}>
-          <span style={{ color: colors.accent, fontWeight: 600 }}>301 negative price hours</span> in Germany in 2023, trending 400+
+        <div className="mt-8 text-center text-[18px] text-hud-text-muted font-sans">
+          <span className="font-semibold" style={{ color: colors.accent }}>301 negative price hours</span> in Germany in 2023, trending 400+
           <br />
-          <span style={{ fontSize: '14px' }}>Solar floods midday. Steep ramp in evening. The "duck curve" problem.</span>
+          <span className="text-[14px]">Solar floods midday. Steep ramp in evening. The "duck curve" problem.</span>
         </div>
-        <div style={{
-          marginTop: 28, textAlign: 'center', fontSize: '22px', fontWeight: 600,
-          color: colors.primary, fontFamily: '"Inter"',
+        <div className="mt-7 text-center text-[22px] font-semibold font-sans" style={{
+          color: colors.primary,
           textShadow: `0 0 30px ${colors.primary}30`,
         }}>
-          The grid needs one thing: <span style={{ fontWeight: 800 }}>flexibility</span>.
+          The grid needs one thing: <span className="font-extrabold">flexibility</span>.
         </div>
       </SlideContainer>
     </Slide>,

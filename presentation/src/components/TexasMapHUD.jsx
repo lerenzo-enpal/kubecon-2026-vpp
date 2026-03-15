@@ -826,11 +826,6 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
         </>
       )}
 
-      {/* ── CSS keyframes ── */}
-      <style>{`
-        .hud-blink { animation: hudBlink 0.5s step-end infinite; }
-        @keyframes hudBlink { 50% { opacity: 0; } }
-      `}</style>
     </div>
   );
 }

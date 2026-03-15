@@ -1,37 +1,19 @@
 import React from 'react';
-import { colors } from '../../theme';
 import SlideContainer from './SlideContainer';
 import GlowText from './GlowText';
 
 export default function SectionDivider({ number, title, subtitle }) {
   return (
     <SlideContainer>
-      <div style={{ textAlign: 'center' }}>
-        <div style={{
-          fontSize: '14px',
-          fontWeight: 600,
-          color: colors.primary,
-          fontFamily: '"JetBrains Mono", monospace',
-          letterSpacing: '0.15em',
-          textTransform: 'uppercase',
-          marginBottom: 20,
-        }}>
+      <div className="text-center">
+        <div className="text-[14px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-5">
           Part {number}
         </div>
         <GlowText size="56px" style={{ textAlign: 'center' }}>
           {title}
         </GlowText>
         {subtitle && (
-          <div style={{
-            marginTop: 20,
-            color: colors.textMuted,
-            fontSize: '22px',
-            fontFamily: '"Inter", system-ui, sans-serif',
-            fontWeight: 400,
-            lineHeight: 1.5,
-            maxWidth: 800,
-            margin: '20px auto 0',
-          }}>
+          <div className="mt-5 text-hud-text-muted text-[22px] font-sans font-normal leading-normal max-w-[800px] mx-auto">
             {subtitle}
           </div>
         )}

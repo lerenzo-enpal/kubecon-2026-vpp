@@ -8,35 +8,31 @@ export function closingSlides() {
     /* ── Slide 21: Back to Berlin ── */
     <Slide key="back-to-berlin" backgroundColor={colors.bg}>
       <SlideContainer noGrid>
-        <div style={{ maxWidth: 750 }}>
-          <div style={{
-            fontSize: '14px', fontWeight: 600, color: colors.primary,
-            fontFamily: '"JetBrains Mono"', letterSpacing: '0.15em',
-            textTransform: 'uppercase', marginBottom: 24,
-          }}>
+        <div className="max-w-[750px]">
+          <div className="text-[14px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-6">
             Back to Berlin
           </div>
-          <div style={{ fontSize: '26px', fontWeight: 400, color: colors.text, fontFamily: '"Inter"', lineHeight: 1.7 }}>
+          <div className="text-[26px] font-normal text-hud-text font-sans leading-[1.7]">
             <Appear>
-              <div style={{ marginBottom: 20 }}>
+              <div className="mb-5">
                 Remember those households in Steglitz-Zehlendorf that stayed warm?
               </div>
             </Appear>
             <Appear>
-              <div style={{ marginBottom: 20, color: colors.textMuted }}>
+              <div className="mb-5 text-hud-text-muted">
                 They had solar panels, batteries, and a software agent on their roof.
               </div>
             </Appear>
             <Appear>
-              <div style={{ marginBottom: 20, color: colors.textMuted }}>
+              <div className="mb-5 text-hud-text-muted">
                 They were part of a Virtual Power Plant.
               </div>
             </Appear>
             <Appear>
-              <div style={{
-                color: colors.primary, fontWeight: 600,
-                textShadow: `0 0 30px ${colors.primary}30`,
-              }}>
+              <div
+                className="font-semibold text-hud-primary"
+                style={{ textShadow: `0 0 30px ${colors.primary}30` }}
+              >
                 The grid failed them. The software didn't.
               </div>
             </Appear>
@@ -52,32 +48,25 @@ export function closingSlides() {
     /* ── Slide 22: The Future Grid ── */
     <Slide key="future-grid" backgroundColor={colors.bg}>
       <SlideContainer>
-        <div style={{ textAlign: 'center' }}>
+        <div className="text-center">
           <GlowText size="48px" style={{ textAlign: 'center', marginBottom: 28 }}>
             The Future Grid
           </GlowText>
-          <div style={{
-            fontSize: '22px', fontWeight: 400, color: colors.textMuted,
-            fontFamily: '"Inter"', lineHeight: 1.7, maxWidth: 650, margin: '0 auto',
-          }}>
+          <div className="text-[22px] font-normal text-hud-text-muted font-sans leading-[1.7] max-w-[650px] mx-auto">
             Millions of devices cooperating.
             <br />Homes, EVs, batteries, renewables &mdash;
             <br />forming distributed power plants.
           </div>
           <Appear>
-            <div style={{
-              marginTop: 32, fontSize: '24px', fontWeight: 600,
-              color: colors.primary, fontFamily: '"Inter"',
-              textShadow: `0 0 30px ${colors.primary}30`,
-            }}>
+            <div
+              className="mt-8 text-[24px] font-semibold text-hud-primary font-sans"
+              style={{ textShadow: `0 0 30px ${colors.primary}30` }}
+            >
               The grid becomes software.
             </div>
           </Appear>
           <Appear>
-            <div style={{
-              marginTop: 12, fontSize: '20px', fontWeight: 400,
-              color: colors.textMuted, fontFamily: '"Inter"',
-            }}>
+            <div className="mt-3 text-[20px] font-normal text-hud-text-muted font-sans">
               And it runs on the same infrastructure you build every day.
             </div>
           </Appear>
@@ -88,30 +77,26 @@ export function closingSlides() {
     /* ── Slide 23: Final Takeaway ── */
     <Slide key="final-takeaway" backgroundColor={colors.bg}>
       <SlideContainer noGrid>
-        <div style={{ textAlign: 'center', maxWidth: 800, margin: '0 auto' }}>
-          <div style={{
-            fontSize: '28px', fontWeight: 600, color: colors.text,
-            fontFamily: '"Inter"', lineHeight: 1.7, marginBottom: 36,
-          }}>
+        <div className="text-center max-w-[800px] mx-auto">
+          <div className="text-[28px] font-semibold text-hud-text font-sans leading-[1.7] mb-9">
             Virtual Power Plants turn distributed renewable energy
-            <br />into <span style={{ color: colors.success }}>reliable grid infrastructure</span>.
+            <br />into <span className="text-hud-success">reliable grid infrastructure</span>.
           </div>
-          <div style={{
-            fontSize: '24px', fontWeight: 400, color: colors.textMuted,
-            fontFamily: '"Inter"', lineHeight: 1.7, marginBottom: 36,
-          }}>
+          <div className="text-[24px] font-normal text-hud-text-muted font-sans leading-[1.7] mb-9">
             Cloud-native systems are what make them possible.
           </div>
-          <div style={{
-            fontSize: '26px', fontWeight: 700, color: colors.primary,
-            fontFamily: '"Inter"', textShadow: `0 0 40px ${colors.primary}30`,
-            padding: '20px 32px', background: `${colors.primary}08`,
-            borderRadius: 16, border: `1px solid ${colors.primary}20`,
-            display: 'inline-block',
-          }}>
+          <div
+            className="text-[26px] font-bold text-hud-primary font-sans inline-block rounded-2xl"
+            style={{
+              textShadow: `0 0 40px ${colors.primary}30`,
+              padding: '20px 32px',
+              background: `${colors.primary}08`,
+              border: `1px solid ${colors.primary}20`,
+            }}
+          >
             You already know how to build the future grid.
             <br />
-            <span style={{ fontWeight: 400, fontSize: '22px', color: colors.textMuted }}>
+            <span className="font-normal text-[22px] text-hud-text-muted">
               You just didn't know it yet.
             </span>
           </div>
@@ -122,28 +107,32 @@ export function closingSlides() {
     /* ── Slide 24: Thank You ── */
     <Slide key="thank-you" backgroundColor={colors.bg}>
       <SlideContainer>
-        <div style={{ textAlign: 'center' }}>
+        <div className="text-center">
           <GlowText size="56px" style={{ textAlign: 'center', marginBottom: 20 }}>
             Thank You
           </GlowText>
-          <div style={{ fontSize: '18px', color: colors.textMuted, fontFamily: '"Inter"', lineHeight: 1.8 }}>
-            <div style={{ marginBottom: 8 }}>
-              <span style={{ color: colors.primary, fontWeight: 600 }}>Enpal / Flexa</span>
+          <div className="text-[18px] text-hud-text-muted font-sans leading-[1.8]">
+            <div className="mb-2">
+              <span className="text-hud-primary font-semibold">Enpal / Flexa</span>
             </div>
-            <div style={{ fontSize: '14px', color: colors.textDim }}>
+            <div className="text-[14px] text-hud-text-dim">
               Building Europe's Largest Virtual Power Plant
             </div>
           </div>
-          <div style={{ marginTop: 48, display: 'flex', gap: 16, justifyContent: 'center' }}>
+          <div className="mt-12 flex gap-4 justify-center">
             {[
               { label: 'Slides & Interactive Demo', color: colors.primary },
               { label: 'Deep Dive Website', color: colors.success },
             ].map((item) => (
-              <div key={item.label} style={{
-                background: colors.surface, border: `1px solid ${item.color}25`,
-                borderRadius: 12, padding: '16px 24px', fontSize: '14px',
-                fontWeight: 500, color: item.color, fontFamily: '"Inter"',
-              }}>
+              <div
+                key={item.label}
+                className="bg-hud-surface rounded-xl text-[14px] font-medium font-sans"
+                style={{
+                  border: `1px solid ${item.color}25`,
+                  padding: '16px 24px',
+                  color: item.color,
+                }}
+              >
                 {item.label}
               </div>
             ))}
