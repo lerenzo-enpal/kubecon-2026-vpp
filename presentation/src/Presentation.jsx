@@ -4,14 +4,13 @@ import { colors } from './theme';
 import FrequencyLine from './components/FrequencyLine';
 import FrequencyDemo from './components/FrequencyDemo';
 import CascadeSimulation from './components/CascadeSimulation';
-import TexasCascade from './components/TexasCascade';
 import RenewableGrowthChart from './components/RenewableGrowthChart';
 import DuckCurveChart from './components/DuckCurveChart';
 import AnimatedStat from './components/AnimatedStat';
 import StaticTexasGrid from './components/StaticTexasGrid';
 import KeplerDashboard from './components/KeplerDashboard';
 import CarbonAwareChart from './components/CarbonAwareChart';
-import TexasMapGL from './components/TexasMapGL';
+import TexasMapHUD from './components/TexasMapHUD';
 
 const theme = {
   colors: { primary: colors.text, secondary: colors.textMuted, tertiary: colors.primary },
@@ -27,7 +26,7 @@ const SECTIONS = [
   { from: 3, to: 11, name: 'The Grid' },
   { from: 12, to: 17, name: 'The Renewable Revolution' },
   { from: 18, to: 25, name: 'The Virtual Power Plant' },
-  { from: 26, to: 31, name: 'Resilience' },
+  { from: 26, to: 30, name: 'Resilience' },
 ];
 
 const slideTemplate = ({ slideNumber, numberOfSlides }) => {
@@ -126,16 +125,10 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* Texas Cascade */}
-      <Slide backgroundColor="#050810" padding="0">
-        <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px' }}>
-            <Badge color={colors.danger}>FEB 15, 2021</Badge>
-            <div style={{ fontSize: '16px', fontWeight: 700, color: colors.danger, fontFamily: '"Inter"' }}>Winter Storm Uri — Cascading Grid Failure</div>
-          </div>
-          <div style={{ flex: 1, position: 'relative' }}>
-            <TexasCascade width={1024} height={620} />
-          </div>
+      {/* Texas Cascade — deck.gl HUD */}
+      <Slide backgroundColor="#020408" padding="0">
+        <div style={{ position: 'absolute', inset: 0 }}>
+          <TexasMapHUD width={1366} height={768} variant="hud" />
         </div>
       </Slide>
 
@@ -577,19 +570,6 @@ export default function Presentation() {
         <P size="15px">Batch jobs (model retraining, analytics) scale up when the grid is clean, scale down when it's dirty.</P>
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
           <CarbonAwareChart width={920} height={370} />
-        </div>
-      </Slide>
-
-      {/* deck.gl Prototype: Texas Grid on Real Map */}
-      <Slide backgroundColor="#050810" padding="0">
-        <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 14px' }}>
-            <Badge color={colors.primary}>PROTOTYPE — deck.gl</Badge>
-            <span style={{ fontSize: '14px', fontWeight: 700, color: colors.primary, fontFamily: '"Inter"' }}>ERCOT Grid on Real Map — WebGL Rendered</span>
-          </div>
-          <div style={{ flex: 1 }}>
-            <TexasMapGL width={1024} height={640} />
-          </div>
         </div>
       </Slide>
 
