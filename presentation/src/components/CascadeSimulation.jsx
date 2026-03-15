@@ -325,8 +325,7 @@ export default function CascadeSimulation({ width = 740, height = 540, withVPP =
         style={{
           width,
           height,
-          borderRadius: 8,
-          border: `1px solid ${colors.surfaceLight}`,
+          /* border removed for seamless slide integration */
         }}
       />
       <div style={{ position: 'absolute', bottom: 12, right: 12, display: 'flex', gap: 8 }}>

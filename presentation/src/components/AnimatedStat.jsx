@@ -69,7 +69,7 @@ export default function AnimatedStat({ target, prefix = '', suffix = '', delay =
   return (
     <div style={{ background: '#1a2236', border: `1px solid ${color}20`, borderRadius: 10, padding: '20px 16px', textAlign: 'center', flex: 1 }}>
       <div style={{ fontSize: '34px', fontWeight: 800, fontFamily: '"JetBrains Mono", monospace', color, textShadow: `0 0 20px ${color}25` }}>{display}</div>
-      <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: 6, fontFamily: '"Inter", system-ui, sans-serif', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{label}</div>
+      <div style={{ fontSize: '20px', color: '#94a3b8', marginTop: 6, fontFamily: '"Inter", system-ui, sans-serif', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{label}</div>
     </div>
   );
 }

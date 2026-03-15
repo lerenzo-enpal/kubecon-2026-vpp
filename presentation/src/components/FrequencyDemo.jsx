@@ -503,8 +503,7 @@ export default function FrequencyDemo({ width = 900, height = 400 }) {
         style={{
           width,
           height,
-          borderRadius: 8,
-          border: `1px solid ${colors.surfaceLight}`,
+          /* border removed for seamless slide integration */
         }}
       />
       <div style={{ position: 'absolute', bottom: 12, right: 12, display: 'flex', gap: 6 }}>
