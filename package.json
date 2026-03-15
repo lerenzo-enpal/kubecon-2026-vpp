@@ -13,6 +13,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "decktape": "^3.15.0"
+    "decktape": "^3.15.0",
+    "pdf-lib": "^1.17.1",
+    "playwright": "^1.58.2"
   }
 }
