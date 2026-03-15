@@ -32,16 +32,18 @@ function lerp(a, b, t) {
   return a + (b - a) * t;
 }
 
+const Y_MAX = 68; // headroom above peak demand (60 GW) for bezier overshoot
+
 function smoothLine(ctx, data, xScale, yScale, padLeft, padTop) {
   ctx.beginPath();
   data.forEach((val, i) => {
     const x = padLeft + i * xScale;
-    const y = padTop + (60 - val) * yScale;
+    const y = padTop + (Y_MAX - val) * yScale;
     if (i === 0) ctx.moveTo(x, y);
     else {
       // Simple bezier smoothing
       const prevX = padLeft + (i - 1) * xScale;
-      const prevY = padTop + (60 - data[i - 1]) * yScale;
+      const prevY = padTop + (Y_MAX - data[i - 1]) * yScale;
       const cpX = (prevX + x) / 2;
       ctx.bezierCurveTo(cpX, prevY, cpX, y, x, y);
     }
@@ -75,7 +77,7 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
     const chartW = width - padLeft - padRight;
     const chartH = height - padTop - padBottom;
     const xScale = chartW / 23;
-    const yScale = chartH / 60; // 0 to 60 GW
+    const yScale = chartH / Y_MAX;
 
     const draw = () => {
       const isActive = slideContext?.isSlideActive;
@@ -93,7 +95,7 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
       ctx.lineWidth = 0.5;
       ctx.strokeStyle = colors.textDim + '15';
       for (let gw = 0; gw <= 60; gw += 10) {
-        const y = padTop + (60 - gw) * yScale;
+        const y = padTop + (Y_MAX - gw) * yScale;
         ctx.beginPath();
         ctx.moveTo(padLeft, y);
         ctx.lineTo(width - padRight, y);
@@ -121,24 +123,51 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
       ctx.fillRect(padLeft, padTop, 6 * xScale, chartH);
       ctx.fillRect(padLeft + 19 * xScale, padTop, 5 * xScale, chartH);
       // Day: subtle warm
-      ctx.fillStyle = `rgba(245, 158, 11, 0.03)`;
+      ctx.fillStyle = `rgba(245, 158, 11, 0.06)`;
       ctx.fillRect(padLeft + 6 * xScale, padTop, 13 * xScale, chartH);
+
+      // Faint sun with downward rays
+      {
+        const sunX = padLeft + 12.5 * xScale;
+        const sunY = padTop + 14;
+        const sunR = 10;
+        ctx.save();
+        ctx.globalAlpha = 0.08;
+        // Sun disc
+        ctx.beginPath();
+        ctx.arc(sunX, sunY, sunR, 0, Math.PI * 2);
+        ctx.fillStyle = '#f59e0b';
+        ctx.fill();
+        // Rays fanning downward
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 1;
+        for (let i = 0; i < 9; i++) {
+          const angle = (Math.PI * 0.15) + (i / 8) * (Math.PI * 0.7); // spread across ~125° downward arc
+          const innerR = sunR + 4;
+          const outerR = sunR + 12 + (i % 2 === 0 ? 6 : 0); // alternating long/short
+          ctx.beginPath();
+          ctx.moveTo(sunX + Math.cos(angle) * innerR, sunY + Math.sin(angle) * innerR);
+          ctx.lineTo(sunX + Math.cos(angle) * outerR, sunY + Math.sin(angle) * outerR);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
 
       // Solar fill (amber area under solar curve)
       ctx.beginPath();
-      ctx.moveTo(padLeft, padTop + 60 * yScale);
+      ctx.moveTo(padLeft, padTop + Y_MAX * yScale);
       solarGen.forEach((val, i) => {
         const x = padLeft + i * xScale;
-        const y = padTop + (60 - val) * yScale;
+        const y = padTop + (Y_MAX - val) * yScale;
         if (i === 0) ctx.lineTo(x, y);
         else {
           const prevX = padLeft + (i - 1) * xScale;
-          const prevY = padTop + (60 - solarGen[i - 1]) * yScale;
+          const prevY = padTop + (Y_MAX - solarGen[i - 1]) * yScale;
           const cpX = (prevX + x) / 2;
           ctx.bezierCurveTo(cpX, prevY, cpX, y, x, y);
         }
       });
-      ctx.lineTo(padLeft + 23 * xScale, padTop + 60 * yScale);
+      ctx.lineTo(padLeft + 23 * xScale, padTop + Y_MAX * yScale);
       ctx.closePath();
       ctx.fillStyle = `rgba(245, 158, 11, 0.12)`;
       ctx.fill();
@@ -157,8 +186,8 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
         HOURS.forEach((h) => {
           if (batteryAction[h] < -1) {
             const x = padLeft + h * xScale;
-            const yNet = padTop + (60 - netDemand[h]) * yScale;
-            const yVpp = padTop + (60 - lerp(netDemand[h], vppNetDemand[h], blend)) * yScale;
+            const yNet = padTop + (Y_MAX - netDemand[h]) * yScale;
+            const yVpp = padTop + (Y_MAX - lerp(netDemand[h], vppNetDemand[h], blend)) * yScale;
             if (!started) { ctx.moveTo(x, yNet); started = true; }
             else {
               const prevH = h - 1;
@@ -172,7 +201,7 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
         for (let h = 18; h >= 0; h--) {
           if (batteryAction[h] < -1) {
             const x = padLeft + h * xScale;
-            const yVpp = padTop + (60 - lerp(netDemand[h], vppNetDemand[h], blend)) * yScale;
+            const yVpp = padTop + (Y_MAX - lerp(netDemand[h], vppNetDemand[h], blend)) * yScale;
             ctx.lineTo(x, yVpp);
           }
         }
@@ -186,7 +215,7 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
         HOURS.forEach((h) => {
           if (batteryAction[h] > 1) {
             const x = padLeft + h * xScale;
-            const yNet = padTop + (60 - netDemand[h]) * yScale;
+            const yNet = padTop + (Y_MAX - netDemand[h]) * yScale;
             if (!started) { ctx.moveTo(x, yNet); started = true; }
             else ctx.lineTo(x, yNet);
           }
@@ -194,7 +223,7 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
         for (let h = 23; h >= 0; h--) {
           if (batteryAction[h] > 1) {
             const x = padLeft + h * xScale;
-            const yVpp = padTop + (60 - lerp(netDemand[h], vppNetDemand[h], blend)) * yScale;
+            const yVpp = padTop + (Y_MAX - lerp(netDemand[h], vppNetDemand[h], blend)) * yScale;
             ctx.lineTo(x, yVpp);
           }
         }
@@ -229,7 +258,7 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
           // Find the belly of the duck
           const bellyHour = currentNet.indexOf(minNet);
           const bellyX = padLeft + bellyHour * xScale;
-          const bellyY = padTop + (60 - minNet) * yScale;
+          const bellyY = padTop + (Y_MAX - minNet) * yScale;
 
           // Pulsing arrow pointing to the belly
           const pulse = Math.sin(t * 3) * 0.3 + 0.7;
@@ -242,8 +271,8 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
         // Steep ramp annotation
         const rampStart = padLeft + 16 * xScale;
         const rampEnd = padLeft + 19 * xScale;
-        const rampYStart = padTop + (60 - currentNet[16]) * yScale;
-        const rampYEnd = padTop + (60 - currentNet[19]) * yScale;
+        const rampYStart = padTop + (Y_MAX - currentNet[16]) * yScale;
+        const rampYEnd = padTop + (Y_MAX - currentNet[19]) * yScale;
         ctx.strokeStyle = `rgba(239, 68, 68, ${0.5 * (1 - blend * 2)})`;
         ctx.lineWidth = 1.5;
         ctx.setLineDash([3, 3]);

@@ -23,62 +23,58 @@ import GridPulse from '../components/GridPulse';
 export function versionA() {
   return [
     /* ── A-2: The Numbers ── */
-    <Slide key="grid-scale-a2" backgroundColor={colors.bg}>
-      <SlideContainer style={{ justifyContent: 'flex-start', paddingTop: 60 }}>
-        <GlowText size="40px" style={{ marginBottom: 28 }}>
-          Running the Largest Machine
-        </GlowText>
-        <div className="grid grid-cols-3 gap-4 max-w-[880px]">
-          {[
-            { v: '36', u: 'countries', c: colors.primary, d: 'synchronized to one frequency' },
-            { v: '305K km', u: '', c: colors.primary, d: 'high-voltage transmission lines' },
-            { v: '400M', u: '', c: colors.success, d: 'connected consumers' },
-            { v: '1,100 GW', u: '', c: colors.secondary, d: 'installed capacity' },
-            { v: '3,000 TWh', u: '/yr', c: colors.accent, d: 'annual electricity production' },
-          ].map((s, i) => (
-            <div key={i} className={`bg-hud-surface rounded-xl p-5 text-center ${i >= 3 ? 'col-span-1' : ''}`} style={{
-              border: `1px solid ${s.c}20`,
-              ...(i === 3 ? { marginLeft: 'auto', gridColumn: '1 / 2' } : {}),
-            }}>
-              <div className="text-[36px] font-extrabold font-mono" style={{
-                color: s.c,
-                textShadow: `0 0 25px ${s.c}30`,
-              }}>{s.v}{s.u && <span className="text-[22px] font-normal text-hud-text-muted ml-1">{s.u}</span>}</div>
-              <div className="text-[20px] text-hud-text-muted font-sans mt-2 capitalize">
-                {s.d}
+    <Slide key="grid-scale-a2" backgroundColor={colors.bg} padding="36px 56px">
+      <div className="flex flex-col h-full w-full">
+          <GlowText size="40px" style={{ marginBottom: 20 }}>
+            Running the Largest Machine
+          </GlowText>
+          <div className="flex-1 flex items-center">
+            <div className="flex gap-6 w-full max-w-[880px] mx-auto">
+              <div className="flex-1 rounded-xl p-6" style={{
+                background: `${colors.accent}06`,
+                border: `1px solid ${colors.accent}20`,
+              }}>
+                <div className="text-[22px] font-semibold text-hud-accent font-sans mb-3">
+                  vs. Volkswagen Wolfsburg
+                </div>
+                <div className="text-[20px] text-hud-text-muted font-sans leading-relaxed">
+                  The world's largest factory has 60,000 workers over 6.5 km².
+                  <br />The grid has <span className="text-hud-text font-semibold">2.3 million workers</span> across <span className="text-hud-text font-semibold">5.5 million km²</span>.
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-        <Appear>
-          <div className="mt-7 flex gap-5 max-w-[780px]">
-            <div className="flex-1 rounded-xl p-5" style={{
-              background: `${colors.accent}06`,
-              border: `1px solid ${colors.accent}20`,
-            }}>
-              <div className="text-[20px] font-semibold text-hud-accent font-sans mb-2">
-                vs. Volkswagen Wolfsburg
-              </div>
-              <div className="text-[20px] text-hud-text-muted font-sans">
-                The world's largest factory has 60,000 workers over 6.5 km².
-                <br />The grid has <span className="text-hud-text font-semibold">2.3 million workers</span> across <span className="text-hud-text font-semibold">5.5 million km²</span>.
-              </div>
-            </div>
-            <div className="flex-1 rounded-xl p-5" style={{
-              background: `${colors.danger}06`,
-              border: `1px solid ${colors.danger}20`,
-            }}>
-              <div className="text-[20px] font-semibold text-hud-danger font-sans mb-2">
-                Zero Downtime
-              </div>
-              <div className="text-[20px] text-hud-text-muted font-sans">
-                Unlike any factory, the grid has never been shut down.
-                It runs 24/7, 365 days a year. <span className="text-hud-text font-semibold">It cannot stop.</span>
+              <div className="flex-1 rounded-xl p-6" style={{
+                background: `${colors.danger}06`,
+                border: `1px solid ${colors.danger}20`,
+              }}>
+                <div className="text-[22px] font-semibold text-hud-danger font-sans mb-3">
+                  Zero Downtime
+                </div>
+                <div className="text-[20px] text-hud-text-muted font-sans leading-relaxed">
+                  Unlike any factory, the grid has never been shut down.
+                  It runs 24/7, 365 days a year. <span className="text-hud-text font-semibold">It cannot stop.</span>
+                </div>
               </div>
             </div>
           </div>
-        </Appear>
-      </SlideContainer>
+          <Appear>
+            <div className="flex gap-3 w-full">
+              {[
+                { v: '36', u: 'countries', c: colors.primary, d: 'synced on one frequency' },
+                { v: '305K km', u: '', c: colors.primary, d: 'transmission lines' },
+                { v: '400M', u: '', c: colors.success, d: 'connected consumers' },
+                { v: '1,100 GW', u: '', c: colors.secondary, d: 'installed capacity' },
+                { v: '3,000 TWh', u: '/yr', c: colors.accent, d: 'annual production' },
+              ].map((s, i) => (
+                <div key={i} className="flex-1 min-w-0 bg-hud-surface rounded-lg px-4 py-4 text-center" style={{ border: `1px solid ${s.c}15` }}>
+                  <div className="text-[32px] font-extrabold font-mono whitespace-nowrap" style={{ color: s.c }}>
+                    {s.v}{s.u && <span className="text-[20px] font-normal text-hud-text-muted ml-0.5">{s.u}</span>}
+                  </div>
+                  <div className="text-[16px] text-hud-text-muted font-sans mt-1">{s.d}</div>
+                </div>
+              ))}
+            </div>
+          </Appear>
+        </div>
       <Notes>
         "This machine has never been turned off. There is no maintenance window.
         No 'we'll fix it in staging.' It's production, all the time, forever.
@@ -97,8 +93,8 @@ export function versionA() {
 export function versionB() {
   return [
     /* ── B-2: No Cache, No Buffer ── */
-    <Slide key="grid-scale-b2" backgroundColor={colors.bg}>
-      <SlideContainer style={{ alignItems: 'center' }}>
+    <Slide key="grid-scale-b2" backgroundColor={colors.bg} padding="36px 56px">
+      <div className="flex flex-col h-full w-full items-center justify-center">
         <div className="text-center max-w-[800px] w-full">
           <GlowText size="40px" style={{ textAlign: 'center', marginBottom: 32 }}>
             The Grid vs. Tech Infrastructure
@@ -147,7 +143,7 @@ export function versionB() {
             ))}
           </div>
         </div>
-      </SlideContainer>
+      </div>
       <Notes>
         "This is the key insight for this audience. Software engineers build fault-tolerant
         systems every day. Circuit breakers, retries, caches, load balancers. The grid has NONE
