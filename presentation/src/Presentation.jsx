@@ -250,10 +250,10 @@ export default function Presentation() {
           <div className="flex-1 flex items-center">
             <div className="flex gap-5 w-full">
               {[
-                { t: 'Peaker Plants', d: 'Gas turbines that sit idle 90% of the year. Fire up only during peak demand. Cost 2–3x more per MWh than baseload.', c: '#fb923c', stat: '$150–$250/MWh' },
-                { t: 'Spinning Reserves', d: 'Keep generators running at partial load "just in case." Burning fuel to produce nothing — pure waste.', c: colors.accent, stat: '5–10% of capacity' },
-                { t: 'Load Shedding', d: 'The last resort: deliberate rolling blackouts. The grid operator picks who loses power. Entire neighborhoods go dark.', c: colors.danger, stat: 'Millions affected' },
-                { t: 'Curtailment', d: 'Too much renewable energy? Just turn it off. Wind turbines feathered, solar panels disconnected. Clean energy — wasted.', c: colors.textDim, stat: '6.1 TWh (DE 2023)' },
+                { t: 'Peaker Plants', d: '261 GW of gas turbines in the US alone — sitting idle 95% of the year. They fire up for peak demand at 2–5x the cost of baseload.', c: '#fb923c', stat: '$110–228/MWh' },
+                { t: 'Spinning Reserves', d: 'Generators running at partial load 24/7 "just in case." 15% capacity margin required. Burning fuel to produce nothing.', c: colors.accent, stat: '15% over-provisioned' },
+                { t: 'Load Shedding', d: 'The last resort: deliberate rolling blackouts. Texas 2021 shed 20 GW — the largest in US history. $80–130B in damage.', c: colors.danger, stat: '69% of Texans lost power' },
+                { t: 'Curtailment', d: 'Too much sun or wind? Turn it off. Germany wasted 19 TWh of clean energy in 2023. California curtailed 3.4M MWh in 2024.', c: colors.textDim, stat: 'EUR 3.3B/yr (DE)' },
               ].map(i => (
                 <div key={i.t} className="bg-hud-surface rounded-xl px-4 py-5 flex-1" style={{ border: `1px solid ${i.c}25` }}>
                   <div className="text-[20px] font-bold font-sans mb-2" style={{ color: i.c }}>{i.t}</div>
@@ -263,7 +263,7 @@ export default function Presentation() {
               ))}
             </div>
           </div>
-          <P size="20px" style={{ fontStyle: 'italic' }}>"The grid's emergency toolkit hasn't changed since the 1960s."</P>
+          <P size="20px" style={{ fontStyle: 'italic' }}>"261 GW of capacity that runs 5% of the year. Rolling blackouts as policy. Clean energy thrown away. This is the toolkit we inherited."</P>
         </div>
       </Slide>
 
