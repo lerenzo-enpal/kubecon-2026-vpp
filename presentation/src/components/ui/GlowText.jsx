@@ -9,15 +9,16 @@ export default function GlowText({
   style = {},
 }) {
   return (
-    <div style={{
-      color,
-      fontSize: size,
-      fontWeight: weight,
-      fontFamily: '"Inter", system-ui, sans-serif',
-      textShadow: `0 0 40px ${color}40, 0 0 80px ${color}20`,
-      lineHeight: 1.1,
-      ...style,
-    }}>
+    <div
+      className="font-sans leading-[1.1]"
+      style={{
+        color,
+        fontSize: size,
+        fontWeight: weight,
+        textShadow: `0 0 40px ${color}40, 0 0 80px ${color}20`,
+        ...style,
+      }}
+    >
       {children}
     </div>
   );

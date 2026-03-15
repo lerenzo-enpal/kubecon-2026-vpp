@@ -1,0 +1,28 @@
+@import "tailwindcss/theme" layer(theme);
+@import "tailwindcss/utilities" layer(utilities);
+
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --color-hud-bg: #0a0e17;
+  --color-hud-bg-alt: #111827;
+  --color-hud-surface: #1a2236;
+  --color-hud-surface-light: #243049;
+  --color-hud-primary: #22d3ee;
+  --color-hud-secondary: #a78bfa;
+  --color-hud-accent: #f59e0b;
+  --color-hud-danger: #ef4444;
+  --color-hud-success: #10b981;
+  --color-hud-text: #f1f5f9;
+  --color-hud-text-muted: #94a3b8;
+  --color-hud-text-dim: #64748b;
+}
+
+.hud-blink {
+  animation: hudBlink 0.5s step-end infinite;
+}
+
+@keyframes hudBlink {
+  50% { opacity: 0; }
+}

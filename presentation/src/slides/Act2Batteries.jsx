@@ -28,19 +28,22 @@ export function act2Slides() {
         <GlowText size="44px" style={{ marginBottom: 32 }}>
           The Fastest Power Plant
         </GlowText>
-        <div style={{ maxWidth: 700 }}>
+        <div className="max-w-[700px]">
           <ComparisonRow label="Coal" value="2-6 hours" color={colors.textDim} barWidth={90} />
           <ComparisonRow label="Gas Turbine" value="10-30 minutes" color="#fb923c" barWidth={45} />
           <ComparisonRow label="Hydro" value="15-30 seconds" color="#60a5fa" barWidth={12} />
           <ComparisonRow label="Battery" value="140 ms" color={colors.success} barWidth={2} />
         </div>
         <Appear>
-          <div style={{
-            marginTop: 28, padding: '20px 28px',
-            background: `${colors.success}08`, border: `1px solid ${colors.success}25`,
-            borderRadius: 12, maxWidth: 700,
-          }}>
-            <div style={{ fontSize: '20px', fontWeight: 600, color: colors.success, fontFamily: '"Inter"' }}>
+          <div
+            className="mt-7 rounded-xl max-w-[700px]"
+            style={{
+              padding: '20px 28px',
+              background: `${colors.success}08`,
+              border: `1px solid ${colors.success}25`,
+            }}
+          >
+            <div className="text-[20px] font-semibold text-hud-success font-sans">
               A battery responds to a grid emergency before a gas turbine
               even knows there <em>is</em> an emergency.
             </div>
@@ -59,10 +62,10 @@ export function act2Slides() {
         <Subtitle size="20px">
           560 MW generator trips in Queensland. Frequency plunging.
         </Subtitle>
-        <div style={{ marginTop: 24 }}>
+        <div className="mt-6 flex justify-center">
           <FrequencyLine width={850} height={180} collapse={true} vppSave={true} />
         </div>
-        <div style={{ display: 'flex', gap: 20, marginTop: 20, justifyContent: 'center' }}>
+        <div className="flex gap-5 mt-5 justify-center">
           <StatCard number="140" unit="ms" label="Battery Response" color={colors.success} />
           <StatCard number="28" unit="sec" label="Gas Turbine Response" color="#fb923c" />
           <StatCard number="8" unit="sec" label="Margin Before Blackout" color={colors.danger} />
@@ -84,21 +87,24 @@ export function act2Slides() {
         <Subtitle size="20px">
           748 MW coal plant trips in Queensland. 1,100 homes in South Australia respond.
         </Subtitle>
-        <div style={{ marginTop: 28, display: 'flex', gap: 20, justifyContent: 'center' }}>
+        <div className="mt-7 flex gap-5 justify-center">
           <StatCard number="1,100" label="Homes Responded" color={colors.success} />
           <StatCard number="2%" label="of Planned Fleet" color={colors.primary} />
           <StatCard number="0" label="Humans Involved" color={colors.accent} />
         </div>
         <Appear>
-          <div style={{
-            marginTop: 28, padding: '20px 28px',
-            background: `${colors.success}08`, border: `1px solid ${colors.success}25`,
-            borderRadius: 12, textAlign: 'center',
-          }}>
-            <div style={{ fontSize: '22px', fontWeight: 600, color: colors.text, fontFamily: '"Inter"' }}>
+          <div
+            className="mt-7 rounded-xl text-center"
+            style={{
+              padding: '20px 28px',
+              background: `${colors.success}08`,
+              border: `1px solid ${colors.success}25`,
+            }}
+          >
+            <div className="text-[22px] font-semibold text-hud-text font-sans">
               Eleven hundred homes. Acting as one.
               <br />
-              <span style={{ color: colors.success }}>Without anyone pushing a button.</span>
+              <span className="text-hud-success">Without anyone pushing a button.</span>
             </div>
           </div>
         </Appear>
@@ -111,22 +117,22 @@ export function act2Slides() {
         <GlowText size="44px" style={{ marginBottom: 28 }}>
           The Economics
         </GlowText>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, maxWidth: 780 }}>
+        <div className="grid grid-cols-2 gap-4 max-w-[780px]">
           {economicsStats.map((item) => (
-            <div key={item.label} style={{
-              background: colors.surface, border: `1px solid ${colors.surfaceLight}`,
-              borderRadius: 12, padding: '20px',
-            }}>
-              <div style={{
-                fontSize: '34px', fontWeight: 800, color: item.color,
-                fontFamily: '"JetBrains Mono"', textShadow: `0 0 25px ${item.color}30`,
-              }}>
+            <div
+              key={item.label}
+              className="bg-hud-surface border border-hud-surface-light rounded-xl p-5"
+            >
+              <div
+                className="text-[34px] font-extrabold font-mono"
+                style={{ color: item.color, textShadow: `0 0 25px ${item.color}30` }}
+              >
                 {item.number}
               </div>
-              <div style={{ fontSize: '15px', fontWeight: 600, color: colors.text, fontFamily: '"Inter"', marginTop: 6 }}>
+              <div className="text-[15px] font-semibold text-hud-text font-sans mt-1.5">
                 {item.label}
               </div>
-              <div style={{ fontSize: '12px', color: colors.textDim, fontFamily: '"Inter"', marginTop: 4 }}>
+              <div className="text-[12px] text-hud-text-dim font-sans mt-1">
                 {item.sub}
               </div>
             </div>
@@ -138,62 +144,59 @@ export function act2Slides() {
     /* ── Slide 13: One Battery Not Enough ── */
     <Slide key="one-battery-not-enough" backgroundColor={colors.bg}>
       <SlideContainer>
-        <div style={{ textAlign: 'center' }}>
+        <div className="text-center">
           <GlowText size="44px" style={{ textAlign: 'center', marginBottom: 36 }}>
             But One Battery Is Not Enough
           </GlowText>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 32 }}>
-            <div style={{
-              background: colors.surface, borderRadius: 16, padding: '32px',
-              border: `1px solid ${colors.surfaceLight}`, textAlign: 'center',
-            }}>
-              <div style={{ fontSize: '48px', fontWeight: 800, color: colors.success, fontFamily: '"JetBrains Mono"' }}>
+          <div className="flex items-center justify-center gap-8">
+            <div className="bg-hud-surface rounded-2xl p-8 border border-hud-surface-light text-center">
+              <div className="text-[48px] font-extrabold text-hud-success font-mono">
                 1
               </div>
-              <div style={{ fontSize: '14px', color: colors.textMuted, fontFamily: '"Inter"', marginTop: 4 }}>
+              <div className="text-[14px] text-hud-text-muted font-sans mt-1">
                 battery = 10 kWh
               </div>
             </div>
-            <div style={{ fontSize: '32px', color: colors.textDim, fontFamily: '"JetBrains Mono"' }}>
+            <div className="text-[32px] text-hud-text-dim font-mono">
               {'\u00d7'}
             </div>
-            <div style={{
-              background: colors.surface, borderRadius: 16, padding: '32px',
-              border: `1px solid ${colors.primary}30`, textAlign: 'center',
-            }}>
-              <div style={{
-                fontSize: '48px', fontWeight: 800, color: colors.primary,
-                fontFamily: '"JetBrains Mono"', textShadow: `0 0 30px ${colors.primary}40`,
-              }}>
+            <div
+              className="bg-hud-surface rounded-2xl p-8 text-center"
+              style={{ border: `1px solid ${colors.primary}30` }}
+            >
+              <div
+                className="text-[48px] font-extrabold text-hud-primary font-mono"
+                style={{ textShadow: `0 0 30px ${colors.primary}40` }}
+              >
                 100K
               </div>
-              <div style={{ fontSize: '14px', color: colors.textMuted, fontFamily: '"Inter"', marginTop: 4 }}>
+              <div className="text-[14px] text-hud-text-muted font-sans mt-1">
                 batteries = 1 GWh
               </div>
             </div>
-            <div style={{ fontSize: '32px', color: colors.textDim, fontFamily: '"JetBrains Mono"' }}>
+            <div className="text-[32px] text-hud-text-dim font-mono">
               =
             </div>
-            <div style={{
-              background: `${colors.accent}10`, borderRadius: 16, padding: '32px',
-              border: `1px solid ${colors.accent}30`, textAlign: 'center',
-            }}>
-              <div style={{
-                fontSize: '36px', fontWeight: 800, color: colors.accent,
-                fontFamily: '"JetBrains Mono"', textShadow: `0 0 30px ${colors.accent}40`,
-              }}>
+            <div
+              className="rounded-2xl p-8 text-center"
+              style={{
+                background: `${colors.accent}10`,
+                border: `1px solid ${colors.accent}30`,
+              }}
+            >
+              <div
+                className="text-[36px] font-extrabold font-mono"
+                style={{ color: colors.accent, textShadow: `0 0 30px ${colors.accent}40` }}
+              >
                 Power Plant
               </div>
             </div>
           </div>
           <Appear>
-            <div style={{
-              marginTop: 36, fontSize: '20px', color: colors.textMuted,
-              fontFamily: '"Inter"', lineHeight: 1.6,
-            }}>
+            <div className="mt-9 text-[20px] text-hud-text-muted font-sans leading-[1.6]">
               Coordinating 100,000 batteries in real-time, responding in milliseconds,
               <br />across unreliable networks?{' '}
-              <span style={{ color: colors.primary, fontWeight: 600 }}>
+              <span className="text-hud-primary font-semibold">
                 That's not an energy problem. That's a distributed systems problem.
               </span>
             </div>

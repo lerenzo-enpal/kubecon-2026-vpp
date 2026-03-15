@@ -34,22 +34,18 @@ export function act3Slides() {
     /* ── Slide 14: What is a VPP? ── */
     <Slide key="what-is-vpp" backgroundColor={colors.bg}>
       <SlideContainer style={{ justifyContent: 'flex-start', paddingTop: 70 }}>
-        <GlowText size="44px" style={{ marginBottom: 16 }}>
+        <GlowText size="44px" className="mb-4">
           What Is a Virtual Power Plant?
         </GlowText>
-        <div style={{
-          fontSize: '22px', fontWeight: 400, color: colors.text,
-          fontFamily: '"Inter"', lineHeight: 1.6, maxWidth: 750, marginBottom: 32,
-        }}>
-          Software that <span style={{ color: colors.primary, fontWeight: 600 }}>aggregates</span> distributed
-          energy resources and <span style={{ color: colors.success, fontWeight: 600 }}>operates</span> them
+        <div className="text-[22px] font-normal text-hud-text font-sans leading-[1.6] max-w-[750px] mb-8">
+          Software that <span className="text-hud-primary font-semibold">aggregates</span> distributed
+          energy resources and <span className="text-hud-success font-semibold">operates</span> them
           as a coordinated power plant.
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
+        <div className="flex items-center justify-center gap-3">
           {/* Assets */}
-          <div style={{
-            background: colors.surface, borderRadius: 12, padding: '20px',
-            border: `1px solid ${colors.surfaceLight}`, display: 'flex', flexDirection: 'column', gap: 10,
+          <div className="bg-hud-surface rounded-xl p-5 flex flex-col gap-2.5" style={{
+            border: `1px solid ${colors.surfaceLight}`,
           }}>
             {[
               { label: 'Solar Panels', color: colors.solar },
@@ -57,44 +53,41 @@ export function act3Slides() {
               { label: 'EV Chargers', color: colors.primary },
               { label: 'Heat Pumps', color: colors.secondary },
             ].map((a) => (
-              <div key={a.label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div style={{
-                  width: 10, height: 10, borderRadius: '50%',
+              <div key={a.label} className="flex items-center gap-2.5">
+                <div className="w-2.5 h-2.5 rounded-full" style={{
                   background: a.color, boxShadow: `0 0 8px ${a.color}60`,
                 }} />
-                <span style={{ fontSize: '15px', color: colors.text, fontFamily: '"Inter"', fontWeight: 500 }}>
+                <span className="text-[15px] text-hud-text font-sans font-medium">
                   {a.label}
                 </span>
               </div>
             ))}
           </div>
 
-          <div style={{ fontSize: '28px', color: colors.primary, fontFamily: '"JetBrains Mono"' }}>{'\u2192'}</div>
+          <div className="text-[28px] text-hud-primary font-mono">{'\u2192'}</div>
 
           {/* Cloud Platform */}
-          <div style={{
-            background: `${colors.primary}08`, borderRadius: 16, padding: '28px 32px',
-            border: `1px solid ${colors.primary}30`, textAlign: 'center',
+          <div className="rounded-2xl text-center" style={{
+            background: `${colors.primary}08`, padding: '28px 32px',
+            border: `1px solid ${colors.primary}30`,
           }}>
-            <div style={{
-              fontSize: '20px', fontWeight: 700, color: colors.primary,
-              fontFamily: '"Inter"', textShadow: `0 0 20px ${colors.primary}40`,
+            <div className="text-[20px] font-bold text-hud-primary font-sans" style={{
+              textShadow: `0 0 20px ${colors.primary}40`,
             }}>
               Cloud Platform
             </div>
-            <div style={{ fontSize: '13px', color: colors.textMuted, fontFamily: '"JetBrains Mono"', marginTop: 8 }}>
+            <div className="text-[13px] text-hud-text-muted font-mono mt-2">
               Kubernetes + Dapr
               <br />Event-driven control
               <br />Real-time telemetry
             </div>
           </div>
 
-          <div style={{ fontSize: '28px', color: colors.primary, fontFamily: '"JetBrains Mono"' }}>{'\u2192'}</div>
+          <div className="text-[28px] text-hud-primary font-mono">{'\u2192'}</div>
 
           {/* Grid Services */}
-          <div style={{
-            background: colors.surface, borderRadius: 12, padding: '20px',
-            border: `1px solid ${colors.surfaceLight}`, display: 'flex', flexDirection: 'column', gap: 10,
+          <div className="bg-hud-surface rounded-xl p-5 flex flex-col gap-2.5" style={{
+            border: `1px solid ${colors.surfaceLight}`,
           }}>
             {[
               { label: 'Frequency Regulation', color: colors.danger },
@@ -102,12 +95,11 @@ export function act3Slides() {
               { label: 'Energy Arbitrage', color: colors.success },
               { label: 'Demand Response', color: colors.primary },
             ].map((s) => (
-              <div key={s.label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div style={{
-                  width: 10, height: 10, borderRadius: '50%',
+              <div key={s.label} className="flex items-center gap-2.5">
+                <div className="w-2.5 h-2.5 rounded-full" style={{
                   background: s.color, boxShadow: `0 0 8px ${s.color}60`,
                 }} />
-                <span style={{ fontSize: '15px', color: colors.text, fontFamily: '"Inter"', fontWeight: 500 }}>
+                <span className="text-[15px] text-hud-text font-sans font-medium">
                   {s.label}
                 </span>
               </div>
@@ -120,23 +112,19 @@ export function act3Slides() {
     /* ── Slide 15: KubeCon Analogy ── */
     <Slide key="kubecon-analogy" backgroundColor={colors.bg}>
       <SlideContainer style={{ justifyContent: 'flex-start', paddingTop: 70 }}>
-        <GlowText size="40px" style={{ marginBottom: 32 }}>
-          Speak<span style={{ color: colors.secondary }}>ing</span> Your Language
+        <GlowText size="40px" className="mb-8">
+          Speak<span className="text-hud-secondary">ing</span> Your Language
         </GlowText>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: 16, maxWidth: 780, alignItems: 'start' }}>
-          <div style={{
-            background: colors.surface, borderRadius: 12, padding: '24px',
+        <div className="items-start max-w-[780px]" style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: 16 }}>
+          <div className="bg-hud-surface rounded-xl" style={{
+            padding: '24px',
             border: `1px solid ${colors.danger}20`,
           }}>
-            <div style={{
-              fontSize: '14px', fontWeight: 600, color: colors.danger,
-              fontFamily: '"JetBrains Mono"', letterSpacing: '0.1em', marginBottom: 16,
-            }}>
+            <div className="text-[14px] font-semibold text-hud-danger font-mono tracking-[0.1em] mb-4">
               TRADITIONAL GRID
             </div>
             {['Monolith architecture', 'Few large generators', 'Manual scaling', 'Single points of failure', 'No observability'].map((item) => (
-              <div key={item} style={{
-                fontSize: '15px', color: colors.textMuted, fontFamily: '"Inter"',
+              <div key={item} className="text-[15px] text-hud-text-muted font-sans" style={{
                 padding: '6px 0', borderBottom: `1px solid ${colors.surfaceLight}`,
               }}>
                 {item}
@@ -144,34 +132,27 @@ export function act3Slides() {
             ))}
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', paddingTop: 80, fontSize: '28px', color: colors.primary, fontFamily: '"JetBrains Mono"' }}>
+          <div className="flex items-center text-[28px] text-hud-primary font-mono" style={{ paddingTop: 80 }}>
             {'\u2192'}
           </div>
 
-          <div style={{
-            background: `${colors.success}06`, borderRadius: 12, padding: '24px',
+          <div className="rounded-xl" style={{
+            background: `${colors.success}06`, padding: '24px',
             border: `1px solid ${colors.success}25`,
           }}>
-            <div style={{
-              fontSize: '14px', fontWeight: 600, color: colors.success,
-              fontFamily: '"JetBrains Mono"', letterSpacing: '0.1em', marginBottom: 16,
-            }}>
+            <div className="text-[14px] font-semibold text-hud-success font-mono tracking-[0.1em] mb-4">
               VIRTUAL POWER PLANT
             </div>
             {['Distributed microservices', 'Millions of nodes', 'Autoscaling capacity', 'Resilient by design', 'Full-stack observability'].map((item) => (
-              <div key={item} style={{
-                fontSize: '15px', color: colors.text, fontFamily: '"Inter"',
-                fontWeight: 500, padding: '6px 0', borderBottom: `1px solid ${colors.surfaceLight}`,
+              <div key={item} className="text-[15px] text-hud-text font-sans font-medium" style={{
+                padding: '6px 0', borderBottom: `1px solid ${colors.surfaceLight}`,
               }}>
                 {item}
               </div>
             ))}
           </div>
         </div>
-        <div style={{
-          marginTop: 24, textAlign: 'center', fontSize: '16px',
-          color: colors.textMuted, fontFamily: '"JetBrains Mono"',
-        }}>
+        <div className="mt-6 text-center text-[16px] text-hud-text-muted font-mono">
           Grid frequency = SLO &nbsp;&bull;&nbsp; Cascade = unhandled failure propagation &nbsp;&bull;&nbsp; Batteries = autoscaling
         </div>
       </SlideContainer>
@@ -180,29 +161,25 @@ export function act3Slides() {
     /* ── Slide 16: Architecture ── */
     <Slide key="architecture" backgroundColor={colors.bg}>
       <SlideContainer style={{ justifyContent: 'flex-start', paddingTop: 60 }}>
-        <GlowText size="40px" style={{ marginBottom: 24 }}>
+        <GlowText size="40px" className="mb-6">
           Architecture
         </GlowText>
-        <div style={{ display: 'flex', gap: 16, justifyContent: 'center' }}>
+        <div className="flex gap-4 justify-center">
           {architectureLayers.map((layer) => (
-            <div key={layer.title} style={{
-              background: colors.surface, borderRadius: 12,
-              border: `1px solid ${layer.color}25`, padding: '20px', flex: 1, minWidth: 170,
+            <div key={layer.title} className="bg-hud-surface rounded-xl flex-1 min-w-[170px]" style={{
+              border: `1px solid ${layer.color}25`, padding: '20px',
             }}>
-              <div style={{
-                fontSize: '14px', fontWeight: 700, color: layer.color,
-                fontFamily: '"JetBrains Mono"', letterSpacing: '0.08em',
-                textTransform: 'uppercase', marginBottom: 12,
-                paddingBottom: 8, borderBottom: `1px solid ${layer.color}20`,
+              <div className="text-[14px] font-bold font-mono tracking-[0.08em] uppercase mb-3 pb-2" style={{
+                color: layer.color,
+                borderBottom: `1px solid ${layer.color}20`,
               }}>
                 {layer.title}
               </div>
               {layer.items.map((item) => (
-                <div key={item} style={{
-                  fontSize: '13px', color: colors.textMuted, fontFamily: '"Inter"',
-                  padding: '5px 0', display: 'flex', alignItems: 'center', gap: 8,
+                <div key={item} className="text-[13px] text-hud-text-muted font-sans flex items-center gap-2" style={{
+                  padding: '5px 0',
                 }}>
-                  <div style={{ width: 4, height: 4, borderRadius: 2, background: layer.color, opacity: 0.6 }} />
+                  <div className="w-1 h-1 rounded-full opacity-60" style={{ background: layer.color }} />
                   {item}
                 </div>
               ))}
@@ -219,22 +196,21 @@ export function act3Slides() {
     /* ── Slide 17: Why Cloud-Native? ── */
     <Slide key="why-cloud-native" backgroundColor={colors.bg}>
       <SlideContainer style={{ justifyContent: 'flex-start', paddingTop: 70 }}>
-        <GlowText size="44px" style={{ marginBottom: 28 }}>
+        <GlowText size="44px" className="mb-7">
           Why Cloud-Native?
         </GlowText>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, maxWidth: 780 }}>
+        <div className="max-w-[780px]" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
           {cloudNativeReasons.map((item) => (
-            <div key={item.title} style={{ display: 'flex', gap: 14, alignItems: 'flex-start', padding: '12px 0' }}>
-              <div style={{
-                width: 10, height: 10, borderRadius: '50%',
-                background: item.color, marginTop: 6, flexShrink: 0,
+            <div key={item.title} className="flex gap-3.5 items-start py-3">
+              <div className="w-2.5 h-2.5 rounded-full mt-1.5 shrink-0" style={{
+                background: item.color,
                 boxShadow: `0 0 10px ${item.color}60`,
               }} />
               <div>
-                <div style={{ fontSize: '17px', fontWeight: 600, color: colors.text, fontFamily: '"Inter"' }}>
+                <div className="text-[17px] font-semibold text-hud-text font-sans">
                   {item.title}
                 </div>
-                <div style={{ fontSize: '14px', color: colors.textMuted, fontFamily: '"Inter"', lineHeight: 1.4 }}>
+                <div className="text-[14px] text-hud-text-muted font-sans leading-[1.4]">
                   {item.desc}
                 </div>
               </div>
@@ -247,7 +223,7 @@ export function act3Slides() {
     /* ── Slide 18: Demo Without VPP ── */
     <Slide key="demo-without-vpp" backgroundColor={colors.bg}>
       <SlideContainer style={{ justifyContent: 'flex-start', paddingTop: 50 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16 }}>
+        <div className="flex items-center gap-4 mb-4">
           <Badge color={colors.danger}>LIVE SIMULATION</Badge>
           <GlowText size="36px" color={colors.danger}>
             Cascading Failure — No VPP
@@ -256,7 +232,7 @@ export function act3Slides() {
         <Subtitle size="16px">
           A generator trips in Essen. Watch the cascade propagate across the German grid.
         </Subtitle>
-        <div style={{ marginTop: 16, display: 'flex', justifyContent: 'center' }}>
+        <div className="mt-4 flex justify-center">
           <CascadeSimulation width={740} height={500} withVPP={false} />
         </div>
       </SlideContainer>
@@ -268,7 +244,7 @@ export function act3Slides() {
     /* ── Slide 19: Demo With VPP ── */
     <Slide key="demo-with-vpp" backgroundColor={colors.bg}>
       <SlideContainer style={{ justifyContent: 'flex-start', paddingTop: 50 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16 }}>
+        <div className="flex items-center gap-4 mb-4">
           <Badge color={colors.success}>LIVE SIMULATION</Badge>
           <GlowText size="36px" color={colors.success}>
             Same Failure — With VPP
@@ -277,7 +253,7 @@ export function act3Slides() {
         <Subtitle size="16px">
           Same generator trip. But now 18 VPP clusters with distributed batteries respond.
         </Subtitle>
-        <div style={{ marginTop: 16, display: 'flex', justifyContent: 'center' }}>
+        <div className="mt-4 flex justify-center">
           <CascadeSimulation width={740} height={500} withVPP={true} />
         </div>
       </SlideContainer>
@@ -290,23 +266,23 @@ export function act3Slides() {
     /* ── Slide 20: Numbers at Scale ── */
     <Slide key="numbers-at-scale" backgroundColor={colors.bg}>
       <SlideContainer>
-        <GlowText size="44px" style={{ marginBottom: 36, textAlign: 'center' }}>
+        <GlowText size="44px" className="mb-9 text-center">
           The Numbers at Scale
         </GlowText>
-        <div style={{ display: 'flex', gap: 20, justifyContent: 'center' }}>
+        <div className="flex gap-5 justify-center">
           <StatCard number="$5.9B" label="Global VPP Market by 2030" color={colors.primary} />
           <StatCard number="80-160" unit=" GW" label="US DOE VPP Target by 2030" color={colors.success} />
           <StatCard number="1M+" label="Home Batteries in Germany" color={colors.accent} />
         </div>
         <Appear>
-          <div style={{
-            marginTop: 32, textAlign: 'center', padding: '24px 32px',
-            background: colors.surface, borderRadius: 12, border: `1px solid ${colors.primary}20`,
+          <div className="mt-8 text-center bg-hud-surface rounded-xl" style={{
+            padding: '24px 32px',
+            border: `1px solid ${colors.primary}20`,
           }}>
-            <div style={{ fontSize: '22px', fontWeight: 600, color: colors.text, fontFamily: '"Inter"', lineHeight: 1.6 }}>
-              1 million batteries coordinated as VPPs = <span style={{ color: colors.primary, fontWeight: 800 }}>10+ GW</span> of flexible capacity
+            <div className="text-[22px] font-semibold text-hud-text font-sans leading-[1.6]">
+              1 million batteries coordinated as VPPs = <span className="text-hud-primary font-extrabold">10+ GW</span> of flexible capacity
               <br />
-              <span style={{ fontSize: '18px', color: colors.textMuted, fontWeight: 400 }}>
+              <span className="text-[18px] text-hud-text-muted font-normal">
                 Equivalent to 10 large gas power plants. Running on Kubernetes.
               </span>
             </div>

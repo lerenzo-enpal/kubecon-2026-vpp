@@ -3,33 +3,14 @@ import { colors } from '../../theme';
 
 export default function StatCard({ number, label, color = colors.primary, unit = '' }) {
   return (
-    <div style={{
-      background: colors.surface,
-      border: `1px solid ${colors.surfaceLight}`,
-      borderRadius: 12,
-      padding: '28px 24px',
-      textAlign: 'center',
-      flex: 1,
-      minWidth: 160,
-    }}>
-      <div style={{
-        fontSize: '42px',
-        fontWeight: 800,
-        fontFamily: '"JetBrains Mono", monospace',
-        color,
-        textShadow: `0 0 30px ${color}30`,
-      }}>
-        {number}<span style={{ fontSize: '22px', fontWeight: 400, color: colors.textMuted }}>{unit}</span>
+    <div className="bg-hud-surface border border-hud-surface-light rounded-xl px-6 py-7 text-center flex-1 min-w-[160px]">
+      <div
+        className="text-[42px] font-extrabold font-mono"
+        style={{ color, textShadow: `0 0 30px ${color}30` }}
+      >
+        {number}<span className="text-[22px] font-normal text-hud-text-muted">{unit}</span>
       </div>
-      <div style={{
-        fontSize: '14px',
-        fontWeight: 500,
-        color: colors.textMuted,
-        marginTop: 8,
-        fontFamily: '"Inter", system-ui, sans-serif',
-        textTransform: 'uppercase',
-        letterSpacing: '0.05em',
-      }}>
+      <div className="text-[14px] font-medium text-hud-text-muted mt-2 font-sans uppercase tracking-[0.05em]">
         {label}
       </div>
     </div>

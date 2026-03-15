@@ -3,33 +3,18 @@ import { colors } from '../../theme';
 
 export default function ComparisonRow({ label, value, color, barWidth }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 12 }}>
-      <div style={{
-        width: 120,
-        fontSize: '16px',
-        fontWeight: 500,
-        color: colors.textMuted,
-        fontFamily: '"Inter", system-ui, sans-serif',
-        textAlign: 'right',
-      }}>
+    <div className="flex items-center gap-4 mb-3">
+      <div className="w-[120px] text-[16px] font-medium text-hud-text-muted font-sans text-right">
         {label}
       </div>
-      <div style={{
-        height: 32,
-        width: `${barWidth}%`,
-        background: `linear-gradient(90deg, ${color}30, ${color}80)`,
-        borderRadius: 6,
-        display: 'flex',
-        alignItems: 'center',
-        paddingLeft: 12,
-        transition: 'width 0.8s ease',
-      }}>
-        <span style={{
-          fontFamily: '"JetBrains Mono", monospace',
-          fontSize: '14px',
-          fontWeight: 600,
-          color: colors.text,
-        }}>
+      <div
+        className="h-8 rounded-md flex items-center pl-3 transition-[width] duration-[800ms] ease-in-out"
+        style={{
+          width: `${barWidth}%`,
+          background: `linear-gradient(90deg, ${color}30, ${color}80)`,
+        }}
+      >
+        <span className="font-mono text-[14px] font-semibold text-hud-text">
           {value}
         </span>
       </div>

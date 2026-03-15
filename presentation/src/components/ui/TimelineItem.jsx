@@ -3,33 +3,19 @@ import { colors } from '../../theme';
 
 export default function TimelineItem({ year, event, color = colors.danger, impact }) {
   return (
-    <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start', marginBottom: 16 }}>
-      <div style={{
-        fontFamily: '"JetBrains Mono", monospace',
-        fontSize: '16px',
-        fontWeight: 700,
-        color,
-        minWidth: 50,
-        textShadow: `0 0 20px ${color}40`,
-      }}>
+    <div className="flex gap-4 items-start mb-4">
+      <div
+        className="font-mono text-[16px] font-bold min-w-[50px]"
+        style={{ color, textShadow: `0 0 20px ${color}40` }}
+      >
         {year}
       </div>
       <div>
-        <div style={{
-          fontSize: '18px',
-          fontWeight: 600,
-          color: colors.text,
-          fontFamily: '"Inter", system-ui, sans-serif',
-        }}>
+        <div className="text-[18px] font-semibold text-hud-text font-sans">
           {event}
         </div>
         {impact && (
-          <div style={{
-            fontSize: '14px',
-            color: colors.textMuted,
-            fontFamily: '"Inter", system-ui, sans-serif',
-            marginTop: 2,
-          }}>
+          <div className="text-[14px] text-hud-text-muted font-sans mt-0.5">
             {impact}
           </div>
         )}

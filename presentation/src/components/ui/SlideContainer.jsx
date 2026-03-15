@@ -4,17 +4,20 @@ import GridBackground from '../GridBackground';
 
 export default function SlideContainer({ children, style = {}, noGrid = false }) {
   return (
-    <div style={{ ...slideStyle, position: 'relative', width: '100%', height: '100%', ...style }}>
+    <div
+      className="relative w-full h-full flex flex-col bg-cover"
+      style={{
+        backgroundColor: slideStyle.backgroundColor,
+        padding: slideStyle.padding,
+        justifyContent: slideStyle.justifyContent,
+        ...style,
+      }}
+    >
       {!noGrid && <GridBackground opacity={0.04} />}
-      <div style={{
-        position: 'relative',
-        zIndex: 1,
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: style.justifyContent || 'center',
-      }}>
+      <div
+        className="relative z-[1] w-full h-full flex flex-col"
+        style={{ justifyContent: style.justifyContent || 'center' }}
+      >
         {children}
       </div>
     </div>
