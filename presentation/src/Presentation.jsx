@@ -11,7 +11,7 @@ import StaticTexasGrid from './components/StaticTexasGrid';
 import KeplerDashboard from './components/KeplerDashboard';
 import CarbonAwareChart from './components/CarbonAwareChart';
 import TexasMapHUD from './components/TexasMapHUD';
-import { versionA, versionB } from './slides/GridScaleSlides';
+import { versionA, versionB, versionD } from './slides/GridScaleSlides';
 import EUGridHUD from './components/EUGridHUD';
 import DemandResponseDemo from './components/DemandResponseDemo';
 
@@ -197,14 +197,8 @@ export default function Presentation() {
         </div>
       </Slide>
       {versionA()}
+      {versionD()}
       {versionB()}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col justify-center items-center h-full text-center">
-          <div className="text-[20px] font-semibold text-hud-text-dim font-mono tracking-[0.15em] uppercase mb-5">Review</div>
-          <H size="48px" center>Option D</H>
-          <P size="20px" center>"The Zoom Out" — deck.gl map: plant → home → region → nation → continent</P>
-        </div>
-      </Slide>
       <Slide backgroundColor="#020408" padding="0">
         <div className="w-full h-full">
           <EUGridHUD width="100%" height="100%" />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { SlideContext } from 'spectacle';
+import { SlideContext, useSteps } from 'spectacle';
 import { DeckGL } from '@deck.gl/react';
 import { FlyToInterpolator } from '@deck.gl/core';
 import { ScatterplotLayer, LineLayer, TextLayer } from '@deck.gl/layers';
@@ -145,12 +145,34 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
   const freqRef = useRef(null);
   const freqHistory = useRef([]);
   const freqCanvasRef = useRef(null);
+  const prevArrowStep = useRef(-1);
 
   const slideContext = useContext(SlideContext);
+
+  // Spectacle arrow key integration — 4 additional steps (step 0 is the initial view)
+  const { step: arrowStep, placeholder: stepsPlaceholder } = useSteps(STEPS.length - 1);
+  const normalizedArrowStep = arrowStep + 1; // -1→0, 0→1, 1→2, etc.
+
+  // Sync arrow key steps with map navigation
+  useEffect(() => {
+    if (normalizedArrowStep !== prevArrowStep.current && normalizedArrowStep >= 0) {
+      prevArrowStep.current = normalizedArrowStep;
+      if (normalizedArrowStep < STEPS.length) {
+        setStepIndex(normalizedArrowStep);
+        setViewState({
+          ...STEPS[normalizedArrowStep].view,
+          transitionDuration: 2200,
+          transitionInterpolator: new FlyToInterpolator(),
+          transitionEasing: t => 1 - Math.pow(1 - t, 3),
+        });
+      }
+    }
+  }, [normalizedArrowStep]);
 
   // Reset on slide enter
   useEffect(() => {
     if (slideContext?.isSlideActive) {
+      prevArrowStep.current = -1;
       setStepIndex(0);
       setViewState(STEPS[0].view);
       setBoot(0);
@@ -335,7 +357,7 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
       <DeckGL
         viewState={viewState}
         onViewStateChange={({ viewState: vs }) => setViewState(vs)}
-        controller={true}
+        controller={false}
         layers={layers}
         style={{ position: 'absolute', inset: 0 }}
       >
@@ -400,42 +422,22 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
         </div>
       </div>
 
-      {/* ── Navigation — bottom center ── */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex gap-2" style={{ opacity: bootFade(1.0) }}>
-        <button onClick={() => goToStep(stepIndex - 1)} disabled={isFirst} className="rounded font-mono font-semibold text-[20px]" style={{
-          background: isFirst ? 'rgba(26,34,54,0.5)' : 'rgba(26,34,54,0.9)',
-          border: '1px solid rgba(34,211,238,0.3)',
-          color: isFirst ? '#334155' : '#94a3b8',
-          padding: '8px 18px',
-          cursor: isFirst ? 'default' : 'pointer',
-        }}>
-          ◂ PREV
-        </button>
-        {/* Step dots */}
-        <div className="flex gap-1.5 items-center rounded px-3" style={{
-          background: 'rgba(5,8,16,0.8)',
-          border: '1px solid rgba(34,211,238,0.15)',
-        }}>
-          {STEPS.map((_, i) => (
-            <div key={i} onClick={() => goToStep(i)} style={{
-              width: 10, height: 10, borderRadius: '50%',
-              background: i === stepIndex ? '#22d3ee' : i < stepIndex ? 'rgba(34,211,238,0.4)' : 'rgba(34,211,238,0.15)',
-              cursor: 'pointer',
-              boxShadow: i === stepIndex ? '0 0 8px rgba(34,211,238,0.5)' : 'none',
-              transition: 'all 0.3s',
-            }} />
-          ))}
-        </div>
-        <button onClick={() => goToStep(stepIndex + 1)} disabled={isLast} className="rounded font-mono font-semibold text-[20px]" style={{
-          background: isLast ? 'rgba(26,34,54,0.5)' : 'rgba(26,34,54,0.9)',
-          border: `1px solid ${isLast ? 'rgba(34,211,238,0.15)' : 'rgba(34,211,238,0.3)'}`,
-          color: isLast ? '#334155' : '#94a3b8',
-          padding: '8px 18px',
-          cursor: isLast ? 'default' : 'pointer',
-        }}>
-          NEXT ▸
-        </button>
+      {/* Step dots — bottom center (arrows handled by Spectacle) */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex gap-1.5 items-center rounded px-3 py-2" style={{
+        opacity: bootFade(1.0),
+        background: 'rgba(5,8,16,0.8)',
+        border: '1px solid rgba(34,211,238,0.15)',
+      }}>
+        {STEPS.map((_, i) => (
+          <div key={i} style={{
+            width: 10, height: 10, borderRadius: '50%',
+            background: i === stepIndex ? '#22d3ee' : i < stepIndex ? 'rgba(34,211,238,0.4)' : 'rgba(34,211,238,0.15)',
+            boxShadow: i === stepIndex ? '0 0 8px rgba(34,211,238,0.5)' : 'none',
+            transition: 'all 0.3s',
+          }} />
+        ))}
       </div>
+      {stepsPlaceholder}
 
       {/* ── Stats bar — bottom right, appears on final steps ── */}
       {stepIndex >= 3 && (
