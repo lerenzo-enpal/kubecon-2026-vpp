@@ -242,34 +242,28 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* Three Lines of Defense */}
+      {/* The Old Playbook */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
-          <H>Three Lines of Defense</H>
-          <P size="20px">When frequency deviates, three layers of reserves activate — each faster than the last.</P>
-          <div className="flex-1 flex flex-col justify-center gap-5 my-4">
-            {[
-              { label: 'FCR', name: 'Frequency Containment', time: '< 30 seconds', speed: 'Batteries: 10–140 ms', color: colors.success, w: 8 },
-              { label: 'aFRR', name: 'Automatic Restoration', time: '30 sec – 5 min', speed: 'Automated dispatch', color: colors.primary, w: 35 },
-              { label: 'mFRR', name: 'Manual Restoration', time: '~ 12.5 minutes', speed: 'Manual re-dispatch, congestion mgmt', color: colors.secondary, w: 75 },
-            ].map(r => (
-              <div key={r.label} className="flex items-center gap-4">
-                <div className="w-[60px] text-[20px] font-bold font-mono text-right" style={{ color: r.color }}>{r.label}</div>
-                <div className="flex-1">
-                  <div className="h-[40px] rounded-md flex items-center px-4 gap-3" style={{ width: `${r.w}%`, background: `linear-gradient(90deg, ${r.color}25, ${r.color}50)`, minWidth: 200 }}>
-                    <span className="font-mono text-[20px] font-semibold text-hud-text whitespace-nowrap">{r.time}</span>
-                    <span className="text-[20px] text-hud-text-muted font-sans">{r.name}</span>
-                  </div>
-                  <div className="text-[20px] text-hud-text-dim font-sans mt-1 ml-1">{r.speed}</div>
+          <H color={colors.accent}>The Old Playbook</H>
+          <P size="20px">Before batteries and software, this is how the grid stayed stable. Expensive, dirty, and blunt.</P>
+          <div className="flex-1 flex items-center">
+            <div className="flex gap-5 w-full">
+              {[
+                { t: 'Peaker Plants', d: 'Gas turbines that sit idle 90% of the year. Fire up only during peak demand. Cost 2–3x more per MWh than baseload.', c: '#fb923c', stat: '$150–$250/MWh' },
+                { t: 'Spinning Reserves', d: 'Keep generators running at partial load "just in case." Burning fuel to produce nothing — pure waste.', c: colors.accent, stat: '5–10% of capacity' },
+                { t: 'Load Shedding', d: 'The last resort: deliberate rolling blackouts. The grid operator picks who loses power. Entire neighborhoods go dark.', c: colors.danger, stat: 'Millions affected' },
+                { t: 'Curtailment', d: 'Too much renewable energy? Just turn it off. Wind turbines feathered, solar panels disconnected. Clean energy — wasted.', c: colors.textDim, stat: '6.1 TWh (DE 2023)' },
+              ].map(i => (
+                <div key={i.t} className="bg-hud-surface rounded-xl px-4 py-5 flex-1" style={{ border: `1px solid ${i.c}25` }}>
+                  <div className="text-[20px] font-bold font-sans mb-2" style={{ color: i.c }}>{i.t}</div>
+                  <div className="text-[20px] text-hud-text-muted font-sans leading-normal mb-3">{i.d}</div>
+                  <div className="text-[20px] font-mono font-semibold" style={{ color: i.c }}>{i.stat}</div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-          <div className="flex gap-4">
-            <StatBox n="100 ms" l="Battery full response" c={colors.success} />
-            <StatBox n="6,000 ms" l="Gas turbine ramp" c="#fb923c" />
-            <StatBox n="60x" l="Faster" c={colors.primary} />
-          </div>
+          <P size="20px" style={{ fontStyle: 'italic' }}>"The grid's emergency toolkit hasn't changed since the 1960s."</P>
         </div>
       </Slide>
 
