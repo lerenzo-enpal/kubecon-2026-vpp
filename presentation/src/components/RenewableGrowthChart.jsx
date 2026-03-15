@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
+import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
 
 const DATA = [
@@ -17,6 +18,7 @@ export default function RenewableGrowthChart({ width = 850, height = 360 }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const progressRef = useRef(0);
+  const slideContext = useContext(SlideContext);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -33,9 +35,13 @@ export default function RenewableGrowthChart({ width = 850, height = 360 }) {
     const chartH = height - padTop - padBottom;
     const barW = chartW / DATA.length - 12;
 
+    // Reset progress for replay when slide becomes active
+    if (slideContext?.isSlideActive) progressRef.current = 0;
+
     const draw = () => {
-      progressRef.current = Math.min(1, progressRef.current + 0.012);
-      const p = progressRef.current;
+      const isActive = slideContext?.isSlideActive;
+      if (isActive) progressRef.current = Math.min(1, progressRef.current + 0.012);
+      const p = isActive ? progressRef.current : 1; // show completed chart when inactive
       const ease = 1 - Math.pow(1 - p, 3); // ease-out cubic
 
       ctx.fillStyle = '#060a12';
@@ -140,14 +146,14 @@ export default function RenewableGrowthChart({ width = 850, height = 360 }) {
         ctx.fillText('\u2190 and accelerating', lastX, arrowY + 4);
       }
 
-      if (p < 1) {
+      if (isActive && p < 1) {
         animRef.current = requestAnimationFrame(draw);
       }
     };
 
     draw();
     return () => cancelAnimationFrame(animRef.current);
-  }, [width, height]);
+  }, [width, height, slideContext?.isSlideActive]);
 
   return (
     <canvas

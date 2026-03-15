@@ -67,7 +67,8 @@ export default function EUGridMap({ width = 900, height = 500 }) {
     }
 
     const draw = () => {
-      tRef.current += 0.016;
+      const isActive = slideContext?.isSlideActive;
+      if (isActive) tRef.current += 0.016;
       const t = tRef.current;
       const now = performance.now();
 
@@ -161,7 +162,7 @@ export default function EUGridMap({ width = 900, height = 500 }) {
         ctx.fillText(s, 16, height - 36 + i * 14);
       });
 
-      animRef.current = requestAnimationFrame(draw);
+      if (isActive) animRef.current = requestAnimationFrame(draw);
     };
 
     draw();

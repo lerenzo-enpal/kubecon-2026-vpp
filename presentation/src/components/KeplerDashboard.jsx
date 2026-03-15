@@ -32,7 +32,8 @@ export default function KeplerDashboard({ width = 880, height = 420 }) {
     ctx.scale(2, 2);
 
     const draw = () => {
-      tRef.current += 0.016;
+      const isActive = slideContext?.isSlideActive;
+      if (isActive) tRef.current += 0.016;
       const t = tRef.current;
 
       ctx.fillStyle = '#060a12';
@@ -159,12 +160,12 @@ export default function KeplerDashboard({ width = 880, height = 420 }) {
       ctx.textAlign = 'center';
       ctx.fillText(`Total VPP platform: ${totalW.toFixed(1)}W   •   60W lightbulb   •   65W laptop   •   The VPP uses less than a lightbulb to manage a power plant`, width / 2, compY);
 
-      animRef.current = requestAnimationFrame(draw);
+      if (isActive) animRef.current = requestAnimationFrame(draw);
     };
 
     draw();
     return () => cancelAnimationFrame(animRef.current);
-  }, [width, height]);
+  }, [width, height, slideContext?.isSlideActive]);
 
   return (
     <canvas
