@@ -233,7 +233,7 @@ export default function TexasMapGL({ width = 960, height = 600 }) {
       {/* HUD overlay */}
       <div style={{ position: 'absolute', top: 10, left: 14, zIndex: 10 }}>
         <div style={{ fontSize: '22px', fontWeight: 800, fontFamily: '"JetBrains Mono"', color: running && elapsed > 10 ? '#ef4444' : '#22d3ee', textShadow: '0 0 12px rgba(0,0,0,0.8)' }}>
-          {running ? `${(60 - failed.size * 0.35 - Math.max(0, elapsed - 2) * 0.06).toFixed(3)} Hz` : '60.000 Hz'}
+          {running ? `${(50 - failed.size * 0.35 - Math.max(0, elapsed - 2) * 0.06).toFixed(3)} Hz` : '50.000 Hz'}
         </div>
         {running && (
           <div style={{ fontSize: '13px', fontFamily: '"JetBrains Mono"', color: '#ef4444', textShadow: '0 0 8px rgba(0,0,0,0.8)', marginTop: 4 }}>

@@ -241,11 +241,11 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
   const legendFade = bootFade(1.8, 0.5);
 
   // ── Computed values ──
-  const rawFreq = running ? 60.0 - failed.size * 0.35 - Math.max(0, elapsed - 2) * 0.06 : 60.0;
-  const freq = Math.max(57.5, rawFreq) + Math.sin(Date.now() / 300) * 0.01;
+  const rawFreq = running ? 50.0 - failed.size * 0.35 - Math.max(0, elapsed - 2) * 0.06 : 50.0;
+  const freq = Math.max(47.5, rawFreq) + Math.sin(Date.now() / 300) * 0.01;
   const mwOffline = Math.min(52277, Math.floor(failed.size / PLANTS.length * 52277));
-  const inDanger = freq < 59.0;
-  const freqColor = freq < 59.0 ? '#ef4444' : freq < 59.5 ? '#f59e0b' : '#22d3ee';
+  const inDanger = freq < 49.0;
+  const freqColor = freq < 49.0 ? '#ef4444' : freq < 49.5 ? '#f59e0b' : '#22d3ee';
   const glowColor = inDanger ? '#ef4444' : '#22d3ee';
   const borderClr = inDanger ? 'rgba(239,68,68,0.5)' : 'rgba(34,211,238,0.35)';
   const showWarning = running && elapsed > 12;
@@ -588,7 +588,7 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
               fontSize: 13, fontFamily: '"JetBrains Mono"', color: freqColor,
               marginTop: 4, fontWeight: 600, opacity: rpContent,
             }}>
-              {freq < 59.0 ? '\u26A0 EMERGENCY' : freq < 59.5 ? '\u26A0 WARNING' : 'NOMINAL'}
+              {freq < 49.0 ? '\u26A0 EMERGENCY' : freq < 49.5 ? '\u26A0 WARNING' : 'NOMINAL'}
             </div>
             {running && (
               <>
@@ -685,7 +685,7 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
               fontSize: 11, fontFamily: '"JetBrains Mono"', color: freqColor,
               textShadow: '0 0 8px rgba(0,0,0,0.9)', marginTop: 2, fontWeight: 600,
             }}>
-              {freq < 59.0 ? '\u26A0 EMERGENCY' : freq < 59.5 ? 'WARNING' : 'ERCOT \u2014 NOMINAL'}
+              {freq < 49.0 ? '\u26A0 EMERGENCY' : freq < 49.5 ? 'WARNING' : 'ERCOT \u2014 NOMINAL'}
             </div>
             {running && (
               <div style={{

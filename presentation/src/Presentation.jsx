@@ -11,6 +11,8 @@ import StaticTexasGrid from './components/StaticTexasGrid';
 import KeplerDashboard from './components/KeplerDashboard';
 import CarbonAwareChart from './components/CarbonAwareChart';
 import TexasMapHUD from './components/TexasMapHUD';
+import { versionA, versionB, versionC } from './slides/GridScaleSlides';
+import EUGridHUD from './components/EUGridHUD';
 
 const theme = {
   colors: { primary: colors.text, secondary: colors.textMuted, tertiary: colors.primary },
@@ -185,6 +187,44 @@ export default function Presentation() {
         </div>
       </Slide>
 
+      {/* ── REVIEW: Grid Scale Bridge Slides ── */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col justify-center items-center h-full text-center">
+          <div className="text-[20px] font-semibold text-hud-text-dim font-mono tracking-[0.15em] uppercase mb-5">Review</div>
+          <H size="48px" center>Option A</H>
+          <P size="20px" center>"The Living Grid" — Animated EU grid map + stat comparison</P>
+        </div>
+      </Slide>
+      {versionA()}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col justify-center items-center h-full text-center">
+          <div className="text-[20px] font-semibold text-hud-text-dim font-mono tracking-[0.15em] uppercase mb-5">Review</div>
+          <H size="48px" center>Option B</H>
+          <P size="20px" center>"By the Numbers" — Cinematic stat reveal + grid vs. tech comparison</P>
+        </div>
+      </Slide>
+      {versionB()}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col justify-center items-center h-full text-center">
+          <div className="text-[20px] font-semibold text-hud-text-dim font-mono tracking-[0.15em] uppercase mb-5">Review</div>
+          <H size="48px" center>Option C</H>
+          <P size="20px" center>"The Synchronized Dance" — Pulse animation + electricity journey</P>
+        </div>
+      </Slide>
+      {versionC()}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col justify-center items-center h-full text-center">
+          <div className="text-[20px] font-semibold text-hud-text-dim font-mono tracking-[0.15em] uppercase mb-5">Review</div>
+          <H size="48px" center>Option D</H>
+          <P size="20px" center>"The Zoom Out" — deck.gl map: plant → home → region → nation → continent</P>
+        </div>
+      </Slide>
+      <Slide backgroundColor="#020408" padding="0">
+        <div className="w-full h-full">
+          <EUGridHUD width="100%" height="100%" />
+        </div>
+      </Slide>
+
       {/* 4: Frequency Demo */}
       <Slide backgroundColor={bg} padding="24px 40px">
         <div className="flex flex-col h-full">
@@ -194,7 +234,7 @@ export default function Presentation() {
             <FrequencyDemo width={900} height={340} />
           </div>
           <div className="flex gap-3.5">
-            <StatBox n="60.000 Hz" l="US Target (50 Hz in EU)" c={colors.primary} />
+            <StatBox n="50.000 Hz" l="EU Target Frequency" c={colors.primary} />
             <StatBox n="107 GW" l="ERCOT Total Capacity" c={colors.secondary} />
             <StatBox n="0 buffer" l="No Grid Storage" c={colors.accent} />
           </div>
