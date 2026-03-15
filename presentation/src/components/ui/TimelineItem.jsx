@@ -5,17 +5,17 @@ export default function TimelineItem({ year, event, color = colors.danger, impac
   return (
     <div className="flex gap-4 items-start mb-4">
       <div
-        className="font-mono text-[16px] font-bold min-w-[50px]"
+        className="font-mono text-[20px] font-bold min-w-[50px]"
         style={{ color, textShadow: `0 0 20px ${color}40` }}
       >
         {year}
       </div>
       <div>
-        <div className="text-[18px] font-semibold text-hud-text font-sans">
+        <div className="text-[20px] font-semibold text-hud-text font-sans">
           {event}
         </div>
         {impact && (
-          <div className="text-[14px] text-hud-text-muted font-sans mt-0.5">
+          <div className="text-[20px] text-hud-text-muted font-sans mt-0.5">
             {impact}
           </div>
         )}

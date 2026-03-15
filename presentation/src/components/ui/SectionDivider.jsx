@@ -6,7 +6,7 @@ export default function SectionDivider({ number, title, subtitle }) {
   return (
     <SlideContainer>
       <div className="text-center">
-        <div className="text-[14px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-5">
+        <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-5">
           Part {number}
         </div>
         <GlowText size="56px" style={{ textAlign: 'center' }}>

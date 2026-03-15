@@ -57,7 +57,7 @@ export function act3Slides() {
                 <div className="w-2.5 h-2.5 rounded-full" style={{
                   background: a.color, boxShadow: `0 0 8px ${a.color}60`,
                 }} />
-                <span className="text-[15px] text-hud-text font-sans font-medium">
+                <span className="text-[20px] text-hud-text font-sans font-medium">
                   {a.label}
                 </span>
               </div>
@@ -76,7 +76,7 @@ export function act3Slides() {
             }}>
               Cloud Platform
             </div>
-            <div className="text-[13px] text-hud-text-muted font-mono mt-2">
+            <div className="text-[20px] text-hud-text-muted font-mono mt-2">
               Kubernetes + Dapr
               <br />Event-driven control
               <br />Real-time telemetry
@@ -99,7 +99,7 @@ export function act3Slides() {
                 <div className="w-2.5 h-2.5 rounded-full" style={{
                   background: s.color, boxShadow: `0 0 8px ${s.color}60`,
                 }} />
-                <span className="text-[15px] text-hud-text font-sans font-medium">
+                <span className="text-[20px] text-hud-text font-sans font-medium">
                   {s.label}
                 </span>
               </div>
@@ -120,11 +120,11 @@ export function act3Slides() {
             padding: '24px',
             border: `1px solid ${colors.danger}20`,
           }}>
-            <div className="text-[14px] font-semibold text-hud-danger font-mono tracking-[0.1em] mb-4">
+            <div className="text-[20px] font-semibold text-hud-danger font-mono tracking-[0.1em] mb-4">
               TRADITIONAL GRID
             </div>
             {['Monolith architecture', 'Few large generators', 'Manual scaling', 'Single points of failure', 'No observability'].map((item) => (
-              <div key={item} className="text-[15px] text-hud-text-muted font-sans" style={{
+              <div key={item} className="text-[20px] text-hud-text-muted font-sans" style={{
                 padding: '6px 0', borderBottom: `1px solid ${colors.surfaceLight}`,
               }}>
                 {item}
@@ -140,11 +140,11 @@ export function act3Slides() {
             background: `${colors.success}06`, padding: '24px',
             border: `1px solid ${colors.success}25`,
           }}>
-            <div className="text-[14px] font-semibold text-hud-success font-mono tracking-[0.1em] mb-4">
+            <div className="text-[20px] font-semibold text-hud-success font-mono tracking-[0.1em] mb-4">
               VIRTUAL POWER PLANT
             </div>
             {['Distributed microservices', 'Millions of nodes', 'Autoscaling capacity', 'Resilient by design', 'Full-stack observability'].map((item) => (
-              <div key={item} className="text-[15px] text-hud-text font-sans font-medium" style={{
+              <div key={item} className="text-[20px] text-hud-text font-sans font-medium" style={{
                 padding: '6px 0', borderBottom: `1px solid ${colors.surfaceLight}`,
               }}>
                 {item}
@@ -152,7 +152,7 @@ export function act3Slides() {
             ))}
           </div>
         </div>
-        <div className="mt-6 text-center text-[16px] text-hud-text-muted font-mono">
+        <div className="mt-6 text-center text-[20px] text-hud-text-muted font-mono">
           Grid frequency = SLO &nbsp;&bull;&nbsp; Cascade = unhandled failure propagation &nbsp;&bull;&nbsp; Batteries = autoscaling
         </div>
       </SlideContainer>
@@ -169,14 +169,14 @@ export function act3Slides() {
             <div key={layer.title} className="bg-hud-surface rounded-xl flex-1 min-w-[170px]" style={{
               border: `1px solid ${layer.color}25`, padding: '20px',
             }}>
-              <div className="text-[14px] font-bold font-mono tracking-[0.08em] uppercase mb-3 pb-2" style={{
+              <div className="text-[20px] font-bold font-mono tracking-[0.08em] uppercase mb-3 pb-2" style={{
                 color: layer.color,
                 borderBottom: `1px solid ${layer.color}20`,
               }}>
                 {layer.title}
               </div>
               {layer.items.map((item) => (
-                <div key={item} className="text-[13px] text-hud-text-muted font-sans flex items-center gap-2" style={{
+                <div key={item} className="text-[20px] text-hud-text-muted font-sans flex items-center gap-2" style={{
                   padding: '5px 0',
                 }}>
                   <div className="w-1 h-1 rounded-full opacity-60" style={{ background: layer.color }} />
@@ -207,10 +207,10 @@ export function act3Slides() {
                 boxShadow: `0 0 10px ${item.color}60`,
               }} />
               <div>
-                <div className="text-[17px] font-semibold text-hud-text font-sans">
+                <div className="text-[20px] font-semibold text-hud-text font-sans">
                   {item.title}
                 </div>
-                <div className="text-[14px] text-hud-text-muted font-sans leading-[1.4]">
+                <div className="text-[20px] text-hud-text-muted font-sans leading-[1.4]">
                   {item.desc}
                 </div>
               </div>
@@ -229,7 +229,7 @@ export function act3Slides() {
             Cascading Failure — No VPP
           </GlowText>
         </div>
-        <Subtitle size="16px">
+        <Subtitle size="20px">
           A generator trips in Essen. Watch the cascade propagate across the German grid.
         </Subtitle>
         <div className="mt-4 flex justify-center">
@@ -250,7 +250,7 @@ export function act3Slides() {
             Same Failure — With VPP
           </GlowText>
         </div>
-        <Subtitle size="16px">
+        <Subtitle size="20px">
           Same generator trip. But now 18 VPP clusters with distributed batteries respond.
         </Subtitle>
         <div className="mt-4 flex justify-center">
@@ -282,7 +282,7 @@ export function act3Slides() {
             <div className="text-[22px] font-semibold text-hud-text font-sans leading-[1.6]">
               1 million batteries coordinated as VPPs = <span className="text-hud-primary font-extrabold">10+ GW</span> of flexible capacity
               <br />
-              <span className="text-[18px] text-hud-text-muted font-normal">
+              <span className="text-[20px] text-hud-text-muted font-normal">
                 Equivalent to 10 large gas power plants. Running on Kubernetes.
               </span>
             </div>

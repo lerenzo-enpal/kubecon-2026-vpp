@@ -19,6 +19,12 @@ Think James Bond war room meets Bloomberg terminal. This is critical infrastruct
 - Transitions between states should feel like systems responding, not slides animating
 - "GRID FAILURE IMMINENT" style warnings: uppercase, monospace, red glow, pulsing opacity
 
+### Typography Minimum Sizes
+
+- **All slide content text must be at least 20px** (`text-[20px]` or `text-xl` in Tailwind). Presentations are projected on large screens at a distance — anything smaller is unreadable from the back of the room.
+- **Exceptions:** HUD overlays (TexasMapHUD), canvas-based animation components (FrequencyDemo, CascadeSimulation, etc.), and navigational chrome (slide counters). These operate at closer viewing distances or serve decorative/functional roles where compact text is appropriate.
+- When adding new slides or components, enforce this floor. If you need visual hierarchy, vary weight, color, and spacing — not by dropping below 20px.
+
 ### Screen Real Estate
 
 - Maximize use of the full viewport for visualizations and data

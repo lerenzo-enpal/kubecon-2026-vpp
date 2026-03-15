@@ -9,7 +9,7 @@ export function closingSlides() {
     <Slide key="back-to-berlin" backgroundColor={colors.bg}>
       <SlideContainer noGrid>
         <div className="max-w-[750px]">
-          <div className="text-[14px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-6">
+          <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-6">
             Back to Berlin
           </div>
           <div className="text-[26px] font-normal text-hud-text font-sans leading-[1.7]">
@@ -111,11 +111,11 @@ export function closingSlides() {
           <GlowText size="56px" style={{ textAlign: 'center', marginBottom: 20 }}>
             Thank You
           </GlowText>
-          <div className="text-[18px] text-hud-text-muted font-sans leading-[1.8]">
+          <div className="text-[20px] text-hud-text-muted font-sans leading-[1.8]">
             <div className="mb-2">
               <span className="text-hud-primary font-semibold">Enpal / Flexa</span>
             </div>
-            <div className="text-[14px] text-hud-text-dim">
+            <div className="text-[20px] text-hud-text-dim">
               Building Europe's Largest Virtual Power Plant
             </div>
           </div>
@@ -126,7 +126,7 @@ export function closingSlides() {
             ].map((item) => (
               <div
                 key={item.label}
-                className="bg-hud-surface rounded-xl text-[14px] font-medium font-sans"
+                className="bg-hud-surface rounded-xl text-[20px] font-medium font-sans"
                 style={{
                   border: `1px solid ${item.color}25`,
                   padding: '16px 24px',

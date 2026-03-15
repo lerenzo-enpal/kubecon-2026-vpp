@@ -60,7 +60,7 @@ export function act1Slides() {
     <Slide key="title" backgroundColor={colors.bg}>
       <SlideContainer>
         <div className="text-center">
-          <div className="text-[13px] font-semibold text-hud-primary font-mono tracking-[0.2em] uppercase mb-7">
+          <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.2em] uppercase mb-7">
             KubeCon + CloudNativeCon Europe 2026
           </div>
           <GlowText size="52px" style={{ textAlign: 'center', marginBottom: 20 }}>
@@ -75,10 +75,10 @@ export function act1Slides() {
               border: `1px solid ${colors.surfaceLight}`,
             }} />
             <div className="text-left">
-              <div className="text-[18px] font-semibold text-hud-text font-sans">
+              <div className="text-[20px] font-semibold text-hud-text font-sans">
                 Enpal / Flexa
               </div>
-              <div className="text-[14px] text-hud-text-muted font-sans">
+              <div className="text-[20px] text-hud-text-muted font-sans">
                 Building Europe's Largest Virtual Power Plant
               </div>
             </div>
@@ -132,10 +132,10 @@ export function act1Slides() {
                 }}>
                   ~
                 </div>
-                <div className="text-[16px] font-semibold text-hud-text font-sans">
+                <div className="text-[20px] font-semibold text-hud-text font-sans">
                   {item.label}
                 </div>
-                <div className="text-[13px] text-hud-text-muted font-sans mt-1">
+                <div className="text-[20px] text-hud-text-muted font-sans mt-1">
                   {item.sub}
                 </div>
               </div>
@@ -171,7 +171,7 @@ export function act1Slides() {
         <div className="mt-5 text-center px-6 py-3 bg-hud-surface rounded-lg inline-block mx-auto" style={{
           border: `1px solid ${colors.danger}20`,
         }}>
-          <div className="text-[14px] text-hud-text-muted font-sans">
+          <div className="text-[20px] text-hud-text-muted font-sans">
             <span className="text-hud-danger font-semibold">2003 Northeast Blackout</span>
             {' '}&mdash; triggered by a software bug and untrimmed trees
           </div>
@@ -227,7 +227,7 @@ export function act1Slides() {
               <div className="text-[20px] font-bold text-hud-text font-sans mb-2">
                 {item.title}
               </div>
-              <div className="text-[15px] text-hud-text-muted font-sans leading-normal">
+              <div className="text-[20px] text-hud-text-muted font-sans leading-normal">
                 {item.desc}
               </div>
             </div>
@@ -259,16 +259,16 @@ export function act1Slides() {
               <div className="text-[20px] font-bold font-sans mb-2" style={{ color: item.color }}>
                 {item.label}
               </div>
-              <div className="text-[15px] text-hud-text-muted font-sans">
+              <div className="text-[20px] text-hud-text-muted font-sans">
                 {item.desc}
               </div>
             </div>
           ))}
         </div>
-        <div className="mt-8 text-center text-[18px] text-hud-text-muted font-sans">
+        <div className="mt-8 text-center text-[20px] text-hud-text-muted font-sans">
           <span className="font-semibold" style={{ color: colors.accent }}>301 negative price hours</span> in Germany in 2023, trending 400+
           <br />
-          <span className="text-[14px]">Solar floods midday. Steep ramp in evening. The "duck curve" problem.</span>
+          <span className="text-[20px]">Solar floods midday. Steep ramp in evening. The "duck curve" problem.</span>
         </div>
         <div className="mt-7 text-center text-[22px] font-semibold font-sans" style={{
           color: colors.primary,
