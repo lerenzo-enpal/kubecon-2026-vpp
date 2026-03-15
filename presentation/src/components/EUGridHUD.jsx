@@ -143,6 +143,8 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
   const [viewState, setViewState] = useState(STEPS[0].view);
   const [freq, setFreq] = useState(50.0);
   const freqRef = useRef(null);
+  const freqHistory = useRef([]);
+  const freqCanvasRef = useRef(null);
 
   const slideContext = useContext(SlideContext);
 
@@ -165,10 +167,45 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
     }
   }, [slideContext?.isSlideActive]);
 
-  // Frequency ticker
+  // Frequency ticker + line chart
   useEffect(() => {
     const tick = () => {
-      setFreq(50.0 + Math.sin(performance.now() / 600) * 0.008);
+      const now = performance.now();
+      const f = 50.0 + Math.sin(now / 600) * 0.008 + Math.sin(now / 170) * 0.002;
+      setFreq(f);
+      freqHistory.current.push(f);
+      if (freqHistory.current.length > 120) freqHistory.current.shift();
+      // Draw mini line chart
+      const canvas = freqCanvasRef.current;
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        const w = 140, h = 36;
+        canvas.width = w * 2; canvas.height = h * 2;
+        ctx.scale(2, 2);
+        ctx.clearRect(0, 0, w, h);
+        const hist = freqHistory.current;
+        if (hist.length > 2) {
+          const min = 49.985, max = 50.015;
+          ctx.beginPath();
+          hist.forEach((v, i) => {
+            const x = (i / (hist.length - 1)) * w;
+            const y = h - ((v - min) / (max - min)) * h;
+            i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+          });
+          ctx.strokeStyle = 'rgba(34,211,238,0.5)';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+          // 50 Hz reference line
+          const refY = h - ((50.0 - min) / (max - min)) * h;
+          ctx.beginPath();
+          ctx.moveTo(0, refY); ctx.lineTo(w, refY);
+          ctx.strokeStyle = 'rgba(34,211,238,0.15)';
+          ctx.lineWidth = 0.5;
+          ctx.setLineDash([3, 3]);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+      }
       freqRef.current = requestAnimationFrame(tick);
     };
     freqRef.current = requestAnimationFrame(tick);
@@ -321,18 +358,16 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
 
       {/* ── Frequency readout — top right ── */}
       <div className="absolute top-4 right-4 z-10 text-right" style={{ opacity: bootFade(0.8) }}>
-        <div className="rounded p-3" style={{
-          background: 'rgba(5,8,16,0.92)',
+        <div className="rounded p-2.5 flex items-center gap-2.5" style={{
+          background: 'rgba(5,8,16,0.85)',
           border: `1px solid ${borderClr}`,
-          boxShadow: `0 0 20px ${glow}18`,
+          boxShadow: `0 0 15px ${glow}12`,
         }}>
-          <div className="text-[32px] font-mono font-bold text-hud-primary" style={{
-            textShadow: '0 0 20px rgba(34,211,238,0.3)',
+          <canvas ref={freqCanvasRef} style={{ width: 140, height: 36 }} />
+          <div className="text-[20px] font-mono font-semibold text-hud-primary" style={{
+            textShadow: '0 0 12px rgba(34,211,238,0.2)',
           }}>
-            {freq.toFixed(3)} Hz
-          </div>
-          <div className="text-[20px] font-mono text-hud-text-dim tracking-[0.1em]">
-            CONTINENTAL EUROPE
+            {freq.toFixed(3)}<span className="text-hud-text-dim ml-0.5">Hz</span>
           </div>
         </div>
       </div>

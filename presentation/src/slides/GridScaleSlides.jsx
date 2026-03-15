@@ -1,8 +1,7 @@
 import React from 'react';
 import { Slide, Appear, Notes } from 'spectacle';
 import { colors } from '../theme';
-import { SlideContainer, GlowText, Subtitle, StatCard, Badge } from '../components/ui';
-import EUGridMap from '../components/EUGridMap';
+import { SlideContainer, GlowText, Subtitle } from '../components/ui';
 import GridPulse from '../components/GridPulse';
 
 /**
@@ -23,29 +22,6 @@ import GridPulse from '../components/GridPulse';
 // ═══════════════════════════════════════════════════════════════════════════
 export function versionA() {
   return [
-    /* ── A-1: The Largest Machine ── */
-    <Slide key="grid-scale-a1" backgroundColor={colors.bg}>
-      <SlideContainer style={{ justifyContent: 'flex-start', paddingTop: 50 }}>
-        <GlowText size="44px" style={{ marginBottom: 16 }}>
-          The Largest Machine Ever Built
-        </GlowText>
-        <Subtitle size="20px">
-          Every generator in Continental Europe rotates in perfect synchrony.
-          Lisbon to Istanbul — one machine, one frequency.
-        </Subtitle>
-        <div className="mt-5 flex justify-center">
-          <EUGridMap width={880} height={380} />
-        </div>
-      </SlideContainer>
-      <Notes>
-        "Before we talk about what happens when the grid fails, you need to understand
-        what the grid actually IS. This is a simplified view of the European grid.
-        Every one of these dots is a major generation hub. Every line is a high-voltage
-        transmission corridor. And all of it — all 36 countries — is spinning at
-        exactly 50 Hz. Right now. As I'm talking to you."
-      </Notes>
-    </Slide>,
-
     /* ── A-2: The Numbers ── */
     <Slide key="grid-scale-a2" backgroundColor={colors.bg}>
       <SlideContainer style={{ justifyContent: 'flex-start', paddingTop: 60 }}>
@@ -277,69 +253,5 @@ export function versionC() {
       </Notes>
     </Slide>,
 
-    /* ── C-2: The Journey of Electricity ── */
-    <Slide key="grid-scale-c2" backgroundColor={colors.bg}>
-      <SlideContainer style={{ justifyContent: 'flex-start', paddingTop: 60 }}>
-        <GlowText size="40px" style={{ marginBottom: 24 }}>
-          From Power Plant to Your Home
-        </GlowText>
-        <div className="flex items-center justify-center gap-0">
-          {[
-            { label: 'Generation', voltage: '10-25 kV', icon: '\u26A1', color: colors.accent },
-            { label: 'Transmission', voltage: '220-400 kV', icon: '\u2191', color: colors.primary },
-            { label: 'Sub-Transmission', voltage: '110 kV', icon: '\u2193', color: colors.secondary },
-            { label: 'Distribution', voltage: '10-35 kV', icon: '\u2193', color: colors.success },
-            { label: 'Your Home', voltage: '230 V', icon: '\u2302', color: colors.text },
-          ].map((step, i) => (
-            <React.Fragment key={i}>
-              <Appear>
-                <div className="rounded-xl p-4 text-center min-w-[130px]" style={{
-                  background: colors.surface,
-                  border: `1px solid ${step.color}25`,
-                }}>
-                  <div className="text-[28px] mb-2">{step.icon}</div>
-                  <div className="text-[20px] font-semibold text-hud-text font-sans">
-                    {step.label}
-                  </div>
-                  <div className="text-[20px] font-mono mt-1" style={{ color: step.color }}>
-                    {step.voltage}
-                  </div>
-                </div>
-              </Appear>
-              {i < 4 && (
-                <div className="text-[20px] text-hud-text-dim px-2 font-mono">{'\u2192'}</div>
-              )}
-            </React.Fragment>
-          ))}
-        </div>
-        <div className="mt-7 flex gap-4 max-w-[780px] mx-auto">
-          <Appear>
-            <div className="flex-1 bg-hud-surface rounded-xl p-4 text-center border border-hud-surface-light">
-              <div className="text-[28px] font-extrabold font-mono text-hud-primary">5-7</div>
-              <div className="text-[20px] text-hud-text-muted font-sans mt-1">Voltage transformations</div>
-            </div>
-          </Appear>
-          <Appear>
-            <div className="flex-1 bg-hud-surface rounded-xl p-4 text-center border border-hud-surface-light">
-              <div className="text-[28px] font-extrabold font-mono text-hud-accent">6-8%</div>
-              <div className="text-[20px] text-hud-text-muted font-sans mt-1">Energy lost in transit</div>
-            </div>
-          </Appear>
-          <Appear>
-            <div className="flex-1 bg-hud-surface rounded-xl p-4 text-center border border-hud-surface-light">
-              <div className="text-[28px] font-extrabold font-mono text-hud-danger">0 ms</div>
-              <div className="text-[20px] text-hud-text-muted font-sans mt-1">Storage anywhere in this chain</div>
-            </div>
-          </Appear>
-        </div>
-      </SlideContainer>
-      <Notes>
-        "Electricity goes through 5 to 7 voltage transformations before it reaches your
-        outlet. And at no point in this entire chain is there any storage. No buffer. No cache.
-        The electron you're using right now was generated a fraction of a second ago, hundreds
-        of kilometers away. That's why the grid is the most impressive real-time system ever
-        built — and why it's so fragile."
-      </Notes>
-    </Slide>,
   ];
 }
