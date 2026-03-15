@@ -48,34 +48,34 @@ const HUBS = [
   { id: 'istanbul', pos: [29.00, 41.01], name: 'Istanbul', cap: 32, type: 'gas' },
 ];
 
-// ── Transmission corridors ──────────────────────────────────
+// ── Transmission corridors [from, to, capacity (1-10)] ──────
 const CORRIDORS = [
   // Iberia
-  ['lisbon', 'madrid'], ['madrid', 'barcelona'],
+  ['lisbon', 'madrid', 4], ['madrid', 'barcelona', 4],
   // France + cross-border
-  ['madrid', 'paris'], ['barcelona', 'lyon'], ['barcelona', 'marseille'],
-  ['paris', 'lyon'], ['lyon', 'marseille'],
-  ['paris', 'london'], ['paris', 'brussels'], ['paris', 'zurich'],
-  ['lyon', 'milan'],
+  ['madrid', 'paris', 6], ['barcelona', 'lyon', 3], ['barcelona', 'marseille', 3],
+  ['paris', 'lyon', 7], ['lyon', 'marseille', 5],
+  ['paris', 'london', 8], ['paris', 'brussels', 6], ['paris', 'zurich', 5],
+  ['lyon', 'milan', 5],
   // Benelux
-  ['london', 'amsterdam'], ['amsterdam', 'brussels'], ['amsterdam', 'hamburg'],
-  ['brussels', 'cologne'],
+  ['london', 'amsterdam', 6], ['amsterdam', 'brussels', 4], ['amsterdam', 'hamburg', 5],
+  ['brussels', 'cologne', 4],
   // Germany internal
-  ['hamburg', 'berlin'], ['hamburg', 'cologne'],
-  ['cologne', 'frankfurt'], ['frankfurt', 'munich'], ['frankfurt', 'berlin'],
-  ['berlin', 'warsaw'], ['berlin', 'prague'], ['berlin', 'copenhagen'],
-  ['munich', 'zurich'], ['munich', 'vienna'],
+  ['hamburg', 'berlin', 7], ['hamburg', 'cologne', 6],
+  ['cologne', 'frankfurt', 8], ['frankfurt', 'munich', 7], ['frankfurt', 'berlin', 8],
+  ['berlin', 'warsaw', 4], ['berlin', 'prague', 5], ['berlin', 'copenhagen', 5],
+  ['munich', 'zurich', 5], ['munich', 'vienna', 6],
   // Alps + Italy
-  ['zurich', 'milan'], ['milan', 'rome'],
-  ['vienna', 'prague'], ['vienna', 'budapest'],
+  ['zurich', 'milan', 5], ['milan', 'rome', 6],
+  ['vienna', 'prague', 5], ['vienna', 'budapest', 4],
   // Nordic
-  ['copenhagen', 'hamburg'], ['copenhagen', 'stockholm'],
-  ['stockholm', 'oslo'], ['stockholm', 'helsinki'],
+  ['copenhagen', 'hamburg', 5], ['copenhagen', 'stockholm', 4],
+  ['stockholm', 'oslo', 5], ['stockholm', 'helsinki', 3],
   // Eastern Europe
-  ['warsaw', 'prague'], ['warsaw', 'budapest'],
-  ['budapest', 'bucharest'], ['budapest', 'vienna'],
+  ['warsaw', 'prague', 4], ['warsaw', 'budapest', 3],
+  ['budapest', 'bucharest', 3], ['budapest', 'vienna', 4],
   // Southeast
-  ['rome', 'athens'], ['athens', 'istanbul'], ['bucharest', 'istanbul'],
+  ['rome', 'athens', 3], ['athens', 'istanbul', 4], ['bucharest', 'istanbul', 3],
 ];
 
 // ── Journey steps: plant → home → region → nation → continent ──
@@ -241,19 +241,47 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
 
   const visibleLines = CORRIDORS
     .filter(([a, b]) => visibleHubs.some(h => h.id === a) && visibleHubs.some(h => h.id === b))
-    .map(([a, b]) => ({ from: getHub(a).pos, to: getHub(b).pos }));
+    .map(([a, b, cap]) => ({ from: getHub(a).pos, to: getHub(b).pos, cap: cap || 3 }));
+
+  // ── Animated particles flowing along corridors ──
+  const now = performance.now();
+  const particles = [];
+  const PARTICLES_PER_LINE = 3;
+  visibleLines.forEach((line, li) => {
+    for (let p = 0; p < PARTICLES_PER_LINE; p++) {
+      const speed = 0.00012 + (line.cap / 10) * 0.00006;
+      const offset = p / PARTICLES_PER_LINE;
+      const t = ((now * speed + offset + li * 0.17) % 1.0);
+      particles.push({
+        pos: [
+          line.from[0] + (line.to[0] - line.from[0]) * t,
+          line.from[1] + (line.to[1] - line.from[1]) * t,
+        ],
+        cap: line.cap,
+      });
+    }
+  });
 
   // ── Deck.gl layers ──
   const layers = [
     new LineLayer({
       id: 'line-glow', data: visibleLines,
       getSourcePosition: d => d.from, getTargetPosition: d => d.to,
-      getColor: [34, 211, 238, 20], getWidth: 10, widthMinPixels: 3,
+      getColor: [34, 211, 238, 14], getWidth: d => 4 + d.cap * 1.2,
+      widthMinPixels: 2,
     }),
     new LineLayer({
       id: 'lines', data: visibleLines,
       getSourcePosition: d => d.from, getTargetPosition: d => d.to,
-      getColor: [34, 211, 238, 110], getWidth: 2.5, widthMinPixels: 1.5,
+      getColor: [34, 211, 238, 90], getWidth: d => 0.5 + d.cap * 0.3,
+      widthMinPixels: 1,
+    }),
+    new ScatterplotLayer({
+      id: 'particles', data: particles,
+      getPosition: d => d.pos,
+      getRadius: 1200,
+      getFillColor: [34, 211, 238, 200],
+      radiusMinPixels: 2, radiusMaxPixels: 4,
     }),
     new ScatterplotLayer({
       id: 'hubs', data: visibleHubs,
