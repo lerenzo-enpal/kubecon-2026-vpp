@@ -12,6 +12,7 @@ import EUGridHUD from './components/EUGridHUD';
 import DemandResponseDemo from './components/DemandResponseDemo';
 import VPPArchitecture from './components/VPPArchitecture';
 import VPPComposite from './components/VPPComposite';
+import GridFlowDemo from './components/GridFlowDemo';
 
 const theme = {
   colors: { primary: colors.text, secondary: colors.textMuted, tertiary: colors.primary },
@@ -193,32 +194,15 @@ export default function Presentation() {
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H>Designed for a Different World</H>
-          <div className="flex-1 flex items-center">
-            <div className="flex items-center gap-2 w-full">
-              {[
-                { l: 'Power Plants', s: 'Few, large', c: colors.accent },
-                { l: 'Transmission', s: 'High voltage', c: colors.secondary },
-                { l: 'Distribution', s: 'One-way', c: colors.primary },
-                { l: 'Homes', s: 'Passive', c: colors.textDim },
-              ].map((x, i) => (
-                <React.Fragment key={i}>
-                  <div className="bg-hud-surface rounded-[10px] px-4 py-5 text-center flex-1" style={{ border: `1px solid ${x.c}30` }}>
-                    <div className="text-[20px] font-semibold text-hud-text font-sans">{x.l}</div>
-                    <div className="text-[20px] text-hud-text-muted font-sans mt-1">{x.s}</div>
-                  </div>
-                  {i < 3 && <div className="text-[20px] text-hud-text-dim font-mono">{'\u2192'}</div>}
-                </React.Fragment>
-              ))}
-            </div>
-          </div>
-          <P size="20px" style={{ fontStyle: 'italic' }}>"Built in the 1950s. One-directional. No flexibility."</P>
+          <P size="20px">Built in the 1950s. One-directional. No flexibility.</P>
+          <GridFlowDemo width="100%" />
         </div>
       </Slide>
 
       {/* 11: The Old Playbook */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
-          <H color={colors.accent}>The Old Playbook</H>
+          <H color={colors.accent}><span style={{ color: colors.danger, marginRight: 12, fontSize: '0.6em', verticalAlign: 'middle', opacity: 0.7 }}>[WIP]</span>The Old Playbook</H>
           <P size="20px">Before batteries and software, this is how the grid stayed stable. Expensive, dirty, and blunt.</P>
           <div className="flex-1 flex items-center">
             <div className="flex gap-5 w-full">
@@ -336,7 +320,7 @@ export default function Presentation() {
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <div className="flex items-center gap-3">
-            <H color={colors.success}>Demand Response in Action</H>
+            <H color={colors.success}><span style={{ color: colors.danger, marginRight: 12, fontSize: '0.6em', verticalAlign: 'middle', opacity: 0.7 }}>[WIP]</span>Demand Response in Action</H>
             <Badge color={colors.accent}>Still in Infancy</Badge>
           </div>
           <P size="20px">Instead of building more power plants — reshape the demand. Trip a generator and watch what happens.</P>
@@ -429,7 +413,7 @@ export default function Presentation() {
       {/* 25: The Impact of Flexibility */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
-          <H color={colors.success}>The Impact of Flexibility</H>
+          <H color={colors.success}><span style={{ color: colors.danger, marginRight: 12, fontSize: '0.6em', verticalAlign: 'middle', opacity: 0.7 }}>[WIP]</span>The Impact of Flexibility</H>
           <P>Flexible demand doesn't just stabilize the grid — it makes electricity dramatically cheaper.</P>
           <div className="flex-1 flex flex-col justify-center gap-5 my-3">
             <div className="flex gap-4">

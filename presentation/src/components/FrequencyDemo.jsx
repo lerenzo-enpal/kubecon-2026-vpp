@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useContext } from 'react';
 import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
 
-// Event-based scenarios — getFreq receives GRID TIME in seconds (real time × timeScale)
+// Event-based scenarios — getDelta receives GRID TIME in seconds (real time × timeScale)
 // Real grid: primary reserves 0-30s, secondary 30s-15min, tertiary 15min+
 const SCENARIOS = [
   {
@@ -10,14 +10,14 @@ const SCENARIOS = [
     color: 'accent',
     timeScale: 95, // 1 real second = 95 grid seconds → ~8s real for full scenario
     // Realistic: inertia → RoCoF → nadir at ~10s → primary arrest → secondary restore → nominal
-    getFreq: (gt) => {
-      if (gt < 2) return 50.0;                                             // system inertia absorbs initial shock
-      if (gt < 10) return 50.0 - ((gt - 2) / 8) * 0.5;                   // RoCoF ~0.06 Hz/s
-      if (gt < 30) return 49.5 + 0.05 * Math.sin((gt - 10) * 0.3);       // nadir ~49.5, primary reserves arrest
-      if (gt < 120) return 49.5 + ((gt - 30) / 90) * 0.3;                // secondary reserves (aFRR) restore
-      if (gt < 600) return 49.8 + ((gt - 120) / 480) * 0.15;             // tertiary reserves, redispatch
-      if (gt < 750) return 49.95 + ((gt - 600) / 150) * 0.05;            // final settling
-      return 50.0;
+    getDelta: (gt) => {
+      if (gt < 2) return 0;                                                // system inertia absorbs initial shock
+      if (gt < 10) return -((gt - 2) / 8) * 0.5;                          // RoCoF ~0.06 Hz/s
+      if (gt < 30) return -0.5 + 0.05 * Math.sin((gt - 10) * 0.3);       // nadir ~49.5, primary reserves arrest
+      if (gt < 120) return -0.5 + ((gt - 30) / 90) * 0.3;                // secondary reserves (aFRR) restore
+      if (gt < 600) return -0.2 + ((gt - 120) / 480) * 0.15;             // tertiary reserves, redispatch
+      if (gt < 750) return -0.05 + ((gt - 600) / 150) * 0.05;            // final settling
+      return 0;
     },
     events: [
       { gt: 2, type: 'warn', text: 'Inertia absorbs initial shock' },
@@ -34,15 +34,15 @@ const SCENARIOS = [
     color: 'danger',
     timeScale: 150, // 1 real second = 150 grid seconds → ~8s real for full scenario
     // Severe: steep RoCoF, UFLS activates, load shedding stabilizes, slow full recovery
-    getFreq: (gt) => {
-      if (gt < 1) return 50.0;                                             // inertia
-      if (gt < 8) return 50.0 - ((gt - 1) / 7) * 1.1;                    // steep RoCoF ~0.16 Hz/s
-      if (gt < 15) return 48.9 + 0.08 * Math.sin((gt - 8) * 0.9);        // nadir ~48.9, UFLS Stage 1 trips
-      if (gt < 60) return 48.9 + ((gt - 15) / 45) * 0.3;                 // load shedding + primary reserves stabilize
-      if (gt < 300) return 49.2 + ((gt - 60) / 240) * 0.5;               // secondary + tertiary reserves
-      if (gt < 900) return 49.7 + ((gt - 300) / 600) * 0.25;             // redispatch, plants ramping up
-      if (gt < 1200) return 49.95 + ((gt - 900) / 300) * 0.05;           // final restoration
-      return 50.0;
+    getDelta: (gt) => {
+      if (gt < 1) return 0;                                                // inertia
+      if (gt < 8) return -((gt - 1) / 7) * 1.1;                           // steep RoCoF ~0.16 Hz/s
+      if (gt < 15) return -1.1 + 0.08 * Math.sin((gt - 8) * 0.9);        // nadir ~48.9, UFLS Stage 1 trips
+      if (gt < 60) return -1.1 + ((gt - 15) / 45) * 0.3;                 // load shedding + primary reserves stabilize
+      if (gt < 300) return -0.8 + ((gt - 60) / 240) * 0.5;               // secondary + tertiary reserves
+      if (gt < 900) return -0.3 + ((gt - 300) / 600) * 0.25;             // redispatch, plants ramping up
+      if (gt < 1200) return -0.05 + ((gt - 900) / 300) * 0.05;           // final restoration
+      return 0;
     },
     events: [
       { gt: 1, type: 'danger', text: 'Massive generation loss — 3 GW offline' },
@@ -60,14 +60,14 @@ const SCENARIOS = [
     color: 'accent',
     timeScale: 75, // 1 real second = 75 grid seconds → ~8s real
     // Over-frequency: too much supply, generators ramp down, AGC restores
-    getFreq: (gt) => {
-      if (gt < 1) return 50.0;                                             // inertia
-      if (gt < 8) return 50.0 + ((gt - 1) / 7) * 0.5;                    // frequency rises — excess generation
-      if (gt < 20) return 50.5 + 0.06 * Math.sin((gt - 8) * 0.5);        // oscillation, generators start tripping
-      if (gt < 90) return 50.5 - ((gt - 20) / 70) * 0.3;                 // AGC ramps down generation
-      if (gt < 300) return 50.2 - ((gt - 90) / 210) * 0.15;              // settling
-      if (gt < 600) return 50.05 - ((gt - 300) / 300) * 0.05;            // final return
-      return 50.0;
+    getDelta: (gt) => {
+      if (gt < 1) return 0;                                                // inertia
+      if (gt < 8) return ((gt - 1) / 7) * 0.5;                            // frequency rises — excess generation
+      if (gt < 20) return 0.5 + 0.06 * Math.sin((gt - 8) * 0.5);         // oscillation, generators start tripping
+      if (gt < 90) return 0.5 - ((gt - 20) / 70) * 0.3;                  // AGC ramps down generation
+      if (gt < 300) return 0.2 - ((gt - 90) / 210) * 0.15;               // settling
+      if (gt < 600) return 0.05 - ((gt - 300) / 300) * 0.05;             // final return
+      return 0;
     },
     events: [
       { gt: 1, type: 'warn', text: 'Sudden demand drop — 5 GW excess' },
@@ -84,13 +84,13 @@ const SCENARIOS = [
     color: 'danger',
     timeScale: 180, // 1 real second = 180 grid seconds
     // Coordinated SCADA compromise — cascading trips, no recovery
-    getFreq: (gt) => {
-      if (gt < 30) return 50.0;                                            // attacker in system, reconnaissance
-      if (gt < 90) return 50.0 - ((gt - 30) / 60) * 0.5;                 // first generators tripped remotely
-      if (gt < 150) return 49.5 - ((gt - 90) / 60) * 0.6;                // cascade — protection relays disabled
-      if (gt < 210) return 48.9 - ((gt - 150) / 60) * 0.7;               // reserves overwhelmed, no coordination
-      if (gt < 270) return 48.2 - ((gt - 210) / 60) * 0.8;               // into collapse
-      return 47.4;                                                         // total blackout
+    getDelta: (gt) => {
+      if (gt < 30) return 0;                                               // attacker in system, reconnaissance
+      if (gt < 90) return -((gt - 30) / 60) * 0.5;                        // first generators tripped remotely
+      if (gt < 150) return -0.5 - ((gt - 90) / 60) * 0.6;                // cascade — protection relays disabled
+      if (gt < 210) return -1.1 - ((gt - 150) / 60) * 0.7;               // reserves overwhelmed, no coordination
+      if (gt < 270) return -1.8 - ((gt - 210) / 60) * 0.8;               // into collapse
+      return -2.6;                                                         // total blackout
     },
     events: [
       { gt: 5, type: 'warn', text: 'Anomalous SCADA traffic detected' },
@@ -175,10 +175,9 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
   const currentFreqRef = useRef(50.0);
   const [scenario, setScenario] = useState(-1); // -1 = stable/reset
   const scenarioRef = useRef(-1);
-  const [scenarioKey, setScenarioKey] = useState(0); // increments to force re-trigger on same scenario
-  const freqOffsetRef = useRef(0); // accumulated deviation for stacked scenario clicks
+  const activeInstancesRef = useRef([]); // array of { scenarioIdx, startTime, num }
+  const instanceCounterRef = useRef(0); // monotonic counter for instance numbering
   const [hackerTakeover, setHackerTakeover] = useState(false);
-  const scenarioStartRef = useRef(null);
   const warningFlashRef = useRef(0);
   const collapseTimeRef = useRef(null);
   const explosionParticlesRef = useRef([]);
@@ -208,7 +207,8 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
     if (slideContext?.isSlideActive) {
       setScenario(-1);
       scenarioRef.current = -1;
-      scenarioStartRef.current = null;
+      activeInstancesRef.current = [];
+      instanceCounterRef.current = 0;
       targetFreqRef.current = 50.0;
       currentFreqRef.current = 50.0;
       collapseTimeRef.current = null;
@@ -220,27 +220,29 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
       lastStatusRef.current = { text: 'GRID STABLE', color: colors.primary, severity: 0, clearedAt: null };
       bannerRef.current = { level: 'none', clearedAt: null };
       lineColorRef.current = { color: colors.primary, clearedAt: null };
-      freqOffsetRef.current = 0;
       setVisibleEvents([]);
     }
   }, [slideContext?.isSlideActive]);
 
   const switchScenario = (idx) => {
     if (scenarioRef.current === idx) {
-      // Same scenario clicked again — stack the deviation (compounds the effect)
-      freqOffsetRef.current += currentFreqRef.current - 50.0;
-      scenarioStartRef.current = performance.now() / 1000;
-      setScenarioKey(k => k + 1);
-      setVisibleEvents([]);
+      // Same scenario clicked again — stack a new instance on top
+      instanceCounterRef.current += 1;
+      activeInstancesRef.current = [
+        ...activeInstancesRef.current,
+        { scenarioIdx: idx, startTime: performance.now() / 1000, num: instanceCounterRef.current },
+      ];
       return;
     }
+    // Different scenario — clear everything and start fresh
     setScenario(idx);
     scenarioRef.current = idx;
-    setScenarioKey(k => k + 1);
-    scenarioStartRef.current = performance.now() / 1000;
+    instanceCounterRef.current = 1;
+    activeInstancesRef.current = [
+      { scenarioIdx: idx, startTime: performance.now() / 1000, num: 1 },
+    ];
     targetFreqRef.current = 50.0;
     currentFreqRef.current = 50.0;
-    freqOffsetRef.current = 0;
     setVisibleEvents([]);
     collapseTimeRef.current = null;
     hackerPhaseRef.current = 0;
@@ -256,8 +258,8 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
   const resetToStable = () => {
     setScenario(-1);
     scenarioRef.current = -1;
-    setScenarioKey(k => k + 1);
-    scenarioStartRef.current = null;
+    activeInstancesRef.current = [];
+    instanceCounterRef.current = 0;
     targetFreqRef.current = 50.0;
     currentFreqRef.current = 50.0;
     tRef.current = 0;
@@ -271,7 +273,6 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
     bannerRef.current = { level: 'none', clearedAt: null };
     lineColorRef.current = { color: colors.primary, clearedAt: null };
     freqWindowRef.current = [];
-    freqOffsetRef.current = 0;
     setVisibleEvents([]);
     setPanelData({
       freq: 50.0, delta: 0, statusText: 'GRID STABLE', statusColor: colors.primary,
@@ -348,13 +349,21 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
       }
       const t = tRef.current;
 
-      // Update target from scenario timeline (grid time = real elapsed × timeScale)
+      // Update target from stacked scenario instances (delta-based)
       let gridTime = 0;
-      if (scenario >= 0 && scenarioStartRef.current !== null) {
-        const realElapsed = performance.now() / 1000 - scenarioStartRef.current;
-        const sc = SCENARIOS[scenario];
-        gridTime = realElapsed * (sc.timeScale || 1);
-        targetFreqRef.current = sc.getFreq(gridTime) + freqOffsetRef.current;
+      const instances = activeInstancesRef.current;
+      if (instances.length > 0) {
+        let target = 50.0;
+        const nowSec = performance.now() / 1000;
+        for (const inst of instances) {
+          const sc = SCENARIOS[inst.scenarioIdx];
+          const elapsed = (nowSec - inst.startTime) * sc.timeScale;
+          target += sc.getDelta(elapsed);
+        }
+        targetFreqRef.current = target;
+        // gridTime for display uses first (oldest) instance
+        const firstSc = SCENARIOS[instances[0].scenarioIdx];
+        gridTime = (nowSec - instances[0].startTime) * firstSc.timeScale;
       }
 
       // Smooth interpolation toward target — faster for large drops, gentle for small ones
@@ -419,12 +428,26 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
           freq, delta: freqDelta, statusText: lastStatusRef.current.text,
           statusColor: lastStatusRef.current.color, statusSeverity: lastStatusRef.current.severity,
           lineColor: lineColorRef.current.color, gridTime,
-          timeScale: scenario >= 0 ? (SCENARIOS[scenario].timeScale || 1) : 1,
+          timeScale: instances.length > 0 ? (SCENARIOS[instances[0].scenarioIdx].timeScale || 1) : 1,
         });
-        // Update visible events
-        if (scenario >= 0 && SCENARIOS[scenario].events) {
-          const evts = SCENARIOS[scenario].events.filter(e => gridTime >= e.gt);
-          setVisibleEvents(prev => prev.length !== evts.length ? evts : prev);
+        // Update visible events from all active instances
+        if (instances.length > 0) {
+          const allEvts = [];
+          const nowEvt = performance.now() / 1000;
+          for (const inst of instances) {
+            const sc = SCENARIOS[inst.scenarioIdx];
+            const instElapsed = (nowEvt - inst.startTime) * sc.timeScale;
+            const prefix = inst.num > 1 ? `#${inst.num} ` : '';
+            if (inst.num > 1) {
+              allEvts.push({ gt: 0, type: 'info', text: `── Instance #${inst.num} ──`, isDivider: true, key: `div-${inst.num}` });
+            }
+            for (const evt of sc.events) {
+              if (instElapsed >= evt.gt) {
+                allEvts.push({ ...evt, text: prefix + evt.text, key: `${inst.num}-${evt.gt}` });
+              }
+            }
+          }
+          setVisibleEvents(prev => prev.length !== allEvts.length ? allEvts : prev);
         }
       }
 
@@ -452,12 +475,12 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
       const collapseElapsed = collapseTimeRef.current ? t - collapseTimeRef.current : 0;
 
       // Phase transitions — glitch starts while BLACKOUT text is still fading
-      if (collapseElapsed > 3 && hackerPhaseRef.current === 1) {
+      if (collapseElapsed > 1.5 && hackerPhaseRef.current === 1) {
         hackerPhaseRef.current = 2; // glitch
         glitchRef.current = { active: true, startTime: t };
         setHackerTakeover(true);
       }
-      if (collapseElapsed > 8 && hackerPhaseRef.current === 2) {
+      if (collapseElapsed > 4 && hackerPhaseRef.current === 2) {
         hackerPhaseRef.current = 3; // hacker
       }
 
@@ -487,8 +510,8 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
         });
 
         // Taunt text - types out character by character
-        const tauntIdx = Math.floor((collapseElapsed - 8) / 3) % TAUNT_LINES.length;
-        const tauntProgress = ((collapseElapsed - 8) % 3) / 3;
+        const tauntIdx = Math.floor((collapseElapsed - 4) / 2) % TAUNT_LINES.length;
+        const tauntProgress = ((collapseElapsed - 4) % 2) / 2;
         const currentTaunt = TAUNT_LINES[tauntIdx];
         const visibleChars = Math.floor(tauntProgress * currentTaunt.length * 1.5);
         const displayText = currentTaunt.substring(0, Math.min(visibleChars, currentTaunt.length));
@@ -501,8 +524,8 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
         ctx.shadowBlur = 0;
 
         // Laughing text that bounces
-        if (collapseElapsed > 12) {
-          const laughT = collapseElapsed - 12;
+        if (collapseElapsed > 7) {
+          const laughT = collapseElapsed - 7;
           const bounce = Math.abs(Math.sin(laughT * 4)) * 10;
           ctx.font = `bold ${24 + Math.sin(laughT * 8) * 4}px JetBrains Mono`;
           ctx.fillStyle = colors.success;
@@ -542,7 +565,7 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
           ctx.font = '11px JetBrains Mono';
           ctx.fillStyle = colors.textDim + '60';
           ctx.textAlign = 'center';
-          ctx.fillText('[ click STABLE to restore grid ]', canvasWidth / 2, height - 14);
+          ctx.fillText('[ click STABLE to restore grid ]', canvasWidth / 2, height - 50);
         }
 
         if (isActive) animRef.current = requestAnimationFrame(draw);
@@ -754,12 +777,12 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
         ctx.fillText(status, canvasWidth - 16, 60);
 
         // Elapsed grid time timer (top-left, under Y-axis label area)
-        if (scenario >= 0 && gridTime > 0) {
+        if (instances.length > 0 && gridTime > 0) {
           const totalSec = Math.floor(gridTime);
           const mm = String(Math.floor(totalSec / 60)).padStart(2, '0');
           const ss = String(totalSec % 60).padStart(2, '0');
-          const scLabel = SCENARIOS[scenario];
-          const timeScaleVal = scLabel.timeScale || 1;
+          const firstSc2 = SCENARIOS[instances[0].scenarioIdx];
+          const timeScaleVal = firstSc2.timeScale || 1;
 
           ctx.textAlign = 'left';
           ctx.font = 'bold 13px JetBrains Mono';
@@ -818,8 +841,8 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
         const particles = explosionParticlesRef.current;
 
         // Screen shake
-        if (collapseElapsed < 3) {
-          const shakeFade = 1 - collapseElapsed / 3;
+        if (collapseElapsed < 1.5) {
+          const shakeFade = 1 - collapseElapsed / 1.5;
           const shakeX = (Math.random() - 0.5) * 20 * shakeFade;
           const shakeY = (Math.random() - 0.5) * 20 * shakeFade;
           ctx.translate(shakeX, shakeY);
@@ -850,9 +873,9 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
         });
 
         // "BOOM" text
-        if (collapseElapsed < 3.5) {
-          const boomScale = Math.min(1, collapseElapsed * 2);
-          const boomAlpha = Math.max(0, 1 - collapseElapsed / 3.5);
+        if (collapseElapsed < 1.5) {
+          const boomScale = Math.min(1, collapseElapsed * 3);
+          const boomAlpha = Math.max(0, 1 - collapseElapsed / 1.5);
           ctx.font = `bold ${100 * boomScale}px JetBrains Mono`;
           ctx.fillStyle = `rgba(239, 68, 68, ${boomAlpha})`;
           ctx.textAlign = 'center';
@@ -870,7 +893,7 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
 
     draw();
     return () => cancelAnimationFrame(animRef.current);
-  }, [canvasWidth, height, slideContext?.isSlideActive, scenario, scenarioKey]);
+  }, [canvasWidth, height, slideContext?.isSlideActive, scenario]);
 
   // Fullscreen hacker canvas animation
   useEffect(() => {
@@ -984,9 +1007,9 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
         });
 
         // Taunt text
-        const hackerElapsed = collapseElapsed - 5; // offset for glitch phase
-        const tauntIdx = Math.floor(Math.max(0, hackerElapsed - 2) / 3) % TAUNT_LINES.length;
-        const tauntProgress = (Math.max(0, hackerElapsed - 2) % 3) / 3;
+        const hackerElapsed = collapseElapsed - 2.5; // offset for glitch phase
+        const tauntIdx = Math.floor(Math.max(0, hackerElapsed - 1) / 2) % TAUNT_LINES.length;
+        const tauntProgress = (Math.max(0, hackerElapsed - 1) % 2) / 2;
         const currentTaunt = TAUNT_LINES[tauntIdx];
         const visibleChars = Math.floor(tauntProgress * currentTaunt.length * 1.5);
         const displayText = currentTaunt.substring(0, Math.min(visibleChars, currentTaunt.length));
@@ -999,8 +1022,8 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
         ctx.shadowBlur = 0;
 
         // Laughing text
-        if (hackerElapsed > 8) {
-          const laughT = hackerElapsed - 8;
+        if (hackerElapsed > 4) {
+          const laughT = hackerElapsed - 4;
           const bounce = Math.abs(Math.sin(laughT * 4)) * 15;
           ctx.font = `bold ${36 + Math.sin(laughT * 8) * 6}px JetBrains Mono`;
           ctx.fillStyle = colors.success;
@@ -1008,7 +1031,7 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
           ctx.shadowColor = colors.success;
           ctx.textAlign = 'center';
           const laughText = 'HA '.repeat(Math.min(Math.floor(laughT * 3) + 1, 8)).trim();
-          const laughY = fh - 150;
+          const laughY = fh - 220;
           ctx.fillText(laughText, fw / 2 + Math.sin(laughT * 5) * 12, laughY - bounce);
           ctx.shadowBlur = 0;
 
@@ -1040,7 +1063,7 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
           ctx.font = '14px JetBrains Mono';
           ctx.fillStyle = colors.textDim + '60';
           ctx.textAlign = 'center';
-          ctx.fillText('[ click RESET to restore grid ]', fw / 2, fh - 24);
+          ctx.fillText('[ click RESET to restore grid ]', fw / 2, fh - 90);
         }
       }
 
@@ -1155,9 +1178,19 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
               </div>
             )}
             {visibleEvents.map((evt, i) => {
+              if (evt.isDivider) {
+                return (
+                  <div key={evt.key} style={{
+                    padding: '6px 0 4px', color: colors.textDim + '60',
+                    fontSize: 10, textAlign: 'center', letterSpacing: '0.1em',
+                  }}>
+                    {evt.text}
+                  </div>
+                );
+              }
               const s = EVENT_STYLES[evt.type] || EVENT_STYLES.info;
               return (
-                <div key={`${evt.gt}-${i}`} style={{
+                <div key={evt.key || `${evt.gt}-${i}`} style={{
                   borderLeft: `2px solid ${s.border}60`,
                   padding: '5px 0 5px 10px', marginBottom: 2,
                   animation: 'eventSlideIn 0.3s ease-out',
