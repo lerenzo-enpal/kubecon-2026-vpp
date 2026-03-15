@@ -176,8 +176,8 @@ export default function Presentation() {
         <div className="flex flex-col h-full">
           <H>The Grid: A Balancing Act</H>
           <P size="20px">This enormous machine maintains a constant 50 Hz frequency — supply and demand balanced every second.<br />Click an event to simulate what happens when something goes wrong.</P>
-          <div className="flex-1 flex justify-center items-center">
-            <FrequencyDemo width={960} height={480} />
+          <div className="flex-1 flex items-center" style={{ width: '100%' }}>
+            <FrequencyDemo width={1286} height={480} panelWidth={340} />
           </div>
           <div className="flex justify-center">
             <div className="rounded-[10px] text-center" style={{ width: '68%', padding: '14px 24px', background: `${colors.accent}08`, border: `1px solid ${colors.accent}20` }}>
