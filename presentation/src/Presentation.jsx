@@ -36,8 +36,8 @@ const slideTemplate = ({ slideNumber, numberOfSlides }) => {
   const section = SECTIONS.find(s => slideNumber >= s.from && slideNumber <= s.to);
   const label = section?.name;
   return (
-    <div className="absolute bottom-3 right-5 text-[11px] font-mono flex gap-2 items-center" style={{ color: colors.textDim + '60' }}>
-      {label && <span style={{ color: colors.textDim + '40' }}>{label}</span>}
+    <div className="absolute bottom-3 right-5 text-[11px] font-mono flex gap-2 items-center" style={{ color: colors.textDim + '99' }}>
+      {label && <span style={{ color: colors.textDim + '70' }}>{label}</span>}
       <span>{slideNumber} / {numberOfSlides}</span>
     </div>
   );
@@ -56,7 +56,7 @@ const Badge = ({ children, color }) => (
 const StatBox = ({ n, l, c }) => (
   <div className="bg-hud-surface border border-hud-surface-light rounded-[10px] px-3.5 py-[18px] text-center flex-1">
     <div className="text-[28px] font-extrabold font-mono" style={{ color: c, textShadow: `0 0 20px ${c}25` }}>{n}</div>
-    <div className="text-[20px] text-hud-text-muted mt-1 font-sans uppercase tracking-[0.04em]">{l}</div>
+    <div className="text-[20px] text-hud-text-muted mt-1 font-sans tracking-[0.02em]">{l}</div>
   </div>
 );
 
@@ -176,7 +176,7 @@ export default function Presentation() {
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H>The Grid: A Balancing Act</H>
-          <P size="20px">This enormous machine maintains a constant 50 Hz frequency — supply and demand balanced every second.<br />Click the scenarios to see what happens when they don't.</P>
+          <P size="20px">This enormous machine maintains a constant 50 Hz frequency — supply and demand balanced every second.<br />Click an event to simulate what happens when something goes wrong.</P>
           <div className="flex-1 flex justify-center items-center">
             <FrequencyDemo width={960} height={480} />
           </div>

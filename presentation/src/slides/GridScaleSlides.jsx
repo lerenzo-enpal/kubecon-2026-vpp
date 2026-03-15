@@ -221,21 +221,20 @@ export function versionC() {
 // ═══════════════════════════════════════════════════════════════════════════
 export function versionD() {
   return [
-    <Slide key="grid-scale-d1" backgroundColor={colors.bg} padding="36px 56px">
-      <div className="relative flex flex-col w-full h-full">
-        {/* Canvas animation layer */}
+    <Slide key="grid-scale-d1" backgroundColor={colors.bg} padding="0">
+      <div className="relative w-full h-full">
+        {/* Canvas animation layer — full bleed */}
         <LargestMachineZoom />
 
-        {/* Title — always visible */}
-        <div className="relative z-10">
+        {/* Content overlay with padding */}
+        <div className="absolute inset-0 z-10 flex flex-col" style={{ padding: '36px 56px' }}>
+          {/* Title — always visible */}
           <GlowText size="40px">Running the Largest Machine</GlowText>
-        </div>
 
-        {/* Spacer */}
-        <div className="flex-1" />
+          {/* Spacer */}
+          <div className="flex-1" />
 
-        {/* Stat boxes at bottom — always visible */}
-        <div className="relative z-10">
+          {/* Stat boxes at bottom — always visible */}
           <div className="flex gap-3 w-full">
             {[
               { v: '36', u: 'countries', c: colors.primary, d: 'synced on one frequency' },
