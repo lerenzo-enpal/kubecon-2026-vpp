@@ -73,7 +73,7 @@ export default function Presentation() {
           <div className="relative z-[1]">
             <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.2em] uppercase mb-8">KubeCon + CloudNativeCon Europe 2026</div>
             <div className="text-[56px] font-extrabold font-sans leading-[1.1] mb-5" style={{ color: colors.primary, textShadow: `0 0 60px ${colors.primary}30` }}>
-              What is a Virtual<br />Power Plant?
+              Virtual<br />Power Plants
             </div>
             <div className="text-[22px] text-hud-text-muted font-sans mb-12">
               Cloud-Native Infrastructure for the Energy Grid
