@@ -73,7 +73,7 @@ export default function Presentation() {
           <div className="relative z-[1]">
             <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.2em] uppercase mb-8">KubeCon + CloudNativeCon Europe 2026</div>
             <div className="text-[56px] font-extrabold font-sans leading-[1.1] mb-5" style={{ color: colors.primary, textShadow: `0 0 60px ${colors.primary}30` }}>
-              Virtual<br />Power Plants
+              Virtual Power Plants
             </div>
             <div className="text-[22px] text-hud-text-muted font-sans mb-12">
               Cloud-Native Infrastructure for the Energy Grid
@@ -127,8 +127,8 @@ export default function Presentation() {
 
       {/* 5: Texas Cascade — deck.gl HUD */}
       <Slide backgroundColor="#020408" padding="0">
-        <div className="absolute inset-0">
-          <TexasMapHUD width={1366} height={768} variant="hud" />
+        <div className="relative w-full h-full">
+          <TexasMapHUD width="100%" height="100%" variant="hud" />
         </div>
       </Slide>
 
