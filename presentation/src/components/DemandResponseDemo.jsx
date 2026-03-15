@@ -118,6 +118,8 @@ export default function DemandResponseDemo({ width = 920, height = 440 }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const slideContext = useContext(SlideContext);
+  const [phase, setPhase] = useState('stable');
+  const phaseRef = useRef('stable');
   const stateRef = useRef({
     phase: 'stable', // stable | tripping | recovered | blackout
     withDR: false,
@@ -322,6 +324,12 @@ export default function DemandResponseDemo({ width = 920, height = 440 }) {
         lx += ctx.measureText(dt.label).width + 26;
       });
 
+      // ── Sync phase to React state for button rendering ──
+      if (s.phase !== phaseRef.current) {
+        phaseRef.current = s.phase;
+        setPhase(s.phase);
+      }
+
       // ── Status ──
       ctx.font = '11px "JetBrains Mono"';
       ctx.textAlign = 'right';
@@ -349,8 +357,6 @@ export default function DemandResponseDemo({ width = 920, height = 440 }) {
     draw();
     return () => cancelAnimationFrame(animRef.current);
   }, [width, height, slideContext?.isSlideActive]);
-
-  const phase = stateRef.current.phase;
 
   return (
     <div style={{ position: 'relative' }}>
