@@ -1,19 +1,17 @@
 import React from 'react';
 import { Deck, Slide, Heading, Text } from 'spectacle';
 import { colors } from './theme';
-import FrequencyLine from './components/FrequencyLine';
 import FrequencyDemo from './components/FrequencyDemo';
-import CascadeSimulation from './components/CascadeSimulation';
 import RenewableGrowthChart from './components/RenewableGrowthChart';
 import DuckCurveChart from './components/DuckCurveChart';
 import AnimatedStat from './components/AnimatedStat';
 import StaticTexasGrid from './components/StaticTexasGrid';
-import KeplerDashboard from './components/KeplerDashboard';
-import CarbonAwareChart from './components/CarbonAwareChart';
 import TexasMapHUD from './components/TexasMapHUD';
 import { versionA, versionB, versionD } from './slides/GridScaleSlides';
 import EUGridHUD from './components/EUGridHUD';
 import DemandResponseDemo from './components/DemandResponseDemo';
+import VPPArchitecture from './components/VPPArchitecture';
+import VPPComposite from './components/VPPComposite';
 
 const theme = {
   colors: { primary: colors.text, secondary: colors.textMuted, tertiary: colors.primary },
@@ -126,7 +124,8 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 4: Texas Cascade — deck.gl HUD */}
+
+      {/* 5: Texas Cascade — deck.gl HUD */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="absolute inset-0">
           <TexasMapHUD width={1366} height={768} variant="hud" />
@@ -259,13 +258,13 @@ export default function Presentation() {
               { text: 'More load shedding needed — cycle accelerates', color: colors.danger, icon: '\u21bb' },
             ].map((step, i) => (
               <div key={i} className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-[10px] flex items-center justify-center text-[20px] font-extrabold font-mono shrink-0" style={{ background: `${step.color}15`, color: step.color }}>{step.icon}</div>
-                <div className="text-[20px] text-hud-text font-sans" style={{ fontWeight: i >= 3 ? 600 : 400 }}>{step.text}</div>
+                <div className="w-11 h-11 rounded-[10px] flex items-center justify-center text-[22px] font-extrabold font-mono shrink-0" style={{ background: `${step.color}15`, color: step.color }}>{step.icon}</div>
+                <div className="text-[24px] text-hud-text font-sans" style={{ fontWeight: i >= 3 ? 600 : 400 }}>{step.text}</div>
               </div>
             ))}
           </div>
           <div className="flex gap-4">
-            <StatBox n="52,000 MW" l="offline (of 107K total)" c={colors.danger} />
+            <StatBox n="52 GW" l="offline (of 107 GW total)" c={colors.danger} />
             <StatBox n="Isolated" l="no grid interconnection" c={colors.accent} />
             <StatBox n="42 hrs" l="average outage duration" c={colors.textMuted} />
           </div>
@@ -317,30 +316,6 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 15: Every Cascade Shares Three Properties — DEPRECATED */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col h-full" style={{ position: 'relative' }}>
-          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, pointerEvents: 'none' }}>
-            <span style={{ fontSize: '300px', fontWeight: 900, color: 'rgba(239, 68, 68, 0.3)', fontFamily: '"JetBrains Mono"' }}>&#x2715;</span>
-          </div>
-          <H>Every Cascade Shares Three Properties</H>
-          <div className="flex-1 flex items-center">
-            <div className="flex gap-5 w-full">
-              {[
-                { n: '1', t: 'Tightly Coupled', d: 'Centralized with single points of failure', c: colors.danger },
-                { n: '2', t: 'No Local Reserves', d: 'No distributed storage to absorb shocks', c: colors.accent },
-                { n: '3', t: 'Blind Operators', d: 'Degraded system-wide observability', c: colors.secondary },
-              ].map(i => (
-                <div key={i.n} className="bg-hud-surface rounded-xl px-5 py-6 flex-1" style={{ border: `1px solid ${i.c}25` }}>
-                  <div className="w-[38px] h-[38px] rounded-[10px] flex items-center justify-center text-[20px] font-extrabold font-mono mb-3" style={{ background: `${i.c}15`, color: i.c }}>{i.n}</div>
-                  <div className="text-[20px] font-bold text-hud-text font-sans mb-2">{i.t}</div>
-                  <div className="text-[20px] text-hud-text-muted font-sans leading-normal">{i.d}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </Slide>
 
       {/* 16: No flexibility — Bridge */}
       <Slide backgroundColor={bg} padding={pad}>
@@ -405,9 +380,12 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 21: Energy Being Thrown Away */}
+      {/* 21: Energy Being Thrown Away — DEPRECATED */}
       <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full" style={{ position: 'relative' }}>
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, pointerEvents: 'none' }}>
+            <span style={{ fontSize: '300px', fontWeight: 900, color: 'rgba(239, 68, 68, 0.3)', fontFamily: '"JetBrains Mono"' }}>&#x2715;</span>
+          </div>
           <H color={colors.accent}>Energy Being Thrown Away</H>
           <P>When supply exceeds demand, prices go <span className="font-semibold" style={{ color: colors.accent }}>negative</span>. Clean energy gets curtailed — paid to <em>not</em> produce.</P>
           <div className="flex-1 flex flex-col justify-center gap-5">
@@ -530,7 +508,62 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 28: What Is a VPP? */}
+      {/* 28: The Architecture Parallel */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <style>{`
+          @keyframes archLeftIn {
+            0% { opacity: 0; transform: translateX(-30px); filter: blur(4px); }
+            100% { opacity: 1; transform: translateX(0); filter: blur(0); }
+          }
+          @keyframes archRightIn {
+            0% { opacity: 0; transform: translateX(30px); filter: blur(4px); }
+            100% { opacity: 1; transform: translateX(0); filter: blur(0); }
+          }
+          @keyframes archVsIn {
+            0% { opacity: 0; transform: scale(0.5); }
+            100% { opacity: 1; transform: scale(1); }
+          }
+        `}</style>
+        <div className="flex flex-col h-full w-full">
+          <H>The Architecture Parallel</H>
+          <div className="flex-1 flex flex-col justify-center w-full max-w-[880px] mx-auto gap-5">
+            {[
+              { grid: 'Few large generators, centralized dispatch', vpp: 'Millions of edge nodes, distributed', color: colors.danger },
+              { grid: 'Manual capacity planning', vpp: 'Horizontal autoscaling', color: colors.accent },
+              { grid: 'Isolated resilience (relays, islanding)', vpp: 'Integrated resilience (coordinated)', color: colors.primary },
+              { grid: 'Centralized observability (SCADA)', vpp: 'Full-stack observability (per-device)', color: colors.success },
+            ].map((row, i) => {
+              const delay = 0.3 + i * 0.35;
+              return (
+                <div key={i} className="flex gap-4 items-start">
+                  <div className="flex-1 rounded-lg p-4" style={{
+                    background: `${row.color}06`,
+                    border: `1px solid ${row.color}15`,
+                    animation: `archLeftIn 0.6s ease-out ${delay}s both`,
+                  }}>
+                    <div className="text-[20px] font-semibold font-sans" style={{ color: row.color }}>
+                      {row.grid}
+                    </div>
+                  </div>
+                  <div className="text-[22px] text-hud-text-dim font-mono pt-3" style={{
+                    animation: `archVsIn 0.3s ease-out ${delay + 0.15}s both`,
+                  }}>vs</div>
+                  <div className="flex-1 rounded-lg p-4 bg-hud-surface border border-hud-surface-light" style={{
+                    animation: `archRightIn 0.6s ease-out ${delay + 0.1}s both`,
+                  }}>
+                    <div className="text-[20px] text-hud-text font-sans font-medium">
+                      {row.vpp}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <P size="20px" center style={{ fontFamily: '"JetBrains Mono"' }}>Frequency = SLO &bull; Cascade = failure propagation &bull; Batteries = autoscaling</P>
+        </div>
+      </Slide>
+
+      {/* 29: What Is a VPP? */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H>What Is a Virtual Power Plant?</H>
@@ -562,7 +595,23 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 29: The Fastest Power Plant */}
+      {/* 29b: VPP Composite Playground */}
+      <Slide backgroundColor={bg} padding="20px">
+        <VPPComposite />
+      </Slide>
+
+      {/* 30: VPP Architecture Flow */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col h-full">
+          <H>How It Works</H>
+          <P size="20px">From market signal to battery response — the command flow through our VPP architecture.</P>
+          <div className="flex-1 flex justify-center items-center">
+            <VPPArchitecture width={940} height={440} />
+          </div>
+        </div>
+      </Slide>
+
+      {/* 30: The Fastest Power Plant */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H>The Fastest Power Plant</H>
@@ -589,34 +638,10 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 30: Hornsdale — DEPRECATED */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col h-full" style={{ position: 'relative' }}>
-          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, pointerEvents: 'none' }}>
-            <span style={{ fontSize: '300px', fontWeight: 900, color: 'rgba(239, 68, 68, 0.3)', fontFamily: '"JetBrains Mono"' }}>&#x2715;</span>
-          </div>
-          <div>
-            <Badge color={colors.success}>PROOF</Badge>
-            <H color={colors.success}>Hornsdale, December 2017</H>
-            <P>560 MW generator trips. Frequency plunging.</P>
-          </div>
-          <div className="flex-1 flex justify-center items-center">
-            <FrequencyLine width={860} height={190} collapse={true} vppSave={true} />
-          </div>
-          <div className="flex gap-4">
-            <StatBox n="140ms" l="Battery Response" c={colors.success} />
-            <StatBox n="28sec" l="Gas Response" c="#fb923c" />
-            <StatBox n="8sec" l="Margin to Blackout" c={colors.danger} />
-          </div>
-        </div>
-      </Slide>
 
-      {/* 31: SA VPP — DEPRECATED */}
+      {/* 32: SA Virtual Power Plant, 2019 */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full" style={{ position: 'relative' }}>
-          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, pointerEvents: 'none' }}>
-            <span style={{ fontSize: '300px', fontWeight: 900, color: 'rgba(239, 68, 68, 0.3)', fontFamily: '"JetBrains Mono"' }}>&#x2715;</span>
-          </div>
           <div>
             <Badge color={colors.success}>PROOF</Badge>
             <H color={colors.success}>SA Virtual Power Plant, 2019</H>
@@ -635,67 +660,9 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 32: The Architecture Parallel */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col h-full">
-          <H>The Architecture Parallel</H>
-          <div className="flex-1 flex items-center">
-            <div className="flex gap-5 items-start w-full">
-              <div className="bg-hud-surface rounded-[10px] p-5 flex-1" style={{ border: `1px solid ${colors.danger}20` }}>
-                <div className="text-[20px] font-semibold font-mono mb-3" style={{ color: colors.danger }}>TRADITIONAL GRID</div>
-                {['Monolithic infrastructure', 'Few large generators', 'Manual capacity planning', 'Single points of failure', 'No observability'].map(x => (
-                  <div key={x} className="text-[20px] text-hud-text-muted font-sans py-[5px] border-b border-hud-surface-light">{x}</div>
-                ))}
-              </div>
-              <div className="pt-[60px] text-[24px] text-hud-primary font-mono">{'\u2192'}</div>
-              <div className="rounded-[10px] p-5 flex-1" style={{ background: `${colors.success}06`, border: `1px solid ${colors.success}25` }}>
-                <div className="text-[20px] font-semibold font-mono mb-3" style={{ color: colors.success }}>VIRTUAL POWER PLANT</div>
-                {['Distributed microservices', 'Millions of edge nodes', 'Horizontal autoscaling', 'Resilient by design', 'Full-stack observability'].map(x => (
-                  <div key={x} className="text-[20px] text-hud-text font-sans font-medium py-[5px] border-b border-hud-surface-light">{x}</div>
-                ))}
-              </div>
-            </div>
-          </div>
-          <P size="20px" center style={{ fontFamily: '"JetBrains Mono"' }}>Frequency = SLO &bull; Cascade = failure propagation &bull; Batteries = autoscaling</P>
-        </div>
-      </Slide>
-
       {/* ═══════ ACT 4: RESILIENCE ═══════ */}
 
-      {/* 33: Section Title: Resilience */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col justify-center items-center h-full text-center">
-          <div className="text-[20px] font-semibold text-hud-success font-mono tracking-[0.15em] uppercase mb-4">Part IV</div>
-          <H size="50px" center color={colors.success}>Resilience</H>
-          <P size="20px" center>What the future grid looks like — and why you already know how to build it</P>
-        </div>
-      </Slide>
 
-      {/* 34: Demo Without VPP */}
-      <Slide backgroundColor={bg} padding="16px 40px">
-        <div className="flex flex-col h-full">
-          <div>
-            <Badge color={colors.danger}>LIVE SIMULATION</Badge>
-            <H size="34px" color={colors.danger}>Cascading Failure — No VPP</H>
-          </div>
-          <div className="flex-1 flex justify-center items-center">
-            <CascadeSimulation width={800} height={520} withVPP={false} />
-          </div>
-        </div>
-      </Slide>
-
-      {/* 35: Demo With VPP */}
-      <Slide backgroundColor={bg} padding="16px 40px">
-        <div className="flex flex-col h-full">
-          <div>
-            <Badge color={colors.success}>LIVE SIMULATION</Badge>
-            <H size="34px" color={colors.success}>Same Failure — With VPP</H>
-          </div>
-          <div className="flex-1 flex justify-center items-center">
-            <CascadeSimulation width={800} height={520} withVPP={true} />
-          </div>
-        </div>
-      </Slide>
 
       {/* 36: Back to Texas */}
       <Slide backgroundColor={bg} padding={pad}>
@@ -716,64 +683,9 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 37: The Future Grid */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col justify-center items-center h-full text-center">
-          <H size="48px" center>The Future Grid</H>
-          <P size="21px" center style={{ maxWidth: 650, marginTop: 8 }}>Millions of devices cooperating. Homes, EVs, batteries — forming distributed power plants.</P>
-          <div className="mt-7 text-[24px] font-semibold font-sans" style={{ color: colors.primary, textShadow: `0 0 30px ${colors.primary}30` }}>The grid becomes software.</div>
-          <P size="20px" center style={{ marginTop: 8 }}>And it runs on the same infrastructure you build every day.</P>
-        </div>
-      </Slide>
-
-      {/* 38: Final Takeaway */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col justify-center items-center h-full text-center">
-          <div className="text-[26px] font-semibold text-hud-text font-sans leading-[1.7] mb-7">
-            Virtual Power Plants turn distributed renewable energy into <span style={{ color: colors.success }}>reliable grid infrastructure</span>.
-          </div>
-          <P size="22px" center style={{ marginBottom: 28 }}>Cloud-native systems are what make them possible.</P>
-          <div className="text-[24px] font-bold font-sans rounded-[14px]" style={{ color: colors.primary, textShadow: `0 0 40px ${colors.primary}30`, padding: '18px 28px', background: `${colors.primary}08`, border: `1px solid ${colors.primary}20` }}>
-            You already know how to build the future grid.<br />
-            <span className="font-normal text-[20px] text-hud-text-muted">You just didn't know it yet.</span>
-          </div>
-        </div>
-      </Slide>
 
       {/* ═══════ TECH DEEP-DIVE / CLOSING ═══════ */}
 
-      {/* 39: Kepler — Live Energy Dashboard */}
-      <Slide backgroundColor={bg} padding="16px 36px">
-        <div className="flex flex-col h-full">
-          <div>
-            <div className="flex items-center gap-2.5 mb-1.5">
-              <Badge color={colors.success}>KEPLER — CNCF</Badge>
-              <span className="text-[20px] text-hud-text-dim font-mono">Per-pod energy monitoring via eBPF</span>
-            </div>
-            <H color={colors.success} size="36px">Experiment: How Much Power Does Our VPP Use?</H>
-          </div>
-          <div className="flex-1 flex justify-center items-center">
-            <KeplerDashboard width={960} height={480} />
-          </div>
-        </div>
-      </Slide>
-
-      {/* 40: Carbon-Aware Scheduling */}
-      <Slide backgroundColor={bg} padding="16px 36px">
-        <div className="flex flex-col h-full">
-          <div>
-            <div className="flex items-center gap-2.5 mb-1.5">
-              <Badge color={colors.success}>KEPLER + KEDA</Badge>
-              <span className="text-[20px] text-hud-text-dim font-mono">Carbon-aware workload scheduling</span>
-            </div>
-            <H color={colors.success} size="36px">Experiment: The VPP Practices What It Preaches</H>
-            <P size="20px">Batch jobs (model retraining, analytics) scale up when the grid is clean, scale down when it's dirty.</P>
-          </div>
-          <div className="flex-1 flex justify-center items-center">
-            <CarbonAwareChart width={960} height={440} />
-          </div>
-        </div>
-      </Slide>
 
       {/* 39: Thank You */}
       <Slide backgroundColor={bg} padding={pad}>

@@ -129,7 +129,7 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
       // Faint sun with downward rays
       {
         const sunX = padLeft + 12.5 * xScale;
-        const sunY = padTop + 14;
+        const sunY = padTop + 34;
         const sunR = 10;
         ctx.save();
         ctx.globalAlpha = 0.08;
