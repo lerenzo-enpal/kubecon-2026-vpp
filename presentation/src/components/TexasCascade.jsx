@@ -99,7 +99,7 @@ export default function TexasCascade({ width = 960, height = 560 }) {
   const phaseRef = useRef('stable');
   const startTimeRef = useRef(null);
   const failedRef = useRef(new Set());
-  const freqRef = useRef(60.0);
+  const freqRef = useRef(50.0);
   const activeStepRef = useRef(-1);
 
   const slideContext = useContext(SlideContext);
@@ -109,7 +109,7 @@ export default function TexasCascade({ width = 960, height = 560 }) {
       setPhase('stable');
       startTimeRef.current = null;
       failedRef.current = new Set();
-      freqRef.current = 60.0;
+      freqRef.current = 50.0;
       activeStepRef.current = -1;
     }
   }, [slideContext?.isSlideActive]);
@@ -117,7 +117,7 @@ export default function TexasCascade({ width = 960, height = 560 }) {
   const reset = () => {
     phaseRef.current = 'stable'; setPhase('stable');
     startTimeRef.current = null; failedRef.current = new Set();
-    freqRef.current = 60.0; activeStepRef.current = -1;
+    freqRef.current = 50.0; activeStepRef.current = -1;
   };
 
   const trigger = () => {
@@ -164,8 +164,8 @@ export default function TexasCascade({ width = 960, height = 560 }) {
         });
         activeStepRef.current = maxStep;
         const failCount = failedRef.current.size;
-        freqRef.current = 60.0 - failCount * 0.35 - Math.max(0, elapsed - 2) * 0.06;
-        freqRef.current = Math.max(57.5, freqRef.current);
+        freqRef.current = 50.0 - failCount * 0.35 - Math.max(0, elapsed - 2) * 0.06;
+        freqRef.current = Math.max(47.5, freqRef.current);
         failedRef.current.delete('comanche');
       }
       const freq = freqRef.current + Math.sin(now / 300) * 0.01;
@@ -181,7 +181,7 @@ export default function TexasCascade({ width = 960, height = 560 }) {
       const stepH = availH / totalSteps;
 
       // Frequency readout at top left
-      const freqColor = freq < 59.0 ? colors.danger : freq < 59.5 ? '#f59e0b' : '#22d3ee';
+      const freqColor = freq < 49.0 ? colors.danger : freq < 49.5 ? '#f59e0b' : '#22d3ee';
       ctx.fillStyle = freqColor;
       ctx.font = 'bold 24px JetBrains Mono';
       ctx.textAlign = 'left';
