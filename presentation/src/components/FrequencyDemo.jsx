@@ -83,6 +83,12 @@ export default function FrequencyDemo({ width = 900, height = 480 }) {
   const hackerPhaseRef = useRef(0);
   // Per-threshold highlight state: { crossed, uncrossedSince, highlight (0-1) }
   const thresholdStateRef = useRef(THRESHOLDS.map(() => ({ crossed: false, uncrossedSince: null, highlight: 0 })));
+  // Latched status text to prevent flickering near boundaries
+  const lastStatusRef = useRef({ text: 'GRID STABLE', color: colors.primary, severity: 0, clearedAt: null });
+  // Latched alert banner state: 'none' | 'shedding' | 'imminent', with 2s holdoff
+  const bannerRef = useRef({ level: 'none', clearedAt: null });
+  // Latched line/readout color with 2s holdoff
+  const lineColorRef = useRef({ color: colors.primary, clearedAt: null });
 
   // Restart animation when slide becomes active
   const slideContext = useContext(SlideContext);
@@ -96,6 +102,9 @@ export default function FrequencyDemo({ width = 900, height = 480 }) {
       glitchRef.current = { active: false, startTime: 0 };
       explosionParticlesRef.current = [];
       thresholdStateRef.current = THRESHOLDS.map(() => ({ crossed: false, uncrossedSince: null, highlight: 0 }));
+      lastStatusRef.current = { text: 'GRID STABLE', color: colors.primary, severity: 0, clearedAt: null };
+      bannerRef.current = { level: 'none', clearedAt: null };
+      lineColorRef.current = { color: colors.primary, clearedAt: null };
     }
   }, [slideContext?.isSlideActive]);
 
@@ -140,8 +149,11 @@ export default function FrequencyDemo({ width = 900, height = 480 }) {
       history.push(freq);
       if (history.length > historyLen) history.shift();
 
+      // Smoothed frequency for all latched/hysteresis logic
+      const sf = currentFreqRef.current;
+
       // Update threshold highlight state (use smoothed freq to avoid jitter)
-      const smoothFreq = currentFreqRef.current;
+      const smoothFreq = sf;
       const now = performance.now() / 1000;
       const tStates = thresholdStateRef.current;
       for (let i = 0; i < THRESHOLDS.length; i++) {
@@ -395,8 +407,23 @@ export default function FrequencyDemo({ width = 900, height = 480 }) {
       }
       ctx.setLineDash([]);
 
-      // Frequency trace
-      const lineColor = freq < 48.5 ? colors.danger : freq < 49.0 ? colors.danger : freq < 49.5 ? colors.accent : colors.primary;
+      // Frequency trace — latched color with 2s holdoff
+      const rawLineColor = sf < 49.0 ? colors.danger : sf < 49.5 ? colors.accent : colors.primary;
+      const lc = lineColorRef.current;
+      if (rawLineColor !== colors.primary) {
+        // Escalate: always adopt worse color immediately
+        if (rawLineColor === colors.danger || lc.color === colors.primary) {
+          lc.color = rawLineColor;
+        }
+        lc.clearedAt = null;
+      } else if (lc.color !== colors.primary) {
+        if (lc.clearedAt === null) lc.clearedAt = now;
+        if (now - lc.clearedAt > 2) {
+          lc.color = colors.primary;
+          lc.clearedAt = null;
+        }
+      }
+      const lineColor = lc.color;
 
       ctx.beginPath();
       ctx.strokeStyle = lineColor;
@@ -434,18 +461,41 @@ export default function FrequencyDemo({ width = 900, height = 480 }) {
       }
       ctx.shadowBlur = 0;
 
-      // Status
-      let status = 'GRID STABLE';
-      let statusColor = colors.primary;
-      if (freq < 47.5) { status = 'GRID COLLAPSE'; statusColor = colors.danger; }
-      else if (freq < 48.5) { status = 'EMERGENCY — ROLLING BLACKOUTS'; statusColor = colors.danger; }
-      else if (freq < 49.0) { status = 'LOAD SHEDDING ACTIVE'; statusColor = colors.danger; }
-      else if (freq < 49.5) { status = 'WARNING — RESERVES ACTIVATED'; statusColor = colors.accent; }
-      else if (freq < 49.8) { status = 'FREQUENCY DEVIATION'; statusColor = colors.accent; }
+      // Status — latched with 2s holdoff before returning to a calmer state
+      const statusZones = [
+        { below: 47.5, status: 'GRID COLLAPSE', color: colors.danger, severity: 5 },
+        { below: 48.5, status: 'EMERGENCY — ROLLING BLACKOUTS', color: colors.danger, severity: 4 },
+        { below: 49.0, status: 'LOAD SHEDDING ACTIVE', color: colors.danger, severity: 3 },
+        { below: 49.5, status: 'WARNING — RESERVES ACTIVATED', color: colors.accent, severity: 2 },
+        { below: 49.8, status: 'FREQUENCY DEVIATION', color: colors.accent, severity: 1 },
+      ];
+      let rawStatus = { text: 'GRID STABLE', color: colors.primary, severity: 0 };
+      for (const z of statusZones) {
+        if (sf < z.below) { rawStatus = z; break; }
+      }
+      const ls = lastStatusRef.current;
+      if (rawStatus.severity >= ls.severity) {
+        // Escalating or same — update immediately
+        ls.text = rawStatus.text;
+        ls.color = rawStatus.color;
+        ls.severity = rawStatus.severity;
+        ls.clearedAt = null;
+      } else {
+        // De-escalating — hold for 2s
+        if (ls.clearedAt === null) ls.clearedAt = now;
+        if (now - ls.clearedAt > 2) {
+          ls.text = rawStatus.text;
+          ls.color = rawStatus.color;
+          ls.severity = rawStatus.severity;
+          ls.clearedAt = null;
+        }
+      }
+      const status = ls.text;
+      let statusColor = ls.color;
 
       ctx.font = '13px JetBrains Mono';
       ctx.textAlign = 'right';
-      if (freq < 49.0) {
+      if (ls.severity >= 3) {
         const flash = Math.sin(warningFlashRef.current * 4) > 0;
         ctx.fillStyle = flash ? statusColor : statusColor + '40';
       } else {
@@ -453,27 +503,36 @@ export default function FrequencyDemo({ width = 900, height = 480 }) {
       }
       ctx.fillText(status, width - 16, 60);
 
-      // Alert banners
-      if (freq < 48.5) {
+      // Alert banners — latched with 2s holdoff (use smoothed freq)
+      const rawBannerLevel = sf < 48.5 ? 'imminent' : sf < 49.0 ? 'shedding' : 'none';
+      const bn = bannerRef.current;
+      if (rawBannerLevel !== 'none') {
+        // Escalate or maintain
+        if (rawBannerLevel === 'imminent' || bn.level !== 'imminent') {
+          bn.level = rawBannerLevel;
+        }
+        bn.clearedAt = null;
+      } else if (bn.level !== 'none') {
+        // Condition cleared — start 2s holdoff
+        if (bn.clearedAt === null) bn.clearedAt = now;
+        if (now - bn.clearedAt > 2) {
+          bn.level = 'none';
+          bn.clearedAt = null;
+        }
+      }
+
+      if (bn.level === 'imminent') {
         const flash = Math.sin(warningFlashRef.current * 6) > 0;
-        if (flash) {
-          ctx.fillStyle = colors.danger + '12';
-          ctx.fillRect(0, height - 44, width, 44);
-          ctx.fillStyle = colors.danger;
-          ctx.font = 'bold 16px JetBrains Mono';
-          ctx.textAlign = 'center';
-          ctx.fillText('\u26a0  GRID FAILURE IMMINENT  \u26a0', width / 2, height - 18);
-        }
-      } else if (freq < 49.0) {
+        ctx.font = 'bold 16px JetBrains Mono';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = flash ? colors.danger : colors.danger + '40';
+        ctx.fillText('\u26a0  GRID FAILURE IMMINENT  \u26a0', width / 2, height - 18);
+      } else if (bn.level === 'shedding') {
         const flash = Math.sin(warningFlashRef.current * 3) > 0.3;
-        if (flash) {
-          ctx.fillStyle = colors.danger + '08';
-          ctx.fillRect(0, height - 36, width, 36);
-          ctx.fillStyle = colors.danger + 'cc';
-          ctx.font = '13px JetBrains Mono';
-          ctx.textAlign = 'center';
-          ctx.fillText('AUTOMATIC LOAD SHEDDING IN PROGRESS', width / 2, height - 14);
-        }
+        ctx.font = '13px JetBrains Mono';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = flash ? colors.danger + 'cc' : colors.danger + '40';
+        ctx.fillText('AUTOMATIC LOAD SHEDDING IN PROGRESS', width / 2, height - 14);
       }
 
       // Left axis

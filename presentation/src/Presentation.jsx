@@ -27,9 +27,9 @@ const pad = '36px 56px';
 const SECTIONS = [
   { from: 1, to: 2, name: '' },
   { from: 3, to: 15, name: 'The Grid' },
-  { from: 16, to: 22, name: 'The Renewable Revolution' },
-  { from: 23, to: 31, name: 'The Virtual Power Plant' },
-  { from: 32, to: 37, name: 'Resilience' },
+  { from: 16, to: 21, name: 'The Renewable Revolution' },
+  { from: 22, to: 30, name: 'The Virtual Power Plant' },
+  { from: 31, to: 36, name: 'Resilience' },
 ];
 
 const slideTemplate = ({ slideNumber, numberOfSlides }) => {
@@ -181,8 +181,8 @@ export default function Presentation() {
             <FrequencyDemo width={960} height={480} />
           </div>
           <div className="flex justify-center">
-            <div className="rounded-[10px] text-center" style={{ width: '60%', padding: '14px 24px', background: `${colors.accent}08`, border: `1px solid ${colors.accent}20` }}>
-              <div className="text-[20px] text-hud-text font-sans">The entire European grid operates within a <span className="font-semibold" style={{ color: colors.accent }}>±0.2 Hz</span> band. Cross those thresholds and automated protection systems start disconnecting load — or generators.</div>
+            <div className="rounded-[10px] text-center" style={{ width: '68%', padding: '14px 24px', background: `${colors.accent}08`, border: `1px solid ${colors.accent}20` }}>
+              <div className="text-[22px] text-hud-text font-sans">The entire European grid operates within a <span className="font-semibold" style={{ color: colors.accent }}>±0.2 Hz</span> band. Cross those thresholds and automated protection systems start disconnecting load or generators.</div>
             </div>
           </div>
         </div>
@@ -226,8 +226,8 @@ export default function Presentation() {
               {[
                 { t: 'Peaker Plants', d: '261 GW of gas turbines in the US alone — sitting idle 95% of the year. They fire up for peak demand at 2–5x the cost of baseload.', c: '#fb923c', stat: '$110–228/MWh' },
                 { t: 'Spinning Reserves', d: 'Generators running at partial load 24/7 "just in case." 15% capacity margin required. Burning fuel to produce nothing.', c: colors.accent, stat: '15% over-provisioned' },
-                { t: 'Load Shedding', d: 'The last resort: deliberate rolling blackouts. Texas 2021 shed 20 GW — the largest in US history. $80–130B in damage.', c: colors.danger, stat: '69% of Texans lost power' },
-                { t: 'Curtailment', d: 'Too much sun or wind? Turn it off. Germany wasted 19 TWh of clean energy in 2023. California curtailed 3.4M MWh in 2024.', c: colors.textDim, stat: 'EUR 3.3B/yr (DE)' },
+                { t: 'Load Shedding', d: 'The last resort: deliberate rolling blackouts. Texas 2021 shed 20 GW — the largest in US history. The crisis cost ERCOT customers $52.6B in excess charges.', c: colors.danger, stat: '$52.6B in 5 days' },
+                { t: 'Curtailment', d: 'Too much sun or wind? Turn it off. Germany wasted 19 TWh of clean energy in 2023. California curtailed 3.4 TWh in 2024.', c: colors.textDim, stat: 'EUR 3.3B/yr (DE)' },
               ].map(i => (
                 <div key={i.t} className="bg-hud-surface rounded-xl px-4 py-5 flex-1" style={{ border: `1px solid ${i.c}25` }}>
                   <div className="text-[20px] font-bold font-sans mb-2" style={{ color: i.c }}>{i.t}</div>
@@ -275,15 +275,16 @@ export default function Presentation() {
       {/* 14: It Keeps Happening */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
-        <H color={colors.danger}>It Keeps Happening</H>
+        <H color={colors.danger}>Not an Isolated Incident</H>
         <div className="flex-1 flex items-center">
         <div className="flex gap-14 w-full">
-          <div className="flex-1 flex flex-col gap-10 justify-center">
+          <div className="flex-1 flex flex-col gap-8 justify-center">
             {[
+              { y: '2003', e: 'Northeast US/Canada', i: '55M people, $6B in damage' },
               { y: '2003', e: 'Italy Blackout', i: '56M people' },
               { y: '2006', e: 'European Grid Split', i: '15M affected' },
-              { y: '2016', e: 'South Australia', i: 'Entire state' },
-              { y: '2021', e: 'Texas ERCOT', i: '4.5M homes, 240+ deaths' },
+              { y: '2016', e: 'South Australia (tornadoes)', i: 'Entire state, 1.7M people' },
+              { y: '2017', e: 'South Australia (heatwave)', i: '90K homes, 45°C day' },
             ].map(t => (
               <div key={t.y+t.e} className="flex gap-4">
                 <div className="font-mono text-[28px] font-bold text-hud-danger min-w-[56px]">{t.y}</div>
@@ -294,8 +295,9 @@ export default function Presentation() {
               </div>
             ))}
           </div>
-          <div className="flex-1 flex flex-col gap-10 justify-center">
+          <div className="flex-1 flex flex-col gap-8 justify-center">
             {[
+              { y: '2021', e: 'Texas ERCOT', i: '4.5M homes, 240+ deaths', c: colors.danger },
               { y: '2021', e: 'Europe Grid Split', i: '1.25 Hz from collapse', c: colors.danger },
               { y: '2025', e: 'Spain/Portugal', i: '60M people', c: colors.accent },
               { y: '2025', e: 'Berlin Arson (x3)', i: '45K+ homes', c: colors.accent },
@@ -315,9 +317,12 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 15: Every Cascade Shares Three Properties */}
+      {/* 15: Every Cascade Shares Three Properties — DEPRECATED */}
       <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full" style={{ position: 'relative' }}>
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, pointerEvents: 'none' }}>
+            <span style={{ fontSize: '300px', fontWeight: 900, color: 'rgba(239, 68, 68, 0.3)', fontFamily: '"JetBrains Mono"' }}>&#x2715;</span>
+          </div>
           <H>Every Cascade Shares Three Properties</H>
           <div className="flex-1 flex items-center">
             <div className="flex gap-5 w-full">
@@ -357,11 +362,15 @@ export default function Presentation() {
       {/* 17: Demand Response in Action */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
-          <H color={colors.success}>Demand Response in Action</H>
+          <div className="flex items-center gap-3">
+            <H color={colors.success}>Demand Response in Action</H>
+            <Badge color={colors.accent}>Still in Infancy</Badge>
+          </div>
           <P size="20px">Instead of building more power plants — reshape the demand. Trip a generator and watch what happens.</P>
           <div className="flex-1 flex justify-center items-center">
             <DemandResponseDemo width={920} height={420} />
           </div>
+          <P size="18px" color={colors.textDim} style={{ fontStyle: 'italic' }}>Note: Current deployment is extremely limited. Focus on the challenges — most grids have no demand-side flexibility at scale today.</P>
         </div>
       </Slide>
 
@@ -396,68 +405,24 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 21: The Dunkelflaute */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col h-full">
-          <H color={colors.danger}>The Dunkelflaute</H>
-          <P>Dark doldrums — when wind and solar collapse simultaneously. High pressure brings still air and overcast skies.</P>
-          <div className="flex-1 flex items-center">
-            <div className="flex gap-5 w-full">
-              <div className="flex-1 rounded-xl p-5" style={{ background: `${colors.danger}06`, border: `1px solid ${colors.danger}20` }}>
-                <div className="text-[20px] font-semibold font-mono mb-3" style={{ color: colors.danger }}>GERMANY — NOV 2024</div>
-                <div className="text-[20px] text-hud-text font-sans mb-2">
-                  Wind installed: <span className="font-semibold" style={{ color: colors.primary }}>72.75 GW</span>
-                </div>
-                <div className="text-[20px] text-hud-text font-sans mb-2">
-                  Wind output during event: <span className="font-semibold" style={{ color: colors.danger }}>2.8 GW (3.8%)</span>
-                </div>
-                <div className="text-[20px] text-hud-text font-sans mb-2">
-                  Solar contribution: <span className="font-semibold" style={{ color: colors.accent }}>4.3%</span> vs ~25% summer
-                </div>
-                <div className="text-[20px] text-hud-text font-sans">
-                  Renewables total: <span className="font-semibold" style={{ color: colors.danger }}>30%</span> (vs normal 50%+)
-                </div>
-              </div>
-              <div className="flex-1 flex flex-col gap-4">
-                <div className="rounded-xl p-4" style={{ background: `${colors.accent}06`, border: `1px solid ${colors.accent}20` }}>
-                  <div className="text-[20px] font-semibold font-mono mb-1" style={{ color: colors.accent }}>DURATION</div>
-                  <div className="text-[20px] text-hud-text font-sans">
-                    <span className="font-semibold" style={{ color: colors.accent }}>14 consecutive days</span> below 10% of installed renewable capacity
-                  </div>
-                </div>
-                <div className="rounded-xl p-4" style={{ background: `${colors.accent}06`, border: `1px solid ${colors.accent}20` }}>
-                  <div className="text-[20px] font-semibold font-mono mb-1" style={{ color: colors.accent }}>PRICE IMPACT</div>
-                  <div className="text-[20px] text-hud-text font-sans">
-                    Prices spiked to <span className="font-semibold" style={{ color: colors.danger }}>EUR 175/MWh</span> — 4x the average
-                  </div>
-                </div>
-                <div className="rounded-xl p-4" style={{ background: `${colors.textDim}06`, border: `1px solid ${colors.textDim}20` }}>
-                  <div className="text-[20px] font-semibold font-mono mb-1" style={{ color: colors.textDim }}>FREQUENCY</div>
-                  <div className="text-[20px] text-hud-text font-sans">Occurs <span className="font-semibold">2–10 times per year</span>, lasting 50–150 hours/month in winter</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <P size="20px" style={{ fontStyle: 'italic' }}>"You cannot go 100% renewable without storage and flexibility."</P>
-        </div>
-      </Slide>
-
-      {/* 22: Negative Prices */}
+      {/* 21: Energy Being Thrown Away */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H color={colors.accent}>Energy Being Thrown Away</H>
-          <P>When supply exceeds demand, prices go <span className="font-semibold" style={{ color: colors.accent }}>negative</span>. Solar gets curtailed. Clean energy — wasted.</P>
-          <div className="flex-1 flex items-center">
+          <P>When supply exceeds demand, prices go <span className="font-semibold" style={{ color: colors.accent }}>negative</span>. Clean energy gets curtailed — paid to <em>not</em> produce.</P>
+          <div className="flex-1 flex flex-col justify-center gap-5">
             <div className="flex gap-4 w-full">
-              {[
-                { n: '139', l: 'Neg. price hours (2021)', c: colors.textDim },
-                { n: '211', l: 'Neg. price hours (2022)', c: colors.textMuted },
-                { n: '301', l: 'Neg. price hours (2023)', c: colors.accent },
-                { n: '400+', l: 'Trending (2024)', c: colors.danger },
-              ].map(s => <StatBox key={s.l} n={s.n} l={s.l} c={s.c} />)}
+              <StatBox n="9.3 TWh" l="Curtailed in Germany (2024)" c={colors.danger} />
+              <StatBox n="+97%" l="Solar curtailment YoY" c={colors.accent} />
+              <StatBox n="475" l="Negative price hours (2024)" c={colors.accent} />
+            </div>
+            <div className="flex gap-4 w-full">
+              <StatBox n="3.4 TWh" l="Curtailed in California (2024)" c={colors.textMuted} />
+              <StatBox n="€3.1B" l="Annual German redispatch cost" c={colors.danger} />
+              <StatBox n="€4.2B" l="EU-wide grid congestion (2023)" c={colors.accent} />
             </div>
           </div>
-          <P size="20px" color={colors.textDim}>Germany — Fraunhofer ISE data</P>
+          <P size="20px" color={colors.textDim}>Sources: Bundesnetzagentur, Fraunhofer ISE, ACER, CAISO</P>
         </div>
       </Slide>
 
@@ -508,32 +473,30 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 25: The Economics of Flexibility */}
+      {/* 25: The Impact of Flexibility */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
-          <H color={colors.success}>The Economics of Flexibility</H>
-          <P>Storage and demand response don't just stabilize the grid — they make electricity cheaper for everyone.</P>
+          <H color={colors.success}>The Impact of Flexibility</H>
+          <P>Flexible demand doesn't just stabilize the grid — it makes electricity dramatically cheaper.</P>
           <div className="flex-1 flex flex-col justify-center gap-5 my-3">
             <div className="flex gap-4">
               <div className="flex-1 rounded-xl p-5" style={{ background: `${colors.success}06`, border: `1px solid ${colors.success}20` }}>
-                <div className="text-[20px] font-semibold font-mono mb-2" style={{ color: colors.success }}>HORNSDALE "TESLA BIG BATTERY"</div>
-                <div className="text-[20px] text-hud-text font-sans mb-1">150 MW / 193.5 MWh</div>
-                <div className="text-[20px] text-hud-text font-sans mb-1">Saved <span className="font-semibold" style={{ color: colors.success }}>AUD $150M in 2 years</span></div>
-                <div className="text-[20px] text-hud-text font-sans mb-1">Ancillary costs down <span className="font-semibold" style={{ color: colors.success }}>91%</span>: $470 → $40/MWh</div>
-                <div className="text-[20px] text-hud-text font-sans">Response: <span className="font-semibold" style={{ color: colors.success }}>100 ms</span> vs 6,000 ms conventional</div>
+                <div className="text-[20px] font-semibold font-mono mb-2" style={{ color: colors.success }}>RMI — Power Shift (Texas / ERCOT, modeled)</div>
+                <div className="text-[20px] text-hud-text font-sans mb-1">Full demand flexibility cuts net generation costs by <span className="font-semibold" style={{ color: colors.success }}>20%</span></div>
+                <div className="text-[20px] text-hud-text font-sans mb-1">Saves <span className="font-semibold" style={{ color: colors.success }}>$140/household/year</span> with just 2 flexible devices</div>
+                <div className="text-[20px] text-hud-text font-sans">Avoids <span className="font-semibold" style={{ color: colors.success }}>75%</span> of new gas peaker units</div>
               </div>
               <div className="flex-1 rounded-xl p-5" style={{ background: `${colors.primary}06`, border: `1px solid ${colors.primary}20` }}>
-                <div className="text-[20px] font-semibold font-mono mb-2" style={{ color: colors.primary }}>AUSTRALIA ISP 2024</div>
-                <div className="text-[20px] text-hud-text font-sans mb-1">49 GW / 646 GWh storage needed by 2050</div>
-                <div className="text-[20px] text-hud-text font-sans mb-1">Net consumer benefit: <span className="font-semibold" style={{ color: colors.primary }}>$22 billion</span></div>
-                <div className="text-[20px] text-hud-text font-sans mb-1">Household bills <span className="font-semibold" style={{ color: colors.primary }}>down up to 20%</span></div>
-                <div className="text-[20px] text-hud-text font-sans">Home batteries save <span className="font-semibold" style={{ color: colors.primary }}>$4.1B</span> in avoided grid investment</div>
+                <div className="text-[20px] font-semibold font-mono mb-2" style={{ color: colors.primary }}>Brattle Group — National US (projected)</div>
+                <div className="text-[20px] text-hud-text font-sans mb-1">60 GW of VPPs save <span className="font-semibold" style={{ color: colors.primary }}>$15–35B</span> over 10 years</div>
+                <div className="text-[20px] text-hud-text font-sans mb-1">Household bills <span className="font-semibold" style={{ color: colors.primary }}>down up to 20%</span> (Australia ISP 2024)</div>
+                <div className="text-[20px] text-hud-text font-sans">Home batteries avoid <span className="font-semibold" style={{ color: colors.primary }}>$4.1B</span> in grid investment</div>
               </div>
             </div>
             <div className="flex gap-4">
-              <StatBox n="93%" l="Battery cost decline (2010-2024)" c={colors.success} />
-              <StatBox n="$78/MWh" l="4-hr battery LCOE (record low)" c={colors.primary} />
-              <StatBox n="30%" l="Cheaper than gas peakers" c={colors.accent} />
+              <StatBox n="20%" l="Generation cost reduction at full flexibility" c={colors.success} />
+              <StatBox n="$10–15B/yr" l="US grid savings from 2 flexible devices per home" c={colors.primary} />
+              <StatBox n="8%" l="Peak demand reduction from smart thermostats + water heaters" c={colors.accent} />
             </div>
           </div>
           <P size="20px" style={{ fontStyle: 'italic' }}>"The cheapest megawatt is the one you never have to generate."</P>
@@ -812,11 +775,59 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 41: Thank You */}
+      {/* 39: Thank You */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <H size="54px" center>Thank You</H>
           <P size="20px" center><span className="text-hud-primary font-semibold">Enpal</span> — Building Europe's Largest Virtual Power Plant</P>
+        </div>
+      </Slide>
+
+      {/* ═══════ APPENDIX ═══════ */}
+
+      {/* 40: The Dunkelflaute */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col h-full">
+          <H color={colors.danger}>The Dunkelflaute</H>
+          <P>Dark doldrums — when wind and solar collapse simultaneously. High pressure brings still air and overcast skies.</P>
+          <div className="flex-1 flex items-center">
+            <div className="flex gap-5 w-full">
+              <div className="flex-1 rounded-xl p-5" style={{ background: `${colors.danger}06`, border: `1px solid ${colors.danger}20` }}>
+                <div className="text-[20px] font-semibold font-mono mb-3" style={{ color: colors.danger }}>GERMANY — NOV 2024</div>
+                <div className="text-[20px] text-hud-text font-sans mb-2">
+                  Wind installed: <span className="font-semibold" style={{ color: colors.primary }}>72.75 GW</span>
+                </div>
+                <div className="text-[20px] text-hud-text font-sans mb-2">
+                  Wind output during event: <span className="font-semibold" style={{ color: colors.danger }}>2.8 GW (3.8%)</span>
+                </div>
+                <div className="text-[20px] text-hud-text font-sans mb-2">
+                  Solar contribution: <span className="font-semibold" style={{ color: colors.accent }}>4.3%</span> vs ~25% summer
+                </div>
+                <div className="text-[20px] text-hud-text font-sans">
+                  Renewables total: <span className="font-semibold" style={{ color: colors.danger }}>30%</span> (vs normal 50%+)
+                </div>
+              </div>
+              <div className="flex-1 flex flex-col gap-4">
+                <div className="rounded-xl p-4" style={{ background: `${colors.accent}06`, border: `1px solid ${colors.accent}20` }}>
+                  <div className="text-[20px] font-semibold font-mono mb-1" style={{ color: colors.accent }}>DURATION</div>
+                  <div className="text-[20px] text-hud-text font-sans">
+                    <span className="font-semibold" style={{ color: colors.accent }}>14 consecutive days</span> below 10% of installed renewable capacity
+                  </div>
+                </div>
+                <div className="rounded-xl p-4" style={{ background: `${colors.accent}06`, border: `1px solid ${colors.accent}20` }}>
+                  <div className="text-[20px] font-semibold font-mono mb-1" style={{ color: colors.accent }}>PRICE IMPACT</div>
+                  <div className="text-[20px] text-hud-text font-sans">
+                    Prices spiked to <span className="font-semibold" style={{ color: colors.danger }}>EUR 175/MWh</span> — 4x the average
+                  </div>
+                </div>
+                <div className="rounded-xl p-4" style={{ background: `${colors.textDim}06`, border: `1px solid ${colors.textDim}20` }}>
+                  <div className="text-[20px] font-semibold font-mono mb-1" style={{ color: colors.textDim }}>FREQUENCY</div>
+                  <div className="text-[20px] text-hud-text font-sans">Occurs <span className="font-semibold">2–10 times per year</span>, lasting 50–150 hours/month in winter</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <P size="20px" style={{ fontStyle: 'italic' }}>"You cannot go 100% renewable without storage and flexibility."</P>
         </div>
       </Slide>
 

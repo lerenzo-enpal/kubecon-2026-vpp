@@ -117,9 +117,6 @@ export function versionB() {
 
   return [
     <Slide key="grid-scale-b2" backgroundColor={colors.bg} padding="36px 56px">
-      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, pointerEvents: 'none' }}>
-        <span style={{ fontSize: '300px', fontWeight: 900, color: 'rgba(239, 68, 68, 0.3)', fontFamily: '"JetBrains Mono"' }}>&#x2715;</span>
-      </div>
       <style>{`
         @keyframes gridRowIn {
           0% { opacity: 0; transform: translateX(-30px); filter: blur(4px); }
@@ -134,7 +131,10 @@ export function versionB() {
           100% { opacity: 1; transform: scale(1); }
         }
       `}</style>
-      <div className="flex flex-col h-full w-full items-center">
+      <div className="flex flex-col h-full w-full items-center" style={{ position: 'relative' }}>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, pointerEvents: 'none' }}>
+          <span style={{ fontSize: '300px', fontWeight: 900, color: 'rgba(239, 68, 68, 0.3)', fontFamily: '"JetBrains Mono"' }}>&#x2715;</span>
+        </div>
         <GlowText size="40px" style={{ textAlign: 'center', marginBottom: 0 }}>
           The Grid vs. Tech Infrastructure
         </GlowText>
