@@ -310,7 +310,6 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
         const eased2 = easeInOutCubic(Math.min(t2, 1));
 
         // Zoom: start zoomed in on factory (high zoom), zoom out to full EU
-        // zoom goes from high (zoomed in) to low (zoomed out)
         const zoomLevel = 8.0 - eased2 * 7.5; // 8.0 → 0.5
         const focusX = 0.35;
         const focusY = 0.40 + eased2 * 0.05;
@@ -340,7 +339,6 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
               if (dist < 0.12) {
                 const ax = mapX(a.x), ay = mapY(a.y);
                 const bx = mapX(b.x), by = mapY(b.y);
-                // Only draw if at least partially visible
                 if ((ax > -100 && ax < width + 100) || (bx > -100 && bx < width + 100)) {
                   ctx.beginPath();
                   ctx.moveTo(ax, ay);
@@ -385,23 +383,22 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
           });
         }
 
-        // VW Factory (always visible, zooming out makes it smaller)
-        const factoryScale = Math.max(0.05, 1 / zoomLevel) * 2;
-        const factoryW = Math.max(20, 200 * factoryScale);
+        // VW Factory — uses mapX/mapY so it naturally shrinks with zoom
+        const FACTORY_WORLD_W = 0.03; // width in normalized coords
+        const factoryW = Math.max(8, FACTORY_WORLD_W * width * zoomLevel);
         const factoryH = factoryW * 0.4;
         const factoryX = mapX(0.35) - factoryW / 2;
         const factoryY = mapY(0.40) - factoryH / 2;
-        const factoryAlpha = Math.max(0.2, 1 - eased2 * 0.6);
+        const factoryAlpha = Math.max(0.15, 1 - eased2 * 0.7);
         drawFactory(ctx, factoryX, factoryY, factoryW, factoryH, factoryAlpha, now);
 
         // VW workers near factory (fade out as we zoom out)
-        if (eased2 < 0.6) {
-          const vwAlpha = 1 - eased2 / 0.6;
-          const personSize = Math.max(2, 10 * factoryScale);
-          // 6 people arranged near factory
+        if (eased2 < 0.5) {
+          const vwAlpha = 1 - eased2 / 0.5;
+          const personSize = Math.max(2, factoryW * 0.04);
           for (let i = 0; i < 6; i++) {
             const px = factoryX + factoryW * (0.15 + (i % 3) * 0.3);
-            const py = factoryY + factoryH + 10 + Math.floor(i / 3) * (personSize * 2.5);
+            const py = factoryY + factoryH + personSize + Math.floor(i / 3) * (personSize * 2.5);
             drawPerson(ctx, px, py, personSize, colors.accent, vwAlpha);
           }
         }
@@ -421,24 +418,27 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
           drawPerson(ctx, px, py, personSize, colors.primary, appearT * pulse);
         }
 
-        // Counter overlay — top right HUD
-        if (eased2 > 0.1) {
-          const countAlpha = Math.min(0.9, eased2);
-          const displayCount = Math.floor(eased2 * 2300000);
+        // ── Counter HUD — top right ──
+        // Starts at 60,000 (Wolfsburg), ticks up to 2,300,000 (EU grid)
+        {
+          const countAlpha = Math.min(1, phaseElapsed / 0.4); // fade in quickly
+          // Counter: 60K at start, ramp to 2.3M with eased2
+          const displayCount = Math.floor(60000 + eased2 * (2300000 - 60000));
           const countStr = displayCount.toLocaleString();
 
           ctx.save();
           ctx.globalAlpha = countAlpha;
 
-          // HUD box background
-          const boxW = 200, boxH = 52;
+          // HUD box
+          const boxW = 210, boxH = 52;
           const boxX = width - boxW - 16, boxY = 12;
-          ctx.fillStyle = `rgba(2, 4, 8, 0.7)`;
+          ctx.fillStyle = 'rgba(2, 4, 8, 0.75)';
           ctx.fillRect(boxX, boxY, boxW, boxH);
           ctx.strokeStyle = `${colors.primary}30`;
           ctx.lineWidth = 1;
           ctx.strokeRect(boxX, boxY, boxW, boxH);
 
+          // Number
           ctx.font = 'bold 28px "JetBrains Mono"';
           ctx.textAlign = 'right';
           ctx.fillStyle = colors.primary;
@@ -446,36 +446,60 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
           ctx.shadowColor = colors.primary;
           ctx.fillText(countStr, width - 24, boxY + 28);
           ctx.shadowBlur = 0;
+
+          // Small label inside box
           ctx.font = '11px "JetBrains Mono"';
           ctx.fillStyle = colors.textDim;
-          ctx.fillText('GRID WORKERS', width - 24, boxY + 44);
-          ctx.restore();
+          ctx.fillText('WORKERS', width - 24, boxY + 44);
 
-          // VW comparison — bottom left HUD
-          if (eased2 > 0.5) {
-            const compAlpha = Math.min(1, (eased2 - 0.5) / 0.3);
-            ctx.save();
-            ctx.globalAlpha = compAlpha * 0.8;
+          // Label below box — transitions from "World's Largest Factory" → (gone) → "European Power Grid"
+          const labelY = boxY + boxH + 14;
+          ctx.textAlign = 'right';
 
-            const cBoxW = 280, cBoxH = 28;
-            const cBoxX = 16, cBoxY = height - cBoxH - 16;
-            ctx.fillStyle = `rgba(2, 4, 8, 0.7)`;
-            ctx.fillRect(cBoxX, cBoxY, cBoxW, cBoxH);
-            ctx.strokeStyle = `${colors.accent}30`;
-            ctx.lineWidth = 1;
-            ctx.strokeRect(cBoxX, cBoxY, cBoxW, cBoxH);
-
-            ctx.font = '600 12px "JetBrains Mono"';
-            ctx.textAlign = 'left';
+          if (eased2 < 0.08) {
+            // "World's Largest Factory" visible at start
+            const labelAlpha = 1 - eased2 / 0.08;
+            ctx.globalAlpha = countAlpha * labelAlpha;
+            ctx.font = '600 11px "JetBrains Mono"';
             ctx.fillStyle = colors.accent;
-            ctx.fillText('VW WOLFSBURG: 60,000', cBoxX + 8, cBoxY + 18);
-            ctx.fillStyle = colors.textDim;
-            ctx.fillText(`  ×${Math.floor(displayCount / 60000)}`, cBoxX + 172, cBoxY + 18);
-            ctx.restore();
+            ctx.fillText("World's Largest Factory", width - 24, labelY);
+          } else if (eased2 > 0.85) {
+            // "European Power Grid" fades in at end
+            const labelAlpha = Math.min(1, (eased2 - 0.85) / 0.15);
+            ctx.globalAlpha = countAlpha * labelAlpha;
+            ctx.font = '600 11px "JetBrains Mono"';
+            ctx.fillStyle = colors.primary;
+            ctx.fillText('European Power Grid', width - 24, labelY);
           }
+
+          ctx.restore();
         }
 
-        // Animated "0" shrinking from center to bottom-left (phase 2 transition)
+        // VW comparison — bottom left HUD (appears mid-animation)
+        if (eased2 > 0.5) {
+          const compAlpha = Math.min(1, (eased2 - 0.5) / 0.3);
+          ctx.save();
+          ctx.globalAlpha = compAlpha * 0.8;
+
+          const cBoxW = 280, cBoxH = 28;
+          const cBoxX = 16, cBoxY = height - cBoxH - 16;
+          ctx.fillStyle = 'rgba(2, 4, 8, 0.7)';
+          ctx.fillRect(cBoxX, cBoxY, cBoxW, cBoxH);
+          ctx.strokeStyle = `${colors.accent}30`;
+          ctx.lineWidth = 1;
+          ctx.strokeRect(cBoxX, cBoxY, cBoxW, cBoxH);
+
+          const displayCount = Math.floor(60000 + eased2 * (2300000 - 60000));
+          ctx.font = '600 12px "JetBrains Mono"';
+          ctx.textAlign = 'left';
+          ctx.fillStyle = colors.accent;
+          ctx.fillText('VW WOLFSBURG: 60,000', cBoxX + 8, cBoxY + 18);
+          ctx.fillStyle = colors.textDim;
+          ctx.fillText(`  \u00d7${Math.floor(displayCount / 60000)}`, cBoxX + 172, cBoxY + 18);
+          ctx.restore();
+        }
+
+        // Animated "0" shrinking from center (phase 2 transition)
         const shrinkT = Math.min(1, phaseElapsed / 0.6);
         const shrinkEased = easeInOutCubic(shrinkT);
         if (shrinkT < 1) {
