@@ -53,6 +53,22 @@ presentation/src/
 └── theme.js                      # Colors, fonts, slide styles
 ```
 
+### Exporting to PDF
+
+With the dev server running:
+
+```bash
+npm run export:pdf
+```
+
+This generates `presentation.pdf` in the project root. Requires `puppeteer` (installed via `decktape`).
+
+You can also specify a custom output path:
+
+```bash
+node scripts/export-pdf.mjs my-export.pdf
+```
+
 ### Building for Production
 
 ```bash
