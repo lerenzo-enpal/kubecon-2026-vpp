@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
-import { SlideContext, useSteps } from 'spectacle';
+import React, { useState, useEffect, useContext, useRef, useCallback } from 'react';
+import { SlideContext } from 'spectacle';
 import { DeckGL } from '@deck.gl/react';
 import { FlyToInterpolator } from '@deck.gl/core';
 import { ScatterplotLayer, LineLayer, TextLayer } from '@deck.gl/layers';
@@ -145,34 +145,14 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
   const freqRef = useRef(null);
   const freqHistory = useRef([]);
   const freqCanvasRef = useRef(null);
-  const prevArrowStep = useRef(-1);
 
+  const stepIndexRef = useRef(0);
   const slideContext = useContext(SlideContext);
-
-  // Spectacle arrow key integration — 4 additional steps (step 0 is the initial view)
-  const { step: arrowStep, placeholder: stepsPlaceholder } = useSteps(STEPS.length - 1);
-  const normalizedArrowStep = arrowStep + 1; // -1→0, 0→1, 1→2, etc.
-
-  // Sync arrow key steps with map navigation
-  useEffect(() => {
-    if (normalizedArrowStep !== prevArrowStep.current && normalizedArrowStep >= 0) {
-      prevArrowStep.current = normalizedArrowStep;
-      if (normalizedArrowStep < STEPS.length) {
-        setStepIndex(normalizedArrowStep);
-        setViewState({
-          ...STEPS[normalizedArrowStep].view,
-          transitionDuration: 2200,
-          transitionInterpolator: new FlyToInterpolator(),
-          transitionEasing: t => 1 - Math.pow(1 - t, 3),
-        });
-      }
-    }
-  }, [normalizedArrowStep]);
 
   // Reset on slide enter
   useEffect(() => {
     if (slideContext?.isSlideActive) {
-      prevArrowStep.current = -1;
+      stepIndexRef.current = 0;
       setStepIndex(0);
       setViewState(STEPS[0].view);
       setBoot(0);
@@ -238,8 +218,9 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
   const bootFade = (delay, dur = 0.4) => ease((boot - delay) / dur);
 
   // Step navigation
-  const goToStep = (idx) => {
+  const goToStep = useCallback((idx) => {
     if (idx < 0 || idx >= STEPS.length) return;
+    stepIndexRef.current = idx;
     setStepIndex(idx);
     setViewState({
       ...STEPS[idx].view,
@@ -247,7 +228,31 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
       transitionInterpolator: new FlyToInterpolator(),
       transitionEasing: t => 1 - Math.pow(1 - t, 3),
     });
-  };
+  }, []);
+
+  // Arrow key navigation — intercept when this slide is active
+  useEffect(() => {
+    if (!slideContext?.isSlideActive) return;
+    const handleKey = (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        const next = stepIndexRef.current + 1;
+        if (next < STEPS.length) {
+          e.stopPropagation();
+          goToStep(next);
+        }
+        // at last step: let Spectacle advance to next slide
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        const prev = stepIndexRef.current - 1;
+        if (prev >= 0) {
+          e.stopPropagation();
+          goToStep(prev);
+        }
+        // at step 0: let Spectacle go to previous slide
+      }
+    };
+    window.addEventListener('keydown', handleKey, true);
+    return () => window.removeEventListener('keydown', handleKey, true);
+  }, [slideContext?.isSlideActive, goToStep]);
 
   const step = STEPS[stepIndex];
   const isLast = stepIndex >= STEPS.length - 1;
@@ -357,7 +362,7 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
       <DeckGL
         viewState={viewState}
         onViewStateChange={({ viewState: vs }) => setViewState(vs)}
-        controller={false}
+        controller={true}
         layers={layers}
         style={{ position: 'absolute', inset: 0 }}
       >
@@ -422,26 +427,10 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
         </div>
       </div>
 
-      {/* Step dots — bottom center (arrows handled by Spectacle) */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex gap-1.5 items-center rounded px-3 py-2" style={{
-        opacity: bootFade(1.0),
-        background: 'rgba(5,8,16,0.8)',
-        border: '1px solid rgba(34,211,238,0.15)',
-      }}>
-        {STEPS.map((_, i) => (
-          <div key={i} style={{
-            width: 10, height: 10, borderRadius: '50%',
-            background: i === stepIndex ? '#22d3ee' : i < stepIndex ? 'rgba(34,211,238,0.4)' : 'rgba(34,211,238,0.15)',
-            boxShadow: i === stepIndex ? '0 0 8px rgba(34,211,238,0.5)' : 'none',
-            transition: 'all 0.3s',
-          }} />
-        ))}
-      </div>
-      {stepsPlaceholder}
 
       {/* ── Stats bar — bottom right, appears on final steps ── */}
       {stepIndex >= 3 && (
-        <div className="absolute bottom-14 right-4 z-10">
+        <div className="absolute bottom-4 right-4 z-10">
           <div className="flex gap-4 rounded p-3" style={{
             background: 'rgba(5,8,16,0.92)',
             border: `1px solid ${borderClr}`,
