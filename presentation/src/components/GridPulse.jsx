@@ -137,8 +137,7 @@ export default function GridPulse({ width = 800, height = 400 }) {
     <canvas
       ref={canvasRef}
       style={{
-        width, height, borderRadius: 8,
-        border: `1px solid ${colors.surfaceLight}`,
+        width, height,
       }}
     />
   );

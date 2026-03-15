@@ -226,12 +226,12 @@ export default function Presentation() {
       </Slide>
 
       {/* 4: Frequency Demo */}
-      <Slide backgroundColor={bg} padding="24px 40px">
+      <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H>The Grid: A Balancing Act</H>
           <P size="20px">Supply and demand must match every second. Click the scenarios to see what happens when they don't.</P>
           <div className="flex-1 flex justify-center items-center">
-            <FrequencyDemo width={900} height={340} />
+            <FrequencyDemo width={920} height={400} />
           </div>
           <div className="flex gap-3.5">
             <StatBox n="50.000 Hz" l="EU Target Frequency" c={colors.primary} />
@@ -243,30 +243,36 @@ export default function Presentation() {
 
       {/* 5: How Grid Was Built */}
       <Slide backgroundColor={bg} padding={pad}>
-        <H>Designed for a Different World</H>
-        <div className="flex items-center gap-2 my-6">
-          {[
-            { l: 'Power Plants', s: 'Few, large', c: colors.accent },
-            { l: 'Transmission', s: 'High voltage', c: colors.secondary },
-            { l: 'Distribution', s: 'One-way', c: colors.primary },
-            { l: 'Homes', s: 'Passive', c: colors.textDim },
-          ].map((x, i) => (
-            <React.Fragment key={i}>
-              <div className="bg-hud-surface rounded-[10px] px-4 py-5 text-center flex-1" style={{ border: `1px solid ${x.c}30` }}>
-                <div className="text-[20px] font-semibold text-hud-text font-sans">{x.l}</div>
-                <div className="text-[20px] text-hud-text-muted font-sans mt-1">{x.s}</div>
-              </div>
-              {i < 3 && <div className="text-[20px] text-hud-text-dim font-mono">{'\u2192'}</div>}
-            </React.Fragment>
-          ))}
+        <div className="flex flex-col h-full">
+          <H>Designed for a Different World</H>
+          <div className="flex-1 flex items-center">
+            <div className="flex items-center gap-2 w-full">
+              {[
+                { l: 'Power Plants', s: 'Few, large', c: colors.accent },
+                { l: 'Transmission', s: 'High voltage', c: colors.secondary },
+                { l: 'Distribution', s: 'One-way', c: colors.primary },
+                { l: 'Homes', s: 'Passive', c: colors.textDim },
+              ].map((x, i) => (
+                <React.Fragment key={i}>
+                  <div className="bg-hud-surface rounded-[10px] px-4 py-5 text-center flex-1" style={{ border: `1px solid ${x.c}30` }}>
+                    <div className="text-[20px] font-semibold text-hud-text font-sans">{x.l}</div>
+                    <div className="text-[20px] text-hud-text-muted font-sans mt-1">{x.s}</div>
+                  </div>
+                  {i < 3 && <div className="text-[20px] text-hud-text-dim font-mono">{'\u2192'}</div>}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+          <P size="20px" style={{ fontStyle: 'italic' }}>"Built in the 1950s. One-directional. No flexibility."</P>
         </div>
-        <P size="20px" style={{ fontStyle: 'italic', marginTop: 12 }}>"Built in the 1950s. One-directional. No flexibility."</P>
       </Slide>
 
       {/* 6: It Keeps Happening */}
       <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col h-full">
         <H color={colors.danger}>It Keeps Happening</H>
-        <div className="flex gap-10 mt-4">
+        <div className="flex-1 flex items-center">
+        <div className="flex gap-10 w-full">
           <div className="flex-1">
             {[
               { y: '2003', e: 'Italy Blackout', i: '56M people' },
@@ -300,23 +306,29 @@ export default function Presentation() {
             ))}
           </div>
         </div>
+        </div>
+        </div>
       </Slide>
 
       {/* 7: Common Pattern */}
       <Slide backgroundColor={bg} padding={pad}>
-        <H>Every Cascade Shares Three Properties</H>
-        <div className="flex gap-5 mt-5">
-          {[
-            { n: '1', t: 'Tightly Coupled', d: 'Centralized with single points of failure', c: colors.danger },
-            { n: '2', t: 'No Local Reserves', d: 'No distributed storage to absorb shocks', c: colors.accent },
-            { n: '3', t: 'Blind Operators', d: 'Degraded system-wide observability', c: colors.secondary },
-          ].map(i => (
-            <div key={i.n} className="bg-hud-surface rounded-xl px-5 py-6 flex-1" style={{ border: `1px solid ${i.c}25` }}>
-              <div className="w-[38px] h-[38px] rounded-[10px] flex items-center justify-center text-[20px] font-extrabold font-mono mb-3" style={{ background: `${i.c}15`, color: i.c }}>{i.n}</div>
-              <div className="text-[20px] font-bold text-hud-text font-sans mb-2">{i.t}</div>
-              <div className="text-[20px] text-hud-text-muted font-sans leading-normal">{i.d}</div>
+        <div className="flex flex-col h-full">
+          <H>Every Cascade Shares Three Properties</H>
+          <div className="flex-1 flex items-center">
+            <div className="flex gap-5 w-full">
+              {[
+                { n: '1', t: 'Tightly Coupled', d: 'Centralized with single points of failure', c: colors.danger },
+                { n: '2', t: 'No Local Reserves', d: 'No distributed storage to absorb shocks', c: colors.accent },
+                { n: '3', t: 'Blind Operators', d: 'Degraded system-wide observability', c: colors.secondary },
+              ].map(i => (
+                <div key={i.n} className="bg-hud-surface rounded-xl px-5 py-6 flex-1" style={{ border: `1px solid ${i.c}25` }}>
+                  <div className="w-[38px] h-[38px] rounded-[10px] flex items-center justify-center text-[20px] font-extrabold font-mono mb-3" style={{ background: `${i.c}15`, color: i.c }}>{i.n}</div>
+                  <div className="text-[20px] font-bold text-hud-text font-sans mb-2">{i.t}</div>
+                  <div className="text-[20px] text-hud-text-muted font-sans leading-normal">{i.d}</div>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </Slide>
 
@@ -346,44 +358,54 @@ export default function Presentation() {
       </Slide>
 
       {/* 10: Renewable Growth */}
-      <Slide backgroundColor={bg} padding="24px 40px">
-        <H>The Renewable Explosion</H>
-        <P size="20px">Germany's electricity from renewables — this is not slowing down.</P>
-        <div className="flex-1 flex justify-center mt-2">
-          <RenewableGrowthChart width={880} height={370} />
+      <Slide backgroundColor={bg} padding="20px 40px">
+        <div className="flex flex-col h-full">
+          <H>The Renewable Explosion</H>
+          <P size="20px">Germany's electricity from renewables — this is not slowing down.</P>
+          <div className="flex-1 flex justify-center items-center">
+            <RenewableGrowthChart width={940} height={440} />
+          </div>
         </div>
       </Slide>
 
       {/* 11: Duck Curve */}
-      <Slide backgroundColor={bg} padding="24px 40px">
-        <H>The Duck Curve Problem</H>
-        <P size="20px">Solar floods the grid midday. Demand ramps steeply at sunset. The grid can't cope.</P>
-        <div className="flex-1 flex justify-center mt-2">
-          <DuckCurveChart width={880} height={360} />
+      <Slide backgroundColor={bg} padding="20px 40px">
+        <div className="flex flex-col h-full">
+          <H>The Duck Curve Problem</H>
+          <P size="20px">Solar floods the grid midday. Demand ramps steeply at sunset. The grid can't cope.</P>
+          <div className="flex-1 flex justify-center items-center">
+            <DuckCurveChart width={940} height={440} />
+          </div>
         </div>
       </Slide>
 
       {/* 12: Negative Prices */}
       <Slide backgroundColor={bg} padding={pad}>
-        <H color={colors.accent}>Energy Being Thrown Away</H>
-        <P>When supply exceeds demand, prices go <span className="font-semibold" style={{ color: colors.accent }}>negative</span>. Solar gets curtailed. Clean energy — wasted.</P>
-        <div className="flex gap-4 my-6">
-          {[
-            { n: '139', l: 'Neg. price hours (2021)', c: colors.textDim },
-            { n: '211', l: 'Neg. price hours (2022)', c: colors.textMuted },
-            { n: '301', l: 'Neg. price hours (2023)', c: colors.accent },
-            { n: '400+', l: 'Trending (2024)', c: colors.danger },
-          ].map(s => <StatBox key={s.l} n={s.n} l={s.l} c={s.c} />)}
+        <div className="flex flex-col h-full">
+          <H color={colors.accent}>Energy Being Thrown Away</H>
+          <P>When supply exceeds demand, prices go <span className="font-semibold" style={{ color: colors.accent }}>negative</span>. Solar gets curtailed. Clean energy — wasted.</P>
+          <div className="flex-1 flex items-center">
+            <div className="flex gap-4 w-full">
+              {[
+                { n: '139', l: 'Neg. price hours (2021)', c: colors.textDim },
+                { n: '211', l: 'Neg. price hours (2022)', c: colors.textMuted },
+                { n: '301', l: 'Neg. price hours (2023)', c: colors.accent },
+                { n: '400+', l: 'Trending (2024)', c: colors.danger },
+              ].map(s => <StatBox key={s.l} n={s.n} l={s.l} c={s.c} />)}
+            </div>
+          </div>
+          <P size="20px" color={colors.textDim}>Germany — Fraunhofer ISE data</P>
         </div>
-        <P size="20px" color={colors.textDim}>Germany — Fraunhofer ISE data</P>
       </Slide>
 
       {/* 13: Load Shifting */}
-      <Slide backgroundColor={bg} padding="24px 40px">
-        <H color={colors.success}>What If You Could Shift the Load?</H>
-        <P size="20px">Batteries absorb midday solar. Discharge in the evening. Click "With VPP" below.</P>
-        <div className="flex-1 flex justify-center mt-2">
-          <DuckCurveChart width={880} height={360} />
+      <Slide backgroundColor={bg} padding="20px 40px">
+        <div className="flex flex-col h-full">
+          <H color={colors.success}>What If You Could Shift the Load?</H>
+          <P size="20px">Batteries absorb midday solar. Discharge in the evening. Click "With VPP" below.</P>
+          <div className="flex-1 flex justify-center items-center">
+            <DuckCurveChart width={940} height={440} />
+          </div>
         </div>
       </Slide>
 
@@ -417,119 +439,151 @@ export default function Presentation() {
 
       {/* 16: What Is a VPP? */}
       <Slide backgroundColor={bg} padding={pad}>
-        <H>What Is a Virtual Power Plant?</H>
-        <P size="20px" color={colors.text}>Software that <span className="font-semibold" style={{ color: colors.primary }}>aggregates</span> distributed energy resources and <span className="font-semibold" style={{ color: colors.success }}>operates</span> them as a coordinated power plant.</P>
-        <div className="flex items-center justify-center gap-3.5 mt-5">
-          <div className="bg-hud-surface rounded-[10px] p-4 border border-hud-surface-light">
-            {['Solar Panels', 'Home Batteries', 'EV Chargers', 'Heat Pumps'].map((a, i) => (
-              <div key={a} className="flex items-center gap-2 mb-1.5 text-[20px] text-hud-text font-sans">
-                <div className="w-2 h-2 rounded-full" style={{ background: [colors.solar, colors.success, colors.primary, colors.secondary][i] }} />{a}
+        <div className="flex flex-col h-full">
+          <H>What Is a Virtual Power Plant?</H>
+          <P size="20px" color={colors.text}>Software that <span className="font-semibold" style={{ color: colors.primary }}>aggregates</span> distributed energy resources and <span className="font-semibold" style={{ color: colors.success }}>operates</span> them as a coordinated power plant.</P>
+          <div className="flex-1 flex items-center justify-center">
+            <div className="flex items-center gap-3.5">
+              <div className="bg-hud-surface rounded-[10px] p-4 border border-hud-surface-light">
+                {['Solar Panels', 'Home Batteries', 'EV Chargers', 'Heat Pumps'].map((a, i) => (
+                  <div key={a} className="flex items-center gap-2 mb-1.5 text-[20px] text-hud-text font-sans">
+                    <div className="w-2 h-2 rounded-full" style={{ background: [colors.solar, colors.success, colors.primary, colors.secondary][i] }} />{a}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          <div className="text-[22px] text-hud-primary font-mono">{'\u2192'}</div>
-          <div className="rounded-xl px-7 py-[22px] text-center" style={{ background: `${colors.primary}08`, border: `1px solid ${colors.primary}30` }}>
-            <div className="text-[20px] font-bold text-hud-primary font-sans">Cloud Platform</div>
-            <div className="text-[20px] text-hud-text-muted font-mono mt-1.5">Kubernetes + Dapr<br />Event-driven control</div>
-          </div>
-          <div className="text-[22px] text-hud-primary font-mono">{'\u2192'}</div>
-          <div className="bg-hud-surface rounded-[10px] p-4 border border-hud-surface-light">
-            {['Frequency Regulation', 'Peak Shaving', 'Energy Arbitrage', 'Demand Response'].map((s, i) => (
-              <div key={s} className="flex items-center gap-2 mb-1.5 text-[20px] text-hud-text font-sans">
-                <div className="w-2 h-2 rounded-full" style={{ background: [colors.danger, colors.accent, colors.success, colors.primary][i] }} />{s}
+              <div className="text-[22px] text-hud-primary font-mono">{'\u2192'}</div>
+              <div className="rounded-xl px-7 py-[22px] text-center" style={{ background: `${colors.primary}08`, border: `1px solid ${colors.primary}30` }}>
+                <div className="text-[20px] font-bold text-hud-primary font-sans">Cloud Platform</div>
+                <div className="text-[20px] text-hud-text-muted font-mono mt-1.5">Kubernetes + Dapr<br />Event-driven control</div>
               </div>
-            ))}
+              <div className="text-[22px] text-hud-primary font-mono">{'\u2192'}</div>
+              <div className="bg-hud-surface rounded-[10px] p-4 border border-hud-surface-light">
+                {['Frequency Regulation', 'Peak Shaving', 'Energy Arbitrage', 'Demand Response'].map((s, i) => (
+                  <div key={s} className="flex items-center gap-2 mb-1.5 text-[20px] text-hud-text font-sans">
+                    <div className="w-2 h-2 rounded-full" style={{ background: [colors.danger, colors.accent, colors.success, colors.primary][i] }} />{s}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </Slide>
 
       {/* 17: Fastest Power Plant */}
       <Slide backgroundColor={bg} padding={pad}>
-        <H>The Fastest Power Plant</H>
-        <div className="mt-4">
-          {[
-            { l: 'Coal', v: '2-6 hours', c: colors.textDim, w: 90 },
-            { l: 'Gas Turbine', v: '10-30 min', c: '#fb923c', w: 45 },
-            { l: 'Hydro', v: '15-30 sec', c: '#60a5fa', w: 12 },
-            { l: 'Battery', v: '140 ms', c: colors.success, w: 2 },
-          ].map(r => (
-            <div key={r.l} className="flex items-center gap-3.5 mb-3">
-              <div className="w-[110px] text-[20px] font-medium text-hud-text-muted font-sans text-right">{r.l}</div>
-              <div className="h-[30px] rounded-md flex items-center pl-3" style={{ width: `${r.w}%`, background: `linear-gradient(90deg, ${r.c}30, ${r.c}80)` }}>
-                <span className="font-mono text-[20px] font-semibold text-hud-text">{r.v}</span>
-              </div>
+        <div className="flex flex-col h-full">
+          <H>The Fastest Power Plant</H>
+          <div className="flex-1 flex items-center">
+            <div className="w-full">
+              {[
+                { l: 'Coal', v: '2-6 hours', c: colors.textDim, w: 90 },
+                { l: 'Gas Turbine', v: '10-30 min', c: '#fb923c', w: 45 },
+                { l: 'Hydro', v: '15-30 sec', c: '#60a5fa', w: 12 },
+                { l: 'Battery', v: '140 ms', c: colors.success, w: 2 },
+              ].map(r => (
+                <div key={r.l} className="flex items-center gap-3.5 mb-4">
+                  <div className="w-[110px] text-[20px] font-medium text-hud-text-muted font-sans text-right">{r.l}</div>
+                  <div className="h-[34px] rounded-md flex items-center pl-3" style={{ width: `${r.w}%`, background: `linear-gradient(90deg, ${r.c}30, ${r.c}80)` }}>
+                    <span className="font-mono text-[20px] font-semibold text-hud-text">{r.v}</span>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-        <div className="mt-5 rounded-[10px]" style={{ padding: '16px 22px', background: `${colors.success}08`, border: `1px solid ${colors.success}25` }}>
-          <div className="text-[20px] font-semibold font-sans" style={{ color: colors.success }}>A battery responds before a gas turbine even knows there's an emergency.</div>
+          </div>
+          <div className="rounded-[10px]" style={{ padding: '16px 22px', background: `${colors.success}08`, border: `1px solid ${colors.success}25` }}>
+            <div className="text-[20px] font-semibold font-sans" style={{ color: colors.success }}>A battery responds before a gas turbine even knows there's an emergency.</div>
+          </div>
         </div>
       </Slide>
 
       {/* 18: Hornsdale */}
       <Slide backgroundColor={bg} padding={pad}>
-        <Badge color={colors.success}>PROOF</Badge>
-        <H color={colors.success}>Hornsdale, December 2017</H>
-        <P>560 MW generator trips. Frequency plunging.</P>
-        <div className="my-3 flex justify-center"><FrequencyLine width={820} height={160} collapse={true} vppSave={true} /></div>
-        <div className="flex gap-4">
-          <StatBox n="140ms" l="Battery Response" c={colors.success} />
-          <StatBox n="28sec" l="Gas Response" c="#fb923c" />
-          <StatBox n="8sec" l="Margin to Blackout" c={colors.danger} />
+        <div className="flex flex-col h-full">
+          <div>
+            <Badge color={colors.success}>PROOF</Badge>
+            <H color={colors.success}>Hornsdale, December 2017</H>
+            <P>560 MW generator trips. Frequency plunging.</P>
+          </div>
+          <div className="flex-1 flex justify-center items-center">
+            <FrequencyLine width={860} height={190} collapse={true} vppSave={true} />
+          </div>
+          <div className="flex gap-4">
+            <StatBox n="140ms" l="Battery Response" c={colors.success} />
+            <StatBox n="28sec" l="Gas Response" c="#fb923c" />
+            <StatBox n="8sec" l="Margin to Blackout" c={colors.danger} />
+          </div>
         </div>
       </Slide>
 
       {/* 19: SA VPP */}
       <Slide backgroundColor={bg} padding={pad}>
-        <Badge color={colors.success}>PROOF</Badge>
-        <H color={colors.success}>SA Virtual Power Plant, 2019</H>
-        <P>748 MW coal plant trips. 1,100 homes respond autonomously.</P>
-        <div className="flex gap-4 my-5">
-          <StatBox n="1,100" l="Homes Responded" c={colors.success} />
-          <StatBox n="2%" l="of Planned Fleet" c={colors.primary} />
-          <StatBox n="0" l="Humans Involved" c={colors.accent} />
-        </div>
-        <div className="rounded-[10px] text-center" style={{ padding: '16px 22px', background: `${colors.success}08`, border: `1px solid ${colors.success}25` }}>
-          <div className="text-[20px] font-semibold text-hud-text font-sans">Eleven hundred homes. Acting as one. <span style={{ color: colors.success }}>Without anyone pushing a button.</span></div>
+        <div className="flex flex-col h-full">
+          <div>
+            <Badge color={colors.success}>PROOF</Badge>
+            <H color={colors.success}>SA Virtual Power Plant, 2019</H>
+            <P>748 MW coal plant trips. 1,100 homes respond autonomously.</P>
+          </div>
+          <div className="flex-1 flex items-center">
+            <div className="flex gap-4 w-full">
+              <StatBox n="1,100" l="Homes Responded" c={colors.success} />
+              <StatBox n="2%" l="of Planned Fleet" c={colors.primary} />
+              <StatBox n="0" l="Humans Involved" c={colors.accent} />
+            </div>
+          </div>
+          <div className="rounded-[10px] text-center" style={{ padding: '16px 22px', background: `${colors.success}08`, border: `1px solid ${colors.success}25` }}>
+            <div className="text-[20px] font-semibold text-hud-text font-sans">Eleven hundred homes. Acting as one. <span style={{ color: colors.success }}>Without anyone pushing a button.</span></div>
+          </div>
         </div>
       </Slide>
 
       {/* 20: KubeCon Analogy */}
       <Slide backgroundColor={bg} padding={pad}>
-        <H>Speaking Your Language</H>
-        <div className="flex gap-5 items-start mt-3">
-          <div className="bg-hud-surface rounded-[10px] p-5 flex-1" style={{ border: `1px solid ${colors.danger}20` }}>
-            <div className="text-[20px] font-semibold font-mono mb-3" style={{ color: colors.danger }}>TRADITIONAL GRID</div>
-            {['Monolith', 'Few generators', 'Manual scaling', 'Single point of failure', 'No observability'].map(x => (
-              <div key={x} className="text-[20px] text-hud-text-muted font-sans py-[5px] border-b border-hud-surface-light">{x}</div>
-            ))}
+        <div className="flex flex-col h-full">
+          <H>Speaking Your Language</H>
+          <div className="flex-1 flex items-center">
+            <div className="flex gap-5 items-start w-full">
+              <div className="bg-hud-surface rounded-[10px] p-5 flex-1" style={{ border: `1px solid ${colors.danger}20` }}>
+                <div className="text-[20px] font-semibold font-mono mb-3" style={{ color: colors.danger }}>TRADITIONAL GRID</div>
+                {['Monolith', 'Few generators', 'Manual scaling', 'Single point of failure', 'No observability'].map(x => (
+                  <div key={x} className="text-[20px] text-hud-text-muted font-sans py-[5px] border-b border-hud-surface-light">{x}</div>
+                ))}
+              </div>
+              <div className="pt-[60px] text-[24px] text-hud-primary font-mono">{'\u2192'}</div>
+              <div className="rounded-[10px] p-5 flex-1" style={{ background: `${colors.success}06`, border: `1px solid ${colors.success}25` }}>
+                <div className="text-[20px] font-semibold font-mono mb-3" style={{ color: colors.success }}>VIRTUAL POWER PLANT</div>
+                {['Distributed microservices', 'Millions of nodes', 'Autoscaling capacity', 'Resilient by design', 'Full observability'].map(x => (
+                  <div key={x} className="text-[20px] text-hud-text font-sans font-medium py-[5px] border-b border-hud-surface-light">{x}</div>
+                ))}
+              </div>
+            </div>
           </div>
-          <div className="pt-[60px] text-[24px] text-hud-primary font-mono">{'\u2192'}</div>
-          <div className="rounded-[10px] p-5 flex-1" style={{ background: `${colors.success}06`, border: `1px solid ${colors.success}25` }}>
-            <div className="text-[20px] font-semibold font-mono mb-3" style={{ color: colors.success }}>VIRTUAL POWER PLANT</div>
-            {['Distributed microservices', 'Millions of nodes', 'Autoscaling capacity', 'Resilient by design', 'Full observability'].map(x => (
-              <div key={x} className="text-[20px] text-hud-text font-sans font-medium py-[5px] border-b border-hud-surface-light">{x}</div>
-            ))}
-          </div>
+          <P size="20px" center style={{ fontFamily: '"JetBrains Mono"' }}>Frequency = SLO &bull; Cascade = failure propagation &bull; Batteries = autoscaling</P>
         </div>
-        <P size="20px" center style={{ marginTop: 16, fontFamily: '"JetBrains Mono"' }}>Frequency = SLO &bull; Cascade = failure propagation &bull; Batteries = autoscaling</P>
       </Slide>
 
       {/* 21: Demo Without VPP */}
       <Slide backgroundColor={bg} padding="16px 40px">
-        <Badge color={colors.danger}>LIVE SIMULATION</Badge>
-        <H size="34px" color={colors.danger}>Cascading Failure — No VPP</H>
-        <div className="flex justify-center mt-1">
-          <CascadeSimulation width={720} height={460} withVPP={false} />
+        <div className="flex flex-col h-full">
+          <div>
+            <Badge color={colors.danger}>LIVE SIMULATION</Badge>
+            <H size="34px" color={colors.danger}>Cascading Failure — No VPP</H>
+          </div>
+          <div className="flex-1 flex justify-center items-center">
+            <CascadeSimulation width={800} height={520} withVPP={false} />
+          </div>
         </div>
       </Slide>
 
       {/* 22: Demo With VPP */}
       <Slide backgroundColor={bg} padding="16px 40px">
-        <Badge color={colors.success}>LIVE SIMULATION</Badge>
-        <H size="34px" color={colors.success}>Same Failure — With VPP</H>
-        <div className="flex justify-center mt-1">
-          <CascadeSimulation width={720} height={460} withVPP={true} />
+        <div className="flex flex-col h-full">
+          <div>
+            <Badge color={colors.success}>LIVE SIMULATION</Badge>
+            <H size="34px" color={colors.success}>Same Failure — With VPP</H>
+          </div>
+          <div className="flex-1 flex justify-center items-center">
+            <CascadeSimulation width={800} height={520} withVPP={true} />
+          </div>
         </div>
       </Slide>
 
@@ -587,27 +641,35 @@ export default function Presentation() {
       </Slide>
 
       {/* Kepler 1: Live Energy Dashboard */}
-      <Slide backgroundColor={bg} padding="20px 36px">
-        <div className="flex items-center gap-2.5 mb-1.5">
-          <Badge color={colors.success}>KEPLER — CNCF</Badge>
-          <span className="text-[20px] text-hud-text-dim font-mono">Per-pod energy monitoring via eBPF</span>
-        </div>
-        <H color={colors.success} size="36px">Experiment: How Much Power Does Our VPP Use?</H>
-        <div className="flex justify-center mt-2">
-          <KeplerDashboard width={920} height={420} />
+      <Slide backgroundColor={bg} padding="16px 36px">
+        <div className="flex flex-col h-full">
+          <div>
+            <div className="flex items-center gap-2.5 mb-1.5">
+              <Badge color={colors.success}>KEPLER — CNCF</Badge>
+              <span className="text-[20px] text-hud-text-dim font-mono">Per-pod energy monitoring via eBPF</span>
+            </div>
+            <H color={colors.success} size="36px">Experiment: How Much Power Does Our VPP Use?</H>
+          </div>
+          <div className="flex-1 flex justify-center items-center">
+            <KeplerDashboard width={960} height={480} />
+          </div>
         </div>
       </Slide>
 
       {/* Kepler 2: Carbon-Aware Scheduling */}
-      <Slide backgroundColor={bg} padding="20px 36px">
-        <div className="flex items-center gap-2.5 mb-1.5">
-          <Badge color={colors.success}>KEPLER + KEDA</Badge>
-          <span className="text-[20px] text-hud-text-dim font-mono">Carbon-aware workload scheduling</span>
-        </div>
-        <H color={colors.success} size="36px">Experiment: The VPP Practices What It Preaches</H>
-        <P size="20px">Batch jobs (model retraining, analytics) scale up when the grid is clean, scale down when it's dirty.</P>
-        <div className="flex justify-center mt-1">
-          <CarbonAwareChart width={920} height={370} />
+      <Slide backgroundColor={bg} padding="16px 36px">
+        <div className="flex flex-col h-full">
+          <div>
+            <div className="flex items-center gap-2.5 mb-1.5">
+              <Badge color={colors.success}>KEPLER + KEDA</Badge>
+              <span className="text-[20px] text-hud-text-dim font-mono">Carbon-aware workload scheduling</span>
+            </div>
+            <H color={colors.success} size="36px">Experiment: The VPP Practices What It Preaches</H>
+            <P size="20px">Batch jobs (model retraining, analytics) scale up when the grid is clean, scale down when it's dirty.</P>
+          </div>
+          <div className="flex-1 flex justify-center items-center">
+            <CarbonAwareChart width={960} height={440} />
+          </div>
         </div>
       </Slide>
 

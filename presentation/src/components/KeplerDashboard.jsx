@@ -169,7 +169,7 @@ export default function KeplerDashboard({ width = 880, height = 420 }) {
   return (
     <canvas
       ref={canvasRef}
-      style={{ width, height, borderRadius: 8, border: `1px solid ${colors.surfaceLight}` }}
+      style={{ width, height }}
     />
   );
 }

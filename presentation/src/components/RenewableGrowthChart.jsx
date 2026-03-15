@@ -152,7 +152,7 @@ export default function RenewableGrowthChart({ width = 850, height = 360 }) {
   return (
     <canvas
       ref={canvasRef}
-      style={{ width, height, borderRadius: 8, border: `1px solid ${colors.surfaceLight}` }}
+      style={{ width, height }}
     />
   );
 }

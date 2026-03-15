@@ -290,7 +290,7 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
     <div style={{ position: 'relative' }}>
       <canvas
         ref={canvasRef}
-        style={{ width, height, borderRadius: 8, border: `1px solid ${colors.surfaceLight}` }}
+        style={{ width, height }}
       />
       <div style={{ position: 'absolute', bottom: 12, right: 12, display: 'flex', gap: 6 }}>
         {[

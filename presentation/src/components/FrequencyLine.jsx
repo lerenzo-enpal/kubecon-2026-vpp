@@ -131,8 +131,7 @@ export default function FrequencyLine({
       style={{
         width,
         height,
-        borderRadius: 8,
-        border: `1px solid ${colors.surfaceLight}`,
+        /* border removed for seamless slide integration */
       }}
     />
   );

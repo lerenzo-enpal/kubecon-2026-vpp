@@ -172,8 +172,7 @@ export default function EUGridMap({ width = 900, height = 500 }) {
     <canvas
       ref={canvasRef}
       style={{
-        width, height, borderRadius: 8,
-        border: `1px solid ${colors.surfaceLight}`,
+        width, height,
       }}
     />
   );

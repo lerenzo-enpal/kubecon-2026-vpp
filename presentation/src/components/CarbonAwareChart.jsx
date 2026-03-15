@@ -229,7 +229,7 @@ export default function CarbonAwareChart({ width = 880, height = 380 }) {
   return (
     <canvas
       ref={canvasRef}
-      style={{ width, height, borderRadius: 8, border: `1px solid ${colors.surfaceLight}` }}
+      style={{ width, height }}
     />
   );
 }
