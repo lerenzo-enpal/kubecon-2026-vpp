@@ -3,6 +3,7 @@ import { Slide, Appear, Notes } from 'spectacle';
 import { colors } from '../theme';
 import { SlideContainer, GlowText, Subtitle } from '../components/ui';
 import GridPulse from '../components/GridPulse';
+import LargestMachineZoom from '../components/LargestMachineZoom';
 
 /**
  * Three substantially different versions of bridge slides between
@@ -63,7 +64,7 @@ export function versionA() {
                 { v: '305K km', u: '', c: colors.primary, d: 'transmission lines' },
                 { v: '400M', u: '', c: colors.success, d: 'connected consumers' },
                 { v: '1,100 GW', u: '', c: colors.secondary, d: 'installed capacity' },
-                { v: '3,000 TWh', u: '/yr', c: colors.accent, d: 'annual production' },
+                { v: '3,000 TWh', u: '', c: colors.accent, d: 'annual production' },
               ].map((s, i) => (
                 <div key={i} className="flex-1 min-w-0 bg-hud-surface rounded-lg px-4 py-4 text-center" style={{ border: `1px solid ${s.c}15` }}>
                   <div className="text-[32px] font-extrabold font-mono whitespace-nowrap" style={{ color: s.c }}>
@@ -91,57 +92,76 @@ export function versionA() {
 // Cinematic feel — numbers appear one by one, build tension
 // ═══════════════════════════════════════════════════════════════════════════
 export function versionB() {
+  const rows = [
+    {
+      grid: 'Every electron consumed the instant it\'s produced',
+      tech: 'The internet can drop packets and retry',
+      color: colors.danger,
+    },
+    {
+      grid: 'Zero storage — no buffer between supply and demand',
+      tech: 'Software systems have caches, queues, CDNs',
+      color: colors.accent,
+    },
+    {
+      grid: 'Failure cascades by physics — unstoppable',
+      tech: 'Failure is contained by circuit breakers and retries',
+      color: colors.primary,
+    },
+    {
+      grid: '2.3 million workers. Never a maintenance window.',
+      tech: '30,000 flights/day in EU ATC — but planes can hold',
+      color: colors.success,
+    },
+  ];
+
   return [
-    /* ── B-2: No Cache, No Buffer ── */
     <Slide key="grid-scale-b2" backgroundColor={colors.bg} padding="36px 56px">
-      <div className="flex flex-col h-full w-full items-center justify-center">
-        <div className="text-center max-w-[800px] w-full">
-          <GlowText size="40px" style={{ textAlign: 'center', marginBottom: 32 }}>
-            The Grid vs. Tech Infrastructure
-          </GlowText>
-          <div className="text-left">
-            {[
-              {
-                grid: 'Every electron consumed the instant it\'s produced',
-                tech: 'The internet can drop packets and retry',
-                color: colors.danger,
-              },
-              {
-                grid: 'Zero storage — no buffer between supply and demand',
-                tech: 'Software systems have caches, queues, CDNs',
-                color: colors.accent,
-              },
-              {
-                grid: 'Failure cascades by physics — unstoppable',
-                tech: 'Failure is contained by circuit breakers and retries',
-                color: colors.primary,
-              },
-              {
-                grid: '2.3 million workers. Never a maintenance window.',
-                tech: '30,000 flights/day in EU ATC — but planes can hold',
-                color: colors.success,
-              },
-            ].map((row, i) => (
-              <Appear key={i}>
-                <div className="flex gap-4 mb-4 items-start">
-                  <div className="flex-1 rounded-lg p-4" style={{
-                    background: `${row.color}06`,
-                    border: `1px solid ${row.color}15`,
-                  }}>
-                    <div className="text-[20px] font-semibold font-sans" style={{ color: row.color }}>
-                      {row.grid}
-                    </div>
-                  </div>
-                  <div className="text-[22px] text-hud-text-dim font-mono pt-3">vs</div>
-                  <div className="flex-1 rounded-lg p-4 bg-hud-surface border border-hud-surface-light">
-                    <div className="text-[20px] text-hud-text-muted font-sans">
-                      {row.tech}
-                    </div>
+      <style>{`
+        @keyframes gridRowIn {
+          0% { opacity: 0; transform: translateX(-30px); filter: blur(4px); }
+          100% { opacity: 1; transform: translateX(0); filter: blur(0); }
+        }
+        @keyframes techRowIn {
+          0% { opacity: 0; transform: translateX(30px); filter: blur(4px); }
+          100% { opacity: 1; transform: translateX(0); filter: blur(0); }
+        }
+        @keyframes vsIn {
+          0% { opacity: 0; transform: scale(0.5); }
+          100% { opacity: 1; transform: scale(1); }
+        }
+      `}</style>
+      <div className="flex flex-col h-full w-full items-center">
+        <GlowText size="40px" style={{ textAlign: 'center', marginBottom: 0 }}>
+          The Grid vs. Tech Infrastructure
+        </GlowText>
+        <div className="flex-1 flex flex-col justify-center w-full max-w-[880px] gap-5">
+          {rows.map((row, i) => {
+            const delay = 0.3 + i * 0.35;
+            return (
+              <div key={i} className="flex gap-4 items-start">
+                <div className="flex-1 rounded-lg p-4" style={{
+                  background: `${row.color}06`,
+                  border: `1px solid ${row.color}15`,
+                  animation: `gridRowIn 0.6s ease-out ${delay}s both`,
+                }}>
+                  <div className="text-[20px] font-semibold font-sans" style={{ color: row.color }}>
+                    {row.grid}
                   </div>
                 </div>
-              </Appear>
-            ))}
-          </div>
+                <div className="text-[22px] text-hud-text-dim font-mono pt-3" style={{
+                  animation: `vsIn 0.3s ease-out ${delay + 0.15}s both`,
+                }}>vs</div>
+                <div className="flex-1 rounded-lg p-4 bg-hud-surface border border-hud-surface-light" style={{
+                  animation: `techRowIn 0.6s ease-out ${delay + 0.1}s both`,
+                }}>
+                  <div className="text-[20px] text-hud-text-muted font-sans">
+                    {row.tech}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
       <Notes>
@@ -188,5 +208,61 @@ export function versionC() {
       </Notes>
     </Slide>,
 
+  ];
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// VERSION D: "The Zoom Out"
+// Starts with stat boxes, dramatic ZERO DOWNTIME reveal, then a full-slide
+// zoom-out animation comparing VW Wolfsburg (60K) to the EU grid (2.3M).
+// ═══════════════════════════════════════════════════════════════════════════
+export function versionD() {
+  return [
+    <Slide key="grid-scale-d1" backgroundColor={colors.bg} padding="36px 56px">
+      <div className="relative flex flex-col w-full h-full">
+        {/* Canvas animation layer */}
+        <LargestMachineZoom />
+
+        {/* Title — always visible */}
+        <div className="relative z-10">
+          <GlowText size="40px">Running the Largest Machine</GlowText>
+        </div>
+
+        {/* Spacer */}
+        <div className="flex-1" />
+
+        {/* Stat boxes at bottom — always visible */}
+        <div className="relative z-10">
+          <div className="flex gap-3 w-full">
+            {[
+              { v: '36', u: 'countries', c: colors.primary, d: 'synced on one frequency' },
+              { v: '305K km', u: '', c: colors.primary, d: 'transmission lines' },
+              { v: '400M', u: '', c: colors.success, d: 'connected consumers' },
+              { v: '1,100 GW', u: '', c: colors.secondary, d: 'installed capacity' },
+              { v: '3,000 TWh', u: '', c: colors.accent, d: 'annual production' },
+            ].map((s, i) => (
+              <div key={i} className="flex-1 min-w-0 rounded-lg px-4 py-4 text-center" style={{
+                background: `${colors.surface}cc`,
+                border: `1px solid ${s.c}15`,
+                backdropFilter: 'blur(8px)',
+              }}>
+                <div className="text-[32px] font-extrabold font-mono whitespace-nowrap" style={{ color: s.c }}>
+                  {s.v}{s.u && <span className="text-[20px] font-normal text-hud-text-muted ml-0.5">{s.u}</span>}
+                </div>
+                <div className="text-[16px] text-hud-text-muted font-sans mt-1">{s.d}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <Notes>
+        "This is the largest machine ever built. Let that sink in.
+        Zero downtime — it has never been turned off. No maintenance window.
+        No 'we'll fix it in staging.' It's production, all the time, forever.
+        And look at the scale: VW Wolfsburg, the world's biggest factory,
+        is a speck compared to this grid. 60,000 workers vs 2.3 million.
+        This is the system we're asking to absorb 50% renewables."
+      </Notes>
+    </Slide>,
   ];
 }
