@@ -576,37 +576,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 29: The Economic Impact of Flexibility */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col h-full">
-          <H color={colors.success}><span style={{ color: colors.danger, marginRight: 12, fontSize: '0.6em', verticalAlign: 'middle', opacity: 0.7 }}>[WIP]</span>The Economic Impact of Flexibility</H>
-          <P>Flexible demand doesn't just stabilize the grid — it makes electricity dramatically cheaper.</P>
-          <div className="flex-1 flex flex-col justify-center gap-5 my-3">
-            <div className="flex gap-4">
-              <div className="flex-1 rounded-xl p-5" style={{ background: `${colors.success}06`, border: `1px solid ${colors.success}20` }}>
-                <div className="text-[20px] font-semibold font-mono mb-2" style={{ color: colors.success }}>RMI — Power Shift (Texas / ERCOT, modeled)</div>
-                <div className="text-[20px] text-hud-text font-sans mb-1">Full demand flexibility cuts net generation costs by <span className="font-semibold" style={{ color: colors.success }}>20%</span></div>
-                <div className="text-[20px] text-hud-text font-sans mb-1">Saves <span className="font-semibold" style={{ color: colors.success }}>$140/household/year</span> with just 2 flexible devices</div>
-                <div className="text-[20px] text-hud-text font-sans">Avoids <span className="font-semibold" style={{ color: colors.success }}>75%</span> of new gas peaker units</div>
-              </div>
-              <div className="flex-1 rounded-xl p-5" style={{ background: `${colors.primary}06`, border: `1px solid ${colors.primary}20` }}>
-                <div className="text-[20px] font-semibold font-mono mb-2" style={{ color: colors.primary }}>Brattle Group — National US (projected)</div>
-                <div className="text-[20px] text-hud-text font-sans mb-1">60 GW of VPPs save <span className="font-semibold" style={{ color: colors.primary }}>$15–35B</span> over 10 years</div>
-                <div className="text-[20px] text-hud-text font-sans mb-1">Household bills <span className="font-semibold" style={{ color: colors.primary }}>down up to 20%</span> (Australia ISP 2024)</div>
-                <div className="text-[20px] text-hud-text font-sans">Home batteries avoid <span className="font-semibold" style={{ color: colors.primary }}>$4.1B</span> in grid investment</div>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <StatBox n="20%" l="Generation cost reduction at full flexibility" c={colors.success} />
-              <StatBox n="$10–15B/yr" l="US grid savings from 2 flexible devices per home" c={colors.primary} />
-              <StatBox n="8%" l="Peak demand reduction from smart thermostats + water heaters" c={colors.accent} />
-            </div>
-          </div>
-          <P size="20px" style={{ fontStyle: 'italic' }}>"The cheapest megawatt is the one you never have to generate."</P>
-        </div>
-      </Slide>
-
-      {/* 30: SA Blackout, 2016 */}
+      {/* SA Blackout, 2016 */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           <SAMapHUD width="100%" height="100%" variant="blackout" />
@@ -650,6 +620,36 @@ export default function Presentation() {
       </Slide>
 
       {/* ═══════ APPENDIX ═══════ */}
+
+      {/* The Economic Impact of Flexibility [WIP] */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col h-full">
+          <H color={colors.success}><span style={{ color: colors.danger, marginRight: 12, fontSize: '0.6em', verticalAlign: 'middle', opacity: 0.7 }}>[WIP]</span>The Economic Impact of Flexibility</H>
+          <P>Flexible demand doesn't just stabilize the grid — it makes electricity dramatically cheaper.</P>
+          <div className="flex-1 flex flex-col justify-center gap-5 my-3">
+            <div className="flex gap-4">
+              <div className="flex-1 rounded-xl p-5" style={{ background: `${colors.success}06`, border: `1px solid ${colors.success}20` }}>
+                <div className="text-[20px] font-semibold font-mono mb-2" style={{ color: colors.success }}>RMI — Power Shift (Texas / ERCOT, modeled)</div>
+                <div className="text-[20px] text-hud-text font-sans mb-1">Full demand flexibility cuts net generation costs by <span className="font-semibold" style={{ color: colors.success }}>20%</span></div>
+                <div className="text-[20px] text-hud-text font-sans mb-1">Saves <span className="font-semibold" style={{ color: colors.success }}>$140/household/year</span> with just 2 flexible devices</div>
+                <div className="text-[20px] text-hud-text font-sans">Avoids <span className="font-semibold" style={{ color: colors.success }}>75%</span> of new gas peaker units</div>
+              </div>
+              <div className="flex-1 rounded-xl p-5" style={{ background: `${colors.primary}06`, border: `1px solid ${colors.primary}20` }}>
+                <div className="text-[20px] font-semibold font-mono mb-2" style={{ color: colors.primary }}>Brattle Group — National US (projected)</div>
+                <div className="text-[20px] text-hud-text font-sans mb-1">60 GW of VPPs save <span className="font-semibold" style={{ color: colors.primary }}>$15–35B</span> over 10 years</div>
+                <div className="text-[20px] text-hud-text font-sans mb-1">Household bills <span className="font-semibold" style={{ color: colors.primary }}>down up to 20%</span> (Australia ISP 2024)</div>
+                <div className="text-[20px] text-hud-text font-sans">Home batteries avoid <span className="font-semibold" style={{ color: colors.primary }}>$4.1B</span> in grid investment</div>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <StatBox n="20%" l="Generation cost reduction at full flexibility" c={colors.success} />
+              <StatBox n="$10–15B/yr" l="US grid savings from 2 flexible devices per home" c={colors.primary} />
+              <StatBox n="8%" l="Peak demand reduction from smart thermostats + water heaters" c={colors.accent} />
+            </div>
+          </div>
+          <P size="20px" style={{ fontStyle: 'italic' }}>"The cheapest megawatt is the one you never have to generate."</P>
+        </div>
+      </Slide>
 
       {/* Now We Shift the Load */}
       <Slide backgroundColor={bg} padding="20px 40px">
