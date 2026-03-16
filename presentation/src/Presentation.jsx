@@ -359,7 +359,7 @@ export default function Presentation() {
           <H color={colors.accent}>The Cost of Wasted Energy</H>
           <P size="20px">Germany has curtailed <span className="font-semibold" style={{ color: colors.accent }}>65.7 TWh</span> of clean energy since 2015 — enough to power 2.7 million homes every year. The cost keeps compounding.</P>
           <div className="flex-1 flex justify-center items-center">
-            <CurtailmentChart width={940} height={440} />
+            <CurtailmentChart width={940} height={340} />
           </div>
         </div>
       </Slide>

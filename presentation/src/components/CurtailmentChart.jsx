@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useContext } from 'react';
+import React, { useEffect, useRef, useContext, useState } from 'react';
 import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
 
@@ -44,10 +44,11 @@ function lerp(a, b, t) {
   return a + (b - a) * Math.max(0, Math.min(1, t));
 }
 
-export default function CurtailmentChart({ width = 900, height = 440 }) {
+export default function CurtailmentChart({ width = 900, height = 380 }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const tRef = useRef(0);
+  const [animFrac, setAnimFrac] = useState(0);
   const slideContext = useContext(SlideContext);
 
   useEffect(() => {
@@ -60,7 +61,7 @@ export default function CurtailmentChart({ width = 900, height = 440 }) {
     const padLeft = 50;
     const padRight = 20;
     const padTop = 40;
-    const padBottom = 70;
+    const padBottom = 40;
     const chartW = width - padLeft - padRight;
     const chartH = height - padTop - padBottom;
     const barGroupW = chartW / DATA.length;
@@ -107,7 +108,7 @@ export default function CurtailmentChart({ width = 900, height = 440 }) {
         ctx.stroke();
 
         if (gv % 20 === 0) {
-          ctx.fillStyle = colors.textDim + '50';
+          ctx.fillStyle = colors.textDim + 'aa';
           ctx.font = '9px JetBrains Mono';
           ctx.textAlign = 'right';
           ctx.fillText(`${gv}`, padLeft - 6, y + 3);
@@ -120,7 +121,7 @@ export default function CurtailmentChart({ width = 900, height = 440 }) {
       ctx.translate(12, padTop + chartH / 2);
       ctx.rotate(-Math.PI / 2);
       ctx.font = '9px JetBrains Mono';
-      ctx.fillStyle = colors.accent + '80';
+      ctx.fillStyle = colors.accent;
       ctx.textAlign = 'center';
       ctx.fillText('Cumulative TWh', 0, 0);
       ctx.restore();
@@ -187,14 +188,14 @@ export default function CurtailmentChart({ width = 900, height = 440 }) {
 
         // Year label
         ctx.font = '10px JetBrains Mono';
-        ctx.fillStyle = colors.textDim + '80';
+        ctx.fillStyle = colors.textMuted;
         ctx.textAlign = 'center';
         ctx.fillText(d.year, x + barW / 2, padTop + chartH + 14);
 
         // EUR compensation (small text below year)
         if (barFrac > 0.5) {
-          ctx.font = '8px JetBrains Mono';
-          ctx.fillStyle = colors.danger + '60';
+          ctx.font = '9px JetBrains Mono';
+          ctx.fillStyle = colors.danger + 'aa';
           ctx.fillText(`${(d.eurM / 1000).toFixed(1)}B`, x + barW / 2, padTop + chartH + 26);
         }
       }
@@ -267,7 +268,7 @@ export default function CurtailmentChart({ width = 900, height = 440 }) {
 
       // Right axis labels (CO2)
       ctx.font = '9px JetBrains Mono';
-      ctx.fillStyle = colors.textDim + '50';
+      ctx.fillStyle = colors.textDim + 'aa';
       ctx.textAlign = 'left';
       for (let gv = 0; gv <= maxCo2; gv += 10) {
         const y = padTop + chartH - (gv / maxCo2) * chartH;
@@ -279,46 +280,13 @@ export default function CurtailmentChart({ width = 900, height = 440 }) {
       ctx.translate(width - 4, padTop + chartH / 2);
       ctx.rotate(-Math.PI / 2);
       ctx.font = '9px JetBrains Mono';
-      ctx.fillStyle = colors.textMuted + '60';
+      ctx.fillStyle = colors.textMuted;
       ctx.textAlign = 'center';
       ctx.fillText('Cumulative CO2', 0, 0);
       ctx.restore();
 
-      // Summary callout boxes at bottom — animated counters
-      const callY = padTop + chartH + 32;
-      // Animated totals: lerp from 0 to final based on overall progress
-      const animFrac = 1 - Math.pow(1 - Math.min(1, t), 3);
-      const animTwh = CUM[DATA.length - 1].twh * animFrac;
-      const animEurM = CUM[DATA.length - 1].eurM * animFrac;
-      const animCo2 = CUM[DATA.length - 1].co2Mt * animFrac;
-      const animHomes = DATA[DATA.length - 1].homes * animFrac;
-      const callouts = [
-        { label: 'Total Wasted', value: `${animTwh.toFixed(1)} TWh`, color: colors.accent },
-        { label: 'Compensation Paid', value: `EUR ${(animEurM / 1000).toFixed(1)}B`, color: colors.danger },
-        { label: 'Avoidable CO2', value: `${animCo2.toFixed(1)} Mt`, color: colors.textMuted },
-        { label: '2024 annual equiv.', value: `${animHomes.toFixed(1)}M homes/yr`, color: colors.primary },
-      ];
-      const callW = (chartW - 30) / 4;
-      callouts.forEach((c, i) => {
-        const cx = padLeft + i * (callW + 10);
-        // Background
-        ctx.fillStyle = c.color + '10';
-        ctx.strokeStyle = c.color + '35';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.roundRect(cx, callY, callW, 32, 4);
-        ctx.fill();
-        ctx.stroke();
-
-        ctx.font = '9px JetBrains Mono';
-        ctx.fillStyle = c.color + 'cc';
-        ctx.textAlign = 'left';
-        ctx.fillText(c.label, cx + 6, callY + 12);
-
-        ctx.font = 'bold 13px JetBrains Mono';
-        ctx.fillStyle = c.color;
-        ctx.fillText(c.value, cx + 6, callY + 26);
-      });
+      // Push animation progress to React state for bottom stat boxes
+      setAnimFrac(1 - Math.pow(1 - Math.min(1, t), 3));
 
       // Legend
       const legY = 22;
@@ -354,10 +322,64 @@ export default function CurtailmentChart({ width = 900, height = 440 }) {
     }
   }, [slideContext?.isSlideActive]);
 
+  const animTwh = CUM[DATA.length - 1].twh * animFrac;
+  const animEurM = CUM[DATA.length - 1].eurM * animFrac;
+  const animCo2 = CUM[DATA.length - 1].co2Mt * animFrac;
+  const animHomes = DATA[DATA.length - 1].homes * animFrac;
+
+  const stats = [
+    { label: 'Total Wasted', value: `${animTwh.toFixed(1)} TWh`, color: colors.accent },
+    { label: 'Compensation Paid', value: `EUR ${(animEurM / 1000).toFixed(1)}B`, color: colors.danger },
+    { label: 'Avoidable CO2', value: `${animCo2.toFixed(1)} Mt`, color: colors.textMuted },
+    { label: '2024 Annual Equiv.', value: animHomes, fmt: 'homes', color: colors.primary },
+  ];
+
   return (
-    <canvas
-      ref={canvasRef}
-      style={{ width, height }}
-    />
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+      <canvas ref={canvasRef} style={{ width, height }} />
+      <div style={{
+        display: 'flex', gap: 10, width: width,
+        opacity: animFrac > 0.01 ? 1 : 0,
+        transform: `translateY(${(1 - Math.min(1, animFrac * 3)) * 12}px)`,
+        transition: 'opacity 0.3s',
+      }}>
+        {stats.map((s, i) => (
+          <div key={i} style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-end',
+            background: s.color + '0a',
+            border: `1px solid ${s.color}30`,
+            borderRadius: 8,
+            padding: '8px 14px',
+            boxShadow: `0 0 20px ${s.color}10`,
+          }}>
+            <div style={{
+              fontSize: 15,
+              fontFamily: '"JetBrains Mono", monospace',
+              color: s.color + 'cc',
+              textTransform: 'uppercase',
+              letterSpacing: '0.04em',
+              marginBottom: 2,
+            }}>
+              {s.label}
+            </div>
+            <div style={{
+              fontSize: 24,
+              fontWeight: 800,
+              fontFamily: '"JetBrains Mono", monospace',
+              color: s.color,
+              textShadow: `0 0 16px ${s.color}30`,
+              whiteSpace: 'nowrap',
+            }}>
+              {s.fmt === 'homes'
+                ? <>{s.value.toFixed(1)}M homes<span style={{ fontSize: 15, fontWeight: 600 }}>/yr</span></>
+                : s.value}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
