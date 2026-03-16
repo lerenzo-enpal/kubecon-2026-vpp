@@ -44,7 +44,7 @@ function lerp(a, b, t) {
   return a + (b - a) * Math.max(0, Math.min(1, t));
 }
 
-export default function CurtailmentChart({ width = 900, height = 400 }) {
+export default function CurtailmentChart({ width = 900, height = 440 }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const tRef = useRef(0);
@@ -60,7 +60,7 @@ export default function CurtailmentChart({ width = 900, height = 400 }) {
     const padLeft = 50;
     const padRight = 20;
     const padTop = 40;
-    const padBottom = 55;
+    const padBottom = 70;
     const chartW = width - padLeft - padRight;
     const chartH = height - padTop - padBottom;
     const barGroupW = chartW / DATA.length;
@@ -76,11 +76,10 @@ export default function CurtailmentChart({ width = 900, height = 400 }) {
       lastTime = now;
 
       if (isActive) {
-        tRef.current = Math.min(tRef.current + dt * 0.5, DATA.length);
+        // Smooth wave: t goes from 0 to 1 over ~3 seconds
+        tRef.current = Math.min(tRef.current + dt / 3.0, 1.0);
       }
       const t = tRef.current;
-      const visibleBars = Math.min(Math.floor(t) + 1, DATA.length);
-      const lastBarFrac = t - Math.floor(Math.min(t, DATA.length - 1));
 
       ctx.clearRect(0, 0, width, height);
 
@@ -126,10 +125,15 @@ export default function CurtailmentChart({ width = 900, height = 400 }) {
       ctx.fillText('Cumulative TWh', 0, 0);
       ctx.restore();
 
-      // Draw bars - stacked: cumulative fill + annual highlight
-      for (let i = 0; i < visibleBars; i++) {
+      // Draw bars - wave-based smooth animation
+      for (let i = 0; i < DATA.length; i++) {
         const d = CUM[i];
-        const barFrac = i < visibleBars - 1 ? 1 : Math.min(1, lastBarFrac + 0.3);
+        // Wave: each bar starts a bit after the previous, creating a sweep
+        const barDelay = i / (DATA.length + 2);
+        const barT = Math.max(0, Math.min(1, (t - barDelay) / (1 - barDelay * 0.8)));
+        // Ease out cubic for smooth deceleration
+        const barFrac = 1 - Math.pow(1 - barT, 3);
+        if (barFrac <= 0) continue;
         const x = padLeft + i * barGroupW + barGap / 2;
 
         // Cumulative TWh bar
@@ -195,41 +199,70 @@ export default function CurtailmentChart({ width = 900, height = 400 }) {
         }
       }
 
-      // CO2 line overlay (secondary axis on right)
+      // CO2 line overlay (secondary axis on right) — drawn smoothly like a pen
       const maxCo2 = 30;
-      if (visibleBars > 1) {
+      // lineProgress: 0 = nothing drawn, DATA.length-1 = fully drawn
+      const lineProgress = Math.max(0, t * (DATA.length - 1));
+
+      if (lineProgress > 0.01) {
+        const getXY = (i) => ({
+          x: padLeft + i * barGroupW + barGap / 2 + barW / 2,
+          y: padTop + chartH - (CUM[i].co2Mt / maxCo2) * chartH,
+        });
+
         ctx.beginPath();
         ctx.strokeStyle = colors.textMuted;
         ctx.lineWidth = 2;
         ctx.setLineDash([]);
-        for (let i = 0; i < visibleBars; i++) {
-          const d = CUM[i];
-          const x = padLeft + i * barGroupW + barGap / 2 + barW / 2;
-          const y = padTop + chartH - (d.co2Mt / maxCo2) * chartH;
-          if (i === 0) ctx.moveTo(x, y);
-          else ctx.lineTo(x, y);
+
+        const fullSegs = Math.floor(lineProgress);
+        const segFrac = lineProgress - fullSegs;
+
+        // Draw complete segments
+        const p0 = getXY(0);
+        ctx.moveTo(p0.x, p0.y);
+        for (let i = 1; i <= fullSegs && i < DATA.length; i++) {
+          const p = getXY(i);
+          ctx.lineTo(p.x, p.y);
+        }
+
+        // Draw partial leading segment
+        if (fullSegs < DATA.length - 1 && segFrac > 0) {
+          const from = getXY(fullSegs);
+          const to = getXY(fullSegs + 1);
+          ctx.lineTo(
+            from.x + (to.x - from.x) * segFrac,
+            from.y + (to.y - from.y) * segFrac,
+          );
         }
         ctx.stroke();
 
-        // CO2 dots
-        for (let i = 0; i < visibleBars; i++) {
-          const d = CUM[i];
-          const x = padLeft + i * barGroupW + barGap / 2 + barW / 2;
-          const y = padTop + chartH - (d.co2Mt / maxCo2) * chartH;
+        // CO2 dots — appear as line passes through them
+        for (let i = 0; i < DATA.length; i++) {
+          if (i > lineProgress + 0.1) break;
+          const p = getXY(i);
+          const dotAlpha = Math.min(1, (lineProgress - i + 0.5) * 2);
+          if (dotAlpha <= 0) continue;
           ctx.fillStyle = colors.textMuted;
+          ctx.globalAlpha = dotAlpha;
           ctx.beginPath();
-          ctx.arc(x, y, 3, 0, Math.PI * 2);
+          ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
           ctx.fill();
+          ctx.globalAlpha = 1;
         }
 
-        // CO2 label on last visible point
-        const lastD = CUM[visibleBars - 1];
-        const lx = padLeft + (visibleBars - 1) * barGroupW + barGap / 2 + barW / 2;
-        const ly = padTop + chartH - (lastD.co2Mt / maxCo2) * chartH;
-        ctx.font = 'bold 11px JetBrains Mono';
-        ctx.fillStyle = colors.textMuted;
-        ctx.textAlign = 'left';
-        ctx.fillText(`${lastD.co2Mt.toFixed(1)} Mt CO2`, lx + 8, ly - 6);
+        // CO2 label on last point — fade in near end
+        if (lineProgress > DATA.length - 2) {
+          const lastD = CUM[DATA.length - 1];
+          const lx = padLeft + (DATA.length - 1) * barGroupW + barGap / 2 + barW / 2;
+          const ly = padTop + chartH - (lastD.co2Mt / maxCo2) * chartH;
+          ctx.font = 'bold 11px JetBrains Mono';
+          ctx.fillStyle = colors.textMuted;
+          ctx.textAlign = 'left';
+          ctx.globalAlpha = Math.min(1, lineProgress - (DATA.length - 2));
+          ctx.fillText(`${lastD.co2Mt.toFixed(1)} Mt CO2`, lx + 8, ly - 6);
+          ctx.globalAlpha = 1;
+        }
       }
 
       // Right axis labels (CO2)
@@ -251,56 +284,61 @@ export default function CurtailmentChart({ width = 900, height = 400 }) {
       ctx.fillText('Cumulative CO2', 0, 0);
       ctx.restore();
 
-      // Summary callout boxes at bottom
+      // Summary callout boxes at bottom — animated counters
       const callY = padTop + chartH + 32;
-      const totalVisible = CUM[visibleBars - 1];
+      // Animated totals: lerp from 0 to final based on overall progress
+      const animFrac = 1 - Math.pow(1 - Math.min(1, t), 3);
+      const animTwh = CUM[DATA.length - 1].twh * animFrac;
+      const animEurM = CUM[DATA.length - 1].eurM * animFrac;
+      const animCo2 = CUM[DATA.length - 1].co2Mt * animFrac;
+      const animHomes = DATA[DATA.length - 1].homes * animFrac;
       const callouts = [
-        { label: 'Total Wasted', value: `${totalVisible.twh.toFixed(1)} TWh`, color: colors.accent },
-        { label: 'Compensation Paid', value: `EUR ${(totalVisible.eurM / 1000).toFixed(1)}B`, color: colors.danger },
-        { label: 'Avoidable CO2', value: `${totalVisible.co2Mt.toFixed(1)} Mt`, color: colors.textMuted },
-        { label: `${totalVisible.year} alone`, value: `${CUM[visibleBars - 1].homes.toFixed(1)}M homes`, color: colors.primary },
+        { label: 'Total Wasted', value: `${animTwh.toFixed(1)} TWh`, color: colors.accent },
+        { label: 'Compensation Paid', value: `EUR ${(animEurM / 1000).toFixed(1)}B`, color: colors.danger },
+        { label: 'Avoidable CO2', value: `${animCo2.toFixed(1)} Mt`, color: colors.textMuted },
+        { label: '2024 annual equiv.', value: `${animHomes.toFixed(1)}M homes/yr`, color: colors.primary },
       ];
       const callW = (chartW - 30) / 4;
       callouts.forEach((c, i) => {
         const cx = padLeft + i * (callW + 10);
         // Background
-        ctx.fillStyle = c.color + '08';
-        ctx.strokeStyle = c.color + '25';
+        ctx.fillStyle = c.color + '10';
+        ctx.strokeStyle = c.color + '35';
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.roundRect(cx, callY, callW, 28, 4);
+        ctx.roundRect(cx, callY, callW, 32, 4);
         ctx.fill();
         ctx.stroke();
 
-        ctx.font = '8px JetBrains Mono';
-        ctx.fillStyle = c.color + '80';
+        ctx.font = '9px JetBrains Mono';
+        ctx.fillStyle = c.color + 'cc';
         ctx.textAlign = 'left';
-        ctx.fillText(c.label, cx + 6, callY + 10);
+        ctx.fillText(c.label, cx + 6, callY + 12);
 
-        ctx.font = 'bold 11px JetBrains Mono';
+        ctx.font = 'bold 13px JetBrains Mono';
         ctx.fillStyle = c.color;
-        ctx.fillText(c.value, cx + 6, callY + 22);
+        ctx.fillText(c.value, cx + 6, callY + 26);
       });
 
       // Legend
       const legY = 22;
       const legX = width - padRight - 200;
-      ctx.font = '9px Inter';
+      ctx.font = '10px JetBrains Mono';
       // Bar legend
-      ctx.fillStyle = colors.accent + '70';
+      ctx.fillStyle = colors.accent + 'cc';
       ctx.fillRect(legX, legY - 4, 10, 8);
-      ctx.fillStyle = colors.textMuted + '80';
+      ctx.fillStyle = colors.textMuted;
       ctx.textAlign = 'left';
       ctx.fillText('Curtailed TWh (cumulative)', legX + 14, legY + 4);
       // Line legend
       ctx.strokeStyle = colors.textMuted;
       ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.moveTo(legX, legY + 12);
-      ctx.lineTo(legX + 10, legY + 12);
+      ctx.moveTo(legX, legY + 14);
+      ctx.lineTo(legX + 10, legY + 14);
       ctx.stroke();
-      ctx.fillStyle = colors.textMuted + '80';
-      ctx.fillText('Avoidable CO2 (cumulative)', legX + 14, legY + 16);
+      ctx.fillStyle = colors.textMuted;
+      ctx.fillText('Avoidable CO2 (cumulative)', legX + 14, legY + 18);
 
       if (isActive) animRef.current = requestAnimationFrame(draw);
     };

@@ -9,6 +9,16 @@ import { colors } from '../theme';
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
+// ── Cumulative stats per year (from docs/electricity-price-research.md) ──
+const YEAR_STATS = {
+  2015: { negHours: 126, curtailedTwh: 4.72, compensationEurM: 478, co2Mt: 2.49 },
+  2018: { negHours: 100, curtailedTwh: 5.40, compensationEurM: 635, co2Mt: 2.53 },
+  2021: { negHours: 139, curtailedTwh: 5.82, compensationEurM: 807, co2Mt: 2.44 },
+  2023: { negHours: 301, curtailedTwh: 10.48, compensationEurM: 577, co2Mt: 3.98 },
+  2025: { negHours: 700, curtailedTwh: null, compensationEurM: null, co2Mt: null },
+  2030: { negHours: '1000+', curtailedTwh: null, compensationEurM: null, co2Mt: null },
+};
+
 // German base demand profile (GW, typical summer weekday without solar)
 const baseDemand = [
   28, 26, 25, 24, 24, 25, 28, 35, 42, 45, 46, 47,
@@ -82,7 +92,7 @@ function lerp(a, b, t) {
   return a + (b - a) * Math.max(0, Math.min(1, t));
 }
 
-export default function DuckCurveChart({ width = 850, height = 360 }) {
+export default function DuckCurveChart({ width = 1100, height = 480 }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const tRef = useRef(0);
@@ -117,8 +127,8 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
     ctx.scale(2, 2);
 
     const padLeft = 60;
-    const padRight = 20;
-    const padTop = 45;
+    const padRight = 200;
+    const padTop = 55;
     const padBottom = 50;
     const chartW = width - padLeft - padRight;
     const chartH = height - padTop - padBottom;
@@ -378,15 +388,83 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
         ctx.fillText('Peakers spinning up', rampX + 18, (rampY1 + rampY2) / 2 + 32);
       }
 
-      // Year indicator (prominent)
+      // Year indicator (prominent) — positioned in right margin
       const displayYear = YEARS[yearIdx];
+      const rpLeft = width - padRight + 16; // right panel left edge
+      const rpWidth = padRight - 26;
       ctx.fillStyle = colors.text;
-      ctx.font = 'bold 28px JetBrains Mono';
-      ctx.textAlign = 'right';
-      ctx.fillText(displayYear.label, width - padRight - 10, padTop + 30);
-      ctx.font = '12px Inter';
+      ctx.font = 'bold 24px JetBrains Mono';
+      ctx.textAlign = 'left';
+      ctx.fillText(displayYear.label, rpLeft, padTop + 24);
+      ctx.font = '10px Inter';
       ctx.fillStyle = colors.textMuted;
-      ctx.fillText(displayYear.desc, width - padRight - 10, padTop + 48);
+      // Wrap the description text
+      const descWords = displayYear.desc.split(' -- ');
+      ctx.fillText(descWords[0] || '', rpLeft, padTop + 40);
+      if (descWords[1]) {
+        ctx.fillStyle = colors.accent + 'cc';
+        ctx.fillText(descWords[1], rpLeft, padTop + 54);
+      }
+
+      // Cumulative stats panel — vertical stack in right margin
+      const stats = YEAR_STATS[displayYear.year];
+      if (stats) {
+        const statBoxH = 52;
+        const statGap = 8;
+        let sy = padTop + 72;
+
+        const drawStatBox = (label, value, unit, color) => {
+          // Background box
+          ctx.fillStyle = color + '0a';
+          ctx.strokeStyle = color + '25';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.roundRect(rpLeft - 4, sy, rpWidth + 4, statBoxH, 3);
+          ctx.fill();
+          ctx.stroke();
+
+          // Value
+          ctx.font = 'bold 16px JetBrains Mono';
+          ctx.fillStyle = color;
+          ctx.textAlign = 'left';
+          ctx.fillText(value, rpLeft + 2, sy + 20);
+
+          // Label
+          ctx.font = '9px JetBrains Mono';
+          ctx.fillStyle = color + '90';
+          ctx.fillText(label, rpLeft + 2, sy + 36);
+
+          // Unit
+          if (unit) {
+            ctx.font = '8px JetBrains Mono';
+            ctx.fillStyle = colors.textDim + '60';
+            ctx.fillText(unit, rpLeft + 2, sy + 46);
+          }
+
+          sy += statBoxH + statGap;
+        };
+
+        const negHoursVal = typeof stats.negHours === 'string' ? stats.negHours : `${stats.negHours}+`;
+        drawStatBox('neg. price hours', negHoursVal, 'annual', colors.danger);
+
+        if (stats.curtailedTwh !== null) {
+          drawStatBox('curtailed', `${stats.curtailedTwh} TWh`, 'annual', colors.accent);
+        } else {
+          drawStatBox('curtailed', 'est. 12+ TWh', 'projected', colors.accent + '80');
+        }
+
+        if (stats.compensationEurM !== null) {
+          drawStatBox('compensation', `EUR ${stats.compensationEurM}M`, 'annual', colors.primary);
+        } else {
+          drawStatBox('compensation', 'est. EUR 600M+', 'projected', colors.primary + '80');
+        }
+
+        if (stats.co2Mt !== null) {
+          drawStatBox('CO2 avoidable', `${stats.co2Mt} Mt`, 'annual', colors.textMuted);
+        } else {
+          drawStatBox('CO2 avoidable', 'est. 4+ Mt', 'projected', colors.textMuted + '80');
+        }
+      }
 
       // Title
       ctx.fillStyle = colors.text;
@@ -394,16 +472,27 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
       ctx.textAlign = 'left';
       ctx.fillText('THE DUCK CURVE -- GROWING EVERY YEAR', padLeft, 24);
 
-      // Legend
+      // Legend — first two left-aligned, last two right-aligned
       const legendY = height - 8;
       ctx.font = '10px Inter';
-      [
+      const leftItems = [
         { color: colors.primary, label: 'Net Demand (current year)', dash: false },
         { color: colors.primary + '30', label: 'Previous years', dash: false },
+      ];
+      const rightItems = [
         { color: colors.textDim + '60', label: 'Base Demand', dash: true },
         { color: colors.solar, label: 'Solar Generation', dash: false },
-      ].forEach((item, i) => {
-        const lx = padLeft + i * 155;
+      ];
+      leftItems.forEach((item, i) => {
+        const lx = padLeft + i * 180;
+        ctx.fillStyle = item.color;
+        ctx.fillRect(lx, legendY - 4, 12, item.dash ? 1 : 8);
+        ctx.fillStyle = colors.textMuted;
+        ctx.textAlign = 'left';
+        ctx.fillText(item.label, lx + 16, legendY + 4);
+      });
+      rightItems.forEach((item, i) => {
+        const lx = width - padRight - (rightItems.length - i) * 160;
         ctx.fillStyle = item.color;
         ctx.fillRect(lx, legendY - 4, 12, item.dash ? 1 : 8);
         ctx.fillStyle = colors.textMuted;

@@ -33,8 +33,8 @@ const SECTIONS = [
   { from: 1, to: 2, name: '' },
   { from: 3, to: 13, name: 'The Grid' },
   { from: 14, to: 18, name: 'The Renewable Revolution' },
-  { from: 19, to: 29, name: 'The Virtual Power Plant' },
-  { from: 30, to: 33, name: 'Resilience' },
+  { from: 19, to: 31, name: 'The Virtual Power Plant' },
+  { from: 32, to: 35, name: 'Resilience' },
 ];
 
 const slideTemplate = ({ slideNumber, numberOfSlides }) => {
@@ -348,7 +348,7 @@ export default function Presentation() {
           <H>The Duck Curve Problem</H>
           <P size="20px">More solar every year. The belly deepens. The evening ramp steepens. Prices go haywire.</P>
           <div className="flex-1 flex justify-center items-center">
-            <DuckCurveChart width={940} height={440} />
+            <DuckCurveChart width={1100} height={480} />
           </div>
         </div>
       </Slide>
@@ -359,7 +359,7 @@ export default function Presentation() {
           <H color={colors.accent}>The Cost of Wasted Energy</H>
           <P size="20px">Germany has curtailed <span className="font-semibold" style={{ color: colors.accent }}>65.7 TWh</span> of clean energy since 2015 — enough to power 2.7 million homes every year. The cost keeps compounding.</P>
           <div className="flex-1 flex justify-center items-center">
-            <CurtailmentChart width={940} height={420} />
+            <CurtailmentChart width={940} height={440} />
           </div>
         </div>
       </Slide>
@@ -514,9 +514,23 @@ export default function Presentation() {
         </div>
       </Slide>
 
+      {/* 25: VPP Summer Scenario — Energy Arbitrage */}
+      <Slide backgroundColor="#020408" padding="0">
+        <div className="relative w-full h-full">
+          <VPPScenarioSlide scenario="summer" />
+        </div>
+      </Slide>
+
+      {/* 26: VPP Winter Scenario — Grid Emergency */}
+      <Slide backgroundColor="#020408" padding="0">
+        <div className="relative w-full h-full">
+          <VPPScenarioSlide scenario="winter" />
+        </div>
+      </Slide>
+
       {/* ── The Architecture (sub-section) ── */}
 
-      {/* 25: The Architecture (section title) */}
+      {/* 27: The Architecture (section title) */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[20px] font-semibold font-mono tracking-[0.15em] uppercase mb-4" style={{ color: colors.primary + 'cc' }}>The Virtual Power Plant</div>

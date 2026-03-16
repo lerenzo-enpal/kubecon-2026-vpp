@@ -101,6 +101,7 @@ All canvas components follow this pattern:
 - Use `requestAnimationFrame` loop, clean up on unmount
 - Time-based animation (use `performance.now()`), never frame-counting
 - Shadow/glow: `ctx.shadowBlur` + `ctx.shadowColor` for emphasis, but always reset after (`shadowBlur = 0`)
+- **Prevent canvas cutoff:** Always ensure padding values leave enough room for all drawn elements. Annotations above the chart need `padTop >= 55px`. Callout boxes below need `padBottom >= 65px`. Labels to the right of the chart (stats, year indicators) need `padRight >= 40px` or more. When adding new elements outside the chart area, increase padding and canvas dimensions accordingly. Verify: all text, callout boxes, and annotations render fully within `[0, width] x [0, height]`. If passing `width`/`height` props from a parent, the parent must also increase its container to match.
 
 ### Anti-Patterns (things that break the aesthetic)
 
