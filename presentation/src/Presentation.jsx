@@ -20,6 +20,7 @@ import EnpalArchitectureDiagram from './components/EnpalArchitectureDiagram';
 import VPPScenarioSlide from './components/VPPScenarioSlide';
 import CurtailmentChart from './components/CurtailmentChart';
 import ResponseTimeline from './components/ResponseTimeline';
+import ThankYouBackground from './components/ThankYouBackground';
 
 const theme = {
   colors: { primary: colors.text, secondary: colors.textMuted, tertiary: colors.primary },
@@ -35,7 +36,7 @@ const SECTIONS = [
   { from: 3, to: 13, name: 'The Grid' },
   { from: 14, to: 17, name: 'The Renewable Revolution' },
   { from: 18, to: 26, name: 'The Virtual Power Plant' },
-  { from: 27, to: 29, name: 'Resilience' },
+  { from: 27, to: 28, name: 'Resilience' },
 ];
 
 const slideTemplate = ({ slideNumber, numberOfSlides }) => {
@@ -400,12 +401,12 @@ export default function Presentation() {
       </Slide>
 
       {/* 21: Inside the Architecture */}
-      <Slide backgroundColor={bg} padding={pad}>
+      <Slide backgroundColor={bg} padding="20px 20px">
         <div className="flex flex-col h-full">
           <H>Inside the Architecture</H>
           <P size="18px">Measurement data every 20 seconds — Protobuf over MQTT through EMQX, into Databricks streaming aggregates powered by Apache Spark.</P>
           <div className="flex-1 flex justify-center items-center">
-            <EnpalArchitectureDiagram width={1128} height={528} />
+            <EnpalArchitectureDiagram width={1320} height={528} />
           </div>
           <div className="flex gap-4 mt-1">
             <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.success }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Home System</span></div>
@@ -574,16 +575,9 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 27: SA Blackout, 2016 */}
-      <Slide backgroundColor="#020408" padding="0">
-        <div className="relative w-full h-full">
-          <SAMapHUD width="100%" height="100%" variant="blackout" />
-        </div>
-      </Slide>
-
       {/* ═══════ ACT 4: RESILIENCE ═══════ */}
 
-      {/* 28: Back to Texas */}
+      {/* 27: Back to Texas */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center h-full">
           <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-6">Back to Texas</div>
@@ -602,15 +596,48 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 29: Thank You */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col justify-center items-center h-full text-center">
-          <H size="54px" center>Thank You</H>
-          <P size="20px" center><span className="text-hud-primary font-semibold">Enpal</span> — Building Europe's Largest Virtual Power Plant</P>
+      {/* 28: Thank You */}
+      <Slide backgroundColor={bg} padding="0">
+        <div className="relative w-full h-full">
+          <ThankYouBackground width={1366} height={768} />
+          {/* Radial fade so text is readable over the animation */}
+          <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse 55% 50% at center, ${colors.bg}ee 0%, ${colors.bg}aa 50%, transparent 80%)` }} />
+          <div className="absolute inset-0 flex flex-col justify-center items-center z-10 text-center">
+            <div className="text-[58px] font-extrabold font-sans leading-[1.1] mb-4" style={{ color: colors.primary, textShadow: `0 0 60px ${colors.primary}30` }}>
+              Thank You
+            </div>
+            <div className="text-[22px] text-hud-text font-sans mb-2">
+              <span className="font-semibold" style={{ color: colors.primary }}>Enpal</span> — Building Europe's Largest Virtual Power Plant
+            </div>
+            <div className="text-[18px] text-hud-text-muted font-sans mb-10">
+              Cloud-Native Infrastructure for the Energy Grid
+            </div>
+            <div className="absolute bottom-10 flex items-center gap-2" style={{ color: colors.textDim, fontSize: 14, fontFamily: '"JetBrains Mono", monospace' }}>
+              <span>Special thanks to</span>
+              <span style={{ color: colors.success }}>Rose</span>
+              <span style={{ opacity: 0.4 }}>&</span>
+              <span>the Enpal Engineering team</span>
+            </div>
+          </div>
         </div>
       </Slide>
 
       {/* ═══════ APPENDIX ═══════ */}
+
+      {/* Appendix Title */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col justify-center items-center h-full text-center">
+          <div className="text-[20px] font-semibold font-mono tracking-[0.15em] uppercase mb-4" style={{ color: colors.textDim }}>Backup Slides</div>
+          <H size="50px" center color={colors.textDim}>Appendix</H>
+        </div>
+      </Slide>
+
+      {/* SA Blackout, 2016 */}
+      <Slide backgroundColor="#020408" padding="0">
+        <div className="relative w-full h-full">
+          <SAMapHUD width="100%" height="100%" variant="blackout" />
+        </div>
+      </Slide>
 
       {/* Winter Grid Emergency */}
       <Slide backgroundColor="#020408" padding="0">
@@ -718,6 +745,41 @@ export default function Presentation() {
             <DemandResponseDemo width={920} height={420} />
           </div>
           <P size="18px" color={colors.textDim} style={{ fontStyle: 'italic' }}>Note: Current deployment is extremely limited. Focus on the challenges — most grids have no demand-side flexibility at scale today.</P>
+        </div>
+      </Slide>
+
+      {/* References */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col h-full">
+          <H color={colors.textMuted}>References</H>
+          <div className="flex-1 flex gap-8 mt-4" style={{ fontSize: 14, fontFamily: '"JetBrains Mono", monospace', color: colors.textDim, lineHeight: 2.2 }}>
+            <div className="flex-1">
+              <div className="text-[15px] font-semibold mb-2" style={{ color: colors.danger }}>Grid Failures</div>
+              <div>ERCOT — Final Report on Feb 2021 Winter Storm (2021)</div>
+              <div>FERC/NERC — Texas Event Report (2021)</div>
+              <div>ENTSO-E — Continental Europe Synchronous Area (2024)</div>
+              <div>AEMO — South Australia Black System Report (2017)</div>
+              <div>REE/REN — Iberian Peninsula Incident Report (2025)</div>
+              <div className="text-[15px] font-semibold mb-2 mt-5" style={{ color: colors.accent }}>Renewable Energy</div>
+              <div>Bundesnetzagentur — Monitoring Report (2024)</div>
+              <div>SMARD.de — Electricity Market Data (2024)</div>
+              <div>Fraunhofer ISE — Energy Charts (2024)</div>
+              <div>CAISO — Duck Curve Analysis (2016-2024)</div>
+            </div>
+            <div className="flex-1">
+              <div className="text-[15px] font-semibold mb-2" style={{ color: colors.success }}>VPP &amp; Flexibility</div>
+              <div>RMI — Power Shift: Flexibility as Infrastructure (2024)</div>
+              <div>Brattle Group — VPP Cost-Benefit Analysis (2023)</div>
+              <div>AEMO — ISP Integrated System Plan (2024)</div>
+              <div>SA Power Networks — VPP Trial Results (2023)</div>
+              <div>Tesla — SA VPP Fleet Performance Data (2023)</div>
+              <div className="text-[15px] font-semibold mb-2 mt-5" style={{ color: colors.primary }}>Architecture &amp; Technology</div>
+              <div>EMQX — MQTT for Energy IoT (2024)</div>
+              <div>Databricks — Streaming for Energy (2024)</div>
+              <div>Enpal — Internal Architecture Documentation</div>
+              <div>Entrix/Enpal — Flexa VPP Controller Design</div>
+            </div>
+          </div>
         </div>
       </Slide>
 

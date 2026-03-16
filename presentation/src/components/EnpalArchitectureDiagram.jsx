@@ -5,7 +5,7 @@ import { colors } from '../theme';
 /**
  * EnpalArchitectureDiagram — Linear left-to-right architecture data flow
  *
- * Physical chain: Grid → Meter (Meterfy) → Steuerbox (§14a) → IoT HEMS
+ * Physical chain: Grid → Meter (Metrify) → Steuerbox (§14a) → IoT HEMS
  * Inverter: PV (DC) + Battery (DC) → Inverter → AC to house
  * Telemetry: IoT HEMS → EMQX → Ingestion → Databricks → Spark
  * To Flexa:  Spark → Event Hub → Flexa
@@ -20,7 +20,7 @@ const NODES = [
   { id: 'grid',        label: 'Grid',            sub: 'Niederspannung',     x: 0.00, y: 0.50, color: colors.danger,    w: 30,  h: 300 },
 
   // Physical power chain — top row
-  { id: 'meter',       label: 'Meterfy',         sub: 'Smart Meter',        x: 0.04, y: 0.10, color: colors.textMuted,  w: 78,  h: 38 },
+  { id: 'meter',       label: 'Metrify',          sub: 'Smart Meter',        x: 0.04, y: 0.10, color: colors.textMuted,  w: 78,  h: 38 },
   { id: 'steuerbox',   label: 'Steuerbox',       sub: '§14a',              x: 0.12, y: 0.10, color: colors.textMuted,   w: 84,  h: 38 },
 
   // Inverter + sources
@@ -31,9 +31,9 @@ const NODES = [
   // IoT HEMS — gateway
   { id: 'iot_hems',    label: 'IoT HEMS',        sub: 'Edge Gateway',      x: 0.21, y: 0.30, color: colors.success,    w: 96,  h: 42 },
 
-  // Controlled devices below IoT HEMS
-  { id: 'hp',          label: 'Heat Pump',       sub: '',                   x: 0.21, y: 0.58, color: colors.success,    w: 84,  h: 34 },
-  { id: 'wallbox',     label: 'Wallbox',         sub: 'EV Charger',        x: 0.21, y: 0.74, color: colors.success,    w: 84,  h: 34 },
+  // Controlled devices below IoT HEMS — spread horizontally so each has a clear line to HEMS
+  { id: 'hp',          label: 'Heat Pump',       sub: '',                   x: 0.14, y: 0.62, color: colors.success,    w: 84,  h: 34 },
+  { id: 'wallbox',     label: 'Wallbox',         sub: 'EV Charger',        x: 0.26, y: 0.62, color: colors.success,    w: 84,  h: 34 },
 
   // === CLOUD / DATA PIPELINE / VPP (spread across remaining 70%) ===
   { id: 'emqx',        label: 'EMQX',            sub: 'MQTT Broker',       x: 0.33, y: 0.30, color: colors.primary,    w: 94,  h: 42 },
@@ -74,10 +74,13 @@ const EDGES = [
   { from: 'spark',       to: 'event_hub',  label: 'Aggregates', color: '#E25A1C',       rate: 1.5 },
   { from: 'event_hub',   to: 'flexa',      label: '',           color: colors.accent,    rate: 1.2 },
 
+  // === DATA: Cloud HEMS ↔ EMQX (bidirectional) ===
+  { from: 'emqx',         to: 'cloud_hems', label: '',          color: colors.primary,   rate: 1.5, offset: -5 },
+
   // === DATA: dispatch (Flexa → IoT HEMS, dashed) ===
   { from: 'flexa',        to: 'event_hub',  label: 'Dispatch',  color: colors.primary,   rate: 2, dash: true, offset: 4 },
   { from: 'event_hub',    to: 'cloud_hems', label: '',          color: colors.primary,   rate: 2, dash: true },
-  { from: 'cloud_hems',   to: 'emqx',       label: '',          color: colors.primary,   rate: 2, dash: true },
+  { from: 'cloud_hems',   to: 'emqx',       label: '',          color: colors.primary,   rate: 2, dash: true, offset: 5 },
   { from: 'emqx',         to: 'iot_hems',   label: '',          color: colors.primary,   rate: 2, dash: true, offset: 3 },
 ];
 

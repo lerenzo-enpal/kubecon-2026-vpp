@@ -60,17 +60,18 @@
 26. **The Economic Impact of Flexibility** -- With vs Without VPP comparison across 5 metrics
     > *Speaker: "Side by side. Without a VPP: cascade failures, gas peakers at EUR 300/MWh, EUR 554M/yr curtailment, EUR 35B in grid upgrades. With a VPP: stabilized in 200ms, batteries at EUR 30-60/MWh, revenue from negative prices, 60% deferred infrastructure."*
 
-### South Australia Case Study + Closing
-27. **SA Blackout, 2016** -- Full-screen South Australia blackout map [SAMapHUD]
-    > *Speaker: "September 2016. South Australia. A storm takes out transmission towers. The entire state goes dark."*
-28. **Back to Texas** -- Revisit 4:37, 10 GW distributed batteries
+### Closing
+27. **Back to Texas** -- Revisit 4:37, 10 GW distributed batteries
     > *Speaker: "Remember those 4 minutes and 37 seconds? With 10 GW of distributed batteries responding in 140 milliseconds, there is no cascade. Because 1 million homes already did."*
-29. **Thank You** -- Closing slide, Enpal branding
+28. **Thank You** -- Closing slide with animated home network, Enpal branding [ThankYouBackground]
     > *Speaker: "Enpal — building Europe's largest virtual power plant. Thank you."*
 
 ### Appendix
+- **Appendix** -- Title slide
+- **SA Blackout, 2016** -- Full-screen South Australia blackout map [SAMapHUD]
 - **Winter Grid Emergency** -- Full-screen Berlin map HUD, 5-step winter scenario [VPPScenarioSlide]
 - **The Economic Impact of Flexibility** -- RMI Power Shift, Brattle VPP savings [WIP]
 - **Now We Shift the Load** -- Duck curve with VPP battery load shifting [DuckCurveVPP]
 - **The Dunkelflaute** -- Dark doldrums: wind+solar collapse, Germany Nov 2024
 - **Demand Response in Action** -- Interactive demo [DemandResponseDemo] [WIP]
+- **References** -- Sources and citations
