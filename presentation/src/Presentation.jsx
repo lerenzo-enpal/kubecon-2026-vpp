@@ -13,6 +13,8 @@ import DemandResponseDemo from './components/DemandResponseDemo';
 import VPPArchitecture from './components/VPPArchitecture';
 import VPPComposite from './components/VPPComposite';
 import GridFlowDemo from './components/GridFlowDemo';
+import ConsumerIcons from './components/ConsumerIcons';
+import SAMapHUD from './components/SAMapHUD';
 
 const theme = {
   colors: { primary: colors.text, secondary: colors.textMuted, tertiary: colors.primary },
@@ -28,7 +30,7 @@ const SECTIONS = [
   { from: 3, to: 15, name: 'The Grid' },
   { from: 16, to: 21, name: 'The Renewable Revolution' },
   { from: 22, to: 30, name: 'The Virtual Power Plant' },
-  { from: 31, to: 36, name: 'Resilience' },
+  { from: 31, to: 37, name: 'Resilience' },
 ];
 
 const slideTemplate = ({ slideNumber, numberOfSlides }) => {
@@ -442,19 +444,12 @@ export default function Presentation() {
 
       {/* 26: Consumers Become Infrastructure */}
       <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col justify-center items-center h-full text-center">
+        <div className="flex flex-col items-center h-full text-center">
           <H size="42px" center>Consumers Become Infrastructure</H>
-          <div className="text-[21px] text-hud-text font-sans leading-[1.7] mt-3 max-w-[700px]">
+          <div className="text-[21px] text-hud-text font-sans leading-[1.7] mt-3 whitespace-nowrap">
             Homes with solar and batteries can <span className="font-semibold" style={{ color: colors.solar }}>charge</span>, <span className="font-semibold" style={{ color: colors.success }}>export</span>, and <span className="font-semibold" style={{ color: colors.primary }}>shift consumption</span>.
           </div>
-          <div className="text-[20px] text-hud-text-muted font-sans leading-[1.8] mt-5 max-w-[700px]">
-            Your roof becomes a power plant.<br />
-            Your garage becomes a grid asset.<br />
-            Your house becomes a node in the largest distributed system ever built.
-          </div>
-          <div className="text-[20px] font-sans font-semibold mt-8" style={{ color: colors.primary, textShadow: `0 0 30px ${colors.primary}30` }}>
-            But coordinating millions of these devices? That's a distributed systems problem.
-          </div>
+          <ConsumerIcons bottomText="But coordinating millions of these devices? That's a distributed systems problem." />
         </div>
       </Slide>
 
@@ -600,24 +595,17 @@ export default function Presentation() {
       </Slide>
 
 
-      {/* 32: SA Virtual Power Plant, 2019 */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col h-full" style={{ position: 'relative' }}>
-          <div>
-            <Badge color={colors.success}>PROOF</Badge>
-            <H color={colors.success}>SA Virtual Power Plant, 2019</H>
-            <P>748 MW coal plant trips. 1,100 homes respond autonomously.</P>
-          </div>
-          <div className="flex-1 flex items-center">
-            <div className="flex gap-4 w-full">
-              <StatBox n="1,100" l="Homes Responded" c={colors.success} />
-              <StatBox n="2%" l="of Planned Fleet" c={colors.primary} />
-              <StatBox n="0" l="Humans Involved" c={colors.accent} />
-            </div>
-          </div>
-          <div className="rounded-[10px] text-center" style={{ padding: '16px 22px', background: `${colors.success}08`, border: `1px solid ${colors.success}25` }}>
-            <div className="text-[20px] font-semibold text-hud-text font-sans">Eleven hundred homes. Acting as one. <span style={{ color: colors.success }}>Without anyone pushing a button.</span></div>
-          </div>
+      {/* 32: SA Blackout, 2016 — deck.gl HUD */}
+      <Slide backgroundColor="#020408" padding="0">
+        <div className="relative w-full h-full">
+          <SAMapHUD width="100%" height="100%" variant="blackout" />
+        </div>
+      </Slide>
+
+      {/* 33: SA Virtual Power Plant, 2019 — deck.gl HUD */}
+      <Slide backgroundColor="#020408" padding="0">
+        <div className="relative w-full h-full">
+          <SAMapHUD width="100%" height="100%" variant="vpp" />
         </div>
       </Slide>
 
