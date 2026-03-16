@@ -20,37 +20,35 @@ const NODES = [
   // Grid — nebulous strip on far left (w/h used for edge connection calculations)
   { id: 'grid',        label: 'Grid',            sub: 'Niederspannung',     x: 0.00, y: 0.50, color: colors.danger,    w: 30,  h: 300 },
 
-  // Physical power chain — top row
-  { id: 'meter',       label: 'Metrify',          sub: 'Smart Meter',        x: 0.06, y: 0.10, color: colors.textMuted,  w: 78,  h: 38 },
-  { id: 'steuerbox',   label: 'Steuerbox',       sub: '§14a',              x: 0.06, y: 0.78, color: colors.textMuted,   w: 84,  h: 38 },
+  // Column 1 — grid-connected metering & generation
+  { id: 'meter',       label: 'Metrify',          sub: 'Smart Meter',        x: 0.08, y: 0.10, color: colors.textMuted,  w: 78,  h: 38 },
+  { id: 'steuerbox',   label: 'Steuerbox',       sub: '§14a',              x: 0.08, y: 0.78, color: colors.textMuted,   w: 84,  h: 38 },
+  { id: 'pv',          label: 'PV',              sub: 'Solar',              x: 0.08, y: 0.40, color: colors.solar,      w: 60,  h: 34 },
+  { id: 'battery',     label: 'Battery',         sub: 'Storage',            x: 0.08, y: 0.58, color: colors.battery,    w: 68,  h: 34 },
 
-  // Inverter + sources
-  { id: 'pv',          label: 'PV',              sub: 'Solar',              x: 0.06, y: 0.40, color: colors.solar,      w: 60,  h: 34 },
-  { id: 'battery',     label: 'Battery',         sub: 'Storage',            x: 0.06, y: 0.58, color: colors.battery,    w: 68,  h: 34 },
-  { id: 'inverter',    label: 'Inverter',        sub: 'DC/AC',             x: 0.18, y: 0.48, color: colors.solar,      w: 80,  h: 38 },
+  // Column 2 — inverter (DC/AC conversion)
+  { id: 'inverter',    label: 'Inverter',        sub: 'DC/AC',             x: 0.24, y: 0.48, color: colors.solar,      w: 80,  h: 38 },
 
-  // IoT HEMS — gateway
-  { id: 'iot_hems',    label: 'IoT HEMS',        sub: 'Edge Gateway',      x: 0.28, y: 0.30, color: colors.success,    w: 96,  h: 42 },
-
-  // Controlled devices below IoT HEMS — spread horizontally so each has a clear line to HEMS
-  { id: 'hp',          label: 'Heat Pump',       sub: '',                   x: 0.20, y: 0.62, color: colors.success,    w: 84,  h: 34 },
-  { id: 'wallbox',     label: 'Wallbox',         sub: 'EV Charger',        x: 0.28, y: 0.62, color: colors.success,    w: 84,  h: 34 },
+  // Column 3 — smart home gateway & controlled devices
+  { id: 'iot_hems',    label: 'IoT HEMS',        sub: 'Edge Gateway',      x: 0.38, y: 0.30, color: colors.success,    w: 96,  h: 42 },
+  { id: 'hp',          label: 'Heat Pump',       sub: '',                   x: 0.28, y: 0.62, color: colors.success,    w: 84,  h: 34 },
+  { id: 'wallbox',     label: 'Wallbox',         sub: 'EV Charger',        x: 0.38, y: 0.62, color: colors.success,    w: 84,  h: 34 },
 
   // === CLOUD / DATA PIPELINE / VPP (staircase layout using vertical space) ===
   // Top row — telemetry ingress
-  { id: 'emqx',        label: 'MQTT',            sub: 'EMQX',              x: 0.41, y: 0.18, color: colors.primary,    w: 94,  h: 42 },
-  { id: 'ingestion',   label: 'Data Ingestion',  sub: 'Protobuf · 20s',   x: 0.64, y: 0.18, color: colors.secondary,  w: 110, h: 42 },
+  { id: 'emqx',        label: 'MQTT',            sub: 'EMQX',              x: 0.53, y: 0.18, color: colors.primary,    w: 94,  h: 42 },
+  { id: 'ingestion',   label: 'Data Ingestion',  sub: 'Protobuf · 20s',   x: 0.70, y: 0.18, color: colors.secondary,  w: 110, h: 42 },
 
-  // Middle row — processing
-  { id: 'databricks',  label: 'Databricks',      sub: 'Bronze → Gold',    x: 0.64, y: 0.50, color: '#FF3621',         w: 105, h: 42 },
-  { id: 'spark',       label: 'Spark Streaming', sub: 'Aggregates',       x: 0.82, y: 0.50, color: '#E25A1C',         w: 120, h: 42 },
+  // Middle row — processing (Databricks aligned with Ingestion)
+  { id: 'databricks',  label: 'Databricks',      sub: 'Bronze → Gold',    x: 0.70, y: 0.50, color: '#FF3621',         w: 105, h: 42 },
+  { id: 'spark',       label: 'Spark Streaming', sub: 'Aggregates',       x: 0.87, y: 0.50, color: '#E25A1C',         w: 120, h: 42 },
 
-  // Bottom row — dispatch / control
-  { id: 'cloud_hems',  label: 'Cloud HEMS',      sub: 'Orchestration · Dapr',      x: 0.41, y: 0.80, color: colors.primary,    w: 105, h: 42 },
-  { id: 'event_hub',   label: 'Event Hub',       sub: 'Azure',            x: 0.64, y: 0.80, color: colors.accent,     w: 105, h: 42 },
+  // Bottom row — dispatch / control (Event Hub aligned with Ingestion)
+  { id: 'cloud_hems',  label: 'Cloud HEMS',      sub: 'Orchestration\nDapr Actors',  x: 0.53, y: 0.80, color: colors.primary,    w: 105, h: 52 },
+  { id: 'event_hub',   label: 'Event Hub',       sub: 'Azure',            x: 0.70, y: 0.80, color: colors.accent,     w: 105, h: 42 },
 
   // Flexa — VPP controller, far right
-  { id: 'flexa',       label: 'Flexa',           sub: 'VPP Controller',   x: 0.82, y: 0.80, color: colors.accent,     w: 120, h: 48 },
+  { id: 'flexa',       label: 'Flexa',           sub: 'VPP Controller',   x: 0.87, y: 0.80, color: colors.accent,     w: 120, h: 48 },
 ];
 
 const EDGES = [
@@ -179,10 +177,10 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
       }
 
       // Section divider (dotted) — Home | Cloud
-      const divCloud = width * 0.38;
-      ctx.strokeStyle = colors.textDim + '50';
-      ctx.lineWidth = 1;
-      ctx.setLineDash([4, 4]);
+      const divCloud = width * 0.50;
+      ctx.strokeStyle = colors.textDim + '90';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([6, 4]);
       ctx.beginPath();
       ctx.moveTo(divCloud, 10);
       ctx.lineTo(divCloud, height - 10);
@@ -220,7 +218,7 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
           const my = (fy + ty) / 2;
           ctx.font = isElectric ? 'bold 10px JetBrains Mono' : '10px JetBrains Mono';
           ctx.textAlign = 'center';
-          ctx.fillStyle = isElectric ? (ELECTRICITY_COLOR + 'dd') : (colors.textDim + 'cc');
+          ctx.fillStyle = isElectric ? (ELECTRICITY_COLOR + 'dd') : (colors.text + 'bb');
           const perpLabelX = -Math.sin(angle) * 9;
           const perpLabelY = Math.cos(angle) * 9;
           ctx.fillText(edge.label, mx + perpLabelX, my + perpLabelY);
@@ -332,40 +330,40 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
         ctx.textAlign = 'center';
         ctx.fillText(node.label, nx + node.w / 2, ny + (node.sub ? 17 : 20));
 
-        // Sub-label
+        // Sub-label (supports \n for multi-line)
         if (node.sub) {
           ctx.font = '9px JetBrains Mono';
-          ctx.fillStyle = colors.textDim + 'cc';
-          ctx.fillText(node.sub, nx + node.w / 2, ny + 30);
+          ctx.fillStyle = colors.text + 'aa';
+          const subLines = node.sub.split('\n');
+          subLines.forEach((line, li) => {
+            ctx.fillText(line, nx + node.w / 2, ny + 30 + li * 11);
+          });
         }
       });
 
       // Section labels
-      ctx.font = 'bold 11px JetBrains Mono';
-      ctx.textAlign = 'left';
+      ctx.font = 'bold 15px JetBrains Mono';
 
       ctx.textAlign = 'right';
-      ctx.fillStyle = colors.success + '70';
+      ctx.fillStyle = colors.success + 'dd';
       ctx.fillText('HOME', divCloud - 14, height * 0.04 + 4);
 
       ctx.textAlign = 'left';
-      ctx.fillStyle = colors.primary + '70';
+      ctx.fillStyle = colors.primary + 'dd';
       ctx.fillText('CLOUD / DATA PIPELINE / VPP', divCloud + 14, height * 0.04 + 4);
 
       // Legend
       ctx.font = '10px JetBrains Mono';
       ctx.textAlign = 'left';
-      ctx.fillStyle = colors.textDim + '90';
+      ctx.fillStyle = colors.text + '90';
       ctx.fillText('IoT HEMS = IoT Hub + Home Energy Management System', 8, height - 22);
 
-      // Electricity vs data legend
       ctx.lineWidth = 2.5;
       ctx.strokeStyle = ELECTRICITY_COLOR + '80';
       ctx.beginPath();
       ctx.moveTo(8, height - 7);
       ctx.lineTo(34, height - 7);
       ctx.stroke();
-      ctx.font = '10px JetBrains Mono';
       ctx.fillStyle = ELECTRICITY_COLOR + 'cc';
       ctx.fillText('electricity', 38, height - 3);
 
@@ -386,10 +384,6 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
       ctx.setLineDash([]);
       ctx.fillStyle = colors.primary + 'cc';
       ctx.fillText('dispatch', 230, height - 3);
-
-      ctx.textAlign = 'right';
-      ctx.fillStyle = colors.secondary + '80';
-      ctx.fillText('20s intervals', width - 10, height - 3);
 
       if (isActive) animRef.current = requestAnimationFrame(draw);
     }

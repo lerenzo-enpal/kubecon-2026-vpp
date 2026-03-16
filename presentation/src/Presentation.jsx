@@ -408,13 +408,6 @@ export default function Presentation() {
           <div className="flex-1 flex justify-center items-center">
             <EnpalArchitectureDiagram width={1366} height={528} />
           </div>
-          <div className="flex gap-4 mt-1">
-            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.success }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Home System</span></div>
-            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.primary }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Cloud / Control</span></div>
-            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: '#E25A1C' }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Databricks + Spark</span></div>
-            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.accent }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Event Hub + Flexa</span></div>
-            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.textMuted }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>External</span></div>
-          </div>
         </div>
       </Slide>
 

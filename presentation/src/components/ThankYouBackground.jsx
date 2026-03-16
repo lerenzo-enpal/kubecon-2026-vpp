@@ -32,23 +32,23 @@ export default function ThankYouBackground({ width = 1366, height = 768 }) {
 
     // Generate cluster centers for natural grouping
     const clusters = [];
-    for (let i = 0; i < 14; i++) {
+    for (let i = 0; i < 18; i++) {
       clusters.push({
         x: 40 + rand() * (width - 80),
         y: 40 + rand() * (height - 80),
       });
     }
 
-    // Generate homes
+    // Generate home dots — more dots, simpler rendering
     const homes = [];
     const palette = [colors.primary, colors.primary, colors.success, colors.success, colors.solar];
 
-    for (let i = 0; i < 220; i++) {
+    for (let i = 0; i < 400; i++) {
       let x, y;
-      if (rand() > 0.25) {
+      if (rand() > 0.2) {
         const cl = clusters[Math.floor(rand() * clusters.length)];
         const angle = rand() * Math.PI * 2;
-        const dist = (rand() + rand()) * 0.5 * 130;
+        const dist = (rand() + rand()) * 0.5 * 140;
         x = cl.x + Math.cos(angle) * dist;
         y = cl.y + Math.sin(angle) * dist;
       } else {
@@ -61,22 +61,21 @@ export default function ThankYouBackground({ width = 1366, height = 768 }) {
 
       homes.push({
         x, y,
-        size: 3 + rand() * 3.5,
+        size: 1.5 + rand() * 2,
         phase: rand() * Math.PI * 2,
         speed: 0.3 + rand() * 0.5,
-        hasSolar: rand() > 0.25,
         color: palette[Math.floor(rand() * palette.length)],
         distFromCenter: Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2),
       });
     }
 
     // Build connection mesh between nearby homes
-    const maxDist = 85;
+    const maxDist = 80;
     const connections = [];
     for (let i = 0; i < homes.length; i++) {
       let count = 0;
       for (let j = i + 1; j < homes.length; j++) {
-        if (count >= 3) break;
+        if (count >= 2) break;
         const dx = homes[i].x - homes[j].x;
         const dy = homes[i].y - homes[j].y;
         const d = Math.sqrt(dx * dx + dy * dy);
@@ -89,7 +88,7 @@ export default function ThankYouBackground({ width = 1366, height = 768 }) {
 
     // Energy particles flowing along connections
     const particles = [];
-    const particleCount = Math.min(60, connections.length);
+    const particleCount = Math.min(50, connections.length);
     for (let i = 0; i < particleCount; i++) {
       const conn = connections[Math.floor(rand() * connections.length)];
       particles.push({
@@ -103,48 +102,46 @@ export default function ThankYouBackground({ width = 1366, height = 768 }) {
 
     // Sparkle state per home: 0 = idle, >0 = sparkling (countdown)
     const sparkle = new Float32Array(homes.length);
-    // Stagger initial sparkle times so some are already going
     const rand2 = seededRandom(99);
     for (let i = 0; i < homes.length; i++) {
       sparkle[i] = rand2() < 0.05 ? rand2() * 0.8 : 0;
     }
 
-    // Transmission lines spanning the canvas
+    // Faint grid transmission lines spanning the canvas
     const lines = [];
     const randL = seededRandom(77);
-    for (let i = 0; i < 18; i++) {
+    for (let i = 0; i < 12; i++) {
       const vertical = randL() > 0.45;
       let x1, y1, x2, y2;
       if (vertical) {
         const baseX = randL() * width;
-        const drift = (randL() - 0.5) * 80;
+        const drift = (randL() - 0.5) * 60;
         x1 = baseX + drift;
         y1 = -20;
         x2 = baseX - drift;
         y2 = height + 20;
       } else {
         const baseY = randL() * height;
-        const drift = (randL() - 0.5) * 60;
+        const drift = (randL() - 0.5) * 50;
         x1 = -20;
         y1 = baseY + drift;
         x2 = width + 20;
         y2 = baseY - drift;
       }
-      const len = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-      // 2-4 energy pulses per line
-      const pulseCount = 2 + Math.floor(randL() * 3);
-      const pulses = [];
-      for (let p = 0; p < pulseCount; p++) {
-        pulses.push({
+      // Tiny sparkle particles per line (3-6 per line)
+      const sparkCount = 3 + Math.floor(randL() * 4);
+      const sparks = [];
+      for (let s = 0; s < sparkCount; s++) {
+        sparks.push({
           t: randL(),
-          speed: 0.0004 + randL() * 0.0008,
+          speed: 0.0006 + randL() * 0.001,
           forward: randL() > 0.3,
         });
       }
       lines.push({
-        x1, y1, x2, y2, len,
+        x1, y1, x2, y2,
         color: [colors.primary, colors.success, colors.primary][Math.floor(randL() * 3)],
-        pulses,
+        sparks,
       });
     }
 
@@ -155,12 +152,12 @@ export default function ThankYouBackground({ width = 1366, height = 768 }) {
       const elapsed = (now - startTime) / 1000;
       ctx.clearRect(0, 0, width, height);
 
-      // Trigger new sparkles — ~3-5 homes per second, randomly
-      if (elapsed - lastSparkleTime > 0.2) {
+      // Trigger new sparkles — ~3-5 homes per second
+      if (elapsed - lastSparkleTime > 0.15) {
         lastSparkleTime = elapsed;
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i < 3; i++) {
           const idx = Math.floor(Math.random() * homes.length);
-          if (sparkle[idx] <= 0) sparkle[idx] = 0.6 + Math.random() * 0.4; // 0.6-1.0s duration
+          if (sparkle[idx] <= 0) sparkle[idx] = 0.5 + Math.random() * 0.5;
         }
       }
 
@@ -169,51 +166,35 @@ export default function ThankYouBackground({ width = 1366, height = 768 }) {
         if (sparkle[i] > 0) sparkle[i] = Math.max(0, sparkle[i] - 0.016);
       }
 
-      // Draw transmission lines with traveling energy pulses
+      // Draw very faint transmission lines with tiny electric sparkles
       lines.forEach(ln => {
         const dx = ln.x2 - ln.x1;
         const dy = ln.y2 - ln.y1;
 
-        // Faint base wire
-        ctx.strokeStyle = hexAlpha(ln.color, 0.04);
-        ctx.lineWidth = 1;
+        // Very faint base wire
+        ctx.strokeStyle = hexAlpha(ln.color, 0.025);
+        ctx.lineWidth = 0.5;
         ctx.beginPath();
         ctx.moveTo(ln.x1, ln.y1);
         ctx.lineTo(ln.x2, ln.y2);
         ctx.stroke();
 
-        // Animate pulses along the wire
-        ln.pulses.forEach(p => {
-          p.t += p.speed * (p.forward ? 1 : -1);
-          if (p.t > 1) p.t -= 1;
-          if (p.t < 0) p.t += 1;
+        // Tiny sparkle particles traveling along the wire
+        ln.sparks.forEach(s => {
+          s.t += s.speed * (s.forward ? 1 : -1);
+          if (s.t > 1) s.t -= 1;
+          if (s.t < 0) s.t += 1;
 
-          const t = p.t;
-          const px = ln.x1 + dx * t;
-          const py = ln.y1 + dy * t;
+          const px = ln.x1 + dx * s.t;
+          const py = ln.y1 + dy * s.t;
 
-          // Thick glowing segment around the pulse point
-          const segLen = 0.04; // 4% of line length
-          const t0 = Math.max(0, t - segLen / 2);
-          const t1 = Math.min(1, t + segLen / 2);
-
-          // Bright core
-          ctx.strokeStyle = hexAlpha(ln.color, 0.18);
-          ctx.lineWidth = 3;
+          // Tiny glowing dot
+          ctx.shadowBlur = 6;
+          ctx.shadowColor = hexAlpha(ln.color, 0.3);
+          ctx.fillStyle = hexAlpha(ln.color, 0.4);
           ctx.beginPath();
-          ctx.moveTo(ln.x1 + dx * t0, ln.y1 + dy * t0);
-          ctx.lineTo(ln.x1 + dx * t1, ln.y1 + dy * t1);
-          ctx.stroke();
-
-          // Glow bloom
-          ctx.shadowBlur = 8;
-          ctx.shadowColor = hexAlpha(ln.color, 0.15);
-          ctx.strokeStyle = hexAlpha(ln.color, 0.1);
-          ctx.lineWidth = 6;
-          ctx.beginPath();
-          ctx.moveTo(ln.x1 + dx * t0, ln.y1 + dy * t0);
-          ctx.lineTo(ln.x1 + dx * t1, ln.y1 + dy * t1);
-          ctx.stroke();
+          ctx.arc(px, py, 1.2, 0, Math.PI * 2);
+          ctx.fill();
           ctx.shadowBlur = 0;
         });
       });
@@ -226,8 +207,8 @@ export default function ThankYouBackground({ width = 1366, height = 768 }) {
       const pulseWidth = 100;
       const pulseFade = 1 - pulseT;
 
-      // Draw connections
-      ctx.lineWidth = 0.5;
+      // Draw connections (faint lines between nearby homes)
+      ctx.lineWidth = 0.4;
       connections.forEach(c => {
         const a = homes[c.a];
         const b = homes[c.b];
@@ -236,8 +217,8 @@ export default function ThankYouBackground({ width = 1366, height = 768 }) {
         );
 
         const pulseDelta = Math.abs(midDist - pulseRadius);
-        const pulseBoost = pulseDelta < pulseWidth ? (1 - pulseDelta / pulseWidth) * 0.12 * pulseFade : 0;
-        const alpha = 0.035 * (1 - c.d / maxDist) + pulseBoost;
+        const pulseBoost = pulseDelta < pulseWidth ? (1 - pulseDelta / pulseWidth) * 0.1 * pulseFade : 0;
+        const alpha = 0.025 * (1 - c.d / maxDist) + pulseBoost;
 
         ctx.strokeStyle = hexAlpha(colors.primary, alpha);
         ctx.beginPath();
@@ -246,8 +227,8 @@ export default function ThankYouBackground({ width = 1366, height = 768 }) {
         ctx.stroke();
       });
 
-      // Draw energy particles
-      ctx.shadowBlur = 4;
+      // Draw energy particles along connections
+      ctx.shadowBlur = 3;
       particles.forEach(p => {
         p.t += p.speed;
         if (p.t > 1) p.t -= 1;
@@ -257,68 +238,48 @@ export default function ThankYouBackground({ width = 1366, height = 768 }) {
         const x = a.x + (b.x - a.x) * t;
         const y = a.y + (b.y - a.y) * t;
 
-        ctx.fillStyle = hexAlpha(p.color, 0.45);
-        ctx.shadowColor = hexAlpha(p.color, 0.3);
+        ctx.fillStyle = hexAlpha(p.color, 0.35);
+        ctx.shadowColor = hexAlpha(p.color, 0.25);
         ctx.beginPath();
-        ctx.arc(x, y, 1.2, 0, Math.PI * 2);
+        ctx.arc(x, y, 0.8, 0, Math.PI * 2);
         ctx.fill();
       });
       ctx.shadowBlur = 0;
 
-      // Draw homes
+      // Draw home dots (simple glowing circles)
       homes.forEach((h, hi) => {
         const breathe = 0.5 + 0.5 * Math.sin(elapsed * h.speed + h.phase);
 
         // Pulse wave boost
         const pulseDelta = Math.abs(h.distFromCenter - pulseRadius);
-        const pulseBoost = pulseDelta < pulseWidth ? (1 - pulseDelta / pulseWidth) * 0.5 * pulseFade : 0;
+        const pulseBoost = pulseDelta < pulseWidth ? (1 - pulseDelta / pulseWidth) * 0.4 * pulseFade : 0;
 
         // Sparkle: quick bright peak then fade
         const sp = sparkle[hi];
-        const sparkleIntensity = sp > 0 ? Math.sin(sp * Math.PI) * 0.55 : 0;
+        const sparkleIntensity = sp > 0 ? Math.sin(sp * Math.PI) * 0.6 : 0;
 
-        const alpha = 0.1 + breathe * 0.12 + pulseBoost + sparkleIntensity;
-        const s = h.size;
+        const alpha = 0.12 + breathe * 0.1 + pulseBoost + sparkleIntensity;
+        const r = h.size;
 
-        // House body
-        ctx.fillStyle = hexAlpha(h.color, alpha * 0.2);
-        ctx.strokeStyle = hexAlpha(h.color, alpha);
-        ctx.lineWidth = 0.6;
-        ctx.fillRect(h.x - s / 2, h.y, s, s * 0.6);
-        ctx.strokeRect(h.x - s / 2, h.y, s, s * 0.6);
-
-        // Roof
-        ctx.beginPath();
-        ctx.moveTo(h.x - s / 2 - 1, h.y);
-        ctx.lineTo(h.x, h.y - s * 0.45);
-        ctx.lineTo(h.x + s / 2 + 1, h.y);
-        ctx.closePath();
-        ctx.strokeStyle = hexAlpha(h.color, alpha * 0.9);
-        ctx.stroke();
-
-        // Solar panel on roof
-        if (h.hasSolar) {
-          ctx.fillStyle = hexAlpha(colors.solar, alpha * 0.7);
-          const pw = s * 0.45;
-          const ph = s * 0.15;
-          ctx.fillRect(h.x - pw / 2, h.y - s * 0.28, pw, ph);
+        // Outer glow (only when sparkling or pulse-boosted)
+        const glowAlpha = pulseBoost * 0.3 + sparkleIntensity * 0.5;
+        if (glowAlpha > 0.01) {
+          ctx.shadowBlur = 8 + sparkleIntensity * 14;
+          ctx.shadowColor = hexAlpha(h.color, glowAlpha);
         }
 
-        // Center glow dot + sparkle bloom
-        const glowSize = 5 + pulseBoost * 12 + sparkleIntensity * 18;
-        ctx.shadowBlur = glowSize;
-        ctx.shadowColor = hexAlpha(h.color, 0.4 + sparkleIntensity * 0.4);
+        // Dot
         ctx.fillStyle = hexAlpha(h.color, alpha);
         ctx.beginPath();
-        ctx.arc(h.x, h.y + s * 0.3, 0.7 + sparkleIntensity * 1.5, 0, Math.PI * 2);
+        ctx.arc(h.x, h.y, r + sparkleIntensity * 1.5, 0, Math.PI * 2);
         ctx.fill();
         ctx.shadowBlur = 0;
       });
 
       // Subtle pulse ring
       if (pulseT < 0.85) {
-        ctx.strokeStyle = hexAlpha(colors.primary, 0.06 * pulseFade);
-        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = hexAlpha(colors.primary, 0.04 * pulseFade);
+        ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.arc(centerX, centerY, Math.max(0, pulseRadius), 0, Math.PI * 2);
         ctx.stroke();
