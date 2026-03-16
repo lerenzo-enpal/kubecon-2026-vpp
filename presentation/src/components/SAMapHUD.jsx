@@ -102,13 +102,16 @@ const BLACKOUT_CASCADE = [
 ];
 
 // ── VPP response steps (2019 Kogan Creek event) ─────────────
+// homePhase: 'standby' (grey) → 'risk' (amber) → 'push' (cyan) → 'stable' (green)
 const VPP_STEPS = [
   {
     phase: 'stable',
     label: 'Grid nominal — SA VPP fleet standby',
-    detail: '1,100 homes with Tesla Powerwalls',
+    detail: '1,100 homes with battery systems',
     freq: 50.0,
     homesActive: 0,
+    homePhase: 'standby',
+    view: { longitude: 138.55, latitude: -34.85, zoom: 8.5, pitch: 40, bearing: -8 },
   },
   {
     phase: 'trip',
@@ -116,20 +119,35 @@ const VPP_STEPS = [
     detail: 'Largest contingency event in NEM',
     freq: 49.61,
     homesActive: 0,
+    homePhase: 'standby',
+    view: { longitude: 138.523, latitude: -34.807, zoom: 11.5, pitch: 45, bearing: -5 },
+  },
+  {
+    phase: 'risk',
+    label: 'Frequency dropping — 1,100 homes at risk',
+    detail: 'SA VPP fleet detects frequency deviation zone',
+    freq: 49.55,
+    homesActive: 0,
+    homePhase: 'risk',
+    view: { longitude: 138.60, latitude: -34.92, zoom: 9.8, pitch: 38, bearing: -8 },
   },
   {
     phase: 'detect',
-    label: 'Frequency deviation detected',
-    detail: 'Powerwalls measure local frequency autonomously',
+    label: 'Home batteries responding — autonomous FCAS raise',
+    detail: 'No central dispatch — local droop response',
     freq: 49.59,
-    homesActive: 200,
+    homesActive: 300,
+    homePhase: 'push',
+    view: { longitude: 138.58, latitude: -34.93, zoom: 11.2, pitch: 42, bearing: -3 },
   },
   {
     phase: 'respond',
-    label: 'VPP injecting power — 6-second FCAS raise',
-    detail: 'Powerwalls discharge to grid via droop response',
+    label: 'VPP fleet discharging — frequency recovering',
+    detail: '900 homes injecting power to grid',
     freq: 49.75,
     homesActive: 900,
+    homePhase: 'push',
+    view: { longitude: 138.58, latitude: -34.93, zoom: 10.3, pitch: 42, bearing: -3 },
   },
   {
     phase: 'stable',
@@ -137,6 +155,8 @@ const VPP_STEPS = [
     detail: '1,100 homes. 2% of fleet. Proof it works.',
     freq: 49.95,
     homesActive: 1100,
+    homePhase: 'stable',
+    view: { longitude: 138.55, latitude: -34.88, zoom: 8.8, pitch: 38, bearing: -8 },
   },
 ];
 
@@ -163,33 +183,72 @@ const BLACKOUT_LOGS = [
 ];
 
 const VPP_LOGS = [
-  { step: 0, text: 'SA VPP FLEET — 1,100 POWERWALLS ONLINE', level: 'info' },
+  { step: 0, text: 'SA VPP FLEET — 1,100 HOME BATTERIES ONLINE', level: 'info' },
   { step: 0, text: 'FCAS BID: 6-SECOND RAISE — ENABLED', level: 'info' },
   { step: 0, text: 'NEM FREQUENCY: 50.00 Hz — NOMINAL', level: 'info' },
   { step: 1, text: '08:00 — KOGAN CREEK (QLD) TRIP — 748 MW LOST', level: 'crit' },
   { step: 1, text: 'NEM FREQUENCY FALLING — 49.61 Hz', level: 'crit' },
   { step: 1, text: 'LARGEST SINGLE CONTINGENCY IN NEM', level: 'warn' },
-  { step: 2, text: 'POWERWALL INVERTERS — FREQ DEVIATION DETECTED', level: 'warn' },
-  { step: 2, text: 'DROOP RESPONSE ACTIVATING — 0.7% SETTING', level: 'warn' },
-  { step: 2, text: 'NO CENTRAL DISPATCH — AUTONOMOUS DETECTION', level: 'info' },
-  { step: 3, text: 'VPP FLEET DISCHARGING — FCAS RAISE ACTIVE', level: 'info' },
-  { step: 3, text: 'RESPONSE TIME: <6 SECONDS — WITHIN SPEC', level: 'info' },
-  { step: 3, text: 'FREQUENCY RECOVERING — 49.75 Hz', level: 'info' },
-  { step: 4, text: '█ GRID STABLE █ — FREQUENCY RESTORED', level: 'info' },
-  { step: 4, text: '1,100 HOMES RESPONDED — 0 HUMANS INVOLVED', level: 'info' },
-  { step: 4, text: 'VPP FLEET: 2% DEPLOYED — PROOF OF CONCEPT', level: 'info' },
+  { step: 2, text: 'FREQ BELOW 49.6 Hz — SA FLEET IN RISK ZONE', level: 'warn' },
+  { step: 2, text: '1,100 HOMES MONITORING — DEVIATION DETECTED', level: 'warn' },
+  { step: 2, text: 'DROOP THRESHOLD APPROACHING — STANDBY', level: 'warn' },
+  { step: 3, text: 'BATTERY INVERTERS — DROOP RESPONSE ACTIVE', level: 'info' },
+  { step: 3, text: 'NO CENTRAL DISPATCH — AUTONOMOUS DETECTION', level: 'info' },
+  { step: 3, text: '300 HOMES DISCHARGING — FCAS RAISE', level: 'info' },
+  { step: 4, text: 'VPP FLEET SCALING — 900 HOMES INJECTING', level: 'info' },
+  { step: 4, text: 'RESPONSE TIME: <6 SECONDS — WITHIN SPEC', level: 'info' },
+  { step: 4, text: 'FREQUENCY RECOVERING — 49.75 Hz', level: 'info' },
+  { step: 5, text: '█ GRID STABLE █ — FREQUENCY RESTORED', level: 'info' },
+  { step: 5, text: '1,100 HOMES RESPONDED — 0 HUMANS INVOLVED', level: 'info' },
+  { step: 5, text: 'VPP FLEET: 2% DEPLOYED — PROOF OF CONCEPT', level: 'info' },
 ];
 
-// ── VPP home locations (deterministic pseudo-random in Adelaide metro) ──
+// ── VPP home locations (clustered around public housing areas in Adelaide) ──
+// SA VPP Phase 2 concentrated on Housing SA properties — public housing estates
+// across northern, western, and southern Adelaide suburbs.
+const ADELAIDE_CLUSTERS = [
+  // Northern suburbs — large Housing SA estates
+  { lng: 138.665, lat: -34.710, weight: 0.14, spread: 0.025, name: 'Elizabeth/Davoren Park' },
+  { lng: 138.680, lat: -34.760, weight: 0.10, spread: 0.018, name: 'Salisbury/Para Hills' },
+  { lng: 138.660, lat: -34.680, weight: 0.06, spread: 0.015, name: 'Smithfield' },
+  // Inner north
+  { lng: 138.600, lat: -34.850, weight: 0.08, spread: 0.012, name: 'Kilburn/Blair Athol' },
+  // Inner west
+  { lng: 138.530, lat: -34.870, weight: 0.07, spread: 0.014, name: 'Woodville/Findon' },
+  { lng: 138.500, lat: -34.840, weight: 0.05, spread: 0.012, name: 'Port Adelaide' },
+  // Central west
+  { lng: 138.555, lat: -35.010, weight: 0.09, spread: 0.016, name: 'Marion/Mitchell Park' },
+  // Southern suburbs
+  { lng: 138.540, lat: -35.090, weight: 0.11, spread: 0.020, name: 'Hackham/Morphett Vale' },
+  { lng: 138.500, lat: -35.130, weight: 0.08, spread: 0.018, name: 'Noarlunga/Christie Downs' },
+  // Scattered suburban (smaller pockets across metro)
+  { lng: 138.620, lat: -34.930, weight: 0.06, spread: 0.030, name: 'Central suburbs' },
+  { lng: 138.700, lat: -34.880, weight: 0.04, spread: 0.020, name: 'Eastern suburbs' },
+  { lng: 138.580, lat: -34.780, weight: 0.04, spread: 0.020, name: 'Prospect/Enfield' },
+  { lng: 138.560, lat: -35.040, weight: 0.08, spread: 0.015, name: 'Sturt/Bedford Park' },
+];
+
 function generateVPPHomes(count, seed = 42) {
   const homes = [];
   let s = seed;
   const next = () => { s = (s * 16807 + 0) % 2147483647; return s / 2147483647; };
-  // Adelaide metro: 138.45-138.75°E, -35.10 to -34.70°S
+  // Gaussian-ish via Box-Muller (using pairs of uniform randoms)
+  const gauss = () => {
+    const u1 = next(), u2 = next();
+    return Math.sqrt(-2 * Math.log(u1 + 0.001)) * Math.cos(2 * Math.PI * u2);
+  };
+
   for (let i = 0; i < count; i++) {
-    const lng = 138.45 + next() * 0.30;
-    const lat = -35.10 + next() * 0.40;
-    // Distance from center of Adelaide for activation ordering
+    // Pick a cluster weighted by its share
+    const r = next();
+    let cumulative = 0;
+    let cluster = ADELAIDE_CLUSTERS[0];
+    for (const c of ADELAIDE_CLUSTERS) {
+      cumulative += c.weight;
+      if (r <= cumulative) { cluster = c; break; }
+    }
+    const lng = cluster.lng + gauss() * cluster.spread;
+    const lat = cluster.lat + gauss() * cluster.spread * 0.7; // slightly tighter N-S
     const dist = Math.sqrt((lng - 138.6) ** 2 + (lat + 34.93) ** 2);
     homes.push({ lng, lat, dist, idx: i });
   }
@@ -210,6 +269,8 @@ const TYPE_COLORS = {
 const FAILED_COLOR = [239, 68, 68];
 const SURVIVED_COLOR = [34, 211, 238];
 const VPP_GREEN = [16, 185, 129];
+const VPP_CYAN = [34, 211, 238];
+const VPP_AMBER = [245, 158, 11];
 
 const getNode = (id) => NODES.find(n => n.id === id);
 
@@ -260,6 +321,7 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
   const wasActiveRef = useRef(false);
 
   // Reset on slide enter
+  const autoStepTimer = useRef(null);
   useEffect(() => {
     if (slideActive) {
       setFailed(new Set());
@@ -277,7 +339,18 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
         };
         bootRef.current = requestAnimationFrame(tick);
       }, 500);
-      return () => { clearTimeout(delay); cancelAnimationFrame(bootRef.current); };
+      // VPP: auto-advance to step 0 (grid nominal) after boot finishes
+      if (!isBlackout) {
+        autoStepTimer.current = setTimeout(() => {
+          setStepIndex(0);
+          setVppActive(VPP_STEPS[0].homesActive);
+        }, 2800);
+      }
+      return () => {
+        clearTimeout(delay);
+        clearTimeout(autoStepTimer.current);
+        cancelAnimationFrame(bootRef.current);
+      };
     } else {
       wasActiveRef.current = false;
     }
@@ -298,6 +371,15 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
             setFailed(nf);
           } else {
             setVppActive(VPP_STEPS[next].homesActive);
+            // Camera fly-to for VPP steps
+            if (VPP_STEPS[next].view) {
+              setViewState({
+                ...VPP_STEPS[next].view,
+                transitionDuration: 1800,
+                transitionInterpolator: new FlyToInterpolator(),
+                transitionEasing: t => 1 - Math.pow(1 - t, 3),
+              });
+            }
           }
           setStepIndex(next);
         }
@@ -313,6 +395,14 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
             setFailed(nf);
           } else {
             setVppActive(VPP_STEPS[prev].homesActive);
+            if (VPP_STEPS[prev].view) {
+              setViewState({
+                ...VPP_STEPS[prev].view,
+                transitionDuration: 1200,
+                transitionInterpolator: new FlyToInterpolator(),
+                transitionEasing: t => 1 - Math.pow(1 - t, 3),
+              });
+            }
           }
           setStepIndex(prev);
         } else if (cur === 0) {
@@ -322,7 +412,7 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
           setVppActive(0);
           setViewState({
             ...defaultView,
-            transitionDuration: 500,
+            transitionDuration: 1200,
             transitionInterpolator: new FlyToInterpolator(),
             transitionEasing: t => 1 - Math.pow(1 - t, 3),
           });
@@ -345,6 +435,14 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
       setFailed(nf);
     } else {
       setVppActive(VPP_STEPS[next].homesActive);
+      if (VPP_STEPS[next].view) {
+        setViewState({
+          ...VPP_STEPS[next].view,
+          transitionDuration: 1800,
+          transitionInterpolator: new FlyToInterpolator(),
+          transitionEasing: t => 1 - Math.pow(1 - t, 3),
+        });
+      }
     }
     setStepIndex(next);
   };
@@ -369,6 +467,14 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
       setFailed(nf);
     } else {
       setVppActive(VPP_STEPS[lastIdx].homesActive);
+      if (VPP_STEPS[lastIdx].view) {
+        setViewState({
+          ...VPP_STEPS[lastIdx].view,
+          transitionDuration: 1800,
+          transitionInterpolator: new FlyToInterpolator(),
+          transitionEasing: t => 1 - Math.pow(1 - t, 3),
+        });
+      }
     }
     setStepIndex(lastIdx);
   };
@@ -417,14 +523,19 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
   }, [isBlackout]);
 
   // ── VPP home dots data ──
+  const currentHomePhase = (!isBlackout && stepIndex >= 0) ? VPP_STEPS[stepIndex].homePhase : 'standby';
   const vppHomeDots = useMemo(() => {
     if (isBlackout) return [];
-    return VPP_HOMES.map((h, i) => ({
-      position: [h.lng, h.lat],
-      active: i < vppActive,
-      idx: i,
-    }));
-  }, [isBlackout, vppActive]);
+    return VPP_HOMES.map((h, i) => {
+      const isActive = i < vppActive;
+      return {
+        position: [h.lng, h.lat],
+        active: isActive,
+        phase: currentHomePhase,
+        idx: i,
+      };
+    });
+  }, [isBlackout, vppActive, currentHomePhase]);
 
   // ── Build line data ──
   const pulse = Math.sin(Date.now() / 250);
@@ -542,25 +653,44 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
       updateTriggers: { getColor: [stepIndex] },
     }));
 
-    // VPP home dots
+    // VPP home dots — always visible, color by phase:
+    // standby: dim warm glow → risk: yellow → push: cyan (active) / dark amber (rest) → stable: green
     if (!isBlackout && vppHomeDots.length > 0) {
       result.push(new ScatterplotLayer({
         id: 'vpp-homes',
         data: vppHomeDots,
         getPosition: d => d.position,
-        getRadius: d => d.active ? 600 : 300,
-        getFillColor: d => d.active ? [...VPP_GREEN, 200] : [100, 116, 139, 60],
-        getLineColor: d => d.active ? [...VPP_GREEN, 255] : [100, 116, 139, 80],
-        stroked: false,
-        radiusMinPixels: d => d.active ? 3 : 1.5,
-        radiusMaxPixels: 8,
+        getRadius: d => {
+          if (d.phase === 'push' && d.active) return 700;
+          if (d.phase === 'stable') return 550;
+          if (d.phase === 'risk') return 450;
+          return 350;
+        },
+        getFillColor: d => {
+          if (d.phase === 'standby') return [200, 170, 80, 70];           // dim warm glow
+          if (d.phase === 'risk') return [...VPP_AMBER, 160];             // yellow — at risk
+          if (d.phase === 'push') return d.active
+            ? [...VPP_CYAN, 230]                                          // cyan — pushing power
+            : [160, 110, 20, 100];                                        // dark amber — waiting
+          if (d.phase === 'stable') return [...VPP_GREEN, 200];           // green — grid held
+          return [200, 170, 80, 70];
+        },
+        getLineColor: d => {
+          if (d.phase === 'push' && d.active) return [...VPP_CYAN, 255];
+          if (d.phase === 'stable') return [...VPP_GREEN, 180];
+          return [0, 0, 0, 0];
+        },
+        stroked: true,
+        lineWidthMinPixels: 1,
+        radiusMinPixels: 2,
+        radiusMaxPixels: 10,
         transitions: { getFillColor: 600, getRadius: 400 },
-        updateTriggers: { getFillColor: [vppActive], getRadius: [vppActive] },
+        updateTriggers: { getFillColor: [vppActive, currentHomePhase], getRadius: [vppActive, currentHomePhase] },
       }));
     }
 
     return result;
-  }, [lines, visibleNodes, failed, vppHomeDots, vppActive, stepIndex, isBlackout, isGridStable]);
+  }, [lines, visibleNodes, failed, vppHomeDots, vppActive, stepIndex, isBlackout, isGridStable, currentHomePhase]);
 
   // ── Panel base style ──
   const panelBase = {
@@ -763,7 +893,7 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
                 <div style={{ color: '#22d3ee50', marginBottom: 2 }}>
                   {'>'} {isBlackout
                     ? `NODES: ${NODES.length} | LINES: ${SA_LINES.length} | STATUS: OK`
-                    : 'FLEET: 1,100 POWERWALLS | FCAS: ENABLED | STATUS: STANDBY'}
+                    : 'FLEET: 1,100 HOME BATTERIES | FCAS: ENABLED | STATUS: STANDBY'}
                 </div>
               )}
               {boot > 2.6 && (
@@ -906,10 +1036,10 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
         ) : (
           <>
             {[
-              { c: 'rgb(16,185,129)', l: 'VPP Home (active)' },
-              { c: 'rgb(100,116,139)', l: 'VPP Home (standby)' },
-              { c: 'rgb(251,146,60)', l: 'Gas Generation' },
-              { c: 'rgb(16,185,129)', l: 'Battery' },
+              { c: 'rgb(200,170,80)', l: 'VPP Home' },
+              { c: 'rgb(245,158,11)', l: 'At Risk' },
+              { c: 'rgb(34,211,238)', l: 'Pushing Power' },
+              { c: 'rgb(16,185,129)', l: 'Grid Stable' },
             ].map(i => (
               <div key={i.l} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                 <div style={{ width: 8, height: 8, borderRadius: '50%', background: i.c }} />
