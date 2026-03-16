@@ -46,7 +46,7 @@ const NODES = [
   { id: 'spark',       label: 'Spark Streaming', sub: 'Aggregates',       x: 0.82, y: 0.50, color: '#E25A1C',         w: 120, h: 42 },
 
   // Bottom row — dispatch / control
-  { id: 'cloud_hems',  label: 'Cloud HEMS',      sub: 'Dapr Actors',      x: 0.41, y: 0.80, color: colors.primary,    w: 105, h: 42 },
+  { id: 'cloud_hems',  label: 'Cloud HEMS',      sub: 'Orchestration · Dapr',      x: 0.41, y: 0.80, color: colors.primary,    w: 105, h: 42 },
   { id: 'event_hub',   label: 'Event Hub',       sub: 'Azure',            x: 0.64, y: 0.80, color: colors.accent,     w: 105, h: 42 },
 
   // Flexa — VPP controller, far right
