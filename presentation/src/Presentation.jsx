@@ -33,9 +33,9 @@ const pad = '36px 56px';
 const SECTIONS = [
   { from: 1, to: 2, name: '' },
   { from: 3, to: 13, name: 'The Grid' },
-  { from: 14, to: 18, name: 'The Renewable Revolution' },
-  { from: 19, to: 31, name: 'The Virtual Power Plant' },
-  { from: 32, to: 35, name: 'Resilience' },
+  { from: 14, to: 17, name: 'The Renewable Revolution' },
+  { from: 18, to: 26, name: 'The Virtual Power Plant' },
+  { from: 27, to: 30, name: 'Resilience' },
 ];
 
 const slideTemplate = ({ slideNumber, numberOfSlides }) => {
@@ -379,7 +379,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 20: The Virtual Power Plant */}
+      {/* 19: The Virtual Power Plant */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-4">Part III</div>
@@ -417,111 +417,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 22: VPP Event Types */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <style>{`
-          @keyframes vppEventIn {
-            0% { opacity: 0; transform: translateX(-24px); filter: blur(3px); }
-            100% { opacity: 1; transform: translateX(0); filter: blur(0); }
-          }
-          @keyframes vppEventBorder {
-            0% { clip-path: inset(0 100% 0 0); }
-            100% { clip-path: inset(0 0% 0 0); }
-          }
-          @keyframes vppEventGlow {
-            0% { box-shadow: none; }
-            50% { box-shadow: 0 0 12px var(--glow-color); }
-            100% { box-shadow: none; }
-          }
-        `}</style>
-        <div className="flex flex-col h-full">
-          <H>How a VPP Responds to Grid Events</H>
-          <P size="20px">Different event types require different response strategies and timescales.</P>
-          <div className="flex flex-col justify-center gap-3 mt-2">
-            {[
-              { event: 'Frequency Containment (FCR)', time: '< 30 seconds', desc: 'Battery injects/absorbs power to stabilize grid frequency', cost: 'Blackout cost: EUR 1-5B per event', color: colors.danger, delay: 0.2 },
-              { event: 'Automatic Frequency Restoration (aFRR)', time: '< 5 minutes', desc: 'Sustained response to restore frequency to 50 Hz', cost: 'Gas peaker alternative: EUR 150-300/MWh', color: colors.accent, delay: 0.5 },
-              { event: 'Peak Shaving', time: '1-4 hours', desc: 'Reduce grid load during demand peaks by discharging batteries', cost: 'Grid upgrade deferred: EUR 35B (RMI est.)', color: colors.primary, delay: 0.9 },
-              { event: 'Energy Arbitrage', time: 'Scheduled', desc: 'Charge at negative prices, discharge at peak — optimizing day-ahead markets', cost: 'Curtailment avoided: EUR 554M/yr (DE)', color: colors.success, delay: 1.4 },
-            ].map(e => (
-              <div key={e.event} className="flex items-start gap-4 rounded-lg p-3"
-                style={{
-                  background: `${e.color}06`,
-                  border: `1px solid ${e.color}15`,
-                  opacity: 0,
-                  '--glow-color': e.color + '20',
-                  animation: `vppEventIn 0.5s ease ${e.delay}s forwards, vppEventGlow 1s ease ${e.delay + 0.4}s both`,
-                }}>
-                <div className="min-w-[140px]">
-                  <div className="text-[17px] font-semibold font-sans" style={{ color: e.color }}>{e.event}</div>
-                  <div className="text-[13px] font-mono mt-1" style={{ color: colors.textDim, opacity: 0, animation: `vppEventIn 0.3s ease ${e.delay + 0.25}s forwards` }}>{e.time}</div>
-                </div>
-                <div className="flex-1">
-                  <div className="text-[17px] text-hud-text-muted font-sans">{e.desc}</div>
-                  <div className="text-[13px] font-mono mt-1" style={{ color: e.color + 'aa', opacity: 0, animation: `vppEventIn 0.3s ease ${e.delay + 0.35}s forwards` }}>{e.cost}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="flex-1 flex items-end justify-center pb-2">
-            <ResponseTimeline width={860} height={130} />
-          </div>
-        </div>
-      </Slide>
-
-      {/* 24: VPP Summer Scenario — Energy Arbitrage */}
-      <Slide backgroundColor="#020408" padding="0">
-        <div className="relative w-full h-full">
-          <VPPScenarioSlide scenario="summer" />
-        </div>
-      </Slide>
-
-      {/* 26: VPP Winter Scenario — Grid Emergency */}
-      <Slide backgroundColor="#020408" padding="0">
-        <div className="relative w-full h-full">
-          <VPPScenarioSlide scenario="winter" />
-        </div>
-      </Slide>
-
-      {/* VPP Impact Summary — With vs Without */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col h-full">
-          <H color={colors.success}>The Economic Impact of Flexibility</H>
-          <P size="20px">What changes when distributed batteries respond in milliseconds instead of hours.</P>
-          <div className="flex-1 flex items-center justify-center">
-            <div className="w-full max-w-[900px]">
-              <div className="flex gap-5 mb-5">
-                <div className="flex-1 text-center text-[18px] font-mono font-semibold py-2 rounded-t-lg" style={{ color: colors.danger, background: colors.danger + '0a', borderBottom: `2px solid ${colors.danger}40` }}>Without VPP</div>
-                <div className="w-[160px]" />
-                <div className="flex-1 text-center text-[18px] font-mono font-semibold py-2 rounded-t-lg" style={{ color: colors.success, background: colors.success + '0a', borderBottom: `2px solid ${colors.success}40` }}>With VPP</div>
-              </div>
-              {[
-                { metric: 'Grid Emergency', without: 'Cascade failure, 4+ hours', withVpp: 'Stabilized in 200ms', icon: 'FCR' },
-                { metric: 'Peak Demand', without: 'Gas peakers: EUR 150-300/MWh', withVpp: 'Battery discharge: EUR 30-60/MWh', icon: 'Cost' },
-                { metric: 'Negative Prices', without: 'Curtail renewables, pay EUR 554M/yr', withVpp: 'Charge batteries, earn revenue', icon: 'Price' },
-                { metric: 'Grid Upgrades', without: 'EUR 35B+ new infrastructure', withVpp: 'Defer 60% with distributed flex', icon: 'Infra' },
-                { metric: 'CO2 Emissions', without: '3.4 Mt avoidable CO2/yr (DE)', withVpp: 'Near-zero curtailment emissions', icon: 'CO2' },
-              ].map((r, i) => (
-                <div key={r.metric} className="flex gap-5 mb-3 items-center" style={{ animation: `archLeftIn 0.5s ease ${0.3 + i * 0.15}s both` }}>
-                  <div className="flex-1 rounded-lg p-4 text-[18px] font-sans text-hud-text-muted" style={{ background: colors.danger + '06', border: `1px solid ${colors.danger}12` }}>
-                    {r.without}
-                  </div>
-                  <div className="w-[160px] text-center">
-                    <div className="text-[16px] font-semibold font-mono" style={{ color: colors.primary }}>{r.metric}</div>
-                  </div>
-                  <div className="flex-1 rounded-lg p-4 text-[18px] font-sans font-semibold" style={{ color: colors.success, background: colors.success + '06', border: `1px solid ${colors.success}12` }}>
-                    {r.withVpp}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </Slide>
-
-      {/* ── The Architecture (sub-section) ── */}
-
-      {/* The Architecture Parallel */}
+      {/* 22: The Architecture Parallel */}
       <Slide backgroundColor={bg} padding={pad}>
         <style>{`
           @keyframes archLeftIn {
@@ -576,14 +472,116 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* SA Blackout, 2016 */}
+      {/* 23: How a VPP Responds to Grid Events */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <style>{`
+          @keyframes vppEventIn {
+            0% { opacity: 0; transform: translateX(-24px); filter: blur(3px); }
+            100% { opacity: 1; transform: translateX(0); filter: blur(0); }
+          }
+          @keyframes vppEventBorder {
+            0% { clip-path: inset(0 100% 0 0); }
+            100% { clip-path: inset(0 0% 0 0); }
+          }
+          @keyframes vppEventGlow {
+            0% { box-shadow: none; }
+            50% { box-shadow: 0 0 12px var(--glow-color); }
+            100% { box-shadow: none; }
+          }
+        `}</style>
+        <div className="flex flex-col h-full">
+          <H>How a VPP Responds to Grid Events</H>
+          <P size="20px">Different event types require different response strategies and timescales.</P>
+          <div className="flex flex-col justify-center gap-3 mt-2">
+            {[
+              { event: 'Frequency Containment (FCR)', time: '< 30 seconds', desc: 'Battery injects/absorbs power to stabilize grid frequency', cost: 'Blackout cost: EUR 1-5B per event', color: colors.danger, delay: 0.2 },
+              { event: 'Automatic Frequency Restoration (aFRR)', time: '< 5 minutes', desc: 'Sustained response to restore frequency to 50 Hz', cost: 'Gas peaker alternative: EUR 150-300/MWh', color: colors.accent, delay: 0.5 },
+              { event: 'Peak Shaving', time: '1-4 hours', desc: 'Reduce grid load during demand peaks by discharging batteries', cost: 'Grid upgrade deferred: EUR 35B (RMI est.)', color: colors.primary, delay: 0.9 },
+              { event: 'Energy Arbitrage', time: 'Scheduled', desc: 'Charge at negative prices, discharge at peak — optimizing day-ahead markets', cost: 'Curtailment avoided: EUR 554M/yr (DE)', color: colors.success, delay: 1.4 },
+            ].map(e => (
+              <div key={e.event} className="flex items-start gap-4 rounded-lg p-3"
+                style={{
+                  background: `${e.color}06`,
+                  border: `1px solid ${e.color}15`,
+                  opacity: 0,
+                  '--glow-color': e.color + '20',
+                  animation: `vppEventIn 0.5s ease ${e.delay}s forwards, vppEventGlow 1s ease ${e.delay + 0.4}s both`,
+                }}>
+                <div className="min-w-[140px]">
+                  <div className="text-[17px] font-semibold font-sans" style={{ color: e.color }}>{e.event}</div>
+                  <div className="text-[13px] font-mono mt-1" style={{ color: colors.textDim, opacity: 0, animation: `vppEventIn 0.3s ease ${e.delay + 0.25}s forwards` }}>{e.time}</div>
+                </div>
+                <div className="flex-1">
+                  <div className="text-[17px] text-hud-text-muted font-sans">{e.desc}</div>
+                  <div className="text-[13px] font-mono mt-1" style={{ color: e.color + 'aa', opacity: 0, animation: `vppEventIn 0.3s ease ${e.delay + 0.35}s forwards` }}>{e.cost}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="flex-1 flex items-end justify-center pb-2">
+            <ResponseTimeline width={860} height={130} />
+          </div>
+        </div>
+      </Slide>
+
+      {/* 24: Summer Arbitrage */}
+      <Slide backgroundColor="#020408" padding="0">
+        <div className="relative w-full h-full">
+          <VPPScenarioSlide scenario="summer" />
+        </div>
+      </Slide>
+
+      {/* 25: Winter Grid Emergency */}
+      <Slide backgroundColor="#020408" padding="0">
+        <div className="relative w-full h-full">
+          <VPPScenarioSlide scenario="winter" />
+        </div>
+      </Slide>
+
+      {/* 26: The Economic Impact of Flexibility */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col h-full">
+          <H color={colors.success}>The Economic Impact of Flexibility</H>
+          <P size="20px">What changes when distributed batteries respond in milliseconds instead of hours.</P>
+          <div className="flex-1 flex items-center justify-center">
+            <div className="w-full max-w-[900px]">
+              <div className="flex gap-5 mb-5">
+                <div className="flex-1 text-center text-[18px] font-mono font-semibold py-2 rounded-t-lg" style={{ color: colors.danger, background: colors.danger + '0a', borderBottom: `2px solid ${colors.danger}40` }}>Without VPP</div>
+                <div className="w-[160px]" />
+                <div className="flex-1 text-center text-[18px] font-mono font-semibold py-2 rounded-t-lg" style={{ color: colors.success, background: colors.success + '0a', borderBottom: `2px solid ${colors.success}40` }}>With VPP</div>
+              </div>
+              {[
+                { metric: 'Grid Emergency', without: 'Cascade failure, 4+ hours', withVpp: 'Stabilized in 200ms', icon: 'FCR' },
+                { metric: 'Peak Demand', without: 'Gas peakers: EUR 150-300/MWh', withVpp: 'Battery discharge: EUR 30-60/MWh', icon: 'Cost' },
+                { metric: 'Negative Prices', without: 'Curtail renewables, pay EUR 554M/yr', withVpp: 'Charge batteries, earn revenue', icon: 'Price' },
+                { metric: 'Grid Upgrades', without: 'EUR 35B+ new infrastructure', withVpp: 'Defer 60% with distributed flex', icon: 'Infra' },
+                { metric: 'CO2 Emissions', without: '3.4 Mt avoidable CO2/yr (DE)', withVpp: 'Near-zero curtailment emissions', icon: 'CO2' },
+              ].map((r, i) => (
+                <div key={r.metric} className="flex gap-5 mb-3 items-center" style={{ animation: `archLeftIn 0.5s ease ${0.3 + i * 0.15}s both` }}>
+                  <div className="flex-1 rounded-lg p-4 text-[18px] font-sans text-hud-text-muted" style={{ background: colors.danger + '06', border: `1px solid ${colors.danger}12` }}>
+                    {r.without}
+                  </div>
+                  <div className="w-[160px] text-center">
+                    <div className="text-[16px] font-semibold font-mono" style={{ color: colors.primary }}>{r.metric}</div>
+                  </div>
+                  <div className="flex-1 rounded-lg p-4 text-[18px] font-sans font-semibold" style={{ color: colors.success, background: colors.success + '06', border: `1px solid ${colors.success}12` }}>
+                    {r.withVpp}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Slide>
+
+      {/* 27: SA Blackout, 2016 */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           <SAMapHUD width="100%" height="100%" variant="blackout" />
         </div>
       </Slide>
 
-      {/* 31: SA Virtual Power Plant, 2019 */}
+      {/* 28: SA Virtual Power Plant, 2019 */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           <SAMapHUD width="100%" height="100%" variant="vpp" />
@@ -592,7 +590,7 @@ export default function Presentation() {
 
       {/* ═══════ ACT 4: RESILIENCE ═══════ */}
 
-      {/* 32: Back to Texas */}
+      {/* 29: Back to Texas */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center h-full">
           <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-6">Back to Texas</div>
@@ -611,7 +609,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 33: Thank You */}
+      {/* 30: Thank You */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <H size="54px" center>Thank You</H>
@@ -708,7 +706,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 35: Demand Response in Action */}
+      {/* Demand Response in Action [WIP] */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <div className="flex items-center gap-3">
