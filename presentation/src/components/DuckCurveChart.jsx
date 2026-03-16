@@ -1,67 +1,78 @@
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
 
-// Simplified 24-hour profiles (GW, loosely based on California/Germany patterns)
+// ── Year-by-year duck curve data ─────────────────────────────
+// Solar penetration grows each year, deepening the duck curve belly
+// and steepening the evening ramp. Based on CAISO/German patterns.
+
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
-// Base demand profile (without solar)
+// Base demand profile (constant across years)
 const baseDemand = [
   28, 26, 25, 24, 24, 25, 28, 35, 42, 45, 46, 47,
   48, 47, 46, 45, 48, 55, 60, 58, 52, 45, 38, 32,
 ];
 
-// Solar generation profile
-const solarGen = [
+// Solar generation by year (scaling factor applied to peak profile)
+const YEARS = [
+  { year: 2015, solarScale: 0.15, label: '2015', desc: '5% solar penetration' },
+  { year: 2018, solarScale: 0.35, label: '2018', desc: '12% solar' },
+  { year: 2021, solarScale: 0.55, label: '2021', desc: '22% solar' },
+  { year: 2023, solarScale: 0.75, label: '2023', desc: '35% solar' },
+  { year: 2025, solarScale: 1.0,  label: '2025', desc: '50% solar' },
+  { year: 2030, solarScale: 1.4,  label: '2030 (projected)', desc: '70% solar' },
+];
+
+// Peak solar generation profile (at 100% scale = 2025 levels)
+const peakSolar = [
   0, 0, 0, 0, 0, 0.5, 3, 8, 16, 24, 30, 34,
   35, 34, 30, 22, 12, 4, 0.5, 0, 0, 0, 0, 0,
 ];
 
-// Net demand = base demand - solar (the duck curve)
-const netDemand = baseDemand.map((d, i) => d - solarGen[i]);
-
-// With VPP: batteries charge midday (increase net demand), discharge evening (decrease net demand)
-const batteryAction = [
-  0, 0, 0, 0, 0, 0, 0, -2, -8, -14, -18, -20,
-  -20, -18, -14, -8, 2, 10, 14, 12, 8, 4, 0, 0,
-];
-
-const vppNetDemand = netDemand.map((d, i) => d + batteryAction[i]);
-
-function lerp(a, b, t) {
-  return a + (b - a) * t;
+function getSolarForYear(yearData) {
+  return peakSolar.map(v => v * yearData.solarScale);
 }
 
-const Y_MAX = 68; // headroom above peak demand (60 GW) for bezier overshoot
+function getNetDemand(solar) {
+  return baseDemand.map((d, i) => d - solar[i]);
+}
 
-function smoothLine(ctx, data, xScale, yScale, padLeft, padTop) {
+// Price proxy: higher spread = more extreme prices
+function getPrice(netDemand) {
+  const min = Math.min(...netDemand);
+  const max = Math.max(...netDemand);
+  return { min, max, spread: max - min };
+}
+
+const Y_MAX = 68;
+const Y_MIN = -12; // Allow negative values for deep duck curve
+
+function smoothLine(ctx, data, xScale, yScale, padLeft, padTop, yMax) {
   ctx.beginPath();
   data.forEach((val, i) => {
     const x = padLeft + i * xScale;
-    const y = padTop + (Y_MAX - val) * yScale;
+    const y = padTop + (yMax - val) * yScale;
     if (i === 0) ctx.moveTo(x, y);
     else {
-      // Simple bezier smoothing
       const prevX = padLeft + (i - 1) * xScale;
-      const prevY = padTop + (Y_MAX - data[i - 1]) * yScale;
+      const prevY = padTop + (yMax - data[i - 1]) * yScale;
       const cpX = (prevX + x) / 2;
       ctx.bezierCurveTo(cpX, prevY, cpX, y, x, y);
     }
   });
 }
 
+function lerp(a, b, t) {
+  return a + (b - a) * Math.max(0, Math.min(1, t));
+}
+
 export default function DuckCurveChart({ width = 850, height = 360 }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const tRef = useRef(0);
+  const phaseRef = useRef(0); // 0-5 for each year, smoothly animated
   const slideContext = useContext(SlideContext);
-  const [mode, setMode] = useState('without'); // 'without' | 'with'
-  const blendRef = useRef(0); // 0 = without, 1 = with VPP
-  const targetBlendRef = useRef(0);
-
-  useEffect(() => {
-    targetBlendRef.current = mode === 'with' ? 1 : 0;
-  }, [mode]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -70,31 +81,51 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
     canvas.height = height * 2;
     ctx.scale(2, 2);
 
-    const padLeft = 55;
+    const padLeft = 60;
     const padRight = 20;
-    const padTop = 40;
-    const padBottom = 45;
+    const padTop = 45;
+    const padBottom = 50;
     const chartW = width - padLeft - padRight;
     const chartH = height - padTop - padBottom;
     const xScale = chartW / 23;
-    const yScale = chartH / Y_MAX;
+    const yRange = Y_MAX - Y_MIN;
+    const yScale = chartH / yRange;
+
+    let lastTime = performance.now();
 
     const draw = () => {
       const isActive = slideContext?.isSlideActive;
+      const now = performance.now();
+      const dt = (now - lastTime) / 1000;
+      lastTime = now;
+
       if (isActive) {
-        tRef.current += 0.02;
-        blendRef.current += (targetBlendRef.current - blendRef.current) * 0.04;
+        tRef.current += dt;
+        // Auto-advance through years: ~2 seconds per year, with a pause
+        const targetPhase = Math.min(YEARS.length - 1, tRef.current / 2.2);
+        phaseRef.current += (targetPhase - phaseRef.current) * 0.04;
       }
+
+      const phase = phaseRef.current;
+      const yearIdx = Math.floor(Math.min(phase, YEARS.length - 1));
+      const yearFrac = phase - yearIdx;
       const t = tRef.current;
-      const blend = blendRef.current;
+
+      // Interpolate between current and next year
+      const currentYear = YEARS[yearIdx];
+      const nextYear = YEARS[Math.min(yearIdx + 1, YEARS.length - 1)];
+      const blendScale = lerp(currentYear.solarScale, nextYear.solarScale, yearFrac);
+
+      const solar = peakSolar.map(v => v * blendScale);
+      const netDem = getNetDemand(solar);
 
       ctx.clearRect(0, 0, width, height);
 
-      // Grid
+      // Grid lines
       ctx.setLineDash([3, 5]);
       ctx.lineWidth = 0.5;
       ctx.strokeStyle = colors.textDim + '15';
-      for (let gw = 0; gw <= 60; gw += 10) {
+      for (let gw = -10; gw <= 60; gw += 10) {
         const y = padTop + (Y_MAX - gw) * yScale;
         ctx.beginPath();
         ctx.moveTo(padLeft, y);
@@ -108,6 +139,19 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
       }
       ctx.setLineDash([]);
 
+      // Zero line (emphasized)
+      const zeroY = padTop + Y_MAX * yScale;
+      ctx.strokeStyle = colors.textDim + '30';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(padLeft, zeroY);
+      ctx.lineTo(width - padRight, zeroY);
+      ctx.stroke();
+      ctx.fillStyle = colors.textDim + '60';
+      ctx.font = '8px JetBrains Mono';
+      ctx.textAlign = 'left';
+      ctx.fillText('0 GW', padLeft + 4, zeroY - 4);
+
       // X-axis hours
       ctx.fillStyle = colors.textDim + '60';
       ctx.font = '9px JetBrains Mono';
@@ -118,191 +162,151 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
       }
 
       // Day/night shading
-      // Night: 0-6, 19-24
       ctx.fillStyle = 'rgba(10, 14, 23, 0.3)';
       ctx.fillRect(padLeft, padTop, 6 * xScale, chartH);
       ctx.fillRect(padLeft + 19 * xScale, padTop, 5 * xScale, chartH);
-      // Day: subtle warm
-      ctx.fillStyle = `rgba(245, 158, 11, 0.06)`;
+      ctx.fillStyle = `rgba(245, 158, 11, 0.05)`;
       ctx.fillRect(padLeft + 6 * xScale, padTop, 13 * xScale, chartH);
 
-      // Faint sun with downward rays
-      {
-        const sunX = padLeft + 12.5 * xScale;
-        const sunY = padTop + 34;
-        const sunR = 10;
-        ctx.save();
-        ctx.globalAlpha = 0.08;
-        // Sun disc
-        ctx.beginPath();
-        ctx.arc(sunX, sunY, sunR, 0, Math.PI * 2);
-        ctx.fillStyle = '#f59e0b';
-        ctx.fill();
-        // Rays fanning downward
-        ctx.strokeStyle = '#f59e0b';
-        ctx.lineWidth = 1;
-        for (let i = 0; i < 9; i++) {
-          const angle = (Math.PI * 0.15) + (i / 8) * (Math.PI * 0.7); // spread across ~125° downward arc
-          const innerR = sunR + 4;
-          const outerR = sunR + 12 + (i % 2 === 0 ? 6 : 0); // alternating long/short
-          ctx.beginPath();
-          ctx.moveTo(sunX + Math.cos(angle) * innerR, sunY + Math.sin(angle) * innerR);
-          ctx.lineTo(sunX + Math.cos(angle) * outerR, sunY + Math.sin(angle) * outerR);
-          ctx.stroke();
-        }
-        ctx.restore();
+      // Negative price zone (below zero) - red shading
+      const minNet = Math.min(...netDem);
+      if (minNet < 0) {
+        ctx.fillStyle = `rgba(239, 68, 68, 0.08)`;
+        const negH = Math.abs(minNet) * yScale;
+        ctx.fillRect(padLeft, zeroY, chartW, Math.min(negH, chartH - (zeroY - padTop)));
       }
 
-      // Solar fill (amber area under solar curve)
+      // Solar fill (amber area)
       ctx.beginPath();
       ctx.moveTo(padLeft, padTop + Y_MAX * yScale);
-      solarGen.forEach((val, i) => {
+      solar.forEach((val, i) => {
         const x = padLeft + i * xScale;
         const y = padTop + (Y_MAX - val) * yScale;
         if (i === 0) ctx.lineTo(x, y);
         else {
           const prevX = padLeft + (i - 1) * xScale;
-          const prevY = padTop + (Y_MAX - solarGen[i - 1]) * yScale;
+          const prevY = padTop + (Y_MAX - solar[i - 1]) * yScale;
           const cpX = (prevX + x) / 2;
           ctx.bezierCurveTo(cpX, prevY, cpX, y, x, y);
         }
       });
       ctx.lineTo(padLeft + 23 * xScale, padTop + Y_MAX * yScale);
       ctx.closePath();
-      ctx.fillStyle = `rgba(245, 158, 11, 0.12)`;
+      ctx.fillStyle = `rgba(245, 158, 11, 0.10)`;
       ctx.fill();
 
       // Solar generation line
-      ctx.strokeStyle = colors.solar + '80';
-      ctx.lineWidth = 1.5;
-      smoothLine(ctx, solarGen, xScale, yScale, padLeft, padTop);
+      ctx.strokeStyle = colors.solar + '70';
+      ctx.lineWidth = 1.2;
+      smoothLine(ctx, solar, xScale, yScale, padLeft, padTop, Y_MAX);
       ctx.stroke();
 
-      // Battery action visualization (when blending toward VPP)
-      if (blend > 0.05) {
-        // Charging zone (midday) — green fill below netDemand
-        ctx.beginPath();
-        let started = false;
-        HOURS.forEach((h) => {
-          if (batteryAction[h] < -1) {
-            const x = padLeft + h * xScale;
-            const yNet = padTop + (Y_MAX - netDemand[h]) * yScale;
-            const yVpp = padTop + (Y_MAX - lerp(netDemand[h], vppNetDemand[h], blend)) * yScale;
-            if (!started) { ctx.moveTo(x, yNet); started = true; }
-            else {
-              const prevH = h - 1;
-              const prevX = padLeft + prevH * xScale;
-              const cpX = (prevX + x) / 2;
-              ctx.bezierCurveTo(cpX, padTop + (60 - netDemand[prevH]) * yScale, cpX, yNet, x, yNet);
-            }
-          }
-        });
-        // Close back along VPP line
-        for (let h = 18; h >= 0; h--) {
-          if (batteryAction[h] < -1) {
-            const x = padLeft + h * xScale;
-            const yVpp = padTop + (Y_MAX - lerp(netDemand[h], vppNetDemand[h], blend)) * yScale;
-            ctx.lineTo(x, yVpp);
-          }
-        }
-        ctx.closePath();
-        ctx.fillStyle = `rgba(16, 185, 129, ${0.15 * blend})`;
-        ctx.fill();
-
-        // Discharge zone (evening)
-        ctx.beginPath();
-        started = false;
-        HOURS.forEach((h) => {
-          if (batteryAction[h] > 1) {
-            const x = padLeft + h * xScale;
-            const yNet = padTop + (Y_MAX - netDemand[h]) * yScale;
-            if (!started) { ctx.moveTo(x, yNet); started = true; }
-            else ctx.lineTo(x, yNet);
-          }
-        });
-        for (let h = 23; h >= 0; h--) {
-          if (batteryAction[h] > 1) {
-            const x = padLeft + h * xScale;
-            const yVpp = padTop + (Y_MAX - lerp(netDemand[h], vppNetDemand[h], blend)) * yScale;
-            ctx.lineTo(x, yVpp);
-          }
-        }
-        ctx.closePath();
-        ctx.fillStyle = `rgba(16, 185, 129, ${0.1 * blend})`;
-        ctx.fill();
+      // Ghost trails of previous years (faint)
+      for (let yi = 0; yi < yearIdx; yi++) {
+        const ghostSolar = getSolarForYear(YEARS[yi]);
+        const ghostNet = getNetDemand(ghostSolar);
+        const age = yearIdx - yi;
+        const alpha = Math.max(0.06, 0.2 - age * 0.04);
+        ctx.strokeStyle = colors.primary + Math.floor(alpha * 255).toString(16).padStart(2, '0');
+        ctx.lineWidth = 1;
+        smoothLine(ctx, ghostNet, xScale, yScale, padLeft, padTop, Y_MAX);
+        ctx.stroke();
       }
 
       // Base demand (gray dashed)
       ctx.setLineDash([6, 4]);
-      ctx.strokeStyle = colors.textDim + '40';
+      ctx.strokeStyle = colors.textDim + '35';
       ctx.lineWidth = 1;
-      smoothLine(ctx, baseDemand, xScale, yScale, padLeft, padTop);
+      smoothLine(ctx, baseDemand, xScale, yScale, padLeft, padTop, Y_MAX);
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // Net demand (the duck) — interpolate between modes
-      const currentNet = HOURS.map(h => lerp(netDemand[h], vppNetDemand[h], blend));
-
+      // Current net demand (the duck) - bright cyan
       ctx.strokeStyle = colors.primary;
       ctx.lineWidth = 2.5;
-      ctx.shadowBlur = 8;
+      ctx.shadowBlur = 10;
       ctx.shadowColor = colors.primary;
-      smoothLine(ctx, currentNet, xScale, yScale, padLeft, padTop);
+      smoothLine(ctx, netDem, xScale, yScale, padLeft, padTop, Y_MAX);
       ctx.stroke();
       ctx.shadowBlur = 0;
 
-      // Overgeneration zone highlight (net demand < 0 or very low)
-      if (blend < 0.5) {
-        const minNet = Math.min(...currentNet);
-        if (minNet < 18) {
-          // Find the belly of the duck
-          const bellyHour = currentNet.indexOf(minNet);
-          const bellyX = padLeft + bellyHour * xScale;
-          const bellyY = padTop + (Y_MAX - minNet) * yScale;
+      // Overgeneration / negative pricing annotation
+      if (minNet < 5) {
+        const bellyHour = netDem.indexOf(minNet);
+        const bellyX = padLeft + bellyHour * xScale;
+        const bellyY = padTop + (Y_MAX - minNet) * yScale;
+        const pulse = Math.sin(t * 3) * 0.3 + 0.7;
 
-          // Pulsing arrow pointing to the belly
-          const pulse = Math.sin(t * 3) * 0.3 + 0.7;
-          ctx.fillStyle = `rgba(245, 158, 11, ${0.6 * pulse * (1 - blend * 2)})`;
+        if (minNet < 0) {
+          // Negative pricing callout
+          ctx.fillStyle = `rgba(239, 68, 68, ${0.8 * pulse})`;
+          ctx.font = 'bold 12px JetBrains Mono';
+          ctx.textAlign = 'center';
+          ctx.fillText('NEGATIVE PRICES', bellyX, bellyY + 18);
+          ctx.font = '10px JetBrains Mono';
+          ctx.fillStyle = `rgba(239, 68, 68, ${0.6 * pulse})`;
+          ctx.fillText('Paid to NOT generate', bellyX, bellyY + 32);
+        } else {
+          ctx.fillStyle = `rgba(245, 158, 11, ${0.6 * pulse})`;
           ctx.font = 'bold 11px JetBrains Mono';
           ctx.textAlign = 'center';
-          ctx.fillText('\u2193 Overgeneration', bellyX, bellyY + 20);
+          ctx.fillText('\u2193 Overgeneration', bellyX, bellyY + 18);
         }
+      }
 
-        // Steep ramp annotation
-        const rampStart = padLeft + 16 * xScale;
-        const rampEnd = padLeft + 19 * xScale;
-        const rampYStart = padTop + (Y_MAX - currentNet[16]) * yScale;
-        const rampYEnd = padTop + (Y_MAX - currentNet[19]) * yScale;
-        ctx.strokeStyle = `rgba(239, 68, 68, ${0.5 * (1 - blend * 2)})`;
+      // Evening ramp annotation
+      const rampDelta = netDem[19] - netDem[14];
+      if (rampDelta > 20) {
+        const rampX = padLeft + 17.5 * xScale;
+        const rampY1 = padTop + (Y_MAX - netDem[14]) * yScale;
+        const rampY2 = padTop + (Y_MAX - netDem[19]) * yScale;
+        const pulse = Math.sin(t * 2.5) * 0.2 + 0.8;
+
+        // Vertical bracket
+        ctx.strokeStyle = `rgba(239, 68, 68, ${0.5 * pulse})`;
         ctx.lineWidth = 1.5;
         ctx.setLineDash([3, 3]);
         ctx.beginPath();
-        ctx.moveTo(rampEnd + 10, rampYStart);
-        ctx.lineTo(rampEnd + 10, rampYEnd);
+        ctx.moveTo(rampX + 12, rampY1);
+        ctx.lineTo(rampX + 12, rampY2);
         ctx.stroke();
         ctx.setLineDash([]);
-        ctx.fillStyle = `rgba(239, 68, 68, ${0.6 * (1 - blend * 2)})`;
-        ctx.font = '10px JetBrains Mono';
+
+        // Ramp label
+        ctx.fillStyle = `rgba(239, 68, 68, ${0.7 * pulse})`;
+        ctx.font = 'bold 11px JetBrains Mono';
         ctx.textAlign = 'left';
-        ctx.fillText('Steep ramp', rampEnd + 15, (rampYStart + rampYEnd) / 2 + 3);
+        ctx.fillText(`${Math.round(rampDelta)} GW ramp`, rampX + 18, (rampY1 + rampY2) / 2 - 6);
+        ctx.font = '9px JetBrains Mono';
+        ctx.fillText('Price spike zone', rampX + 18, (rampY1 + rampY2) / 2 + 8);
       }
+
+      // Year indicator (prominent)
+      const displayYear = YEARS[yearIdx];
+      ctx.fillStyle = colors.text;
+      ctx.font = 'bold 28px JetBrains Mono';
+      ctx.textAlign = 'right';
+      ctx.fillText(displayYear.label, width - padRight - 10, padTop + 30);
+      ctx.font = '12px Inter';
+      ctx.fillStyle = colors.textMuted;
+      ctx.fillText(displayYear.desc, width - padRight - 10, padTop + 48);
 
       // Title
       ctx.fillStyle = colors.text;
       ctx.font = 'bold 13px JetBrains Mono';
       ctx.textAlign = 'left';
-      ctx.fillText(blend < 0.5 ? 'NET DEMAND — THE DUCK CURVE' : 'NET DEMAND — WITH VPP LOAD SHIFTING', padLeft, 24);
+      ctx.fillText('THE DUCK CURVE -- GROWING EVERY YEAR', padLeft, 24);
 
       // Legend
-      const legendY = height - 10;
+      const legendY = height - 8;
       ctx.font = '10px Inter';
       [
-        { color: colors.primary, label: 'Net Demand', dash: false },
+        { color: colors.primary, label: 'Net Demand (current year)', dash: false },
+        { color: colors.primary + '30', label: 'Previous years', dash: false },
         { color: colors.textDim + '60', label: 'Base Demand', dash: true },
-        { color: colors.solar, label: 'Solar Gen', dash: false },
-        ...(blend > 0.3 ? [{ color: colors.success, label: 'Battery Action', dash: false }] : []),
+        { color: colors.solar, label: 'Solar Generation', dash: false },
       ].forEach((item, i) => {
-        const lx = padLeft + i * 120;
+        const lx = padLeft + i * 155;
         ctx.fillStyle = item.color;
         ctx.fillRect(lx, legendY - 4, 12, item.dash ? 1 : 8);
         ctx.fillStyle = colors.textMuted;
@@ -318,38 +322,9 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
   }, [width, height, slideContext?.isSlideActive]);
 
   return (
-    <div style={{ position: 'relative' }}>
-      <canvas
-        ref={canvasRef}
-        style={{ width, height }}
-      />
-      <div style={{ position: 'absolute', bottom: 12, right: 12, display: 'flex', gap: 6 }}>
-        {[
-          { key: 'without', label: 'Without Storage', color: colors.accent },
-          { key: 'with', label: 'With VPP', color: colors.success },
-        ].map(btn => {
-          const isActive = mode === btn.key;
-          return (
-            <button
-              key={btn.key}
-              onClick={() => setMode(btn.key)}
-              style={{
-                background: isActive ? `${btn.color}25` : colors.surface,
-                border: `1px solid ${isActive ? btn.color : colors.surfaceLight}`,
-                color: isActive ? btn.color : colors.textMuted,
-                padding: '5px 14px',
-                borderRadius: 6,
-                cursor: 'pointer',
-                fontSize: 12,
-                fontFamily: '"JetBrains Mono"',
-                fontWeight: isActive ? 600 : 400,
-              }}
-            >
-              {btn.label}
-            </button>
-          );
-        })}
-      </div>
-    </div>
+    <canvas
+      ref={canvasRef}
+      style={{ width, height }}
+    />
   );
 }

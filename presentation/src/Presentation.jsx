@@ -4,6 +4,7 @@ import { colors } from './theme';
 import FrequencyDemo from './components/FrequencyDemo';
 import RenewableGrowthChart from './components/RenewableGrowthChart';
 import DuckCurveChart from './components/DuckCurveChart';
+import DuckCurveVPP from './components/DuckCurveVPP';
 import AnimatedStat from './components/AnimatedStat';
 import StaticTexasGrid from './components/StaticTexasGrid';
 import TexasMapHUD from './components/TexasMapHUD';
@@ -16,6 +17,7 @@ import ConsumerIcons from './components/ConsumerIcons';
 import SAMapHUD from './components/SAMapHUD';
 // DEPRECATED: import VPPExplainerZoom from './components/VPPExplainerZoom';
 import EnpalArchitectureDiagram from './components/EnpalArchitectureDiagram';
+import VPPScenarioSlide from './components/VPPScenarioSlide';
 
 const theme = {
   colors: { primary: colors.text, secondary: colors.textMuted, tertiary: colors.primary },
@@ -343,7 +345,7 @@ export default function Presentation() {
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H>The Duck Curve Problem</H>
-          <P size="20px">Solar floods the grid midday. Demand ramps steeply at sunset. The grid can't cope.</P>
+          <P size="20px">More solar every year. The belly deepens. The evening ramp steepens. Prices go haywire.</P>
           <div className="flex-1 flex justify-center items-center">
             <DuckCurveChart width={940} height={440} />
           </div>
@@ -471,7 +473,7 @@ export default function Presentation() {
           <H color={colors.success}>Now We Shift the Load</H>
           <P size="20px">Batteries absorb midday solar. Discharge in the evening. Click "With VPP" below.</P>
           <div className="flex-1 flex justify-center items-center">
-            <DuckCurveChart width={940} height={440} />
+            <DuckCurveVPP width={940} height={440} />
           </div>
         </div>
       </Slide>
@@ -498,6 +500,16 @@ export default function Presentation() {
             ))}
           </div>
         </div>
+      </Slide>
+
+      {/* 24: VPP in Action — Summer Arbitrage */}
+      <Slide backgroundColor={bg} padding="0">
+        <VPPScenarioSlide scenario="summer" />
+      </Slide>
+
+      {/* 25: VPP in Action — Winter Grid Emergency */}
+      <Slide backgroundColor={bg} padding="0">
+        <VPPScenarioSlide scenario="winter" />
       </Slide>
 
       {/* ── The Architecture (sub-section) ── */}
