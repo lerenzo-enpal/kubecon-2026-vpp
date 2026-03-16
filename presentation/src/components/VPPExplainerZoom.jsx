@@ -4,12 +4,12 @@ import { SlideContext, useSteps } from 'spectacle';
 // ── Virtual space is 3200×2000. Steps define focus point + scale ──
 // focusX/Y = center of interest in virtual-space coords
 const STEPS = [
-  { scale: 2.0, focusX: 1600, focusY: 1490, title: 'Inside a Smart Home', desc: 'A single household with solar, battery, heat pump, EV — all wired through one smart inverter.' },
-  { scale: 2.5, focusX: 1590, focusY: 1460, title: 'The Edge Device', desc: 'The hybrid inverter is the brain — measuring, deciding, and responding in milliseconds.' },
-  { scale: 0.85, focusX: 1600, focusY: 920, title: 'Connected to the Cloud', desc: 'MQTT telemetry streams up. Dispatch commands flow down. Every home is a real-time endpoint.' },
-  { scale: 0.52, focusX: 1500, focusY: 750, title: 'A Fleet of Thousands', desc: 'Thousands of homes form a distributed fleet — orchestrated by Kubernetes and Dapr on the edge.' },
-  { scale: 0.38, focusX: 1500, focusY: 650, title: 'Grid Services', desc: 'The fleet bids into frequency markets and responds to grid operator dispatch — like a power plant.' },
-  { scale: 0.32, focusX: 1500, focusY: 700, title: 'The Complete Picture', desc: 'A Virtual Power Plant: thousands of homes, one intelligent platform, real grid services.' },
+  { scale: 1.0,  focusX: 1600, focusY: 1490, title: 'Inside a Smart Home', desc: 'A single household with solar, battery, heat pump, EV — all wired through one smart inverter.' },
+  { scale: 1.25, focusX: 1590, focusY: 1460, title: 'The Edge Device', desc: 'The hybrid inverter is the brain — measuring, deciding, and responding in milliseconds.' },
+  { scale: 0.58, focusX: 1600, focusY: 920,  title: 'Connected to the Cloud', desc: 'MQTT telemetry streams up. Dispatch commands flow down. Every home is a real-time endpoint.' },
+  { scale: 0.38, focusX: 1500, focusY: 750,  title: 'A Fleet of Thousands', desc: 'Thousands of homes form a distributed fleet — orchestrated by Kubernetes and Dapr on the edge.' },
+  { scale: 0.28, focusX: 1500, focusY: 650,  title: 'Grid Services', desc: 'The fleet bids into frequency markets and responds to grid operator dispatch — like a power plant.' },
+  { scale: 0.24, focusX: 1500, focusY: 700,  title: 'The Complete Picture', desc: 'A Virtual Power Plant: thousands of homes, one intelligent platform, real grid services.' },
 ];
 
 // ── Home asset data ──────────────────────────────────────────
@@ -154,7 +154,7 @@ export default function VPPExplainerZoom() {
   // transform: translate(tx, ty) scale(s) → point (x,y) maps to (s*x + tx, s*y + ty)
   // To center (focusX, focusY): tx = vw/2 - s*focusX, ty = vh/2 - s*focusY
   const { w: vw, h: vh } = containerSize;
-  const s = step ? step.scale : 0.28;
+  const s = step ? step.scale : 0.22;
   const fx = step ? step.focusX : 1500;
   const fy = step ? step.focusY : 700;
   const tx = vw / 2 - s * fx;
