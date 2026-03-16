@@ -33,20 +33,20 @@ const NODES = [
 
   // Controlled devices below IoT HEMS — spread horizontally so each has a clear line to HEMS
   { id: 'hp',          label: 'Heat Pump',       sub: '',                   x: 0.14, y: 0.62, color: colors.success,    w: 84,  h: 34 },
-  { id: 'wallbox',     label: 'Wallbox',         sub: 'EV Charger',        x: 0.26, y: 0.62, color: colors.success,    w: 84,  h: 34 },
+  { id: 'wallbox',     label: 'Wallbox',         sub: 'EV Charger',        x: 0.22, y: 0.62, color: colors.success,    w: 84,  h: 34 },
 
-  // === CLOUD / DATA PIPELINE / VPP (spread across remaining 70%) ===
-  { id: 'emqx',        label: 'EMQX',            sub: 'MQTT Broker',       x: 0.33, y: 0.30, color: colors.primary,    w: 94,  h: 42 },
-  { id: 'ingestion',   label: 'Data Ingestion',  sub: 'Protobuf · 20s',   x: 0.45, y: 0.30, color: colors.secondary,  w: 110, h: 42 },
-  { id: 'databricks',  label: 'Databricks',      sub: 'Bronze → Gold',    x: 0.58, y: 0.30, color: '#FF3621',         w: 105, h: 42 },
-  { id: 'spark',       label: 'Spark Streaming', sub: 'Aggregates',       x: 0.72, y: 0.30, color: '#E25A1C',         w: 120, h: 42 },
+  // === CLOUD / DATA PIPELINE / VPP ===
+  { id: 'emqx',        label: 'EMQX',            sub: 'MQTT Broker',       x: 0.36, y: 0.30, color: colors.primary,    w: 94,  h: 42 },
+  { id: 'ingestion',   label: 'Data Ingestion',  sub: 'Protobuf · 20s',   x: 0.48, y: 0.30, color: colors.secondary,  w: 110, h: 42 },
+  { id: 'databricks',  label: 'Databricks',      sub: 'Bronze → Gold',    x: 0.61, y: 0.30, color: '#FF3621',         w: 105, h: 42 },
+  { id: 'spark',       label: 'Spark Streaming', sub: 'Aggregates',       x: 0.74, y: 0.30, color: '#E25A1C',         w: 120, h: 42 },
 
   // Control bridge — bottom row
-  { id: 'cloud_hems',  label: 'Cloud HEMS',      sub: 'Orchestration',    x: 0.33, y: 0.72, color: colors.primary,    w: 105, h: 42 },
-  { id: 'event_hub',   label: 'Event Hub',       sub: 'Azure',            x: 0.58, y: 0.72, color: colors.accent,     w: 105, h: 42 },
+  { id: 'cloud_hems',  label: 'Cloud HEMS',      sub: 'Orchestration',    x: 0.36, y: 0.72, color: colors.primary,    w: 105, h: 42 },
+  { id: 'event_hub',   label: 'Event Hub',       sub: 'Azure',            x: 0.61, y: 0.72, color: colors.accent,     w: 105, h: 42 },
 
   // Flexa — close to Event Hub, far right
-  { id: 'flexa',       label: 'Flexa',           sub: 'VPP Controller',   x: 0.82, y: 0.52, color: colors.accent,     w: 120, h: 48 },
+  { id: 'flexa',       label: 'Flexa',           sub: 'VPP Controller',   x: 0.85, y: 0.52, color: colors.accent,     w: 120, h: 48 },
 ];
 
 const EDGES = [
@@ -170,14 +170,21 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
         ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(width, gy); ctx.stroke();
       }
 
-      // Section divider between home and cloud
-      const divX = width * 0.34;
-      ctx.strokeStyle = colors.textDim + '12';
+      // Section dividers (dotted)
+      ctx.strokeStyle = colors.textDim + '18';
       ctx.lineWidth = 1;
       ctx.setLineDash([4, 4]);
+      // Grid | Home divider
+      const divGrid = width * 0.03;
       ctx.beginPath();
-      ctx.moveTo(divX, 10);
-      ctx.lineTo(divX, height - 10);
+      ctx.moveTo(divGrid, 10);
+      ctx.lineTo(divGrid, height - 10);
+      ctx.stroke();
+      // Home | Cloud divider
+      const divCloud = width * 0.31;
+      ctx.beginPath();
+      ctx.moveTo(divCloud, 10);
+      ctx.lineTo(divCloud, height - 10);
       ctx.stroke();
       ctx.setLineDash([]);
 
@@ -340,10 +347,10 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
       ctx.fillText('GRID', 10, height * 0.04 + 4);
 
       ctx.fillStyle = colors.success + '70';
-      ctx.fillText('HOME', width * 0.14, height * 0.04 + 4);
+      ctx.fillText('HOME', width * 0.06, height * 0.04 + 4);
 
       ctx.fillStyle = colors.primary + '70';
-      ctx.fillText('CLOUD / DATA PIPELINE / VPP', width * 0.37, height * 0.04 + 4);
+      ctx.fillText('CLOUD / DATA PIPELINE / VPP', width * 0.36, height * 0.04 + 4);
 
       // Legend
       ctx.font = '10px JetBrains Mono';
