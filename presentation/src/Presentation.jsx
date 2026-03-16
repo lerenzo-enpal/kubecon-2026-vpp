@@ -614,7 +614,7 @@ export default function Presentation() {
             </div>
             <div className="absolute bottom-10 flex items-center gap-2" style={{ color: colors.textDim, fontSize: 14, fontFamily: '"JetBrains Mono", monospace' }}>
               <span>Special thanks to</span>
-              <span style={{ color: colors.success }}>Rose</span>
+              <span style={{ color: colors.success }}>@engineeringwithRosie</span>
               <span style={{ opacity: 0.4 }}>&</span>
               <span>the Enpal Engineering team</span>
             </div>
