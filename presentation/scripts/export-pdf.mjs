@@ -32,7 +32,7 @@ const OUT_DIR = resolve(import.meta.dirname, '../..');
 
 function nextVersion() {
   const files = readdirSync(OUT_DIR);
-  const pattern = new RegExp(`^${BASE_NAME}_v(\\d{3})\\.pdf$`);
+  const pattern = new RegExp(`^20260324_${BASE_NAME}_v(\\d{3})\\.pdf$`);
   let max = 0;
   for (const f of files) {
     const m = f.match(pattern);
@@ -43,7 +43,7 @@ function nextVersion() {
 
 const ver = nextVersion();
 const verStr = String(ver).padStart(3, '0');
-const OUTPUT = join(OUT_DIR, `${BASE_NAME}_v${verStr}.pdf`);
+const OUTPUT = join(OUT_DIR, `20260324_${BASE_NAME}_v${verStr}.pdf`);
 
 console.log(`Exporting ${URL} → ${OUTPUT}`);
 if (MAX_SLIDES) console.log(`Limiting to first ${MAX_SLIDES} slides`);
