@@ -15,7 +15,7 @@ import VPPComposite from './components/VPPComposite';
 import GridFlowDemo from './components/GridFlowDemo';
 import ConsumerIcons from './components/ConsumerIcons';
 import SAMapHUD from './components/SAMapHUD';
-import VPPExplainerZoom from './components/VPPExplainerZoom';
+// DEPRECATED: import VPPExplainerZoom from './components/VPPExplainerZoom';
 import EnpalArchitectureDiagram from './components/EnpalArchitectureDiagram';
 
 const theme = {
@@ -519,10 +519,35 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 29: What Is a VPP? — Interactive Zoom Explainer */}
-      <Slide backgroundColor={bg} padding="0px">
-        <div className="w-full h-full">
-          <VPPExplainerZoom />
+      {/* 29: What Is a VPP? */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col h-full">
+          <H>What Is a Virtual Power Plant?</H>
+          <P size="20px" color={colors.text}>Software that <span className="font-semibold" style={{ color: colors.primary }}>aggregates</span> distributed energy resources and <span className="font-semibold" style={{ color: colors.success }}>operates</span> them as a coordinated power plant.</P>
+          <div className="flex-1 flex items-center justify-center">
+            <div className="flex items-center gap-3.5">
+              <div className="bg-hud-surface rounded-[10px] p-4 border border-hud-surface-light">
+                {['Solar Panels', 'Home Batteries', 'EV Chargers', 'Heat Pumps'].map((a, i) => (
+                  <div key={a} className="flex items-center gap-2 mb-1.5 text-[20px] text-hud-text font-sans">
+                    <div className="w-2 h-2 rounded-full" style={{ background: [colors.solar, colors.success, colors.primary, colors.secondary][i] }} />{a}
+                  </div>
+                ))}
+              </div>
+              <div className="text-[22px] text-hud-primary font-mono">{'\u2192'}</div>
+              <div className="rounded-xl px-7 py-[22px] text-center" style={{ background: `${colors.primary}08`, border: `1px solid ${colors.primary}30` }}>
+                <div className="text-[20px] font-bold text-hud-primary font-sans">Cloud Platform</div>
+                <div className="text-[20px] text-hud-text-muted font-mono mt-1.5">Kubernetes + Dapr<br />Event-driven control</div>
+              </div>
+              <div className="text-[22px] text-hud-primary font-mono">{'\u2192'}</div>
+              <div className="bg-hud-surface rounded-[10px] p-4 border border-hud-surface-light">
+                {['Frequency Regulation', 'Peak Shaving', 'Energy Arbitrage', 'Demand Response'].map((s, i) => (
+                  <div key={s} className="flex items-center gap-2 mb-1.5 text-[20px] text-hud-text font-sans">
+                    <div className="w-2 h-2 rounded-full" style={{ background: [colors.danger, colors.accent, colors.success, colors.primary][i] }} />{s}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </Slide>
 
