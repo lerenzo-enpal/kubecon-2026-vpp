@@ -267,14 +267,6 @@ export default function VPPArchitecture({ width = 960, height = 540 }) {
         const sunR = 16;
         ctx.save();
         ctx.globalAlpha = sunAlpha * 0.7;
-        // Sun glow halo
-        const grad = ctx.createRadialGradient(sunX, sunY, sunR, sunX, sunY, sunR * 4);
-        grad.addColorStop(0, '#f59e0b30');
-        grad.addColorStop(1, '#f59e0b00');
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(sunX, sunY, sunR * 4, 0, Math.PI * 2);
-        ctx.fill();
         // Sun disc
         ctx.beginPath();
         ctx.arc(sunX, sunY, sunR, 0, Math.PI * 2);
@@ -367,14 +359,19 @@ export default function VPPArchitecture({ width = 960, height = 540 }) {
         ctx.stroke();
         ctx.shadowBlur = 0;
 
-        // PV panel — right side of roof, tilted to face sun
-        const pvX = cx + hw + 14;
-        const pvY = cy - bodyH / 2 - 6;
+        // PV panel — on right roof slope
+        const roofPeakX = cx;
+        const roofPeakY = cy - roofH - bodyH / 2;
+        const roofBaseX = cx + hw + 5;
+        const roofBaseY = cy - bodyH / 2;
+        const roofAngle = Math.atan2(roofBaseY - roofPeakY, roofBaseX - roofPeakX);
+        const pvX = roofPeakX + (roofBaseX - roofPeakX) * 0.5;
+        const pvY = roofPeakY + (roofBaseY - roofPeakY) * 0.5;
         const pvW = 22;
         const pvH = 10;
         ctx.save();
         ctx.translate(pvX, pvY);
-        ctx.rotate(0.2);
+        ctx.rotate(roofAngle);
         // Panel body
         const pvGlow = isDay ? sunAlpha * 0.4 : 0;
         ctx.fillStyle = `rgba(59, 130, 246, ${0.5 + pvGlow})`;
@@ -450,15 +447,6 @@ export default function VPPArchitecture({ width = 960, height = 540 }) {
         }
         // isPulling: no arrow on battery (it's depleted, grid feeds house)
       });
-
-      // Flow direction labels
-      ctx.font = 'bold 13px JetBrains Mono';
-      ctx.fillStyle = colors.accent + '50';
-      ctx.textAlign = 'left';
-      ctx.fillText('COMMANDS \u2192', 10, 20);
-      ctx.fillStyle = colors.success + '50';
-      ctx.textAlign = 'right';
-      ctx.fillText('\u2190 TELEMETRY', width - 10, 20);
 
       if (isActive) animRef.current = requestAnimationFrame(draw);
     }

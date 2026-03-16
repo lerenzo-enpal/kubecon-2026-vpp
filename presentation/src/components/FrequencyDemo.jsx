@@ -4,11 +4,12 @@ import { colors } from '../theme';
 
 // Event-based scenarios — getDelta receives GRID TIME in seconds (real time × timeScale)
 // Real grid: primary reserves 0-30s, secondary 30s-15min, tertiary 15min+
+// Target: each scenario completes in ~5 real seconds for presentation pacing
 const SCENARIOS = [
   {
     label: 'Generator Trip (800 MW)',
     color: 'accent',
-    timeScale: 95, // 1 real second = 95 grid seconds → ~8s real for full scenario
+    timeScale: 150, // 1 real second = 150 grid seconds → ~5s real for full scenario
     // Realistic: inertia → RoCoF → nadir at ~10s → primary arrest → secondary restore → nominal
     getDelta: (gt) => {
       if (gt < 2) return 0;                                                // system inertia absorbs initial shock
@@ -32,7 +33,7 @@ const SCENARIOS = [
   {
     label: '3 GW Loss of Generation',
     color: 'danger',
-    timeScale: 150, // 1 real second = 150 grid seconds → ~8s real for full scenario
+    timeScale: 240, // 1 real second = 240 grid seconds → ~5s real for full scenario
     // Severe: steep RoCoF, UFLS activates, load shedding stabilizes, slow full recovery
     getDelta: (gt) => {
       if (gt < 1) return 0;                                                // inertia
@@ -58,7 +59,7 @@ const SCENARIOS = [
   {
     label: 'Sudden Demand Drop (5 GW)',
     color: 'accent',
-    timeScale: 75, // 1 real second = 75 grid seconds → ~8s real
+    timeScale: 120, // 1 real second = 120 grid seconds → ~5s real
     // Over-frequency: too much supply, generators ramp down, AGC restores
     getDelta: (gt) => {
       if (gt < 1) return 0;                                                // inertia
@@ -82,7 +83,7 @@ const SCENARIOS = [
   {
     label: 'Cyber Attack',
     color: 'danger',
-    timeScale: 180, // 1 real second = 180 grid seconds
+    timeScale: 290, // 1 real second = 290 grid seconds → ~5s real
     // Coordinated SCADA compromise — cascading trips, no recovery
     getDelta: (gt) => {
       if (gt < 30) return 0;                                               // attacker in system, reconnaissance
@@ -196,7 +197,7 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
   // Panel state: exposed freq data for the HTML readout panel
   const [panelData, setPanelData] = useState({
     freq: 50.0, delta: 0, statusText: 'GRID STABLE', statusColor: colors.primary,
-    statusSeverity: 0, lineColor: colors.primary, gridTime: 0, timeScale: 1,
+    statusSeverity: 0, lineColor: colors.primary, gridTime: 0, timeScale: 100,
   });
   const [visibleEvents, setVisibleEvents] = useState([]);
   const eventFeedRef = useRef(null);
@@ -276,7 +277,7 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
     setVisibleEvents([]);
     setPanelData({
       freq: 50.0, delta: 0, statusText: 'GRID STABLE', statusColor: colors.primary,
-      statusSeverity: 0, lineColor: colors.primary, gridTime: 0, timeScale: 1,
+      statusSeverity: 0, lineColor: colors.primary, gridTime: 0, timeScale: 100,
     });
   };
 
@@ -428,7 +429,7 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
           freq, delta: freqDelta, statusText: lastStatusRef.current.text,
           statusColor: lastStatusRef.current.color, statusSeverity: lastStatusRef.current.severity,
           lineColor: lineColorRef.current.color, gridTime,
-          timeScale: instances.length > 0 ? (SCENARIOS[instances[0].scenarioIdx].timeScale || 1) : 1,
+          timeScale: instances.length > 0 ? (SCENARIOS[instances[0].scenarioIdx].timeScale || 100) : 100,
         });
         // Update visible events from all active instances
         if (instances.length > 0) {
@@ -786,7 +787,7 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
           const mm = String(Math.floor(totalSec / 60)).padStart(2, '0');
           const ss = String(totalSec % 60).padStart(2, '0');
           const firstSc2 = SCENARIOS[instances[0].scenarioIdx];
-          const timeScaleVal = firstSc2.timeScale || 1;
+          const timeScaleVal = firstSc2.timeScale || 100;
 
           ctx.textAlign = 'left';
           ctx.font = 'bold 13px JetBrains Mono';
@@ -1157,7 +1158,7 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
               &nbsp;&nbsp;{'\u0394'} {'\u00b1'}{panelData.delta.toFixed(3)} Hz
             </div>
             {/* Timer + scale */}
-            <div style={{ fontSize: 11, marginTop: 4, color: colors.textDim + 'bb' }}>
+            <div style={{ fontSize: 14, marginTop: 4, color: colors.textDim }}>
               &nbsp;&nbsp;{panelData.gridTime > 0 ? formatGT(Math.floor(panelData.gridTime)) : 'T+00:00'} · {panelData.timeScale}× speed
             </div>
             {/* Status */}

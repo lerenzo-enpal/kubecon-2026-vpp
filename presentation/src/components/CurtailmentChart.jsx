@@ -77,8 +77,8 @@ export default function CurtailmentChart({ width = 900, height = 380 }) {
       lastTime = now;
 
       if (isActive) {
-        // Smooth wave: t goes from 0 to 1 over ~3 seconds
-        tRef.current = Math.min(tRef.current + dt / 3.0, 1.0);
+        // Smooth wave: t goes from 0 to 1 over ~1.5 seconds (2x speed)
+        tRef.current = Math.min(tRef.current + dt / 1.5, 1.0);
       }
       const t = tRef.current;
 

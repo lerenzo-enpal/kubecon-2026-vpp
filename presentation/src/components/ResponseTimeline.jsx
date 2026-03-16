@@ -21,10 +21,11 @@ function msToLabel(ms) {
   return `${(ms / 3600000).toFixed(0)} hr`;
 }
 
-export default function ResponseTimeline({ width = 860, height = 130 }) {
+export default function ResponseTimeline({ width = 860, height = 130, delay = 0 }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const tRef = useRef(0);
+  const delayRef = useRef(0);
   const slideContext = useContext(SlideContext);
 
   useEffect(() => {
@@ -48,7 +49,11 @@ export default function ResponseTimeline({ width = 860, height = 130 }) {
       lastTime = now;
 
       if (isActive) {
-        tRef.current = Math.min(tRef.current + dt / 2.0, 1.0);
+        if (delayRef.current < delay) {
+          delayRef.current += dt;
+        } else {
+          tRef.current = Math.min(tRef.current + dt / 2.0, 1.0);
+        }
       }
       const t = tRef.current;
       const ease = 1 - Math.pow(1 - t, 3);
@@ -159,6 +164,7 @@ export default function ResponseTimeline({ width = 860, height = 130 }) {
   useEffect(() => {
     if (slideContext?.isSlideActive) {
       tRef.current = 0;
+      delayRef.current = 0;
     }
   }, [slideContext?.isSlideActive]);
 

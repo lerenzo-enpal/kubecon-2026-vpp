@@ -450,19 +450,19 @@ export default function DuckCurveChart({ width = 1100, height = 480 }) {
         if (stats.curtailedTwh !== null) {
           drawStatBox('curtailed', `${stats.curtailedTwh} TWh`, 'annual', colors.accent);
         } else {
-          drawStatBox('curtailed', 'est. 12+ TWh', 'projected', colors.accent + '80');
+          drawStatBox('curtailed', '12+ TWh est.', 'projected', colors.accent);
         }
 
         if (stats.compensationEurM !== null) {
           drawStatBox('compensation', `EUR ${stats.compensationEurM}M`, 'annual', colors.primary);
         } else {
-          drawStatBox('compensation', 'est. EUR 600M+', 'projected', colors.primary + '80');
+          drawStatBox('compensation', 'EUR 600M+ est.', 'projected', colors.primary);
         }
 
         if (stats.co2Mt !== null) {
           drawStatBox('CO2 avoidable', `${stats.co2Mt} Mt`, 'annual', colors.textMuted);
         } else {
-          drawStatBox('CO2 avoidable', 'est. 4+ Mt', 'projected', colors.textMuted + '80');
+          drawStatBox('CO2 avoidable', '4+ Mt est.', 'projected', colors.textMuted);
         }
       }
 

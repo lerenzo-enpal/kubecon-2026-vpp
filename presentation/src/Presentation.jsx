@@ -190,7 +190,7 @@ export default function Presentation() {
           </div>
           <div className="flex justify-center">
             <div className="rounded-[10px] text-center" style={{ width: '68%', padding: '14px 24px', background: `${colors.accent}08`, border: `1px solid ${colors.accent}20` }}>
-              <div className="text-[22px] text-hud-text font-sans">The entire European grid operates within a <span className="font-semibold" style={{ color: colors.accent }}>±0.2 Hz</span> band. Cross those thresholds and automated protection systems start disconnecting load or generators.</div>
+              <div className="text-[22px] font-sans" style={{ color: colors.textDim }}>The entire European grid operates within a <span className="font-semibold" style={{ color: colors.accent }}>±0.2 Hz</span> band. Cross those thresholds and automated protection systems start disconnecting load or generators.</div>
             </div>
           </div>
         </div>
@@ -373,7 +373,7 @@ export default function Presentation() {
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col items-center h-full text-center">
           <H size="42px" center>Consumers Become Infrastructure</H>
-          <div className="text-[26px] text-hud-text font-sans leading-[1.7] mt-4 whitespace-nowrap">
+          <div className="text-[30px] text-hud-text font-sans leading-[1.7] mt-10 whitespace-nowrap">
             Homes with solar and batteries can <span className="font-semibold" style={{ color: colors.solar }}>charge</span>, <span className="font-semibold" style={{ color: colors.success }}>export</span>, and <span className="font-semibold" style={{ color: colors.primary }}>shift consumption</span>.
           </div>
           <ConsumerIcons />
@@ -501,7 +501,7 @@ export default function Presentation() {
                   '--glow-color': e.color + '20',
                   animation: `vppEventIn 0.5s ease ${e.delay}s forwards, vppEventGlow 1s ease ${e.delay + 0.4}s both`,
                 }}>
-                <div className="min-w-[140px]">
+                <div className="min-w-[160px]">
                   <div className="text-[17px] font-semibold font-sans" style={{ color: e.color }}>{e.event}</div>
                   <div className="text-[13px] font-mono mt-1" style={{ color: colors.textDim, opacity: 0, animation: `vppEventIn 0.3s ease ${e.delay + 0.25}s forwards` }}>{e.time}</div>
                 </div>
@@ -513,7 +513,7 @@ export default function Presentation() {
             ))}
           </div>
           <div className="flex-1 flex items-end justify-center pb-2">
-            <ResponseTimeline width={860} height={130} />
+            <ResponseTimeline width={860} height={130} delay={2.5} />
           </div>
         </div>
       </Slide>
