@@ -170,18 +170,11 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
         ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(width, gy); ctx.stroke();
       }
 
-      // Section dividers (dotted)
+      // Section divider (dotted) — Home | Cloud
+      const divCloud = width * 0.31;
       ctx.strokeStyle = colors.textDim + '50';
       ctx.lineWidth = 1;
       ctx.setLineDash([4, 4]);
-      // Grid | Home divider
-      const divGrid = width * 0.03;
-      ctx.beginPath();
-      ctx.moveTo(divGrid, 10);
-      ctx.lineTo(divGrid, height - 10);
-      ctx.stroke();
-      // Home | Cloud divider
-      const divCloud = width * 0.31;
       ctx.beginPath();
       ctx.moveTo(divCloud, 10);
       ctx.lineTo(divCloud, height - 10);
@@ -263,36 +256,36 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
         const gridNode = getNode('grid');
         const gx = gridNode.x * width;
         const pulse = 0.5 + 0.5 * Math.sin(now * 1.5);
-        // Vertical glow strip
-        const grad = ctx.createLinearGradient(gx, 0, gx + 50, 0);
-        grad.addColorStop(0, colors.danger + '20');
-        grad.addColorStop(0.5, colors.danger + '08');
+        // Vertical glow strip — wider
+        const grad = ctx.createLinearGradient(gx, 0, gx + 70, 0);
+        grad.addColorStop(0, colors.danger + '28');
+        grad.addColorStop(0.5, colors.danger + '0c');
         grad.addColorStop(1, colors.danger + '00');
         ctx.fillStyle = grad;
-        ctx.fillRect(0, 20, 50, height - 40);
-        // Vertical line
-        ctx.strokeStyle = colors.danger + Math.round(25 + pulse * 20).toString(16).padStart(2, '0');
-        ctx.lineWidth = 2;
+        ctx.fillRect(0, 15, 70, height - 30);
+        // Vertical line — thicker
+        ctx.strokeStyle = colors.danger + Math.round(30 + pulse * 25).toString(16).padStart(2, '0');
+        ctx.lineWidth = 3;
         ctx.beginPath();
-        ctx.moveTo(gx + 4, 30);
-        ctx.lineTo(gx + 4, height - 30);
+        ctx.moveTo(gx + 5, 25);
+        ctx.lineTo(gx + 5, height - 25);
         ctx.stroke();
         // Glow
-        ctx.shadowBlur = 12 * pulse;
-        ctx.shadowColor = colors.danger + '40';
+        ctx.shadowBlur = 16 * pulse;
+        ctx.shadowColor = colors.danger + '50';
         ctx.stroke();
         ctx.shadowBlur = 0;
-        // Label rotated vertically
+        // Label rotated vertically — larger
         ctx.save();
-        ctx.translate(gx + 16, height / 2);
+        ctx.translate(gx + 20, height / 2);
         ctx.rotate(-Math.PI / 2);
-        ctx.font = 'bold 14px JetBrains Mono';
-        ctx.fillStyle = colors.danger + 'aa';
+        ctx.font = 'bold 24px JetBrains Mono';
+        ctx.fillStyle = colors.danger + 'bb';
         ctx.textAlign = 'center';
         ctx.fillText('GRID', 0, 0);
-        ctx.font = '10px JetBrains Mono';
-        ctx.fillStyle = colors.textDim + '90';
-        ctx.fillText('Niederspannung', 0, 16);
+        ctx.font = '11px JetBrains Mono';
+        ctx.fillStyle = colors.textDim + 'aa';
+        ctx.fillText('Niederspannung', 0, 20);
         ctx.restore();
       }
 
@@ -343,9 +336,11 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
       ctx.font = 'bold 11px JetBrains Mono';
       ctx.textAlign = 'left';
 
+      ctx.textAlign = 'right';
       ctx.fillStyle = colors.success + '70';
-      ctx.fillText('HOME', divGrid + 8, height * 0.04 + 4);
+      ctx.fillText('HOME', divCloud - 8, height * 0.04 + 4);
 
+      ctx.textAlign = 'left';
       ctx.fillStyle = colors.primary + '70';
       ctx.fillText('CLOUD / DATA PIPELINE / VPP', divCloud + 8, height * 0.04 + 4);
 

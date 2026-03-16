@@ -109,6 +109,45 @@ export default function ThankYouBackground({ width = 1366, height = 768 }) {
       sparkle[i] = rand2() < 0.05 ? rand2() * 0.8 : 0;
     }
 
+    // Transmission lines spanning the canvas
+    const lines = [];
+    const randL = seededRandom(77);
+    for (let i = 0; i < 18; i++) {
+      const vertical = randL() > 0.45;
+      let x1, y1, x2, y2;
+      if (vertical) {
+        const baseX = randL() * width;
+        const drift = (randL() - 0.5) * 80;
+        x1 = baseX + drift;
+        y1 = -20;
+        x2 = baseX - drift;
+        y2 = height + 20;
+      } else {
+        const baseY = randL() * height;
+        const drift = (randL() - 0.5) * 60;
+        x1 = -20;
+        y1 = baseY + drift;
+        x2 = width + 20;
+        y2 = baseY - drift;
+      }
+      const len = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+      // 2-4 energy pulses per line
+      const pulseCount = 2 + Math.floor(randL() * 3);
+      const pulses = [];
+      for (let p = 0; p < pulseCount; p++) {
+        pulses.push({
+          t: randL(),
+          speed: 0.0004 + randL() * 0.0008,
+          forward: randL() > 0.3,
+        });
+      }
+      lines.push({
+        x1, y1, x2, y2, len,
+        color: [colors.primary, colors.success, colors.primary][Math.floor(randL() * 3)],
+        pulses,
+      });
+    }
+
     let startTime = performance.now();
     let lastSparkleTime = 0;
 
@@ -129,6 +168,55 @@ export default function ThankYouBackground({ width = 1366, height = 768 }) {
       for (let i = 0; i < sparkle.length; i++) {
         if (sparkle[i] > 0) sparkle[i] = Math.max(0, sparkle[i] - 0.016);
       }
+
+      // Draw transmission lines with traveling energy pulses
+      lines.forEach(ln => {
+        const dx = ln.x2 - ln.x1;
+        const dy = ln.y2 - ln.y1;
+
+        // Faint base wire
+        ctx.strokeStyle = hexAlpha(ln.color, 0.04);
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(ln.x1, ln.y1);
+        ctx.lineTo(ln.x2, ln.y2);
+        ctx.stroke();
+
+        // Animate pulses along the wire
+        ln.pulses.forEach(p => {
+          p.t += p.speed * (p.forward ? 1 : -1);
+          if (p.t > 1) p.t -= 1;
+          if (p.t < 0) p.t += 1;
+
+          const t = p.t;
+          const px = ln.x1 + dx * t;
+          const py = ln.y1 + dy * t;
+
+          // Thick glowing segment around the pulse point
+          const segLen = 0.04; // 4% of line length
+          const t0 = Math.max(0, t - segLen / 2);
+          const t1 = Math.min(1, t + segLen / 2);
+
+          // Bright core
+          ctx.strokeStyle = hexAlpha(ln.color, 0.18);
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(ln.x1 + dx * t0, ln.y1 + dy * t0);
+          ctx.lineTo(ln.x1 + dx * t1, ln.y1 + dy * t1);
+          ctx.stroke();
+
+          // Glow bloom
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = hexAlpha(ln.color, 0.15);
+          ctx.strokeStyle = hexAlpha(ln.color, 0.1);
+          ctx.lineWidth = 6;
+          ctx.beginPath();
+          ctx.moveTo(ln.x1 + dx * t0, ln.y1 + dy * t0);
+          ctx.lineTo(ln.x1 + dx * t1, ln.y1 + dy * t1);
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+        });
+      });
 
       // Radial pulse wave
       const pulseInterval = 5;

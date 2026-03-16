@@ -401,12 +401,12 @@ export default function Presentation() {
       </Slide>
 
       {/* 21: Inside the Architecture */}
-      <Slide backgroundColor={bg} padding="20px 20px">
+      <Slide backgroundColor={bg} padding="16px 0px">
         <div className="flex flex-col h-full">
-          <H>Inside the Architecture</H>
-          <P size="18px">Measurement data every 20 seconds — Protobuf over MQTT through EMQX, into Databricks streaming aggregates powered by Apache Spark.</P>
+          <div className="px-8"><H>Inside the Architecture</H></div>
+          <div className="px-8"><P size="18px">Measurement data every 20 seconds — Protobuf over MQTT through EMQX, into Databricks streaming aggregates powered by Apache Spark.</P></div>
           <div className="flex-1 flex justify-center items-center">
-            <EnpalArchitectureDiagram width={1320} height={528} />
+            <EnpalArchitectureDiagram width={1366} height={528} />
           </div>
           <div className="flex gap-4 mt-1">
             <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.success }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Home System</span></div>
