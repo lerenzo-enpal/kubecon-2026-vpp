@@ -101,11 +101,34 @@ export default function ThankYouBackground({ width = 1366, height = 768 }) {
       });
     }
 
+    // Sparkle state per home: 0 = idle, >0 = sparkling (countdown)
+    const sparkle = new Float32Array(homes.length);
+    // Stagger initial sparkle times so some are already going
+    const rand2 = seededRandom(99);
+    for (let i = 0; i < homes.length; i++) {
+      sparkle[i] = rand2() < 0.05 ? rand2() * 0.8 : 0;
+    }
+
     let startTime = performance.now();
+    let lastSparkleTime = 0;
 
     const draw = (now) => {
       const elapsed = (now - startTime) / 1000;
       ctx.clearRect(0, 0, width, height);
+
+      // Trigger new sparkles — ~3-5 homes per second, randomly
+      if (elapsed - lastSparkleTime > 0.2) {
+        lastSparkleTime = elapsed;
+        for (let i = 0; i < 2; i++) {
+          const idx = Math.floor(Math.random() * homes.length);
+          if (sparkle[idx] <= 0) sparkle[idx] = 0.6 + Math.random() * 0.4; // 0.6-1.0s duration
+        }
+      }
+
+      // Decay sparkles
+      for (let i = 0; i < sparkle.length; i++) {
+        if (sparkle[i] > 0) sparkle[i] = Math.max(0, sparkle[i] - 0.016);
+      }
 
       // Radial pulse wave
       const pulseInterval = 5;
@@ -155,14 +178,18 @@ export default function ThankYouBackground({ width = 1366, height = 768 }) {
       ctx.shadowBlur = 0;
 
       // Draw homes
-      homes.forEach(h => {
+      homes.forEach((h, hi) => {
         const breathe = 0.5 + 0.5 * Math.sin(elapsed * h.speed + h.phase);
 
         // Pulse wave boost
         const pulseDelta = Math.abs(h.distFromCenter - pulseRadius);
         const pulseBoost = pulseDelta < pulseWidth ? (1 - pulseDelta / pulseWidth) * 0.5 * pulseFade : 0;
 
-        const alpha = 0.1 + breathe * 0.12 + pulseBoost;
+        // Sparkle: quick bright peak then fade
+        const sp = sparkle[hi];
+        const sparkleIntensity = sp > 0 ? Math.sin(sp * Math.PI) * 0.55 : 0;
+
+        const alpha = 0.1 + breathe * 0.12 + pulseBoost + sparkleIntensity;
         const s = h.size;
 
         // House body
@@ -189,12 +216,13 @@ export default function ThankYouBackground({ width = 1366, height = 768 }) {
           ctx.fillRect(h.x - pw / 2, h.y - s * 0.28, pw, ph);
         }
 
-        // Center glow dot
-        ctx.shadowBlur = 5 + pulseBoost * 12;
-        ctx.shadowColor = hexAlpha(h.color, 0.4);
+        // Center glow dot + sparkle bloom
+        const glowSize = 5 + pulseBoost * 12 + sparkleIntensity * 18;
+        ctx.shadowBlur = glowSize;
+        ctx.shadowColor = hexAlpha(h.color, 0.4 + sparkleIntensity * 0.4);
         ctx.fillStyle = hexAlpha(h.color, alpha);
         ctx.beginPath();
-        ctx.arc(h.x, h.y + s * 0.3, 0.7, 0, Math.PI * 2);
+        ctx.arc(h.x, h.y + s * 0.3, 0.7 + sparkleIntensity * 1.5, 0, Math.PI * 2);
         ctx.fill();
         ctx.shadowBlur = 0;
       });
