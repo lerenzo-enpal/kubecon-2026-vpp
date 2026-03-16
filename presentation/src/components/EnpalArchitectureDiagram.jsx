@@ -338,11 +338,11 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
 
       ctx.textAlign = 'right';
       ctx.fillStyle = colors.success + '70';
-      ctx.fillText('HOME', divCloud - 8, height * 0.04 + 4);
+      ctx.fillText('HOME', divCloud - 14, height * 0.04 + 4);
 
       ctx.textAlign = 'left';
       ctx.fillStyle = colors.primary + '70';
-      ctx.fillText('CLOUD / DATA PIPELINE / VPP', divCloud + 8, height * 0.04 + 4);
+      ctx.fillText('CLOUD / DATA PIPELINE / VPP', divCloud + 14, height * 0.04 + 4);
 
       // Legend
       ctx.font = '10px JetBrains Mono';
