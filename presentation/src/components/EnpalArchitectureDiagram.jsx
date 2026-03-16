@@ -171,7 +171,7 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
       }
 
       // Section dividers (dotted)
-      ctx.strokeStyle = colors.textDim + '18';
+      ctx.strokeStyle = colors.textDim + '50';
       ctx.lineWidth = 1;
       ctx.setLineDash([4, 4]);
       // Grid | Home divider
