@@ -63,7 +63,7 @@ cd presentation
 npm run export:pdf
 ```
 
-Output is auto-versioned in the project root: `vpp-presentation_v001.pdf`, `_v002.pdf`, etc.
+Output is auto-versioned in the project root: `20260324_vpp-presentation_v001.pdf`, `_v002.pdf`, etc.
 Each run detects existing versions and increments automatically.
 
 Environment variables:
@@ -86,6 +86,14 @@ PAUSE=5 MAX_SLIDES=10 npm run export:pdf
 npm run build
 npm run preview
 ```
+
+## Deployment
+
+Hosted on Netlify with basic auth (password-protected).
+
+- Auto-deploys on push to `main` via GitHub Actions
+- Edge function handles HTTP Basic Auth (`SITE_PASSWORD` env var on Netlify)
+- GitHub secrets required: `NETLIFY_AUTH_TOKEN`, `NETLIFY_SITE_ID`
 
 ## Research
 

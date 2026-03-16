@@ -1,0 +1,7 @@
+[build]
+  command = "cd presentation && npm run build"
+  publish = "presentation/dist"
+
+[[edge_functions]]
+  path = "/*"
+  function = "auth"
