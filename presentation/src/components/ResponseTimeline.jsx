@@ -21,7 +21,7 @@ function msToLabel(ms) {
   return `${(ms / 3600000).toFixed(0)} hr`;
 }
 
-export default function ResponseTimeline({ width = 860, height = 100 }) {
+export default function ResponseTimeline({ width = 860, height = 130 }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const tRef = useRef(0);
@@ -36,7 +36,7 @@ export default function ResponseTimeline({ width = 860, height = 100 }) {
 
     const padLeft = 10;
     const padRight = 20;
-    const trackY = 48;
+    const trackY = 68;
     const trackW = width - padLeft - padRight;
 
     let lastTime = performance.now();

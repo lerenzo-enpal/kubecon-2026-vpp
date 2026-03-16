@@ -442,7 +442,7 @@ export default function Presentation() {
             ))}
           </div>
           <div className="flex-1 flex items-end justify-center pb-2">
-            <ResponseTimeline width={860} height={100} />
+            <ResponseTimeline width={860} height={130} />
           </div>
         </div>
       </Slide>
