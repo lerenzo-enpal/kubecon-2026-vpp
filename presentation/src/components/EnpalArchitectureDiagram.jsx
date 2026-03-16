@@ -5,7 +5,7 @@ import { colors } from '../theme';
 /**
  * EnpalArchitectureDiagram — Linear left-to-right architecture data flow
  *
- * Physical chain: Grid → Meter (Metrify) → Steuerbox (§14a) → IoT HEMS
+ * Physical chain: Grid → Meter (Metrify) → IoT HEMS; Steuerbox (§14a) → Inverter
  * Inverter: PV (DC) + Battery (DC) → Inverter → AC to house
  * Telemetry: IoT HEMS → EMQX → Ingestion → Databricks → Spark
  * To Flexa:  Spark → Event Hub → Flexa
@@ -21,7 +21,7 @@ const NODES = [
 
   // Physical power chain — top row
   { id: 'meter',       label: 'Metrify',          sub: 'Smart Meter',        x: 0.04, y: 0.10, color: colors.textMuted,  w: 78,  h: 38 },
-  { id: 'steuerbox',   label: 'Steuerbox',       sub: '§14a',              x: 0.12, y: 0.10, color: colors.textMuted,   w: 84,  h: 38 },
+  { id: 'steuerbox',   label: 'Steuerbox',       sub: '§14a',              x: 0.04, y: 0.78, color: colors.textMuted,   w: 84,  h: 38 },
 
   // Inverter + sources
   { id: 'pv',          label: 'PV',              sub: 'Solar',              x: 0.04, y: 0.40, color: colors.solar,      w: 60,  h: 34 },
@@ -50,10 +50,12 @@ const NODES = [
 ];
 
 const EDGES = [
-  // === ELECTRICITY: Grid → Meter → Steuerbox (main power cable) ===
+  // === ELECTRICITY: Grid → Meter → IoT HEMS (main power cable) ===
   { from: 'grid',        to: 'meter',      label: 'AC',         color: ELECTRICITY_COLOR, rate: 2.5, electric: true },
-  { from: 'meter',       to: 'steuerbox',  label: '',           color: ELECTRICITY_COLOR, rate: 2.5, electric: true },
-  { from: 'steuerbox',   to: 'iot_hems',   label: '',           color: ELECTRICITY_COLOR, rate: 2.5, electric: true },
+  { from: 'meter',       to: 'iot_hems',   label: '',           color: ELECTRICITY_COLOR, rate: 2.5, electric: true },
+
+  // === CONTROL: Steuerbox → Inverter (§14a grid operator control) ===
+  { from: 'steuerbox',   to: 'inverter',   label: '§14a',       color: colors.textMuted,  rate: 3 },
 
   // === ELECTRICITY: PV + Battery → Inverter (DC), Inverter → house (AC) ===
   { from: 'pv',          to: 'inverter',   label: 'DC',         color: ELECTRICITY_COLOR, rate: 3, electric: true },
