@@ -1,10 +1,4 @@
-import React, { useState, useEffect, useContext, useRef, useCallback, useMemo } from 'react';
-import { SlideContext } from 'spectacle';
-import { DeckGL } from '@deck.gl/react';
-import { FlyToInterpolator } from '@deck.gl/core';
-import { ScatterplotLayer } from '@deck.gl/layers';
-import Map from 'react-map-gl/maplibre';
-import 'maplibre-gl/dist/maplibre-gl.css';
+import React, { useEffect, useRef } from 'react';
 import { colors } from '../theme';
 import { SUMMER_STEPS, WINTER_STEPS } from './VPPScenarioHomes';
 
@@ -13,95 +7,89 @@ function generateHomes(count, seed = 42) {
   const homes = [];
   let s = seed;
   const next = () => { s = (s * 16807 + 0) % 2147483647; return s / 2147483647; };
-  // Berlin/Brandenburg bounding box approx
-  const lonMin = 12.8, lonMax = 14.2;
-  const latMin = 52.1, latMax = 52.9;
+  // Cluster more densely around Berlin center, sparser in Brandenburg
   for (let i = 0; i < count; i++) {
-    homes.push({
-      id: i,
-      position: [lonMin + next() * (lonMax - lonMin), latMin + next() * (latMax - latMin)],
-      size: 3 + next() * 4,
-    });
+    const r = next();
+    let lon, lat;
+    if (r < 0.6) {
+      // Berlin core cluster
+      lon = 13.25 + next() * 0.35;
+      lat = 52.4 + next() * 0.2;
+    } else if (r < 0.85) {
+      // Inner suburbs
+      lon = 13.0 + next() * 0.8;
+      lat = 52.3 + next() * 0.4;
+    } else {
+      // Outer Brandenburg
+      lon = 12.8 + next() * 1.4;
+      lat = 52.1 + next() * 0.8;
+    }
+    homes.push({ id: i, lon, lat, size: 2 + next() * 3 });
   }
   return homes;
 }
 
 const HOMES = generateHomes(300);
 
-// Power plant location (for winter scenario generator trip)
-const POWER_PLANT = { position: [14.5, 51.8], name: 'Schwarze Pumpe' };
+// Power plant (winter scenario)
+const POWER_PLANT = { lon: 14.35, lat: 51.85, name: 'Schwarze Pumpe' };
 
-// ── View states ──────────────────────────────────────────────
-const BERLIN_VIEW = {
-  longitude: 13.4,
-  latitude: 52.5,
-  zoom: 8.5,
-  pitch: 0,
-  bearing: 0,
-};
+// ── Geo projection helpers ──────────────────────────────────
+// Simple Mercator-ish projection for the Brandenburg region
+function createProjection(centerLon, centerLat, zoom, width, height) {
+  const scale = Math.pow(2, zoom) * 40;
+  return {
+    project(lon, lat) {
+      const x = width / 2 + (lon - centerLon) * scale;
+      const y = height / 2 - (lat - centerLat) * scale * 0.75; // lat squish
+      return [x, y];
+    },
+  };
+}
 
-const BRANDENBURG_VIEW = {
-  longitude: 13.4,
-  latitude: 52.45,
-  zoom: 7.5,
-  pitch: 0,
-  bearing: 0,
-};
+function lerp(a, b, t) {
+  return a + (b - a) * Math.min(1, Math.max(0, t));
+}
 
 // ── Color helpers ────────────────────────────────────────────
-function hexToRgb(hex) {
+function hexToRgba(hex, alpha) {
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);
-  return [r, g, b];
+  return `rgba(${r},${g},${b},${alpha})`;
 }
-
-const COLOR_SOLAR = hexToRgb(colors.solar);
-const COLOR_PRIMARY = hexToRgb(colors.primary);
-const COLOR_DANGER = hexToRgb(colors.danger);
-const COLOR_SUCCESS = hexToRgb(colors.success);
-const COLOR_DIM = hexToRgb(colors.textDim);
 
 function getHomeColor(scenario, step, time, homeIndex) {
   if (scenario === 'summer') {
     if (step <= 2) {
-      // Solar active - amber pulsing
-      const pulse = 140 + 60 * Math.sin(time * 2 + homeIndex * 0.3);
-      return [...COLOR_SOLAR, pulse];
+      const pulse = 0.55 + 0.25 * Math.sin(time * 2 + homeIndex * 0.3);
+      return hexToRgba(colors.solar, pulse);
     }
     if (step === 3) {
-      // Discharging - amber/accent
-      const pulse = 120 + 80 * Math.sin(time * 3 + homeIndex * 0.2);
-      return [...COLOR_SOLAR, pulse];
+      const pulse = 0.5 + 0.3 * Math.sin(time * 3 + homeIndex * 0.2);
+      return hexToRgba(colors.solar, pulse);
     }
-    // Result
-    return [...COLOR_SUCCESS, 140];
+    return hexToRgba(colors.success, 0.55);
   }
 
   // Winter
-  if (step === 0) {
-    return [...COLOR_PRIMARY, 100 + 30 * Math.sin(time * 1.5 + homeIndex * 0.4)];
-  }
+  if (step === 0) return hexToRgba(colors.primary, 0.4 + 0.12 * Math.sin(time * 1.5 + homeIndex * 0.4));
   if (step === 1) {
-    // Alert - red flash
-    const flash = 100 + 155 * Math.abs(Math.sin(time * 5 + homeIndex * 0.1));
-    return [...COLOR_DANGER, flash];
+    const flash = 0.4 + 0.6 * Math.abs(Math.sin(time * 5 + homeIndex * 0.1));
+    return hexToRgba(colors.danger, flash);
   }
   if (step === 2 || step === 3) {
-    // Responding - cyan pulse
-    const pulse = 100 + 100 * Math.sin(time * 3 + homeIndex * 0.15);
-    return [...COLOR_PRIMARY, pulse];
+    const pulse = 0.4 + 0.4 * Math.sin(time * 3 + homeIndex * 0.15);
+    return hexToRgba(colors.primary, pulse);
   }
-  // Stable
-  return [...COLOR_SUCCESS, 130];
+  return hexToRgba(colors.success, 0.5);
 }
 
-// ── HUD Overlays ─────────────────────────────────────────────
+// ── HUD Overlays (React, positioned over canvas) ────────────
 
 function FrequencyGauge({ freq }) {
   const freqColor = freq >= 49.95 ? colors.success : freq >= 49.8 ? colors.accent : colors.danger;
   const isAlert = freq < 49.8;
-
   return (
     <div style={{
       position: 'absolute', top: 12, right: 12,
@@ -124,7 +112,6 @@ function FrequencyGauge({ freq }) {
 function PriceTicker({ value, trend }) {
   const priceColor = value < 0 ? colors.success : value > 15 ? colors.danger : colors.text;
   const arrow = trend === 'rising' ? '\u2191' : trend === 'falling' ? '\u2193' : trend === 'negative' ? '\u2193\u2193' : '';
-
   return (
     <div style={{
       position: 'absolute', top: 12, left: 12,
@@ -158,7 +145,6 @@ function TimeBadge({ scenario }) {
 function HomeCounter({ step, scenario }) {
   const count = scenario === 'winter' && step >= 3 ? '12,847' : scenario === 'summer' ? '8,200' : '12,000';
   const responding = (scenario === 'winter' && step >= 2) || (scenario === 'summer' && step >= 2);
-
   return (
     <div style={{
       position: 'absolute', bottom: 12, right: 12,
@@ -176,7 +162,6 @@ function HomeCounter({ step, scenario }) {
   );
 }
 
-// Generator trip marker for winter scenario
 function GeneratorTrip({ step }) {
   if (step < 1) return null;
   return (
@@ -195,10 +180,19 @@ function GeneratorTrip({ step }) {
   );
 }
 
-// ── Sun Overlay (Canvas drawn on top of map) ─────────────────
+// ── Main Component (pure canvas) ────────────────────────────
 
-function SunOverlay({ angle, brightness, width, height }) {
+export default function VPPScenarioMap({ scenario = 'summer', step = 0, width = 960, height = 340 }) {
   const canvasRef = useRef(null);
+  const animRef = useRef(null);
+  const stepRef = useRef(step);
+  stepRef.current = step;
+
+  const steps = scenario === 'summer' ? SUMMER_STEPS : WINTER_STEPS;
+  const currentStep = steps[Math.min(step, steps.length - 1)];
+
+  // Zoom state for smooth transitions
+  const zoomRef = useRef({ lon: 13.4, lat: 52.5, zoom: 8.5 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -206,132 +200,155 @@ function SunOverlay({ angle, brightness, width, height }) {
     canvas.width = width * 2;
     canvas.height = height * 2;
     ctx.scale(2, 2);
-    ctx.clearRect(0, 0, width, height);
 
-    // Sun arc: angle 0=horizon-left, 0.5=zenith, 1.0=horizon-right
-    const arcStartX = 40;
-    const arcEndX = width - 40;
-    const arcTopY = 20;
-    const arcBottomY = height - 10;
+    const draw = () => {
+      const now = performance.now() / 1000;
+      const s = stepRef.current;
+      ctx.clearRect(0, 0, width, height);
 
-    const sunX = arcStartX + angle * (arcEndX - arcStartX);
-    const sunY = arcBottomY - Math.sin(angle * Math.PI) * (arcBottomY - arcTopY);
-    const sunR = 10 + brightness * 8;
+      // Target view
+      const isWideView = scenario === 'winter' && s >= 3;
+      const targetLon = 13.4;
+      const targetLat = isWideView ? 52.35 : 52.5;
+      const targetZoom = isWideView ? 7.0 : 8.5;
 
-    // Draw arc path (subtle)
-    ctx.strokeStyle = colors.solar + '15';
-    ctx.lineWidth = 1;
-    ctx.setLineDash([4, 8]);
-    ctx.beginPath();
-    for (let t = 0; t <= 1; t += 0.02) {
-      const ax = arcStartX + t * (arcEndX - arcStartX);
-      const ay = arcBottomY - Math.sin(t * Math.PI) * (arcBottomY - arcTopY);
-      if (t === 0) ctx.moveTo(ax, ay);
-      else ctx.lineTo(ax, ay);
-    }
-    ctx.stroke();
-    ctx.setLineDash([]);
+      // Smooth zoom transition
+      zoomRef.current.lon = lerp(zoomRef.current.lon, targetLon, 0.03);
+      zoomRef.current.lat = lerp(zoomRef.current.lat, targetLat, 0.03);
+      zoomRef.current.zoom = lerp(zoomRef.current.zoom, targetZoom, 0.03);
 
-    // Sun glow
-    if (brightness > 0.1) {
-      const gradient = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, sunR * 4);
-      const alpha = Math.floor(brightness * 40).toString(16).padStart(2, '0');
-      gradient.addColorStop(0, colors.solar + alpha);
-      gradient.addColorStop(1, colors.solar + '00');
-      ctx.fillStyle = gradient;
+      const proj = createProjection(zoomRef.current.lon, zoomRef.current.lat, zoomRef.current.zoom, width, height);
+
+      // Dark background
+      ctx.fillStyle = colors.bg;
+      ctx.fillRect(0, 0, width, height);
+
+      // Grid overlay
+      ctx.strokeStyle = colors.surfaceLight + '08';
+      ctx.lineWidth = 1;
+      for (let gx = 0; gx < width; gx += 40) {
+        ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, height); ctx.stroke();
+      }
+      for (let gy = 0; gy < height; gy += 40) {
+        ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(width, gy); ctx.stroke();
+      }
+
+      // Region boundary (faint Berlin outline — simplified ellipse)
+      const [bx, by] = proj.project(13.4, 52.52);
+      ctx.strokeStyle = colors.primary + '12';
+      ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.arc(sunX, sunY, sunR * 4, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.ellipse(bx, by, 80, 50, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      // Label
+      ctx.font = '9px "JetBrains Mono", monospace';
+      ctx.fillStyle = colors.textDim + '30';
+      ctx.textAlign = 'center';
+      ctx.fillText('BERLIN', bx, by + 60);
 
-      // Sun disc
-      const discAlpha = Math.floor(brightness * 200).toString(16).padStart(2, '0');
-      ctx.fillStyle = colors.solar + discAlpha;
-      ctx.beginPath();
-      ctx.arc(sunX, sunY, sunR, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }, [angle, brightness, width, height]);
+      // Draw home dots
+      for (const home of HOMES) {
+        const [hx, hy] = proj.project(home.lon, home.lat);
+        if (hx < -10 || hx > width + 10 || hy < -10 || hy > height + 10) continue;
 
-  return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        position: 'absolute', top: 0, left: 0,
-        width, height, pointerEvents: 'none',
-      }}
-    />
-  );
-}
+        const color = getHomeColor(scenario, s, now, home.id);
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(hx, hy, home.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
 
-// ── Main Component ───────────────────────────────────────────
+      // Power plant marker (winter)
+      if (scenario === 'winter' && s >= 1) {
+        const [px, py] = proj.project(POWER_PLANT.lon, POWER_PLANT.lat);
+        const plantColor = s >= 4 ? colors.success : colors.danger;
+        const pulse = 0.6 + 0.4 * Math.sin(now * 4);
 
-export default function VPPScenarioMap({ scenario = 'summer', step = 0, width = 960, height = 340 }) {
-  const timeRef = useRef(0);
-  const [tick, setTick] = useState(0);
-  const animRef = useRef(null);
+        // Outer ring
+        ctx.strokeStyle = hexToRgba(plantColor, pulse * 0.6);
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(px, py, 12, 0, Math.PI * 2);
+        ctx.stroke();
 
-  const steps = scenario === 'summer' ? SUMMER_STEPS : WINTER_STEPS;
-  const currentStep = steps[Math.min(step, steps.length - 1)];
+        // Inner dot
+        ctx.fillStyle = hexToRgba(plantColor, 0.8);
+        ctx.beginPath();
+        ctx.arc(px, py, 6, 0, Math.PI * 2);
+        ctx.fill();
 
-  // Animate tick for pulsing dots
-  useEffect(() => {
-    const loop = () => {
-      timeRef.current = performance.now() / 1000;
-      setTick(t => t + 1);
-      animRef.current = requestAnimationFrame(loop);
+        // X mark if offline
+        if (s < 4) {
+          ctx.strokeStyle = colors.danger;
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.moveTo(px - 5, py - 5); ctx.lineTo(px + 5, py + 5);
+          ctx.moveTo(px + 5, py - 5); ctx.lineTo(px - 5, py + 5);
+          ctx.stroke();
+        }
+
+        // Label
+        ctx.font = '9px "JetBrains Mono", monospace';
+        ctx.fillStyle = plantColor;
+        ctx.textAlign = 'center';
+        ctx.fillText(POWER_PLANT.name, px, py + 20);
+      }
+
+      // Sun overlay
+      const sunAngle = currentStep.sun.angle;
+      const sunBrightness = currentStep.sun.brightness;
+      if (sunBrightness > 0.1) {
+        const arcStartX = 40;
+        const arcEndX = width - 40;
+        const arcTopY = 15;
+        const arcBottomY = height - 10;
+        const sunX = arcStartX + sunAngle * (arcEndX - arcStartX);
+        const sunY = arcBottomY - Math.sin(sunAngle * Math.PI) * (arcBottomY - arcTopY);
+        const sunR = 8 + sunBrightness * 6;
+
+        // Arc path (subtle)
+        ctx.save();
+        ctx.globalAlpha = sunBrightness * 0.3;
+        ctx.strokeStyle = colors.solar;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 8]);
+        ctx.beginPath();
+        for (let t = 0; t <= 1; t += 0.02) {
+          const ax = arcStartX + t * (arcEndX - arcStartX);
+          const ay = arcBottomY - Math.sin(t * Math.PI) * (arcBottomY - arcTopY);
+          if (t === 0) ctx.moveTo(ax, ay);
+          else ctx.lineTo(ax, ay);
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Sun glow
+        const grad = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, sunR * 4);
+        grad.addColorStop(0, hexToRgba(colors.solar, sunBrightness * 0.15));
+        grad.addColorStop(1, hexToRgba(colors.solar, 0));
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(sunX, sunY, sunR * 4, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Sun disc
+        ctx.fillStyle = hexToRgba(colors.solar, sunBrightness * 0.8);
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = colors.solar;
+        ctx.beginPath();
+        ctx.arc(sunX, sunY, sunR, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.restore();
+      }
+
+      animRef.current = requestAnimationFrame(draw);
     };
-    animRef.current = requestAnimationFrame(loop);
+
+    draw();
     return () => cancelAnimationFrame(animRef.current);
-  }, []);
-
-  const time = timeRef.current;
-
-  // View state - zoom out for "thousands respond" step
-  const viewState = useMemo(() => {
-    const base = (scenario === 'winter' && step >= 3) ? BRANDENBURG_VIEW : BERLIN_VIEW;
-    return {
-      ...base,
-      transitionDuration: 1500,
-      transitionInterpolator: new FlyToInterpolator(),
-    };
-  }, [scenario, step]);
-
-  // Power plant dot (only in winter)
-  const plantData = scenario === 'winter' && step >= 1 ? [POWER_PLANT] : [];
-
-  const layers = [
-    // Home dots
-    new ScatterplotLayer({
-      id: 'homes',
-      data: HOMES,
-      getPosition: d => d.position,
-      getRadius: d => d.size,
-      getFillColor: d => getHomeColor(scenario, step, time, d.id),
-      radiusMinPixels: 2,
-      radiusMaxPixels: 7,
-      radiusScale: 1,
-      updateTriggers: {
-        getFillColor: [scenario, step, Math.floor(time * 4)],
-      },
-    }),
-    // Power plant (red X when tripped)
-    new ScatterplotLayer({
-      id: 'plant',
-      data: plantData,
-      getPosition: d => d.position,
-      getRadius: 12,
-      getFillColor: step >= 4 ? [16, 185, 129, 100] : [239, 68, 68, 200],
-      getLineColor: step >= 4 ? [16, 185, 129, 200] : [239, 68, 68, 255],
-      lineWidthMinPixels: 2,
-      stroked: true,
-      radiusMinPixels: 8,
-      radiusMaxPixels: 14,
-      updateTriggers: {
-        getFillColor: [step],
-        getLineColor: [step],
-      },
-    }),
-  ];
+  }, [width, height, scenario, steps, currentStep]);
 
   return (
     <div style={{ position: 'relative', width, height, overflow: 'hidden', borderRadius: 6 }}>
@@ -341,27 +358,10 @@ export default function VPPScenarioMap({ scenario = 'summer', step = 0, width = 
           50% { box-shadow: 0 0 12px 4px ${colors.danger}30; }
         }
       `}</style>
-      <DeckGL
-        viewState={viewState}
-        controller={false}
-        layers={layers}
-        style={{ width, height }}
-      >
-        <Map
-          mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
-          style={{ width: '100%', height: '100%' }}
-          attributionControl={false}
-        />
-      </DeckGL>
-
-      {/* Sun overlay */}
-      <SunOverlay
-        angle={currentStep.sun.angle}
-        brightness={currentStep.sun.brightness}
-        width={width}
-        height={height}
+      <canvas
+        ref={canvasRef}
+        style={{ width, height, display: 'block' }}
       />
-
       {/* HUD overlays */}
       <FrequencyGauge freq={currentStep.freq} />
       <PriceTicker value={currentStep.price.value} trend={currentStep.price.trend} />

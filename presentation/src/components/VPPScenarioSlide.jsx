@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useContext, useCallback, lazy, Suspense } from 'react';
 import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
 import VPPScenarioMap from './VPPScenarioMap';
@@ -59,10 +59,17 @@ export default function VPPScenarioSlide({ scenario = 'summer' }) {
     return () => ro.disconnect();
   }, []);
 
-  // Reset on slide enter
+  // Defer rendering until slide is active for one frame (smooth transition)
+  const [ready, setReady] = useState(false);
   useEffect(() => {
     if (slideActive) {
       setStep(0);
+      setReady(false);
+      // Defer heavy content by a frame so the slide transition renders first
+      const raf = requestAnimationFrame(() => setReady(true));
+      return () => cancelAnimationFrame(raf);
+    } else {
+      setReady(false);
     }
   }, [slideActive]);
 
@@ -103,34 +110,44 @@ export default function VPPScenarioSlide({ scenario = 'summer' }) {
         background: colors.bg,
       }}
     >
-      {/* Top: Map */}
-      <div style={{ flex: `0 0 ${mapH}px`, position: 'relative' }}>
-        <VPPScenarioMap
-          scenario={scenario}
-          step={step}
-          width={size.w}
-          height={mapH}
-        />
-      </div>
+      {ready ? (
+        <>
+          {/* Top: Map */}
+          <div style={{ flex: `0 0 ${mapH}px`, position: 'relative', opacity: ready ? 1 : 0, transition: 'opacity 0.3s ease' }}>
+            <VPPScenarioMap
+              scenario={scenario}
+              step={step}
+              width={size.w}
+              height={mapH}
+            />
+          </div>
 
-      {/* Divider line */}
-      <div style={{
-        height: 1,
-        background: `linear-gradient(90deg, transparent, ${colors.primary}30, transparent)`,
-      }} />
+          {/* Divider line */}
+          <div style={{
+            height: 1,
+            background: `linear-gradient(90deg, transparent, ${colors.primary}30, transparent)`,
+          }} />
 
-      {/* Bottom: Houses + Narration */}
-      <div style={{ flex: 1, position: 'relative', minHeight: 0 }}>
-        <VPPScenarioHomes
-          scenario={scenario}
-          step={step}
-          width={size.w}
-          height={homesH}
-        />
-      </div>
+          {/* Bottom: Houses + Narration */}
+          <div style={{ flex: 1, position: 'relative', minHeight: 0 }}>
+            <VPPScenarioHomes
+              scenario={scenario}
+              step={step}
+              width={size.w}
+              height={homesH}
+            />
+          </div>
 
-      {/* Step indicator */}
-      <StepIndicator total={STEP_COUNT} current={step} />
+          {/* Step indicator */}
+          <StepIndicator total={STEP_COUNT} current={step} />
+        </>
+      ) : (
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 14, color: colors.textDim }}>
+            Loading scenario...
+          </div>
+        </div>
+      )}
     </div>
   );
 }

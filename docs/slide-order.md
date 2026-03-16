@@ -21,8 +21,9 @@
 19. The Virtual Power Plant (section title)
 20. What Is a Virtual Power Plant?
 21. The Fastest Power Plant
-22. Now We Shift the Load (Duck Curve shift mode)
 23. VPP Event Types
+22. Now We Shift the Load (Duck Curve shift mode)
+
 24. The Architecture (section title)
 25. How It Works (VPP Architecture Flow)
 26. Inside the Architecture (EnpalArchitectureDiagram)

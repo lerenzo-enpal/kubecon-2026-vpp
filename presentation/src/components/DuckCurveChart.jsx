@@ -3,31 +3,35 @@ import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
 
 // ── Year-by-year duck curve data ─────────────────────────────
-// Solar penetration grows each year, deepening the duck curve belly
-// and steepening the evening ramp. Based on CAISO/German patterns.
+// Based on real German grid data (Bundesnetzagentur/SMARD, EPEX SPOT).
+// Solar capacity: 39 GW (2015) → 104 GW (2025) → 215 GW target (2030).
+// Negative price hours: 126 (2015) → 457 (2024) → 700+ pace (2025).
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
-// Base demand profile (constant across years)
+// German base demand profile (GW, typical summer weekday without solar)
 const baseDemand = [
   28, 26, 25, 24, 24, 25, 28, 35, 42, 45, 46, 47,
   48, 47, 46, 45, 48, 55, 60, 58, 52, 45, 38, 32,
 ];
 
-// Solar generation by year (scaling factor applied to peak profile)
+// Real German solar capacity data (GW installed) → solarScale
+// Scale: 1.0 = 2025 levels (~104 GW installed, peak output ~55 GW on sunny day)
+// Sources: Bundesnetzagentur/SMARD, EPEX SPOT, PV Magazine
 const YEARS = [
-  { year: 2015, solarScale: 0.15, label: '2015', desc: '5% solar penetration' },
-  { year: 2018, solarScale: 0.35, label: '2018', desc: '12% solar' },
-  { year: 2021, solarScale: 0.55, label: '2021', desc: '22% solar' },
-  { year: 2023, solarScale: 0.75, label: '2023', desc: '35% solar' },
-  { year: 2025, solarScale: 1.0,  label: '2025', desc: '50% solar' },
-  { year: 2030, solarScale: 1.4,  label: '2030 (projected)', desc: '70% solar' },
+  { year: 2015, solarScale: 0.38, label: '2015', desc: '39 GW installed -- 126 neg. price hrs' },
+  { year: 2018, solarScale: 0.43, label: '2018', desc: '45 GW installed -- ~100 neg. price hrs' },
+  { year: 2021, solarScale: 0.57, label: '2021', desc: '59 GW installed -- 139 neg. price hrs' },
+  { year: 2023, solarScale: 0.79, label: '2023', desc: '82 GW installed -- 301 neg. price hrs' },
+  { year: 2025, solarScale: 1.0,  label: '2025', desc: '104 GW installed -- 700+ neg. price hrs' },
+  { year: 2030, solarScale: 1.5,  label: '2030 (target)', desc: '215 GW target -- 1000+ neg. price hrs?' },
 ];
 
-// Peak solar generation profile (at 100% scale = 2025 levels)
+// Peak solar generation profile (GW, at 100% scale = 2025 with 104 GW installed)
+// Peak output ~55 GW on a sunny summer day (capacity factor ~53% at noon)
 const peakSolar = [
-  0, 0, 0, 0, 0, 0.5, 3, 8, 16, 24, 30, 34,
-  35, 34, 30, 22, 12, 4, 0.5, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 1, 5, 14, 28, 40, 49, 54,
+  55, 54, 49, 36, 20, 8, 1, 0, 0, 0, 0, 0,
 ];
 
 function getSolarForYear(yearData) {
@@ -38,15 +42,26 @@ function getNetDemand(solar) {
   return baseDemand.map((d, i) => d - solar[i]);
 }
 
-// Price proxy: higher spread = more extreme prices
-function getPrice(netDemand) {
-  const min = Math.min(...netDemand);
-  const max = Math.max(...netDemand);
-  return { min, max, spread: max - min };
+// Map net demand (GW) to wholesale electricity price (EUR/MWh)
+// Calibrated to real EPEX SPOT day-ahead prices (Germany 2024):
+//   Midday solar belly: -50 to -80 EUR/MWh typical, record -250 (May 2025)
+//   Evening peak: 120-200 EUR/MWh typical, up to 936 (Dec 2024 Dunkelflaute)
+//   Average 2024: ~78 EUR/MWh, peak-load avg: ~88 EUR/MWh
+//   CCGT marginal cost: 80-120 EUR/MWh, OCGT peaker: 150-250 EUR/MWh
+//   EPEX SPOT exchange floor: -500 EUR/MWh
+function demandToPrice(gw) {
+  let price;
+  if (gw < -5) price = -50 + (gw + 5) * 10;   // deep negative: -5→-50, -15→-150
+  else if (gw < 0) price = gw * 10;             // mild negative: -3 GW → -30 EUR/MWh
+  else if (gw < 25) price = 20 + gw * 1.8;      // baseload/nuclear: 20-65 EUR/MWh
+  else if (gw < 45) price = 65 + (gw - 25) * 2; // mid-merit coal/CCGT: 65-105 EUR/MWh
+  else if (gw < 55) price = 105 + (gw - 45) * 8; // CCGT/OCGT ramp: 105-185 EUR/MWh
+  else price = 185 + (gw - 55) * 20;             // scarcity/peaker: 185+ EUR/MWh
+  return Math.max(-500, price);                  // EPEX SPOT floor
 }
 
 const Y_MAX = 68;
-const Y_MIN = -12; // Allow negative values for deep duck curve
+const Y_MIN = -40; // Allow deep negative values (2030: -34.5 GW net demand)
 
 function smoothLine(ctx, data, xScale, yScale, padLeft, padTop, yMax) {
   ctx.beginPath();
@@ -73,6 +88,26 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
   const tRef = useRef(0);
   const phaseRef = useRef(0); // 0-5 for each year, smoothly animated
   const slideContext = useContext(SlideContext);
+
+  // Intercept back arrow: first press resets animation, second press navigates
+  useEffect(() => {
+    const handler = (e) => {
+      if (!slideContext?.isSlideActive) return;
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowUp') return;
+
+      // If animation has progressed, reset it and block navigation
+      if (tRef.current > 0.1) {
+        e.stopPropagation();
+        tRef.current = 0;
+        phaseRef.current = 0;
+      }
+      // Otherwise let the event through so Spectacle navigates
+    };
+
+    // Use capture phase to run before Spectacle's listener
+    document.addEventListener('keydown', handler, true);
+    return () => document.removeEventListener('keydown', handler, true);
+  }, [slideContext?.isSlideActive]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -125,7 +160,7 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
       ctx.setLineDash([3, 5]);
       ctx.lineWidth = 0.5;
       ctx.strokeStyle = colors.textDim + '15';
-      for (let gw = -10; gw <= 60; gw += 10) {
+      for (let gw = -30; gw <= 60; gw += 10) {
         const y = padTop + (Y_MAX - gw) * yScale;
         ctx.beginPath();
         ctx.moveTo(padLeft, y);
@@ -171,9 +206,38 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
       // Negative price zone (below zero) - red shading
       const minNet = Math.min(...netDem);
       if (minNet < 0) {
-        ctx.fillStyle = `rgba(239, 68, 68, 0.08)`;
-        const negH = Math.abs(minNet) * yScale;
-        ctx.fillRect(padLeft, zeroY, chartW, Math.min(negH, chartH - (zeroY - padTop)));
+        const negH = Math.min(Math.abs(minNet) * yScale, chartH - (zeroY - padTop));
+        // Stronger red fill
+        ctx.fillStyle = `rgba(239, 68, 68, 0.18)`;
+        ctx.fillRect(padLeft, zeroY, chartW, negH);
+        // Diagonal hazard stripes
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(padLeft, zeroY, chartW, negH);
+        ctx.clip();
+        ctx.strokeStyle = `rgba(239, 68, 68, 0.12)`;
+        ctx.lineWidth = 1;
+        for (let sx = -negH; sx < chartW + negH; sx += 12) {
+          ctx.beginPath();
+          ctx.moveTo(padLeft + sx, zeroY);
+          ctx.lineTo(padLeft + sx + negH, zeroY + negH);
+          ctx.stroke();
+        }
+        ctx.restore();
+        // Top border on zero line
+        ctx.strokeStyle = `rgba(239, 68, 68, 0.5)`;
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(padLeft, zeroY);
+        ctx.lineTo(padLeft + chartW, zeroY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        // "NEGATIVE PRICE ZONE" label in the red area
+        ctx.fillStyle = `rgba(239, 68, 68, 0.35)`;
+        ctx.font = 'bold 11px JetBrains Mono';
+        ctx.textAlign = 'right';
+        ctx.fillText('NEGATIVE PRICE ZONE', padLeft + chartW - 8, zeroY + negH - 6);
       }
 
       // Solar fill (amber area)
@@ -201,16 +265,29 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
       smoothLine(ctx, solar, xScale, yScale, padLeft, padTop, Y_MAX);
       ctx.stroke();
 
-      // Ghost trails of previous years (faint)
+      // Ghost trails of previous years (faint) — label every other one
       for (let yi = 0; yi < yearIdx; yi++) {
         const ghostSolar = getSolarForYear(YEARS[yi]);
         const ghostNet = getNetDemand(ghostSolar);
         const age = yearIdx - yi;
         const alpha = Math.max(0.06, 0.2 - age * 0.04);
-        ctx.strokeStyle = colors.primary + Math.floor(alpha * 255).toString(16).padStart(2, '0');
+        const hex = Math.floor(alpha * 255).toString(16).padStart(2, '0');
+        ctx.strokeStyle = colors.primary + hex;
         ctx.lineWidth = 1;
         smoothLine(ctx, ghostNet, xScale, yScale, padLeft, padTop, Y_MAX);
         ctx.stroke();
+
+        // Label every other ghost year at the belly of the curve
+        if (yi % 2 === 0) {
+          const ghostMin = Math.min(...ghostNet);
+          const bellyH = ghostNet.indexOf(ghostMin);
+          const lx = padLeft + bellyH * xScale;
+          const ly = padTop + (Y_MAX - ghostMin) * yScale;
+          ctx.font = 'bold 10px JetBrains Mono';
+          ctx.fillStyle = colors.primary + Math.floor(Math.max(0.15, alpha) * 255).toString(16).padStart(2, '0');
+          ctx.textAlign = 'center';
+          ctx.fillText(YEARS[yi].year, lx, ly + 12);
+        }
       }
 
       // Base demand (gray dashed)
@@ -230,31 +307,41 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
       ctx.stroke();
       ctx.shadowBlur = 0;
 
-      // Overgeneration / negative pricing annotation
+      // Overgeneration / negative pricing annotation with EUR/MWh price
       if (minNet < 5) {
         const bellyHour = netDem.indexOf(minNet);
         const bellyX = padLeft + bellyHour * xScale;
         const bellyY = padTop + (Y_MAX - minNet) * yScale;
         const pulse = Math.sin(t * 3) * 0.3 + 0.7;
+        const minPrice = Math.round(demandToPrice(minNet));
 
         if (minNet < 0) {
-          // Negative pricing callout
-          ctx.fillStyle = `rgba(239, 68, 68, ${0.8 * pulse})`;
-          ctx.font = 'bold 12px JetBrains Mono';
+          // Negative pricing callout — large text with EUR/MWh
+          ctx.fillStyle = `rgba(239, 68, 68, ${0.9 * pulse})`;
+          ctx.font = 'bold 22px JetBrains Mono';
           ctx.textAlign = 'center';
-          ctx.fillText('NEGATIVE PRICES', bellyX, bellyY + 18);
-          ctx.font = '10px JetBrains Mono';
+          ctx.shadowBlur = 12;
+          ctx.shadowColor = 'rgba(239, 68, 68, 0.4)';
+          ctx.fillText('NEGATIVE PRICES', bellyX, bellyY + 24);
+          ctx.shadowBlur = 0;
+          // Show the actual negative price
+          ctx.font = 'bold 18px JetBrains Mono';
+          ctx.fillStyle = `rgba(239, 68, 68, ${0.85 * pulse})`;
+          ctx.fillText(`${minPrice} EUR/MWh`, bellyX, bellyY + 48);
+          ctx.font = '13px JetBrains Mono';
           ctx.fillStyle = `rgba(239, 68, 68, ${0.6 * pulse})`;
-          ctx.fillText('Paid to NOT generate', bellyX, bellyY + 32);
+          ctx.fillText('Paid to NOT generate', bellyX, bellyY + 66);
         } else {
-          ctx.fillStyle = `rgba(245, 158, 11, ${0.6 * pulse})`;
-          ctx.font = 'bold 11px JetBrains Mono';
+          ctx.fillStyle = `rgba(245, 158, 11, ${0.7 * pulse})`;
+          ctx.font = 'bold 18px JetBrains Mono';
           ctx.textAlign = 'center';
-          ctx.fillText('\u2193 Overgeneration', bellyX, bellyY + 18);
+          ctx.fillText('\u2193 Overgeneration risk', bellyX, bellyY + 22);
         }
       }
 
-      // Evening ramp annotation
+      // Evening ramp / peaker price spike annotation
+      const maxNet = Math.max(...netDem);
+      const peakHour = netDem.indexOf(maxNet);
       const rampDelta = netDem[19] - netDem[14];
       if (rampDelta > 20) {
         const rampX = padLeft + 17.5 * xScale;
@@ -272,13 +359,23 @@ export default function DuckCurveChart({ width = 850, height = 360 }) {
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // Ramp label
-        ctx.fillStyle = `rgba(239, 68, 68, ${0.7 * pulse})`;
-        ctx.font = 'bold 11px JetBrains Mono';
+        // Ramp label — larger text
+        ctx.fillStyle = `rgba(239, 68, 68, ${0.8 * pulse})`;
+        ctx.font = 'bold 18px JetBrains Mono';
         ctx.textAlign = 'left';
-        ctx.fillText(`${Math.round(rampDelta)} GW ramp`, rampX + 18, (rampY1 + rampY2) / 2 - 6);
-        ctx.font = '9px JetBrains Mono';
-        ctx.fillText('Price spike zone', rampX + 18, (rampY1 + rampY2) / 2 + 8);
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = 'rgba(239, 68, 68, 0.3)';
+        ctx.fillText(`${Math.round(rampDelta)} GW ramp`, rampX + 18, (rampY1 + rampY2) / 2 - 8);
+        ctx.shadowBlur = 0;
+
+        // Peak price as peakers spin up
+        const peakPrice = Math.round(demandToPrice(maxNet));
+        ctx.font = 'bold 16px JetBrains Mono';
+        ctx.fillStyle = `rgba(239, 68, 68, ${0.85 * pulse})`;
+        ctx.fillText(`${peakPrice} EUR/MWh`, rampX + 18, (rampY1 + rampY2) / 2 + 14);
+        ctx.font = 'bold 12px JetBrains Mono';
+        ctx.fillStyle = `rgba(239, 68, 68, ${0.55 * pulse})`;
+        ctx.fillText('Peakers spinning up', rampX + 18, (rampY1 + rampY2) / 2 + 32);
       }
 
       // Year indicator (prominent)

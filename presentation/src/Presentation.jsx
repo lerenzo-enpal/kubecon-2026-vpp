@@ -18,6 +18,7 @@ import SAMapHUD from './components/SAMapHUD';
 // DEPRECATED: import VPPExplainerZoom from './components/VPPExplainerZoom';
 import EnpalArchitectureDiagram from './components/EnpalArchitectureDiagram';
 import VPPScenarioSlide from './components/VPPScenarioSlide';
+import CurtailmentChart from './components/CurtailmentChart';
 
 const theme = {
   colors: { primary: colors.text, secondary: colors.textMuted, tertiary: colors.primary },
@@ -31,9 +32,9 @@ const pad = '36px 56px';
 const SECTIONS = [
   { from: 1, to: 2, name: '' },
   { from: 3, to: 13, name: 'The Grid' },
-  { from: 14, to: 17, name: 'The Renewable Revolution' },
-  { from: 18, to: 30, name: 'The Virtual Power Plant' },
-  { from: 31, to: 34, name: 'Resilience' },
+  { from: 14, to: 18, name: 'The Renewable Revolution' },
+  { from: 19, to: 29, name: 'The Virtual Power Plant' },
+  { from: 30, to: 33, name: 'Resilience' },
 ];
 
 const slideTemplate = ({ slideNumber, numberOfSlides }) => {
@@ -352,7 +353,18 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 17: Clean Energy Has Outgrown the Grid */}
+      {/* 17: The Cost of Wasted Energy */}
+      <Slide backgroundColor={bg} padding="20px 40px">
+        <div className="flex flex-col h-full">
+          <H color={colors.accent}>The Cost of Wasted Energy</H>
+          <P size="20px">Germany has curtailed <span className="font-semibold" style={{ color: colors.accent }}>65.7 TWh</span> of clean energy since 2015 — enough to power 2.7 million homes every year. The cost keeps compounding.</P>
+          <div className="flex-1 flex justify-center items-center">
+            <CurtailmentChart width={940} height={420} />
+          </div>
+        </div>
+      </Slide>
+
+      {/* 18: Clean Energy Has Outgrown the Grid */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H color={colors.danger}>Clean Energy Has Outgrown the Grid</H>
@@ -388,7 +400,7 @@ export default function Presentation() {
 
       {/* ═══════ ACT 3: THE VIRTUAL POWER PLANT ═══════ */}
 
-      {/* 18: Consumers Become Infrastructure */}
+      {/* 19: Consumers Become Infrastructure */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col items-center h-full text-center">
           <H size="42px" center>Consumers Become Infrastructure</H>
@@ -399,7 +411,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 19: The Virtual Power Plant */}
+      {/* 20: The Virtual Power Plant */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-4">Part III</div>
@@ -408,7 +420,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 20: What Is a Virtual Power Plant? */}
+      {/* 21: What Is a Virtual Power Plant? */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H>What Is a Virtual Power Plant?</H>
@@ -440,7 +452,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 21: The Fastest Power Plant */}
+      {/* 22: The Fastest Power Plant */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H>The Fastest Power Plant</H>
@@ -463,17 +475,6 @@ export default function Presentation() {
           </div>
           <div className="rounded-[10px]" style={{ padding: '16px 22px', background: `${colors.success}08`, border: `1px solid ${colors.success}25` }}>
             <div className="text-[20px] font-semibold font-sans" style={{ color: colors.success }}>A battery responds before a gas turbine even knows there's an emergency.</div>
-          </div>
-        </div>
-      </Slide>
-
-      {/* 22: Now We Shift the Load */}
-      <Slide backgroundColor={bg} padding="20px 40px">
-        <div className="flex flex-col h-full">
-          <H color={colors.success}>Now We Shift the Load</H>
-          <P size="20px">Batteries absorb midday solar. Discharge in the evening. Click "With VPP" below.</P>
-          <div className="flex-1 flex justify-center items-center">
-            <DuckCurveVPP width={940} height={440} />
           </div>
         </div>
       </Slide>
@@ -502,19 +503,20 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 24: VPP in Action — Summer Arbitrage */}
-      <Slide backgroundColor={bg} padding="0">
-        <VPPScenarioSlide scenario="summer" />
-      </Slide>
-
-      {/* 25: VPP in Action — Winter Grid Emergency */}
-      <Slide backgroundColor={bg} padding="0">
-        <VPPScenarioSlide scenario="winter" />
+      {/* 24: Now We Shift the Load */}
+      <Slide backgroundColor={bg} padding="20px 40px">
+        <div className="flex flex-col h-full">
+          <H color={colors.success}>Now We Shift the Load</H>
+          <P size="20px">Batteries absorb midday solar. Discharge in the evening. Click "With VPP" below.</P>
+          <div className="flex-1 flex justify-center items-center">
+            <DuckCurveVPP width={940} height={440} />
+          </div>
+        </div>
       </Slide>
 
       {/* ── The Architecture (sub-section) ── */}
 
-      {/* 24: The Architecture (section title) */}
+      {/* 25: The Architecture (section title) */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[20px] font-semibold font-mono tracking-[0.15em] uppercase mb-4" style={{ color: colors.primary + 'cc' }}>The Virtual Power Plant</div>
@@ -523,7 +525,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 25: How It Works */}
+      {/* 26: How It Works */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H>How It Works</H>
@@ -534,7 +536,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 26: Inside the Architecture */}
+      {/* 27: Inside the Architecture */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H>Inside the Architecture</H>
@@ -552,7 +554,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 27: The Architecture Parallel */}
+      {/* 28: The Architecture Parallel */}
       <Slide backgroundColor={bg} padding={pad}>
         <style>{`
           @keyframes archLeftIn {
@@ -607,7 +609,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 28: The Economic Impact of Flexibility */}
+      {/* 29: The Economic Impact of Flexibility */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H color={colors.success}><span style={{ color: colors.danger, marginRight: 12, fontSize: '0.6em', verticalAlign: 'middle', opacity: 0.7 }}>[WIP]</span>The Economic Impact of Flexibility</H>
@@ -637,14 +639,14 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 29: SA Blackout, 2016 */}
+      {/* 30: SA Blackout, 2016 */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           <SAMapHUD width="100%" height="100%" variant="blackout" />
         </div>
       </Slide>
 
-      {/* 30: SA Virtual Power Plant, 2019 */}
+      {/* 31: SA Virtual Power Plant, 2019 */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           <SAMapHUD width="100%" height="100%" variant="vpp" />
@@ -653,7 +655,7 @@ export default function Presentation() {
 
       {/* ═══════ ACT 4: RESILIENCE ═══════ */}
 
-      {/* 31: Back to Texas */}
+      {/* 32: Back to Texas */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center h-full">
           <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-6">Back to Texas</div>
@@ -672,7 +674,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 32: Thank You */}
+      {/* 33: Thank You */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <H size="54px" center>Thank You</H>
@@ -682,7 +684,7 @@ export default function Presentation() {
 
       {/* ═══════ APPENDIX ═══════ */}
 
-      {/* 33: The Dunkelflaute */}
+      {/* 34: The Dunkelflaute */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H color={colors.danger}>The Dunkelflaute</H>
@@ -728,7 +730,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 34: Demand Response in Action */}
+      {/* 35: Demand Response in Action */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <div className="flex items-center gap-3">

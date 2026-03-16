@@ -2,28 +2,30 @@ import React, { useEffect, useRef, useState, useContext } from 'react';
 import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
 
-// Simplified 24-hour profiles (GW, loosely based on California/Germany patterns)
+// Real German 2025 profiles (GW) — 104 GW solar installed
+// Sources: Bundesnetzagentur/SMARD, EPEX SPOT
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
-// Base demand profile (without solar)
+// German base demand profile (GW, typical summer weekday without solar)
 const baseDemand = [
   28, 26, 25, 24, 24, 25, 28, 35, 42, 45, 46, 47,
   48, 47, 46, 45, 48, 55, 60, 58, 52, 45, 38, 32,
 ];
 
-// Solar generation profile
+// Solar generation profile (GW, 2025 sunny summer day, ~55 GW peak)
 const solarGen = [
-  0, 0, 0, 0, 0, 0.5, 3, 8, 16, 24, 30, 34,
-  35, 34, 30, 22, 12, 4, 0.5, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 1, 5, 14, 28, 40, 49, 54,
+  55, 54, 49, 36, 20, 8, 1, 0, 0, 0, 0, 0,
 ];
 
 // Net demand = base demand - solar (the duck curve)
 const netDemand = baseDemand.map((d, i) => d - solarGen[i]);
 
-// With VPP: batteries charge midday (increase net demand), discharge evening (decrease net demand)
+// With VPP: batteries charge midday (absorb overgeneration), discharge evening (shave peak)
+// Scaled up to match the deeper duck curve
 const batteryAction = [
-  0, 0, 0, 0, 0, 0, 0, -2, -8, -14, -18, -20,
-  -20, -18, -14, -8, 2, 10, 14, 12, 8, 4, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, -3, -10, -16, -20, -22,
+  -22, -20, -16, -10, 4, 14, 18, 16, 10, 5, 0, 0,
 ];
 
 const vppNetDemand = netDemand.map((d, i) => d + batteryAction[i]);

@@ -308,7 +308,7 @@ export default function VPPArchitecture({ width = 960, height = 540 }) {
         const pulse = 0.5 + 0.5 * Math.sin(now * 2.5 + i * 2);
 
         // Underground grid cable — goes down from house then right off edge
-        const cableDropY = cy + bodyH / 2 + 8;
+        const cableDropY = cy + bodyH / 2 + 32;
         const cableRightX = cx + hw;
         ctx.beginPath();
         ctx.moveTo(cableRightX, cy + bodyH / 2);
