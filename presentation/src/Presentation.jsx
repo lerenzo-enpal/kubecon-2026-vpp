@@ -19,6 +19,7 @@ import SAMapHUD from './components/SAMapHUD';
 import EnpalArchitectureDiagram from './components/EnpalArchitectureDiagram';
 import VPPScenarioSlide from './components/VPPScenarioSlide';
 import CurtailmentChart from './components/CurtailmentChart';
+import ResponseTimeline from './components/ResponseTimeline';
 
 const theme = {
   colors: { primary: colors.text, secondary: colors.textMuted, tertiary: colors.primary },
@@ -356,58 +357,25 @@ export default function Presentation() {
       {/* 17: The Cost of Wasted Energy */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
-          <H color={colors.accent}>The Cost of Wasted Energy</H>
-          <P size="20px">Germany has curtailed <span className="font-semibold" style={{ color: colors.accent }}>65.7 TWh</span> of clean energy since 2015 — enough to power 2.7 million homes every year. The cost keeps compounding.</P>
+          <H color={colors.danger}>Clean Energy Has Outgrown the Grid</H>
           <div className="flex-1 flex justify-center items-center">
             <CurtailmentChart width={940} height={340} />
           </div>
-        </div>
-      </Slide>
-
-      {/* 18: Clean Energy Has Outgrown the Grid */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col h-full">
-          <H color={colors.danger}>Clean Energy Has Outgrown the Grid</H>
-          <P>Germany paid generators <span className="font-semibold" style={{ color: colors.danger }}>EUR 554 million</span> to <em>not</em> produce electricity in 2024.</P>
-          <div className="flex-1 flex flex-col justify-center gap-5">
-            <div className="flex gap-4 w-full">
-              <StatBox n="9.3 TWh" l="Renewable energy curtailed (2024)" c={colors.danger} />
-              <StatBox n="+97%" l="Solar curtailment increase YoY" c={colors.accent} />
-              <StatBox n="2.7M" l="Homes that energy could have powered" c={colors.primary} />
-            </div>
-            <div className="flex gap-5 w-full">
-              <div className="flex-1 rounded-xl p-5" style={{ background: `${colors.danger}06`, border: `1px solid ${colors.danger}20` }}>
-                <div className="text-[20px] font-semibold font-sans mb-2" style={{ color: colors.danger }}>
-                  Not just a transmission problem
-                </div>
-                <div className="text-[20px] text-hud-text-muted font-sans leading-relaxed">
-                  49% of grid congestion measures are at the <span className="text-hud-text font-semibold">local distribution level</span> — rooftop solar overwhelming neighborhood transformers. New long-distance cables don't fix this.
-                </div>
-              </div>
-              <div className="flex-1 rounded-xl p-5" style={{ background: `${colors.success}06`, border: `1px solid ${colors.success}20` }}>
-                <div className="text-[20px] font-semibold font-sans mb-2" style={{ color: colors.success }}>
-                  The missing buyer
-                </div>
-                <div className="text-[20px] text-hud-text-muted font-sans leading-relaxed">
-                  When a wind farm is curtailed, there is no local demand to absorb the excess. A VPP could charge batteries, pre-heat buildings, and shift EV charging — <span className="text-hud-text font-semibold">becoming the buyer of last resort</span>.
-                </div>
-              </div>
-            </div>
-          </div>
-          <P size="20px" color={colors.textDim}>Germany — Bundesnetzagentur 2024 data. North-south transmission bottlenecks (SuedLink delayed to 2028) account for the other 51%.</P>
+          <P size="22px" style={{ textAlign: 'center', marginTop: 0, marginBottom: 16 }}><span style={{ color: colors.danger }}>Grid Congestion</span> is overwhelming neighborhood transformers.<br />New long-distance lines won't fix 49% of the problem.</P>
+          <div style={{ fontSize: 12, color: colors.textDim, fontFamily: '"Inter", sans-serif', textAlign: 'left', marginTop: 0 }}>Germany — Bundesnetzagentur 2024 data. North-south transmission bottlenecks (SuedLink delayed to 2028)</div>
         </div>
       </Slide>
 
       {/* ═══════ ACT 3: THE VIRTUAL POWER PLANT ═══════ */}
 
-      {/* 19: Consumers Become Infrastructure */}
+      {/* 18: Consumers Become Infrastructure */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col items-center h-full text-center">
           <H size="42px" center>Consumers Become Infrastructure</H>
-          <div className="text-[21px] text-hud-text font-sans leading-[1.7] mt-3 whitespace-nowrap">
+          <div className="text-[26px] text-hud-text font-sans leading-[1.7] mt-4 whitespace-nowrap">
             Homes with solar and batteries can <span className="font-semibold" style={{ color: colors.solar }}>charge</span>, <span className="font-semibold" style={{ color: colors.success }}>export</span>, and <span className="font-semibold" style={{ color: colors.primary }}>shift consumption</span>.
           </div>
-          <ConsumerIcons bottomText="But coordinating millions of these devices? That's a distributed systems problem." />
+          <ConsumerIcons />
         </div>
       </Slide>
 
@@ -452,69 +420,34 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 22: The Fastest Power Plant */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col h-full">
-          <H>The Fastest Power Plant</H>
-          <div className="flex-1 flex items-center">
-            <div className="w-full">
-              {[
-                { l: 'Coal', v: '2-6 hours', c: colors.textDim, w: 90 },
-                { l: 'Gas Turbine', v: '10-30 min', c: '#fb923c', w: 45 },
-                { l: 'Hydro', v: '15-30 sec', c: '#60a5fa', w: 12 },
-                { l: 'Battery', v: '140 ms', c: colors.success, w: 2 },
-              ].map(r => (
-                <div key={r.l} className="flex items-center gap-3.5 mb-4">
-                  <div className="w-[110px] text-[20px] font-medium text-hud-text-muted font-sans text-right">{r.l}</div>
-                  <div className="h-[34px] rounded-md flex items-center pl-3" style={{ width: `${r.w}%`, background: `linear-gradient(90deg, ${r.c}30, ${r.c}80)` }}>
-                    <span className="font-mono text-[20px] font-semibold text-hud-text">{r.v}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="rounded-[10px]" style={{ padding: '16px 22px', background: `${colors.success}08`, border: `1px solid ${colors.success}25` }}>
-            <div className="text-[20px] font-semibold font-sans" style={{ color: colors.success }}>A battery responds before a gas turbine even knows there's an emergency.</div>
-          </div>
-        </div>
-      </Slide>
-
-      {/* 23: VPP Event Types */}
+      {/* 22: VPP Event Types */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H>How a VPP Responds to Grid Events</H>
           <P size="20px">Different event types require different response strategies and timescales.</P>
-          <div className="flex-1 flex flex-col justify-center gap-4">
+          <div className="flex flex-col justify-center gap-3 mt-2">
             {[
               { event: 'Frequency Containment (FCR)', time: '< 30 seconds', desc: 'Battery injects/absorbs power to stabilize grid frequency', color: colors.danger },
               { event: 'Automatic Frequency Restoration (aFRR)', time: '< 5 minutes', desc: 'Sustained response to restore frequency to 50 Hz', color: colors.accent },
               { event: 'Peak Shaving', time: '1-4 hours', desc: 'Reduce grid load during demand peaks by discharging batteries', color: colors.primary },
               { event: 'Energy Arbitrage', time: 'Scheduled', desc: 'Charge when cheap, discharge when expensive — optimizing across day-ahead markets', color: colors.success },
             ].map(e => (
-              <div key={e.event} className="flex items-start gap-4 rounded-lg p-4" style={{ background: `${e.color}06`, border: `1px solid ${e.color}15` }}>
+              <div key={e.event} className="flex items-start gap-4 rounded-lg p-3" style={{ background: `${e.color}06`, border: `1px solid ${e.color}15` }}>
                 <div className="min-w-[140px]">
-                  <div className="text-[18px] font-semibold font-sans" style={{ color: e.color }}>{e.event}</div>
-                  <div className="text-[14px] font-mono mt-1" style={{ color: colors.textDim }}>{e.time}</div>
+                  <div className="text-[17px] font-semibold font-sans" style={{ color: e.color }}>{e.event}</div>
+                  <div className="text-[13px] font-mono mt-1" style={{ color: colors.textDim }}>{e.time}</div>
                 </div>
-                <div className="text-[18px] text-hud-text-muted font-sans">{e.desc}</div>
+                <div className="text-[17px] text-hud-text-muted font-sans">{e.desc}</div>
               </div>
             ))}
           </div>
-        </div>
-      </Slide>
-
-      {/* 24: Now We Shift the Load */}
-      <Slide backgroundColor={bg} padding="20px 40px">
-        <div className="flex flex-col h-full">
-          <H color={colors.success}>Now We Shift the Load</H>
-          <P size="20px">Batteries absorb midday solar. Discharge in the evening. Click "With VPP" below.</P>
-          <div className="flex-1 flex justify-center items-center">
-            <DuckCurveVPP width={940} height={440} />
+          <div className="flex-1 flex items-end justify-center pb-2">
+            <ResponseTimeline width={860} height={100} />
           </div>
         </div>
       </Slide>
 
-      {/* 25: VPP Summer Scenario — Energy Arbitrage */}
+      {/* 24: VPP Summer Scenario — Energy Arbitrage */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           <VPPScenarioSlide scenario="summer" />
@@ -698,7 +631,18 @@ export default function Presentation() {
 
       {/* ═══════ APPENDIX ═══════ */}
 
-      {/* 34: The Dunkelflaute */}
+      {/* Now We Shift the Load */}
+      <Slide backgroundColor={bg} padding="20px 40px">
+        <div className="flex flex-col h-full">
+          <H color={colors.success}>Now We Shift the Load</H>
+          <P size="20px">Batteries absorb midday solar. Discharge in the evening. Click "With VPP" below.</P>
+          <div className="flex-1 flex justify-center items-center">
+            <DuckCurveVPP width={940} height={440} />
+          </div>
+        </div>
+      </Slide>
+
+      {/* The Dunkelflaute */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H color={colors.danger}>The Dunkelflaute</H>

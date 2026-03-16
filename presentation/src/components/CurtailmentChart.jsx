@@ -85,15 +85,15 @@ export default function CurtailmentChart({ width = 900, height = 380 }) {
       ctx.clearRect(0, 0, width, height);
 
       // Title
-      ctx.font = 'bold 13px JetBrains Mono';
+      ctx.font = 'bold 16px JetBrains Mono';
       ctx.fillStyle = colors.text;
       ctx.textAlign = 'left';
       ctx.fillText('CUMULATIVE RENEWABLE ENERGY WASTED -- GERMANY', padLeft, 22);
 
       // Subtitle
-      ctx.font = '10px JetBrains Mono';
+      ctx.font = '11px JetBrains Mono';
       ctx.fillStyle = colors.textDim;
-      ctx.fillText('Bundesnetzagentur / SMARD -- Einspeisemanagement + Redispatch 2.0', padLeft, 34);
+      ctx.fillText('Bundesnetzagentur / SMARD -- Einspeisemanagement + Redispatch 2.0', padLeft, 36);
 
       // Grid lines for TWh (primary axis)
       const maxTwh = 70;

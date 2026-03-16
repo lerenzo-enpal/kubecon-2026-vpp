@@ -177,9 +177,9 @@ export default function ConsumerIcons({ bottomText }) {
   const active = slideContext?.isSlideActive;
 
   const panels = [
-    { Icon: SolarHome, label: 'Rooftop Solar', sub: 'Your roof becomes a power plant', delay: 0.3 },
-    { Icon: EVGarage, label: 'EV + Storage', sub: 'Your garage becomes a grid asset', delay: 0.8 },
-    { Icon: ConnectedHomes, label: 'Distributed Grid', sub: 'Every home becomes a node', delay: 1.3 },
+    { Icon: SolarHome, label: 'Rooftop Solar', sub: 'Roofs become power plants', delay: 0.3 },
+    { Icon: EVGarage, label: 'EV + Storage', sub: 'EVs are a grid asset', delay: 0.8 },
+    { Icon: ConnectedHomes, label: 'Distributed Grid', sub: 'Homes become nodes', delay: 1.3 },
   ];
 
   return (
