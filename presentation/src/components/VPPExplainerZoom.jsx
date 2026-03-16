@@ -1,14 +1,15 @@
-import React, { useState, useEffect, useContext, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useContext, useRef, useCallback } from 'react';
 import { SlideContext, useSteps } from 'spectacle';
 
-// ── Step definitions ─────────────────────────────────────────
+// ── Virtual space is 3200×2000. Steps define focus point + scale ──
+// focusX/Y = center of interest in virtual-space coords
 const STEPS = [
-  { scale: 2.2, tx: -1600, ty: -1300, title: 'Inside a Smart Home', desc: 'A single household with solar, battery, heat pump, EV — all wired through one smart inverter.' },
-  { scale: 2.8, tx: -1750, ty: -1450, title: 'The Edge Device', desc: 'The hybrid inverter is the brain — measuring, deciding, and responding in milliseconds.' },
-  { scale: 1.0, tx: -1100, ty: -400, title: 'Connected to the Cloud', desc: 'MQTT telemetry streams up. Dispatch commands flow down. Every home is a real-time endpoint.' },
-  { scale: 0.55, tx: -200, ty: -100, title: 'A Fleet of Thousands', desc: 'Thousands of homes form a distributed fleet — orchestrated by Kubernetes and Dapr on the edge.' },
-  { scale: 0.38, tx: -10, ty: 0, title: 'Grid Services', desc: 'The fleet bids into frequency markets and responds to grid operator dispatch — like a power plant.' },
-  { scale: 0.32, tx: 50, ty: 20, title: 'The Complete Picture', desc: 'A Virtual Power Plant: thousands of homes, one intelligent platform, real grid services.' },
+  { scale: 2.0, focusX: 1600, focusY: 1490, title: 'Inside a Smart Home', desc: 'A single household with solar, battery, heat pump, EV — all wired through one smart inverter.' },
+  { scale: 2.5, focusX: 1590, focusY: 1460, title: 'The Edge Device', desc: 'The hybrid inverter is the brain — measuring, deciding, and responding in milliseconds.' },
+  { scale: 0.85, focusX: 1600, focusY: 920, title: 'Connected to the Cloud', desc: 'MQTT telemetry streams up. Dispatch commands flow down. Every home is a real-time endpoint.' },
+  { scale: 0.52, focusX: 1500, focusY: 750, title: 'A Fleet of Thousands', desc: 'Thousands of homes form a distributed fleet — orchestrated by Kubernetes and Dapr on the edge.' },
+  { scale: 0.38, focusX: 1500, focusY: 650, title: 'Grid Services', desc: 'The fleet bids into frequency markets and responds to grid operator dispatch — like a power plant.' },
+  { scale: 0.32, focusX: 1500, focusY: 700, title: 'The Complete Picture', desc: 'A Virtual Power Plant: thousands of homes, one intelligent platform, real grid services.' },
 ];
 
 // ── Home asset data ──────────────────────────────────────────
@@ -75,11 +76,27 @@ export default function VPPExplainerZoom() {
   const bootRef = useRef(null);
   const stepIndexRef = useRef(-1);
   stepIndexRef.current = stepIndex;
+  const containerRef = useRef(null);
+  const [containerSize, setContainerSize] = useState({ w: 1024, h: 700 });
 
   const { placeholder } = useSteps(1);
 
   const slideContext = useContext(SlideContext);
   const slideActive = slideContext?.isSlideActive;
+
+  // Measure container
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const measure = () => {
+      const { width, height } = el.getBoundingClientRect();
+      if (width > 0 && height > 0) setContainerSize({ w: width, h: height });
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   // Reset & boot on slide enter
   useEffect(() => {
@@ -132,9 +149,16 @@ export default function VPPExplainerZoom() {
 
   const booted = boot > 2.0;
   const step = stepIndex >= 0 ? STEPS[stepIndex] : null;
-  const currentScale = step ? step.scale : 0.3;
-  const currentTx = step ? step.tx : 0;
-  const currentTy = step ? step.ty : 0;
+
+  // Compute CSS transform: translate then scale, centering focusX/Y in viewport
+  // transform: translate(tx, ty) scale(s) → point (x,y) maps to (s*x + tx, s*y + ty)
+  // To center (focusX, focusY): tx = vw/2 - s*focusX, ty = vh/2 - s*focusY
+  const { w: vw, h: vh } = containerSize;
+  const s = step ? step.scale : 0.28;
+  const fx = step ? step.focusX : 1500;
+  const fy = step ? step.focusY : 700;
+  const tx = vw / 2 - s * fx;
+  const ty = vh / 2 - s * fy;
 
   // Visibility flags
   const showHome = stepIndex >= 0;
@@ -146,7 +170,7 @@ export default function VPPExplainerZoom() {
   const showFullTitle = stepIndex >= 5;
 
   return (
-    <div style={{
+    <div ref={containerRef} style={{
       position: 'relative', width: '100%', height: '100%',
       background: '#0a0e17', overflow: 'hidden', fontFamily: '"Inter", system-ui, sans-serif',
     }}>
@@ -172,11 +196,11 @@ export default function VPPExplainerZoom() {
         }} />
       )}
 
-      {/* Virtual space with zoom/pan */}
+      {/* Virtual space with zoom/pan — translate then scale from origin 0,0 */}
       <div style={{
-        position: 'absolute', inset: 0,
+        position: 'absolute', top: 0, left: 0, width: 3200, height: 2000,
         transition: 'transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-        transform: `scale(${currentScale}) translate(${currentTx}px, ${currentTy}px)`,
+        transform: `translate(${tx}px, ${ty}px) scale(${s})`,
         transformOrigin: '0 0',
         opacity: booted ? 1 : 0,
       }}>
