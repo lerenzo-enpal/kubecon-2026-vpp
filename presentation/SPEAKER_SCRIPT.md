@@ -177,6 +177,19 @@ Bulleted talking points per slide. Edit freely — this is your working script.
 - Watch the data flow — from market signal to battery charge in seconds
 - This is cloud-native infrastructure running the power grid
 
+### 31b. Inside the Architecture
+- [ANIMATED] Now let's zoom in — this is the internal data flow
+- Each home has devices — heat pump, PV, battery — connected to an IoT hub
+- The IoT hub connects to our cloud via EMQX, our MQTT broker
+- We ingest both static config data and measurement telemetry every 20 seconds, all aligned in Protobuf schemas
+- Data flows into Databricks — raw, then bronze, silver, gold layers — classic lakehouse
+- Here's the game changer: Apache Spark streaming aggregates on Databricks give us near-real-time pattern detection at latencies that would be unthinkable in traditional web request-response cycles
+- Our BI team, predictive monitoring, and solutions teams all build on these streaming pipelines
+- We progressively increase aggregation windows to minimize storage — raw data is kept for a limited period
+- The control loop: VPP controller dispatches to the local HEMS, which runs conflict resolution via our WISH protocol
+- We also integrate §14a grid regulation devices, smart meters via Meterfy, and cloud-to-cloud with Flexor via Event Hub
+- The clever use of streaming aggregates on Databricks is helping us substantially reduce costs while maintaining the low latency that makes real-time grid response possible
+
 ---
 
 ## Resilience (Part IV) — ~3 min
