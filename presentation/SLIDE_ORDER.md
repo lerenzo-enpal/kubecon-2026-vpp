@@ -41,6 +41,7 @@ Reorder by cutting/pasting lines. Tell Claude the new order and it will update P
 28. **The Architecture Parallel** — Traditional grid vs VPP, Kubernetes analogy
 29. **What Is a VPP?** — Architecture diagram: devices→cloud→services
 30. **How It Works** — Animated VPP architecture flow: Market→Trader→Controller→Kafka→Enpal→Homes [VPPArchitecture]
+30b. **Inside the Architecture** — Cyclic data flow: Devices→IoT Hub→EMQX→Ingestion→Databricks→Spark Streaming→VPP Controller→HEMS, with §14a, Meterfy, Flexor integrations [EnpalArchitectureDiagram]
 31. **The Fastest Power Plant** — Response time bars: coal vs gas vs battery
 32. X **SA Virtual Power Plant, 2019** — 1,100 homes, 0 humans — DEPRECATED
 
