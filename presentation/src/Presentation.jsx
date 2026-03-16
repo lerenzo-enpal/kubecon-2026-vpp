@@ -484,7 +484,7 @@ export default function Presentation() {
           <H>The Architecture Parallel</H>
           <div className="flex-1 flex flex-col justify-center w-full max-w-[880px] mx-auto gap-5">
             {[
-              { grid: 'Few large generators, centralized dispatch', vpp: 'Millions of edge nodes, distributed', color: colors.danger },
+              { grid: 'Few large generators, centralized', vpp: 'Millions of edge nodes, distributed', color: colors.danger },
               { grid: 'Manual capacity planning', vpp: 'Horizontal autoscaling', color: colors.accent },
               { grid: 'Isolated resilience (relays, islanding)', vpp: 'Integrated resilience (coordinated)', color: colors.primary },
               { grid: 'Centralized observability (SCADA)', vpp: 'Full-stack observability (per-device)', color: colors.success },
@@ -581,7 +581,8 @@ export default function Presentation() {
             <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.success }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Home System</span></div>
             <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.primary }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Cloud / Control</span></div>
             <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: '#E25A1C' }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Databricks + Spark</span></div>
-            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.accent }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>External Partners</span></div>
+            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.accent }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Event Hub + Flexa</span></div>
+            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.textMuted }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>External</span></div>
           </div>
         </div>
       </Slide>
