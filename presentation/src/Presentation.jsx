@@ -399,6 +399,24 @@ export default function Presentation() {
         </div>
       </Slide>
 
+      {/* 21: Inside the Architecture */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col h-full">
+          <H>Inside the Architecture</H>
+          <P size="18px">Measurement data every 20 seconds — Protobuf over MQTT through EMQX, into Databricks streaming aggregates powered by Apache Spark.</P>
+          <div className="flex-1 flex justify-center items-center">
+            <EnpalArchitectureDiagram width={1128} height={528} />
+          </div>
+          <div className="flex gap-4 mt-1">
+            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.success }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Home System</span></div>
+            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.primary }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Cloud / Control</span></div>
+            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: '#E25A1C' }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Databricks + Spark</span></div>
+            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.accent }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Event Hub + Flexa</span></div>
+            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.textMuted }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>External</span></div>
+          </div>
+        </div>
+      </Slide>
+
       {/* 22: VPP Event Types */}
       <Slide backgroundColor={bg} padding={pad}>
         <style>{`
@@ -473,9 +491,9 @@ export default function Presentation() {
           <div className="flex-1 flex items-center justify-center">
             <div className="w-full max-w-[900px]">
               <div className="flex gap-5 mb-5">
-                <div className="flex-1 text-center text-[15px] font-mono font-semibold py-2 rounded-t-lg" style={{ color: colors.danger, background: colors.danger + '0a', borderBottom: `2px solid ${colors.danger}40` }}>Without VPP</div>
+                <div className="flex-1 text-center text-[18px] font-mono font-semibold py-2 rounded-t-lg" style={{ color: colors.danger, background: colors.danger + '0a', borderBottom: `2px solid ${colors.danger}40` }}>Without VPP</div>
                 <div className="w-[160px]" />
-                <div className="flex-1 text-center text-[15px] font-mono font-semibold py-2 rounded-t-lg" style={{ color: colors.success, background: colors.success + '0a', borderBottom: `2px solid ${colors.success}40` }}>With VPP</div>
+                <div className="flex-1 text-center text-[18px] font-mono font-semibold py-2 rounded-t-lg" style={{ color: colors.success, background: colors.success + '0a', borderBottom: `2px solid ${colors.success}40` }}>With VPP</div>
               </div>
               {[
                 { metric: 'Grid Emergency', without: 'Cascade failure, 4+ hours', withVpp: 'Stabilized in 200ms', icon: 'FCR' },
@@ -485,13 +503,13 @@ export default function Presentation() {
                 { metric: 'CO2 Emissions', without: '3.4 Mt avoidable CO2/yr (DE)', withVpp: 'Near-zero curtailment emissions', icon: 'CO2' },
               ].map((r, i) => (
                 <div key={r.metric} className="flex gap-5 mb-3 items-center" style={{ animation: `archLeftIn 0.5s ease ${0.3 + i * 0.15}s both` }}>
-                  <div className="flex-1 rounded-lg p-3 text-[15px] font-sans text-hud-text-muted" style={{ background: colors.danger + '06', border: `1px solid ${colors.danger}12` }}>
+                  <div className="flex-1 rounded-lg p-4 text-[18px] font-sans text-hud-text-muted" style={{ background: colors.danger + '06', border: `1px solid ${colors.danger}12` }}>
                     {r.without}
                   </div>
                   <div className="w-[160px] text-center">
-                    <div className="text-[14px] font-semibold font-mono" style={{ color: colors.primary }}>{r.metric}</div>
+                    <div className="text-[16px] font-semibold font-mono" style={{ color: colors.primary }}>{r.metric}</div>
                   </div>
-                  <div className="flex-1 rounded-lg p-3 text-[15px] font-sans font-semibold" style={{ color: colors.success, background: colors.success + '06', border: `1px solid ${colors.success}12` }}>
+                  <div className="flex-1 rounded-lg p-4 text-[18px] font-sans font-semibold" style={{ color: colors.success, background: colors.success + '06', border: `1px solid ${colors.success}12` }}>
                     {r.withVpp}
                   </div>
                 </div>
@@ -503,25 +521,7 @@ export default function Presentation() {
 
       {/* ── The Architecture (sub-section) ── */}
 
-      {/* Inside the Architecture */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col h-full">
-          <H>Inside the Architecture</H>
-          <P size="18px">Measurement data every 20 seconds — Protobuf over MQTT through EMQX, into Databricks streaming aggregates powered by Apache Spark.</P>
-          <div className="flex-1 flex justify-center items-center">
-            <EnpalArchitectureDiagram width={1128} height={528} />
-          </div>
-          <div className="flex gap-4 mt-1">
-            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.success }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Home System</span></div>
-            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.primary }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Cloud / Control</span></div>
-            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: '#E25A1C' }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Databricks + Spark</span></div>
-            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.accent }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Event Hub + Flexa</span></div>
-            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.textMuted }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>External</span></div>
-          </div>
-        </div>
-      </Slide>
-
-      {/* 28: The Architecture Parallel */}
+      {/* The Architecture Parallel */}
       <Slide backgroundColor={bg} padding={pad}>
         <style>{`
           @keyframes archLeftIn {
