@@ -35,7 +35,7 @@ const SECTIONS = [
   { from: 3, to: 13, name: 'The Grid' },
   { from: 14, to: 17, name: 'The Renewable Revolution' },
   { from: 18, to: 26, name: 'The Virtual Power Plant' },
-  { from: 27, to: 30, name: 'Resilience' },
+  { from: 27, to: 29, name: 'Resilience' },
 ];
 
 const slideTemplate = ({ slideNumber, numberOfSlides }) => {
@@ -531,10 +531,10 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 25: Winter Grid Emergency */}
+      {/* 25: SA Virtual Power Plant, 2019 */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
-          <VPPScenarioSlide scenario="winter" />
+          <SAMapHUD width="100%" height="100%" variant="vpp" />
         </div>
       </Slide>
 
@@ -581,16 +581,9 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 28: SA Virtual Power Plant, 2019 */}
-      <Slide backgroundColor="#020408" padding="0">
-        <div className="relative w-full h-full">
-          <SAMapHUD width="100%" height="100%" variant="vpp" />
-        </div>
-      </Slide>
-
       {/* ═══════ ACT 4: RESILIENCE ═══════ */}
 
-      {/* 29: Back to Texas */}
+      {/* 28: Back to Texas */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center h-full">
           <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-6">Back to Texas</div>
@@ -609,7 +602,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 30: Thank You */}
+      {/* 29: Thank You */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <H size="54px" center>Thank You</H>
@@ -618,6 +611,13 @@ export default function Presentation() {
       </Slide>
 
       {/* ═══════ APPENDIX ═══════ */}
+
+      {/* Winter Grid Emergency */}
+      <Slide backgroundColor="#020408" padding="0">
+        <div className="relative w-full h-full">
+          <VPPScenarioSlide scenario="winter" />
+        </div>
+      </Slide>
 
       {/* The Economic Impact of Flexibility [WIP] */}
       <Slide backgroundColor={bg} padding={pad}>
