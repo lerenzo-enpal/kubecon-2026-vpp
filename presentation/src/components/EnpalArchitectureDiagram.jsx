@@ -5,75 +5,77 @@ import { colors } from '../theme';
 /**
  * EnpalArchitectureDiagram — Linear left-to-right architecture data flow
  *
- * Home system: PV, Battery → Inverter → Meter → Grid (power chain)
- *   IoT HEMS (merged IoT Hub + Local HEMS) manages: Inverter, Steuerbox, Heat Pump, Wallbox
- * Telemetry:  IoT HEMS → EMQX → Ingestion → Databricks → Spark
- * To Flexa:   Spark → Event Hub → Flexa
- * Dispatch:   Flexa → Event Hub → Cloud HEMS → EMQX → IoT HEMS → devices
+ * Physical chain: Grid → Meter (Meterfy) → Steuerbox (§14a) → IoT HEMS
+ * Inverter: PV (DC) + Battery (DC) → Inverter → AC to house
+ * Telemetry: IoT HEMS → EMQX → Ingestion → Databricks → Spark
+ * To Flexa:  Spark → Event Hub → Flexa
+ * Dispatch:  Flexa → Event Hub → Cloud HEMS → EMQX → IoT HEMS
  */
 
+const ELECTRICITY_COLOR = colors.accent; // amber for power
+
 const NODES = [
-  // Home devices — top cluster (above IoT HEMS)
-  { id: 'pv',          label: 'PV',              sub: 'Solar Panels',       x: 0.01, y: 0.12, color: colors.solar,     w: 60,  h: 30 },
-  { id: 'inverter',    label: 'Inverter',        sub: '',                   x: 0.09, y: 0.12, color: colors.solar,     w: 68,  h: 30 },
-  { id: 'battery',     label: 'Battery',         sub: '',                   x: 0.18, y: 0.12, color: colors.battery,   w: 62,  h: 30 },
+  // Physical power chain — top row (Grid → Meter → Steuerbox → IoT HEMS)
+  { id: 'grid',        label: 'Grid',            sub: 'Niederspannung',     x: 0.01, y: 0.12, color: colors.danger,    w: 70,  h: 42 },
+  { id: 'meter',       label: 'Meterfy',         sub: 'Smart Meter',        x: 0.10, y: 0.12, color: colors.textMuted,  w: 65,  h: 32 },
+  { id: 'steuerbox',   label: 'Steuerbox',       sub: '§14a',              x: 0.19, y: 0.12, color: colors.textMuted,   w: 72,  h: 32 },
 
-  // Home devices — flanking IoT HEMS
-  { id: 'steuerbox',   label: 'Steuerbox',       sub: '§14a',              x: 0.01, y: 0.38, color: colors.textMuted,  w: 72,  h: 30 },
-  { id: 'iot_hems',    label: 'IoT HEMS',        sub: 'Edge Gateway',      x: 0.12, y: 0.38, color: colors.success,   w: 82,  h: 36 },
+  // Inverter + sources — branching off house electrical
+  { id: 'pv',          label: 'PV',              sub: 'Solar',              x: 0.01, y: 0.42, color: colors.solar,      w: 50,  h: 28 },
+  { id: 'battery',     label: 'Battery',         sub: 'Storage',            x: 0.01, y: 0.62, color: colors.battery,    w: 58,  h: 28 },
+  { id: 'inverter',    label: 'Inverter',        sub: 'DC/AC',             x: 0.10, y: 0.52, color: colors.solar,      w: 68,  h: 32 },
 
-  // Home devices — below IoT HEMS
-  { id: 'hp',          label: 'Heat Pump',       sub: '',                   x: 0.01, y: 0.60, color: colors.success,   w: 72,  h: 30 },
-  { id: 'wallbox',     label: 'Wallbox',         sub: 'EV Charger',        x: 0.10, y: 0.60, color: colors.success,   w: 68,  h: 30 },
+  // IoT HEMS — gateway between home and cloud
+  { id: 'iot_hems',    label: 'IoT HEMS',        sub: 'Edge Gateway',      x: 0.19, y: 0.42, color: colors.success,    w: 82,  h: 36 },
 
-  // Meter → Grid (power chain, secondary)
-  { id: 'meter',       label: 'Meter',           sub: 'Smart Meter',       x: 0.01, y: 0.82, color: colors.textMuted,  w: 58,  h: 28 },
-  { id: 'grid',        label: 'Grid',            sub: '',                   x: 0.09, y: 0.82, color: colors.textMuted,  w: 50,  h: 28 },
+  // Other home devices below IoT HEMS
+  { id: 'hp',          label: 'Heat Pump',       sub: '',                   x: 0.19, y: 0.62, color: colors.success,    w: 72,  h: 28 },
+  { id: 'wallbox',     label: 'Wallbox',         sub: 'EV Charger',        x: 0.19, y: 0.78, color: colors.success,    w: 72,  h: 28 },
 
-  // Cloud pipeline (linear right, y=0.30)
-  { id: 'emqx',        label: 'EMQX',            sub: 'MQTT Broker',       x: 0.27, y: 0.30, color: colors.primary,    w: 80,  h: 36 },
-  { id: 'ingestion',   label: 'Data Ingestion',  sub: 'Protobuf · 20s',   x: 0.39, y: 0.30, color: colors.secondary,  w: 95,  h: 36 },
-  { id: 'databricks',  label: 'Databricks',      sub: 'Bronze → Gold',    x: 0.52, y: 0.30, color: '#FF3621',         w: 90,  h: 36 },
-  { id: 'spark',       label: 'Spark Streaming', sub: 'Aggregates',       x: 0.66, y: 0.30, color: '#E25A1C',         w: 105, h: 36 },
+  // Cloud pipeline — middle row
+  { id: 'emqx',        label: 'EMQX',            sub: 'MQTT Broker',       x: 0.34, y: 0.35, color: colors.primary,    w: 80,  h: 36 },
+  { id: 'ingestion',   label: 'Data Ingestion',  sub: 'Protobuf · 20s',   x: 0.45, y: 0.35, color: colors.secondary,  w: 95,  h: 36 },
+  { id: 'databricks',  label: 'Databricks',      sub: 'Bronze → Gold',    x: 0.57, y: 0.35, color: '#FF3621',         w: 90,  h: 36 },
+  { id: 'spark',       label: 'Spark Streaming', sub: 'Aggregates',       x: 0.69, y: 0.35, color: '#E25A1C',         w: 105, h: 36 },
 
-  // Control bridge (bottom row)
-  { id: 'cloud_hems',  label: 'Cloud HEMS',      sub: 'Orchestration',    x: 0.27, y: 0.70, color: colors.primary,    w: 90,  h: 36 },
-  { id: 'event_hub',   label: 'Event Hub',       sub: 'Azure',            x: 0.52, y: 0.70, color: colors.accent,     w: 90,  h: 36 },
+  // Control bridge — bottom row
+  { id: 'cloud_hems',  label: 'Cloud HEMS',      sub: 'Orchestration',    x: 0.34, y: 0.75, color: colors.primary,    w: 90,  h: 36 },
+  { id: 'event_hub',   label: 'Event Hub',       sub: 'Azure',            x: 0.57, y: 0.75, color: colors.accent,     w: 90,  h: 36 },
 
-  // VPP Controller (far right)
-  { id: 'flexa',       label: 'Flexa',           sub: 'VPP Controller',   x: 0.83, y: 0.50, color: colors.accent,     w: 100, h: 36 },
+  // VPP Controller
+  { id: 'flexa',       label: 'Flexa',           sub: 'VPP Controller',   x: 0.82, y: 0.55, color: colors.accent,     w: 100, h: 36 },
 ];
 
 const EDGES = [
-  // === Home: device → Inverter ===
-  { from: 'pv',         to: 'inverter',   label: '',           color: colors.solar,     rate: 3 },
-  { from: 'battery',    to: 'inverter',   label: '',           color: colors.battery,   rate: 3 },
+  // === ELECTRICITY: Grid → Meter → Steuerbox (main power cable) ===
+  { from: 'grid',        to: 'meter',      label: 'AC',         color: ELECTRICITY_COLOR, rate: 2.5, electric: true },
+  { from: 'meter',       to: 'steuerbox',  label: '',           color: ELECTRICITY_COLOR, rate: 2.5, electric: true },
+  { from: 'steuerbox',   to: 'iot_hems',   label: '',           color: ELECTRICITY_COLOR, rate: 2.5, electric: true },
 
-  // === Home: devices → IoT HEMS ===
-  { from: 'inverter',   to: 'iot_hems',   label: '',           color: colors.success,   rate: 2 },
-  { from: 'steuerbox',  to: 'iot_hems',   label: '',           color: colors.textMuted, rate: 4 },
-  { from: 'hp',         to: 'iot_hems',   label: '',           color: colors.success,   rate: 3 },
-  { from: 'wallbox',    to: 'iot_hems',   label: '',           color: colors.success,   rate: 3 },
+  // === ELECTRICITY: PV + Battery → Inverter (DC), Inverter → house (AC) ===
+  { from: 'pv',          to: 'inverter',   label: 'DC',         color: ELECTRICITY_COLOR, rate: 3, electric: true },
+  { from: 'battery',     to: 'inverter',   label: 'DC',         color: ELECTRICITY_COLOR, rate: 3, electric: true },
+  { from: 'inverter',    to: 'iot_hems',   label: 'AC',         color: ELECTRICITY_COLOR, rate: 2.5, electric: true },
 
-  // === Home: power chain (secondary) ===
-  { from: 'inverter',   to: 'meter',      label: '',           color: colors.textMuted, rate: 4 },
-  { from: 'meter',      to: 'grid',       label: '',           color: colors.textMuted, rate: 4 },
+  // === DATA: devices → IoT HEMS ===
+  { from: 'hp',          to: 'iot_hems',   label: '',           color: colors.success,   rate: 3 },
+  { from: 'wallbox',     to: 'iot_hems',   label: '',           color: colors.success,   rate: 3 },
 
-  // === Telemetry pipeline (left → right) ===
-  { from: 'iot_hems',   to: 'emqx',       label: 'MQTT',      color: colors.primary,   rate: 1.2, offset: -3 },
-  { from: 'emqx',       to: 'ingestion',  label: 'Protobuf',  color: colors.secondary, rate: 1 },
-  { from: 'ingestion',  to: 'databricks', label: '',           color: colors.secondary, rate: 1.2 },
-  { from: 'databricks', to: 'spark',      label: 'Streaming', color: '#E25A1C',        rate: 1 },
+  // === DATA: telemetry pipeline (left → right) ===
+  { from: 'iot_hems',    to: 'emqx',       label: 'MQTT',      color: colors.primary,   rate: 1.2, offset: -3 },
+  { from: 'emqx',        to: 'ingestion',  label: 'Protobuf',  color: colors.secondary, rate: 1 },
+  { from: 'ingestion',   to: 'databricks', label: '',           color: colors.secondary, rate: 1.2 },
+  { from: 'databricks',  to: 'spark',      label: 'Streaming', color: '#E25A1C',        rate: 1 },
 
-  // === Spark → Flexa (via Event Hub) ===
-  { from: 'spark',      to: 'event_hub',  label: 'Aggregates', color: '#E25A1C',       rate: 1.5 },
-  { from: 'event_hub',  to: 'flexa',      label: '',           color: colors.accent,    rate: 1.2 },
+  // === DATA: Spark → Flexa (via Event Hub) ===
+  { from: 'spark',       to: 'event_hub',  label: 'Aggregates', color: '#E25A1C',       rate: 1.5 },
+  { from: 'event_hub',   to: 'flexa',      label: '',           color: colors.accent,    rate: 1.2 },
 
-  // === Dispatch (Flexa → IoT HEMS, dashed) ===
-  { from: 'flexa',       to: 'event_hub',  label: 'Dispatch',  color: colors.primary,   rate: 2, dash: true, offset: 4 },
-  { from: 'event_hub',   to: 'cloud_hems', label: '',          color: colors.primary,   rate: 2, dash: true },
-  { from: 'cloud_hems',  to: 'emqx',       label: '',          color: colors.primary,   rate: 2, dash: true },
-  { from: 'emqx',        to: 'iot_hems',   label: '',          color: colors.primary,   rate: 2, dash: true, offset: 3 },
+  // === DATA: dispatch (Flexa → IoT HEMS, dashed) ===
+  { from: 'flexa',        to: 'event_hub',  label: 'Dispatch',  color: colors.primary,   rate: 2, dash: true, offset: 4 },
+  { from: 'event_hub',    to: 'cloud_hems', label: '',          color: colors.primary,   rate: 2, dash: true },
+  { from: 'cloud_hems',   to: 'emqx',       label: '',          color: colors.primary,   rate: 2, dash: true },
+  { from: 'emqx',         to: 'iot_hems',   label: '',          color: colors.primary,   rate: 2, dash: true, offset: 3 },
 ];
 
 function getNode(id) {
@@ -140,7 +142,7 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
           progress: 0,
           speed: 0.008 + Math.random() * 0.004,
           color: edge.color || colors.primary,
-          size: 2.5 + Math.random() * 1.5,
+          size: edge.electric ? (3.5 + Math.random() * 1.5) : (2.5 + Math.random() * 1.5),
         });
       });
     }
@@ -160,9 +162,9 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
         ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(width, gy); ctx.stroke();
       }
 
-      // Subtle section divider between home and cloud
-      const divX = width * 0.235;
-      ctx.strokeStyle = colors.textDim + '15';
+      // Section divider between home and cloud
+      const divX = width * 0.305;
+      ctx.strokeStyle = colors.textDim + '12';
       ctx.lineWidth = 1;
       ctx.setLineDash([4, 4]);
       ctx.beginPath();
@@ -174,10 +176,11 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
       // Draw edges
       EDGES.forEach((edge) => {
         const { fx, fy, tx, ty } = edgeEndpoints(edge);
+        const isElectric = edge.electric;
 
         ctx.beginPath();
-        ctx.strokeStyle = (edge.color || colors.primary) + '30';
-        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = (edge.color || colors.primary) + (isElectric ? '40' : '25');
+        ctx.lineWidth = isElectric ? 2.5 : 1.5;
         if (edge.dash) ctx.setLineDash([6, 4]);
         ctx.moveTo(fx, fy);
         ctx.lineTo(tx, ty);
@@ -186,7 +189,7 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
 
         // Arrow head
         const angle = Math.atan2(ty - fy, tx - fx);
-        const arrowSize = 5;
+        const arrowSize = isElectric ? 6 : 5;
         ctx.beginPath();
         ctx.fillStyle = (edge.color || colors.primary) + '50';
         ctx.moveTo(tx, ty);
@@ -199,9 +202,9 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
         if (edge.label) {
           const mx = (fx + tx) / 2;
           const my = (fy + ty) / 2;
-          ctx.font = '7px JetBrains Mono';
+          ctx.font = isElectric ? 'bold 7px JetBrains Mono' : '7px JetBrains Mono';
           ctx.textAlign = 'center';
-          ctx.fillStyle = colors.textDim + '90';
+          ctx.fillStyle = isElectric ? (ELECTRICITY_COLOR + 'aa') : (colors.textDim + '90');
           const perpLabelX = -Math.sin(angle) * 9;
           const perpLabelY = Math.cos(angle) * 9;
           ctx.fillText(edge.label, mx + perpLabelX, my + perpLabelY);
@@ -224,7 +227,7 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
         ctx.beginPath();
         ctx.arc(px, py, p.size, 0, Math.PI * 2);
         ctx.fillStyle = p.color;
-        ctx.shadowBlur = 8;
+        ctx.shadowBlur = edge.electric ? 12 : 8;
         ctx.shadowColor = p.color;
         ctx.fill();
         ctx.shadowBlur = 0;
@@ -255,7 +258,7 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
         ctx.stroke();
 
         // Colored accent line at top
-        ctx.fillStyle = node.color + '80';
+        ctx.fillStyle = node.color + '90';
         ctx.beginPath();
         ctx.roundRect(nx, ny, node.w, 2, [5, 5, 0, 0]);
         ctx.fill();
@@ -269,16 +272,16 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
         ctx.shadowBlur = 0;
 
         // Label
-        ctx.font = 'bold 8px JetBrains Mono';
+        ctx.font = 'bold 9px JetBrains Mono';
         ctx.fillStyle = node.color;
         ctx.textAlign = 'center';
-        ctx.fillText(node.label, nx + node.w / 2, ny + (node.sub ? 14 : 17));
+        ctx.fillText(node.label, nx + node.w / 2, ny + (node.sub ? 15 : 18));
 
         // Sub-label
         if (node.sub) {
-          ctx.font = '6.5px JetBrains Mono';
+          ctx.font = '7px JetBrains Mono';
           ctx.fillStyle = colors.textDim + 'aa';
-          ctx.fillText(node.sub, nx + node.w / 2, ny + 24);
+          ctx.fillText(node.sub, nx + node.w / 2, ny + 26);
         }
       });
 
@@ -286,14 +289,17 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
       ctx.font = 'bold 8px JetBrains Mono';
       ctx.textAlign = 'left';
 
+      ctx.fillStyle = colors.danger + '40';
+      ctx.fillText('GRID', 10, height * 0.04 + 4);
+
       ctx.fillStyle = colors.success + '40';
-      ctx.fillText('HOME SYSTEM', 8, height * 0.04 + 4);
+      ctx.fillText('HOME', width * 0.14, height * 0.04 + 4);
 
       ctx.fillStyle = colors.primary + '40';
-      ctx.fillText('CLOUD', width * 0.27, height * 0.04 + 4);
+      ctx.fillText('CLOUD', width * 0.34, height * 0.04 + 4);
 
       ctx.fillStyle = '#E25A1C40';
-      ctx.fillText('DATA PIPELINE', width * 0.47, height * 0.04 + 4);
+      ctx.fillText('DATA PIPELINE', width * 0.50, height * 0.04 + 4);
 
       ctx.fillStyle = colors.accent + '40';
       ctx.textAlign = 'right';
@@ -303,14 +309,41 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
       ctx.font = '6.5px JetBrains Mono';
       ctx.textAlign = 'left';
       ctx.fillStyle = colors.textDim + '50';
-      ctx.fillText('IoT HEMS = IoT Hub + Home Energy Management System', 8, height * 0.96);
+      ctx.fillText('IoT HEMS = IoT Hub + Home Energy Management System', 8, height - 18);
 
-      ctx.textAlign = 'center';
-      ctx.fillText('── telemetry    - - dispatch', width * 0.52, height * 0.96);
+      // Electricity vs data legend
+      ctx.fillStyle = ELECTRICITY_COLOR + '80';
+      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = ELECTRICITY_COLOR + '60';
+      ctx.beginPath();
+      ctx.moveTo(8, height - 6);
+      ctx.lineTo(30, height - 6);
+      ctx.stroke();
+      ctx.font = '6.5px JetBrains Mono';
+      ctx.fillStyle = ELECTRICITY_COLOR + '80';
+      ctx.fillText('electricity', 34, height - 3);
+
+      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = colors.primary + '60';
+      ctx.beginPath();
+      ctx.moveTo(100, height - 6);
+      ctx.lineTo(122, height - 6);
+      ctx.stroke();
+      ctx.fillStyle = colors.primary + '80';
+      ctx.fillText('data', 126, height - 3);
+
+      ctx.setLineDash([4, 3]);
+      ctx.beginPath();
+      ctx.moveTo(160, height - 6);
+      ctx.lineTo(182, height - 6);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = colors.primary + '80';
+      ctx.fillText('dispatch', 186, height - 3);
 
       ctx.textAlign = 'right';
       ctx.fillStyle = colors.secondary + '40';
-      ctx.fillText('20s intervals', width - 10, height * 0.96);
+      ctx.fillText('20s intervals', width - 10, height - 3);
 
       if (isActive) animRef.current = requestAnimationFrame(draw);
     }

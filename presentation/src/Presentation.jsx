@@ -519,6 +519,31 @@ export default function Presentation() {
         </div>
       </Slide>
 
+      {/* 28b: The Architecture Parallel — two-column version */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col h-full">
+          <H>The Architecture Parallel</H>
+          <div className="flex-1 flex items-center">
+            <div className="flex gap-5 items-start w-full">
+              <div className="bg-hud-surface rounded-[10px] p-5 flex-1" style={{ border: `1px solid ${colors.danger}20` }}>
+                <div className="text-[20px] font-semibold font-mono mb-3" style={{ color: colors.danger }}>TRADITIONAL GRID</div>
+                {['Monolithic infrastructure', 'Few large generators', 'Manual capacity planning', 'Single points of failure', 'No observability'].map(x => (
+                  <div key={x} className="text-[20px] text-hud-text-muted font-sans py-[5px] border-b border-hud-surface-light">{x}</div>
+                ))}
+              </div>
+              <div className="pt-[60px] text-[24px] text-hud-primary font-mono">{'\u2192'}</div>
+              <div className="rounded-[10px] p-5 flex-1" style={{ background: `${colors.success}06`, border: `1px solid ${colors.success}25` }}>
+                <div className="text-[20px] font-semibold font-mono mb-3" style={{ color: colors.success }}>VIRTUAL POWER PLANT</div>
+                {['Distributed microservices', 'Millions of edge nodes', 'Horizontal autoscaling', 'Resilient by design', 'Full-stack observability'].map(x => (
+                  <div key={x} className="text-[20px] text-hud-text font-sans font-medium py-[5px] border-b border-hud-surface-light">{x}</div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <P size="20px" center style={{ fontFamily: '"JetBrains Mono"' }}>Frequency = SLO &bull; Cascade = failure propagation &bull; Batteries = autoscaling</P>
+        </div>
+      </Slide>
+
       {/* 29: What Is a VPP? */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
