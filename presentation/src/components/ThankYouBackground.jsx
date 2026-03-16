@@ -320,7 +320,7 @@ export default function ThankYouBackground({ width = 1366, height = 768 }) {
         ctx.strokeStyle = hexAlpha(colors.primary, 0.06 * pulseFade);
         ctx.lineWidth = 1.5;
         ctx.beginPath();
-        ctx.arc(centerX, centerY, pulseRadius, 0, Math.PI * 2);
+        ctx.arc(centerX, centerY, Math.max(0, pulseRadius), 0, Math.PI * 2);
         ctx.stroke();
       }
 

@@ -5,8 +5,9 @@ import { colors } from '../theme';
 /**
  * EnpalArchitectureDiagram — Linear left-to-right architecture data flow
  *
- * Physical chain: Grid → Meter (Metrify) → IoT HEMS; Steuerbox (§14a) → Inverter
+ * Physical chain: Grid → Meter (Metrify) → Inverter; Steuerbox (§14a) → Inverter
  * Inverter: PV (DC) + Battery (DC) → Inverter → AC to house
+ * Feed-in: PV/Battery → Inverter → Meter → Grid (occasional)
  * Telemetry: IoT HEMS → EMQX → Ingestion → Databricks → Spark
  * To Flexa:  Spark → Event Hub → Flexa
  * Dispatch:  Flexa → Event Hub → Cloud HEMS → EMQX → IoT HEMS
@@ -20,39 +21,46 @@ const NODES = [
   { id: 'grid',        label: 'Grid',            sub: 'Niederspannung',     x: 0.00, y: 0.50, color: colors.danger,    w: 30,  h: 300 },
 
   // Physical power chain — top row
-  { id: 'meter',       label: 'Metrify',          sub: 'Smart Meter',        x: 0.04, y: 0.10, color: colors.textMuted,  w: 78,  h: 38 },
-  { id: 'steuerbox',   label: 'Steuerbox',       sub: '§14a',              x: 0.04, y: 0.78, color: colors.textMuted,   w: 84,  h: 38 },
+  { id: 'meter',       label: 'Metrify',          sub: 'Smart Meter',        x: 0.06, y: 0.10, color: colors.textMuted,  w: 78,  h: 38 },
+  { id: 'steuerbox',   label: 'Steuerbox',       sub: '§14a',              x: 0.06, y: 0.78, color: colors.textMuted,   w: 84,  h: 38 },
 
   // Inverter + sources
-  { id: 'pv',          label: 'PV',              sub: 'Solar',              x: 0.04, y: 0.40, color: colors.solar,      w: 60,  h: 34 },
-  { id: 'battery',     label: 'Battery',         sub: 'Storage',            x: 0.04, y: 0.58, color: colors.battery,    w: 68,  h: 34 },
-  { id: 'inverter',    label: 'Inverter',        sub: 'DC/AC',             x: 0.12, y: 0.48, color: colors.solar,      w: 80,  h: 38 },
+  { id: 'pv',          label: 'PV',              sub: 'Solar',              x: 0.06, y: 0.40, color: colors.solar,      w: 60,  h: 34 },
+  { id: 'battery',     label: 'Battery',         sub: 'Storage',            x: 0.06, y: 0.58, color: colors.battery,    w: 68,  h: 34 },
+  { id: 'inverter',    label: 'Inverter',        sub: 'DC/AC',             x: 0.18, y: 0.48, color: colors.solar,      w: 80,  h: 38 },
 
   // IoT HEMS — gateway
-  { id: 'iot_hems',    label: 'IoT HEMS',        sub: 'Edge Gateway',      x: 0.21, y: 0.30, color: colors.success,    w: 96,  h: 42 },
+  { id: 'iot_hems',    label: 'IoT HEMS',        sub: 'Edge Gateway',      x: 0.28, y: 0.30, color: colors.success,    w: 96,  h: 42 },
 
   // Controlled devices below IoT HEMS — spread horizontally so each has a clear line to HEMS
-  { id: 'hp',          label: 'Heat Pump',       sub: '',                   x: 0.14, y: 0.62, color: colors.success,    w: 84,  h: 34 },
-  { id: 'wallbox',     label: 'Wallbox',         sub: 'EV Charger',        x: 0.22, y: 0.62, color: colors.success,    w: 84,  h: 34 },
+  { id: 'hp',          label: 'Heat Pump',       sub: '',                   x: 0.20, y: 0.62, color: colors.success,    w: 84,  h: 34 },
+  { id: 'wallbox',     label: 'Wallbox',         sub: 'EV Charger',        x: 0.28, y: 0.62, color: colors.success,    w: 84,  h: 34 },
 
-  // === CLOUD / DATA PIPELINE / VPP ===
-  { id: 'emqx',        label: 'EMQX',            sub: 'MQTT Broker',       x: 0.36, y: 0.30, color: colors.primary,    w: 94,  h: 42 },
-  { id: 'ingestion',   label: 'Data Ingestion',  sub: 'Protobuf · 20s',   x: 0.48, y: 0.30, color: colors.secondary,  w: 110, h: 42 },
-  { id: 'databricks',  label: 'Databricks',      sub: 'Bronze → Gold',    x: 0.61, y: 0.30, color: '#FF3621',         w: 105, h: 42 },
-  { id: 'spark',       label: 'Spark Streaming', sub: 'Aggregates',       x: 0.74, y: 0.30, color: '#E25A1C',         w: 120, h: 42 },
+  // === CLOUD / DATA PIPELINE / VPP (staircase layout using vertical space) ===
+  // Top row — telemetry ingress
+  { id: 'emqx',        label: 'MQTT',            sub: 'EMQX',              x: 0.41, y: 0.18, color: colors.primary,    w: 94,  h: 42 },
+  { id: 'ingestion',   label: 'Data Ingestion',  sub: 'Protobuf · 20s',   x: 0.64, y: 0.18, color: colors.secondary,  w: 110, h: 42 },
 
-  // Control bridge — bottom row
-  { id: 'cloud_hems',  label: 'Cloud HEMS',      sub: 'Orchestration',    x: 0.36, y: 0.72, color: colors.primary,    w: 105, h: 42 },
-  { id: 'event_hub',   label: 'Event Hub',       sub: 'Azure',            x: 0.61, y: 0.72, color: colors.accent,     w: 105, h: 42 },
+  // Middle row — processing
+  { id: 'databricks',  label: 'Databricks',      sub: 'Bronze → Gold',    x: 0.64, y: 0.50, color: '#FF3621',         w: 105, h: 42 },
+  { id: 'spark',       label: 'Spark Streaming', sub: 'Aggregates',       x: 0.82, y: 0.50, color: '#E25A1C',         w: 120, h: 42 },
 
-  // Flexa — close to Event Hub, far right
-  { id: 'flexa',       label: 'Flexa',           sub: 'VPP Controller',   x: 0.85, y: 0.52, color: colors.accent,     w: 120, h: 48 },
+  // Bottom row — dispatch / control
+  { id: 'cloud_hems',  label: 'Cloud HEMS',      sub: 'Dapr Actors',      x: 0.41, y: 0.80, color: colors.primary,    w: 105, h: 42 },
+  { id: 'event_hub',   label: 'Event Hub',       sub: 'Azure',            x: 0.64, y: 0.80, color: colors.accent,     w: 105, h: 42 },
+
+  // Flexa — VPP controller, far right
+  { id: 'flexa',       label: 'Flexa',           sub: 'VPP Controller',   x: 0.82, y: 0.80, color: colors.accent,     w: 120, h: 48 },
 ];
 
 const EDGES = [
-  // === ELECTRICITY: Grid → Meter → IoT HEMS (main power cable) ===
+  // === ELECTRICITY: Grid → Meter → Inverter (main power cable) ===
   { from: 'grid',        to: 'meter',      label: 'AC',         color: ELECTRICITY_COLOR, rate: 2.5, electric: true },
-  { from: 'meter',       to: 'iot_hems',   label: '',           color: ELECTRICITY_COLOR, rate: 2.5, electric: true },
+  { from: 'meter',       to: 'inverter',   label: 'AC',         color: ELECTRICITY_COLOR, rate: 2.5, electric: true },
+
+  // === ELECTRICITY: Feed-in (PV/Battery → Inverter → Meter → Grid) ===
+  { from: 'inverter',    to: 'meter',      label: 'Feed-in',   color: ELECTRICITY_COLOR, rate: 4, electric: true, dash: true, offset: 6 },
+  { from: 'meter',       to: 'grid',       label: '',           color: ELECTRICITY_COLOR, rate: 4, electric: true, dash: true, offset: 6 },
 
   // === CONTROL: Steuerbox → Inverter (§14a grid operator control) ===
   { from: 'steuerbox',   to: 'inverter',   label: '§14a',       color: colors.textMuted,  rate: 3 },
@@ -171,7 +179,7 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
       }
 
       // Section divider (dotted) — Home | Cloud
-      const divCloud = width * 0.31;
+      const divCloud = width * 0.38;
       ctx.strokeStyle = colors.textDim + '50';
       ctx.lineWidth = 1;
       ctx.setLineDash([4, 4]);
