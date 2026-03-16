@@ -15,3 +15,10 @@
 - [ ] Add "Why Cloud-Native?" slide back (removed during restructure, still valuable)
 - [ ] Consider adding the Berlin blackout story as an appendix slide (strong for European audience)
 - [ ] Practice timing — talk should run 25 minutes to leave buffer for Q&A
+
+
+# mario to do
+[] can i put something about ercot cost vs 2030 electrification cost in the eu
+[] old curtailment in playbook. ???
+[] sort out limits of vpp (slide in appendix)
+

@@ -11,7 +11,6 @@ import { versionA, versionD } from './slides/GridScaleSlides';
 import EUGridHUD from './components/EUGridHUD';
 import DemandResponseDemo from './components/DemandResponseDemo';
 import VPPArchitecture from './components/VPPArchitecture';
-import VPPComposite from './components/VPPComposite';
 import GridFlowDemo from './components/GridFlowDemo';
 import ConsumerIcons from './components/ConsumerIcons';
 import SAMapHUD from './components/SAMapHUD';
@@ -29,10 +28,10 @@ const pad = '36px 56px';
 // Section ranges (slide numbers are 1-indexed)
 const SECTIONS = [
   { from: 1, to: 2, name: '' },
-  { from: 3, to: 15, name: 'The Grid' },
-  { from: 16, to: 21, name: 'The Renewable Revolution' },
-  { from: 22, to: 30, name: 'The Virtual Power Plant' },
-  { from: 31, to: 37, name: 'Resilience' },
+  { from: 3, to: 13, name: 'The Grid' },
+  { from: 14, to: 17, name: 'The Renewable Revolution' },
+  { from: 18, to: 30, name: 'The Virtual Power Plant' },
+  { from: 31, to: 34, name: 'Resilience' },
 ];
 
 const slideTemplate = ({ slideNumber, numberOfSlides }) => {
@@ -130,7 +129,7 @@ export default function Presentation() {
       </Slide>
 
 
-      {/* 5: Texas Cascade — deck.gl HUD */}
+      {/* 4: Texas Cascade — deck.gl HUD */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           <TexasMapHUD width="100%" height="100%" variant="hud" />
@@ -166,17 +165,17 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 6: Grid Scale — Version D */}
+      {/* 6: Grid Scale */}
       {versionD()}
 
-      {/* 8: EU Grid HUD */}
+      {/* 7: EU Grid HUD */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="w-full h-full">
           <EUGridHUD width="100%" height="100%" />
         </div>
       </Slide>
 
-      {/* 9: Frequency Demo */}
+      {/* 8: Frequency Demo */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H>The Grid: A Balancing Act</H>
@@ -194,7 +193,7 @@ export default function Presentation() {
 
       {/* ── Grid narrative continues ── */}
 
-      {/* 10: Designed for a Different World */}
+      {/* 9: Designed for a Different World */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H>Designed for a Different World</H>
@@ -203,7 +202,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 11: The Old Playbook */}
+      {/* 10: The Old Playbook */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H color={colors.accent}><span style={{ color: colors.danger, marginRight: 12, fontSize: '0.6em', verticalAlign: 'middle', opacity: 0.7 }}>[WIP]</span>The Old Playbook</H>
@@ -229,7 +228,7 @@ export default function Presentation() {
       </Slide>
 
 
-      {/* 13: Why Texas Failed */}
+      {/* 11: Why Texas Failed */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H color={colors.danger}>Why Texas Failed</H>
@@ -257,7 +256,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 14: It Keeps Happening */}
+      {/* 12: It Keeps Happening */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
         <H color={colors.danger}>Not an Isolated Incident</H>
@@ -303,7 +302,7 @@ export default function Presentation() {
       </Slide>
 
 
-      {/* 16: No flexibility — Bridge */}
+      {/* 13: No Flexibility — Bridge */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[28px] font-semibold text-hud-text font-sans leading-[1.7] mb-7">
@@ -320,22 +319,7 @@ export default function Presentation() {
 
       {/* ═══════ ACT 2: THE RENEWABLE REVOLUTION ═══════ */}
 
-      {/* 17: Demand Response in Action */}
-      <Slide backgroundColor={bg} padding="20px 40px">
-        <div className="flex flex-col h-full">
-          <div className="flex items-center gap-3">
-            <H color={colors.success}><span style={{ color: colors.danger, marginRight: 12, fontSize: '0.6em', verticalAlign: 'middle', opacity: 0.7 }}>[WIP]</span>Demand Response in Action</H>
-            <Badge color={colors.accent}>Still in Infancy</Badge>
-          </div>
-          <P size="20px">Instead of building more power plants — reshape the demand. Trip a generator and watch what happens.</P>
-          <div className="flex-1 flex justify-center items-center">
-            <DemandResponseDemo width={920} height={420} />
-          </div>
-          <P size="18px" color={colors.textDim} style={{ fontStyle: 'italic' }}>Note: Current deployment is extremely limited. Focus on the challenges — most grids have no demand-side flexibility at scale today.</P>
-        </div>
-      </Slide>
-
-      {/* 18: Section Title: The Renewable Revolution */}
+      {/* 14: The Renewable Revolution */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[20px] font-semibold text-hud-accent font-mono tracking-[0.15em] uppercase mb-4">Part II</div>
@@ -344,7 +328,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 19: Renewable Growth */}
+      {/* 15: The Renewable Explosion */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H>The Renewable Explosion</H>
@@ -355,7 +339,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 20: Duck Curve */}
+      {/* 16: The Duck Curve Problem */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H>The Duck Curve Problem</H>
@@ -366,8 +350,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-
-      {/* 23: Curtailment */}
+      {/* 17: Clean Energy Has Outgrown the Grid */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H color={colors.danger}>Clean Energy Has Outgrown the Grid</H>
@@ -403,48 +386,7 @@ export default function Presentation() {
 
       {/* ═══════ ACT 3: THE VIRTUAL POWER PLANT ═══════ */}
 
-      {/* 24: Load Shifting — Duck Curve */}
-      <Slide backgroundColor={bg} padding="20px 40px">
-        <div className="flex flex-col h-full">
-          <H color={colors.success}>What If You Could Shift the Load?</H>
-          <P size="20px">Batteries absorb midday solar. Discharge in the evening. Click "With VPP" below.</P>
-          <div className="flex-1 flex justify-center items-center">
-            <DuckCurveChart width={940} height={440} />
-          </div>
-        </div>
-      </Slide>
-
-      {/* 25: The Impact of Flexibility */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col h-full">
-          <H color={colors.success}><span style={{ color: colors.danger, marginRight: 12, fontSize: '0.6em', verticalAlign: 'middle', opacity: 0.7 }}>[WIP]</span>The Impact of Flexibility</H>
-          <P>Flexible demand doesn't just stabilize the grid — it makes electricity dramatically cheaper.</P>
-          <div className="flex-1 flex flex-col justify-center gap-5 my-3">
-            <div className="flex gap-4">
-              <div className="flex-1 rounded-xl p-5" style={{ background: `${colors.success}06`, border: `1px solid ${colors.success}20` }}>
-                <div className="text-[20px] font-semibold font-mono mb-2" style={{ color: colors.success }}>RMI — Power Shift (Texas / ERCOT, modeled)</div>
-                <div className="text-[20px] text-hud-text font-sans mb-1">Full demand flexibility cuts net generation costs by <span className="font-semibold" style={{ color: colors.success }}>20%</span></div>
-                <div className="text-[20px] text-hud-text font-sans mb-1">Saves <span className="font-semibold" style={{ color: colors.success }}>$140/household/year</span> with just 2 flexible devices</div>
-                <div className="text-[20px] text-hud-text font-sans">Avoids <span className="font-semibold" style={{ color: colors.success }}>75%</span> of new gas peaker units</div>
-              </div>
-              <div className="flex-1 rounded-xl p-5" style={{ background: `${colors.primary}06`, border: `1px solid ${colors.primary}20` }}>
-                <div className="text-[20px] font-semibold font-mono mb-2" style={{ color: colors.primary }}>Brattle Group — National US (projected)</div>
-                <div className="text-[20px] text-hud-text font-sans mb-1">60 GW of VPPs save <span className="font-semibold" style={{ color: colors.primary }}>$15–35B</span> over 10 years</div>
-                <div className="text-[20px] text-hud-text font-sans mb-1">Household bills <span className="font-semibold" style={{ color: colors.primary }}>down up to 20%</span> (Australia ISP 2024)</div>
-                <div className="text-[20px] text-hud-text font-sans">Home batteries avoid <span className="font-semibold" style={{ color: colors.primary }}>$4.1B</span> in grid investment</div>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <StatBox n="20%" l="Generation cost reduction at full flexibility" c={colors.success} />
-              <StatBox n="$10–15B/yr" l="US grid savings from 2 flexible devices per home" c={colors.primary} />
-              <StatBox n="8%" l="Peak demand reduction from smart thermostats + water heaters" c={colors.accent} />
-            </div>
-          </div>
-          <P size="20px" style={{ fontStyle: 'italic' }}>"The cheapest megawatt is the one you never have to generate."</P>
-        </div>
-      </Slide>
-
-      {/* 26: Consumers Become Infrastructure */}
+      {/* 18: Consumers Become Infrastructure */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col items-center h-full text-center">
           <H size="42px" center>Consumers Become Infrastructure</H>
@@ -455,7 +397,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 27: Section Title: The Virtual Power Plant */}
+      {/* 19: The Virtual Power Plant */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-4">Part III</div>
@@ -464,87 +406,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 28: The Architecture Parallel */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <style>{`
-          @keyframes archLeftIn {
-            0% { opacity: 0; transform: translateX(-30px); filter: blur(4px); }
-            100% { opacity: 1; transform: translateX(0); filter: blur(0); }
-          }
-          @keyframes archRightIn {
-            0% { opacity: 0; transform: translateX(30px); filter: blur(4px); }
-            100% { opacity: 1; transform: translateX(0); filter: blur(0); }
-          }
-          @keyframes archVsIn {
-            0% { opacity: 0; transform: scale(0.5); }
-            100% { opacity: 1; transform: scale(1); }
-          }
-        `}</style>
-        <div className="flex flex-col h-full w-full">
-          <H>The Architecture Parallel</H>
-          <div className="flex-1 flex flex-col justify-center w-full max-w-[880px] mx-auto gap-5">
-            {[
-              { grid: 'Few large generators, centralized', vpp: 'Millions of edge nodes, distributed', color: colors.danger },
-              { grid: 'Manual capacity planning', vpp: 'Horizontal autoscaling', color: colors.accent },
-              { grid: 'Isolated resilience (relays, islanding)', vpp: 'Integrated resilience (coordinated)', color: colors.primary },
-              { grid: 'Centralized observability (SCADA)', vpp: 'Full-stack observability (per-device)', color: colors.success },
-            ].map((row, i) => {
-              const delay = 0.3 + i * 0.35;
-              return (
-                <div key={i} className="flex gap-4 items-start">
-                  <div className="flex-1 rounded-lg p-4" style={{
-                    background: `${row.color}06`,
-                    border: `1px solid ${row.color}15`,
-                    animation: `archLeftIn 0.6s ease-out ${delay}s both`,
-                  }}>
-                    <div className="text-[20px] font-semibold font-sans" style={{ color: row.color }}>
-                      {row.grid}
-                    </div>
-                  </div>
-                  <div className="text-[22px] text-hud-text-dim font-mono pt-3" style={{
-                    animation: `archVsIn 0.3s ease-out ${delay + 0.15}s both`,
-                  }}>vs</div>
-                  <div className="flex-1 rounded-lg p-4 bg-hud-surface border border-hud-surface-light" style={{
-                    animation: `archRightIn 0.6s ease-out ${delay + 0.1}s both`,
-                  }}>
-                    <div className="text-[20px] text-hud-text font-sans font-medium">
-                      {row.vpp}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <P size="20px" center style={{ fontFamily: '"JetBrains Mono"' }}>Frequency = SLO &bull; Cascade = failure propagation &bull; Batteries = autoscaling</P>
-        </div>
-      </Slide>
-
-      {/* 28b: The Architecture Parallel — two-column version */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col h-full">
-          <H>The Architecture Parallel</H>
-          <div className="flex-1 flex items-center">
-            <div className="flex gap-5 items-start w-full">
-              <div className="bg-hud-surface rounded-[10px] p-5 flex-1" style={{ border: `1px solid ${colors.danger}20` }}>
-                <div className="text-[20px] font-semibold font-mono mb-3" style={{ color: colors.danger }}>TRADITIONAL GRID</div>
-                {['Monolithic infrastructure', 'Few large generators', 'Manual capacity planning', 'Single points of failure', 'No observability'].map(x => (
-                  <div key={x} className="text-[20px] text-hud-text-muted font-sans py-[5px] border-b border-hud-surface-light">{x}</div>
-                ))}
-              </div>
-              <div className="pt-[60px] text-[24px] text-hud-primary font-mono">{'\u2192'}</div>
-              <div className="rounded-[10px] p-5 flex-1" style={{ background: `${colors.success}06`, border: `1px solid ${colors.success}25` }}>
-                <div className="text-[20px] font-semibold font-mono mb-3" style={{ color: colors.success }}>VIRTUAL POWER PLANT</div>
-                {['Distributed microservices', 'Millions of edge nodes', 'Horizontal autoscaling', 'Resilient by design', 'Full-stack observability'].map(x => (
-                  <div key={x} className="text-[20px] text-hud-text font-sans font-medium py-[5px] border-b border-hud-surface-light">{x}</div>
-                ))}
-              </div>
-            </div>
-          </div>
-          <P size="20px" center style={{ fontFamily: '"JetBrains Mono"' }}>Frequency = SLO &bull; Cascade = failure propagation &bull; Batteries = autoscaling</P>
-        </div>
-      </Slide>
-
-      {/* 29: What Is a VPP? */}
+      {/* 20: What Is a Virtual Power Plant? */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H>What Is a Virtual Power Plant?</H>
@@ -576,43 +438,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 29b: VPP Composite Playground */}
-      <Slide backgroundColor={bg} padding="20px">
-        <div className="w-full h-full">
-          <VPPComposite />
-        </div>
-      </Slide>
-
-      {/* 30: VPP Architecture Flow */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col h-full">
-          <H>How It Works</H>
-          <P size="20px">From market signal to battery response — the command flow through our VPP architecture.</P>
-          <div className="flex-1 flex justify-center items-center">
-            <VPPArchitecture width={940} height={440} />
-          </div>
-        </div>
-      </Slide>
-
-      {/* 30b: Technical Architecture — Data Flow */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col h-full">
-          <H>Inside the Architecture</H>
-          <P size="18px">Measurement data every 20 seconds — Protobuf over MQTT through EMQX, into Databricks streaming aggregates powered by Apache Spark.</P>
-          <div className="flex-1 flex justify-center items-center">
-            <EnpalArchitectureDiagram width={940} height={440} />
-          </div>
-          <div className="flex gap-4 mt-1">
-            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.success }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Home System</span></div>
-            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.primary }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Cloud / Control</span></div>
-            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: '#E25A1C' }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Databricks + Spark</span></div>
-            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.accent }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Event Hub + Flexa</span></div>
-            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.textMuted }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>External</span></div>
-          </div>
-        </div>
-      </Slide>
-
-      {/* 30: The Fastest Power Plant */}
+      {/* 21: The Fastest Power Plant */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H>The Fastest Power Plant</H>
@@ -639,15 +465,174 @@ export default function Presentation() {
         </div>
       </Slide>
 
+      {/* 22: Now We Shift the Load */}
+      <Slide backgroundColor={bg} padding="20px 40px">
+        <div className="flex flex-col h-full">
+          <H color={colors.success}>Now We Shift the Load</H>
+          <P size="20px">Batteries absorb midday solar. Discharge in the evening. Click "With VPP" below.</P>
+          <div className="flex-1 flex justify-center items-center">
+            <DuckCurveChart width={940} height={440} />
+          </div>
+        </div>
+      </Slide>
 
-      {/* 32: SA Blackout, 2016 — deck.gl HUD */}
+      {/* 23: VPP Event Types */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col h-full">
+          <H>How a VPP Responds to Grid Events</H>
+          <P size="20px">Different event types require different response strategies and timescales.</P>
+          <div className="flex-1 flex flex-col justify-center gap-4">
+            {[
+              { event: 'Frequency Containment (FCR)', time: '< 30 seconds', desc: 'Battery injects/absorbs power to stabilize grid frequency', color: colors.danger },
+              { event: 'Automatic Frequency Restoration (aFRR)', time: '< 5 minutes', desc: 'Sustained response to restore frequency to 50 Hz', color: colors.accent },
+              { event: 'Peak Shaving', time: '1-4 hours', desc: 'Reduce grid load during demand peaks by discharging batteries', color: colors.primary },
+              { event: 'Energy Arbitrage', time: 'Scheduled', desc: 'Charge when cheap, discharge when expensive — optimizing across day-ahead markets', color: colors.success },
+            ].map(e => (
+              <div key={e.event} className="flex items-start gap-4 rounded-lg p-4" style={{ background: `${e.color}06`, border: `1px solid ${e.color}15` }}>
+                <div className="min-w-[140px]">
+                  <div className="text-[18px] font-semibold font-sans" style={{ color: e.color }}>{e.event}</div>
+                  <div className="text-[14px] font-mono mt-1" style={{ color: colors.textDim }}>{e.time}</div>
+                </div>
+                <div className="text-[18px] text-hud-text-muted font-sans">{e.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Slide>
+
+      {/* ── The Architecture (sub-section) ── */}
+
+      {/* 24: The Architecture (section title) */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col justify-center items-center h-full text-center">
+          <div className="text-[20px] font-semibold font-mono tracking-[0.15em] uppercase mb-4" style={{ color: colors.primary + 'cc' }}>The Virtual Power Plant</div>
+          <H size="50px" center>The Architecture</H>
+          <P size="20px" center>How we built a distributed power plant on cloud-native infrastructure</P>
+        </div>
+      </Slide>
+
+      {/* 25: How It Works */}
+      <Slide backgroundColor={bg} padding="20px 40px">
+        <div className="flex flex-col h-full">
+          <H>How It Works</H>
+          <P size="20px">From market signal to battery response — the command flow through our VPP architecture.</P>
+          <div className="flex-1 flex justify-center items-center">
+            <VPPArchitecture width={1272} height={648} />
+          </div>
+        </div>
+      </Slide>
+
+      {/* 26: Inside the Architecture */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col h-full">
+          <H>Inside the Architecture</H>
+          <P size="18px">Measurement data every 20 seconds — Protobuf over MQTT through EMQX, into Databricks streaming aggregates powered by Apache Spark.</P>
+          <div className="flex-1 flex justify-center items-center">
+            <EnpalArchitectureDiagram width={1128} height={528} />
+          </div>
+          <div className="flex gap-4 mt-1">
+            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.success }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Home System</span></div>
+            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.primary }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Cloud / Control</span></div>
+            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: '#E25A1C' }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Databricks + Spark</span></div>
+            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.accent }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Event Hub + Flexa</span></div>
+            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.textMuted }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>External</span></div>
+          </div>
+        </div>
+      </Slide>
+
+      {/* 27: The Architecture Parallel */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <style>{`
+          @keyframes archLeftIn {
+            0% { opacity: 0; transform: translateX(-30px); filter: blur(4px); }
+            100% { opacity: 1; transform: translateX(0); filter: blur(0); }
+          }
+          @keyframes archRightIn {
+            0% { opacity: 0; transform: translateX(30px); filter: blur(4px); }
+            100% { opacity: 1; transform: translateX(0); filter: blur(0); }
+          }
+          @keyframes archVsIn {
+            0% { opacity: 0; transform: scale(0.5); }
+            100% { opacity: 1; transform: scale(1); }
+          }
+        `}</style>
+        <div className="flex flex-col h-full w-full">
+          <H>The Architecture Parallel</H>
+          <div className="flex-1 flex flex-col justify-center w-full max-w-[880px] mx-auto gap-5">
+            {[
+              { grid: 'Few large generators', vpp: 'Distributed edge nodes', color: colors.danger },
+              { grid: 'Manual planning', vpp: 'Semi-autonomous autoscaling', color: colors.accent },
+              { grid: 'Isolated resilience', vpp: 'Integrated resilience', color: colors.primary },
+              { grid: 'Centralized observability (SCADA)', vpp: 'Full-stack observability', color: colors.success },
+            ].map((row, i) => {
+              const delay = 0.3 + i * 0.35;
+              return (
+                <div key={i} className="flex gap-4 items-start">
+                  <div className="flex-1 rounded-lg p-4" style={{
+                    background: `${row.color}06`,
+                    border: `1px solid ${row.color}15`,
+                    animation: `archLeftIn 0.6s ease-out ${delay}s both`,
+                  }}>
+                    <div className="text-[20px] font-semibold font-sans" style={{ color: row.color }}>
+                      {row.grid}
+                    </div>
+                  </div>
+                  <div className="text-[22px] text-hud-text-dim font-mono pt-3" style={{
+                    animation: `archVsIn 0.3s ease-out ${delay + 0.15}s both`,
+                  }}>vs</div>
+                  <div className="flex-1 rounded-lg p-4 bg-hud-surface border border-hud-surface-light" style={{
+                    animation: `archRightIn 0.6s ease-out ${delay + 0.1}s both`,
+                  }}>
+                    <div className="text-[20px] text-hud-text font-sans font-medium">
+                      {row.vpp}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <P size="20px" center style={{ fontFamily: '"JetBrains Mono"' }}>Frequency = SLO &bull; Cascade = failure propagation &bull; Batteries = autoscaling</P>
+        </div>
+      </Slide>
+
+      {/* 28: The Economic Impact of Flexibility */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col h-full">
+          <H color={colors.success}><span style={{ color: colors.danger, marginRight: 12, fontSize: '0.6em', verticalAlign: 'middle', opacity: 0.7 }}>[WIP]</span>The Economic Impact of Flexibility</H>
+          <P>Flexible demand doesn't just stabilize the grid — it makes electricity dramatically cheaper.</P>
+          <div className="flex-1 flex flex-col justify-center gap-5 my-3">
+            <div className="flex gap-4">
+              <div className="flex-1 rounded-xl p-5" style={{ background: `${colors.success}06`, border: `1px solid ${colors.success}20` }}>
+                <div className="text-[20px] font-semibold font-mono mb-2" style={{ color: colors.success }}>RMI — Power Shift (Texas / ERCOT, modeled)</div>
+                <div className="text-[20px] text-hud-text font-sans mb-1">Full demand flexibility cuts net generation costs by <span className="font-semibold" style={{ color: colors.success }}>20%</span></div>
+                <div className="text-[20px] text-hud-text font-sans mb-1">Saves <span className="font-semibold" style={{ color: colors.success }}>$140/household/year</span> with just 2 flexible devices</div>
+                <div className="text-[20px] text-hud-text font-sans">Avoids <span className="font-semibold" style={{ color: colors.success }}>75%</span> of new gas peaker units</div>
+              </div>
+              <div className="flex-1 rounded-xl p-5" style={{ background: `${colors.primary}06`, border: `1px solid ${colors.primary}20` }}>
+                <div className="text-[20px] font-semibold font-mono mb-2" style={{ color: colors.primary }}>Brattle Group — National US (projected)</div>
+                <div className="text-[20px] text-hud-text font-sans mb-1">60 GW of VPPs save <span className="font-semibold" style={{ color: colors.primary }}>$15–35B</span> over 10 years</div>
+                <div className="text-[20px] text-hud-text font-sans mb-1">Household bills <span className="font-semibold" style={{ color: colors.primary }}>down up to 20%</span> (Australia ISP 2024)</div>
+                <div className="text-[20px] text-hud-text font-sans">Home batteries avoid <span className="font-semibold" style={{ color: colors.primary }}>$4.1B</span> in grid investment</div>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <StatBox n="20%" l="Generation cost reduction at full flexibility" c={colors.success} />
+              <StatBox n="$10–15B/yr" l="US grid savings from 2 flexible devices per home" c={colors.primary} />
+              <StatBox n="8%" l="Peak demand reduction from smart thermostats + water heaters" c={colors.accent} />
+            </div>
+          </div>
+          <P size="20px" style={{ fontStyle: 'italic' }}>"The cheapest megawatt is the one you never have to generate."</P>
+        </div>
+      </Slide>
+
+      {/* 29: SA Blackout, 2016 */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           <SAMapHUD width="100%" height="100%" variant="blackout" />
         </div>
       </Slide>
 
-      {/* 33: SA Virtual Power Plant, 2019 — deck.gl HUD */}
+      {/* 30: SA Virtual Power Plant, 2019 */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           <SAMapHUD width="100%" height="100%" variant="vpp" />
@@ -656,9 +641,7 @@ export default function Presentation() {
 
       {/* ═══════ ACT 4: RESILIENCE ═══════ */}
 
-
-
-      {/* 36: Back to Texas */}
+      {/* 31: Back to Texas */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center h-full">
           <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-6">Back to Texas</div>
@@ -677,11 +660,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-
-      {/* ═══════ TECH DEEP-DIVE / CLOSING ═══════ */}
-
-
-      {/* 39: Thank You */}
+      {/* 32: Thank You */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <H size="54px" center>Thank You</H>
@@ -691,7 +670,7 @@ export default function Presentation() {
 
       {/* ═══════ APPENDIX ═══════ */}
 
-      {/* 40: The Dunkelflaute */}
+      {/* 33: The Dunkelflaute */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H color={colors.danger}>The Dunkelflaute</H>
@@ -734,6 +713,21 @@ export default function Presentation() {
             </div>
           </div>
           <P size="20px" style={{ fontStyle: 'italic' }}>"You cannot go 100% renewable without storage and flexibility."</P>
+        </div>
+      </Slide>
+
+      {/* 34: Demand Response in Action */}
+      <Slide backgroundColor={bg} padding="20px 40px">
+        <div className="flex flex-col h-full">
+          <div className="flex items-center gap-3">
+            <H color={colors.success}><span style={{ color: colors.danger, marginRight: 12, fontSize: '0.6em', verticalAlign: 'middle', opacity: 0.7 }}>[WIP]</span>Demand Response in Action</H>
+            <Badge color={colors.accent}>Still in Infancy</Badge>
+          </div>
+          <P size="20px">Instead of building more power plants — reshape the demand. Trip a generator and watch what happens.</P>
+          <div className="flex-1 flex justify-center items-center">
+            <DemandResponseDemo width={920} height={420} />
+          </div>
+          <P size="18px" color={colors.textDim} style={{ fontStyle: 'italic' }}>Note: Current deployment is extremely limited. Focus on the challenges — most grids have no demand-side flexibility at scale today.</P>
         </div>
       </Slide>
 

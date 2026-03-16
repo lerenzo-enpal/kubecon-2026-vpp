@@ -15,35 +15,38 @@ import { colors } from '../theme';
 const ELECTRICITY_COLOR = colors.accent; // amber for power
 
 const NODES = [
-  // Physical power chain — top row (Grid → Meter → Steuerbox → IoT HEMS)
-  { id: 'grid',        label: 'Grid',            sub: 'Niederspannung',     x: 0.01, y: 0.12, color: colors.danger,    w: 70,  h: 42 },
-  { id: 'meter',       label: 'Meterfy',         sub: 'Smart Meter',        x: 0.10, y: 0.12, color: colors.textMuted,  w: 65,  h: 32 },
-  { id: 'steuerbox',   label: 'Steuerbox',       sub: '§14a',              x: 0.19, y: 0.12, color: colors.textMuted,   w: 72,  h: 32 },
+  // === HOME SYSTEM (compact cluster) ===
+  // Grid — nebulous strip on far left (w/h used for edge connection calculations)
+  { id: 'grid',        label: 'Grid',            sub: 'Niederspannung',     x: 0.00, y: 0.50, color: colors.danger,    w: 30,  h: 300 },
 
-  // Inverter + sources — branching off house electrical
-  { id: 'pv',          label: 'PV',              sub: 'Solar',              x: 0.01, y: 0.42, color: colors.solar,      w: 50,  h: 28 },
-  { id: 'battery',     label: 'Battery',         sub: 'Storage',            x: 0.01, y: 0.62, color: colors.battery,    w: 58,  h: 28 },
-  { id: 'inverter',    label: 'Inverter',        sub: 'DC/AC',             x: 0.10, y: 0.52, color: colors.solar,      w: 68,  h: 32 },
+  // Physical power chain — top row
+  { id: 'meter',       label: 'Meterfy',         sub: 'Smart Meter',        x: 0.04, y: 0.10, color: colors.textMuted,  w: 78,  h: 38 },
+  { id: 'steuerbox',   label: 'Steuerbox',       sub: '§14a',              x: 0.12, y: 0.10, color: colors.textMuted,   w: 84,  h: 38 },
 
-  // IoT HEMS — gateway between home and cloud
-  { id: 'iot_hems',    label: 'IoT HEMS',        sub: 'Edge Gateway',      x: 0.19, y: 0.42, color: colors.success,    w: 82,  h: 36 },
+  // Inverter + sources
+  { id: 'pv',          label: 'PV',              sub: 'Solar',              x: 0.04, y: 0.40, color: colors.solar,      w: 60,  h: 34 },
+  { id: 'battery',     label: 'Battery',         sub: 'Storage',            x: 0.04, y: 0.58, color: colors.battery,    w: 68,  h: 34 },
+  { id: 'inverter',    label: 'Inverter',        sub: 'DC/AC',             x: 0.12, y: 0.48, color: colors.solar,      w: 80,  h: 38 },
 
-  // Other home devices below IoT HEMS
-  { id: 'hp',          label: 'Heat Pump',       sub: '',                   x: 0.19, y: 0.62, color: colors.success,    w: 72,  h: 28 },
-  { id: 'wallbox',     label: 'Wallbox',         sub: 'EV Charger',        x: 0.19, y: 0.78, color: colors.success,    w: 72,  h: 28 },
+  // IoT HEMS — gateway
+  { id: 'iot_hems',    label: 'IoT HEMS',        sub: 'Edge Gateway',      x: 0.21, y: 0.30, color: colors.success,    w: 96,  h: 42 },
 
-  // Cloud pipeline — middle row
-  { id: 'emqx',        label: 'EMQX',            sub: 'MQTT Broker',       x: 0.34, y: 0.35, color: colors.primary,    w: 80,  h: 36 },
-  { id: 'ingestion',   label: 'Data Ingestion',  sub: 'Protobuf · 20s',   x: 0.45, y: 0.35, color: colors.secondary,  w: 95,  h: 36 },
-  { id: 'databricks',  label: 'Databricks',      sub: 'Bronze → Gold',    x: 0.57, y: 0.35, color: '#FF3621',         w: 90,  h: 36 },
-  { id: 'spark',       label: 'Spark Streaming', sub: 'Aggregates',       x: 0.69, y: 0.35, color: '#E25A1C',         w: 105, h: 36 },
+  // Controlled devices below IoT HEMS
+  { id: 'hp',          label: 'Heat Pump',       sub: '',                   x: 0.21, y: 0.58, color: colors.success,    w: 84,  h: 34 },
+  { id: 'wallbox',     label: 'Wallbox',         sub: 'EV Charger',        x: 0.21, y: 0.74, color: colors.success,    w: 84,  h: 34 },
+
+  // === CLOUD / DATA PIPELINE / VPP (spread across remaining 70%) ===
+  { id: 'emqx',        label: 'EMQX',            sub: 'MQTT Broker',       x: 0.33, y: 0.30, color: colors.primary,    w: 94,  h: 42 },
+  { id: 'ingestion',   label: 'Data Ingestion',  sub: 'Protobuf · 20s',   x: 0.45, y: 0.30, color: colors.secondary,  w: 110, h: 42 },
+  { id: 'databricks',  label: 'Databricks',      sub: 'Bronze → Gold',    x: 0.58, y: 0.30, color: '#FF3621',         w: 105, h: 42 },
+  { id: 'spark',       label: 'Spark Streaming', sub: 'Aggregates',       x: 0.72, y: 0.30, color: '#E25A1C',         w: 120, h: 42 },
 
   // Control bridge — bottom row
-  { id: 'cloud_hems',  label: 'Cloud HEMS',      sub: 'Orchestration',    x: 0.34, y: 0.75, color: colors.primary,    w: 90,  h: 36 },
-  { id: 'event_hub',   label: 'Event Hub',       sub: 'Azure',            x: 0.57, y: 0.75, color: colors.accent,     w: 90,  h: 36 },
+  { id: 'cloud_hems',  label: 'Cloud HEMS',      sub: 'Orchestration',    x: 0.33, y: 0.72, color: colors.primary,    w: 105, h: 42 },
+  { id: 'event_hub',   label: 'Event Hub',       sub: 'Azure',            x: 0.58, y: 0.72, color: colors.accent,     w: 105, h: 42 },
 
-  // VPP Controller
-  { id: 'flexa',       label: 'Flexa',           sub: 'VPP Controller',   x: 0.82, y: 0.55, color: colors.accent,     w: 100, h: 36 },
+  // Flexa — close to Event Hub, far right
+  { id: 'flexa',       label: 'Flexa',           sub: 'VPP Controller',   x: 0.82, y: 0.52, color: colors.accent,     w: 120, h: 48 },
 ];
 
 const EDGES = [
@@ -163,7 +166,7 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
       }
 
       // Section divider between home and cloud
-      const divX = width * 0.305;
+      const divX = width * 0.34;
       ctx.strokeStyle = colors.textDim + '12';
       ctx.lineWidth = 1;
       ctx.setLineDash([4, 4]);
@@ -202,9 +205,9 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
         if (edge.label) {
           const mx = (fx + tx) / 2;
           const my = (fy + ty) / 2;
-          ctx.font = isElectric ? 'bold 7px JetBrains Mono' : '7px JetBrains Mono';
+          ctx.font = isElectric ? 'bold 10px JetBrains Mono' : '10px JetBrains Mono';
           ctx.textAlign = 'center';
-          ctx.fillStyle = isElectric ? (ELECTRICITY_COLOR + 'aa') : (colors.textDim + '90');
+          ctx.fillStyle = isElectric ? (ELECTRICITY_COLOR + 'dd') : (colors.textDim + 'cc');
           const perpLabelX = -Math.sin(angle) * 9;
           const perpLabelY = Math.cos(angle) * 9;
           ctx.fillText(edge.label, mx + perpLabelX, my + perpLabelY);
@@ -243,8 +246,47 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
         ctx.stroke();
       }
 
-      // Draw nodes
+      // Draw grid as a tall nebulous glow on the far left
+      {
+        const gridNode = getNode('grid');
+        const gx = gridNode.x * width;
+        const pulse = 0.5 + 0.5 * Math.sin(now * 1.5);
+        // Vertical glow strip
+        const grad = ctx.createLinearGradient(gx, 0, gx + 50, 0);
+        grad.addColorStop(0, colors.danger + '20');
+        grad.addColorStop(0.5, colors.danger + '08');
+        grad.addColorStop(1, colors.danger + '00');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 20, 50, height - 40);
+        // Vertical line
+        ctx.strokeStyle = colors.danger + Math.round(25 + pulse * 20).toString(16).padStart(2, '0');
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(gx + 4, 30);
+        ctx.lineTo(gx + 4, height - 30);
+        ctx.stroke();
+        // Glow
+        ctx.shadowBlur = 12 * pulse;
+        ctx.shadowColor = colors.danger + '40';
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+        // Label rotated vertically
+        ctx.save();
+        ctx.translate(gx + 16, height / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.font = 'bold 14px JetBrains Mono';
+        ctx.fillStyle = colors.danger + 'aa';
+        ctx.textAlign = 'center';
+        ctx.fillText('GRID', 0, 0);
+        ctx.font = '10px JetBrains Mono';
+        ctx.fillStyle = colors.textDim + '90';
+        ctx.fillText('Niederspannung', 0, 16);
+        ctx.restore();
+      }
+
+      // Draw all other nodes as boxes
       NODES.forEach((node) => {
+        if (node.id === 'grid') return; // grid drawn separately
         const nx = node.x * width;
         const ny = node.y * height - node.h / 2;
         const pulse = 0.5 + 0.5 * Math.sin(now * 2 + node.x * 10 + node.y * 7);
@@ -253,96 +295,88 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
         ctx.strokeStyle = node.color + Math.round(40 + pulse * 30).toString(16).padStart(2, '0');
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.roundRect(nx, ny, node.w, node.h, 5);
+        ctx.roundRect(nx, ny, node.w, node.h, 6);
         ctx.fill();
         ctx.stroke();
 
         // Colored accent line at top
         ctx.fillStyle = node.color + '90';
         ctx.beginPath();
-        ctx.roundRect(nx, ny, node.w, 2, [5, 5, 0, 0]);
+        ctx.roundRect(nx, ny, node.w, 2.5, [6, 6, 0, 0]);
         ctx.fill();
 
         // Glow
-        ctx.shadowBlur = 6 * pulse;
+        ctx.shadowBlur = 8 * pulse;
         ctx.shadowColor = node.color + '30';
         ctx.beginPath();
-        ctx.roundRect(nx, ny, node.w, node.h, 5);
+        ctx.roundRect(nx, ny, node.w, node.h, 6);
         ctx.stroke();
         ctx.shadowBlur = 0;
 
         // Label
-        ctx.font = 'bold 9px JetBrains Mono';
+        ctx.font = 'bold 12px JetBrains Mono';
         ctx.fillStyle = node.color;
         ctx.textAlign = 'center';
-        ctx.fillText(node.label, nx + node.w / 2, ny + (node.sub ? 15 : 18));
+        ctx.fillText(node.label, nx + node.w / 2, ny + (node.sub ? 17 : 20));
 
         // Sub-label
         if (node.sub) {
-          ctx.font = '7px JetBrains Mono';
-          ctx.fillStyle = colors.textDim + 'aa';
-          ctx.fillText(node.sub, nx + node.w / 2, ny + 26);
+          ctx.font = '9px JetBrains Mono';
+          ctx.fillStyle = colors.textDim + 'cc';
+          ctx.fillText(node.sub, nx + node.w / 2, ny + 30);
         }
       });
 
       // Section labels
-      ctx.font = 'bold 8px JetBrains Mono';
+      ctx.font = 'bold 11px JetBrains Mono';
       ctx.textAlign = 'left';
 
-      ctx.fillStyle = colors.danger + '40';
+      ctx.fillStyle = colors.danger + '70';
       ctx.fillText('GRID', 10, height * 0.04 + 4);
 
-      ctx.fillStyle = colors.success + '40';
+      ctx.fillStyle = colors.success + '70';
       ctx.fillText('HOME', width * 0.14, height * 0.04 + 4);
 
-      ctx.fillStyle = colors.primary + '40';
-      ctx.fillText('CLOUD', width * 0.34, height * 0.04 + 4);
-
-      ctx.fillStyle = '#E25A1C40';
-      ctx.fillText('DATA PIPELINE', width * 0.50, height * 0.04 + 4);
-
-      ctx.fillStyle = colors.accent + '40';
-      ctx.textAlign = 'right';
-      ctx.fillText('VPP', width - 10, height * 0.04 + 4);
+      ctx.fillStyle = colors.primary + '70';
+      ctx.fillText('CLOUD / DATA PIPELINE / VPP', width * 0.37, height * 0.04 + 4);
 
       // Legend
-      ctx.font = '6.5px JetBrains Mono';
+      ctx.font = '10px JetBrains Mono';
       ctx.textAlign = 'left';
-      ctx.fillStyle = colors.textDim + '50';
-      ctx.fillText('IoT HEMS = IoT Hub + Home Energy Management System', 8, height - 18);
+      ctx.fillStyle = colors.textDim + '90';
+      ctx.fillText('IoT HEMS = IoT Hub + Home Energy Management System', 8, height - 22);
 
       // Electricity vs data legend
-      ctx.fillStyle = ELECTRICITY_COLOR + '80';
       ctx.lineWidth = 2.5;
-      ctx.strokeStyle = ELECTRICITY_COLOR + '60';
+      ctx.strokeStyle = ELECTRICITY_COLOR + '80';
       ctx.beginPath();
-      ctx.moveTo(8, height - 6);
-      ctx.lineTo(30, height - 6);
+      ctx.moveTo(8, height - 7);
+      ctx.lineTo(34, height - 7);
       ctx.stroke();
-      ctx.font = '6.5px JetBrains Mono';
-      ctx.fillStyle = ELECTRICITY_COLOR + '80';
-      ctx.fillText('electricity', 34, height - 3);
+      ctx.font = '10px JetBrains Mono';
+      ctx.fillStyle = ELECTRICITY_COLOR + 'cc';
+      ctx.fillText('electricity', 38, height - 3);
 
       ctx.lineWidth = 1.5;
-      ctx.strokeStyle = colors.primary + '60';
+      ctx.strokeStyle = colors.primary + '80';
       ctx.beginPath();
-      ctx.moveTo(100, height - 6);
-      ctx.lineTo(122, height - 6);
+      ctx.moveTo(130, height - 7);
+      ctx.lineTo(156, height - 7);
       ctx.stroke();
-      ctx.fillStyle = colors.primary + '80';
-      ctx.fillText('data', 126, height - 3);
+      ctx.fillStyle = colors.primary + 'cc';
+      ctx.fillText('data', 160, height - 3);
 
       ctx.setLineDash([4, 3]);
       ctx.beginPath();
-      ctx.moveTo(160, height - 6);
-      ctx.lineTo(182, height - 6);
+      ctx.moveTo(200, height - 7);
+      ctx.lineTo(226, height - 7);
       ctx.stroke();
       ctx.setLineDash([]);
-      ctx.fillStyle = colors.primary + '80';
-      ctx.fillText('dispatch', 186, height - 3);
+      ctx.fillStyle = colors.primary + 'cc';
+      ctx.fillText('dispatch', 230, height - 3);
 
       ctx.textAlign = 'right';
-      ctx.fillStyle = colors.secondary + '40';
+      ctx.fillStyle = colors.secondary + '80';
       ctx.fillText('20s intervals', width - 10, height - 3);
 
       if (isActive) animRef.current = requestAnimationFrame(draw);
