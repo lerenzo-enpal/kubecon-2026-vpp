@@ -16,6 +16,7 @@ import GridFlowDemo from './components/GridFlowDemo';
 import ConsumerIcons from './components/ConsumerIcons';
 import SAMapHUD from './components/SAMapHUD';
 import VPPExplainerZoom from './components/VPPExplainerZoom';
+import EnpalArchitectureDiagram from './components/EnpalArchitectureDiagram';
 
 const theme = {
   colors: { primary: colors.text, secondary: colors.textMuted, tertiary: colors.primary },
@@ -539,6 +540,23 @@ export default function Presentation() {
           <P size="20px">From market signal to battery response — the command flow through our VPP architecture.</P>
           <div className="flex-1 flex justify-center items-center">
             <VPPArchitecture width={940} height={440} />
+          </div>
+        </div>
+      </Slide>
+
+      {/* 30b: Technical Architecture — Data Flow */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col h-full">
+          <H>Inside the Architecture</H>
+          <P size="18px">Measurement data every 20 seconds — Protobuf over MQTT through EMQX, into Databricks streaming aggregates powered by Apache Spark.</P>
+          <div className="flex-1 flex justify-center items-center">
+            <EnpalArchitectureDiagram width={940} height={440} />
+          </div>
+          <div className="flex gap-4 mt-1">
+            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.success }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Home System</span></div>
+            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.primary }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Cloud / Control</span></div>
+            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: '#E25A1C' }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>Databricks + Spark</span></div>
+            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background: colors.accent }} /><span className="text-[11px] font-mono" style={{ color: colors.textDim }}>External Partners</span></div>
           </div>
         </div>
       </Slide>
