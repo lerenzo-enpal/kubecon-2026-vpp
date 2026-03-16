@@ -4,8 +4,8 @@ import { SlideContext, useSteps } from 'spectacle';
 // ── Virtual space is 3200×2000. Steps define focus point + scale ──
 // focusX/Y = center of interest in virtual-space coords
 const STEPS = [
-  { scale: 1.0,  focusX: 1600, focusY: 1490, title: 'Inside a Smart Home', desc: 'A single household with solar, battery, heat pump, EV — all wired through one smart inverter.' },
-  { scale: 1.25, focusX: 1590, focusY: 1460, title: 'The Edge Device', desc: 'The hybrid inverter is the brain — measuring, deciding, and responding in milliseconds.' },
+  { scale: 1.0,  focusX: 1350, focusY: 1360, title: 'Inside a Smart Home', desc: 'A single household with solar, battery, heat pump, EV — all wired through one smart inverter.' },
+  { scale: 1.25, focusX: 1340, focusY: 1340, title: 'The Edge Device', desc: 'The hybrid inverter is the brain — measuring, deciding, and responding in milliseconds.' },
   { scale: 0.58, focusX: 1600, focusY: 920,  title: 'Connected to the Cloud', desc: 'MQTT telemetry streams up. Dispatch commands flow down. Every home is a real-time endpoint.' },
   { scale: 0.38, focusX: 1500, focusY: 750,  title: 'A Fleet of Thousands', desc: 'Thousands of homes form a distributed fleet — orchestrated by Kubernetes and Dapr on the edge.' },
   { scale: 0.28, focusX: 1500, focusY: 650,  title: 'Grid Services', desc: 'The fleet bids into frequency markets and responds to grid operator dispatch — like a power plant.' },
