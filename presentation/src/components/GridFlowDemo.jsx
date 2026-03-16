@@ -2,24 +2,24 @@ import React, { useState, useEffect, useContext } from 'react';
 import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
 
-// Connection path data — reused for static lines and flow overlay
+// ─── Connection path data ───
+// phase: 'trans' = HV backbone (step 2), 'dist' = substation + distribution (step 3)
 const CONN = [
-  // Plant → Tower1
-  { d: 'M 200 135 L 290 98', group: 'hv' },
-  { d: 'M 200 340 L 290 155', group: 'hv' },
-  // Tower1 → Tower2 (3-phase HV)
-  { d: 'M 335 85 L 445 85', group: 'hv' },
-  { d: 'M 335 98 L 445 98', group: 'hv' },
-  { d: 'M 335 111 L 445 111', group: 'hv' },
-  // Tower2 → Substation
-  { d: 'M 485 98 L 590 158', group: 'hv' },
-  // Substation → consumers (distribution)
-  { d: 'M 710 155 Q 760 155 810 110', group: 'dist' },
-  { d: 'M 710 155 Q 770 155 920 125', group: 'dist' },
-  { d: 'M 710 155 Q 790 145 1110 198', group: 'dist' },
-  { d: 'M 710 175 Q 780 240 855 340', group: 'dist' },
-  { d: 'M 710 165 Q 750 145 810 55', group: 'dist' },
+  { d: 'M 200 135 L 290 98', group: 'hv', phase: 'trans', wd: 0 },
+  { d: 'M 200 340 L 290 155', group: 'hv', phase: 'trans', wd: 0.05 },
+  { d: 'M 335 85 L 445 85', group: 'hv', phase: 'trans', wd: 0.2 },
+  { d: 'M 335 98 L 445 98', group: 'hv', phase: 'trans', wd: 0.22 },
+  { d: 'M 335 111 L 445 111', group: 'hv', phase: 'trans', wd: 0.24 },
+  { d: 'M 485 98 L 590 158', group: 'hv', phase: 'dist', wd: 0.4 },
+  { d: 'M 710 155 Q 760 155 810 110', group: 'dist', phase: 'load', wd: 0.58 },
+  { d: 'M 710 155 Q 770 155 920 125', group: 'dist', phase: 'load', wd: 0.63 },
+  { d: 'M 710 155 Q 790 145 1110 198', group: 'dist', phase: 'load', wd: 0.72 },
+  { d: 'M 710 175 Q 780 240 855 340', group: 'dist', phase: 'load', wd: 0.61 },
+  { d: 'M 710 165 Q 750 145 810 55', group: 'dist', phase: 'load', wd: 0.56 },
 ];
+const CONN_TRANS = CONN.filter(c => c.phase === 'trans');
+const CONN_DIST = CONN.filter(c => c.phase === 'dist');
+const CONN_LOAD = CONN.filter(c => c.phase === 'load');
 
 const PHASES = [
   { label: 'Generation', sub: 'Few, large, dispatchable', color: colors.accent },
@@ -28,11 +28,32 @@ const PHASES = [
   { label: 'Consumers', sub: 'Passive loads', color: colors.textDim },
 ];
 
-// Staggered delay for buildings appearing at step 4 (left→right)
-const appearDelay = (x) => ((x - 700) / 500 * 0.6).toFixed(2);
+// ─── Draw animation helpers ───
+// Stroke-draw only (fill="none" elements)
+function dS(on, delay, dur = 0.6) {
+  const base = { strokeDasharray: 1, strokeDashoffset: 1 };
+  if (!on) return base;
+  return { ...base, animation: `drawStroke ${dur}s ease ${delay}s forwards` };
+}
 
+// Stroke-draw + fill-reveal (filled elements)
+function dSF(on, delay, dur = 0.6, fillDelay) {
+  const fd = fillDelay != null ? fillDelay : delay + dur * 0.7;
+  const base = { strokeDasharray: 1, strokeDashoffset: 1, fillOpacity: 0 };
+  if (!on) return base;
+  return { ...base, animation: `drawStroke ${dur}s ease ${delay}s forwards, fillReveal 0.3s ease ${fd}s forwards` };
+}
+
+// Digital flicker for text labels
+function flk(on, delay) {
+  if (!on) return { opacity: 0 };
+  return { opacity: 0, animation: `hudFlicker 0.5s ease ${delay}s forwards` };
+}
+
+// ─── Main component ───
 export default function GridFlowDemo({ width = '100%' }) {
   const [step, setStep] = useState(0);
+  const [litMap, setLitMap] = useState({});
   const slideContext = useContext(SlideContext);
 
   useEffect(() => {
@@ -42,7 +63,7 @@ export default function GridFlowDemo({ width = '100%' }) {
   useEffect(() => {
     if (!slideContext?.isSlideActive) return;
     const handler = (e) => {
-      if (e.key === 'ArrowRight' && step < 4) {
+      if (e.key === 'ArrowRight' && step < 5) {
         e.stopPropagation(); e.preventDefault();
         setStep(s => s + 1);
       } else if (e.key === 'ArrowLeft' && step > 0) {
@@ -55,13 +76,71 @@ export default function GridFlowDemo({ width = '100%' }) {
   }, [slideContext?.isSlideActive, step]);
 
   const c = colors.primary;
-  const showBuildings = step >= 4;
-  const lit = step >= 4;
-  const flowing = step >= 3;
+  const drawPlants = step >= 1;
+  const drawTrans = step >= 2;
+  const drawDist = step >= 3;
+  const drawConsumers = step >= 4;
+  const flowing = step >= 5;
+
+  // Cascade energized states as energy arrives at each element
+  useEffect(() => {
+    if (step < 5) { setLitMap({}); return; }
+    const cascade = [
+      ['towers',    220],
+      ['substation', 580],
+      ['shopping',  780],
+      ['house1',    800],
+      ['factory',   830],
+      ['house2',    850],
+      ['house3',    900],
+      ['apartment', 1020],
+    ];
+    const timers = cascade.map(([id, ms]) =>
+      setTimeout(() => setLitMap(m => ({ ...m, [id]: true })), ms)
+    );
+    return () => timers.forEach(clearTimeout);
+  }, [step]);
 
   return (
     <div style={{ width, display: 'flex', flexDirection: 'column', flex: 1, gap: 12 }}>
       <style>{`
+        @keyframes drawStroke {
+          to { stroke-dashoffset: 0; }
+        }
+        @keyframes fillReveal {
+          to { fill-opacity: 1; }
+        }
+        @keyframes hudFlicker {
+          0% { opacity: 0; }
+          10% { opacity: 0.7; }
+          18% { opacity: 0.1; }
+          30% { opacity: 0.85; }
+          42% { opacity: 0.25; }
+          58% { opacity: 1; }
+          100% { opacity: 1; }
+        }
+        @keyframes labelFlash {
+          0% { opacity: 0; }
+          8% { opacity: 0.8; }
+          16% { opacity: 0.15; }
+          30% { opacity: 0.9; }
+          50% { opacity: 0.7; }
+          70% { opacity: 0.25; }
+          100% { opacity: 0; }
+        }
+        @keyframes energyPulse {
+          0% { stroke-dashoffset: 1; opacity: 0.9; }
+          80% { opacity: 0.9; }
+          100% { stroke-dashoffset: -0.12; opacity: 0; }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes coilPulse {
+          0%, 100% { stroke: ${c}90; filter: none; }
+          50% { stroke: ${c}; filter: url(#gf); }
+        }
         @keyframes flowDash { to { stroke-dashoffset: -18; } }
         @keyframes arcFlicker {
           0%, 100% { opacity: 0; }
@@ -77,73 +156,107 @@ export default function GridFlowDemo({ width = '100%' }) {
           <defs>
             <filter id="gf"><feGaussianBlur stdDeviation="3" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
             <filter id="wg"><feGaussianBlur stdDeviation="4" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+            {/* Graph paper grid pattern */}
+            <pattern id="gridSmall" width="24" height="24" patternUnits="userSpaceOnUse">
+              <path d="M 24 0 L 0 0 0 24" fill="none" stroke={c} strokeWidth="0.3" opacity="0.07" />
+            </pattern>
+            <pattern id="gridLarge" width="120" height="120" patternUnits="userSpaceOnUse">
+              <rect width="120" height="120" fill="url(#gridSmall)" />
+              <path d="M 120 0 L 0 0 0 120" fill="none" stroke={c} strokeWidth="0.5" opacity="0.09" />
+            </pattern>
+            {/* Radial mask — stronger center, weaker edges */}
+            <radialGradient id="gridMask" cx="50%" cy="50%" r="55%">
+              <stop offset="0%" stopColor="white" stopOpacity="0.6" />
+              <stop offset="50%" stopColor="white" stopOpacity="0.35" />
+              <stop offset="100%" stopColor="white" stopOpacity="0.05" />
+            </radialGradient>
+            <mask id="gridFade">
+              <rect width="1200" height="480" fill="url(#gridMask)" />
+            </mask>
           </defs>
 
-          {/* Subtle scan grid */}
-          <pattern id="sg" width="1200" height="4" patternUnits="userSpaceOnUse">
-            <line x1="0" y1="3" x2="1200" y2="3" stroke={c} strokeWidth="0.3" opacity="0.04" />
-          </pattern>
-          <rect width="1200" height="480" fill="url(#sg)" />
+          {/* Graph paper background with radial fade */}
+          <rect width="1200" height="480" fill="url(#gridLarge)" mask="url(#gridFade)" />
 
-          {/* ═══ BUILDINGS — appear at step 4 with staggered fade-in ═══ */}
-          <g style={{ opacity: showBuildings ? 1 : 0, transition: 'opacity 0.8s ease' }}>
-            <House x={810} y={82} w={78} h={64} c={c} lit={lit} litDelay={appearDelay(810)} />
-            <House x={920} y={100} w={66} h={54} c={c} lit={lit} litDelay={appearDelay(920)} />
-            <House x={1028} y={115} w={62} h={50} c={c} lit={lit} litDelay={appearDelay(1028)} />
-            <Apartment x={1110} y={126} w={65} h={155} c={c} lit={lit} litDelay={appearDelay(1110)} />
-            <Factory x={850} y={310} w={185} h={100} c={c} lit={lit} litDelay={appearDelay(855)} />
-            <ShoppingCenter x={810} y={30} w={195} h={52} c={c} lit={lit} litDelay={appearDelay(810)} />
+          {/* ═══ STEP 1: POWER PLANTS ═══ */}
+          <g style={{ visibility: step >= 1 ? 'visible' : 'hidden' }}>
+            <Reticle x={20} y={48} w={190} h={370} c={c} active={drawPlants} delay={0} label="SCANNING: GENERATION" />
+            <Plant x={30} y={68} w={165} h={130} c={c} smoking={step >= 5} label="COAL 800MW" draw={drawPlants} t0={0.3} />
+            <Plant x={30} y={278} w={165} h={130} c={c} smoking={step >= 5} label="GAS 400MW" draw={drawPlants} t0={0.65} />
           </g>
 
-          {/* ═══ POWER PLANTS — step 1+ ═══ */}
-          <g style={{ opacity: step >= 1 ? 1 : 0, transition: 'opacity 0.8s ease' }}>
-            <Plant x={30} y={68} w={165} h={130} c={c} smoking={flowing} label="COAL 800MW" />
-            <Plant x={30} y={278} w={165} h={130} c={c} smoking={flowing} label="GAS 400MW" />
-          </g>
-
-          {/* ═══ TRANSMISSION & DISTRIBUTION — step 2+ ═══ */}
-          <g style={{ opacity: step >= 2 ? 1 : 0, transition: 'opacity 0.8s ease' }}>
-            <Tower x={315} y={62} h={180} c={c} />
-            <Tower x={465} y={62} h={180} c={c} />
-            <Substation x={590} y={120} w={120} h={100} c={c} />
-
-            {/* Static connection lines */}
-            {CONN.map((p, i) => (
-              <path key={i} d={p.d} stroke={c + '25'} strokeWidth="1.2" fill="none" />
+          {/* ═══ STEP 2: TRANSMISSION (towers + HV lines) ═══ */}
+          <g style={{ visibility: step >= 2 ? 'visible' : 'hidden' }}>
+            <Reticle x={280} y={48} w={210} h={200} c={c} active={drawTrans} delay={0} label="MAPPING: HV BACKBONE" />
+            <Tower x={315} y={62} h={180} c={c} draw={drawTrans} t0={0.25} energized={!!litMap.towers} />
+            <Tower x={465} y={62} h={180} c={c} draw={drawTrans} t0={0.45} energized={!!litMap.towers} />
+            {CONN_TRANS.map((p, i) => (
+              <path key={`t${i}`} pathLength="1" d={p.d} stroke={c + '25'} strokeWidth="1.2" fill="none"
+                style={dS(drawTrans, 0.4 + i * 0.08, 0.5)} />
             ))}
           </g>
 
-          {/* ═══ FLOW OVERLAY — step 3+ ═══ */}
-          <g style={{ opacity: flowing ? 1 : 0, transition: 'opacity 0.6s ease' }}>
-            {CONN.map((p, i) => (
-              <path key={`fl-${i}`} d={p.d} stroke={c} strokeWidth={p.group === 'hv' ? '2.5' : '2'} fill="none"
-                strokeDasharray="8 10" filter="url(#gf)"
-                style={{ animation: flowing ? `flowDash ${0.5 + i * 0.03}s linear infinite` : 'none' }}
-              />
+          {/* ═══ STEP 3: DISTRIBUTION (substation + dist lines) ═══ */}
+          <g style={{ visibility: step >= 3 ? 'visible' : 'hidden' }}>
+            <Reticle x={555} y={90} w={200} h={150} c={c} active={drawDist} delay={0} label="LINKING: DISTRIBUTION" />
+            <Substation x={590} y={120} w={120} h={100} c={c} draw={drawDist} t0={0.25} energized={!!litMap.substation} />
+            {CONN_DIST.map((p, i) => (
+              <path key={`d${i}`} pathLength="1" d={p.d} stroke={c + '25'} strokeWidth="1.2" fill="none"
+                style={dS(drawDist, 0.5 + i * 0.08, 0.5)} />
             ))}
+          </g>
 
-            {/* Electric arcs between HV lines at tower span */}
-            {[360, 385, 410, 435].map(ax => (
-              <g key={ax}>
-                <line x1={ax} y1={86} x2={ax + 1} y2={97} stroke={c} strokeWidth="1.2" filter="url(#gf)"
-                  style={{ animation: `arcFlicker ${0.4 + (ax % 7) * 0.1}s ease-in-out infinite ${ax * 0.003}s` }} />
-                <line x1={ax + 2} y1={99} x2={ax} y2={110} stroke={c} strokeWidth="1" filter="url(#gf)"
-                  style={{ animation: `arcFlicker ${0.5 + (ax % 5) * 0.08}s ease-in-out infinite ${ax * 0.004 + 0.2}s` }} />
+          {/* ═══ STEP 4: CONSUMERS (buildings + load lines, dark) ═══ */}
+          <g style={{ visibility: step >= 4 ? 'visible' : 'hidden' }}>
+            <Reticle x={760} y={18} w={430} h={440} c={c} active={drawConsumers} delay={0} label="LOCATING: LOAD CENTERS" />
+            {CONN_LOAD.map((p, i) => (
+              <path key={`l${i}`} pathLength="1" d={p.d} stroke={c + '25'} strokeWidth="1.2" fill="none"
+                style={dS(drawConsumers, 0.15 + i * 0.08, 0.5)} />
+            ))}
+            <ShoppingCenter x={810} y={30} w={195} h={52} c={c} lit={!!litMap.shopping} draw={drawConsumers} t0={0.25} />
+            <House x={810} y={82} w={78} h={64} c={c} lit={!!litMap.house1} draw={drawConsumers} t0={0.4} />
+            <House x={920} y={100} w={66} h={54} c={c} lit={!!litMap.house2} draw={drawConsumers} t0={0.55} />
+            <House x={1028} y={115} w={62} h={50} c={c} lit={!!litMap.house3} draw={drawConsumers} t0={0.7} />
+            <Apartment x={1110} y={126} w={65} h={155} c={c} lit={!!litMap.apartment} draw={drawConsumers} t0={0.85} />
+            <Factory x={850} y={310} w={185} h={100} c={c} lit={!!litMap.factory} draw={drawConsumers} t0={0.5} />
+          </g>
+
+          {/* ═══ STEP 5: ELECTRIFICATION — cascading energy flow ═══ */}
+          {flowing && (
+            <g>
+              {/* Energy pulses — bright segment traveling each line */}
+              {CONN.map((p, i) => (
+                <path key={`pulse-${i}`} pathLength="1" d={p.d}
+                  stroke={c} strokeWidth={p.group === 'hv' ? 3 : 2.5}
+                  fill="none" strokeDasharray="0.12 0.88" filter="url(#gf)"
+                  style={{ strokeDashoffset: 1, opacity: 0, animation: `energyPulse 0.25s linear ${p.wd}s forwards` }}
+                />
+              ))}
+              {/* Steady flow — appears after each pulse arrives */}
+              {CONN.map((p, i) => {
+                const flowStart = p.wd + 0.18;
+                return (
+                  <path key={`flow-${i}`} d={p.d}
+                    stroke={c} strokeWidth={p.group === 'hv' ? 2.5 : 2}
+                    fill="none" strokeDasharray="8 10" filter="url(#gf)"
+                    style={{ opacity: 0, animation: `fadeIn 0.15s ease ${flowStart}s forwards, flowDash ${0.5 + i * 0.03}s linear ${flowStart}s infinite` }}
+                  />
+                );
+              })}
+              {/* Arcs — appear when energy hits HV lines between towers */}
+              <g style={{ opacity: 0, animation: 'fadeIn 0.15s ease 0.3s forwards' }}>
+                {[360, 385, 410, 435].map(ax => (
+                  <g key={ax}>
+                    <line x1={ax} y1={86} x2={ax + 1} y2={97} stroke={c} strokeWidth="1.2" filter="url(#gf)"
+                      style={{ animation: `arcFlicker ${0.4 + (ax % 7) * 0.1}s ease-in-out infinite ${0.3 + ax * 0.003}s` }} />
+                    <line x1={ax + 2} y1={99} x2={ax} y2={110} stroke={c} strokeWidth="1" filter="url(#gf)"
+                      style={{ animation: `arcFlicker ${0.5 + (ax % 5) * 0.08}s ease-in-out infinite ${0.3 + ax * 0.004 + 0.2}s` }} />
+                  </g>
+                ))}
               </g>
-            ))}
-          </g>
+            </g>
+          )}
 
-          {/* Section labels */}
-          <g style={{ opacity: step >= 1 ? 1 : 0, transition: 'opacity 0.6s ease' }}>
-            <text x="112" y="466" textAnchor="middle" fill={colors.textDim + '60'} fontSize="9" fontFamily="JetBrains Mono" letterSpacing="0.15em">GENERATION</text>
-          </g>
-          <g style={{ opacity: step >= 2 ? 1 : 0, transition: 'opacity 0.6s ease' }}>
-            <text x="390" y="466" textAnchor="middle" fill={colors.textDim + '60'} fontSize="9" fontFamily="JetBrains Mono" letterSpacing="0.15em">TRANSMISSION</text>
-            <text x="650" y="466" textAnchor="middle" fill={colors.textDim + '60'} fontSize="9" fontFamily="JetBrains Mono" letterSpacing="0.15em">DISTRIBUTION</text>
-          </g>
-          <g style={{ opacity: step >= 4 ? 1 : 0, transition: 'opacity 0.6s ease' }}>
-            <text x="960" y="466" textAnchor="middle" fill={colors.textDim + '60'} fontSize="9" fontFamily="JetBrains Mono" letterSpacing="0.15em">CONSUMERS</text>
-          </g>
         </svg>
       </div>
 
@@ -163,8 +276,8 @@ export default function GridFlowDemo({ width = '100%' }) {
                 transition: 'all 0.5s ease',
                 boxShadow: current ? `0 0 20px ${p.color}18, inset 0 0 20px ${p.color}08` : 'none',
               }}>
-                <div style={{ fontSize: 18, fontWeight: 600, color: active ? p.color : colors.textDim, transition: 'color 0.5s ease' }}>{p.label}</div>
-                <div style={{ fontSize: 14, color: active ? colors.textMuted : colors.textDim + '80', marginTop: 3, transition: 'color 0.5s ease' }}>{p.sub}</div>
+                <div style={{ fontSize: 20, fontWeight: 600, color: active ? p.color : colors.textDim, transition: 'color 0.5s ease', textShadow: active ? `0 0 10px ${p.color}60` : 'none' }}>{p.label}</div>
+                <div style={{ fontSize: 15, color: active ? colors.textMuted : colors.textDim + '80', marginTop: 3, transition: 'color 0.5s ease' }}>{p.sub}</div>
               </div>
               {i < 3 && (
                 <div style={{
@@ -181,7 +294,7 @@ export default function GridFlowDemo({ width = '100%' }) {
 
       {/* Step dots */}
       <div style={{ display: 'flex', justifyContent: 'center', gap: 6, paddingBottom: 2 }}>
-        {[0, 1, 2, 3, 4].map(i => (
+        {[0, 1, 2, 3, 4, 5].map(i => (
           <div key={i} style={{
             width: 6, height: 6, borderRadius: '50%',
             background: i <= step ? c : colors.textDim + '30',
@@ -195,10 +308,55 @@ export default function GridFlowDemo({ width = '100%' }) {
 }
 
 // ═══════════════════════════════════════════════════════
-// SVG sub-components
+// SVG sub-components with draw-in animations
 // ═══════════════════════════════════════════════════════
 
-function House({ x, y, w, h, c, lit, litDelay = '0' }) {
+function Reticle({ x, y, w, h, c, active, delay = 0, label }) {
+  const s = 14;
+  const hw = w / 2, hh = h / 2;
+  const cx = x + hw, cy = y + hh;
+  const uid = `ret${Math.round(x)}x${Math.round(y)}`;
+
+  // Each corner: bracket lines + fly-out offset from center
+  const corners = [
+    { id: 'tl', ox: hw, oy: hh, x1: x, y1: y, hx: x + s, vy: y + s },
+    { id: 'tr', ox: -hw, oy: hh, x1: x + w, y1: y, hx: x + w - s, vy: y + s },
+    { id: 'bl', ox: hw, oy: -hh, x1: x, y1: y + h, hx: x + s, vy: y + h - s },
+    { id: 'br', ox: -hw, oy: -hh, x1: x + w, y1: y + h, hx: x + w - s, vy: y + h - s },
+  ];
+
+  return (
+    <g>
+      {/* Per-corner fly-out keyframes */}
+      <style>{corners.map(cr => `
+        @keyframes ${uid}_${cr.id} {
+          0% { transform: translate(${cr.ox}px, ${cr.oy}px); opacity: 0; }
+          10% { opacity: 0.9; }
+          60% { transform: translate(0, 0); opacity: 0.7; }
+          78% { opacity: 0.12; }
+          100% { transform: translate(0, 0); opacity: 0; }
+        }
+      `).join('')}</style>
+
+      {corners.map(cr => (
+        <g key={cr.id} filter="url(#gf)"
+          style={active ? { opacity: 0, animation: `${uid}_${cr.id} 0.8s ease ${delay}s forwards` } : { opacity: 0 }}>
+          <line x1={cr.x1} y1={cr.y1} x2={cr.hx} y2={cr.y1} stroke={c} strokeWidth="1.2" />
+          <line x1={cr.x1} y1={cr.y1} x2={cr.x1} y2={cr.vy} stroke={c} strokeWidth="1.2" />
+        </g>
+      ))}
+
+      {/* Label flashes at center then fades */}
+      {label && (
+        <text x={cx} y={cy} fill={c} fontSize="8" fontFamily="JetBrains Mono"
+          letterSpacing="0.12em" textAnchor="middle" dominantBaseline="middle"
+          style={active ? { opacity: 0, animation: `labelFlash 1s ease ${delay}s forwards` } : { opacity: 0 }}>{label}</text>
+      )}
+    </g>
+  );
+}
+
+function House({ x, y, w, h, c, lit, draw, t0 = 0 }) {
   const roofH = h * 0.38;
   const bodyY = y + roofH;
   const bodyH = h * 0.62;
@@ -207,53 +365,52 @@ function House({ x, y, w, h, c, lit, litDelay = '0' }) {
   const amber = colors.accent;
   const wf = lit ? amber + 'bb' : '#0a0e18';
   const ws = lit ? amber + '50' : c + '20';
-  const td = `fill 0.5s ease ${litDelay}s, stroke 0.4s ease ${litDelay}s`;
 
   return (
     <g>
-      <polygon points={`${x},${bodyY} ${x + w / 2},${y} ${x + w},${bodyY}`}
-        stroke={c + '50'} strokeWidth="1.2" fill="none" />
-      <rect x={x} y={bodyY} width={w} height={bodyH}
-        stroke={c + '50'} strokeWidth="1.2" fill={c + '03'} />
-      <rect x={x + w * 0.15} y={bodyY + bodyH * 0.2} width={winW} height={winH}
+      <polygon pathLength="1" points={`${x},${bodyY} ${x + w / 2},${y} ${x + w},${bodyY}`}
+        stroke={c + '50'} strokeWidth="1.2" fill="none" style={dS(draw, t0, 0.5)} />
+      <rect pathLength="1" x={x} y={bodyY} width={w} height={bodyH}
+        stroke={c + '50'} strokeWidth="1.2" fill={c + '03'} style={dSF(draw, t0 + 0.1, 0.5)} />
+      <rect pathLength="1" x={x + w * 0.15} y={bodyY + bodyH * 0.2} width={winW} height={winH}
         fill={wf} stroke={ws} strokeWidth="0.7"
         filter={lit ? 'url(#wg)' : undefined}
-        style={{ transition: td }} />
-      <rect x={x + w * 0.62} y={bodyY + bodyH * 0.2} width={winW} height={winH}
+        style={{ ...dSF(draw, t0 + 0.35, 0.25, t0 + 0.7), transition: 'fill 0.5s ease, stroke 0.4s ease' }} />
+      <rect pathLength="1" x={x + w * 0.62} y={bodyY + bodyH * 0.2} width={winW} height={winH}
         fill={wf} stroke={ws} strokeWidth="0.7"
         filter={lit ? 'url(#wg)' : undefined}
-        style={{ transition: td }} />
-      <rect x={x + w * 0.38} y={bodyY + bodyH * 0.55} width={w * 0.24} height={bodyH * 0.45}
-        stroke={c + '18'} strokeWidth="0.7" fill="none" />
+        style={{ ...dSF(draw, t0 + 0.4, 0.25, t0 + 0.75), transition: 'fill 0.5s ease, stroke 0.4s ease' }} />
+      <rect pathLength="1" x={x + w * 0.38} y={bodyY + bodyH * 0.55} width={w * 0.24} height={bodyH * 0.45}
+        stroke={c + '18'} strokeWidth="0.7" fill="none" style={dS(draw, t0 + 0.45, 0.25)} />
     </g>
   );
 }
 
-function Apartment({ x, y, w, h, c, lit, litDelay = '0' }) {
+function Apartment({ x, y, w, h, c, lit, draw, t0 = 0 }) {
   const amber = colors.accent;
   const floors = 5;
   const cols = 3;
   const winW = w * 0.17;
   const winH = h / floors * 0.38;
-  const baseDelay = parseFloat(litDelay);
 
   return (
     <g>
-      <rect x={x} y={y} width={w} height={h}
-        stroke={c + '50'} strokeWidth="1.2" fill={c + '03'} />
+      <rect pathLength="1" x={x} y={y} width={w} height={h}
+        stroke={c + '50'} strokeWidth="1.2" fill={c + '03'} style={dSF(draw, t0, 0.7)} />
+      {/* Windows — scan pattern top→bottom, left→right */}
       {Array.from({ length: floors }).map((_, fi) =>
         Array.from({ length: cols }).map((_, ci) => {
           const wx = x + w * 0.1 + ci * (w * 0.28);
           const wy = y + h * 0.06 + fi * (h / floors);
           const isLit = lit && !((fi + ci) % 3 === 2);
-          const d = baseDelay + fi * 0.06 + ci * 0.03;
+          const d = t0 + 0.5 + fi * 0.06 + ci * 0.04;
           return (
-            <rect key={`${fi}-${ci}`} x={wx} y={wy} width={winW} height={winH}
+            <rect key={`${fi}-${ci}`} pathLength="1" x={wx} y={wy} width={winW} height={winH}
               fill={isLit ? amber + 'bb' : '#0a0e18'}
               stroke={isLit ? amber + '50' : c + '18'}
               strokeWidth="0.6"
               filter={isLit ? 'url(#wg)' : undefined}
-              style={{ transition: `fill 0.4s ease ${d.toFixed(2)}s` }}
+              style={{ ...dSF(draw, d, 0.2, d + 0.15), transition: 'fill 0.5s ease, stroke 0.4s ease' }}
             />
           );
         })
@@ -262,9 +419,8 @@ function Apartment({ x, y, w, h, c, lit, litDelay = '0' }) {
   );
 }
 
-function Factory({ x, y, w, h, c, lit, litDelay = '0' }) {
+function Factory({ x, y, w, h, c, lit, draw, t0 = 0 }) {
   const amber = colors.accent;
-  const td = `fill 0.5s ease ${litDelay}s, stroke 0.4s ease ${litDelay}s`;
   const wf = lit ? amber + '66' : '#0a0e18';
   const ws = lit ? amber + '35' : c + '15';
   const stackW = w * 0.07;
@@ -272,69 +428,60 @@ function Factory({ x, y, w, h, c, lit, litDelay = '0' }) {
 
   return (
     <g>
-      {/* Main building */}
-      <rect x={x} y={y} width={w} height={h}
-        stroke={c + '50'} strokeWidth="1.2" fill={c + '03'} />
-      {/* Smokestack */}
-      <rect x={x + w * 0.9} y={y - stackH} width={stackW} height={stackH}
-        stroke={c + '50'} strokeWidth="1" fill={c + '03'} />
-      {/* Sawtooth roof — 4 teeth for wider look */}
-      <polyline
+      <rect pathLength="1" x={x} y={y} width={w} height={h}
+        stroke={c + '50'} strokeWidth="1.2" fill={c + '03'} style={dSF(draw, t0, 0.6)} />
+      <rect pathLength="1" x={x + w * 0.9} y={y - stackH} width={stackW} height={stackH}
+        stroke={c + '50'} strokeWidth="1" fill={c + '03'} style={dSF(draw, t0 + 0.15, 0.4)} />
+      <polyline pathLength="1"
         points={`${x},${y} ${x + w * 0.12},${y - 16} ${x + w * 0.24},${y} ${x + w * 0.36},${y - 16} ${x + w * 0.48},${y} ${x + w * 0.6},${y - 16} ${x + w * 0.72},${y} ${x + w * 0.84},${y - 16} ${x + w * 0.84},${y}`}
-        stroke={c + '50'} strokeWidth="1" fill="none" />
-      {/* Small high windows — industrial strip */}
+        stroke={c + '50'} strokeWidth="1" fill="none" style={dS(draw, t0 + 0.25, 0.5)} />
       {[0.06, 0.2, 0.34, 0.48, 0.62].map((pct, i) => (
-        <rect key={i} x={x + w * pct} y={y + h * 0.15} width={w * 0.1} height={h * 0.12}
+        <rect key={i} pathLength="1" x={x + w * pct} y={y + h * 0.15} width={w * 0.1} height={h * 0.12}
           fill={wf} stroke={ws} strokeWidth="0.6"
           filter={lit ? 'url(#wg)' : undefined}
-          style={{ transition: `fill 0.4s ease ${(parseFloat(litDelay) + i * 0.06).toFixed(2)}s` }} />
+          style={{ ...dSF(draw, t0 + 0.5 + i * 0.05, 0.2, t0 + 0.8 + i * 0.05), transition: 'fill 0.5s ease, stroke 0.4s ease' }} />
       ))}
-      {/* Loading dock bays */}
       {[0.06, 0.22, 0.38].map((pct, i) => (
-        <rect key={`d${i}`} x={x + w * pct} y={y + h * 0.55} width={w * 0.12} height={h * 0.45}
-          stroke={c + '20'} strokeWidth="0.7" fill="none" />
+        <rect key={`d${i}`} pathLength="1" x={x + w * pct} y={y + h * 0.55} width={w * 0.12} height={h * 0.45}
+          stroke={c + '20'} strokeWidth="0.7" fill="none" style={dS(draw, t0 + 0.6 + i * 0.05, 0.25)} />
       ))}
-      {/* Ventilation units on roof */}
       {[0.55, 0.68].map((pct, i) => (
-        <rect key={`v${i}`} x={x + w * pct} y={y - 6} width={w * 0.06} height={6}
-          stroke={c + '30'} strokeWidth="0.6" fill={c + '05'} />
+        <rect key={`v${i}`} pathLength="1" x={x + w * pct} y={y - 6} width={w * 0.06} height={6}
+          stroke={c + '30'} strokeWidth="0.6" fill={c + '05'} style={dSF(draw, t0 + 0.5 + i * 0.1, 0.2)} />
       ))}
       <text x={x + w * 0.45} y={y + h + 16} textAnchor="middle"
-        fill={c + '30'} fontSize="8" fontFamily="JetBrains Mono" letterSpacing="0.1em">INDUSTRIAL</text>
+        fill={c + '30'} fontSize="8" fontFamily="JetBrains Mono" letterSpacing="0.1em"
+        style={flk(draw, t0 + 0.9)}>INDUSTRIAL</text>
     </g>
   );
 }
 
-function ShoppingCenter({ x, y, w, h, c, lit, litDelay = '0' }) {
+function ShoppingCenter({ x, y, w, h, c, lit, draw, t0 = 0 }) {
   const amber = colors.accent;
-  const td = `fill 0.5s ease ${litDelay}s`;
   const wf = lit ? amber + '99' : '#0a0e18';
 
   return (
     <g>
-      {/* Main structure — flat roof */}
-      <rect x={x} y={y} width={w} height={h}
-        stroke={c + '50'} strokeWidth="1.2" fill={c + '03'} />
-      {/* Awning / canopy overhang */}
-      <line x1={x} y1={y + h * 0.65} x2={x + w} y2={y + h * 0.65}
-        stroke={c + '35'} strokeWidth="1" />
-      {/* Storefront windows */}
+      <rect pathLength="1" x={x} y={y} width={w} height={h}
+        stroke={c + '50'} strokeWidth="1.2" fill={c + '03'} style={dSF(draw, t0, 0.5)} />
+      <line pathLength="1" x1={x} y1={y + h * 0.65} x2={x + w} y2={y + h * 0.65}
+        stroke={c + '35'} strokeWidth="1" style={dS(draw, t0 + 0.2, 0.3)} />
       {[0.04, 0.2, 0.36, 0.52, 0.68, 0.84].map((pct, i) => (
-        <rect key={i} x={x + w * pct} y={y + h * 0.12} width={w * 0.12} height={h * 0.45}
+        <rect key={i} pathLength="1" x={x + w * pct} y={y + h * 0.12} width={w * 0.12} height={h * 0.45}
           fill={wf} stroke={lit ? amber + '40' : c + '15'} strokeWidth="0.6"
           filter={lit ? 'url(#wg)' : undefined}
-          style={{ transition: `fill 0.3s ease ${(parseFloat(litDelay) + i * 0.05).toFixed(2)}s` }} />
+          style={{ ...dSF(draw, t0 + 0.3 + i * 0.04, 0.2, t0 + 0.6 + i * 0.04), transition: 'fill 0.5s ease, stroke 0.4s ease' }} />
       ))}
-      {/* Signage area */}
-      <rect x={x + w * 0.3} y={y - 10} width={w * 0.4} height={10}
-        stroke={c + '30'} strokeWidth="0.8" fill={c + '04'} />
+      <rect pathLength="1" x={x + w * 0.3} y={y - 10} width={w * 0.4} height={10}
+        stroke={c + '30'} strokeWidth="0.8" fill={c + '04'} style={dSF(draw, t0 + 0.4, 0.3)} />
       <text x={x + w * 0.5} y={y + h + 14} textAnchor="middle"
-        fill={c + '30'} fontSize="8" fontFamily="JetBrains Mono" letterSpacing="0.1em">RETAIL</text>
+        fill={c + '30'} fontSize="8" fontFamily="JetBrains Mono" letterSpacing="0.1em"
+        style={flk(draw, t0 + 0.7)}>RETAIL</text>
     </g>
   );
 }
 
-function Plant({ x, y, w, h, c, smoking, label }) {
+function Plant({ x, y, w, h, c, smoking, label, draw, t0 = 0 }) {
   const towerW = w * 0.28;
   const towerH = h * 0.92;
   const towerX = x + w * 0.68;
@@ -347,12 +494,12 @@ function Plant({ x, y, w, h, c, smoking, label }) {
   return (
     <g>
       {/* Main building */}
-      <rect x={x} y={y + h * 0.3} width={w * 0.58} height={h * 0.7}
+      <rect pathLength="1" x={x} y={y + h * 0.3} width={w * 0.58} height={h * 0.7}
         stroke={activeStroke} strokeWidth="1.5" fill={activeFill}
         filter={smoking ? 'url(#gf)' : undefined}
-        style={{ transition: 'fill 0.6s ease, stroke 0.4s ease' }} />
+        style={{ ...dSF(draw, t0, 0.7), transition: 'fill 0.6s ease, stroke 0.4s ease' }} />
       {/* Cooling tower */}
-      <path d={`
+      <path pathLength="1" d={`
         M ${towerX} ${y + towerH}
         Q ${towerX + towerW * 0.12} ${y + towerH * 0.45}, ${towerX + towerW * 0.08} ${y}
         L ${towerX + towerW * 0.92} ${y}
@@ -360,22 +507,24 @@ function Plant({ x, y, w, h, c, smoking, label }) {
         Z
       `} stroke={activeStroke} strokeWidth="1.5" fill={activeFill}
         filter={smoking ? 'url(#gf)' : undefined}
-        style={{ transition: 'fill 0.6s ease, stroke 0.4s ease' }} />
+        style={{ ...dSF(draw, t0 + 0.15, 0.7), transition: 'fill 0.6s ease, stroke 0.4s ease' }} />
       {/* Smokestack */}
-      <rect x={stackX} y={y + h * 0.3 - stackH} width={stackW} height={stackH}
+      <rect pathLength="1" x={stackX} y={y + h * 0.3 - stackH} width={stackW} height={stackH}
         stroke={activeStroke} strokeWidth="1" fill={activeFill}
-        style={{ transition: 'fill 0.6s ease, stroke 0.4s ease' }} />
-      {/* Label — bright enough to read */}
+        style={{ ...dSF(draw, t0 + 0.3, 0.4), transition: 'fill 0.6s ease, stroke 0.4s ease' }} />
+      {/* Label */}
       <text x={x + w * 0.29} y={y + h * 0.7} textAnchor="middle"
-        fill={c + 'cc'} fontSize="9" fontWeight="600" fontFamily="JetBrains Mono" letterSpacing="0.08em">{label}</text>
+        fill={c + 'cc'} fontSize="9" fontWeight="600" fontFamily="JetBrains Mono" letterSpacing="0.08em"
+        style={flk(draw, t0 + 0.8)}>{label}</text>
       {/* Corner brackets */}
-      <line x1={x - 4} y1={y + h * 0.3 - 4} x2={x + 12} y2={y + h * 0.3 - 4} stroke={c + '25'} strokeWidth="1" />
-      <line x1={x - 4} y1={y + h * 0.3 - 4} x2={x - 4} y2={y + h * 0.3 + 12} stroke={c + '25'} strokeWidth="1" />
+      <line pathLength="1" x1={x - 4} y1={y + h * 0.3 - 4} x2={x + 12} y2={y + h * 0.3 - 4}
+        stroke={c + '25'} strokeWidth="1" style={dS(draw, t0 + 0.7, 0.3)} />
+      <line pathLength="1" x1={x - 4} y1={y + h * 0.3 - 4} x2={x - 4} y2={y + h * 0.3 + 12}
+        stroke={c + '25'} strokeWidth="1" style={dS(draw, t0 + 0.7, 0.3)} />
 
-      {/* Smoke (SMIL) — large, visible puffs */}
+      {/* Smoke (SMIL) */}
       {smoking && (
         <g>
-          {/* Stack smoke — 3 puffs */}
           <circle cx={stackX + stackW / 2} cy={y + h * 0.3 - stackH} r="5" fill={c + '30'}>
             <animate attributeName="cy" from={y + h * 0.3 - stackH} to={y + h * 0.3 - stackH - 40} dur="2s" repeatCount="indefinite" />
             <animate attributeName="r" from="5" to="14" dur="2s" repeatCount="indefinite" />
@@ -391,7 +540,6 @@ function Plant({ x, y, w, h, c, smoking, label }) {
             <animate attributeName="r" from="3" to="10" dur="3s" repeatCount="indefinite" begin="1.3s" />
             <animate attributeName="opacity" from="0.5" to="0" dur="3s" repeatCount="indefinite" begin="1.3s" />
           </circle>
-          {/* Cooling tower steam — big billowing clouds */}
           <circle cx={towerX + towerW * 0.5} cy={y} r="7" fill={c + '22'}>
             <animate attributeName="cy" from={y} to={y - 40} dur="2.2s" repeatCount="indefinite" begin="0.3s" />
             <animate attributeName="r" from="7" to="20" dur="2.2s" repeatCount="indefinite" begin="0.3s" />
@@ -413,48 +561,86 @@ function Plant({ x, y, w, h, c, smoking, label }) {
   );
 }
 
-function Tower({ x, y, h, c }) {
+function Tower({ x, y, h, c, draw, t0 = 0, energized }) {
   const topW = 42;
   const midW = 30;
   const baseW = 22;
   const armY = y + h * 0.14;
   const midY = y + h * 0.38;
+  const es = energized ? c + '80' : c + '50';
 
   return (
     <g>
-      <line x1={x} y1={y + 6} x2={x} y2={y + h} stroke={c + '50'} strokeWidth="1.5" />
-      <line x1={x - topW / 2} y1={armY} x2={x + topW / 2} y2={armY} stroke={c + '50'} strokeWidth="1.2" />
-      <line x1={x - midW / 2} y1={midY} x2={x + midW / 2} y2={midY} stroke={c + '50'} strokeWidth="1" />
-      <line x1={x - baseW / 2} y1={y + h} x2={x - midW / 2} y2={midY} stroke={c + '30'} strokeWidth="0.8" />
-      <line x1={x + baseW / 2} y1={y + h} x2={x + midW / 2} y2={midY} stroke={c + '30'} strokeWidth="0.8" />
-      <line x1={x - midW / 2} y1={midY} x2={x} y2={y + 6} stroke={c + '30'} strokeWidth="0.8" />
-      <line x1={x + midW / 2} y1={midY} x2={x} y2={y + 6} stroke={c + '30'} strokeWidth="0.8" />
-      <line x1={x - baseW / 2} y1={y + h} x2={x + midW / 2} y2={midY} stroke={c + '18'} strokeWidth="0.5" />
-      <line x1={x + baseW / 2} y1={y + h} x2={x - midW / 2} y2={midY} stroke={c + '18'} strokeWidth="0.5" />
-      <circle cx={x - topW / 2} cy={armY} r="2.5" fill={c + '30'} stroke={c + '50'} strokeWidth="0.5" />
-      <circle cx={x + topW / 2} cy={armY} r="2.5" fill={c + '30'} stroke={c + '50'} strokeWidth="0.5" />
-      <circle cx={x} cy={armY} r="2.5" fill={c + '30'} stroke={c + '50'} strokeWidth="0.5" />
+      {/* Main vertical pole */}
+      <line pathLength="1" x1={x} y1={y + h} x2={x} y2={y + 6} stroke={es} strokeWidth="1.5"
+        style={{ ...dS(draw, t0, 0.5), transition: 'stroke 0.5s ease' }} />
+      {/* Top cross arm */}
+      <line pathLength="1" x1={x - topW / 2} y1={armY} x2={x + topW / 2} y2={armY} stroke={es} strokeWidth="1.2"
+        style={{ ...dS(draw, t0 + 0.2, 0.3), transition: 'stroke 0.5s ease' }} />
+      {/* Mid cross arm */}
+      <line pathLength="1" x1={x - midW / 2} y1={midY} x2={x + midW / 2} y2={midY} stroke={es} strokeWidth="1"
+        style={{ ...dS(draw, t0 + 0.25, 0.3), transition: 'stroke 0.5s ease' }} />
+      {/* Lattice lines */}
+      <line pathLength="1" x1={x - baseW / 2} y1={y + h} x2={x - midW / 2} y2={midY} stroke={c + '30'} strokeWidth="0.8"
+        style={dS(draw, t0 + 0.3, 0.3)} />
+      <line pathLength="1" x1={x + baseW / 2} y1={y + h} x2={x + midW / 2} y2={midY} stroke={c + '30'} strokeWidth="0.8"
+        style={dS(draw, t0 + 0.32, 0.3)} />
+      <line pathLength="1" x1={x - midW / 2} y1={midY} x2={x} y2={y + 6} stroke={c + '30'} strokeWidth="0.8"
+        style={dS(draw, t0 + 0.35, 0.3)} />
+      <line pathLength="1" x1={x + midW / 2} y1={midY} x2={x} y2={y + 6} stroke={c + '30'} strokeWidth="0.8"
+        style={dS(draw, t0 + 0.37, 0.3)} />
+      {/* Cross lattice */}
+      <line pathLength="1" x1={x - baseW / 2} y1={y + h} x2={x + midW / 2} y2={midY} stroke={c + '18'} strokeWidth="0.5"
+        style={dS(draw, t0 + 0.4, 0.25)} />
+      <line pathLength="1" x1={x + baseW / 2} y1={y + h} x2={x - midW / 2} y2={midY} stroke={c + '18'} strokeWidth="0.5"
+        style={dS(draw, t0 + 0.42, 0.25)} />
+      {/* Insulators — glow when energized */}
+      {[x - topW / 2, x, x + topW / 2].map((ix, i) => (
+        <circle key={i} pathLength="1" cx={ix} cy={armY} r="2.5"
+          fill={energized ? c + '90' : c + '30'} stroke={energized ? c : c + '50'} strokeWidth="0.5"
+          filter={energized ? 'url(#gf)' : undefined}
+          style={{ ...dSF(draw, t0 + 0.48 + i * 0.02, 0.2), transition: 'fill 0.4s ease, stroke 0.4s ease' }}
+        />
+      ))}
     </g>
   );
 }
 
-function Substation({ x, y, w, h, c }) {
+function Substation({ x, y, w, h, c, draw, t0 = 0, energized }) {
+  const coilStroke = energized ? c : c + '45';
+  const coilFilter = energized ? 'url(#gf)' : undefined;
+
   return (
     <g>
-      <rect x={x} y={y} width={w} height={h}
-        stroke={c + '55'} strokeWidth="1.5" fill={c + '05'} />
-      <polyline
+      <rect pathLength="1" x={x} y={y} width={w} height={h}
+        stroke={energized ? c + '80' : c + '55'} strokeWidth="1.5"
+        fill={energized ? c + '0a' : c + '05'}
+        filter={energized ? 'url(#gf)' : undefined}
+        style={{ ...dSF(draw, t0, 0.6), transition: 'stroke 0.5s ease, fill 0.5s ease' }} />
+      {/* Transformer zigzag coils — pulse when energized */}
+      <polyline pathLength="1"
         points={`${x + w * 0.3},${y + h * 0.18} ${x + w * 0.48},${y + h * 0.32} ${x + w * 0.3},${y + h * 0.46} ${x + w * 0.48},${y + h * 0.6} ${x + w * 0.3},${y + h * 0.74}`}
-        stroke={c + '45'} strokeWidth="1.5" fill="none" />
-      <polyline
+        stroke={coilStroke} strokeWidth={energized ? 2 : 1.5} fill="none" filter={coilFilter}
+        style={energized
+          ? { strokeDasharray: 'none', strokeDashoffset: 0, animation: 'coilPulse 1.2s ease-in-out infinite' }
+          : dS(draw, t0 + 0.35, 0.5)} />
+      <polyline pathLength="1"
         points={`${x + w * 0.52},${y + h * 0.18} ${x + w * 0.7},${y + h * 0.32} ${x + w * 0.52},${y + h * 0.46} ${x + w * 0.7},${y + h * 0.6} ${x + w * 0.52},${y + h * 0.74}`}
-        stroke={c + '45'} strokeWidth="1.5" fill="none" />
+        stroke={coilStroke} strokeWidth={energized ? 2 : 1.5} fill="none" filter={coilFilter}
+        style={energized
+          ? { strokeDasharray: 'none', strokeDashoffset: 0, animation: 'coilPulse 1.2s ease-in-out infinite 0.6s' }
+          : dS(draw, t0 + 0.45, 0.5)} />
+      {/* Label */}
       <text x={x + w / 2} y={y + h + 14} textAnchor="middle"
-        fill={c + '35'} fontSize="8" fontFamily="JetBrains Mono" letterSpacing="0.1em">SUBSTATION</text>
+        fill={c + '35'} fontSize="8" fontFamily="JetBrains Mono" letterSpacing="0.1em"
+        style={flk(draw, t0 + 0.9)}>SUBSTATION</text>
+      {/* Corner brackets */}
       {[[x - 4, y - 4, 1, 1], [x + w + 4, y - 4, -1, 1], [x - 4, y + h + 4, 1, -1], [x + w + 4, y + h + 4, -1, -1]].map(([bx, by, dx, dy], i) => (
         <g key={i}>
-          <line x1={bx} y1={by} x2={bx + 10 * dx} y2={by} stroke={c + '25'} strokeWidth="1" />
-          <line x1={bx} y1={by} x2={bx} y2={by + 10 * dy} stroke={c + '25'} strokeWidth="1" />
+          <line pathLength="1" x1={bx} y1={by} x2={bx + 10 * dx} y2={by} stroke={c + '25'} strokeWidth="1"
+            style={dS(draw, t0 + 0.6 + i * 0.05, 0.2)} />
+          <line pathLength="1" x1={bx} y1={by} x2={bx} y2={by + 10 * dy} stroke={c + '25'} strokeWidth="1"
+            style={dS(draw, t0 + 0.62 + i * 0.05, 0.2)} />
         </g>
       ))}
     </g>

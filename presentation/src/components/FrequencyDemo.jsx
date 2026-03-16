@@ -537,10 +537,14 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
           ctx.fillText(laughText, canvasWidth / 2 + Math.sin(laughT * 5) * 8, height - 70 - bounce);
           ctx.shadowBlur = 0;
 
-          // Small subtitle
+          // Small subtitle — typewriter
           ctx.font = '12px JetBrains Mono';
           ctx.fillStyle = colors.success + '80';
-          ctx.fillText('[ grid_operator has left the chat ]', canvasWidth / 2, height - 40);
+          const chatMsg = '[ grid_operator has left the chat ]';
+          const chatChars = Math.min(chatMsg.length, Math.floor((laughT - 1) * 25));
+          if (chatChars > 0) {
+            ctx.fillText(chatMsg.substring(0, chatChars) + (chatChars < chatMsg.length && Math.sin(t * 6) > 0 ? '█' : ''), canvasWidth / 2, height - 40);
+          }
         }
 
         // Matrix rain in background
@@ -1035,9 +1039,14 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
           ctx.fillText(laughText, fw / 2 + Math.sin(laughT * 5) * 12, laughY - bounce);
           ctx.shadowBlur = 0;
 
+          // Subtitle — typewriter
           ctx.font = '16px JetBrains Mono';
           ctx.fillStyle = colors.success + '80';
-          ctx.fillText('[ grid_operator has left the chat ]', fw / 2, laughY + 40);
+          const chatMsg = '[ grid_operator has left the chat ]';
+          const chatChars = Math.min(chatMsg.length, Math.floor((laughT - 1) * 25));
+          if (chatChars > 0) {
+            ctx.fillText(chatMsg.substring(0, chatChars) + (chatChars < chatMsg.length && Math.sin(now * 6) > 0 ? '█' : ''), fw / 2, laughY + 40);
+          }
         }
 
         // Matrix rain
@@ -1057,13 +1066,20 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
 
         ctx.globalAlpha = 1;
 
-        // Reset hint
-        const hintFlash = Math.sin(now * 2) > 0;
-        if (hintFlash) {
+        // Reset hint — typewriter then blink
+        const resetMsg = '[ click RESET to restore grid ]';
+        const resetT = Math.max(0, hackerElapsed - 6);
+        const resetChars = Math.min(resetMsg.length, Math.floor(resetT * 20));
+        if (resetChars > 0) {
           ctx.font = '14px JetBrains Mono';
           ctx.fillStyle = colors.textDim + '60';
           ctx.textAlign = 'center';
-          ctx.fillText('[ click RESET to restore grid ]', fw / 2, fh - 90);
+          const blink = resetChars >= resetMsg.length && Math.sin(now * 2) < 0;
+          if (!blink) {
+            ctx.fillText(resetChars < resetMsg.length
+              ? resetMsg.substring(0, resetChars) + '█'
+              : resetMsg, fw / 2, fh - 90);
+          }
         }
       }
 

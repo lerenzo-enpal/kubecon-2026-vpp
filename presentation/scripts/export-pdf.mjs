@@ -3,9 +3,12 @@
  * Export Spectacle presentation to PDF using Playwright.
  * Navigates slide-by-slide in presentation mode, screenshots each, combines into PDF.
  *
+ * Output is auto-versioned: vpp-presentation_v001.pdf, _v002.pdf, etc.
+ * Existing versions are detected and the next version is used automatically.
+ *
  * Usage:
  *   1. Start the dev server:  npm run dev
- *   2. Run this script:       node scripts/export-pdf.mjs [output.pdf]
+ *   2. Run this script:       node scripts/export-pdf.mjs
  *
  * Environment:
  *   PORT=3000        Dev server port (default 3000)
@@ -15,14 +18,32 @@
 
 import { chromium } from 'playwright';
 import { PDFDocument } from 'pdf-lib';
-import { writeFileSync } from 'fs';
-import { resolve } from 'path';
+import { writeFileSync, readdirSync } from 'fs';
+import { resolve, basename, dirname, join } from 'path';
 
 const PORT = process.env.PORT || 3000;
 const MAX_SLIDES = parseInt(process.env.MAX_SLIDES || '0');
 const PAUSE = parseInt(process.env.PAUSE || '3') * 1000;
 const URL = `http://localhost:${PORT}/`;
-const OUTPUT = resolve(process.argv[2] || '../20260324-vpp-presentation.pdf');
+
+// ── Auto-versioned output path ──────────────────────────────
+const BASE_NAME = 'vpp-presentation';
+const OUT_DIR = resolve(import.meta.dirname, '../..');
+
+function nextVersion() {
+  const files = readdirSync(OUT_DIR);
+  const pattern = new RegExp(`^${BASE_NAME}_v(\\d{3})\\.pdf$`);
+  let max = 0;
+  for (const f of files) {
+    const m = f.match(pattern);
+    if (m) max = Math.max(max, parseInt(m[1], 10));
+  }
+  return max + 1;
+}
+
+const ver = nextVersion();
+const verStr = String(ver).padStart(3, '0');
+const OUTPUT = join(OUT_DIR, `${BASE_NAME}_v${verStr}.pdf`);
 
 console.log(`Exporting ${URL} → ${OUTPUT}`);
 if (MAX_SLIDES) console.log(`Limiting to first ${MAX_SLIDES} slides`);
@@ -66,12 +87,12 @@ console.log(`Captured ${screenshots.length} slides, building PDF…`);
 const pdf = await PDFDocument.create();
 for (const shot of screenshots) {
   const img = await pdf.embedPng(shot);
-  const page = pdf.addPage([img.width, img.height]);
-  page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
+  const pg = pdf.addPage([img.width, img.height]);
+  pg.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
 }
 
 const pdfBytes = await pdf.save();
 writeFileSync(OUTPUT, pdfBytes);
 
-console.log(`Done! ${screenshots.length} slides → ${OUTPUT}`);
+console.log(`Done! ${screenshots.length} slides → ${OUTPUT} (v${verStr})`);
 await browser.close();

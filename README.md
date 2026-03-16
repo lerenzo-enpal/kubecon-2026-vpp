@@ -37,6 +37,7 @@ presentation/src/
 ├── components/
 │   ├── ui/                       # Reusable slide primitives
 │   ├── TexasMapHUD.jsx           # deck.gl Texas cascade map
+│   ├── SAMapHUD.jsx              # deck.gl SA blackout/VPP map
 │   ├── EUGridHUD.jsx             # deck.gl EU grid with zoom steps
 │   ├── FrequencyDemo.jsx         # Interactive frequency balancing act
 │   ├── FrequencyLine.jsx         # Animated 50 Hz frequency trace
@@ -55,18 +56,28 @@ presentation/src/
 
 ### Exporting to PDF
 
-With the dev server running:
+With the dev server running in another terminal:
 
 ```bash
+cd presentation
 npm run export:pdf
 ```
 
-This generates `presentation.pdf` in the project root. Requires `puppeteer` (installed via `decktape`).
+Output is auto-versioned in the project root: `vpp-presentation_v001.pdf`, `_v002.pdf`, etc.
+Each run detects existing versions and increments automatically.
 
-You can also specify a custom output path:
+Environment variables:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PORT` | `3000` | Dev server port |
+| `MAX_SLIDES` | `0` (all) | Limit to first N slides |
+| `PAUSE` | `3` | Seconds to wait per slide |
+
+Example with options:
 
 ```bash
-node scripts/export-pdf.mjs my-export.pdf
+PAUSE=5 MAX_SLIDES=10 npm run export:pdf
 ```
 
 ### Building for Production
