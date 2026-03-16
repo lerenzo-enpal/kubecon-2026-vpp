@@ -501,7 +501,7 @@ export default function Presentation() {
                   '--glow-color': e.color + '20',
                   animation: `vppEventIn 0.5s ease ${e.delay}s forwards, vppEventGlow 1s ease ${e.delay + 0.4}s both`,
                 }}>
-                <div className="min-w-[160px]">
+                <div className="w-[320px] shrink-0">
                   <div className="text-[17px] font-semibold font-sans" style={{ color: e.color }}>{e.event}</div>
                   <div className="text-[13px] font-mono mt-1" style={{ color: colors.textDim, opacity: 0, animation: `vppEventIn 0.3s ease ${e.delay + 0.25}s forwards` }}>{e.time}</div>
                 </div>
@@ -513,7 +513,18 @@ export default function Presentation() {
             ))}
           </div>
           <div className="flex-1 flex items-end justify-center pb-2">
-            <ResponseTimeline width={860} height={130} delay={2.5} />
+            <div className="w-[80%] flex items-center gap-4 rounded-lg px-5 py-3" style={{
+              background: colors.success + '0a',
+              border: `1px solid ${colors.success}25`,
+              opacity: 0,
+              animation: 'vppEventIn 0.5s ease 2.2s forwards',
+            }}>
+              <div className="shrink-0">
+                <div className="text-[26px] font-bold font-mono" style={{ color: colors.success }}>And Fast:</div>
+                <div className="text-[12px] font-mono mt-1" style={{ color: colors.textDim }}>Response Time</div>
+              </div>
+              <div className="flex-1"><ResponseTimeline width={840} height={120} delay={2.8} /></div>
+            </div>
           </div>
         </div>
       </Slide>
@@ -608,8 +619,10 @@ export default function Presentation() {
             <div className="absolute bottom-10 flex items-center gap-2" style={{ color: colors.textDim, fontSize: 14, fontFamily: '"JetBrains Mono", monospace' }}>
               <span>Special thanks to</span>
               <span style={{ color: colors.success }}>@engineeringwithRosie</span>
-              <span style={{ opacity: 0.4 }}>&</span>
+              <span style={{ opacity: 0.4 }}>,</span>
               <span>the Enpal Engineering team</span>
+              <span style={{ opacity: 0.4 }}>&</span>
+              <span style={{ color: colors.primary }}>Flexa</span>
             </div>
           </div>
         </div>

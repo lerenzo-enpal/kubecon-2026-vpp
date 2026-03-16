@@ -813,7 +813,7 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
             fontSize: 13, fontWeight: 700, fontFamily: '"JetBrains Mono"',
             color: '#94a3b8', letterSpacing: '0.12em',
           }}>
-            {isBlackout ? 'AEMO — SA GRID' : 'SA VPP FLEET'}
+            {isBlackout ? 'AEMO — SA GRID' : 'FREQUENCY RESTORATION'}
           </span>
           <span style={{
             marginLeft: 'auto', fontSize: 11, fontFamily: '"JetBrains Mono"',
