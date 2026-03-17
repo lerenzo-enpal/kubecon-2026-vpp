@@ -229,6 +229,8 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
       // Spawn and draw particles
       if (isActive) spawnParticles(now);
 
+      // Advance particles and group by color for batched shadow rendering
+      const particlesByColor = {};
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
         if (isActive) p.progress += p.speed;
@@ -236,26 +238,39 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
 
         const edge = EDGES[p.edge];
         const { fx, fy, tx, ty } = edgeEndpoints(edge);
-        const px = fx + (tx - fx) * p.progress;
-        const py = fy + (ty - fy) * p.progress;
+        p._px = fx + (tx - fx) * p.progress;
+        p._py = fy + (ty - fy) * p.progress;
+        p._fx = fx; p._fy = fy; p._tx = tx; p._ty = ty;
 
+        if (!particlesByColor[p.color]) particlesByColor[p.color] = [];
+        particlesByColor[p.color].push(p);
+      }
+
+      // Draw particles batched by color — one shadow fill per group instead of per particle
+      for (const [color, group] of Object.entries(particlesByColor)) {
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = color;
+        ctx.fillStyle = color;
         ctx.beginPath();
-        ctx.arc(px, py, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = p.color;
-        ctx.shadowBlur = edge.electric ? 12 : 8;
-        ctx.shadowColor = p.color;
+        for (const p of group) {
+          ctx.moveTo(p._px + p.size, p._py);
+          ctx.arc(p._px, p._py, p.size, 0, Math.PI * 2);
+        }
         ctx.fill();
         ctx.shadowBlur = 0;
 
-        const tp = Math.max(0, p.progress - 0.07);
-        const tpx = fx + (tx - fx) * tp;
-        const tpy = fy + (ty - fy) * tp;
-        ctx.beginPath();
-        ctx.moveTo(tpx, tpy);
-        ctx.lineTo(px, py);
-        ctx.strokeStyle = p.color + '50';
-        ctx.lineWidth = p.size * 0.7;
-        ctx.stroke();
+        // Trails — no shadow needed
+        for (const p of group) {
+          const tp = Math.max(0, p.progress - 0.07);
+          const tpx = p._fx + (p._tx - p._fx) * tp;
+          const tpy = p._fy + (p._ty - p._fy) * tp;
+          ctx.beginPath();
+          ctx.moveTo(tpx, tpy);
+          ctx.lineTo(p._px, p._py);
+          ctx.strokeStyle = color + '50';
+          ctx.lineWidth = p.size * 0.7;
+          ctx.stroke();
+        }
       }
 
       // Draw grid as a tall nebulous glow on the far left

@@ -180,6 +180,8 @@ export default function VPPArchitecture() {
       // Spawn and draw particles
       if (isActive) spawnParticles(now);
 
+      // Advance particles and group by color for batched shadow rendering
+      const particlesByColor = {};
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
         if (isActive) p.progress += p.speed;
@@ -187,27 +189,39 @@ export default function VPPArchitecture() {
 
         const edge = EDGES[p.edge];
         const { fx, fy, tx, ty } = edgePoints(edge);
-        const px = fx + (tx - fx) * p.progress;
-        const py = fy + (ty - fy) * p.progress;
+        p._px = fx + (tx - fx) * p.progress;
+        p._py = fy + (ty - fy) * p.progress;
+        p._fx = fx; p._fy = fy; p._tx = tx; p._ty = ty;
 
+        if (!particlesByColor[p.color]) particlesByColor[p.color] = [];
+        particlesByColor[p.color].push(p);
+      }
+
+      // Draw particles batched by color — one shadow fill per group instead of per particle
+      for (const [color, group] of Object.entries(particlesByColor)) {
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = color;
+        ctx.fillStyle = color;
         ctx.beginPath();
-        ctx.arc(px, py, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = p.color;
-        ctx.shadowBlur = 12;
-        ctx.shadowColor = p.color;
+        for (const p of group) {
+          ctx.moveTo(p._px + p.size, p._py);
+          ctx.arc(p._px, p._py, p.size, 0, Math.PI * 2);
+        }
         ctx.fill();
         ctx.shadowBlur = 0;
 
-        // Trail
-        const tp = Math.max(0, p.progress - 0.08);
-        const tpx = fx + (tx - fx) * tp;
-        const tpy = fy + (ty - fy) * tp;
-        ctx.beginPath();
-        ctx.moveTo(tpx, tpy);
-        ctx.lineTo(px, py);
-        ctx.strokeStyle = p.color + '50';
-        ctx.lineWidth = p.size * 0.8;
-        ctx.stroke();
+        // Trails — no shadow needed
+        for (const p of group) {
+          const tp = Math.max(0, p.progress - 0.08);
+          const tpx = p._fx + (p._tx - p._fx) * tp;
+          const tpy = p._fy + (p._ty - p._fy) * tp;
+          ctx.beginPath();
+          ctx.moveTo(tpx, tpy);
+          ctx.lineTo(p._px, p._py);
+          ctx.strokeStyle = color + '50';
+          ctx.lineWidth = p.size * 0.8;
+          ctx.stroke();
+        }
       }
 
       // Draw main nodes
@@ -357,13 +371,10 @@ export default function VPPArchitecture() {
             ctx.globalAlpha = alpha * 0.85;
             ctx.fillStyle = '#e2e8f0';
 
-            // Star dot
+            // Star dot — no shadowBlur (shapes too small for visible glow)
             ctx.beginPath();
-            ctx.arc(sx, sy, star.size, 0, Math.PI * 2);
-            ctx.shadowBlur = 6 * twinkle;
-            ctx.shadowColor = '#94a3b8';
+            ctx.arc(sx, sy, star.size * (1 + twinkle * 0.3), 0, Math.PI * 2);
             ctx.fill();
-            ctx.shadowBlur = 0;
 
             // Cross sparkle for larger stars
             if (star.size > 1.6) {
@@ -452,24 +463,24 @@ export default function VPPArchitecture() {
         ctx.stroke();
         ctx.shadowBlur = 0;
 
-        // Animated electricity particles on underground cable
+        // Animated electricity particles on underground cable — batched shadow
         const hasFlow = isExporting || isPulling;
         const elecDir = isExporting ? 1 : -1;
-        const isIdle = !hasFlow;
         const elecAlpha = hasFlow ? 0.85 : 0.15;
+        ctx.shadowBlur = hasFlow ? 6 : 2;
+        ctx.shadowColor = electricYellow;
+        ctx.fillStyle = electricYellow;
+        ctx.globalAlpha = elecAlpha;
+        ctx.beginPath();
         for (let ep = 0; ep < 3; ep++) {
           const baseP = ((now * 0.3 * elecDir + ep * 0.33 + i * 0.13) % 1 + 1) % 1;
           const epx = cableRightX + (width + 20 - cableRightX) * baseP;
-          ctx.beginPath();
+          ctx.moveTo(epx + 2, cableDropY);
           ctx.arc(epx, cableDropY, 2, 0, Math.PI * 2);
-          ctx.fillStyle = electricYellow;
-          ctx.globalAlpha = elecAlpha;
-          ctx.shadowBlur = hasFlow ? 6 : 2;
-          ctx.shadowColor = electricYellow;
-          ctx.fill();
-          ctx.shadowBlur = 0;
-          ctx.globalAlpha = 1;
         }
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.globalAlpha = 1;
 
         // House body
         ctx.beginPath();

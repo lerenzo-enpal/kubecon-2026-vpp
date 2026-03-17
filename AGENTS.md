@@ -148,3 +148,192 @@ All canvas components follow this pattern:
 - **Do not commit or push unless explicitly requested by the user.** Wait for the user to review changes and ask for a commit.
 - **Do not add Co-Authored-By lines in git commits.**
 - **Framework: Spectacle** by Nearform (v10). Key shortcuts: `Ctrl+Shift+O` (overview), `Ctrl+Shift+P` (presenter mode), `Ctrl+K` (command palette), Arrow keys (navigate slides/steps).
+
+---
+
+## Component Architecture
+
+### File Organization
+
+```
+presentation/src/
+├── Presentation.jsx              # Main deck — all ~35 slides (65KB, should be split)
+├── theme.js                      # Color tokens, font config
+├── main.jsx                      # Entry point (fontsource imports)
+├── index.css                     # TailwindCSS v4
+├── components/
+│   ├── ui/                       # 8 reusable primitives (GlowText, StatCard, etc.)
+│   ├── *MapHUD.jsx               # DeckGL + MapLibre full-screen map slides (4 files)
+│   ├── *Chart.jsx                # Canvas chart components (5 files)
+│   ├── *Demo.jsx                 # Interactive canvas demos (3 files)
+│   ├── *Diagram.jsx              # Canvas flow diagrams (2 files)
+│   └── *Background.jsx           # Ambient canvas backgrounds (1 file)
+└── slides/
+    └── GridScaleSlides.jsx       # Slide variant exports (versionA/B/C/D)
+```
+
+### Quick Reference
+
+| What | Where |
+|------|-------|
+| Slide order (source of truth) | `docs/slide-order.md` |
+| Architecture data flow | `docs/architecture-data-flow.md` |
+| Color tokens | `presentation/src/theme.js` |
+| Reusable UI primitives | `presentation/src/components/ui/` |
+| Animation cycle spec | `docs/vpp-animation-cycle.md` |
+
+### Naming Conventions
+
+| Type | Pattern | Example |
+|------|---------|---------|
+| Map HUD component | `{Region}MapHUD.jsx` | `TexasMapHUD.jsx`, `SAMapHUD.jsx` |
+| Canvas chart | `{Topic}Chart.jsx` | `DuckCurveChart.jsx`, `CurtailmentChart.jsx` |
+| Canvas diagram | `{Topic}Diagram.jsx` | `EnpalArchitectureDiagram.jsx` |
+| Interactive demo | `{Topic}Demo.jsx` | `FrequencyDemo.jsx`, `DemandResponseDemo.jsx` |
+| UI primitives | `ui/{Name}.jsx` | `ui/GlowText.jsx`, `ui/StatCard.jsx` |
+| Slide variants | `slides/{Topic}Slides.jsx` | `slides/GridScaleSlides.jsx` |
+
+### DeckGL Map Components
+
+4 components use DeckGL + MapLibre (`TexasMapHUD`, `SAMapHUD`, `EUGridHUD`, `VPPScenarioMapSlide`):
+
+```jsx
+import MapGL from 'react-map-gl/maplibre';  // MUST be MapGL, NOT Map
+import { FlyToInterpolator } from '@deck.gl/core';
+
+const FLY_TO = new FlyToInterpolator();      // Module-level singleton (stateless)
+```
+
+**Rules:**
+- ALWAYS import as `MapGL` (not `Map`) — `Map` shadows JavaScript's built-in `Map` constructor and causes `"Map is not a constructor"` crashes
+- ALWAYS use a module-level `FlyToInterpolator` singleton — it's stateless, safe to share
+- Use `Map` (the JS data structure) for O(1) node/plant lookups instead of `Array.find()`
+
+### Particle Shadow Batching
+
+Canvas components with animated particles batch shadow draws by color to reduce GPU blur computations:
+
+```jsx
+// Group particles by color
+const byColor = {};
+for (const p of liveParticles) {
+  if (!byColor[p.color]) byColor[p.color] = [];
+  byColor[p.color].push(p);
+}
+// One shadow fill per color group instead of per particle
+for (const [color, group] of Object.entries(byColor)) {
+  ctx.shadowBlur = 10;
+  ctx.shadowColor = color;
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  for (const p of group) {
+    ctx.moveTo(p._px + p.size, p._py);
+    ctx.arc(p._px, p._py, p.size, 0, Math.PI * 2);
+  }
+  ctx.fill();
+  ctx.shadowBlur = 0;
+}
+```
+
+**Rules:**
+- NEVER set `shadowBlur` per-element in a loop — batch into one `fill()` per color group
+- Skip `shadowBlur` entirely for shapes < 3px (invisible at that scale)
+- Each `fill()`/`stroke()` with `shadowBlur > 0` triggers a Gaussian blur — minimize the count
+
+---
+
+## Open Improvements
+
+### HIGH: Lazy Slide Mounting (Issue #5)
+
+**Problem:** Spectacle renders all ~35 slides into the DOM simultaneously. Every canvas RAF loop, DeckGL WebGL context, and MapLibre tile fetcher is alive from page load.
+
+**Solution:** Create a `<LazyContent>` wrapper that only mounts heavy children when the slide is active:
+
+```jsx
+// presentation/src/components/ui/LazyContent.jsx
+import { useContext } from 'react';
+import { SlideContext } from 'spectacle';
+
+export default function LazyContent({ children }) {
+  const slideContext = useContext(SlideContext);
+  if (!slideContext?.isSlideActive) return null;
+  return <>{children}</>;
+}
+
+// Usage in Presentation.jsx:
+<Slide backgroundColor={bg}>
+  <LazyContent>
+    <TexasMapHUD variant="hud" />
+  </LazyContent>
+</Slide>
+```
+
+**Impact:** Eliminates ~30 idle RAF loops and ~4 WebGL contexts. Single biggest performance win available.
+
+**Risk:** Flash of empty content when navigating to a heavy slide. Mitigate with:
+- CSS fade-in transition on mount
+- Only wrapping the heaviest components (DeckGL maps, canvas animations), not text slides
+- Optional: mount +-1 adjacent slides for pre-warming
+
+### MEDIUM: Extract Shared Canvas Utilities
+
+**Problem:** 18 canvas components duplicate: 2x HiDPI setup, RAF gating, background grid drawing, padding calculations, and particle rendering.
+
+**Proposed:** `presentation/src/utils/canvas.js` with `setupCanvas()`, `drawGrid()`, and `drawParticlesBatched()`.
+
+### MEDIUM: Consolidate DeckGL Boilerplate
+
+**Problem:** 4 map components repeat the same DeckGL + MapGL + dark-matter-style + scanline overlay pattern.
+
+**Proposed:** `MapSlideShell.jsx` wrapping the shared DeckGL/MapGL/scanlines structure, with each map component providing only its custom layers and HUD panels.
+
+### LOW: Split Presentation.jsx
+
+**Problem:** `Presentation.jsx` is ~65KB with all slide JSX inlined. Hard to navigate, causes large diffs.
+
+**Proposed:** Split into `slides/01-Opening.jsx`, `slides/02-TheGrid.jsx`, etc. Import and spread.
+
+### LOW: Extend Shadow Batching
+
+Apply the particle batching pattern to remaining heavy canvas components:
+
+| Component | Shadow draws/frame | Status |
+|-----------|-------------------|--------|
+| VPPArchitecture | ~98 → ~15 | Done |
+| EnpalArchitectureDiagram | ~60 → ~12 | Done |
+| FrequencyDemo | ~16 | Not done (complex interleaving) |
+| LargestMachineZoom | ~8 | Not done |
+| ThankYouBackground | ~6 | Not done |
+
+---
+
+## Lessons Learned
+
+These came from actual bugs and debugging sessions:
+
+1. **`import Map from 'react-map-gl/maplibre'` shadows `new Map()`** — always import as `MapGL`. This caused a production crash.
+2. **`Array.indexOf([a, b])` never works** — JavaScript compares array references, not values. Use loop indices or pre-computed Maps.
+3. **`setState()` in RAF loops = 60 re-renders/sec** — use refs for draw-loop state, throttle React state updates to ~15fps max.
+4. **Canvas `shadowBlur` cost is per-fill, not per-state-change** — batch shapes into single `fill()` calls grouped by color.
+5. **`FlyToInterpolator` is stateless** — use a module-level singleton, never `new FlyToInterpolator()` per transition.
+6. **Spectacle `SlideContext.isSlideActive`** — the only reliable way to know if your slide is visible. ALWAYS gate heavy work on this.
+7. **Canvas padding cutoff is recurring** — callouts below need padBottom >= 65px, annotations above need padTop >= 55px. When in doubt, add 20%.
+8. **`useEffect` deps for RAF** — must include `slideContext?.isSlideActive` so the loop restarts when the slide becomes active.
+9. **Google Fonts CDN = render-blocking external dependency** — self-host via `@fontsource` packages instead.
+10. **`Array.find()` in draw loops = O(n) per frame** — pre-compute `Map` at module level for O(1).
+
+---
+
+## For Agents Working on This Codebase
+
+1. **Read `docs/slide-order.md` first** — canonical slide sequence with speaker assignments and timing
+2. **Read `theme.js`** — all color tokens. Never hardcode hex (except Databricks orange `#FF3621` / `#E25A1C`)
+3. **Check `ui/` before creating new components** — GlowText, Subtitle, StatCard, Badge, ComparisonRow, TimelineItem, SectionDivider already exist
+4. **Gate all animations on `isSlideActive`** — if you add a new canvas/RAF/interval, gate it or it burns CPU forever on invisible slides
+5. **Import MapLibre as `MapGL`** — not `Map` (shadows built-in Map constructor)
+6. **Flexa, not Flexor** — the VPP controller is always "Flexa" (Enpal + Entrix joint venture)
+7. **Spark does NOT connect to EMQX directly** — see `docs/architecture-data-flow.md`
+8. **Test with `npm run build`** — Vite production build catches things dev mode misses
+9. **No emoji in components** — dark cinematic aesthetic only
+10. **No Co-Authored-By in commits**
