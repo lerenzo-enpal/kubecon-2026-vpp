@@ -2,6 +2,12 @@
 
 Bulleted talking points per slide. Speakers marked as **LERENZO** or **MARIO**.
 
+| Speaker | Slides | Count |
+|---------|--------|-------|
+| LERENZO | 3-5, 9-13, 19-25, 27-28 | 17 |
+| MARIO   | 6-8, 14-18, 26 | 8 |
+| Shared  | 1-2 (opening) | 2 |
+
 ---
 
 ## Opening
