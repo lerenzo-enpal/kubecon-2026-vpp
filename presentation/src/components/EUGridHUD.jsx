@@ -3,7 +3,7 @@ import { SlideContext } from 'spectacle';
 import { DeckGL } from '@deck.gl/react';
 import { FlyToInterpolator } from '@deck.gl/core';
 import { ScatterplotLayer, LineLayer, TextLayer } from '@deck.gl/layers';
-import Map from 'react-map-gl/maplibre';
+import MapGL from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 // ── EU generation hubs with real coordinates ─────────────────
@@ -377,7 +377,7 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
         layers={layers}
         style={{ position: 'absolute', inset: 0 }}
       >
-        <Map
+        <MapGL
           mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
           style={{ width: '100%', height: '100%' }}
         />

@@ -4,7 +4,7 @@ import { DeckGL } from '@deck.gl/react';
 import { FlyToInterpolator } from '@deck.gl/core';
 import { ScatterplotLayer, LineLayer, TextLayer } from '@deck.gl/layers';
 
-import Map from 'react-map-gl/maplibre';
+import MapGL from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 const FLY_TO = new FlyToInterpolator();
@@ -409,7 +409,7 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
         height={height}
         style={{ position: 'absolute' }}
       >
-        <Map
+        <MapGL
           mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
           style={{ width: '100%', height: '100%' }}
         />
