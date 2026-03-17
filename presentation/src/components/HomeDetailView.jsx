@@ -1,12 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { colors } from '../theme';
 
 // Home schematic overlay for the Hollywood zoom view
 // Shows solar, battery, EV, heat pump with status indicators and flow arrows
 
-function DeviceBox({ label, status, level, kw, flow, color, statusColor }) {
-  const isActive = status !== 'off' && status !== 'paused';
+function DeviceBox({ label, status, level, levelTarget, kw, flow, color, statusColor }) {
+  const isActive = status !== 'off' && status !== 'paused' && status !== 'curtailed';
   const displayColor = statusColor || color;
+  const isCharging = (status === 'charging' || status === 'pre-heat') && levelTarget !== undefined;
+
+  // Animate level from initial to target over ~8s
+  const [animLevel, setAnimLevel] = useState(level);
+  const rafRef = useRef(null);
+  const startRef = useRef(null);
+  useEffect(() => {
+    if (!isCharging) { setAnimLevel(level); return; }
+    const from = level;
+    const to = levelTarget;
+    const duration = 8000;
+    startRef.current = performance.now();
+    const tick = () => {
+      const elapsed = performance.now() - startRef.current;
+      const t = Math.min(1, elapsed / duration);
+      const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+      setAnimLevel(from + (to - from) * eased);
+      if (t < 1) rafRef.current = requestAnimationFrame(tick);
+    };
+    rafRef.current = requestAnimationFrame(tick);
+    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
+  }, [isCharging, level, levelTarget]);
+
+  const displayLevel = isCharging ? animLevel : level;
+
   return (
     <div style={{
       background: 'rgba(5, 8, 16, 0.85)',
@@ -42,24 +67,33 @@ function DeviceBox({ label, status, level, kw, flow, color, statusColor }) {
         color: colors.textMuted, textTransform: 'uppercase',
         marginBottom: 3,
       }}>
-        {status}
+        {status === 'pre-heat' ? 'THERMAL LOADING' : status}
       </div>
 
-      {level !== undefined && (
+      {displayLevel !== undefined && (
         <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 3 }}>
           <div style={{
             flex: 1, height: 4, borderRadius: 2,
             background: colors.surfaceLight,
+            position: 'relative',
+            overflow: 'hidden',
           }}>
             <div style={{
-              width: `${Math.min(100, level * 100)}%`,
+              width: `${Math.min(100, displayLevel * 100)}%`,
               height: '100%', borderRadius: 2,
               background: displayColor,
-              transition: 'width 0.5s ease',
+              animation: isCharging ? 'chargePulse 1s ease-in-out infinite' : 'none',
             }} />
+            {isCharging && (
+              <div style={{
+                position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                background: `linear-gradient(90deg, transparent 0%, ${displayColor}50 50%, transparent 100%)`,
+                animation: 'chargeGlow 1s ease-in-out infinite',
+              }} />
+            )}
           </div>
           <span style={{ fontSize: 7, fontFamily: '"JetBrains Mono"', color: displayColor }}>
-            {Math.round(level * 100)}%
+            {Math.round(displayLevel * 100)}%
           </span>
         </div>
       )}
@@ -72,7 +106,7 @@ function DeviceBox({ label, status, level, kw, flow, color, statusColor }) {
           {kw.toFixed(1)} kW
           {flow && flow !== 'none' && (
             <span style={{ fontSize: 8, marginLeft: 4, color: colors.textDim }}>
-              {flow === 'to-grid' ? 'TO GRID' : flow === 'from-grid' ? 'FROM GRID' : flow === 'to-home' ? 'TO HOME' : ''}
+              {flow === 'from-grid' ? 'FROM GRID' : flow === 'to-home' ? 'TO HOME' : ''}
             </span>
           )}
         </div>
@@ -102,7 +136,16 @@ function FlowArrow({ direction = 'right', color = colors.primary, active = true 
   );
 }
 
-export default function HomeDetailView({ homeDetail, style = {} }) {
+// Inject charging glow keyframes once
+const STYLE_ID = 'home-detail-charge-glow';
+if (typeof document !== 'undefined' && !document.getElementById(STYLE_ID)) {
+  const style = document.createElement('style');
+  style.id = STYLE_ID;
+  style.textContent = `@keyframes chargeGlow { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } } @keyframes chargePulse { 0%,100% { filter: brightness(1); } 50% { filter: brightness(1.6); } }`;
+  document.head.appendChild(style);
+}
+
+export default function HomeDetailView({ homeDetail, style: styleProp = {} }) {
   if (!homeDetail) return null;
 
   const { solar, battery, ev, heatPump, gridPrice } = homeDetail;
@@ -116,7 +159,7 @@ export default function HomeDetailView({ homeDetail, style = {} }) {
       boxShadow: `0 0 30px rgba(2,4,8,0.8), inset 0 0 20px ${colors.primary}06`,
       backdropFilter: 'blur(12px)',
       position: 'relative',
-      ...style,
+      ...styleProp,
     }}>
       {/* Corner brackets */}
       {['tl', 'tr', 'bl', 'br'].map(pos => {
@@ -149,11 +192,12 @@ export default function HomeDetailView({ homeDetail, style = {} }) {
         </span>
         {gridPrice && (
           <span style={{
-            marginLeft: 'auto', fontSize: 10, fontWeight: 700,
-            fontFamily: '"JetBrains Mono"',
-            color: gridPrice.startsWith('-') ? colors.success : gridPrice.startsWith('+') && parseInt(gridPrice) > 15 ? colors.danger : colors.text,
+            marginLeft: 'auto', fontSize: 10, fontFamily: '"JetBrains Mono"',
+            color: colors.text,
           }}>
-            {gridPrice}
+            {gridPrice.startsWith('-') ? (
+              <><span style={{ fontWeight: 700, color: colors.danger }}>NEGATIVE</span>{' '}{gridPrice}</>
+            ) : gridPrice}
           </span>
         )}
       </div>
@@ -178,6 +222,7 @@ export default function HomeDetailView({ homeDetail, style = {} }) {
             label="BATTERY"
             status={battery.status}
             level={battery.level}
+            levelTarget={battery.levelTarget}
             kw={battery.flow !== 'none' ? Math.abs(battery.kw || 0) : 0}
             flow={battery.flow}
             color={colors.battery}
@@ -191,18 +236,20 @@ export default function HomeDetailView({ homeDetail, style = {} }) {
             label="HEAT PUMP"
             status={heatPump.status}
             kw={heatPump.kw}
+            flow={heatPump.flow}
             color={colors.secondary}
             statusColor={heatPump.status === 'paused' ? colors.accent : colors.secondary}
           />
           <FlowArrow
             direction="right"
-            color={colors.textDim}
-            active={false}
+            color={heatPump.kw > 0 ? colors.secondary : colors.textDim}
+            active={heatPump.kw > 0}
           />
           <DeviceBox
             label="EV"
             status={ev.status}
             level={ev.level}
+            levelTarget={ev.levelTarget}
             kw={ev.flow !== 'none' ? Math.abs(ev.kw || 0) : 0}
             flow={ev.flow}
             color={colors.primary}
