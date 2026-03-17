@@ -53,7 +53,7 @@ const SUMMER_STEPS = [
     ],
     price: { value: -5, trend: 'negative' },
     freq: 50.00,
-    view: { longitude: 13.38, latitude: 52.50, zoom: 15, pitch: 40, bearing: -3 },
+    view: { longitude: 13.2707, latitude: 52.5928, zoom: 17, pitch: 40, bearing: -3 },
     duckHighlightHour: 13,
     duckBlend: 0.3,
     homePhase: 'charge',

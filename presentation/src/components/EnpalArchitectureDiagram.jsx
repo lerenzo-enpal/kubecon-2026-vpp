@@ -110,7 +110,8 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
 
     const particles = [];
     const BASE_INTERVAL = 0.4;
-    const edgeLastSpawn = EDGES.map(() => 0);
+    const startTime = performance.now() / 1000;
+    const edgeLastSpawn = EDGES.map(() => startTime);
 
     function nodeCenter(node) {
       return { cx: node.x * width + node.w / 2, cy: node.y * height };
@@ -149,6 +150,7 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
     function spawnParticles(now) {
       EDGES.forEach((edge, ei) => {
         const interval = BASE_INTERVAL * (edge.rate || 1);
+        if (now - edgeLastSpawn[ei] > interval * 3) edgeLastSpawn[ei] = now;
         if (now - edgeLastSpawn[ei] < interval) return;
         edgeLastSpawn[ei] = now;
         particles.push({

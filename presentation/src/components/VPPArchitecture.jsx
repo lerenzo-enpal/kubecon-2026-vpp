@@ -44,28 +44,39 @@ function getNode(id) {
   return NODES.find(n => n.id === id) || HOMES.find(h => h.id === id);
 }
 
-export default function VPPArchitecture({ width = 960, height = 540 }) {
+export default function VPPArchitecture() {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const slideContext = useContext(SlideContext);
 
   useEffect(() => {
     const canvas = canvasRef.current;
+    const container = canvas.parentElement;
     const ctx = canvas.getContext('2d');
+    const width = container.clientWidth;
+    const height = container.clientHeight;
     canvas.width = width * 2;
     canvas.height = height * 2;
     ctx.scale(2, 2);
+
+    // Content area — leave room for title overlay at top
+    const padTop = height * 0.13;
+    const contentH = height * 0.82;
+    const mapY = (frac) => padTop + frac * contentH;
 
     const nodeW = 150, nodeH = 66;
     const homeW = 56, homeH = 52;
 
     const particles = [];
     const BASE_INTERVAL = 0.3;
-    const edgeLastSpawn = EDGES.map(() => 0);
+    const startTime = performance.now() / 1000;
+    const edgeLastSpawn = EDGES.map(() => startTime);
 
     function spawnParticles(now) {
       EDGES.forEach((edge, ei) => {
         const interval = BASE_INTERVAL * (edge.rateMul || 1);
+        // If gap is too large (e.g. tab was hidden), reset to now — prevents burst
+        if (now - edgeLastSpawn[ei] > interval * 3) edgeLastSpawn[ei] = now;
         if (now - edgeLastSpawn[ei] < interval) return;
         edgeLastSpawn[ei] = now;
         const from = getNode(edge.from);
@@ -114,8 +125,8 @@ export default function VPPArchitecture({ width = 960, height = 540 }) {
           fx = from.x * width;
           tx = to.x * width + toW;
         }
-        fy = from.y * height;
-        ty = to.y * height;
+        fy = mapY(from.y);
+        ty = mapY(to.y);
         return { fx, fy, tx, ty, isToHome, isFromHome };
       }
 
@@ -189,7 +200,7 @@ export default function VPPArchitecture({ width = 960, height = 540 }) {
       // Draw main nodes
       NODES.forEach((node) => {
         const nx = node.x * width;
-        const ny = node.y * height - nodeH / 2;
+        const ny = mapY(node.y) - nodeH / 2;
         const pulse = 0.5 + 0.5 * Math.sin(now * 2 + node.x * 10);
 
         // Node box
@@ -227,47 +238,75 @@ export default function VPPArchitecture({ width = 960, height = 540 }) {
         ctx.fillText(node.sub, nx + nodeW / 2, ny + 50);
       });
 
-      // Day/night cycle — 3 phases over ~20s
-      // Phase 1 (0.0–0.4): Sun up, PV charges battery, house self-powered
-      // Phase 2 (0.4–0.7): Sun sets, battery exports to grid
-      // Phase 3 (0.7–1.0): Battery depleted, house pulls from grid, then sun rises
-      const cyclePeriod = 20; // seconds
-      const cycleT = ((now % cyclePeriod) / cyclePeriod); // 0..1
-      // Smooth sun alpha — use cosine easing to avoid flicker at transitions
-      let sunAlpha;
-      if (cycleT < 0.05) {
-        // Fade in from pre-dawn (0.3) to full (1) — smooth wrap from end of cycle
-        sunAlpha = 0.3 + 0.7 * (cycleT / 0.05);
-      } else if (cycleT < 0.4) {
-        sunAlpha = 1;
-      } else if (cycleT < 0.55) {
-        // Sunset: cosine ease from 1 → 0
-        sunAlpha = 0.5 + 0.5 * Math.cos((cycleT - 0.4) / 0.15 * Math.PI);
-      } else if (cycleT < 0.88) {
-        sunAlpha = 0;
-      } else {
-        // Pre-dawn glow: ease from 0 → 0.3
-        sunAlpha = 0.3 * (1 - Math.cos((cycleT - 0.88) / 0.12 * Math.PI)) / 2;
-      }
-      const isDay = cycleT < 0.4;
-      const isExporting = cycleT >= 0.4 && cycleT < 0.7;  // battery → grid
-      const isPulling = cycleT >= 0.7 && cycleT < 0.9;    // grid → house
-      // Battery charge level: charges 0→1 during day, drains during export, flat during pull
-      const batteryLevel = cycleT < 0.4
-        ? Math.min(1, cycleT / 0.35)
-        : cycleT < 0.7
-          ? Math.max(0.08, 1 - (cycleT - 0.4) / 0.3)
-          : 0.08;
+      // ── Unified clock ──────────────────────────────────────────────
+      // See docs/vpp-animation-cycle.md for full spec
+      // Default: 12s cycle = 1s per 2 hours
+      const CYCLE_SECONDS = 12;
+      const hour = ((now % CYCLE_SECONDS) / CYCLE_SECONDS) * 24; // 0..24
+
+      // Cosine ease helper (0→1 over [a,b])
+      const smoothstep = (a, b, t) => {
+        const x = Math.max(0, Math.min(1, (t - a) / (b - a)));
+        return x * x * (3 - 2 * x);
+      };
+
+      // Phase
+      const phase = hour < 6.5 ? 'night-pull'
+        : hour < 7.0 ? 'sunrise'
+        : hour < 9.0 ? 'morning-peak'
+        : hour < 14.0 ? 'charging'
+        : hour < 19.5 ? 'pv-export'
+        : hour < 20.0 ? 'sunset-discharge'
+        : hour < 22.5 ? 'battery-discharge'
+        : 'night-pull';
+
+      // Sun alpha: 0 (down) → 1 (full)
+      const sunAlpha = hour < 6.5 ? 0
+        : hour < 7.0 ? smoothstep(6.5, 7.0, hour)
+        : hour < 19.0 ? 1
+        : hour < 20.0 ? 1 - smoothstep(19.0, 20.0, hour)
+        : 0;
+
+      // Sun vertical arc — zenith at solar noon (13:15)
+      const solarNoon = 13.25;
+      const sunHalf = solarNoon - 6.5; // hours from rise to noon
+      const sunArc = Math.max(0, 1 - Math.abs(hour - solarNoon) / sunHalf);
+
+      // Moon alpha (visibility) — inverse of sun
+      const moonAlpha = Math.max(0, 1 - sunAlpha * 2.5);
+      // Moon arc — slow arc peaking at midnight (hour 0/24), independent of alpha
+      // Moon is "up" from ~19:00 to ~07:00 (12h window centered on midnight)
+      const moonNoon = 0; // midnight
+      const moonHalf = 6.5; // hours from moonrise to peak
+      // Wrap hour so midnight is 0 (hour 20→-4, hour 4→4)
+      const moonHour = hour > 12 ? hour - 24 : hour;
+      const moonArc = Math.max(0, 1 - Math.abs(moonHour - moonNoon) / moonHalf);
+
+      // Battery level
+      const BAT_MIN = 0.08;
+      const batteryLevel = hour < 9.0 ? BAT_MIN
+        : hour < 14.0 ? BAT_MIN + (1 - BAT_MIN) * ((hour - 9) / 5)
+        : hour < 19.5 ? 1.0
+        : hour < 22.5 ? Math.max(BAT_MIN, 1.0 - (1 - BAT_MIN) * ((hour - 19.5) / 3))
+        : BAT_MIN;
+
+      // Cable flow direction
+      const isExporting = phase === 'pv-export' || phase === 'sunset-discharge' || phase === 'battery-discharge';
+      const isPulling = phase === 'night-pull' || phase === 'sunrise';
+      const isCharging = phase === 'charging';
+      const isDay = sunAlpha > 0.5;
+
       const electricYellow = '#fbbf24';
 
-      // Sun in top-right corner
+      // Sun with vertical arc — rises and sets
       {
         const sunX = width - 55;
-        const sunY = 45;
+        const sunYBase = 90;   // horizon (low position when rising/setting)
+        const sunYZenith = 45; // highest point — keeps rays safely in bounds
+        const sunY = sunYBase - (sunYBase - sunYZenith) * sunArc * sunAlpha;
         const sunR = 16;
         ctx.save();
         ctx.globalAlpha = sunAlpha * 0.7;
-        // Sun disc
         ctx.beginPath();
         ctx.arc(sunX, sunY, sunR, 0, Math.PI * 2);
         ctx.fillStyle = '#f59e0b';
@@ -275,7 +314,6 @@ export default function VPPArchitecture({ width = 960, height = 540 }) {
         ctx.shadowColor = '#f59e0b';
         ctx.fill();
         ctx.shadowBlur = 0;
-        // Rays — slow rotation, thicker lines to prevent sub-pixel flicker
         ctx.strokeStyle = '#f59e0b';
         ctx.lineWidth = 2;
         for (let r = 0; r < 8; r++) {
@@ -290,10 +328,47 @@ export default function VPPArchitecture({ width = 960, height = 540 }) {
         ctx.restore();
       }
 
+      // Moon crescent — rendered on offscreen canvas to avoid compositing bleed
+      {
+        const moonAlpha = Math.max(0, 1 - sunAlpha * 2.5);
+        if (moonAlpha > 0.01) {
+          const moonX = width - 55;
+          const moonYBase = 85;
+          const moonYZenith = 50;
+          const moonY = moonYBase - (moonYBase - moonYZenith) * moonArc;
+          const moonR = 13;
+          const buf = moonR + 16; // buffer for glow
+          const size = buf * 2;
+          // Draw crescent on offscreen canvas
+          const off = document.createElement('canvas');
+          off.width = size * 2; off.height = size * 2;
+          const oc = off.getContext('2d');
+          oc.scale(2, 2);
+          // Moon disc
+          oc.beginPath();
+          oc.arc(buf, buf, moonR, 0, Math.PI * 2);
+          oc.fillStyle = '#c8d0db';
+          oc.fill();
+          // Cut out crescent
+          oc.globalCompositeOperation = 'destination-out';
+          oc.beginPath();
+          oc.arc(buf + 6, buf - 2, moonR * 0.82, 0, Math.PI * 2);
+          oc.fill();
+          // Stamp onto main canvas
+          ctx.save();
+          ctx.globalAlpha = moonAlpha * 0.65;
+          ctx.shadowBlur = 14;
+          ctx.shadowColor = '#94a3b8';
+          ctx.drawImage(off, moonX - buf, moonY - buf, size, size);
+          ctx.shadowBlur = 0;
+          ctx.restore();
+        }
+      }
+
       // Draw homes with PV, battery, underground grid
       HOMES.forEach((home, i) => {
         const cx = home.x * width + homeW / 2;
-        const cy = home.y * height;
+        const cy = mapY(home.y);
         const hw = homeW / 2;
         const roofH = 18;
         const bodyH = 28;
@@ -321,9 +396,9 @@ export default function VPPArchitecture({ width = 960, height = 540 }) {
         ctx.shadowBlur = 0;
 
         // Animated electricity particles on underground cable
-        // Direction: exporting = right (house→grid), pulling = left (grid→house), day = dim/idle
         const hasFlow = isExporting || isPulling;
         const elecDir = isExporting ? 1 : -1;
+        const isIdle = !hasFlow;
         const elecAlpha = hasFlow ? 0.85 : 0.15;
         for (let ep = 0; ep < 3; ep++) {
           const baseP = ((now * 0.3 * elecDir + ep * 0.33 + i * 0.13) % 1 + 1) % 1;
@@ -373,7 +448,7 @@ export default function VPPArchitecture({ width = 960, height = 540 }) {
         ctx.translate(pvX, pvY);
         ctx.rotate(roofAngle);
         // Panel body
-        const pvGlow = isDay ? sunAlpha * 0.4 : 0;
+        const pvGlow = sunAlpha * 0.4;
         ctx.fillStyle = `rgba(59, 130, 246, ${0.5 + pvGlow})`;
         ctx.fillRect(-pvW / 2, -pvH / 2, pvW, pvH);
         ctx.strokeStyle = `rgba(59, 130, 246, ${0.7 + pvGlow})`;
@@ -388,7 +463,7 @@ export default function VPPArchitecture({ width = 960, height = 540 }) {
         ctx.moveTo(pvW / 6, -pvH / 2); ctx.lineTo(pvW / 6, pvH / 2);
         ctx.stroke();
         // Sun glow on panel
-        if (isDay) {
+        if (sunAlpha > 0.01) {
           ctx.shadowBlur = 10 * sunAlpha;
           ctx.shadowColor = '#f59e0b';
           ctx.strokeStyle = `rgba(245, 158, 11, ${sunAlpha * 0.4})`;
@@ -404,7 +479,9 @@ export default function VPPArchitecture({ width = 960, height = 540 }) {
         const batW = 14;
         const batH = 20;
         const fillH = batH * batteryLevel;
-        const batColor = isDay ? colors.success : isExporting ? colors.accent : colors.danger;
+        const batColor = batteryLevel <= BAT_MIN ? colors.danger
+          : (phase === 'sunset-discharge' || phase === 'battery-discharge') ? colors.accent
+          : colors.success;
 
         // Battery outline
         ctx.strokeStyle = batColor + '50';
@@ -426,7 +503,7 @@ export default function VPPArchitecture({ width = 960, height = 540 }) {
         ctx.shadowBlur = 0;
 
         // Charging/discharging indicator arrow
-        if (isDay) {
+        if (isCharging) {
           // Down arrow (charging from PV)
           ctx.beginPath();
           ctx.moveTo(batX + batW / 2, batY + 5);
@@ -436,7 +513,7 @@ export default function VPPArchitecture({ width = 960, height = 540 }) {
           ctx.fillStyle = colors.success + '90';
           ctx.fill();
         } else if (isExporting) {
-          // Up arrow (discharging to grid)
+          // Up arrow (discharging/exporting to grid)
           ctx.beginPath();
           ctx.moveTo(batX + batW / 2, batY + 9);
           ctx.lineTo(batX + batW / 2 - 3, batY + 5);
@@ -445,7 +522,6 @@ export default function VPPArchitecture({ width = 960, height = 540 }) {
           ctx.fillStyle = colors.accent + '90';
           ctx.fill();
         }
-        // isPulling: no arrow on battery (it's depleted, grid feeds house)
       });
 
       if (isActive) animRef.current = requestAnimationFrame(draw);
@@ -453,13 +529,13 @@ export default function VPPArchitecture({ width = 960, height = 540 }) {
 
     draw();
     return () => cancelAnimationFrame(animRef.current);
-  }, [width, height, slideContext?.isSlideActive]);
+  }, [slideContext?.isSlideActive]);
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
       <canvas
         ref={canvasRef}
-        style={{ width, height }}
+        style={{ width: '100%', height: '100%' }}
       />
     </div>
   );

@@ -90,12 +90,80 @@ export default function ResponseTimeline({ width = 720, height = 120, delay = 0 
         ctx.fillText(tickLabels[i], x, trackY + trackH / 2 + 24);
       });
 
-      // Animated sweep fill
+      // Animated energy bolt sweep
       const sweepX = padLeft + ease * trackW;
-      if (t > 0.01) {
+      const boltNow = now / 1000;
+      if (t > 0.01 && t < 1.0) {
+        // Jagged bolt trail — series of short zigzag segments behind the leading edge
+        const boltLen = Math.min(sweepX - padLeft, 120); // trail length
+        const boltStartX = sweepX - boltLen;
+        const segments = 14;
+        const segW = boltLen / segments;
+        ctx.save();
+        // Trail glow (wide, dim)
+        ctx.strokeStyle = colors.primary + '18';
+        ctx.lineWidth = trackH;
+        ctx.beginPath();
+        ctx.moveTo(padLeft, trackY);
+        ctx.lineTo(boltStartX, trackY);
+        ctx.stroke();
+        // Bolt path
+        ctx.beginPath();
+        ctx.moveTo(boltStartX, trackY);
+        for (let s = 1; s <= segments; s++) {
+          const sx = boltStartX + s * segW;
+          const jitter = (s < segments)
+            ? (Math.sin(boltNow * 18 + s * 3.7) * 6 + Math.cos(boltNow * 29 + s * 5.1) * 3)
+            : 0; // last point lands on center
+          ctx.lineTo(sx, trackY + jitter);
+        }
+        // Main bolt stroke
+        ctx.strokeStyle = colors.primary;
+        ctx.lineWidth = 2.5;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = colors.primary;
+        ctx.stroke();
+        // Bright inner core
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1;
+        ctx.shadowBlur = 6;
+        ctx.shadowColor = '#ffffff';
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+        ctx.restore();
+
+        // Leading edge flash
+        const flicker = 0.7 + 0.3 * Math.sin(boltNow * 40);
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(sweepX, trackY, 5 * flicker, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = colors.primary;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        // Spark particles flying off the leading edge
+        for (let sp = 0; sp < 4; sp++) {
+          const age = ((boltNow * 6 + sp * 1.7) % 1);
+          const sparkX = sweepX + age * 18 * (sp % 2 === 0 ? 1 : -0.5);
+          const sparkY = trackY + Math.sin(boltNow * 25 + sp * 4) * (8 + age * 6);
+          const sparkAlpha = 1 - age;
+          ctx.globalAlpha = sparkAlpha * flicker;
+          ctx.beginPath();
+          ctx.arc(sparkX, sparkY, 1.5 - age, 0, Math.PI * 2);
+          ctx.fillStyle = colors.primary;
+          ctx.shadowBlur = 4;
+          ctx.shadowColor = colors.primary;
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+        ctx.shadowBlur = 0;
+        ctx.restore();
+      } else if (t >= 1.0) {
+        // Final state — settled energy trail
         ctx.fillStyle = colors.primary + '12';
         ctx.beginPath();
-        ctx.roundRect(padLeft, trackY - trackH / 2, sweepX - padLeft, trackH, [8, 0, 0, 8]);
+        ctx.roundRect(padLeft, trackY - trackH / 2, trackW, trackH, 8);
         ctx.fill();
       }
 

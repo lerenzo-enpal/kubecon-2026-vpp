@@ -99,7 +99,7 @@ function TargetingReticle({ visible }) {
   if (!visible) return null;
   return (
     <div style={{
-      position: 'absolute', top: '50%', left: '50%',
+      position: 'absolute', top: 'calc(50% - 3px)', left: 'calc(50% + 195px)',
       transform: 'translate(-50%, -50%)',
       width: 120, height: 120,
       pointerEvents: 'none', zIndex: 12,
@@ -236,6 +236,16 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
   const isZoomed = (viewState.zoom || 8.5) > 13;
   const showReticle = isZoomed && currentStep.showHomeDetail;
 
+  // Delayed flag for home detail — avoids flash during zoom animation
+  const [homeDetailReady, setHomeDetailReady] = useState(false);
+  useEffect(() => {
+    if (currentStep.showHomeDetail) {
+      const t = setTimeout(() => setHomeDetailReady(true), 1200);
+      return () => clearTimeout(t);
+    }
+    setHomeDetailReady(false);
+  }, [currentStep.showHomeDetail]);
+
   // ── Home dots data ──
   const homeDots = useMemo(() => {
     const phaseColor = PHASE_COLORS[homePhase] || PHASE_COLORS.standby;
@@ -369,7 +379,7 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
           color: currentStep.highlightColor, letterSpacing: '0.08em',
           marginBottom: 6,
         }}>
-          {currentStep.highlight}
+          {scenario === 'summer' ? 'Energy Arbitrage + Peak Shaving' : currentStep.highlight}
         </div>
         {/* Narration text */}
         <div style={{
@@ -431,17 +441,17 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
       {/* ── Center: Targeting reticle (during zoom) ── */}
       <TargetingReticle visible={showReticle} />
 
-      {/* ── Center-right: Home detail overlay (during zoom steps) ── */}
+      {/* ── Right: Home detail overlay (during zoom steps) ── */}
       {currentStep.showHomeDetail && currentStep.homeDetail && (
         <div style={{
           position: 'absolute',
-          top: '50%', right: 20,
-          transform: 'translateY(-50%)',
+          top: 80, bottom: 160, left: 10,
+          display: 'flex', alignItems: 'center',
           zIndex: 14,
-          opacity: isZoomed ? 1 : 0,
+          opacity: homeDetailReady ? 1 : 0,
           transition: 'opacity 0.8s ease',
         }}>
-          <HomeDetailView homeDetail={currentStep.homeDetail} />
+          <HomeDetailView homeDetail={currentStep.homeDetail} style={{ transform: 'scale(1.35)', transformOrigin: 'left center' }} />
         </div>
       )}
 

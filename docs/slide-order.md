@@ -53,7 +53,7 @@
     > *Speaker: "If you squint, a VPP looks a lot like Kubernetes. The grid operator is the control plane. Homes are nodes. Devices are pods. Flexa is the scheduler."*
 23. **How a VPP Responds to Grid Events** -- FCR, aFRR, peak shaving, energy arbitrage + response timeline + costs
     > *Speaker: "Different timescales, different strategies. FCR in under 30 seconds — blackout cost EUR 1-5B per event. Arbitrage scheduled day-ahead — avoiding EUR 554M/yr in curtailment. And look at the response time — a battery responds in 140ms. Coal takes 2 hours."*
-24. **Summer Arbitrage** -- Full-screen Berlin map HUD, 6-step summer scenario [VPPScenarioSlide]
+24. **Energy Arbitrage + Peak Shaving** -- Full-screen Berlin map HUD, 6-step summer scenario [VPPScenarioSlide]
     > *Speaker: Walk through each step. "Sunny July. 8,200 homes. Midday — prices collapse. Flexa holds batteries empty on purpose. Prices go negative — charge everything. Evening — discharge at peak. Revenue earned. Grid peaks softened."*
 25. **SA Virtual Power Plant, 2019** -- Full-screen South Australia VPP map, 1,100 homes [SAMapHUD]
     > *Speaker: "South Australia proved this works. 1,100 homes with Tesla Powerwalls — the world's first proof that distributed batteries can stabilize a grid at scale."*

@@ -390,13 +390,13 @@ export default function Presentation() {
       </Slide>
 
       {/* 20: What Is a Virtual Power Plant? */}
-      <Slide backgroundColor={bg} padding="20px 40px">
-        <div className="flex flex-col h-full">
-          <H>What Is a Virtual Power Plant?</H>
-          <P size="20px">From market signal to battery response — the command flow through our VPP architecture.</P>
-          <div className="flex-1 flex justify-center items-center">
-            <VPPArchitecture width={1272} height={648} />
+      <Slide backgroundColor={bg} padding="0">
+        <div className="relative w-full h-full">
+          <div className="absolute inset-0 flex flex-col pt-5 px-10 pointer-events-none z-10">
+            <H>What Is a Virtual Power Plant?</H>
+            <P size="20px">From market signal to battery response — the command flow through our VPP architecture.</P>
           </div>
+          <VPPArchitecture />
         </div>
       </Slide>
 
@@ -529,7 +529,7 @@ export default function Presentation() {
         </div>
       </Slide>
 
-      {/* 24: Summer Arbitrage */}
+      {/* 24: Energy Arbitrage + Peak Shaving */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           <VPPScenarioSlide scenario="summer" />
@@ -784,7 +784,11 @@ export default function Presentation() {
               <div>Databricks — Streaming for Energy (2024)</div>
               <div>Enpal — Internal Architecture Documentation</div>
               <div>Entrix/Enpal — Flexa VPP Controller Design</div>
+              <div>Flexa — VPP Controller (Joint Venture Enpal + Entrix)</div>
             </div>
+          </div>
+          <div className="mt-auto pt-3" style={{ fontSize: 12, fontFamily: '"JetBrains Mono", monospace', color: colors.textDim }}>
+            Sources &amp; architecture docs: <span style={{ color: colors.primary }}>github.com/kubekon/kubecon-2026-vpp/tree/main/docs</span>
           </div>
         </div>
       </Slide>
