@@ -258,7 +258,7 @@ export function versionD() {
         </div>
       </div>
       <Notes>
-        "This is the largest machine ever built. Let that sink in.
+        [MARIO] "This is the largest machine ever built. Let that sink in.
         Zero downtime — it has never been turned off. No maintenance window.
         No 'we'll fix it in staging.' It's production, all the time, forever.
         And look at the scale: VW Wolfsburg, the world's biggest factory,

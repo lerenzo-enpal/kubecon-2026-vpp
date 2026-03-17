@@ -164,7 +164,7 @@ export default function Presentation() {
           <P size="20px" center>The world's largest machine.</P>
         </div>
         <Notes>
-          "The world's largest machine" — this isn't hyperbole, we're going to prove it.
+          [LERENZO] "The world's largest machine" — this isn't hyperbole, we're going to prove it.
         </Notes>
       </Slide>
 
@@ -175,7 +175,7 @@ export default function Presentation() {
           <TexasMapHUD width="100%" height="100%" variant="hud" />
         </div>
         <Notes>
-          February 2021 — a polar vortex hits Texas.
+          [LERENZO] February 2021 — a polar vortex hits Texas.
           Watch the grid go dark, county by county.
           This is real data — 4.5 million homes lost power.
         </Notes>
@@ -209,7 +209,7 @@ export default function Presentation() {
           </div>
         </div>
         <Notes>
-          The Texas grid was 4 minutes and 37 seconds from a total cold-start collapse.
+          [LERENZO] The Texas grid was 4 minutes and 37 seconds from a total cold-start collapse.
           A cold restart takes weeks, maybe months — you're rebuilding the grid from scratch.
           246 people died. $195 billion in damage.
           Wholesale prices went from $50 to $9,000/MWh overnight — 180x.
@@ -226,7 +226,7 @@ export default function Presentation() {
           <EUGridHUD width="100%" height="100%" />
         </div>
         <Notes>
-          This is the Continental European grid — real-time visualization.
+          [MARIO] This is the Continental European grid — real-time visualization.
           400 million consumers. 1,100 GW of installed capacity.
           Every node is synchronized. One heartbeat: 50 Hz.
         </Notes>
@@ -247,7 +247,7 @@ export default function Presentation() {
           </div>
         </div>
         <Notes>
-          The grid maintains exactly 50 Hz — supply and demand balanced every single second.
+          [MARIO] The grid maintains exactly 50 Hz — supply and demand balanced every single second.
           The +/-0.2 Hz band is everything — cross it and automated systems start disconnecting.
           Click scenarios to simulate events:
           Generator trip: 800 MW offline, watch reserves catch it — recovery in ~12 minutes.
@@ -268,7 +268,7 @@ export default function Presentation() {
           <GridFlowDemo width="100%" />
         </div>
         <Notes>
-          Power Plants to Transmission to Distribution to Homes.
+          [MARIO] Power Plants to Transmission to Distribution to Homes.
           One direction. Few large producers. Passive consumers.
           Designed in the 1950s. No flexibility built in.
         </Notes>
@@ -298,7 +298,7 @@ export default function Presentation() {
           <P size="20px" style={{ fontStyle: 'italic' }}>"261 GW of capacity that runs 5% of the year. Rolling blackouts as policy. Clean energy thrown away. This is the toolkit we inherited."</P>
         </div>
         <Notes>
-          How did we manage this for 70 years?
+          [MARIO] How did we manage this for 70 years?
           Peaker plants: 261 GW sitting idle 95% of the year, firing up at 2-5x cost.
           Spinning reserves: generators running at partial load 24/7 "just in case" — burning fuel to produce nothing.
           Load shedding: deliberate blackouts as policy. Texas shed 20 GW — $52.6 billion in excess charges in 5 days.
@@ -334,7 +334,7 @@ export default function Presentation() {
           </div>
         </div>
         <Notes>
-          The gas-electric death spiral — a cascading feedback loop.
+          [LERENZO] The gas-electric death spiral — a cascading feedback loop.
           Cold hits, generators freeze, load shedding, cuts power to gas pipelines, more generators fail, more load shedding.
           Steps 4-6 are the death spiral — it accelerates.
           52,000 MW offline out of 107,000. ERCOT is isolated — no interconnection to call for help.
@@ -385,7 +385,7 @@ export default function Presentation() {
         </div>
         </div>
         <Notes>
-          This isn't a Texas problem — it's a grid architecture problem.
+          [LERENZO] This isn't a Texas problem — it's a grid architecture problem.
           10 major failures in 23 years across 3 continents.
           2003 Northeast US: 55 million people, $6B. 2016 South Australia: entire state.
           Spain/Portugal 2025: 60 million people. Berlin arson 2025: three attacks, 45K+ homes.
@@ -408,7 +408,7 @@ export default function Presentation() {
           </div>
         </div>
         <Notes>
-          Every one of these failures shares one root cause: no flexibility.
+          [LERENZO] Every one of these failures shares one root cause: no flexibility.
           Pause. Let that land.
           "Now imagine adding the most variable energy source in history."
         </Notes>
@@ -424,7 +424,7 @@ export default function Presentation() {
           <P size="20px" center>Inevitable, amazing — and a whole new kind of problem</P>
         </div>
         <Notes>
-          "Inevitable, amazing — and a whole new kind of problem."
+          [MARIO] "Inevitable, amazing — and a whole new kind of problem."
         </Notes>
       </Slide>
 
@@ -438,7 +438,7 @@ export default function Presentation() {
           </div>
         </div>
         <Notes>
-          Germany's renewable share — this is exponential growth.
+          [MARIO] Germany's renewable share — this is exponential growth.
           Already over 50% of electricity generation.
           This is not slowing down. Every country is on this curve.
         </Notes>
@@ -454,7 +454,7 @@ export default function Presentation() {
           </div>
         </div>
         <Notes>
-          Solar floods the grid at midday — prices collapse.
+          [MARIO] Solar floods the grid at midday — prices collapse.
           Sunset: demand ramps steeply, solar disappears.
           This "belly" gets deeper every year as more solar comes online.
           The grid needs ramping capacity it doesn't have.
@@ -472,7 +472,7 @@ export default function Presentation() {
           <div style={{ fontSize: 12, color: colors.textDim, fontFamily: '"Inter", sans-serif', textAlign: 'left', marginTop: 0 }}>Germany — Bundesnetzagentur 2024 data. North-south transmission bottlenecks (SuedLink delayed to 2028)</div>
         </div>
         <Notes>
-          Germany paid EUR 554 million to generators to NOT produce electricity.
+          [MARIO] Germany paid EUR 554 million to generators to NOT produce electricity.
           9.3 TWh curtailed — enough to power 2.7 million homes.
           49% of congestion is at the local distribution level — rooftop solar overwhelming neighborhood transformers.
           New long-distance cables don't fix this. You need local flexibility.
@@ -492,7 +492,7 @@ export default function Presentation() {
           <ConsumerIcons />
         </div>
         <Notes>
-          Your roof becomes a power plant. Your garage becomes a grid asset.
+          [MARIO] Your roof becomes a power plant. Your garage becomes a grid asset.
           Your house becomes a node in the largest distributed system ever built.
           But coordinating millions of these devices? That's a distributed systems problem.
           Transition: that's where we come in.
@@ -507,7 +507,7 @@ export default function Presentation() {
           <P size="20px" center>Software that turns distributed energy into grid infrastructure</P>
         </div>
         <Notes>
-          "Software that turns distributed energy into grid infrastructure."
+          [LERENZO] "Software that turns distributed energy into grid infrastructure."
         </Notes>
       </Slide>
 
@@ -521,7 +521,7 @@ export default function Presentation() {
           <VPPArchitecture />
         </div>
         <Notes>
-          Left: devices — solar panels, batteries, EV chargers, heat pumps.
+          [LERENZO] Left: devices — solar panels, batteries, EV chargers, heat pumps.
           Center: cloud platform — Kubernetes + Dapr, event-driven control.
           Right: services — frequency regulation, peak shaving, energy arbitrage, demand response.
           Energy market sends request, Market trader (Entrix), VPP Controller on Kubernetes.
@@ -540,7 +540,7 @@ export default function Presentation() {
           </div>
         </div>
         <Notes>
-          Now let's zoom in — this is the internal data flow.
+          [LERENZO] Now let's zoom in — this is the internal data flow.
           Each home has devices — heat pump, PV, battery — connected to an IoT hub.
           The IoT hub connects to our cloud via EMQX, our MQTT broker.
           We ingest both static config data and measurement telemetry every 20 seconds, all aligned in Protobuf schemas.
@@ -605,7 +605,7 @@ export default function Presentation() {
           <P size="20px" center style={{ fontFamily: '"JetBrains Mono"' }}>Frequency = SLO &bull; Cascade = failure propagation &bull; Batteries = autoscaling</P>
         </div>
         <Notes>
-          Traditional grid = monolithic. VPP = microservices.
+          [LERENZO] Traditional grid = monolithic. VPP = microservices.
           Draw the parallel for this audience:
           Frequency = your SLO. Cascade = failure propagation. Batteries = autoscaling.
           You already think in these terms every day.
@@ -674,7 +674,7 @@ export default function Presentation() {
           </div>
         </div>
         <Notes>
-          Different timescales, different strategies.
+          [LERENZO] Different timescales, different strategies.
           FCR: under 30 seconds — blackout cost EUR 1-5B per event.
           aFRR: under 5 minutes — gas peaker alternative at EUR 150-300/MWh.
           Peak Shaving: 1-4 hours — grid upgrade deferred: EUR 35B (RMI est.).
@@ -690,7 +690,7 @@ export default function Presentation() {
           <VPPScenarioSlide scenario="summer" />
         </div>
         <Notes>
-          Full-screen Berlin map — walk through each step.
+          [MARIO] Full-screen Berlin map — walk through each step.
           Sunny July morning. 53,000 homes generating solar.
           Midday — prices collapse. Flexa holds batteries empty on purpose.
           Prices go negative — charge everything. Solar curtailed, batteries and EVs charging from the grid at negative prices, heat pumps pre-heating homes to bank cheap energy as thermal mass.
@@ -705,7 +705,7 @@ export default function Presentation() {
           <SAMapHUD width="100%" height="100%" variant="vpp" />
         </div>
         <Notes>
-          South Australia proved this works.
+          [MARIO] South Australia proved this works.
           1,100 homes with Tesla Powerwalls.
           The world's first proof that distributed batteries can stabilize a grid at scale.
         </Notes>
@@ -746,7 +746,7 @@ export default function Presentation() {
           </div>
         </div>
         <Notes>
-          Side by side comparison — Without VPP vs. With VPP.
+          [MARIO] Side by side comparison — Without VPP vs. With VPP.
           Without: cascade failures, gas peakers at EUR 150-300/MWh, EUR 554M/yr curtailment, EUR 35B in grid upgrades, 3.4 Mt avoidable CO2.
           With: stabilized in 200ms, batteries at EUR 30-60/MWh, revenue from negative prices, 60% deferred infrastructure, near-zero curtailment emissions.
           The cheapest megawatt is the one you never have to generate.
@@ -773,7 +773,7 @@ export default function Presentation() {
           </div>
         </div>
         <Notes>
-          Remember those 4 minutes and 37 seconds?
+          [LERENZO] Remember those 4 minutes and 37 seconds?
           With 10 GW of distributed batteries responding in 140 milliseconds, there is no cascade.
           The frequency never drops. The gas plants never need to save you.
           Because 1 million homes already did.
@@ -807,7 +807,7 @@ export default function Presentation() {
           </div>
         </div>
         <Notes>
-          Thank you — Enpal, building Europe's largest virtual power plant.
+          [LERENZO] Thank you — Enpal, building Europe's largest virtual power plant.
           Questions? Find us at the booth / connect after.
         </Notes>
       </Slide>
