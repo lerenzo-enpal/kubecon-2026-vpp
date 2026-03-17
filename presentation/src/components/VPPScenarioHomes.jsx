@@ -5,7 +5,7 @@ import { colors } from '../theme';
 // Extended with view (DeckGL camera), duckHighlightHour, duckBlend, homePhase, showHomeDetail
 const SUMMER_STEPS = [
   {
-    narration: 'Sunny July morning. 8,200 homes generating solar.',
+    narration: 'Sunny July morning. 53,000 homes generating solar.',
     highlight: 'Energy Arbitrage',
     highlightColor: colors.success,
     sun: { angle: 0.85, brightness: 1.0 },

@@ -393,7 +393,7 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
           marginTop: 6, fontSize: 10, fontFamily: '"JetBrains Mono"',
           color: colors.textDim,
         }}>
-          {scenario === 'summer' ? '8,200 HOMES CONNECTED' : '12,000 HOMES CONNECTED'}
+          {scenario === 'summer' ? '53,000 HOMES CONNECTED' : '12,000 HOMES CONNECTED'}
           {' -- BERLIN / BRANDENBURG'}
         </div>
       </div>
