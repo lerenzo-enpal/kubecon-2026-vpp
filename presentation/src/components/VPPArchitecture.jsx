@@ -272,8 +272,13 @@ export default function VPPArchitecture() {
       const sunHalf = solarNoon - 6.5; // hours from rise to noon
       const sunArc = Math.max(0, 1 - Math.abs(hour - solarNoon) / sunHalf);
 
-      // Moon alpha (visibility) — inverse of sun
-      const moonAlpha = Math.max(0, 1 - sunAlpha * 2.5);
+      // Moon alpha (visibility) — smooth fade in/out tied to hour
+      // Fades in 19:00–20:30, full 20:30–05:00, fades out 05:00–06:30
+      const moonAlpha = hour < 5.0 ? 1
+        : hour < 6.5 ? 1 - smoothstep(5.0, 6.5, hour)
+        : hour < 19.0 ? 0
+        : hour < 20.5 ? smoothstep(19.0, 20.5, hour)
+        : 1;
       // Moon arc — slow arc peaking at midnight (hour 0/24), independent of alpha
       // Moon is "up" from ~19:00 to ~07:00 (12h window centered on midnight)
       const moonNoon = 0; // midnight
