@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KubeCon 2026 VPP -- Style Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* ── Core Palette (from theme.js) ── */
+    --bg:            #0a0e17;
+    --bg-alt:        #111827;
+    --surface:       #1a2236;
+    --surface-light: #243049;
+    --primary:       #22d3ee;   /* cyan  */
+    --secondary:     #a78bfa;   /* purple */
+    --accent:        #f59e0b;   /* amber  */
+    --danger:        #ef4444;   /* red    */
+    --success:       #10b981;   /* green  */
+    --text:          #f1f5f9;
+    --text-muted:    #94a3b8;
+    --text-dim:      #64748b;
+
+    /* ── Semantic Aliases ── */
+    --grid:    var(--primary);
+    --battery: var(--success);
+    --solar:   var(--accent);
+    --warning: var(--danger);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    padding: 60px 80px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* ── Layout ── */
+  .header { margin-bottom: 60px; border-bottom: 1px solid #243049; padding-bottom: 40px; }
+  .header h1 {
+    font-size: 48px; font-weight: 800; color: var(--primary); line-height: 1.1;
+    text-shadow: 0 0 40px rgba(34,211,238,0.35);
+  }
+  .header p { color: var(--text-muted); font-size: 18px; margin-top: 12px; }
+
+  section { margin-bottom: 72px; }
+  section > h2 {
+    font-size: 28px; font-weight: 800; color: var(--text); margin-bottom: 8px;
+    border-left: 3px solid var(--primary); padding-left: 16px;
+  }
+  section > .desc {
+    color: var(--text-dim); font-size: 14px; margin-bottom: 28px; padding-left: 19px;
+  }
+  h3 {
+    font-size: 16px; font-weight: 700; color: var(--text-muted); margin-bottom: 12px;
+    font-family: 'JetBrains Mono', monospace; text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .subsection { margin-bottom: 40px; }
+
+  /* ── Grids ── */
+  .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+  .swatch {
+    background: var(--surface); border: 1px solid var(--surface-light); border-radius: 8px;
+    padding: 0; overflow: hidden;
+  }
+  .swatch-color { height: 56px; }
+  .swatch-info { padding: 10px 12px; }
+  .swatch-name { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; color: var(--text); }
+  .swatch-hex  { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+  .swatch-use  { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+
+  /* ── Tables ── */
+  table {
+    width: 100%; border-collapse: collapse; font-size: 14px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  th {
+    text-align: left; padding: 10px 14px; color: var(--text-muted);
+    border-bottom: 1px solid var(--surface-light); font-weight: 600; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  td {
+    padding: 8px 14px; border-bottom: 1px solid #1a223640;
+    color: var(--text-dim); vertical-align: top;
+  }
+  tr:hover td { background: rgba(34,211,238,0.03); }
+  td code {
+    background: var(--surface); padding: 2px 6px; border-radius: 4px;
+    font-size: 12px; color: var(--primary); border: 1px solid var(--surface-light);
+  }
+  td .current { color: var(--accent); }
+  td .recommended { color: var(--success); font-weight: 600; }
+
+  /* ── Type specimens ── */
+  .type-specimen {
+    background: var(--surface); border: 1px solid var(--surface-light);
+    border-radius: 8px; padding: 20px 24px; margin-bottom: 10px;
+  }
+  .type-meta {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--text-dim); margin-top: 8px;
+  }
+
+  /* ── Opacity swatches ── */
+  .opacity-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; }
+  .opacity-swatch {
+    text-align: center; padding: 12px 8px;
+    border-radius: 6px; border: 1px solid var(--surface-light);
+    background: var(--surface);
+  }
+  .opacity-bar { height: 24px; border-radius: 4px; margin-bottom: 8px; }
+  .opacity-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim); }
+  .opacity-pct   { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim); margin-top: 2px; }
+
+  /* ── Card patterns ── */
+  .card-demo {
+    display: inline-flex; gap: 16px; flex-wrap: wrap;
+  }
+  .demo-card {
+    border-radius: 10px; padding: 18px 20px; text-align: center; min-width: 150px;
+    background: var(--surface); border: 1px solid var(--surface-light);
+  }
+  .demo-badge {
+    display: inline-block; padding: 3px 10px; border-radius: 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 600;
+  }
+  .demo-stat-n {
+    font-family: 'JetBrains Mono', monospace; font-weight: 800;
+    font-size: 28px;
+  }
+  .demo-stat-l {
+    font-family: 'Inter', sans-serif; font-size: 14px; color: var(--text-muted);
+    margin-top: 4px; letter-spacing: 0.02em;
+  }
+
+  /* ── Glow shadow demo ── */
+  .glow-demo {
+    display: flex; gap: 24px; flex-wrap: wrap; align-items: center;
+  }
+  .glow-box {
+    padding: 16px 24px; border-radius: 8px; text-align: center;
+    font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 16px;
+    background: var(--surface); border: 1px solid var(--surface-light);
+  }
+
+  /* ── Inconsistency callouts ── */
+  .callout {
+    background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.2);
+    border-radius: 8px; padding: 16px 20px; margin-bottom: 16px;
+  }
+  .callout-title {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700;
+    color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+  .callout p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+  .callout.green {
+    background: rgba(16,185,129,0.06); border-color: rgba(16,185,129,0.2);
+  }
+  .callout.green .callout-title { color: var(--success); }
+
+  /* ── Inline code ── */
+  code {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.9em;
+  }
+
+  /* ── TOC ── */
+  .toc { margin-bottom: 48px; }
+  .toc a {
+    color: var(--primary); text-decoration: none; font-size: 15px;
+    display: block; padding: 4px 0;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .toc a:hover { text-decoration: underline; }
+
+  /* ── Horizontal rule ── */
+  hr { border: none; border-top: 1px solid var(--surface-light); margin: 48px 0; }
+
+  /* ── Flex helpers ── */
+  .flex { display: flex; }
+  .flex-wrap { flex-wrap: wrap; }
+  .gap-8 { gap: 8px; }
+  .gap-12 { gap: 12px; }
+  .gap-16 { gap: 16px; }
+  .gap-24 { gap: 24px; }
+  .mt-16 { margin-top: 16px; }
+  .mt-24 { margin-top: 24px; }
+  .mb-8  { margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>KubeCon 2026 VPP</h1>
+  <p>Presentation Style Guide -- Visual Standards &amp; Conventions</p>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<nav class="toc">
+  <h3>Contents</h3>
+  <a href="#colors">1. Color Palette</a>
+  <a href="#typography">2. Typography</a>
+  <a href="#opacity">3. Opacity System</a>
+  <a href="#canvas-type">4. Canvas Typography Scale</a>
+  <a href="#components">5. Component Patterns</a>
+  <a href="#shadows">6. Shadows &amp; Glow</a>
+  <a href="#spacing">7. Spacing &amp; Layout</a>
+  <a href="#canvas-conventions">8. Canvas Drawing Conventions</a>
+  <a href="#inconsistencies">9. Current Inconsistencies</a>
+  <a href="#standards">10. Proposed Standards</a>
+</nav>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<section id="colors">
+  <h2>Color Palette</h2>
+  <div class="desc">Defined in <code>presentation/src/theme.js</code>. Use these tokens -- never hardcode colors (except Databricks orange <code>#FF3621</code> / <code>#E25A1C</code>).</div>
+
+  <div class="subsection">
+    <h3>Core Colors</h3>
+    <div class="color-grid">
+      <div class="swatch"><div class="swatch-color" style="background:#0a0e17;border-bottom:1px solid #243049"></div><div class="swatch-info"><div class="swatch-name">bg</div><div class="swatch-hex">#0a0e17</div><div class="swatch-use">Slide background</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#111827"></div><div class="swatch-info"><div class="swatch-name">bgAlt</div><div class="swatch-hex">#111827</div><div class="swatch-use">Alternate background</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#1a2236"></div><div class="swatch-info"><div class="swatch-name">surface</div><div class="swatch-hex">#1a2236</div><div class="swatch-use">Cards, panels, boxes</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#243049"></div><div class="swatch-info"><div class="swatch-name">surfaceLight</div><div class="swatch-hex">#243049</div><div class="swatch-use">Borders, dividers</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#22d3ee"></div><div class="swatch-info"><div class="swatch-name">primary</div><div class="swatch-hex">#22d3ee</div><div class="swatch-use">Headings, links, nominal state</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#a78bfa"></div><div class="swatch-info"><div class="swatch-name">secondary</div><div class="swatch-hex">#a78bfa</div><div class="swatch-use">Hydro/biomass, accents</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#f59e0b"></div><div class="swatch-info"><div class="swatch-name">accent</div><div class="swatch-hex">#f59e0b</div><div class="swatch-use">Solar, amber alerts, warnings</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#ef4444"></div><div class="swatch-info"><div class="swatch-name">danger</div><div class="swatch-hex">#ef4444</div><div class="swatch-use">Failures, critical alerts</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#10b981"></div><div class="swatch-info"><div class="swatch-name">success</div><div class="swatch-hex">#10b981</div><div class="swatch-use">VPP response, telemetry, green</div></div></div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>Text Colors</h3>
+    <div class="color-grid">
+      <div class="swatch"><div class="swatch-color" style="background:#f1f5f9"></div><div class="swatch-info"><div class="swatch-name">text</div><div class="swatch-hex">#f1f5f9</div><div class="swatch-use">Primary text, headings</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#94a3b8"></div><div class="swatch-info"><div class="swatch-name">textMuted</div><div class="swatch-hex">#94a3b8</div><div class="swatch-use">Body text, descriptions</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#64748b"></div><div class="swatch-info"><div class="swatch-name">textDim</div><div class="swatch-hex">#64748b</div><div class="swatch-use">Tertiary text, axis labels, captions</div></div></div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>Semantic Aliases</h3>
+    <table>
+      <tr><th>Alias</th><th>Maps To</th><th>Usage</th></tr>
+      <tr><td><code>grid</code></td><td>primary (#22d3ee)</td><td>Grid infrastructure lines</td></tr>
+      <tr><td><code>battery</code></td><td>success (#10b981)</td><td>Battery charge/discharge</td></tr>
+      <tr><td><code>solar</code></td><td>accent (#f59e0b)</td><td>Solar generation, PV panels</td></tr>
+      <tr><td><code>warning</code></td><td>danger (#ef4444)</td><td>Same as danger</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<section id="typography">
+  <h2>Typography</h2>
+  <div class="desc">Two font families. Inter for display/body text. JetBrains Mono for data, metrics, code, and canvas elements.</div>
+
+  <div class="subsection">
+    <h3>Font Families</h3>
+    <table>
+      <tr><th>Family</th><th>Stack</th><th>Usage</th></tr>
+      <tr><td style="font-family:'Inter',sans-serif;color:var(--text)">Inter</td><td><code>"Inter", system-ui, sans-serif</code></td><td>Slide headings, body text, descriptions, legends</td></tr>
+      <tr><td style="font-family:'JetBrains Mono',monospace;color:var(--text)">JetBrains Mono</td><td><code>"JetBrains Mono", monospace</code></td><td>Data values, axis labels, canvas text, badges, code</td></tr>
+    </table>
+  </div>
+
+  <div class="subsection">
+    <h3>Slide Typography Scale (JSX / H, P components)</h3>
+
+    <div class="type-specimen">
+      <div style="font-family:'Inter',sans-serif;font-size:56px;font-weight:800;color:var(--primary);text-shadow:0 0 40px rgba(34,211,238,0.35);line-height:1.15">
+        Presentation Title
+      </div>
+      <div class="type-meta">56px / 800 / Inter / primary / glow shadow -- Title slide only</div>
+    </div>
+
+    <div class="type-specimen">
+      <div style="font-family:'Inter',sans-serif;font-size:50px;font-weight:800;color:var(--accent);text-shadow:0 0 40px rgba(245,158,11,0.35);line-height:1.15">
+        Section Divider
+      </div>
+      <div class="type-meta">50-54px / 800 / Inter / varies / glow shadow -- Part dividers</div>
+    </div>
+
+    <div class="type-specimen">
+      <div style="font-family:'Inter',sans-serif;font-size:40px;font-weight:800;color:var(--primary);text-shadow:0 0 40px rgba(34,211,238,0.35);line-height:1.15">
+        Slide Heading
+      </div>
+      <div class="type-meta">40px / 800 / Inter / primary (default) / glow shadow -- H component default</div>
+    </div>
+
+    <div class="type-specimen">
+      <div style="font-family:'Inter',sans-serif;font-size:20px;font-weight:400;color:var(--text-muted);line-height:1.5">
+        Body paragraph text for slide descriptions, subtitles, and explanatory content.
+      </div>
+      <div class="type-meta">20px / 400 / Inter / textMuted -- P component default</div>
+    </div>
+
+    <div class="type-specimen">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;color:var(--primary)">
+        KubeCon + CloudNativeCon 2026
+      </div>
+      <div class="type-meta">20px / 600 / JetBrains Mono / primary -- Badge/section labels, uppercase + tracking</div>
+    </div>
+
+    <div class="type-specimen">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:800;color:var(--danger);text-shadow:0 0 20px rgba(239,68,68,0.25)">
+        52 GW
+      </div>
+      <div class="type-meta">28px / 800 / JetBrains Mono / semantic color / glow -- StatBox values</div>
+    </div>
+
+    <div class="type-specimen">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:400;color:var(--text-dim);line-height:2.2">
+        ERCOT -- Final Report on Feb 2021 Winter Storm (2021)
+      </div>
+      <div class="type-meta">14px / 400 / JetBrains Mono / textDim -- References slide</div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>Full Type Scale (All Sizes in Use)</h3>
+    <table>
+      <tr><th>Size</th><th>Weight</th><th>Family</th><th>Where Used</th></tr>
+      <tr><td>58px</td><td>800</td><td>Inter</td><td>Thank You slide title</td></tr>
+      <tr><td>56px</td><td>800</td><td>Inter</td><td>Presentation title</td></tr>
+      <tr><td>54px</td><td>800</td><td>Inter</td><td>Section dividers (large)</td></tr>
+      <tr><td>50px</td><td>800</td><td>Inter</td><td>Section dividers</td></tr>
+      <tr><td>40px</td><td>800</td><td>Inter</td><td>Slide headings (H default)</td></tr>
+      <tr><td>36px</td><td>800</td><td>Inter</td><td>Smaller slide headings</td></tr>
+      <tr><td>28px</td><td>800</td><td>JetBrains Mono</td><td>StatBox values, large metrics</td></tr>
+      <tr><td>24px</td><td>600-700</td><td>Inter / JB Mono</td><td>Agenda items, large callouts</td></tr>
+      <tr><td>22px</td><td>600</td><td>Inter</td><td>Slide subtitles</td></tr>
+      <tr><td>20px</td><td>400-600</td><td>Inter / JB Mono</td><td>Body text (P default), labels, badges</td></tr>
+      <tr><td>18px</td><td>400</td><td>Inter</td><td>Smaller body, callouts</td></tr>
+      <tr><td>15px</td><td>600</td><td>JetBrains Mono</td><td>Reference category headers</td></tr>
+      <tr><td>14px</td><td>400</td><td>JetBrains Mono</td><td>References, fine print</td></tr>
+      <tr><td>13px</td><td>700</td><td>JetBrains Mono</td><td>HUD panel headers</td></tr>
+      <tr><td>12px</td><td>400</td><td>JetBrains Mono</td><td>Footer text, smallest slide text</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<section id="opacity">
+  <h2>Opacity System</h2>
+  <div class="desc">Opacity is applied via 2-digit hex suffixes appended to color strings: <code>colors.primary + '40'</code> = 25% opacity. This is the dominant pattern across all canvas and inline styles.</div>
+
+  <div class="subsection">
+    <h3>Standard Opacity Tiers</h3>
+    <div class="opacity-grid">
+      <div class="opacity-swatch"><div class="opacity-bar" style="background:#22d3ee06"></div><div class="opacity-label"><code>06</code></div><div class="opacity-pct">2.4%</div></div>
+      <div class="opacity-swatch"><div class="opacity-bar" style="background:#22d3ee0a"></div><div class="opacity-label"><code>0a</code></div><div class="opacity-pct">3.9%</div></div>
+      <div class="opacity-swatch"><div class="opacity-bar" style="background:#22d3ee10"></div><div class="opacity-label"><code>10</code></div><div class="opacity-pct">6.3%</div></div>
+      <div class="opacity-swatch"><div class="opacity-bar" style="background:#22d3ee15"></div><div class="opacity-label"><code>15</code></div><div class="opacity-pct">8.2%</div></div>
+      <div class="opacity-swatch"><div class="opacity-bar" style="background:#22d3ee18"></div><div class="opacity-label"><code>18</code></div><div class="opacity-pct">9.4%</div></div>
+      <div class="opacity-swatch"><div class="opacity-bar" style="background:#22d3ee20"></div><div class="opacity-label"><code>20</code></div><div class="opacity-pct">12.5%</div></div>
+      <div class="opacity-swatch"><div class="opacity-bar" style="background:#22d3ee25"></div><div class="opacity-label"><code>25</code></div><div class="opacity-pct">14.5%</div></div>
+      <div class="opacity-swatch"><div class="opacity-bar" style="background:#22d3ee30"></div><div class="opacity-label"><code>30</code></div><div class="opacity-pct">18.8%</div></div>
+      <div class="opacity-swatch"><div class="opacity-bar" style="background:#22d3ee40"></div><div class="opacity-label"><code>40</code></div><div class="opacity-pct">25.1%</div></div>
+      <div class="opacity-swatch"><div class="opacity-bar" style="background:#22d3ee50"></div><div class="opacity-label"><code>50</code></div><div class="opacity-pct">31.4%</div></div>
+      <div class="opacity-swatch"><div class="opacity-bar" style="background:#22d3ee60"></div><div class="opacity-label"><code>60</code></div><div class="opacity-pct">37.6%</div></div>
+      <div class="opacity-swatch"><div class="opacity-bar" style="background:#22d3ee70"></div><div class="opacity-label"><code>70</code></div><div class="opacity-pct">43.9%</div></div>
+      <div class="opacity-swatch"><div class="opacity-bar" style="background:#22d3ee80"></div><div class="opacity-label"><code>80</code></div><div class="opacity-pct">50.2%</div></div>
+      <div class="opacity-swatch"><div class="opacity-bar" style="background:#22d3ee90"></div><div class="opacity-label"><code>90</code></div><div class="opacity-pct">56.5%</div></div>
+      <div class="opacity-swatch"><div class="opacity-bar" style="background:#22d3eeaa"></div><div class="opacity-label"><code>aa</code></div><div class="opacity-pct">66.7%</div></div>
+      <div class="opacity-swatch"><div class="opacity-bar" style="background:#22d3eebb"></div><div class="opacity-label"><code>bb</code></div><div class="opacity-pct">73.3%</div></div>
+      <div class="opacity-swatch"><div class="opacity-bar" style="background:#22d3eecc"></div><div class="opacity-label"><code>cc</code></div><div class="opacity-pct">80.0%</div></div>
+      <div class="opacity-swatch"><div class="opacity-bar" style="background:#22d3eeee"></div><div class="opacity-label"><code>ee</code></div><div class="opacity-pct">93.3%</div></div>
+    </div>
+  </div>
+
+  <div class="subsection mt-24">
+    <h3>Usage by Context</h3>
+    <table>
+      <tr><th>Context</th><th>Suffix</th><th>Purpose</th></tr>
+      <tr><td>Background grid pattern</td><td><code>06</code>-<code>10</code></td><td>Barely visible structural grid</td></tr>
+      <tr><td>Badge/card backgrounds</td><td><code>0a</code>-<code>18</code></td><td>Tinted surface behind content</td></tr>
+      <tr><td>Borders (subtle)</td><td><code>15</code>-<code>25</code></td><td>Card edges, section dividers</td></tr>
+      <tr><td>Borders (visible)</td><td><code>30</code>-<code>40</code></td><td>Active borders, badge outlines</td></tr>
+      <tr><td>Grid lines (chart)</td><td><code>15</code>-<code>20</code></td><td>Background reference lines</td></tr>
+      <tr><td>Axis labels</td><td><code>50</code>-<code>60</code></td><td>Readable but subdued</td></tr>
+      <tr><td>Line strokes (secondary)</td><td><code>35</code>-<code>70</code></td><td>Ghost trails, dashed references</td></tr>
+      <tr><td>Text (secondary)</td><td><code>80</code>-<code>aa</code></td><td>Descriptions, sub-labels</td></tr>
+      <tr><td>Text (primary)</td><td><code>cc</code>-<code>ee</code></td><td>Important labels, near full opacity</td></tr>
+      <tr><td>Glow/shadow color</td><td><code>20</code>-<code>40</code></td><td>Ambient light behind elements</td></tr>
+    </table>
+  </div>
+
+  <div class="callout mt-24">
+    <div class="callout-title">Minimum Opacity Standard</div>
+    <p>Readable text should never go below <code>50</code> (31%). Axis labels at <code>50</code> are the floor.
+       Decorative elements (grid lines, ghost trails) can go as low as <code>06</code>.
+       Borders should be at least <code>15</code> to be perceptible on dark backgrounds.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<section id="canvas-type">
+  <h2>Canvas Typography Scale</h2>
+  <div class="desc">Font sizes used in Canvas 2D rendering across all chart/diagram components. These are currently inconsistent -- see proposed standards below.</div>
+
+  <div class="subsection">
+    <h3>Current Usage (Audit)</h3>
+    <table>
+      <tr><th>Role</th><th>Sizes Found</th><th>Font</th><th>Components Using</th></tr>
+      <tr>
+        <td>Chart title</td>
+        <td class="current">11px, 13px, 16px</td>
+        <td>bold JB Mono</td>
+        <td>CarbonAware (11), DuckCurve (13), Curtailment (16), RenewableGrowth (13)</td>
+      </tr>
+      <tr>
+        <td>Y-axis labels</td>
+        <td class="current">9px, 10px</td>
+        <td>JB Mono</td>
+        <td>DuckCurve (9), CarbonAware (9), Curtailment (9), RenewableGrowth (10)</td>
+      </tr>
+      <tr>
+        <td>X-axis labels</td>
+        <td class="current">9px, 10px, 11px</td>
+        <td>JB Mono</td>
+        <td>DuckCurve (9), CarbonAware (9), Curtailment (10), RenewableGrowth (11)</td>
+      </tr>
+      <tr>
+        <td>Legend text</td>
+        <td class="current">9px, 10px</td>
+        <td>Inter</td>
+        <td>CarbonAware (9), DuckCurve (10), RenewableGrowth (10), DuckCurveVPP (10)</td>
+      </tr>
+      <tr>
+        <td>Stat box value</td>
+        <td class="current">16px, 20px, 22px, 24px</td>
+        <td>bold JB Mono</td>
+        <td>DuckCurve (16), Kepler (20), Curtailment (24), FrequencyDemo (varies)</td>
+      </tr>
+      <tr>
+        <td>Stat box label</td>
+        <td class="current">8px, 9px, 10px</td>
+        <td>JB Mono</td>
+        <td>DuckCurve (9), CarbonAware (varies), Curtailment (15 inline)</td>
+      </tr>
+      <tr>
+        <td>Annotation text</td>
+        <td class="current">10px, 11px, 13px</td>
+        <td>Inter / JB Mono</td>
+        <td>CarbonAware (10), DuckCurve (13), CurtailmentChart (11)</td>
+      </tr>
+      <tr>
+        <td>Node labels (architecture)</td>
+        <td class="current">12px, 15px, 16px, 24px</td>
+        <td>bold JB Mono</td>
+        <td>VPPArch (16), EnpalArch (24/15), Kepler (22)</td>
+      </tr>
+      <tr>
+        <td>Node sub-labels</td>
+        <td class="current">9px, 10px, 11px, 12px</td>
+        <td>JB Mono</td>
+        <td>VPPArch (12), EnpalArch (9/11), Kepler (10)</td>
+      </tr>
+      <tr>
+        <td>Grid line dash</td>
+        <td class="current">[3,5], [5,5], [6,4], [4,4]</td>
+        <td>--</td>
+        <td>Various</td>
+      </tr>
+      <tr>
+        <td>Grid line width</td>
+        <td class="current">0.5px, 1px</td>
+        <td>--</td>
+        <td>DuckCurve (0.5), Curtailment (0.5), FreqLine (1)</td>
+      </tr>
+      <tr>
+        <td>Main data line</td>
+        <td class="current">2px, 2.5px</td>
+        <td>--</td>
+        <td>DuckCurve (2.5), CarbonAware (2), FreqLine (2.5)</td>
+      </tr>
+      <tr>
+        <td>Glow shadowBlur</td>
+        <td class="current">6, 8, 10, 12, 14, 20</td>
+        <td>--</td>
+        <td>Various</td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<section id="components">
+  <h2>Component Patterns</h2>
+  <div class="desc">Reusable visual patterns for cards, badges, stat boxes, and HUD panels.</div>
+
+  <div class="subsection">
+    <h3>Badge</h3>
+    <div class="flex gap-16 flex-wrap" style="align-items:center">
+      <div class="demo-badge" style="background:rgba(34,211,238,0.094);color:var(--primary);border:1px solid rgba(34,211,238,0.188)">Primary Badge</div>
+      <div class="demo-badge" style="background:rgba(245,158,11,0.094);color:var(--accent);border:1px solid rgba(245,158,11,0.188)">Accent Badge</div>
+      <div class="demo-badge" style="background:rgba(16,185,129,0.094);color:var(--success);border:1px solid rgba(16,185,129,0.188)">Success Badge</div>
+      <div class="demo-badge" style="background:rgba(239,68,68,0.094);color:var(--danger);border:1px solid rgba(239,68,68,0.188)">Danger Badge</div>
+    </div>
+    <div class="type-meta mt-16">
+      Background: <code>color + '18'</code> | Border: <code>1px solid color + '30'</code> | Radius: 14px |
+      Font: 20px / 600 / JetBrains Mono | Padding: 3px 10px
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>StatBox</h3>
+    <div class="card-demo">
+      <div class="demo-card">
+        <div class="demo-stat-n" style="color:var(--danger);text-shadow:0 0 20px rgba(239,68,68,0.25)">52 GW</div>
+        <div class="demo-stat-l">offline capacity</div>
+      </div>
+      <div class="demo-card">
+        <div class="demo-stat-n" style="color:var(--primary);text-shadow:0 0 20px rgba(34,211,238,0.25)">50.00 Hz</div>
+        <div class="demo-stat-l">grid frequency</div>
+      </div>
+      <div class="demo-card">
+        <div class="demo-stat-n" style="color:var(--success);text-shadow:0 0 20px rgba(16,185,129,0.25)">340k</div>
+        <div class="demo-stat-l">homes connected</div>
+      </div>
+      <div class="demo-card">
+        <div class="demo-stat-n" style="color:var(--accent);text-shadow:0 0 20px rgba(245,158,11,0.25)">65.7 TWh</div>
+        <div class="demo-stat-l">curtailed energy</div>
+      </div>
+    </div>
+    <div class="type-meta mt-16">
+      Background: <code>surface</code> | Border: <code>1px solid surfaceLight</code> | Radius: 10px | Padding: 18px 14px<br>
+      Value: 28px / 800 / JetBrains Mono / semantic color + glow shadow<br>
+      Label: 20px / 400 / Inter / textMuted / tracking 0.02em
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>Canvas Stat Box (Right Panel)</h3>
+    <table>
+      <tr><th>Property</th><th>Value</th></tr>
+      <tr><td>Background</td><td><code>color + '0a'</code></td></tr>
+      <tr><td>Border</td><td><code>1px solid color + '25'</code></td></tr>
+      <tr><td>Border radius</td><td>3px</td></tr>
+      <tr><td>Value font</td><td>bold 16px JetBrains Mono</td></tr>
+      <tr><td>Label font</td><td>9px JetBrains Mono, <code>color + '90'</code></td></tr>
+      <tr><td>Unit font</td><td>8px JetBrains Mono, <code>textDim + '60'</code></td></tr>
+    </table>
+  </div>
+
+  <div class="subsection">
+    <h3>HUD Panel (Map Slides)</h3>
+    <table>
+      <tr><th>Property</th><th>Value</th></tr>
+      <tr><td>Background</td><td><code>rgba(5, 8, 16, 0.9)</code> or <code>rgba(5, 8, 16, 0.92)</code></td></tr>
+      <tr><td>Border</td><td><code>1px solid rgba(34,211,238,0.35)</code></td></tr>
+      <tr><td>Box shadow</td><td><code>0 0 20px ${glowColor}18, inset 0 0 15px ${glowColor}06</code></td></tr>
+      <tr><td>Backdrop filter</td><td><code>blur(12px)</code></td></tr>
+      <tr><td>Border radius</td><td>3px</td></tr>
+      <tr><td>Header font</td><td>13px / 700 / JetBrains Mono / textMuted / tracking 0.12em / uppercase</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<section id="shadows">
+  <h2>Shadows &amp; Glow</h2>
+  <div class="desc">Glow effects are a signature element of the cinematic aesthetic. They use text-shadow (CSS) or shadowBlur (Canvas).</div>
+
+  <div class="subsection">
+    <h3>CSS Text Shadows</h3>
+    <div class="glow-demo">
+      <div class="glow-box" style="color:var(--primary);text-shadow:0 0 40px rgba(34,211,238,0.35)">
+        Heading Glow
+      </div>
+      <div class="glow-box" style="color:var(--danger);text-shadow:0 0 60px rgba(239,68,68,0.30)">
+        Danger Glow
+      </div>
+      <div class="glow-box" style="color:var(--success);text-shadow:0 0 30px rgba(16,185,129,0.30)">
+        Success Glow
+      </div>
+      <div class="glow-box" style="color:var(--accent);text-shadow:0 0 20px rgba(245,158,11,0.25)">
+        Stat Glow
+      </div>
+    </div>
+    <table class="mt-24">
+      <tr><th>Element</th><th>Shadow</th></tr>
+      <tr><td>H component (headings)</td><td><code>0 0 40px ${color}35</code></td></tr>
+      <tr><td>StatBox values</td><td><code>0 0 20px ${color}25</code></td></tr>
+      <tr><td>Large hero numbers</td><td><code>0 0 60px ${color}30</code></td></tr>
+      <tr><td>HUD frequency display</td><td><code>0 0 22px ${color}40</code></td></tr>
+      <tr><td>AnimatedStat</td><td><code>0 0 20px ${color}25</code></td></tr>
+    </table>
+  </div>
+
+  <div class="subsection">
+    <h3>Canvas shadowBlur Values</h3>
+    <table>
+      <tr><th>Element</th><th>shadowBlur</th><th>shadowColor Pattern</th></tr>
+      <tr><td>Primary data line</td><td>8-10px</td><td><code>colors.primary</code> (full)</td></tr>
+      <tr><td>Node box pulse</td><td>10-14px (animated)</td><td><code>color + '40'</code></td></tr>
+      <tr><td>Annotation callout</td><td>8-12px</td><td><code>rgba(r,g,b, 0.3-0.4)</code></td></tr>
+      <tr><td>Sun/celestial</td><td>14-20px</td><td>Full color</td></tr>
+      <tr><td>Star twinkle</td><td>4-6px (animated)</td><td><code>#94a3b8</code></td></tr>
+      <tr><td>Battery glow</td><td>5px</td><td><code>color + '40'</code></td></tr>
+    </table>
+  </div>
+
+  <div class="subsection">
+    <h3>CSS Box Shadows</h3>
+    <table>
+      <tr><th>Element</th><th>Shadow</th></tr>
+      <tr><td>HUD panels</td><td><code>0 0 20px ${glowColor}18, inset 0 0 15px ${glowColor}06</code></td></tr>
+      <tr><td>Stat cards (inline)</td><td><code>0 0 20px ${color}10</code></td></tr>
+      <tr><td>Vignette overlay</td><td><code>inset 0 0 120px 40px rgba(2,4,8,0.7)</code></td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<section id="spacing">
+  <h2>Spacing &amp; Layout</h2>
+  <div class="desc">Slide padding, chart padding, and common spacing values.</div>
+
+  <div class="subsection">
+    <h3>Slide Padding</h3>
+    <table>
+      <tr><th>Slide Type</th><th>Padding</th><th>Background</th></tr>
+      <tr><td>Content slides</td><td><code>36px 56px</code></td><td><code>#0a0e17</code> (bg)</td></tr>
+      <tr><td>Canvas-heavy slides</td><td><code>20px 40px</code></td><td><code>#0a0e17</code> (bg)</td></tr>
+      <tr><td>Full-screen map/canvas</td><td><code>0</code></td><td><code>#020408</code> (darker)</td></tr>
+      <tr><td>Architecture diagram</td><td><code>16px 0px</code></td><td><code>#0a0e17</code> (bg)</td></tr>
+    </table>
+  </div>
+
+  <div class="subsection">
+    <h3>Chart Padding (Canvas)</h3>
+    <table>
+      <tr><th>Component</th><th>padLeft</th><th>padRight</th><th>padTop</th><th>padBottom</th></tr>
+      <tr><td class="current">DuckCurveChart</td><td>60</td><td>200</td><td>55</td><td>50</td></tr>
+      <tr><td class="current">CarbonAwareChart</td><td>55</td><td>20</td><td>48</td><td>40</td></tr>
+      <tr><td class="current">RenewableGrowthChart</td><td>50</td><td>150</td><td>40</td><td>50</td></tr>
+      <tr><td class="current">CurtailmentChart</td><td>50</td><td>20</td><td>40</td><td>40</td></tr>
+      <tr><td class="current">DuckCurveVPP</td><td>55</td><td>20</td><td>40</td><td>45</td></tr>
+    </table>
+    <div class="callout mt-16">
+      <div class="callout-title">Note</div>
+      <p>Chart padding varies per component. padLeft ranges 50-60px, padTop 40-55px, padBottom 40-50px.
+         padRight varies widely (20-200px) depending on whether there's a side panel.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>Common Border Radii</h3>
+    <table>
+      <tr><th>Value</th><th>Usage</th></tr>
+      <tr><td>2-3px</td><td>HUD panels, tech/tight corners, canvas stat boxes</td></tr>
+      <tr><td>6px</td><td>Buttons, small controls</td></tr>
+      <tr><td>8px</td><td>Inline stat cards</td></tr>
+      <tr><td>10px</td><td>StatBox component, main cards</td></tr>
+      <tr><td>14px</td><td>Badges (pill shape)</td></tr>
+      <tr><td>[3,3,0,0] or [4,4,0,0]</td><td>Bar chart tops (rounded top, flat bottom)</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<section id="canvas-conventions">
+  <h2>Canvas Drawing Conventions</h2>
+  <div class="desc">Patterns for Canvas 2D rendering shared across chart/diagram components.</div>
+
+  <div class="subsection">
+    <h3>Retina Scaling</h3>
+    <p style="color:var(--text-muted);font-size:14px;margin-bottom:8px">All canvas components use 2x scaling for retina displays:</p>
+    <div class="type-specimen" style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--primary)">
+      canvas.width = width * 2;<br>
+      canvas.height = height * 2;<br>
+      ctx.scale(2, 2);
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>Grid Lines</h3>
+    <table>
+      <tr><th>Property</th><th>Value</th></tr>
+      <tr><td>Dash pattern</td><td><code>[3, 5]</code> (standard)</td></tr>
+      <tr><td>Line width</td><td>0.5px</td></tr>
+      <tr><td>Stroke color</td><td><code>textDim + '15'</code></td></tr>
+      <tr><td>Zero line (emphasis)</td><td>1px solid, <code>textDim + '30'</code></td></tr>
+    </table>
+  </div>
+
+  <div class="subsection">
+    <h3>Day/Night Shading</h3>
+    <table>
+      <tr><th>Zone</th><th>Fill</th></tr>
+      <tr><td>Night (darkness)</td><td><code>rgba(10, 14, 23, 0.3)</code></td></tr>
+      <tr><td>Day (sunlight)</td><td><code>rgba(245, 158, 11, 0.03-0.06)</code></td></tr>
+      <tr><td>Negative price zone</td><td><code>rgba(239, 68, 68, 0.18)</code></td></tr>
+    </table>
+  </div>
+
+  <div class="subsection">
+    <h3>Data Lines</h3>
+    <table>
+      <tr><th>Line Type</th><th>Width</th><th>Dash</th><th>Color</th></tr>
+      <tr><td>Primary data line</td><td>2.5px</td><td>solid</td><td><code>primary</code> + glow</td></tr>
+      <tr><td>Secondary data line</td><td>1.5-2px</td><td>solid</td><td><code>accent + 'bb'</code></td></tr>
+      <tr><td>Reference/base line</td><td>1px</td><td>[6, 4]</td><td><code>textDim + '35'</code></td></tr>
+      <tr><td>Ghost/history line</td><td>1px</td><td>solid</td><td><code>primary + alpha</code> (fading)</td></tr>
+      <tr><td>Threshold line</td><td>1px</td><td>[5, 5]</td><td><code>danger + '40'</code></td></tr>
+    </table>
+  </div>
+
+  <div class="subsection">
+    <h3>Animation Patterns</h3>
+    <table>
+      <tr><th>Pattern</th><th>Formula</th><th>Usage</th></tr>
+      <tr><td>Pulse (0.5-1.0)</td><td><code>0.5 + 0.5 * Math.sin(now * speed)</code></td><td>Node boxes, indicators</td></tr>
+      <tr><td>Ease-out cubic</td><td><code>1 - Math.pow(1 - t, 3)</code></td><td>Entrance animations, bar reveals</td></tr>
+      <tr><td>Smoothstep</td><td><code>x*x*(3 - 2*x)</code></td><td>Fade in/out transitions</td></tr>
+      <tr><td>Particle flow</td><td><code>progress += speed</code> (0.01-0.02)</td><td>Data flow particles</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<section id="inconsistencies">
+  <h2>Current Inconsistencies</h2>
+  <div class="desc">Audit of places where similar elements use different values across components.</div>
+
+  <div class="callout">
+    <div class="callout-title">Chart title font size</div>
+    <p>
+      CarbonAwareChart &amp; KeplerDashboard use <strong>11px bold</strong>.
+      DuckCurveChart, RenewableGrowth, DuckCurveVPP use <strong>13px bold</strong>.
+      CurtailmentChart uses <strong>16px bold</strong>.
+    </p>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">Axis label font size</div>
+    <p>
+      Y-axis: most use <strong>9px</strong> but RenewableGrowthChart uses <strong>10px</strong>.<br>
+      X-axis: DuckCurve/CarbonAware use <strong>9px</strong>, Curtailment uses <strong>10px</strong>, RenewableGrowth uses <strong>11px</strong>.
+    </p>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">Legend font size</div>
+    <p>
+      CarbonAwareChart uses <strong>9px Inter</strong>.
+      DuckCurveChart, RenewableGrowth, DuckCurveVPP use <strong>10px Inter</strong>.
+    </p>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">Grid line opacity suffix</div>
+    <p>
+      Most charts use <code>textDim + '15'</code> for grid lines.
+      CurtailmentChart uses <code>textDim + '12'</code>.
+      FrequencyLine uses <code>textDim + '20'</code>.
+    </p>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">Grid dash pattern</div>
+    <p>
+      Most charts: <code>[3, 5]</code>.
+      FrequencyLine: <code>[5, 5]</code>.
+      DuckCurveChart base demand: <code>[6, 4]</code>.
+      Negative price zone border: <code>[4, 4]</code>.
+    </p>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">Bar chart top corner radius</div>
+    <p>
+      RenewableGrowthChart: <code>[4, 4, 0, 0]</code>.
+      CarbonAwareChart: <code>[3, 3, 0, 0]</code>.
+      CurtailmentChart (annual): <code>[3, 3, 0, 0]</code>.
+    </p>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">Canvas stat box border radius</div>
+    <p>
+      DuckCurveChart: <strong>3px</strong>.
+      FrequencyDemo: <strong>3px</strong>.
+      CurtailmentChart inline cards: <strong>8px</strong>.
+    </p>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">padLeft across charts</div>
+    <p>
+      50px (RenewableGrowth, Curtailment), 55px (CarbonAware, DuckCurveVPP), 60px (DuckCurveChart).
+      Without a side panel, 50-55px would standardize well.
+    </p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<section id="standards">
+  <h2>Proposed Standards</h2>
+  <div class="desc">Recommended standard values to unify across all canvas chart components. Adopt incrementally.</div>
+
+  <div class="callout green">
+    <div class="callout-title">Canvas Typography Standard</div>
+    <p>Standardize these font sizes across all canvas chart components:</p>
+  </div>
+  <table>
+    <tr><th>Role</th><th>Standard</th><th>Font</th><th>Color Pattern</th></tr>
+    <tr><td>Chart title</td><td class="recommended">13px bold</td><td>JetBrains Mono</td><td><code>colors.text</code></td></tr>
+    <tr><td>Y-axis labels</td><td class="recommended">9px</td><td>JetBrains Mono</td><td><code>textDim + '50'</code></td></tr>
+    <tr><td>X-axis labels</td><td class="recommended">9px</td><td>JetBrains Mono</td><td><code>textDim + '60'</code></td></tr>
+    <tr><td>Legend text</td><td class="recommended">10px</td><td>Inter</td><td><code>textMuted</code></td></tr>
+    <tr><td>Stat value</td><td class="recommended">16px bold</td><td>JetBrains Mono</td><td>semantic color</td></tr>
+    <tr><td>Stat label</td><td class="recommended">9px</td><td>JetBrains Mono</td><td><code>color + '90'</code></td></tr>
+    <tr><td>Stat unit</td><td class="recommended">8px</td><td>JetBrains Mono</td><td><code>textDim + '60'</code></td></tr>
+    <tr><td>Annotation text</td><td class="recommended">11px</td><td>Inter</td><td>semantic color</td></tr>
+    <tr><td>Zero line label</td><td class="recommended">8px</td><td>JetBrains Mono</td><td><code>textDim + '60'</code></td></tr>
+  </table>
+
+  <div class="callout green mt-24">
+    <div class="callout-title">Grid &amp; Line Standard</div>
+    <p>Standardize grid and line rendering:</p>
+  </div>
+  <table>
+    <tr><th>Element</th><th>Standard</th></tr>
+    <tr><td>Grid dash pattern</td><td class="recommended">[3, 5]</td></tr>
+    <tr><td>Grid line width</td><td class="recommended">0.5px</td></tr>
+    <tr><td>Grid stroke</td><td class="recommended"><code>textDim + '15'</code></td></tr>
+    <tr><td>Zero/reference line</td><td class="recommended">1px solid, <code>textDim + '30'</code></td></tr>
+    <tr><td>Primary data line</td><td class="recommended">2.5px with shadowBlur 10</td></tr>
+    <tr><td>Secondary data line</td><td class="recommended">1.5px, no shadow</td></tr>
+    <tr><td>Reference/dashed line</td><td class="recommended">[6, 4] dash, 1px, <code>textDim + '35'</code></td></tr>
+    <tr><td>Bar top corners</td><td class="recommended">[3, 3, 0, 0]</td></tr>
+  </table>
+
+  <div class="callout green mt-24">
+    <div class="callout-title">Chart Padding Standard</div>
+    <p>For charts without a side panel:</p>
+  </div>
+  <table>
+    <tr><th>Side</th><th>Standard</th><th>Notes</th></tr>
+    <tr><td>padLeft</td><td class="recommended">55px</td><td>Room for Y-axis labels</td></tr>
+    <tr><td>padRight</td><td class="recommended">20px</td><td>Minimal (or 200px if side stat panel)</td></tr>
+    <tr><td>padTop</td><td class="recommended">45px</td><td>Room for title + annotations above</td></tr>
+    <tr><td>padBottom</td><td class="recommended">45px</td><td>Room for X-axis labels + legend</td></tr>
+  </table>
+
+  <div class="callout green mt-24">
+    <div class="callout-title">Minimum Opacity Floor</div>
+    <p>Text that must be readable: minimum hex suffix <code>50</code> (31%).<br>
+       Borders that should be visible: minimum <code>15</code> (8%).<br>
+       Decorative grids/ghosts: can go to <code>06</code> (2.4%).<br>
+       Glow shadow colors: <code>20</code>-<code>40</code> range.</p>
+  </div>
+
+  <div class="callout green mt-24">
+    <div class="callout-title">Canvas Stat Box Standard</div>
+    <p>
+      Background: <code>color + '0a'</code> |
+      Border: <code>1px solid color + '25'</code> |
+      Radius: <strong>3px</strong> |
+      Height: 52px |
+      Gap: 8px
+    </p>
+  </div>
+</section>
+
+<hr>
+
+<footer style="color:var(--text-dim);font-size:13px;font-family:'JetBrains Mono',monospace;padding:20px 0 40px">
+  KubeCon 2026 VPP Presentation -- Style Guide<br>
+  Generated from codebase audit of presentation/src/
+</footer>
+
+</body>
+</html>
