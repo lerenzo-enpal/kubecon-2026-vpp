@@ -96,27 +96,35 @@ export default function DuckCurveChart({ width = 1100, height = 480 }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const tRef = useRef(0);
-  const phaseRef = useRef(0); // 0-5 for each year, smoothly animated
+  const phaseRef = useRef(0); // smooth animated value toward targetPhaseRef
+  const targetPhaseRef = useRef(0); // discrete step: 0..YEARS.length-1
   const slideContext = useContext(SlideContext);
 
-  // Intercept back arrow: first press resets animation, second press navigates
+  // Arrow forward steps through years; arrow back always navigates
   useEffect(() => {
     const handler = (e) => {
       if (!slideContext?.isSlideActive) return;
-      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowUp') return;
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowDown') return;
 
-      // If animation has progressed, reset it and block navigation
-      if (tRef.current > 0.1) {
+      // If we haven't shown all years yet, advance one step and block navigation
+      if (targetPhaseRef.current < YEARS.length - 1) {
         e.stopPropagation();
-        tRef.current = 0;
-        phaseRef.current = 0;
+        targetPhaseRef.current += 1;
       }
-      // Otherwise let the event through so Spectacle navigates
+      // Otherwise let the event through so Spectacle navigates to next slide
     };
 
-    // Use capture phase to run before Spectacle's listener
     document.addEventListener('keydown', handler, true);
     return () => document.removeEventListener('keydown', handler, true);
+  }, [slideContext?.isSlideActive]);
+
+  // Reset when navigating back to this slide
+  useEffect(() => {
+    if (slideContext?.isSlideActive) {
+      tRef.current = 0;
+      phaseRef.current = 0;
+      targetPhaseRef.current = 0;
+    }
   }, [slideContext?.isSlideActive]);
 
   useEffect(() => {
@@ -136,19 +144,14 @@ export default function DuckCurveChart({ width = 1100, height = 480 }) {
     const yRange = Y_MAX - Y_MIN;
     const yScale = chartH / yRange;
 
-    let lastTime = performance.now();
-
     const draw = () => {
       const isActive = slideContext?.isSlideActive;
       const now = performance.now();
-      const dt = (now - lastTime) / 1000;
-      lastTime = now;
 
       if (isActive) {
-        tRef.current += dt;
-        // Auto-advance through years: ~2 seconds per year, with a pause
-        const targetPhase = Math.min(YEARS.length - 1, tRef.current / 2.2);
-        phaseRef.current += (targetPhase - phaseRef.current) * 0.04;
+        tRef.current += 0.016; // steady tick for pulse animations
+        // Smooth interpolation toward target phase
+        phaseRef.current += (targetPhaseRef.current - phaseRef.current) * 0.06;
       }
 
       const phase = phaseRef.current;

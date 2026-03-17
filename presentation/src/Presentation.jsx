@@ -943,36 +943,38 @@ export default function Presentation() {
         <div className="flex flex-col h-full">
           <H color={colors.textMuted}>References</H>
           <div className="flex-1 flex gap-8 mt-4" style={{ fontSize: 14, fontFamily: '"JetBrains Mono", monospace', color: colors.textDim, lineHeight: 2.2 }}>
+            {(() => { const A = ({ href, children }) => <a href={href} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline', textDecorationColor: colors.textDim + '50', textUnderlineOffset: 3 }}>{children}</a>; return (<>
             <div className="flex-1">
               <div className="text-[15px] font-semibold mb-2" style={{ color: colors.danger }}>Grid Failures</div>
-              <div>ERCOT — Final Report on Feb 2021 Winter Storm (2021)</div>
-              <div>FERC/NERC — Texas Event Report (2021)</div>
-              <div>ENTSO-E — Continental Europe Synchronous Area (2024)</div>
-              <div>AEMO — South Australia Black System Report (2017)</div>
-              <div>REE/REN — Iberian Peninsula Incident Report (2025)</div>
+              <div><A href="https://www.ercot.com/gridmktinfo/docs/2021">ERCOT — Final Report on Feb 2021 Winter Storm (2021)</A></div>
+              <div><A href="https://www.ferc.gov/media/february-2021-cold-weather-outages-texas-and-south-central-united-states-ferc-nerc-and">FERC/NERC — Texas Event Report (2021)</A></div>
+              <div><A href="https://www.entsoe.eu/news/2024/05/07/continental-europe-synchronous-area-separation-on-8-january-2021/">ENTSO-E — Continental Europe Synchronous Area (2024)</A></div>
+              <div><A href="https://www.aemo.com.au/-/media/files/electricity/nem/market_notices_and_events/power_system_incident_reports/2017/integrated-final-report-sa-black-system-28-september-2016.pdf">AEMO — South Australia Black System Report (2017)</A></div>
+              <div><A href="https://www.ree.es/en">REE/REN — Iberian Peninsula Incident Report (2025)</A></div>
               <div className="text-[15px] font-semibold mb-2 mt-5" style={{ color: colors.accent }}>Renewable Energy</div>
-              <div>Bundesnetzagentur — Monitoring Report (2024)</div>
-              <div>SMARD.de — Electricity Market Data (2024)</div>
-              <div>Fraunhofer ISE — Energy Charts (2024)</div>
-              <div>CAISO — Duck Curve Analysis (2016-2024)</div>
+              <div><A href="https://www.bundesnetzagentur.de/EN/Areas/Energy/Companies/DataCollection_Monitoring/monitoring-report/start.html">Bundesnetzagentur — Monitoring Report (2024)</A></div>
+              <div><A href="https://www.smard.de/en">SMARD.de — Electricity Market Data (2024)</A></div>
+              <div><A href="https://energy-charts.info/">Fraunhofer ISE — Energy Charts (2024)</A></div>
+              <div><A href="https://www.caiso.com/documents/flexibleresourceshelprenewables_fastfacts.pdf">CAISO — Duck Curve Analysis (2016-2024)</A></div>
             </div>
             <div className="flex-1">
               <div className="text-[15px] font-semibold mb-2" style={{ color: colors.success }}>VPP &amp; Flexibility</div>
-              <div>RMI — Power Shift: Flexibility as Infrastructure (2024)</div>
-              <div>Brattle Group — VPP Cost-Benefit Analysis (2023)</div>
-              <div>AEMO — ISP Integrated System Plan (2024)</div>
-              <div>SA Power Networks — VPP Trial Results (2023)</div>
-              <div>Tesla — SA VPP Fleet Performance Data (2023)</div>
+              <div><A href="https://rmi.org/insight/power-shift/">RMI — Power Shift: Flexibility as Infrastructure (2024)</A></div>
+              <div><A href="https://www.brattle.com/insights-events/publications/real-reliability-the-value-of-virtual-power/">Brattle Group — VPP Cost-Benefit Analysis (2023)</A></div>
+              <div><A href="https://aemo.com.au/energy-systems/major-publications/integrated-system-plan-isp">AEMO — ISP Integrated System Plan (2024)</A></div>
+              <div><A href="https://www.sapowernetworks.com.au/industry/virtual-power-plant/">SA Power Networks — VPP Trial Results (2023)</A></div>
+              <div><A href="https://www.tesla.com/en_au/sa-virtual-power-plant">Tesla — SA VPP Fleet Performance Data (2023)</A></div>
               <div className="text-[15px] font-semibold mb-2 mt-5" style={{ color: colors.primary }}>Architecture &amp; Technology</div>
-              <div>EMQX — MQTT for Energy IoT (2024)</div>
-              <div>Databricks — Streaming for Energy (2024)</div>
+              <div><A href="https://www.emqx.com/en/solutions/energy-and-utilities">EMQX — MQTT for Energy IoT (2024)</A></div>
+              <div><A href="https://www.databricks.com/solutions/industries/energy-and-utilities">Databricks — Streaming for Energy (2024)</A></div>
               <div>Enpal — Internal Architecture Documentation</div>
               <div>Entrix/Enpal — Flexa VPP Controller Design</div>
-              <div>Flexa — VPP Controller (Joint Venture Enpal + Entrix)</div>
+              <div><A href="https://github.com/Rio517/kubecon-2026-vpp">Flexa — VPP Controller (Joint Venture Enpal + Entrix)</A></div>
             </div>
+            </>); })()}
           </div>
           <div className="mt-auto pt-3" style={{ fontSize: 12, fontFamily: '"JetBrains Mono", monospace', color: colors.textDim }}>
-            Sources &amp; architecture docs: <span style={{ color: colors.primary }}>github.com/kubekon/kubecon-2026-vpp/tree/main/docs</span>
+            Sources &amp; architecture docs: <a href="https://github.com/Rio517/kubecon-2026-vpp/tree/main/docs" target="_blank" rel="noopener noreferrer" style={{ color: colors.primary, textDecoration: 'underline', textUnderlineOffset: 3 }}>github.com/Rio517/kubecon-2026-vpp/tree/main/docs</a>
           </div>
         </div>
       </Slide>

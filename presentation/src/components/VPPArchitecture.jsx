@@ -40,6 +40,18 @@ const EDGES = [
   { from: 'trader',     to: 'market',     protocol: '',       rateMul: 8 },
 ];
 
+// Deterministic star positions for night sky
+const STARS = Array.from({ length: 30 }, (_, i) => {
+  const hash = (n) => { const x = Math.sin(n) * 43758.5453; return x - Math.floor(x); };
+  return {
+    x: hash(i * 127.1 + 311.7),
+    y: 0.02 + hash(i * 269.5 + 183.3) * 0.11,
+    size: 0.8 + hash(i * 419.2 + 71.9) * 1.5,
+    twinkleSpeed: 1.5 + hash(i * 631.2 + 97.1) * 3,
+    twinkleOffset: hash(i * 523.7 + 43.3) * Math.PI * 2,
+  };
+});
+
 function getNode(id) {
   return NODES.find(n => n.id === id) || HOMES.find(h => h.id === id);
 }
@@ -260,11 +272,11 @@ export default function VPPArchitecture() {
         : hour < 22.5 ? 'battery-discharge'
         : 'night-pull';
 
-      // Sun alpha: 0 (down) → 1 (full)
-      const sunAlpha = hour < 6.5 ? 0
-        : hour < 7.0 ? smoothstep(6.5, 7.0, hour)
-        : hour < 19.0 ? 1
-        : hour < 20.0 ? 1 - smoothstep(19.0, 20.0, hour)
+      // Sun alpha: 0 (down) → 1 (full) — slow fade over ~2h each way
+      const sunAlpha = hour < 5.5 ? 0
+        : hour < 7.5 ? smoothstep(5.5, 7.5, hour)
+        : hour < 18.0 ? 1
+        : hour < 20.5 ? 1 - smoothstep(18.0, 20.5, hour)
         : 0;
 
       // Sun vertical arc — zenith at solar noon (13:15)
@@ -272,12 +284,11 @@ export default function VPPArchitecture() {
       const sunHalf = solarNoon - 6.5; // hours from rise to noon
       const sunArc = Math.max(0, 1 - Math.abs(hour - solarNoon) / sunHalf);
 
-      // Moon alpha (visibility) — smooth fade in/out tied to hour
-      // Fades in 19:00–20:30, full 20:30–05:00, fades out 05:00–06:30
-      const moonAlpha = hour < 5.0 ? 1
-        : hour < 6.5 ? 1 - smoothstep(5.0, 6.5, hour)
-        : hour < 19.0 ? 0
-        : hour < 20.5 ? smoothstep(19.0, 20.5, hour)
+      // Moon alpha (visibility) — slow fade over ~3h each way
+      const moonAlpha = hour < 4.0 ? 1
+        : hour < 7.0 ? 1 - smoothstep(4.0, 7.0, hour)
+        : hour < 17.5 ? 0
+        : hour < 21.0 ? smoothstep(17.5, 21.0, hour)
         : 1;
       // Moon arc — slow arc peaking at midnight (hour 0/24), independent of alpha
       // Moon is "up" from ~19:00 to ~07:00 (12h window centered on midnight)
@@ -306,9 +317,7 @@ export default function VPPArchitecture() {
       // Sun with vertical arc — rises and sets
       {
         const sunX = width - 55;
-        const sunYBase = 90;   // horizon (low position when rising/setting)
-        const sunYZenith = 45; // highest point — keeps rays safely in bounds
-        const sunY = sunYBase - (sunYBase - sunYZenith) * sunArc * sunAlpha;
+        const sunY = 55;       // fixed position — fades in/out only
         const sunR = 16;
         ctx.save();
         ctx.globalAlpha = sunAlpha * 0.7;
@@ -333,14 +342,53 @@ export default function VPPArchitecture() {
         ctx.restore();
       }
 
+      // Stars — sparkle in as sun sets, fade out at sunrise
+      {
+        const starAlpha = 1 - sunAlpha;
+        if (starAlpha > 0.01) {
+          STARS.forEach((star) => {
+            const twinkle = 0.3 + 0.7 * (0.5 + 0.5 * Math.sin(now * star.twinkleSpeed + star.twinkleOffset));
+            const alpha = starAlpha * twinkle;
+            const sx = star.x * width;
+            const sy = star.y * height;
+
+            ctx.save();
+            ctx.globalAlpha = alpha * 0.85;
+            ctx.fillStyle = '#e2e8f0';
+
+            // Star dot
+            ctx.beginPath();
+            ctx.arc(sx, sy, star.size, 0, Math.PI * 2);
+            ctx.shadowBlur = 6 * twinkle;
+            ctx.shadowColor = '#94a3b8';
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // Cross sparkle for larger stars
+            if (star.size > 1.6) {
+              ctx.strokeStyle = '#e2e8f0';
+              ctx.lineWidth = 0.6;
+              ctx.globalAlpha = alpha * 0.35;
+              const sparkleLen = star.size * 1.5 + star.size * 0.8 * Math.sin(now * star.twinkleSpeed * 1.3 + star.twinkleOffset);
+              ctx.beginPath();
+              ctx.moveTo(sx - sparkleLen, sy);
+              ctx.lineTo(sx + sparkleLen, sy);
+              ctx.moveTo(sx, sy - sparkleLen);
+              ctx.lineTo(sx, sy + sparkleLen);
+              ctx.stroke();
+            }
+
+            ctx.restore();
+          });
+        }
+      }
+
       // Moon crescent — rendered on offscreen canvas to avoid compositing bleed
       {
         const moonAlpha = Math.max(0, 1 - sunAlpha * 2.5);
         if (moonAlpha > 0.01) {
           const moonX = width - 55;
-          const moonYBase = 85;
-          const moonYZenith = 50;
-          const moonY = moonYBase - (moonYBase - moonYZenith) * moonArc;
+          const moonY = 50;        // fixed position — fades in/out only
           const moonR = 13;
           const buf = moonR + 16; // buffer for glow
           const size = buf * 2;
