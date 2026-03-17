@@ -4,8 +4,8 @@ Bulleted talking points per slide. Speakers marked as **LERENZO** or **MARIO**.
 
 | Speaker | Slides | Count |
 |---------|--------|-------|
-| LERENZO | 3-5, 9-13, 19-25, 27-28 | 17 |
-| MARIO   | 6-8, 14-18, 26 | 8 |
+| LERENZO | 3-5, 11-13, 19-23, 27-28 | 13 |
+| MARIO   | 6-10, 14-18, 24-26 | 13 |
 | Shared  | 1-2 (opening) | 2 |
 
 ---
@@ -62,12 +62,12 @@ Bulleted talking points per slide. Speakers marked as **LERENZO** or **MARIO**.
   - Cyber attack: coordinated SCADA compromise, cascading trips, no recovery — blackout
 - Notice the accelerated timer — these events play out over minutes in real grid time
 
-### 9. Designed for a Different World — LERENZO
+### 9. Designed for a Different World — MARIO
 - Power Plants → Transmission → Distribution → Homes
 - One direction. Few large producers. Passive consumers.
 - Designed in the 1950s. No flexibility built in.
 
-### 10. The Old Playbook — LERENZO
+### 10. The Old Playbook — MARIO
 - How did we manage this for 70 years?
 - Peaker plants: 261 GW sitting idle 95% of the year, firing up at 2-5x cost
 - Spinning reserves: generators running at partial load 24/7 "just in case" — burning fuel to produce nothing
@@ -170,7 +170,7 @@ Bulleted talking points per slide. Speakers marked as **LERENZO** or **MARIO**.
 - A battery responds before a gas turbine even knows there's an emergency
 - This is why batteries + software win
 
-### 24. Energy Arbitrage + Peak Shaving — LERENZO
+### 24. Energy Arbitrage + Peak Shaving — MARIO
 - [MAP HUD] Full-screen Berlin map — walk through each step
 - Sunny July morning. 53,000 homes generating solar.
 - Midday — prices collapse. Flexa holds batteries empty on purpose.
@@ -178,7 +178,7 @@ Bulleted talking points per slide. Speakers marked as **LERENZO** or **MARIO**.
 - Evening — sun sets, prices spike. Full batteries discharge at peak prices.
 - Revenue earned. Grid peaks softened. Fossil generation reduced.
 
-### 25. SA Virtual Power Plant, 2019 — LERENZO
+### 25. SA Virtual Power Plant, 2019 — MARIO
 - South Australia proved this works
 - 1,100 homes with Tesla Powerwalls
 - The world's first proof that distributed batteries can stabilize a grid at scale
