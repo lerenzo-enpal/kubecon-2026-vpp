@@ -151,7 +151,7 @@ export default function GridFlowDemo({ width = '100%' }) {
         }
       `}</style>
 
-      <div style={{ flex: 1, minHeight: 0 }}>
+      <div style={{ flex: 1, minHeight: 0, willChange: 'transform', transform: 'translateZ(0)' }}>
         <svg viewBox="0 0 1200 480" style={{ width: '100%', height: '100%' }} preserveAspectRatio="xMidYMid meet">
           <defs>
             <filter id="gf"><feGaussianBlur stdDeviation="3" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>

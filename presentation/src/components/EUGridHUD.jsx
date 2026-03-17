@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useContext, useRef, useCallback, useMemo } from 'react';
 import { SlideContext } from 'spectacle';
 import { DeckGL } from '@deck.gl/react';
 import { FlyToInterpolator } from '@deck.gl/core';
@@ -133,7 +133,10 @@ const TYPE_COLORS = {
   hydro: [34, 211, 238],
 };
 
-const getHub = (id) => HUBS.find(h => h.id === id);
+const HUB_MAP = new Map(HUBS.map(h => [h.id, h]));
+const getHub = (id) => HUB_MAP.get(id);
+
+const FLY_TO = new FlyToInterpolator();
 
 // ── Main component ──────────────────────────────────────────
 export default function EUGridHUD({ width = '100%', height = '100%' }) {
@@ -171,10 +174,16 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
 
   // Frequency ticker + line chart
   useEffect(() => {
+    if (!slideContext?.isSlideActive) return;
+    let lastStateUpdate = 0;
     const tick = () => {
       const now = performance.now();
       const f = 50.0 + Math.sin(now / 600) * 0.008 + Math.sin(now / 170) * 0.002;
-      setFreq(f);
+      // Throttle React state updates to ~15fps (66ms)
+      if (now - lastStateUpdate > 66) {
+        setFreq(f);
+        lastStateUpdate = now;
+      }
       freqHistory.current.push(f);
       if (freqHistory.current.length > 120) freqHistory.current.shift();
       // Draw mini line chart
@@ -212,7 +221,7 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
     };
     freqRef.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(freqRef.current);
-  }, []);
+  }, [slideContext?.isSlideActive]);
 
   const ease = (t) => t < 0 ? 0 : t > 1 ? 1 : 1 - Math.pow(1 - t, 3);
   const bootFade = (delay, dur = 0.4) => ease((boot - delay) / dur);
@@ -225,7 +234,7 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
     setViewState({
       ...STEPS[idx].view,
       transitionDuration: 2200,
-      transitionInterpolator: new FlyToInterpolator(),
+      transitionInterpolator: FLY_TO,
       transitionEasing: t => 1 - Math.pow(1 - t, 3),
     });
   }, []);
@@ -259,16 +268,18 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
   const isFirst = stepIndex === 0;
 
   // Determine visible hubs and lines
-  const allVisible = step.visibleIds === null && stepIndex > 0;
-  const visibleHubs = allVisible
-    ? HUBS
-    : step.visibleIds
-      ? HUBS.filter(h => step.visibleIds.includes(h.id))
-      : [];
+  const visibleHubs = useMemo(() => {
+    const allVisible = step.visibleIds === null && stepIndex > 0;
+    if (allVisible) return HUBS;
+    if (step.visibleIds) return HUBS.filter(h => step.visibleIds.includes(h.id));
+    return [];
+  }, [stepIndex]);
 
-  const visibleLines = CORRIDORS
-    .filter(([a, b]) => visibleHubs.some(h => h.id === a) && visibleHubs.some(h => h.id === b))
-    .map(([a, b, cap]) => ({ from: getHub(a).pos, to: getHub(b).pos, cap: cap || 3 }));
+  const visibleLines = useMemo(() => {
+    return CORRIDORS
+      .filter(([a, b]) => visibleHubs.some(h => h.id === a) && visibleHubs.some(h => h.id === b))
+      .map(([a, b, cap]) => ({ from: getHub(a).pos, to: getHub(b).pos, cap: cap || 3 }));
+  }, [visibleHubs]);
 
   // ── Animated particles flowing along corridors ──
   const now = performance.now();

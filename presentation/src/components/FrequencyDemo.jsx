@@ -387,9 +387,12 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
       while (freqWindowRef.current.length > 0 && freqWindowRef.current[0].t < cutoff) {
         freqWindowRef.current.shift();
       }
-      const windowVals = freqWindowRef.current.map(e => e.f);
-      const freqMax = Math.max(...windowVals);
-      const freqMin = Math.min(...windowVals);
+      let freqMax = -Infinity, freqMin = Infinity;
+      for (let i = 0; i < freqWindowRef.current.length; i++) {
+        const f = freqWindowRef.current[i].f;
+        if (f > freqMax) freqMax = f;
+        if (f < freqMin) freqMin = f;
+      }
       const freqDelta = (freqMax - freqMin) / 2;
 
       // Smoothed frequency for all latched/hysteresis logic

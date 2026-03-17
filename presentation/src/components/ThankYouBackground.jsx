@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
+import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
 
 function seededRandom(seed) {
@@ -16,10 +17,12 @@ function hexAlpha(hex, a) {
 export default function ThankYouBackground({ width = 1366, height = 768 }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
+  const slideContext = useContext(SlideContext);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    if (!slideContext?.isSlideActive) return;
     const ctx = canvas.getContext('2d');
     const dpr = 2;
     canvas.width = width * dpr;
@@ -285,12 +288,12 @@ export default function ThankYouBackground({ width = 1366, height = 768 }) {
         ctx.stroke();
       }
 
-      animRef.current = requestAnimationFrame(draw);
+      if (slideContext?.isSlideActive) animRef.current = requestAnimationFrame(draw);
     };
 
     animRef.current = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(animRef.current);
-  }, [width, height]);
+  }, [width, height, slideContext?.isSlideActive]);
 
   return (
     <canvas

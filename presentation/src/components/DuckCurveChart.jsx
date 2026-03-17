@@ -99,6 +99,9 @@ export default function DuckCurveChart({ width = 1100, height = 480 }) {
   const phaseRef = useRef(0); // smooth animated value toward targetPhaseRef
   const targetPhaseRef = useRef(0); // discrete step: 0..YEARS.length-1
   const slideContext = useContext(SlideContext);
+  const cachedBlendRef = useRef(null);
+  const cachedSolarRef = useRef(null);
+  const cachedNetDemRef = useRef(null);
 
   // Arrow forward steps through years; arrow back always navigates
   useEffect(() => {
@@ -164,8 +167,13 @@ export default function DuckCurveChart({ width = 1100, height = 480 }) {
       const nextYear = YEARS[Math.min(yearIdx + 1, YEARS.length - 1)];
       const blendScale = lerp(currentYear.solarScale, nextYear.solarScale, yearFrac);
 
-      const solar = peakSolar.map(v => v * blendScale);
-      const netDem = getNetDemand(solar);
+      if (cachedBlendRef.current !== blendScale) {
+        cachedBlendRef.current = blendScale;
+        cachedSolarRef.current = peakSolar.map(v => v * blendScale);
+        cachedNetDemRef.current = getNetDemand(cachedSolarRef.current);
+      }
+      const solar = cachedSolarRef.current;
+      const netDem = cachedNetDemRef.current;
 
       ctx.clearRect(0, 0, width, height);
 

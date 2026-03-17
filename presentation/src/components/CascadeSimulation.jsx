@@ -24,6 +24,8 @@ const LINES = [
   ['nur', 'mun'],
 ];
 
+const NODE_MAP = new Map(NODES.map(n => [n.id, n]));
+
 const typeColors = {
   wind: '#60a5fa',
   solar: colors.solar,
@@ -37,7 +39,7 @@ export default function CascadeSimulation({ width = 740, height = 540, withVPP =
   const animRef = useRef(null);
   const slideContext = useContext(SlideContext);
   const [phase, setPhase] = useState('stable'); // stable, trigger, cascade, (recover if VPP)
-  const [freq, setFreq] = useState(50.0);
+
   const phaseRef = useRef('stable');
   const startTimeRef = useRef(null);
   const failedRef = useRef(new Set());
@@ -46,7 +48,6 @@ export default function CascadeSimulation({ width = 740, height = 540, withVPP =
   const reset = () => {
     phaseRef.current = 'stable';
     setPhase('stable');
-    setFreq(50.0);
     startTimeRef.current = null;
     failedRef.current = new Set();
     overloadRef.current = {};
@@ -130,12 +131,11 @@ export default function CascadeSimulation({ width = 740, height = 540, withVPP =
         }
       }
       currentFreq += Math.sin(now / 300) * 0.01;
-      if (isActive) setFreq(currentFreq);
 
       // Draw transmission lines
-      LINES.forEach(([a, b]) => {
-        const nodeA = NODES.find(n => n.id === a);
-        const nodeB = NODES.find(n => n.id === b);
+      LINES.forEach(([a, b], lineIdx) => {
+        const nodeA = NODE_MAP.get(a);
+        const nodeB = NODE_MAP.get(b);
         const aFailed = failedRef.current.has(a);
         const bFailed = failedRef.current.has(b);
         const overload = Math.max(overloadRef.current[a] || 0, overloadRef.current[b] || 0);
@@ -161,7 +161,7 @@ export default function CascadeSimulation({ width = 740, height = 540, withVPP =
 
         // Animated flow dots
         if (!aFailed || !bFailed) {
-          const flowT = (now / 2000 + LINES.indexOf([a,b]) * 0.3) % 1;
+          const flowT = (now / 2000 + lineIdx * 0.3) % 1;
           const dotX = nodeA.x + (nodeB.x - nodeA.x) * flowT;
           const dotY = nodeA.y + (nodeB.y - nodeA.y) * flowT;
           ctx.beginPath();

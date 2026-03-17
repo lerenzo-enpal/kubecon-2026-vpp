@@ -49,6 +49,7 @@ export default function CurtailmentChart({ width = 900, height = 380 }) {
   const animRef = useRef(null);
   const tRef = useRef(0);
   const [animFrac, setAnimFrac] = useState(0);
+  const lastAnimFracRef = useRef(0);
   const slideContext = useContext(SlideContext);
 
   useEffect(() => {
@@ -286,7 +287,11 @@ export default function CurtailmentChart({ width = 900, height = 380 }) {
       ctx.restore();
 
       // Push animation progress to React state for bottom stat boxes
-      setAnimFrac(1 - Math.pow(1 - Math.min(1, t), 3));
+      const newFrac = 1 - Math.pow(1 - Math.min(1, t), 3);
+      if (Math.abs(newFrac - lastAnimFracRef.current) > 0.005) {
+        lastAnimFracRef.current = newFrac;
+        setAnimFrac(newFrac);
+      }
 
       // Legend
       const legY = 22;

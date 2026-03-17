@@ -210,7 +210,7 @@ export default function ConsumerIcons({ bottomText }) {
           50% { opacity: 0; }
         }
       `}</style>
-      <div style={{ display: 'flex', gap: 56, justifyContent: 'center', alignItems: 'center', flex: 1, marginTop: 20 }}>
+      <div style={{ display: 'flex', gap: 56, justifyContent: 'center', alignItems: 'center', flex: 1, marginTop: 20, willChange: 'transform', transform: 'translateZ(0)' }}>
         <svg width="0" height="0">
           <defs>
             <filter id="cig"><feGaussianBlur stdDeviation="2.5" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>

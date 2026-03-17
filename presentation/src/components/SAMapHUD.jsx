@@ -6,6 +6,8 @@ import { ScatterplotLayer, LineLayer, TextLayer } from '@deck.gl/layers';
 import Map from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
+const FLY_TO = new FlyToInterpolator();
+
 // ── Camera presets ──────────────────────────────────────────
 const VIEWS = {
   blackout: { longitude: 138.5, latitude: -34.0, zoom: 6.2, pitch: 35, bearing: -5 },
@@ -272,7 +274,8 @@ const VPP_GREEN = [16, 185, 129];
 const VPP_CYAN = [34, 211, 238];
 const VPP_AMBER = [245, 158, 11];
 
-const getNode = (id) => NODES.find(n => n.id === id);
+const NODE_MAP = new Map(NODES.map(n => [n.id, n]));
+const getNode = (id) => NODE_MAP.get(id);
 
 // ── HUD corner bracket decoration ──────────────────────────
 function Corner({ pos, color }) {
@@ -376,7 +379,7 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
               setViewState({
                 ...VPP_STEPS[next].view,
                 transitionDuration: 1800,
-                transitionInterpolator: new FlyToInterpolator(),
+                transitionInterpolator: FLY_TO,
                 transitionEasing: t => 1 - Math.pow(1 - t, 3),
               });
             }
@@ -399,7 +402,7 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
               setViewState({
                 ...VPP_STEPS[prev].view,
                 transitionDuration: 1200,
-                transitionInterpolator: new FlyToInterpolator(),
+                transitionInterpolator: FLY_TO,
                 transitionEasing: t => 1 - Math.pow(1 - t, 3),
               });
             }
@@ -413,7 +416,7 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
           setViewState({
             ...defaultView,
             transitionDuration: 1200,
-            transitionInterpolator: new FlyToInterpolator(),
+            transitionInterpolator: FLY_TO,
             transitionEasing: t => 1 - Math.pow(1 - t, 3),
           });
         }
@@ -439,7 +442,7 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
         setViewState({
           ...VPP_STEPS[next].view,
           transitionDuration: 1800,
-          transitionInterpolator: new FlyToInterpolator(),
+          transitionInterpolator: FLY_TO,
           transitionEasing: t => 1 - Math.pow(1 - t, 3),
         });
       }
@@ -454,7 +457,7 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
     setViewState({
       ...defaultView,
       transitionDuration: 500,
-      transitionInterpolator: new FlyToInterpolator(),
+      transitionInterpolator: FLY_TO,
       transitionEasing: t => 1 - Math.pow(1 - t, 3),
     });
   };
@@ -471,7 +474,7 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
         setViewState({
           ...VPP_STEPS[lastIdx].view,
           transitionDuration: 1800,
-          transitionInterpolator: new FlyToInterpolator(),
+          transitionInterpolator: FLY_TO,
           transitionEasing: t => 1 - Math.pow(1 - t, 3),
         });
       }
@@ -538,8 +541,8 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
   }, [isBlackout, vppActive, currentHomePhase]);
 
   // ── Build line data ──
-  const pulse = Math.sin(Date.now() / 250);
   const lines = useMemo(() => {
+    const pulse = Math.sin(Date.now() / 250);
     const visibleLines = isBlackout
       ? SA_LINES
       : SA_LINES.filter(([a, b]) => {

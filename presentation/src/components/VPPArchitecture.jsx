@@ -52,13 +52,14 @@ const STARS = Array.from({ length: 30 }, (_, i) => {
   };
 });
 
-function getNode(id) {
-  return NODES.find(n => n.id === id) || HOMES.find(h => h.id === id);
-}
+const ALL_NODES = [...NODES, ...HOMES];
+const NODE_MAP = new Map(ALL_NODES.map(n => [n.id, n]));
+function getNode(id) { return NODE_MAP.get(id); }
 
 export default function VPPArchitecture() {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
+  const moonCanvasRef = useRef(null);
   const slideContext = useContext(SlideContext);
 
   useEffect(() => {
@@ -393,7 +394,10 @@ export default function VPPArchitecture() {
           const buf = moonR + 16; // buffer for glow
           const size = buf * 2;
           // Draw crescent on offscreen canvas
-          const off = document.createElement('canvas');
+          if (!moonCanvasRef.current) {
+            moonCanvasRef.current = document.createElement('canvas');
+          }
+          const off = moonCanvasRef.current;
           off.width = size * 2; off.height = size * 2;
           const oc = off.getContext('2d');
           oc.scale(2, 2);

@@ -3,8 +3,11 @@ import { SlideContext, useSteps } from 'spectacle';
 import { DeckGL } from '@deck.gl/react';
 import { FlyToInterpolator } from '@deck.gl/core';
 import { ScatterplotLayer, LineLayer, TextLayer } from '@deck.gl/layers';
+
 import Map from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
+
+const FLY_TO = new FlyToInterpolator();
 
 // ── Camera presets ──────────────────────────────────────────
 const VIEWS = {
@@ -79,7 +82,8 @@ const LOG_MSGS = [
 const TYPE_COLORS = { wind: [96, 165, 250], gas: [251, 146, 60], coal: [148, 163, 184], nuclear: [167, 139, 250] };
 const FAILED_COLOR = [239, 68, 68];
 const COMANCHE_GREEN = [16, 185, 129];
-const getPlant = (id) => PLANTS.find(p => p.id === id);
+const PLANT_MAP = new Map(PLANTS.map(p => [p.id, p]));
+const getPlant = (id) => PLANT_MAP.get(id);
 
 // ── Camera target for step mode ─────────────────────────────
 function getStepView(stepIdx, fallback) {
@@ -179,7 +183,7 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
       setViewState({
         ...defaultView,
         transitionDuration: 500,
-        transitionInterpolator: new FlyToInterpolator(),
+        transitionInterpolator: FLY_TO,
         transitionEasing: t => 1 - Math.pow(1 - t, 3),
       });
     } else if (spectacleStep >= 1) {
@@ -197,7 +201,7 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
         setViewState({
           ...target,
           transitionDuration: 800,
-          transitionInterpolator: new FlyToInterpolator(),
+          transitionInterpolator: FLY_TO,
           transitionEasing: t => 1 - Math.pow(1 - t, 3),
         });
       }
@@ -245,7 +249,7 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
     setViewState({
       ...target,
       transitionDuration: 800,
-      transitionInterpolator: new FlyToInterpolator(),
+      transitionInterpolator: FLY_TO,
       transitionEasing: t => 1 - Math.pow(1 - t, 3), // fast start, smooth deceleration
     });
   };
@@ -256,7 +260,7 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
     setViewState({
       ...defaultView,
       transitionDuration: mode === 'stepping' ? 600 : 0,
-      transitionInterpolator: new FlyToInterpolator(),
+      transitionInterpolator: FLY_TO,
       transitionEasing: t => 1 - Math.pow(1 - t, 3),
     });
     setMode('playing');
@@ -269,7 +273,7 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
     setViewState({
       ...defaultView,
       transitionDuration: 500,
-      transitionInterpolator: new FlyToInterpolator(),
+      transitionInterpolator: FLY_TO,
       transitionEasing: t => 1 - Math.pow(1 - t, 3),
     });
   };

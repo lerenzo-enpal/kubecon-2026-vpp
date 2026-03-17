@@ -92,9 +92,8 @@ const EDGES = [
   { from: 'emqx',         to: 'iot_hems',   label: '',          color: colors.primary,   rate: 2, dash: true, offset: 3 },
 ];
 
-function getNode(id) {
-  return NODES.find(n => n.id === id);
-}
+const NODE_MAP = new Map(NODES.map(n => [n.id, n]));
+function getNode(id) { return NODE_MAP.get(id); }
 
 export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) {
   const canvasRef = useRef(null);
