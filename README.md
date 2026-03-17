@@ -80,6 +80,16 @@ Example with options:
 PAUSE=5 MAX_SLIDES=10 npm run export:pdf
 ```
 
+### Speaker Overlay
+
+Add `?speaker=1` (or any truthy value) to the URL to show the assigned speaker (LERENZO / MARIO / SHARED) on each slide:
+
+```
+http://localhost:3000?speaker=1
+```
+
+To hide it, omit the param entirely or set it to a falsy value (`null`, `no`, `disable`, `nein`, `false`, `off`).
+
 ### Building for Production
 
 ```bash
@@ -89,9 +99,11 @@ npm run preview
 
 ## Deployment
 
-Hosted on Netlify with basic auth (password-protected).
+Live: [https://kubekon-vpp-2026.netlify.app](https://kubekon-vpp-2026.netlify.app) (password-protected)
 
-- Auto-deploys on push to `main` via GitHub Actions
+Hosted on Netlify with basic auth.
+
+- Manual deploy only — trigger via GitHub Actions "Run workflow" button
 - Edge function handles HTTP Basic Auth (`SITE_PASSWORD` env var on Netlify)
 - GitHub secrets required: `NETLIFY_AUTH_TOKEN`, `NETLIFY_SITE_ID`
 
