@@ -121,9 +121,8 @@ export default function Presentation() {
           </div>
         </div>
         <Notes>
-          Welcome to KubeCon, thank you for being here.
-          I work at Enpal — we're building Europe's largest virtual power plant.
-          Before we talk about what a VPP is, we need to talk about the thing it's trying to fix.
+          We work at Enpal — we're building Europe's largest virtual power plant.
+          Before we talk about what a VPP is, let's get some context
         </Notes>
       </Slide>
 
@@ -150,9 +149,8 @@ export default function Presentation() {
           </div>
         </div>
         <Notes>
-          Four parts: The Grid, Renewables, the VPP itself, and Resilience.
-          ~30 minutes total — we'll go fast.
-          By the end you'll understand why the energy grid is the most exciting distributed systems problem on the planet.
+          We'll go fast.
+          By the end you'll understand why the energy grid is one of the most exciting distributed systems problem on the planet.
         </Notes>
       </Slide>
 
@@ -163,7 +161,7 @@ export default function Presentation() {
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[20px] font-semibold text-hud-danger font-mono tracking-[0.15em] uppercase mb-4">Part I</div>
           <H size="54px" center color={colors.danger}>The Grid</H>
-          <P size="20px" center>The world's largest machine — and why it keeps failing</P>
+          <P size="20px" center>The world's largest machine.</P>
         </div>
         <Notes>
           "The world's largest machine" — this isn't hyperbole, we're going to prove it.
