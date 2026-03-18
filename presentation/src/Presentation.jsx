@@ -668,10 +668,6 @@ export default function Presentation() {
             0% { opacity: 0; transform: translateX(-24px); filter: blur(3px); }
             100% { opacity: 1; transform: translateX(0); filter: blur(0); }
           }
-          @keyframes vppEventBorder {
-            0% { clip-path: inset(0 100% 0 0); }
-            100% { clip-path: inset(0 0% 0 0); }
-          }
           @keyframes vppEventGlow {
             0% { box-shadow: none; }
             50% { box-shadow: 0 0 12px var(--glow-color); }
@@ -681,53 +677,64 @@ export default function Presentation() {
         <div className="flex flex-col h-full">
           <H>How a VPP Responds to Grid Events</H>
           <P size="20px">Different event types require different response strategies and timescales.</P>
-          <div className="flex flex-col justify-center gap-3 mt-2">
-            {[
-              { event: 'Frequency Containment (FCR)', time: '< 30 seconds', desc: 'Battery injects/absorbs power to stabilize grid frequency', cost: 'Blackout cost: EUR 1-5B per event', color: colors.danger, delay: 0.2 },
-              { event: 'Automatic Frequency Restoration (aFRR)', time: '< 5 minutes', desc: 'Sustained response to restore frequency to 50 Hz', cost: 'Gas peaker alternative: EUR 150-300/MWh', color: colors.accent, delay: 0.5 },
-              { event: 'Peak Shaving', time: '1-4 hours', desc: 'Reduce grid load during demand peaks by discharging batteries', cost: 'VPP capacity 40-60% cheaper than peakers (Brattle)', color: colors.primary, delay: 0.9 },
-              { event: 'Energy Arbitrage', time: 'Scheduled', desc: 'Charge at negative prices, discharge at peak — optimizing day-ahead markets', cost: 'Curtailment avoided: EUR 554M/yr (DE)', color: colors.success, delay: 1.4 },
-            ].map(e => (
-              <div key={e.event} className="flex items-start gap-4 rounded-lg p-3"
-                style={{
-                  background: `${e.color}06`,
-                  border: `1px solid ${e.color}15`,
-                  opacity: 0,
-                  '--glow-color': e.color + '20',
-                  animation: `vppEventIn 0.5s ease ${e.delay}s forwards, vppEventGlow 1s ease ${e.delay + 0.4}s both`,
-                }}>
-                <div className="w-[320px] shrink-0">
-                  <div className="text-[17px] font-semibold font-sans" style={{ color: e.color }}>{e.event}</div>
-                  <div className="text-[13px] font-mono mt-1" style={{ color: colors.textDim, opacity: 0, animation: `vppEventIn 0.3s ease ${e.delay + 0.25}s forwards` }}>{e.time}</div>
+          <Stepper values={[1, 2]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col">
+            {(stepVal) => {
+              const sv = stepVal ?? 0;
+              const events = [
+                { event: 'Frequency Containment (FCR)', time: '< 30 seconds', desc: 'Battery injects/absorbs power to stabilize grid frequency', cost: 'Blackout cost: EUR 1-5B per event', color: colors.danger, delay: 0.2 },
+                { event: 'Automatic Frequency Restoration (aFRR)', time: '< 5 minutes', desc: 'Sustained response to restore frequency to 50 Hz', cost: 'Gas peaker alternative: EUR 150-300/MWh', color: colors.accent, delay: 0.5 },
+                { event: 'Peak Shaving', time: '1-4 hours', desc: 'Reduce grid load during demand peaks by discharging batteries', cost: 'VPP capacity 40-60% cheaper than peakers (Brattle)', color: colors.primary, delay: 0.9 },
+                { event: 'Energy Arbitrage', time: 'Scheduled', desc: 'Charge at negative prices, discharge at peak — optimizing day-ahead markets', cost: 'Curtailment avoided: EUR 554M/yr (DE)', color: colors.success, delay: 1.4 },
+              ];
+              return (
+                <div className="flex flex-col flex-1">
+                  <div className="flex flex-col justify-center gap-3 mt-2" style={{ opacity: sv >= 1 ? 1 : 0, transition: 'opacity 0.3s ease' }}>
+                    {events.map(e => (
+                      <div key={e.event} className="flex items-start gap-4 rounded-lg p-3"
+                        style={{
+                          background: `${e.color}06`,
+                          border: `1px solid ${e.color}15`,
+                          opacity: 0,
+                          '--glow-color': e.color + '20',
+                          animation: sv >= 1 ? `vppEventIn 0.5s ease ${e.delay}s forwards, vppEventGlow 1s ease ${e.delay + 0.4}s both` : 'none',
+                        }}>
+                        <div className="w-[320px] shrink-0">
+                          <div className="text-[17px] font-semibold font-sans" style={{ color: e.color }}>{e.event}</div>
+                          <div className="text-[13px] font-mono mt-1" style={{ color: colors.textDim, opacity: 0, animation: sv >= 1 ? `vppEventIn 0.3s ease ${e.delay + 0.25}s forwards` : 'none' }}>{e.time}</div>
+                        </div>
+                        <div className="flex-1">
+                          <div className="text-[17px] text-hud-text-muted font-sans">{e.desc}</div>
+                          <div className="text-[13px] font-mono mt-1" style={{ color: e.color + 'aa', opacity: 0, animation: sv >= 1 ? `vppEventIn 0.3s ease ${e.delay + 0.35}s forwards` : 'none' }}>{e.cost}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex-1 flex items-end justify-center pb-2">
+                    <div className="w-[80%] flex items-center gap-4 rounded-lg px-5 py-3" style={{
+                      background: colors.success + '0a',
+                      border: `1px solid ${colors.success}25`,
+                      opacity: sv >= 2 ? 1 : 0,
+                      transform: sv >= 2 ? 'translateX(0)' : 'translateX(-24px)',
+                      transition: 'all 0.5s ease',
+                    }}>
+                      <div className="shrink-0">
+                        <div className="text-[26px] font-bold font-mono" style={{ color: colors.success }}>And Fast:</div>
+                        <div className="text-[12px] font-mono mt-1" style={{ color: colors.textDim }}>Response Time</div>
+                      </div>
+                      <div className="flex-1"><LazyContent><ResponseTimeline width={840} height={120} delay={sv >= 2 ? 0.5 : 999} /></LazyContent></div>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <div className="text-[17px] text-hud-text-muted font-sans">{e.desc}</div>
-                  <div className="text-[13px] font-mono mt-1" style={{ color: e.color + 'aa', opacity: 0, animation: `vppEventIn 0.3s ease ${e.delay + 0.35}s forwards` }}>{e.cost}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="flex-1 flex items-end justify-center pb-2">
-            <div className="w-[80%] flex items-center gap-4 rounded-lg px-5 py-3" style={{
-              background: colors.success + '0a',
-              border: `1px solid ${colors.success}25`,
-              opacity: 0,
-              animation: 'vppEventIn 0.5s ease 2.2s forwards',
-            }}>
-              <div className="shrink-0">
-                <div className="text-[26px] font-bold font-mono" style={{ color: colors.success }}>And Fast:</div>
-                <div className="text-[12px] font-mono mt-1" style={{ color: colors.textDim }}>Response Time</div>
-              </div>
-              <div className="flex-1"><LazyContent><ResponseTimeline width={840} height={120} delay={2.8} /></LazyContent></div>
-            </div>
-          </div>
+              );
+            }}
+          </Stepper>
         </div>
         <Notes>
-          [LERENZO] Different timescales, different strategies.
+          [LERENZO] Different timescales, different strategies. [ARROW]
           FCR: under 30 seconds — blackout cost EUR 1-5B per event.
           aFRR: under 5 minutes — gas peaker alternative at EUR 150-300/MWh.
           Peak Shaving: 1-4 hours — VPP capacity 40-60% cheaper than peakers (Brattle).
-          Energy Arbitrage: scheduled day-ahead — curtailment avoided: EUR 554M/yr (DE).
+          Energy Arbitrage: scheduled day-ahead — curtailment avoided: EUR 554M/yr (DE). [ARROW]
           The speed comparison: Coal 2-12 hours. Gas 10-30 minutes. Hydro 15-30 seconds. Battery: 140 milliseconds.
           A battery responds before a gas turbine even knows there's an emergency.
         </Notes>
@@ -765,34 +772,56 @@ export default function Presentation() {
         <div className="flex flex-col h-full">
           <H color={colors.success}>The Economic Impact of Flexibility</H>
           <P size="20px">What changes when distributed batteries respond in milliseconds instead of hours.</P>
-          <div className="flex-1 flex items-center justify-center">
-            <div className="w-full max-w-[900px]">
-              <div className="flex gap-5 mb-5">
-                <div className="flex-1 text-center text-[18px] font-mono font-semibold py-2 rounded-t-lg" style={{ color: colors.danger, background: colors.danger + '0a', borderBottom: `2px solid ${colors.danger}40` }}>Without VPP</div>
-                <div className="w-[160px]" />
-                <div className="flex-1 text-center text-[18px] font-mono font-semibold py-2 rounded-t-lg" style={{ color: colors.success, background: colors.success + '0a', borderBottom: `2px solid ${colors.success}40` }}>With VPP</div>
-              </div>
-              {[
-                { metric: 'Grid Emergency', without: 'Cascade failure, 4+ hours', withVpp: 'Stabilized in 200ms', icon: 'FCR' },
-                { metric: 'Peak Demand', without: 'Gas peakers: EUR 150-300/MWh', withVpp: 'Battery discharge: EUR 60-100/MWh', icon: 'Cost' },
-                { metric: 'Negative Prices', without: 'Curtail renewables, pay EUR 554M/yr', withVpp: 'Charge batteries, earn revenue', icon: 'Price' },
-                { metric: 'Grid Upgrades', without: 'EUR 35B+ new infrastructure', withVpp: 'VPP capacity 40-60% cheaper (Brattle)', icon: 'Infra' },
-                { metric: 'CO2 Emissions', without: '~3.4 Mt avoidable CO2/yr (BNetzA + UBA, 2024)', withVpp: 'Near-zero curtailment emissions', icon: 'CO2' },
-              ].map((r, i) => (
-                <div key={r.metric} className="flex gap-5 mb-3 items-center" style={{ animation: `archLeftIn 0.5s ease ${0.3 + i * 0.15}s both` }}>
-                  <div className="flex-1 rounded-lg p-4 text-[18px] font-sans text-hud-text-muted" style={{ background: colors.danger + '06', border: `1px solid ${colors.danger}12` }}>
-                    {r.without}
-                  </div>
-                  <div className="w-[160px] text-center">
-                    <div className="text-[16px] font-semibold font-mono" style={{ color: colors.primary }}>{r.metric}</div>
-                  </div>
-                  <div className="flex-1 rounded-lg p-4 text-[18px] font-sans font-semibold" style={{ color: colors.success, background: colors.success + '06', border: `1px solid ${colors.success}12` }}>
-                    {r.withVpp}
+          <Stepper values={[1, 2, 3, 4, 5]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col">
+            {(visibleCount) => {
+              const vc = visibleCount ?? 0;
+              const rows = [
+                { metric: 'Grid Emergency', without: 'Cascade failure, 4+ hours', withVpp: 'Stabilized in 200ms' },
+                { metric: 'Peak Demand', without: 'Gas peakers: EUR 150-300/MWh', withVpp: 'Battery discharge: EUR 60-100/MWh' },
+                { metric: 'Negative Prices', without: 'Curtail renewables, pay EUR 554M/yr', withVpp: 'Charge batteries, earn revenue' },
+                { metric: 'Grid Upgrades', without: 'EUR 35B+ new infrastructure', withVpp: 'VPP capacity 40-60% cheaper (Brattle)' },
+                { metric: 'CO2 Emissions', without: '~3.4 Mt avoidable CO2/yr (BNetzA + UBA, 2024)', withVpp: 'Near-zero curtailment emissions' },
+              ];
+              return (
+                <div className="flex-1 flex items-center justify-center">
+                  <div className="w-full max-w-[900px]">
+                    <div className="flex gap-5 mb-5">
+                      <div className="flex-1 text-center text-[18px] font-mono font-semibold py-2 rounded-t-lg" style={{ color: colors.danger, background: colors.danger + '0a', borderBottom: `2px solid ${colors.danger}40` }}>Without VPP</div>
+                      <div className="w-[160px]" />
+                      <div className="flex-1 text-center text-[18px] font-mono font-semibold py-2 rounded-t-lg" style={{ color: colors.success, background: colors.success + '0a', borderBottom: `2px solid ${colors.success}40` }}>With VPP</div>
+                    </div>
+                    {rows.map((r, i) => {
+                      const visible = i < vc;
+                      const isNew = i === vc - 1;
+                      return (
+                        <div key={r.metric} className="flex gap-5 mb-3 items-center" style={{
+                          opacity: visible ? 1 : 0,
+                          transform: visible ? 'translateY(0)' : 'translateY(12px)',
+                          transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                        }}>
+                          <div className="flex-1 rounded-lg p-4 text-[18px] font-sans text-hud-text-muted" style={{ background: colors.danger + '06', border: `1px solid ${colors.danger}12` }}>
+                            {r.without}
+                          </div>
+                          <div className="w-[160px] text-center">
+                            <div className="text-[16px] font-semibold font-mono" style={{ color: colors.primary }}>{r.metric}</div>
+                          </div>
+                          <div className="flex-1 rounded-lg p-4 text-[18px] font-sans font-semibold" style={{
+                            color: colors.success,
+                            background: colors.success + '06',
+                            border: `1px solid ${colors.success}12`,
+                            boxShadow: isNew ? `0 0 12px ${colors.success}15` : 'none',
+                            transition: 'box-shadow 0.8s ease',
+                          }}>
+                            {r.withVpp}
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
+              );
+            }}
+          </Stepper>
         </div>
         <Notes>
           [MARIO] Side by side comparison — Without VPP vs. With VPP.

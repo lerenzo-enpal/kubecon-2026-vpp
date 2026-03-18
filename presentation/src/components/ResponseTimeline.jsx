@@ -112,8 +112,9 @@ export default function ResponseTimeline({ width = 720, height = 120, delay = 0 
         ctx.moveTo(boltStartX, trackY);
         for (let s = 1; s <= segments; s++) {
           const sx = boltStartX + s * segW;
+          const calm = 1 - t * t; // 1.0 at start → 0.0 at end
           const jitter = (s < segments)
-            ? (Math.sin(boltNow * 18 + s * 3.7) * 6 + Math.cos(boltNow * 29 + s * 5.1) * 3)
+            ? (Math.sin(boltNow * 18 + s * 3.7) * 6 + Math.cos(boltNow * 29 + s * 5.1) * 3) * calm
             : 0; // last point lands on center
           ctx.lineTo(sx, trackY + jitter);
         }
@@ -132,8 +133,9 @@ export default function ResponseTimeline({ width = 720, height = 120, delay = 0 
         ctx.shadowBlur = 0;
         ctx.restore();
 
-        // Leading edge flash
-        const flicker = 0.7 + 0.3 * Math.sin(boltNow * 40);
+        // Leading edge flash (calms as bolt settles)
+        const calm = 1 - t * t;
+        const flicker = 0.7 + 0.3 * Math.sin(boltNow * 40) * calm;
         ctx.save();
         ctx.beginPath();
         ctx.arc(sweepX, trackY, 5 * flicker, 0, Math.PI * 2);

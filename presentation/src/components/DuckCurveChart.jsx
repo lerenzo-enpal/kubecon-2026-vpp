@@ -349,7 +349,7 @@ export default function DuckCurveChart({ width = 1100, height = 560 }) {
         const bellyHour = netDem.indexOf(minNet);
         const bellyX = padLeft + bellyHour * xScale;
         const bellyY = padTop + (Y_MAX - minNet) * yScale;
-        const pulse = Math.sin(t * 3) * 0.3 + 0.7;
+        const pulse = Math.sin(t * 3) * 0.15 + 0.85;
         const minPrice = Math.round(demandToPrice(minNet));
 
         if (minNet < 0) {
@@ -382,7 +382,7 @@ export default function DuckCurveChart({ width = 1100, height = 560 }) {
         const rampX = padLeft + 17.5 * xScale;
         const rampY1 = padTop + (Y_MAX - netDem[14]) * yScale;
         const rampY2 = padTop + (Y_MAX - netDem[19]) * yScale;
-        const pulse = Math.sin(t * 2.5) * 0.2 + 0.8;
+        const pulse = Math.sin(t * 2.5) * 0.15 + 0.85;
 
         // Vertical bracket
         ctx.strokeStyle = `rgba(239, 68, 68, ${0.5 * pulse})`;
