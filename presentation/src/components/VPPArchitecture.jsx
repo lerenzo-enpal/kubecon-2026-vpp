@@ -287,11 +287,11 @@ export default function VPPArchitecture() {
         : hour < 22.5 ? 'battery-discharge'
         : 'night-pull';
 
-      // Sun alpha: 0 (down) → 1 (full) — slow fade over ~2h each way
+      // Sun alpha: 0 (down) → 1 (full) — slow fade over ~3h each way
       const sunAlpha = hour < 5.5 ? 0
-        : hour < 7.5 ? smoothstep(5.5, 7.5, hour)
-        : hour < 18.0 ? 1
-        : hour < 20.5 ? 1 - smoothstep(18.0, 20.5, hour)
+        : hour < 8.0 ? smoothstep(5.5, 8.0, hour)
+        : hour < 17.0 ? 1
+        : hour < 21.0 ? 1 - smoothstep(17.0, 21.0, hour)
         : 0;
 
       // Sun vertical arc — zenith at solar noon (13:15)
@@ -299,11 +299,12 @@ export default function VPPArchitecture() {
       const sunHalf = solarNoon - 6.5; // hours from rise to noon
       const sunArc = Math.max(0, 1 - Math.abs(hour - solarNoon) / sunHalf);
 
-      // Moon alpha (visibility) — slow fade over ~3h each way
+      // Moon alpha (visibility) — fades in after sun is ~25% visible
+      // Stars arrive when sun is at 25% (sunAlpha ~0.25 → hour ~20)
       const moonAlpha = hour < 4.0 ? 1
-        : hour < 7.0 ? 1 - smoothstep(4.0, 7.0, hour)
-        : hour < 17.5 ? 0
-        : hour < 21.0 ? smoothstep(17.5, 21.0, hour)
+        : hour < 8.0 ? 1 - smoothstep(4.0, 8.0, hour)
+        : hour < 20.0 ? 0
+        : hour < 23.5 ? smoothstep(20.0, 23.5, hour)
         : 1;
       // Moon arc — slow arc peaking at midnight (hour 0/24), independent of alpha
       // Moon is "up" from ~19:00 to ~07:00 (12h window centered on midnight)
@@ -463,20 +464,39 @@ export default function VPPArchitecture() {
         ctx.stroke();
         ctx.shadowBlur = 0;
 
-        // Animated electricity particles on underground cable — batched shadow
+        // Animated electricity particles on L-shaped cable path
+        // Path: house base (cableRightX, cy+bodyH/2) → down to (cableRightX, cableDropY) → right to (width+20, cableDropY)
         const hasFlow = isExporting || isPulling;
         const elecDir = isExporting ? 1 : -1;
         const elecAlpha = hasFlow ? 0.85 : 0.15;
+        const vertLen = cableDropY - (cy + bodyH / 2);
+        const horizLen = width + 20 - cableRightX;
+        const totalLen = vertLen + horizLen;
+        const vertFrac = vertLen / totalLen; // fraction of path that is vertical
         ctx.shadowBlur = hasFlow ? 6 : 2;
         ctx.shadowColor = electricYellow;
         ctx.fillStyle = electricYellow;
         ctx.globalAlpha = elecAlpha;
         ctx.beginPath();
-        for (let ep = 0; ep < 3; ep++) {
-          const baseP = ((now * 0.3 * elecDir + ep * 0.33 + i * 0.13) % 1 + 1) % 1;
-          const epx = cableRightX + (width + 20 - cableRightX) * baseP;
-          ctx.moveTo(epx + 2, cableDropY);
-          ctx.arc(epx, cableDropY, 2, 0, Math.PI * 2);
+        for (let ep = 0; ep < 4; ep++) {
+          // t goes 0→1 along full path; pulling = from grid edge toward house
+          const baseP = ((now * 0.25 * elecDir + ep * 0.25 + i * 0.13) % 1 + 1) % 1;
+          // Pulling: t=0 at grid edge (right), t=1 at house. Exporting: reversed.
+          const t = isPulling ? baseP : 1 - baseP;
+          let epx, epy;
+          if (t > 1 - vertFrac) {
+            // Vertical segment (near house)
+            const vt = (t - (1 - vertFrac)) / vertFrac; // 0 at bottom, 1 at house
+            epx = cableRightX;
+            epy = cableDropY - vt * vertLen;
+          } else {
+            // Horizontal segment
+            const ht = t / (1 - vertFrac); // 0 at grid edge, 1 at corner
+            epx = width + 20 - ht * horizLen;
+            epy = cableDropY;
+          }
+          ctx.moveTo(epx + 2, epy);
+          ctx.arc(epx, epy, 2, 0, Math.PI * 2);
         }
         ctx.fill();
         ctx.shadowBlur = 0;

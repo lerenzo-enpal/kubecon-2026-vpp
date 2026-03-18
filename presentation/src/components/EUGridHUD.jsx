@@ -12,12 +12,20 @@ const HUBS = [
   { id: 'lisbon', pos: [-9.14, 38.74], name: 'Lisbon', cap: 12, type: 'wind' },
   { id: 'madrid', pos: [-3.70, 40.42], name: 'Madrid', cap: 28, type: 'solar' },
   { id: 'barcelona', pos: [2.17, 41.39], name: 'Barcelona', cap: 12, type: 'solar' },
+  { id: 'bilbao', pos: [-2.93, 43.26], name: 'Bilbao', cap: 8, type: 'wind' },
+  { id: 'seville', pos: [-5.98, 37.39], name: 'Seville', cap: 10, type: 'solar' },
   // France
   { id: 'paris', pos: [2.35, 48.86], name: 'Paris', cap: 55, type: 'nuclear' },
   { id: 'lyon', pos: [4.84, 45.76], name: 'Lyon', cap: 18, type: 'nuclear' },
   { id: 'marseille', pos: [5.37, 43.30], name: 'Marseille', cap: 14, type: 'nuclear' },
-  // UK (interconnected)
+  { id: 'toulouse', pos: [1.44, 43.60], name: 'Toulouse', cap: 10, type: 'nuclear' },
+  { id: 'bordeaux', pos: [-0.58, 44.84], name: 'Bordeaux', cap: 10, type: 'nuclear' },
+  { id: 'strasbourg', pos: [7.75, 48.57], name: 'Strasbourg', cap: 8, type: 'nuclear' },
+  // UK & Ireland
   { id: 'london', pos: [-0.12, 51.51], name: 'London', cap: 42, type: 'gas' },
+  { id: 'edinburgh', pos: [-3.19, 55.95], name: 'Edinburgh', cap: 12, type: 'wind' },
+  { id: 'manchester', pos: [-2.24, 53.48], name: 'Manchester', cap: 14, type: 'gas' },
+  { id: 'dublin', pos: [-6.26, 53.35], name: 'Dublin', cap: 8, type: 'wind' },
   // Benelux
   { id: 'amsterdam', pos: [4.90, 52.37], name: 'Amsterdam', cap: 18, type: 'gas' },
   { id: 'brussels', pos: [4.35, 50.85], name: 'Brussels', cap: 14, type: 'nuclear' },
@@ -27,55 +35,93 @@ const HUBS = [
   { id: 'munich', pos: [11.58, 48.14], name: 'Munich', cap: 22, type: 'solar' },
   { id: 'cologne', pos: [6.96, 50.94], name: 'Cologne', cap: 18, type: 'gas' },
   { id: 'frankfurt', pos: [8.68, 50.11], name: 'Frankfurt', cap: 16, type: 'gas' },
+  { id: 'stuttgart', pos: [9.18, 48.78], name: 'Stuttgart', cap: 12, type: 'solar' },
+  { id: 'leipzig', pos: [12.37, 51.34], name: 'Leipzig', cap: 10, type: 'coal' },
+  { id: 'dortmund', pos: [7.47, 51.51], name: 'Dortmund', cap: 14, type: 'coal' },
   // Alps
   { id: 'zurich', pos: [8.54, 47.37], name: 'Zurich', cap: 16, type: 'hydro' },
   { id: 'vienna', pos: [16.37, 48.21], name: 'Vienna', cap: 16, type: 'hydro' },
+  { id: 'innsbruck', pos: [11.39, 47.26], name: 'Innsbruck', cap: 8, type: 'hydro' },
   // Italy
   { id: 'milan', pos: [9.19, 45.46], name: 'Milan', cap: 24, type: 'gas' },
   { id: 'rome', pos: [12.50, 41.90], name: 'Rome', cap: 20, type: 'gas' },
+  { id: 'naples', pos: [14.27, 40.85], name: 'Naples', cap: 10, type: 'gas' },
+  { id: 'turin', pos: [7.69, 45.07], name: 'Turin', cap: 12, type: 'gas' },
   // Nordic
   { id: 'copenhagen', pos: [12.57, 55.68], name: 'Copenhagen', cap: 10, type: 'wind' },
   { id: 'stockholm', pos: [18.07, 59.33], name: 'Stockholm', cap: 20, type: 'hydro' },
   { id: 'oslo', pos: [10.75, 59.91], name: 'Oslo', cap: 28, type: 'hydro' },
   { id: 'helsinki', pos: [24.94, 60.17], name: 'Helsinki', cap: 12, type: 'nuclear' },
+  { id: 'gothenburg', pos: [11.97, 57.71], name: 'Gothenburg', cap: 10, type: 'wind' },
+  { id: 'bergen', pos: [5.32, 60.39], name: 'Bergen', cap: 14, type: 'hydro' },
   // Central/Eastern Europe
   { id: 'warsaw', pos: [21.01, 52.23], name: 'Warsaw', cap: 25, type: 'coal' },
   { id: 'prague', pos: [14.42, 50.08], name: 'Prague', cap: 14, type: 'nuclear' },
   { id: 'budapest', pos: [19.04, 47.50], name: 'Budapest', cap: 12, type: 'nuclear' },
   { id: 'bucharest', pos: [26.10, 44.43], name: 'Bucharest', cap: 14, type: 'hydro' },
+  { id: 'krakow', pos: [19.94, 50.06], name: 'Krakow', cap: 10, type: 'coal' },
+  { id: 'bratislava', pos: [17.11, 48.15], name: 'Bratislava', cap: 8, type: 'nuclear' },
+  { id: 'zagreb', pos: [15.98, 45.81], name: 'Zagreb', cap: 6, type: 'hydro' },
+  { id: 'belgrade', pos: [20.46, 44.82], name: 'Belgrade', cap: 10, type: 'coal' },
+  { id: 'sofia', pos: [23.32, 42.70], name: 'Sofia', cap: 8, type: 'nuclear' },
   // Southeast
   { id: 'athens', pos: [23.73, 37.98], name: 'Athens', cap: 10, type: 'solar' },
   { id: 'istanbul', pos: [29.00, 41.01], name: 'Istanbul', cap: 32, type: 'gas' },
+  // Baltics
+  { id: 'riga', pos: [24.11, 56.95], name: 'Riga', cap: 6, type: 'gas' },
+  { id: 'vilnius', pos: [25.28, 54.69], name: 'Vilnius', cap: 6, type: 'gas' },
+  { id: 'tallinn', pos: [24.75, 59.44], name: 'Tallinn', cap: 5, type: 'wind' },
 ];
 
 // ── Transmission corridors [from, to, capacity (1-10)] ──────
 const CORRIDORS = [
   // Iberia
-  ['lisbon', 'madrid', 4], ['madrid', 'barcelona', 4],
+  ['lisbon', 'madrid', 4], ['lisbon', 'seville', 3], ['seville', 'madrid', 4],
+  ['madrid', 'barcelona', 4], ['madrid', 'bilbao', 3], ['bilbao', 'bordeaux', 3],
   // France + cross-border
-  ['madrid', 'paris', 6], ['barcelona', 'lyon', 3], ['barcelona', 'marseille', 3],
-  ['paris', 'lyon', 7], ['lyon', 'marseille', 5],
-  ['paris', 'london', 8], ['paris', 'brussels', 6], ['paris', 'zurich', 5],
-  ['lyon', 'milan', 5],
+  ['madrid', 'toulouse', 4], ['barcelona', 'marseille', 3], ['barcelona', 'toulouse', 3],
+  ['toulouse', 'bordeaux', 4], ['toulouse', 'marseille', 4], ['toulouse', 'lyon', 4],
+  ['bordeaux', 'paris', 5], ['paris', 'lyon', 7], ['lyon', 'marseille', 5],
+  ['paris', 'london', 8], ['paris', 'brussels', 6], ['paris', 'strasbourg', 5],
+  ['strasbourg', 'zurich', 4], ['strasbourg', 'frankfurt', 4], ['strasbourg', 'cologne', 3],
+  ['lyon', 'turin', 4], ['lyon', 'zurich', 4],
+  // UK & Ireland
+  ['london', 'manchester', 5], ['manchester', 'edinburgh', 4],
+  ['dublin', 'manchester', 3], ['dublin', 'edinburgh', 3],
+  ['london', 'amsterdam', 6],
   // Benelux
-  ['london', 'amsterdam', 6], ['amsterdam', 'brussels', 4], ['amsterdam', 'hamburg', 5],
+  ['amsterdam', 'brussels', 4], ['amsterdam', 'hamburg', 5],
   ['brussels', 'cologne', 4],
   // Germany internal
-  ['hamburg', 'berlin', 7], ['hamburg', 'cologne', 6],
-  ['cologne', 'frankfurt', 8], ['frankfurt', 'munich', 7], ['frankfurt', 'berlin', 8],
+  ['hamburg', 'berlin', 7], ['hamburg', 'cologne', 6], ['hamburg', 'dortmund', 5],
+  ['cologne', 'dortmund', 5], ['cologne', 'frankfurt', 8], ['dortmund', 'frankfurt', 5],
+  ['frankfurt', 'stuttgart', 6], ['frankfurt', 'leipzig', 5], ['frankfurt', 'berlin', 8],
+  ['stuttgart', 'munich', 5], ['leipzig', 'berlin', 5], ['leipzig', 'prague', 4],
   ['berlin', 'warsaw', 4], ['berlin', 'prague', 5], ['berlin', 'copenhagen', 5],
-  ['munich', 'zurich', 5], ['munich', 'vienna', 6],
+  ['munich', 'zurich', 5], ['munich', 'innsbruck', 4], ['munich', 'vienna', 6],
   // Alps + Italy
-  ['zurich', 'milan', 5], ['milan', 'rome', 6],
-  ['vienna', 'prague', 5], ['vienna', 'budapest', 4],
+  ['zurich', 'innsbruck', 4], ['innsbruck', 'vienna', 4], ['innsbruck', 'milan', 4],
+  ['zurich', 'milan', 5], ['turin', 'milan', 5], ['milan', 'rome', 6],
+  ['rome', 'naples', 4],
+  ['vienna', 'prague', 5], ['vienna', 'bratislava', 4], ['vienna', 'budapest', 4],
   // Nordic
-  ['copenhagen', 'hamburg', 5], ['copenhagen', 'stockholm', 4],
-  ['stockholm', 'oslo', 5], ['stockholm', 'helsinki', 3],
-  // Eastern Europe
-  ['warsaw', 'prague', 4], ['warsaw', 'budapest', 3],
-  ['budapest', 'bucharest', 3], ['budapest', 'vienna', 4],
+  ['copenhagen', 'hamburg', 5], ['copenhagen', 'gothenburg', 4], ['copenhagen', 'stockholm', 4],
+  ['gothenburg', 'oslo', 4], ['gothenburg', 'stockholm', 4],
+  ['oslo', 'bergen', 5], ['oslo', 'stockholm', 5],
+  ['stockholm', 'helsinki', 3],
+  // Baltics
+  ['helsinki', 'tallinn', 3], ['tallinn', 'riga', 3], ['riga', 'vilnius', 3],
+  ['vilnius', 'warsaw', 3],
+  // Central/Eastern Europe
+  ['warsaw', 'prague', 4], ['warsaw', 'krakow', 4],
+  ['krakow', 'bratislava', 3], ['krakow', 'budapest', 3],
+  ['bratislava', 'budapest', 4], ['budapest', 'zagreb', 3],
+  ['budapest', 'belgrade', 3], ['budapest', 'bucharest', 3],
+  ['zagreb', 'vienna', 3], ['zagreb', 'milan', 3],
+  ['belgrade', 'bucharest', 3], ['belgrade', 'sofia', 3],
   // Southeast
-  ['rome', 'athens', 3], ['athens', 'istanbul', 4], ['bucharest', 'istanbul', 3],
+  ['naples', 'athens', 3], ['sofia', 'athens', 3],
+  ['athens', 'istanbul', 4], ['bucharest', 'istanbul', 3], ['sofia', 'istanbul', 3],
 ];
 
 // ── Journey steps: plant → home → region → nation → continent ──
@@ -102,7 +148,7 @@ const STEPS = [
     subtitle: '5 major hubs connected across Southern Germany & Alps',
     voltage: '110–400 kV',
     detail: 'Multiple generation sources — gas, solar, hydro, nuclear — feed the regional network',
-    visibleIds: ['munich', 'zurich', 'frankfurt', 'vienna', 'milan', 'prague', 'lyon'],
+    visibleIds: ['munich', 'zurich', 'frankfurt', 'vienna', 'milan', 'prague', 'lyon', 'innsbruck', 'stuttgart', 'turin'],
   },
   {
     view: { longitude: 10.5, latitude: 51.5, zoom: 5.2, pitch: 32, bearing: 0 },
@@ -112,7 +158,8 @@ const STEPS = [
     detail: '230 GW installed. Hamburg wind farms to Bavarian solar, all synchronized at 50 Hz',
     visibleIds: ['munich', 'zurich', 'frankfurt', 'vienna', 'milan', 'prague',
       'lyon', 'berlin', 'hamburg', 'cologne', 'amsterdam', 'brussels',
-      'copenhagen', 'paris', 'warsaw'],
+      'copenhagen', 'paris', 'warsaw', 'stuttgart', 'leipzig', 'dortmund',
+      'strasbourg', 'innsbruck', 'turin', 'bratislava'],
   },
   {
     view: { longitude: 12, latitude: 49, zoom: 3.4, pitch: 15, bearing: 0 },
@@ -135,6 +182,14 @@ const TYPE_COLORS = {
 
 const HUB_MAP = new Map(HUBS.map(h => [h.id, h]));
 const getHub = (id) => HUB_MAP.get(id);
+
+// Only label major energy cities to avoid overlap in dense regions
+const LABELED_HUBS = new Set([
+  'lisbon', 'madrid', 'paris', 'london', 'berlin', 'munich',
+  'hamburg', 'rome', 'milan', 'oslo', 'stockholm', 'helsinki',
+  'warsaw', 'vienna', 'athens', 'istanbul', 'dublin', 'copenhagen',
+  'bucharest', 'edinburgh', 'bergen', 'vilnius',
+]);
 
 const FLY_TO = new FlyToInterpolator();
 
@@ -303,15 +358,9 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
   // ── Deck.gl layers ──
   const layers = [
     new LineLayer({
-      id: 'line-glow', data: visibleLines,
-      getSourcePosition: d => d.from, getTargetPosition: d => d.to,
-      getColor: [34, 211, 238, 14], getWidth: d => 4 + d.cap * 1.2,
-      widthMinPixels: 2,
-    }),
-    new LineLayer({
       id: 'lines', data: visibleLines,
       getSourcePosition: d => d.from, getTargetPosition: d => d.to,
-      getColor: [34, 211, 238, 90], getWidth: d => 0.5 + d.cap * 0.3,
+      getColor: [34, 211, 238, 90], getWidth: d => 0.3 + d.cap * 0.15,
       widthMinPixels: 1,
     }),
     new ScatterplotLayer({
@@ -332,7 +381,7 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
       transitions: { getFillColor: 400, getRadius: 400 },
     }),
     new TextLayer({
-      id: 'labels', data: visibleHubs,
+      id: 'labels', data: visibleHubs.filter(h => LABELED_HUBS.has(h.id)),
       getPosition: d => d.pos, getText: d => d.name,
       getSize: 12, getColor: [241, 245, 249, 190],
       getTextAnchor: 'middle', getAlignmentBaseline: 'top',
@@ -378,7 +427,7 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
         style={{ position: 'absolute', inset: 0 }}
       >
         <MapGL
-          mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+          mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json"
           style={{ width: '100%', height: '100%' }}
         />
       </DeckGL>
@@ -467,7 +516,7 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
       )}
 
       {/* ── Legend — bottom left ── */}
-      <div className="absolute bottom-14 left-4 z-10" style={{ opacity: bootFade(1.5) }}>
+      <div className="absolute bottom-4 left-4 z-10" style={{ opacity: bootFade(1.5) }}>
         <div className="flex gap-3 rounded p-2.5" style={{
           background: 'rgba(5,8,16,0.85)',
           border: '1px solid rgba(34,211,238,0.12)',

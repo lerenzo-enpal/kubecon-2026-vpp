@@ -292,17 +292,6 @@ export default function GridFlowDemo({ width = '100%' }) {
         })}
       </div>
 
-      {/* Step dots */}
-      <div style={{ display: 'flex', justifyContent: 'center', gap: 6, paddingBottom: 2 }}>
-        {[0, 1, 2, 3, 4, 5].map(i => (
-          <div key={i} style={{
-            width: 6, height: 6, borderRadius: '50%',
-            background: i <= step ? c : colors.textDim + '30',
-            transition: 'background 0.3s ease',
-            boxShadow: i === step ? `0 0 8px ${c}` : 'none',
-          }} />
-        ))}
-      </div>
     </div>
   );
 }
@@ -507,9 +496,14 @@ function Plant({ x, y, w, h, c, smoking, label, draw, t0 = 0 }) {
         stroke={activeStroke} strokeWidth="1" fill={activeFill}
         style={{ ...dSF(draw, t0 + 0.3, 0.4), transition: 'fill 0.6s ease, stroke 0.4s ease' }} />
       {/* Label */}
-      <text x={x + w * 0.29} y={y + h + 18} textAnchor="middle"
-        fill={c + 'cc'} fontSize="18" fontWeight="600" fontFamily="JetBrains Mono" letterSpacing="0.08em"
-        style={flk(draw, t0 + 0.8)}>{label}</text>
+      {/* Label — split into two centered lines */}
+      <text x={x + w * 0.29} y={y + h * 0.65} textAnchor="middle"
+        fill={c + 'cc'} fontSize="14" fontWeight="600" fontFamily="JetBrains Mono" letterSpacing="0.08em"
+        style={flk(draw, t0 + 0.8)}>
+        {label.split(' ').map((word, i, arr) => (
+          <tspan key={i} x={x + w * 0.29} dy={i === 0 ? `${-(arr.length - 1) * 0.5}em` : '1em'}>{word}</tspan>
+        ))}
+      </text>
       {/* Corner brackets */}
       <line pathLength="1" x1={x - 4} y1={y + h * 0.3 - 4} x2={x + 12} y2={y + h * 0.3 - 4}
         stroke={c + '25'} strokeWidth="1" style={dS(draw, t0 + 0.7, 0.3)} />
@@ -625,8 +619,8 @@ function Substation({ x, y, w, h, c, draw, t0 = 0, energized }) {
           ? { strokeDasharray: 'none', strokeDashoffset: 0, animation: 'coilPulse 1.2s ease-in-out infinite 0.6s' }
           : dS(draw, t0 + 0.45, 0.5)} />
       {/* Label */}
-      <text x={x + w / 2} y={y + h + 18} textAnchor="middle"
-        fill={c + '35'} fontSize="16" fontFamily="JetBrains Mono" letterSpacing="0.1em"
+      <text x={x + w / 2} y={y + h + 23} textAnchor="middle"
+        fill={c + '35'} fontSize="13" fontFamily="JetBrains Mono" letterSpacing="0.1em"
         style={flk(draw, t0 + 0.9)}>SUBSTATION</text>
       {/* Corner brackets */}
       {[[x - 4, y - 4, 1, 1], [x + w + 4, y - 4, -1, 1], [x - 4, y + h + 4, 1, -1], [x + w + 4, y + h + 4, -1, -1]].map(([bx, by, dx, dy], i) => (

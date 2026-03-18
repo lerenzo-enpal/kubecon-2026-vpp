@@ -484,7 +484,7 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
               }}>ERCOT GRID MONITOR</span>
               <span style={{
                 marginLeft: 'auto', fontSize: 11, fontFamily: '"JetBrains Mono"',
-                color: '#64748b60',
+                color: '#64748bcc',
               }}>FEB 2021</span>
             </div>
 
@@ -576,23 +576,23 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
               clipPath: terminalDraw < 1 ? `inset(0 0 ${(1 - terminalDraw) * 100}% 0)` : 'none',
             }}>
               <div style={{
-                fontSize: 9, fontFamily: '"JetBrains Mono"', color: '#64748b50',
+                fontSize: 9, fontFamily: '"JetBrains Mono"', color: '#64748b80',
                 letterSpacing: '0.1em', marginBottom: 4,
               }}>SYSTEM LOG</div>
               {visibleLogs.length === 0 && (
                 <div style={{ fontSize: 12, fontFamily: '"JetBrains Mono"' }}>
                   {boot > 2.2 && (
-                    <div style={{ color: '#22d3ee50', marginBottom: 2 }}>
+                    <div style={{ color: '#22d3eecc', marginBottom: 2 }}>
                       {'>'} ERCOT GRID MONITOR v2.1 INIT...
                     </div>
                   )}
                   {boot > 2.6 && (
-                    <div style={{ color: '#22d3ee50', marginBottom: 2 }}>
+                    <div style={{ color: '#22d3eecc', marginBottom: 2 }}>
                       {'>'} NODES: {PLANTS.length} | LINKS: {TX_LINES.length} | STATUS: OK
                     </div>
                   )}
                   {boot > 3.0 && (
-                    <div style={{ color: '#64748b35' }}>
+                    <div style={{ color: '#64748bcc' }}>
                       {'>'} Awaiting events...<span className="hud-blink">{'\u2588'}</span>
                     </div>
                   )}
@@ -631,7 +631,7 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
           }}>
             <Corners color={glowColor} />
             <div style={{
-              fontSize: 10, fontFamily: '"JetBrains Mono"', color: '#64748b60',
+              fontSize: 10, fontFamily: '"JetBrains Mono"', color: '#64748bcc',
               letterSpacing: '0.1em', marginBottom: 6,
               opacity: rpContent,
             }}>FREQUENCY</div>

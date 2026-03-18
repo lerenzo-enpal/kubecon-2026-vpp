@@ -579,8 +579,8 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
       getSourcePosition: d => d.from,
       getTargetPosition: d => d.to,
       getColor: d => d.color,
-      getWidth: 3,
-      widthMinPixels: 2,
+      getWidth: 1.5,
+      widthMinPixels: 1,
       updateTriggers: { getColor: [stepIndex, Date.now() >> 8] },
     }));
 
@@ -591,8 +591,8 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
       getSourcePosition: d => d.from,
       getTargetPosition: d => d.to,
       getColor: d => d.color.map((c, i) => i < 3 ? c : Math.floor(c * 0.3)),
-      getWidth: 10,
-      widthMinPixels: 4,
+      getWidth: 4,
+      widthMinPixels: 2,
       updateTriggers: { getColor: [stepIndex, Date.now() >> 8] },
     }));
 
