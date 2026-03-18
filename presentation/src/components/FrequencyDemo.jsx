@@ -1087,12 +1087,14 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
         }
       }
 
-      hackerAnimRef.current = requestAnimationFrame(drawHacker);
+      if (slideContext?.isSlideActive) {
+        hackerAnimRef.current = requestAnimationFrame(drawHacker);
+      }
     };
 
     drawHacker();
     return () => cancelAnimationFrame(hackerAnimRef.current);
-  }, [hackerTakeover]);
+  }, [hackerTakeover, slideContext?.isSlideActive]);
 
   // Auto-scroll event feed
   useEffect(() => {

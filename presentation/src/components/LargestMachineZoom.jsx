@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useContext, useMemo, useState, useCallback } from 'react';
 import { SlideContext, useSteps } from 'spectacle';
 import DeckGL from '@deck.gl/react';
-import { FlyToInterpolator } from '@deck.gl/core';
+import { WebMercatorViewport } from '@deck.gl/core';
 import { ScatterplotLayer } from '@deck.gl/layers';
 import Map from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
@@ -13,7 +13,7 @@ import SETTLEMENTS_RAW from '../data/europe-settlements';
  *
  * Phase 0: Canvas — subtle grid pulse + "HOW BIG? LET'S COMPARE."
  * Phase 1: Canvas — Wolfsburg factory drawn by pen traces
- * Phase 2: deck.gl — FlyTo from Wolfsburg to EU night-lights view
+ * Phase 2: deck.gl — Manual zoom-out from Wolfsburg to EU night-lights
  * Phase 3: Canvas overlay — Big "0" ZERO DOWNTIME over the EU map
  */
 
@@ -22,18 +22,38 @@ const hexToRgb = (hex) => {
   return m ? [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16)] : [200, 200, 200];
 };
 
-// ── Preprocess GeoNames data: [lng, lat, pop] → deck.gl-ready format ──
-const SETTLEMENTS = SETTLEMENTS_RAW.map(([lng, lat, pop]) => ({ position: [lng, lat], pop }));
+// ── Pre-process GeoNames settlements with animation groups ──
+// group: 0=static, 1=blink (0.2s off/1s cycle), 2=fade (smooth), 3=pulse (bright flash/3s)
+const SETTLEMENTS = SETTLEMENTS_RAW.map(([lng, lat, pop], i) => {
+  const hash = ((i * 2654435761) >>> 0) % 20;
+  let group = 0;
+  if (hash === 0) group = 1;
+  else if (hash === 1) group = 2;
+  else if (hash === 2) group = 3;
+  const seed = ((i * 2654435761) >>> 0) / 4294967296; // 0-1
+  return { position: [lng, lat], pop, group, seed };
+});
 
 // Wolfsburg VW factory: 52.4227°N 10.7865°E
 const WOLFSBURG = [10.7865, 52.4227];
 
-// ── Canvas helpers (Phase 0, 1, 3) ──
+// ── Helpers ──
+
+function lerp(a, b, t) { return a + (b - a) * t; }
 
 function easeOutBack(t) {
   const c1 = 1.70158, c3 = c1 + 1;
   return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
 }
+
+// Use deck.gl's own viewport for projection — guarantees alignment with ScatterplotLayer dots
+function projectToScreen(lng, lat, view, screenW, screenH) {
+  const vp = new WebMercatorViewport({ width: screenW, height: screenH, ...view });
+  const [x, y] = vp.project([lng, lat]);
+  return { x, y };
+}
+
+// ── Canvas drawing helpers (Phase 0, 1, 3) ──
 
 function drawFactory(ctx, x, y, w, h, alpha, labelAlpha = 1) {
   ctx.save();
@@ -125,8 +145,9 @@ function drawCounterHUD(ctx, count, label, labelColor, alpha, width) {
 
 // ── deck.gl config ──
 const DARK_MAP = 'https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json';
-const WOLFSBURG_VIEW = { longitude: 10.7865, latitude: 52.4227, zoom: 12, pitch: 0, bearing: 0 };
+const WOLFSBURG_VIEW = { longitude: 10.7865, latitude: 52.4227, zoom: 14, pitch: 0, bearing: 0 };
 const EUROPE_VIEW   = { longitude: 10, latitude: 50, zoom: 3.8, pitch: 0, bearing: 0 };
+const ZOOM_DURATION = 7; // seconds — slow enough to track Wolfsburg
 
 export default function LargestMachineZoom({ width = 1024, height = 668 }) {
   const canvasRef = useRef(null);
@@ -139,8 +160,26 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
   const phaseTimeRef = useRef(0);
   const prevStepRef = useRef(-1);
 
-  // ── deck.gl state (uncontrolled mode — required for FlyToInterpolator) ──
-  const [initialViewState, setInitialViewState] = useState(WOLFSBURG_VIEW);
+  // ── Controlled viewState — manual interpolation in RAF loop ──
+  const [viewState, setViewState] = useState(WOLFSBURG_VIEW);
+  const zoomProgressRef = useRef(0);  // 0-1 animation progress for light appearance
+  const nowRef = useRef(0);           // current time (seconds) for light animation
+
+  // Light animation tick — 10fps layer updates for blink/fade/pulse effects
+  const [lightTick, setLightTick] = useState(0);
+  useEffect(() => {
+    if (currentStepValue < 2) return;
+    const interval = setInterval(() => setLightTick(t => t + 1), 100);
+    return () => clearInterval(interval);
+  }, [currentStepValue]);
+
+  // Reset viewState when going back to earlier phases
+  useEffect(() => {
+    if (currentStepValue < 2) {
+      setViewState(WOLFSBURG_VIEW);
+      zoomProgressRef.current = 0;
+    }
+  }, [currentStepValue]);
 
   // Hide borders + darken ocean to near-black night color
   const onMapLoad = useCallback(() => {
@@ -161,47 +200,70 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
     } catch (_) { /* style not ready */ }
   }, []);
 
-  // Trigger fly-to zoom on Phase 2 entry
-  useEffect(() => {
-    if (currentStepValue === 2) {
-      setInitialViewState({
-        ...EUROPE_VIEW,
-        transitionDuration: 5000,
-        transitionInterpolator: new FlyToInterpolator(),
-        transitionEasing: t => 1 - Math.pow(1 - t, 3),
-      });
-    } else if (currentStepValue < 2) {
-      setInitialViewState(WOLFSBURG_VIEW);
-    }
-  }, [currentStepValue]);
-
-  // deck.gl layers — 46K real European settlements from GeoNames
+  // deck.gl layers — 46K real European settlements with animated subsets
   const layers = useMemo(() => {
     if (currentStepValue < 2) return [];
+    const now = nowRef.current;
+    const zp = zoomProgressRef.current;
     return [
       new ScatterplotLayer({
         id: 'settlements',
         data: SETTLEMENTS,
         getPosition: d => d.position,
-        getRadius: d => 200 + Math.sqrt(d.pop) * 8,
+        getRadius: d => 100 + Math.sqrt(d.pop) * 2,
         getFillColor: d => {
-          const brightness = Math.min(255, 100 + Math.sqrt(d.pop) * 0.5);
-          return [255, 240, 200, brightness];
+          const popFactor = Math.min(1, Math.sqrt(d.pop) / 130);
+          // Progressive appearance: big cities first, smaller ones later
+          const appearT = Math.max(0, Math.min(1, (zp - (1 - popFactor) * 0.7) / 0.3));
+          if (appearT < 0.01) return [255, 240, 200, 0];
+          let brightness = Math.min(255, 100 + Math.sqrt(d.pop) * 0.5);
+          let alpha = brightness * appearT;
+
+          // Animation groups (only when fully appeared)
+          if (appearT > 0.5) {
+            if (d.group === 1) {
+              // Blink: 1s cycle, 0.2s off
+              const cycle = (now + d.seed * 7) % 1;
+              if (cycle > 0.8) alpha = 0;
+            } else if (d.group === 2) {
+              // Fade in/out: smooth ~2s cycle
+              const fade = (Math.sin((now + d.seed * 10) * Math.PI) + 1) / 2;
+              alpha *= 0.2 + fade * 0.8;
+            } else if (d.group === 3) {
+              // Bright pulse: every 3s, 0.4s flash
+              const cycle = (now + d.seed * 20) % 3;
+              if (cycle < 0.4) {
+                alpha = Math.min(255, alpha * 2.5);
+              }
+            }
+          }
+
+          return [255, 240, 200, Math.round(Math.max(0, Math.min(255, alpha)))];
         },
-        radiusMinPixels: 0.4,
-        radiusMaxPixels: 4,
+        radiusMinPixels: 0.3,
+        radiusMaxPixels: 2,
+        updateTriggers: { getFillColor: [lightTick] },
       }),
       new ScatterplotLayer({
         id: 'wolfsburg',
         data: [WOLFSBURG],
         getPosition: d => d,
         getRadius: 4000,
-        getFillColor: [255, 216, 102, 255],
+        getFillColor: () => {
+          const zp = zoomProgressRef.current;
+          // Don't show until factory lines have faded (factory fades at t*1.5, gone at ~0.67)
+          // Start appearing at 60% zoom progress, full brightness at 80%
+          if (zp < 0.55) return [245, 158, 11, 0];
+          const dotT = Math.max(0, Math.min(1, (zp - 0.55) / 0.25));
+          const alpha = Math.round(dotT * 255);
+          return [245, 158, 11, alpha];
+        },
         radiusMinPixels: 4,
         radiusMaxPixels: 8,
+        updateTriggers: { getFillColor: [lightTick] },
       }),
     ];
-  }, [currentStepValue]);
+  }, [currentStepValue, lightTick]);
 
   // ── Canvas animation loop (Phase 0, 1, 3 + HUD overlay for Phase 2) ──
   useEffect(() => {
@@ -214,6 +276,7 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
     const draw = () => {
       const isActive = slideContext?.isSlideActive;
       const now = performance.now();
+      nowRef.current = now / 1000;
 
       if (currentStepValue !== prevStepRef.current) {
         prevStepRef.current = currentStepValue;
@@ -360,39 +423,112 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
       }
 
       // ════════════════════════════════════════════
-      // PHASE 2: Factory SHRINKS (zoom-out) + HUD counter (deck.gl handles the map)
+      // PHASE 2: Manual zoom-out — factory tracks map projection
       // ════════════════════════════════════════════
-      if (step === 2 && elapsed < 3) {
-        // Shrink factory using canvas transform — feels like a camera zoom-out
-        const t = Math.min(1, elapsed / 2.5);
-        const scale = Math.max(0.01, 1 - t);
-        const fadeAlpha = Math.max(0, 1 - elapsed / 2);
-        if (fadeAlpha > 0.01 && scale > 0.01) {
-          const cx = width / 2, cy = height * 0.42;
-          ctx.save();
-          ctx.globalAlpha = fadeAlpha;
-          ctx.translate(cx, cy);
-          ctx.scale(scale, scale);
-          ctx.translate(-cx, -cy);
-          const factoryW = 246, factoryH = factoryW * 0.4;
-          drawFactory(ctx, cx - factoryW / 2, cy - factoryH / 2, factoryW, factoryH, 1, scale > 0.3 ? 1 : 0);
-          // Also draw the labels from Phase 1 (they shrink with the factory)
-          if (scale > 0.15) {
-            ctx.textAlign = 'center';
-            ctx.font = '700 24px "JetBrains Mono"'; ctx.fillStyle = colors.accent;
-            ctx.shadowBlur = 10; ctx.shadowColor = colors.accent + '40';
-            ctx.fillText('VOLKSWAGEN WOLFSBURG', cx, cy + factoryH / 2 + 30);
-            ctx.shadowBlur = 0;
-            ctx.font = '600 15px "JetBrains Mono"'; ctx.fillStyle = colors.text;
-            ctx.fillText("WORLD'S LARGEST FACTORY", cx, cy + factoryH / 2 + 52);
-            ctx.font = '500 13px "JetBrains Mono"'; ctx.fillStyle = colors.textDim;
-            ctx.fillText('60,000 WORKERS \u00b7 6.5 KM\u00b2', cx, cy + factoryH / 2 + 70);
+      if (step === 2) {
+        const t = Math.min(1, elapsed / ZOOM_DURATION);
+        // ease-in-out cubic: slow start (keeps Wolfsburg visible), fast middle, slow end
+        const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        zoomProgressRef.current = eased;
+
+        // Interpolate viewState: zoom starts immediately, but pan is delayed
+        // so Wolfsburg stays centered for the first half of the animation
+        const panT = Math.max(0, Math.min(1, (eased - 0.4) / 0.6)); // pan starts at 40% zoom progress
+        const panEased = panT * panT * (3 - 2 * panT); // smoothstep for the pan
+        const currentView = {
+          longitude: lerp(WOLFSBURG_VIEW.longitude, EUROPE_VIEW.longitude, panEased),
+          latitude: lerp(WOLFSBURG_VIEW.latitude, EUROPE_VIEW.latitude, panEased),
+          zoom: lerp(WOLFSBURG_VIEW.zoom, EUROPE_VIEW.zoom, eased),
+          pitch: 0,
+          bearing: 0,
+        };
+
+        // Push viewState to DeckGL (controlled mode)
+        if (t < 1) {
+          setViewState(currentView);
+        } else if (t >= 1 && eased < 1.01) {
+          // Final state — set once
+          setViewState(EUROPE_VIEW);
+          zoomProgressRef.current = 1;
+        }
+
+        // Draw factory at its projected screen position, scaled proportionally to map zoom
+        const zoomDelta = currentView.zoom - WOLFSBURG_VIEW.zoom; // negative (zooming out)
+        const factoryScale = Math.pow(2, zoomDelta); // shrinks as zoom decreases
+
+        if (factoryScale > 0.003) {
+          const { x: projX, y: projY } = projectToScreen(
+            WOLFSBURG[0], WOLFSBURG[1], currentView, width, height
+          );
+          // Phase 1 draws at (width/2, height*0.42). Blend from that to the true
+          // projected position so there's no jump on phase transition.
+          const blendT = Math.min(1, t * 4); // blend over first 25% of zoom
+          const sx = lerp(width / 2, projX, blendT);
+          const sy = lerp(height * 0.42, projY, blendT);
+
+          const fadeAlpha = Math.max(0, 1 - t * 1.5); // fade out over first 2/3 of zoom
+          if (fadeAlpha > 0.01) {
+            const baseW = 246, baseH = baseW * 0.4;
+            ctx.save();
+            ctx.globalAlpha = fadeAlpha;
+            ctx.translate(sx, sy);
+            ctx.scale(factoryScale, factoryScale);
+            ctx.translate(-sx, -sy);
+            drawFactory(ctx, sx - baseW / 2, sy - baseH / 2, baseW, baseH, 1, factoryScale > 0.15 ? 1 : 0);
+            if (factoryScale > 0.15) {
+              ctx.textAlign = 'center';
+              ctx.font = '700 24px "JetBrains Mono"'; ctx.fillStyle = colors.accent;
+              ctx.shadowBlur = 10; ctx.shadowColor = colors.accent + '40';
+              ctx.fillText('VOLKSWAGEN WOLFSBURG', sx, sy + baseH / 2 + 30);
+              ctx.shadowBlur = 0;
+              ctx.font = '600 15px "JetBrains Mono"'; ctx.fillStyle = colors.text;
+              ctx.fillText("WORLD'S LARGEST FACTORY", sx, sy + baseH / 2 + 52);
+              ctx.font = '500 13px "JetBrains Mono"'; ctx.fillStyle = colors.textDim;
+              ctx.fillText('60,000 WORKERS \u00b7 6.5 KM\u00b2', sx, sy + baseH / 2 + 70);
+            }
+            ctx.restore();
           }
+        }
+
+        // Hollywood-style callout label — traces from the deck.gl Wolfsburg dot
+        if (eased > 0.75) {
+          const calloutAlpha = Math.min(1, (eased - 0.75) / 0.15);
+          // Use the FINAL view for projection so the label lands exactly on the dot
+          // at full zoom-out (no drift from interpolation rounding)
+          const projView = t >= 1 ? EUROPE_VIEW : currentView;
+          const { x: wx, y: wy } = projectToScreen(
+            WOLFSBURG[0], WOLFSBURG[1], projView, width, height
+          );
+          // Angled line from dot to label (kept tight)
+          const lineEndX = wx + 20 * calloutAlpha;
+          const lineEndY = wy - 14 * calloutAlpha;
+          const labelX = lineEndX + 30 * calloutAlpha;
+          const labelY = lineEndY;
+
+          ctx.save();
+          ctx.globalAlpha = calloutAlpha;
+          // Line from the dot center — no extra circle, the deck.gl dot IS the anchor
+          ctx.strokeStyle = colors.accent;
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(wx, wy);
+          ctx.lineTo(lineEndX, lineEndY);
+          ctx.lineTo(labelX, labelY);
+          ctx.stroke();
+          // Label text
+          ctx.font = '600 14px "JetBrains Mono"';
+          ctx.fillStyle = colors.accent;
+          ctx.textAlign = 'left';
+          ctx.textBaseline = 'bottom';
+          ctx.fillText('VW FACTORY', labelX + 7, labelY - 2);
+          ctx.font = '500 11px "JetBrains Mono"';
+          ctx.fillStyle = colors.textDim;
+          ctx.fillText('WOLFSBURG', labelX + 7, labelY + 13);
           ctx.restore();
         }
       }
       if (step >= 2) {
-        const t3 = step === 2 ? Math.min(elapsed / 5, 1) : 1;
+        const t3 = step === 2 ? Math.min(elapsed / ZOOM_DURATION, 1) : 1;
         const eased = t3 * t3 * t3;
         const displayCount = Math.floor(60000 + eased * (2300000 - 60000));
         let label = "World's Largest Factory";
@@ -416,7 +552,7 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
         const bracketOff = bracketBase + (1 - bracketE) * 200;
         const bLen = 24;
 
-        ctx.save(); ctx.globalAlpha = bracketE * 0.6; ctx.strokeStyle = colors.danger; ctx.lineWidth = 2;
+        ctx.save(); ctx.globalAlpha = bracketE; ctx.strokeStyle = colors.danger; ctx.lineWidth = 2.5;
         ctx.beginPath(); ctx.moveTo(cx - bracketOff, cy - bracketOff + bLen); ctx.lineTo(cx - bracketOff, cy - bracketOff); ctx.lineTo(cx - bracketOff + bLen, cy - bracketOff); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(cx + bracketOff - bLen, cy - bracketOff); ctx.lineTo(cx + bracketOff, cy - bracketOff); ctx.lineTo(cx + bracketOff, cy - bracketOff + bLen); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(cx - bracketOff, cy + bracketOff - bLen); ctx.lineTo(cx - bracketOff, cy + bracketOff); ctx.lineTo(cx - bracketOff + bLen, cy + bracketOff); ctx.stroke();
@@ -468,8 +604,12 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
             ctx.strokeStyle = `rgba(${cr},${cg},${cb},${0.04 * ring * impactE})`; ctx.lineWidth = 1; ctx.stroke();
           }
           ctx.save(); ctx.font = `900 ${zeroSize * zeroPulse}px "JetBrains Mono"`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-          ctx.fillStyle = colors.danger; ctx.shadowBlur = 40; ctx.shadowColor = colors.danger;
-          ctx.fillText('0', cx, cy); ctx.shadowBlur = 0; ctx.restore();
+          ctx.fillStyle = colors.danger;
+          ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 3;
+          ctx.shadowBlur = 10; ctx.shadowColor = '#000000';
+          ctx.fillText('0', cx, cy);
+          ctx.shadowBlur = 0; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 0;
+          ctx.restore();
         }
 
         if (elapsed >= 0.85 && elapsed < 1.05) {
@@ -482,10 +622,17 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
           const textT = Math.min(1, (elapsed - 1.3) / 0.5);
           const textE = 1 - Math.pow(1 - textT, 3);
           ctx.save(); ctx.globalAlpha = textE;
-          ctx.font = '600 28px "JetBrains Mono"'; ctx.textAlign = 'center'; ctx.fillStyle = colors.danger;
-          ctx.fillText('ZERO DOWNTIME', cx, cy + 120);
-          ctx.font = '20px "Inter"'; ctx.fillStyle = colors.textMuted;
-          ctx.fillText('This machine has never been shut down.', cx, cy + 155);
+          ctx.font = '700 28px "JetBrains Mono"'; ctx.textAlign = 'center';
+          ctx.fillStyle = colors.danger;
+          ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 0;
+          ctx.shadowBlur = 40; ctx.shadowColor = '#000000';
+          // Draw twice to stack the shadow for a heavier dark backdrop
+          ctx.fillText('ZERO DOWNTIME', cx, cy + 100);
+          ctx.fillText('ZERO DOWNTIME', cx, cy + 100);
+          ctx.font = '500 18px "Inter"'; ctx.fillStyle = colors.text;
+          ctx.fillText('This machine has never been shut down.', cx, cy + 175);
+          ctx.fillText('This machine has never been shut down.', cx, cy + 175);
+          ctx.shadowBlur = 0;
           ctx.restore();
         }
       }
@@ -516,10 +663,10 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
       <div style={{
         position: 'absolute', inset: 0, zIndex: 1,
         opacity: currentStepValue >= 2 ? 1 : 0,
-        transition: 'opacity 0.4s ease-in',
+        transition: 'opacity 0.3s ease-in',
       }}>
         <DeckGL
-          initialViewState={initialViewState}
+          viewState={viewState}
           controller={false}
           layers={layers}
           style={{ position: 'absolute', inset: 0 }}

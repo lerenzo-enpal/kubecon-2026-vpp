@@ -3,6 +3,7 @@ import { colors } from '../theme';
 
 // Compact duck curve for bottom HUD panel on VPP scenario slides
 // Same data as DuckCurveVPP but rendered smaller with a highlight band
+// No RAF loop needed — redraws only when props change (useEffect deps)
 
 const baseDemand = [
   28, 26, 25, 24, 24, 25, 28, 35, 42, 45, 46, 47,
@@ -53,7 +54,6 @@ function smoothLine(ctx, data, xScale, yScale, padLeft, padTop, yMax) {
 
 export default function DuckCurveHUD({ highlightHour = null, blend = 0, scenario = 'summer', width = 400, height = 130 }) {
   const canvasRef = useRef(null);
-  const animRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -72,8 +72,7 @@ export default function DuckCurveHUD({ highlightHour = null, blend = 0, scenario
     const yRange = Y_MAX - Y_MIN;
     const yScale = chartH / yRange;
 
-    const draw = () => {
-      ctx.clearRect(0, 0, width, height);
+    ctx.clearRect(0, 0, width, height);
 
       const isWinter = scenario === 'winter';
       const demandData = isWinter ? winterDemand : netDemand;
@@ -219,12 +218,6 @@ export default function DuckCurveHUD({ highlightHour = null, blend = 0, scenario
       ctx.fillStyle = colors.textDim + '80';
       ctx.textAlign = 'left';
       ctx.fillText(isWinter ? 'DEMAND PROFILE' : 'NET DEMAND (DUCK CURVE)', padLeft, 10);
-
-      animRef.current = requestAnimationFrame(draw);
-    };
-
-    draw();
-    return () => cancelAnimationFrame(animRef.current);
   }, [width, height, highlightHour, blend, scenario]);
 
   return (

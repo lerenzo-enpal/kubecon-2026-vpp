@@ -158,11 +158,7 @@ export default function CurtailmentChart({ width = 900, height = 380 }) {
         ctx.roundRect(x, barY, barW, annH, [3, 3, 0, 0]);
         ctx.fill();
 
-        // Glow on annual portion
-        ctx.shadowBlur = 6;
-        ctx.shadowColor = colors.accent + '30';
-        ctx.fill();
-        ctx.shadowBlur = 0;
+        // Glow on annual portion (shadow applied in batch pass below)
 
         // Bar border
         ctx.strokeStyle = colors.accent + '40';
@@ -200,6 +196,27 @@ export default function CurtailmentChart({ width = 900, height = 380 }) {
           ctx.fillText(`${(d.eurM / 1000).toFixed(1)}B`, x + barW / 2, padTop + chartH + 26);
         }
       }
+
+      // Batched shadow glow pass — one shadowBlur state change instead of N
+      ctx.shadowBlur = 6;
+      ctx.shadowColor = colors.accent + '30';
+      ctx.fillStyle = colors.accent + '70';
+      for (let i = 0; i < DATA.length; i++) {
+        const barDelay = i / (DATA.length + 2);
+        const barT = Math.max(0, Math.min(1, (t - barDelay) / (1 - barDelay * 0.8)));
+        const barFrac = 1 - Math.pow(1 - barT, 3);
+        if (barFrac <= 0) continue;
+        const x = padLeft + i * barGroupW + barGap / 2;
+        const d = CUM[i];
+        const cumH = (d.twh / maxTwh) * chartH * barFrac;
+        const prevCumH = i > 0 ? (CUM[i - 1].twh / maxTwh) * chartH * barFrac : 0;
+        const annH = cumH - prevCumH;
+        const barY = padTop + chartH - cumH;
+        ctx.beginPath();
+        ctx.roundRect(x, barY, barW, annH, [3, 3, 0, 0]);
+        ctx.fill();
+      }
+      ctx.shadowBlur = 0;
 
       // CO2 line overlay (secondary axis on right) — drawn smoothly like a pen
       const maxCo2 = 30;
@@ -288,7 +305,7 @@ export default function CurtailmentChart({ width = 900, height = 380 }) {
 
       // Push animation progress to React state for bottom stat boxes
       const newFrac = 1 - Math.pow(1 - Math.min(1, t), 3);
-      if (Math.abs(newFrac - lastAnimFracRef.current) > 0.005) {
+      if (Math.abs(newFrac - lastAnimFracRef.current) > 0.02) {
         lastAnimFracRef.current = newFrac;
         setAnimFrac(newFrac);
       }
