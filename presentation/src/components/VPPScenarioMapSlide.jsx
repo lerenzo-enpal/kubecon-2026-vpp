@@ -435,22 +435,34 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
       )}
 
       {/* ── Bottom: Duck Curve HUD panel ── */}
-      <div style={{
-        ...panelBase,
-        position: 'absolute', bottom: 24, left: 10,
-        zIndex: 10, padding: '6px 8px',
-        opacity: bootFade(1.0, 0.5),
-        transform: `translateY(${(1 - bootFade(1.0, 0.5)) * 15}px)`,
-      }}>
-        <Corners color={accentColor + '40'} size={10} />
-        <DuckCurveHUD
-          highlightHour={currentStep.duckHighlightHour}
-          blend={currentStep.duckBlend}
-          scenario={scenario}
-          width={380}
-          height={120}
-        />
-      </div>
+      {(() => {
+        const isExpanded = stepIndex === steps.length - 1;
+        const duckW = isExpanded ? 760 : 380;
+        const duckH = isExpanded ? 260 : 120;
+        return (
+          <div style={{
+            ...panelBase,
+            position: 'absolute', bottom: 24, left: 10,
+            zIndex: 10, padding: isExpanded ? '10px 14px' : '6px 8px',
+            opacity: bootFade(1.0, 0.5),
+            transform: `translateY(${(1 - bootFade(1.0, 0.5)) * 15}px)`,
+            transition: 'width 0.8s cubic-bezier(0.4, 0, 0.2, 1), height 0.8s cubic-bezier(0.4, 0, 0.2, 1), padding 0.8s ease',
+            width: duckW + (isExpanded ? 28 : 16),
+            height: duckH + (isExpanded ? 20 : 12),
+            overflow: 'hidden',
+          }}>
+            <Corners color={accentColor + '40'} size={10} />
+            <DuckCurveHUD
+              highlightHour={currentStep.duckHighlightHour}
+              blend={currentStep.duckBlend}
+              scenario={scenario}
+              width={duckW}
+              height={duckH}
+              expanded={isExpanded}
+            />
+          </div>
+        );
+      })()}
 
       {/* ── Step dots ── */}
       <StepIndicator total={STEP_COUNT} current={stepIndex} />
