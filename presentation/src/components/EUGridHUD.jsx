@@ -164,7 +164,7 @@ const STEPS = [
   {
     view: { longitude: 12, latitude: 49, zoom: 3.4, pitch: 15, bearing: 0 },
     title: 'The Largest Machine Ever Built',
-    subtitle: '36 countries · 400 million people · one frequency',
+    subtitle: '36 countries · 400 million people · one standard: 50 Hz',
     voltage: '50.000 Hz',
     detail: '305,000 km of high-voltage lines. 1,100 GW installed capacity. It has never been turned off.',
     visibleIds: null, // all

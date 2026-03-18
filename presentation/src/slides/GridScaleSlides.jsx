@@ -39,7 +39,7 @@ export function versionA() {
                   vs. Volkswagen Wolfsburg
                 </div>
                 <div className="text-[20px] text-hud-text-muted font-sans leading-relaxed">
-                  The world's largest factory has 60,000 workers over 6.5 km².
+                  Europe's largest car factory has 60,000 workers over 6.5 km².
                   <br />The grid has <span className="text-hud-text font-semibold">2.3 million workers</span> across <span className="text-hud-text font-semibold">5.5 million km²</span>.
                 </div>
               </div>

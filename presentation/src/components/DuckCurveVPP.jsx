@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useContext } from 'react';
 import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
 
-// Real German 2025 profiles (GW) — 104 GW solar installed
+// Real German 2025 profiles (GW) — 106 GW solar installed
 // Sources: Bundesnetzagentur/SMARD, EPEX SPOT
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
@@ -12,10 +12,11 @@ const baseDemand = [
   48, 47, 46, 45, 48, 55, 60, 58, 52, 45, 38, 32,
 ];
 
-// Solar generation profile (GW, 2025 sunny summer day, ~55 GW peak)
+// Solar generation profile (GW, 2025 sunny summer day, ~50 GW peak)
+// Record: 50.4 GW on Jun 20, 2025 (Fraunhofer ISE)
 const solarGen = [
-  0, 0, 0, 0, 0, 1, 5, 14, 28, 40, 49, 54,
-  55, 54, 49, 36, 20, 8, 1, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 1, 5, 13, 25, 36, 45, 49,
+  50, 49, 45, 33, 18, 7, 1, 0, 0, 0, 0, 0,
 ];
 
 // Net demand = base demand - solar (the duck curve)

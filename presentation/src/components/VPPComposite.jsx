@@ -18,7 +18,7 @@ const ARCH_ROWS = [
 ];
 
 const SPEED_BARS = [
-  { l: 'Coal', v: '2-6 hours', c: colors.textDim, w: 90 },
+  { l: 'Coal', v: '2-12 hours', c: colors.textDim, w: 90 },
   { l: 'Gas Turbine', v: '10-30 min', c: '#fb923c', w: 45 },
   { l: 'Hydro', v: '15-30 sec', c: '#60a5fa', w: 12 },
   { l: 'Battery', v: '140 ms', c: colors.success, w: 2 },

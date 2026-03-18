@@ -37,20 +37,20 @@ Bulleted talking points per slide. Speakers marked as **LERENZO** or **MARIO**.
 ### 5. "4 minutes and 37 seconds" — LERENZO
 - The Texas grid was 4 minutes and 37 seconds from a total cold-start collapse
 - A cold restart takes weeks, maybe months — you're rebuilding the grid from scratch
-- 246 people died. $195 billion in damage.
-- Wholesale prices went from $50 to $9,000/MWh overnight — 180x
+- 246 people died. $195 billion in estimated damage (Perryman Group).
+- Wholesale prices went from ~$50 to $9,000/MWh overnight — 180x
 - Families got $7,000 bills in a week. Their provider went bankrupt.
 
 ### 6. Grid Scale — MARIO
-- The world's largest factory is VW Wolfsburg — 60,000 workers over 6.5 km²
+- Europe's largest car factory is VW Wolfsburg — 60,000 workers over 6.5 km²
 - The European grid: 2.3 million workers across 5.5 million km²
-- 36 countries, all synchronized on one frequency
+- 36 countries, all operating at 50 Hz across interconnected synchronous areas
 - Zero downtime — this machine has never been turned off. No maintenance window. No staging environment.
 
 ### 7. EU Grid HUD — MARIO
 - This is the Continental European grid — real-time visualization
-- 400 million consumers. 1,100 GW of installed capacity.
-- Every node is synchronized. One heartbeat: 50 Hz.
+- 400 million consumers. 1,100 GW of installed capacity (ENTSO-E, 2024).
+- 36 countries, all operating at 50 Hz across interconnected synchronous areas.
 
 ### 8. The Grid: A Balancing Act — MARIO
 - The grid maintains exactly 50 Hz — supply and demand balanced every single second
@@ -71,7 +71,7 @@ Bulleted talking points per slide. Speakers marked as **LERENZO** or **MARIO**.
 - How did we manage this for 70 years?
 - Peaker plants: 261 GW sitting idle 95% of the year, firing up at 2-5x cost
 - Spinning reserves: generators running at partial load 24/7 "just in case" — burning fuel to produce nothing
-- Load shedding: deliberate blackouts as policy. Texas shed 20 GW — $52.6 billion in excess charges in 5 days
+- Load shedding: deliberate blackouts as policy. Texas shed 20 GW — $16 billion in overcharges from keeping the price cap too long
 - Curtailment: too much sun? Turn it off. Germany threw away 19 TWh of clean energy in 2023
 
 ### 11. Why Texas Failed — LERENZO
@@ -84,7 +84,7 @@ Bulleted talking points per slide. Speakers marked as **LERENZO** or **MARIO**.
 - This isn't a Texas problem — it's a grid architecture problem
 - 10 major failures in 23 years across 3 continents
 - 2003 Northeast US: 55 million people, $6B. 2016 South Australia: entire state.
-- Spain/Portugal 2025: 60 million people. Berlin arson 2025: three attacks, 45K+ homes.
+- Spain/Portugal 2025: 60 million people. Berlin arson 2025: two attacks, 50K+ homes.
 - The common thread? Centralized, inflexible, cascading.
 
 ### 13. No flexibility. — LERENZO
@@ -164,9 +164,9 @@ Bulleted talking points per slide. Speakers marked as **LERENZO** or **MARIO**.
 - Different timescales, different strategies
 - FCR: under 30 seconds — blackout cost EUR 1-5B per event
 - aFRR: under 5 minutes — gas peaker alternative at EUR 150-300/MWh
-- Peak Shaving: 1-4 hours — grid upgrade deferred: EUR 35B (RMI est.)
+- Peak Shaving: 1-4 hours — VPP capacity 40-60% cheaper than peakers (Brattle)
 - Energy Arbitrage: scheduled day-ahead — curtailment avoided: EUR 554M/yr (DE)
-- The speed comparison: Coal 2-6 hours. Gas 10-30 minutes. Hydro 15-30 seconds. Battery: 140 milliseconds.
+- The speed comparison: Coal 2-12 hours. Gas 10-30 minutes. Hydro 15-30 seconds. Battery: 140 milliseconds.
 - A battery responds before a gas turbine even knows there's an emergency
 - This is why batteries + software win
 
@@ -180,13 +180,13 @@ Bulleted talking points per slide. Speakers marked as **LERENZO** or **MARIO**.
 
 ### 25. SA Virtual Power Plant, 2019 — MARIO
 - South Australia proved this works
-- 1,100 homes with Tesla Powerwalls
-- The world's first proof that distributed batteries can stabilize a grid at scale
+- ~1,000 homes with Tesla Powerwalls
+- One of the world's first demonstrations that distributed home batteries can stabilize a grid
 
 ### 26. The Economic Impact of Flexibility — MARIO
 - Side by side comparison — Without VPP vs. With VPP
-- Without: cascade failures, gas peakers at EUR 150-300/MWh, EUR 554M/yr curtailment, EUR 35B in grid upgrades, 3.4 Mt avoidable CO2
-- With: stabilized in 200ms, batteries at EUR 30-60/MWh, revenue from negative prices, 60% deferred infrastructure, near-zero curtailment emissions
+- Without: cascade failures, gas peakers at EUR 150-300/MWh, EUR 554M/yr curtailment, EUR 35B+ in grid upgrades, ~3.4 Mt avoidable CO2 (BNetzA + UBA, 2024)
+- With: stabilized in 200ms, batteries at EUR 60-100/MWh, revenue from negative prices, VPP capacity 40-60% cheaper (Brattle), near-zero curtailment emissions
 - The cheapest megawatt is the one you never have to generate
 
 ---
@@ -210,7 +210,7 @@ Bulleted talking points per slide. Speakers marked as **LERENZO** or **MARIO**.
 ### The Dunkelflaute
 - "Dark doldrums" — when wind AND solar collapse simultaneously
 - Germany Nov 2024: 14 consecutive days below 10% renewable capacity
-- Wind at 3.8% of installed capacity. Prices spiked to EUR 175/MWh — 4x average.
+- Wind at 3.8% of installed capacity. Prices spiked to EUR 145/MWh (Nov) and EUR 175/MWh (Dec) — ~2x the annual average.
 - This is the scenario that makes storage and flexibility non-optional
 - Only bring up if asked about "what if there's no wind or sun"
 

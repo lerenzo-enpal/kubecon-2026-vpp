@@ -17,8 +17,14 @@
 - [ ] Practice timing — talk should run 25 minutes to leave buffer for Q&A
 
 
+## Post-Conference Refactors
+- [ ] Organize `components/` into subfolders (`charts/`, `maps/`, `diagrams/`, `demos/`, `ui/`) — update all import paths (~30 files)
+- [ ] Extract `useMapSteps` hook from EUGridHUD / SAMapHUD / VPPScenarioMapSlide cascade step pattern
+
+
 # mario to do
 [] can i put something about ercot cost vs 2030 electrification cost in the eu
 [] old curtailment in playbook. ???
 [] sort out limits of vpp (slide in appendix)
+[] look into the presentation-wide margin from Spectacle — slides have unused padding/margin that wastes screen real estate. Consider overriding Deck/Slide defaults or dropping Spectacle entirely
 

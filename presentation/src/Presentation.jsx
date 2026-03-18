@@ -196,11 +196,11 @@ export default function Presentation() {
           <div className="flex gap-5 my-4">
             <AnimatedStat target="4:37" label="from total collapse" color={colors.danger} delay={0} duration={1200} />
             <AnimatedStat target="246" label="people dead" color={colors.danger} delay={300} duration={1000} />
-            <AnimatedStat target="$195B" label="in damage" color={colors.accent} delay={600} duration={1400} />
+            <AnimatedStat target="$195B" label="in damage (Perryman est.)" color={colors.accent} delay={600} duration={1400} />
             <AnimatedStat target="4.5M" label="homes dark" color={colors.textMuted} delay={900} duration={1100} />
           </div>
           <div className="text-[20px] text-hud-text font-sans leading-[1.8]">
-            Wholesale electricity spiked to <span className="font-semibold" style={{ color: colors.danger }}>$9,000/MWh</span> — a <span className="font-semibold" style={{ color: colors.danger }}>180x</span> increase.
+            Wholesale electricity spiked from ~$50 to <span className="font-semibold" style={{ color: colors.danger }}>$9,000/MWh</span> — a <span className="font-semibold" style={{ color: colors.danger }}>180x</span> increase.
             <br />Families received <span className="font-semibold" style={{ color: colors.danger }}>$7,000 bills</span> in a single week. Their provider — Griddy — went bankrupt.
           </div>
           <div className="pt-3.5" style={{ borderTop: `1px solid ${colors.surfaceLight}` }}>
@@ -212,8 +212,8 @@ export default function Presentation() {
         <Notes>
           [LERENZO] The Texas grid was 4 minutes and 37 seconds from a total cold-start collapse.
           A cold restart takes weeks, maybe months — you're rebuilding the grid from scratch.
-          246 people died. $195 billion in damage.
-          Wholesale prices went from $50 to $9,000/MWh overnight — 180x.
+          246 people died. $195 billion in estimated damage (Perryman Group).
+          Wholesale prices went from ~$50 to $9,000/MWh overnight — 180x.
           Families got $7,000 bills in a week. Their provider went bankrupt.
         </Notes>
       </Slide>
@@ -228,8 +228,8 @@ export default function Presentation() {
         </div>
         <Notes>
           [MARIO] This is the Continental European grid — real-time visualization.
-          400 million consumers. 1,100 GW of installed capacity.
-          Every node is synchronized. One heartbeat: 50 Hz.
+          400 million consumers. 1,100 GW of installed capacity (ENTSO-E, 2024).
+          36 countries, all operating at 50 Hz across interconnected synchronous areas.
         </Notes>
       </Slide>
 
@@ -285,8 +285,8 @@ export default function Presentation() {
               {[
                 { t: 'Peaker Plants', d: '261 GW of gas turbines in the US alone — sitting idle 95% of the year. They fire up for peak demand at 2–5x the cost of baseload.', c: '#fb923c', stat: '$110–228/MWh' },
                 { t: 'Spinning Reserves', d: 'Generators running at partial load 24/7 "just in case." 15% capacity margin required. Burning fuel to produce nothing.', c: colors.accent, stat: '15% over-provisioned' },
-                { t: 'Load Shedding', d: 'The last resort: deliberate rolling blackouts. Texas 2021 shed 20 GW — the largest in US history. The crisis cost ERCOT customers $52.6B in excess charges.', c: colors.danger, stat: '$52.6B in 5 days' },
-                { t: 'Curtailment', d: 'Too much sun or wind? Turn it off. Germany wasted 19 TWh of clean energy in 2023. California curtailed 3.4 TWh in 2024.', c: colors.textDim, stat: 'EUR 3.3B/yr (DE)' },
+                { t: 'Load Shedding', d: 'The last resort: deliberate rolling blackouts. Texas 2021 shed 20 GW — the largest in US history. ERCOT kept the $9,000 price cap two days too long — $16B in overcharges.', c: colors.danger, stat: '$16B overcharges' },
+                { t: 'Curtailment', d: 'Too much sun or wind? Turn it off. Germany wasted 19 TWh of clean energy in 2023. California curtailed 3.4 TWh in 2024.', c: colors.textDim, stat: '~EUR 3B/yr (DE, 2023)' },
               ].map(i => (
                 <div key={i.t} className="bg-hud-surface rounded-xl px-4 py-5 flex-1" style={{ border: `1px solid ${i.c}25` }}>
                   <div className="text-[20px] font-bold font-sans mb-2" style={{ color: i.c }}>{i.t}</div>
@@ -302,7 +302,7 @@ export default function Presentation() {
           [MARIO] How did we manage this for 70 years?
           Peaker plants: 261 GW sitting idle 95% of the year, firing up at 2-5x cost.
           Spinning reserves: generators running at partial load 24/7 "just in case" — burning fuel to produce nothing.
-          Load shedding: deliberate blackouts as policy. Texas shed 20 GW — $52.6 billion in excess charges in 5 days.
+          Load shedding: deliberate blackouts as policy. Texas shed 20 GW — $16 billion in overcharges from keeping the price cap too long.
           Curtailment: too much sun? Turn it off. Germany threw away 19 TWh of clean energy in 2023.
         </Notes>
       </Slide>
@@ -352,9 +352,9 @@ export default function Presentation() {
             {[
               { y: '2003', e: 'Northeast US/Canada', i: '55M people, $6B in damage' },
               { y: '2003', e: 'Italy Blackout', i: '56M people' },
-              { y: '2006', e: 'European Grid Split', i: '15M affected' },
+              { y: '2006', e: 'European Grid Split', i: '15M households' },
               { y: '2016', e: 'South Australia (tornadoes)', i: 'Entire state, 1.7M people' },
-              { y: '2017', e: 'South Australia (heatwave)', i: '90K homes, 45°C day' },
+              { y: '2017', e: 'South Australia (heatwave)', i: '90K homes, ~42°C day' },
             ].map(t => (
               <div key={t.y+t.e} className="flex gap-4">
                 <div className="font-mono text-[28px] font-bold text-hud-danger min-w-[56px]">{t.y}</div>
@@ -368,9 +368,9 @@ export default function Presentation() {
           <div className="flex-1 flex flex-col gap-8 justify-center">
             {[
               { y: '2021', e: 'Texas ERCOT', i: '4.5M homes, 240+ deaths', c: colors.danger },
-              { y: '2021', e: 'Europe Grid Split', i: '1.25 Hz from collapse', c: colors.danger },
+              { y: '2021', e: 'Europe Grid Split', i: 'Freq dropped to 49.74 Hz', c: colors.danger },
               { y: '2025', e: 'Spain/Portugal', i: '60M people', c: colors.accent },
-              { y: '2025', e: 'Berlin Arson (x3)', i: '45K+ homes', c: colors.accent },
+              { y: '2025', e: 'Berlin Arson (x2)', i: '50K+ homes', c: colors.accent },
               { y: '2026', e: 'Berlin Teltow Canal', i: '4-day outage', c: colors.primary },
             ].map(t => (
               <div key={t.y+t.e} className="flex gap-4">
@@ -637,7 +637,7 @@ export default function Presentation() {
             {[
               { event: 'Frequency Containment (FCR)', time: '< 30 seconds', desc: 'Battery injects/absorbs power to stabilize grid frequency', cost: 'Blackout cost: EUR 1-5B per event', color: colors.danger, delay: 0.2 },
               { event: 'Automatic Frequency Restoration (aFRR)', time: '< 5 minutes', desc: 'Sustained response to restore frequency to 50 Hz', cost: 'Gas peaker alternative: EUR 150-300/MWh', color: colors.accent, delay: 0.5 },
-              { event: 'Peak Shaving', time: '1-4 hours', desc: 'Reduce grid load during demand peaks by discharging batteries', cost: 'Grid upgrade deferred: EUR 35B (RMI est.)', color: colors.primary, delay: 0.9 },
+              { event: 'Peak Shaving', time: '1-4 hours', desc: 'Reduce grid load during demand peaks by discharging batteries', cost: 'VPP capacity 40-60% cheaper than peakers (Brattle)', color: colors.primary, delay: 0.9 },
               { event: 'Energy Arbitrage', time: 'Scheduled', desc: 'Charge at negative prices, discharge at peak — optimizing day-ahead markets', cost: 'Curtailment avoided: EUR 554M/yr (DE)', color: colors.success, delay: 1.4 },
             ].map(e => (
               <div key={e.event} className="flex items-start gap-4 rounded-lg p-3"
@@ -678,9 +678,9 @@ export default function Presentation() {
           [LERENZO] Different timescales, different strategies.
           FCR: under 30 seconds — blackout cost EUR 1-5B per event.
           aFRR: under 5 minutes — gas peaker alternative at EUR 150-300/MWh.
-          Peak Shaving: 1-4 hours — grid upgrade deferred: EUR 35B (RMI est.).
+          Peak Shaving: 1-4 hours — VPP capacity 40-60% cheaper than peakers (Brattle).
           Energy Arbitrage: scheduled day-ahead — curtailment avoided: EUR 554M/yr (DE).
-          The speed comparison: Coal 2-6 hours. Gas 10-30 minutes. Hydro 15-30 seconds. Battery: 140 milliseconds.
+          The speed comparison: Coal 2-12 hours. Gas 10-30 minutes. Hydro 15-30 seconds. Battery: 140 milliseconds.
           A battery responds before a gas turbine even knows there's an emergency.
         </Notes>
       </Slide>
@@ -707,8 +707,8 @@ export default function Presentation() {
         </div>
         <Notes>
           [MARIO] South Australia proved this works.
-          1,100 homes with Tesla Powerwalls.
-          The world's first proof that distributed batteries can stabilize a grid at scale.
+          ~1,000 homes with Tesla Powerwalls.
+          One of the world's first demonstrations that distributed home batteries can stabilize a grid.
         </Notes>
       </Slide>
 
@@ -726,10 +726,10 @@ export default function Presentation() {
               </div>
               {[
                 { metric: 'Grid Emergency', without: 'Cascade failure, 4+ hours', withVpp: 'Stabilized in 200ms', icon: 'FCR' },
-                { metric: 'Peak Demand', without: 'Gas peakers: EUR 150-300/MWh', withVpp: 'Battery discharge: EUR 30-60/MWh', icon: 'Cost' },
+                { metric: 'Peak Demand', without: 'Gas peakers: EUR 150-300/MWh', withVpp: 'Battery discharge: EUR 60-100/MWh', icon: 'Cost' },
                 { metric: 'Negative Prices', without: 'Curtail renewables, pay EUR 554M/yr', withVpp: 'Charge batteries, earn revenue', icon: 'Price' },
-                { metric: 'Grid Upgrades', without: 'EUR 35B+ new infrastructure', withVpp: 'Defer 60% with distributed flex', icon: 'Infra' },
-                { metric: 'CO2 Emissions', without: '3.4 Mt avoidable CO2/yr (DE)', withVpp: 'Near-zero curtailment emissions', icon: 'CO2' },
+                { metric: 'Grid Upgrades', without: 'EUR 35B+ new infrastructure', withVpp: 'VPP capacity 40-60% cheaper (Brattle)', icon: 'Infra' },
+                { metric: 'CO2 Emissions', without: '~3.4 Mt avoidable CO2/yr (BNetzA + UBA, 2024)', withVpp: 'Near-zero curtailment emissions', icon: 'CO2' },
               ].map((r, i) => (
                 <div key={r.metric} className="flex gap-5 mb-3 items-center" style={{ animation: `archLeftIn 0.5s ease ${0.3 + i * 0.15}s both` }}>
                   <div className="flex-1 rounded-lg p-4 text-[18px] font-sans text-hud-text-muted" style={{ background: colors.danger + '06', border: `1px solid ${colors.danger}12` }}>
@@ -847,14 +847,14 @@ export default function Presentation() {
               <div className="flex-1 rounded-xl p-5" style={{ background: `${colors.success}06`, border: `1px solid ${colors.success}20` }}>
                 <div className="text-[20px] font-semibold font-mono mb-2" style={{ color: colors.success }}>RMI — Power Shift (Texas / ERCOT, modeled)</div>
                 <div className="text-[20px] text-hud-text font-sans mb-1">Full demand flexibility cuts net generation costs by <span className="font-semibold" style={{ color: colors.success }}>20%</span></div>
-                <div className="text-[20px] text-hud-text font-sans mb-1">Saves <span className="font-semibold" style={{ color: colors.success }}>$140/household/year</span> with just 2 flexible devices</div>
+                <div className="text-[20px] text-hud-text font-sans mb-1">Saves <span className="font-semibold" style={{ color: colors.success }}>$140/household/year</span> with full VPP integration</div>
                 <div className="text-[20px] text-hud-text font-sans">Avoids <span className="font-semibold" style={{ color: colors.success }}>75%</span> of new gas peaker units</div>
               </div>
               <div className="flex-1 rounded-xl p-5" style={{ background: `${colors.primary}06`, border: `1px solid ${colors.primary}20` }}>
                 <div className="text-[20px] font-semibold font-mono mb-2" style={{ color: colors.primary }}>Brattle Group — National US (projected)</div>
                 <div className="text-[20px] text-hud-text font-sans mb-1">60 GW of VPPs save <span className="font-semibold" style={{ color: colors.primary }}>$15–35B</span> over 10 years</div>
-                <div className="text-[20px] text-hud-text font-sans mb-1">Household bills <span className="font-semibold" style={{ color: colors.primary }}>down up to 20%</span> (Australia ISP 2024)</div>
-                <div className="text-[20px] text-hud-text font-sans">Home batteries avoid <span className="font-semibold" style={{ color: colors.primary }}>$4.1B</span> in grid investment</div>
+                <div className="text-[20px] text-hud-text font-sans mb-1">System-wide savings of <span className="font-semibold" style={{ color: colors.primary }}>AU$18.5B</span> (AEMO ISP 2024)</div>
+                <div className="text-[20px] text-hud-text font-sans">Home batteries avoid <span className="font-semibold" style={{ color: colors.primary }}>AU$4.1B</span> in grid investment</div>
               </div>
             </div>
             <div className="flex gap-4">
@@ -910,12 +910,12 @@ export default function Presentation() {
                 <div className="rounded-xl p-4" style={{ background: `${colors.accent}06`, border: `1px solid ${colors.accent}20` }}>
                   <div className="text-[20px] font-semibold font-mono mb-1" style={{ color: colors.accent }}>PRICE IMPACT</div>
                   <div className="text-[20px] text-hud-text font-sans">
-                    Prices spiked to <span className="font-semibold" style={{ color: colors.danger }}>EUR 175/MWh</span> — 4x the average
+                    Prices spiked to <span className="font-semibold" style={{ color: colors.danger }}>EUR 145/MWh</span> (Nov) and <span className="font-semibold" style={{ color: colors.danger }}>EUR 175/MWh</span> (Dec) — ~2x the annual average
                   </div>
                 </div>
                 <div className="rounded-xl p-4" style={{ background: `${colors.textDim}06`, border: `1px solid ${colors.textDim}20` }}>
                   <div className="text-[20px] font-semibold font-mono mb-1" style={{ color: colors.textDim }}>FREQUENCY</div>
-                  <div className="text-[20px] text-hud-text font-sans">Occurs <span className="font-semibold">2–10 times per year</span>, lasting 50–150 hours/month in winter</div>
+                  <div className="text-[20px] text-hud-text font-sans">Occurs <span className="font-semibold">2–10 times per year</span>, lasting 50–100 hours/month in winter</div>
                 </div>
               </div>
             </div>
