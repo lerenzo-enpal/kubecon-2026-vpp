@@ -1,6 +1,7 @@
 import React from 'react';
 import { Deck, Slide, Heading, Text, Notes } from 'spectacle';
 import { colors } from './theme';
+import { LazyContent } from './components/ui';
 import FrequencyDemo from './components/FrequencyDemo';
 import RenewableGrowthChart from './components/RenewableGrowthChart';
 import DuckCurveChart from './components/DuckCurveChart';
@@ -172,7 +173,7 @@ export default function Presentation() {
       {/* 4: Texas Cascade — deck.gl HUD */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
-          <TexasMapHUD width="100%" height="100%" variant="hud" />
+          <LazyContent><TexasMapHUD width="100%" height="100%" variant="hud" /></LazyContent>
         </div>
         <Notes>
           [LERENZO] February 2021 — a polar vortex hits Texas.
@@ -223,7 +224,7 @@ export default function Presentation() {
       {/* 7: EU Grid HUD */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="w-full h-full">
-          <EUGridHUD width="100%" height="100%" />
+          <LazyContent><EUGridHUD width="100%" height="100%" /></LazyContent>
         </div>
         <Notes>
           [MARIO] This is the Continental European grid — real-time visualization.
@@ -238,7 +239,7 @@ export default function Presentation() {
           <H>The Grid: A Balancing Act</H>
           <P size="20px">This enormous machine maintains a constant 50 Hz frequency — supply and demand balanced every second.<br />Click an event to simulate what happens when something goes wrong.</P>
           <div className="flex-1 flex items-center" style={{ width: '100%' }}>
-            <FrequencyDemo width={1286} height={480} panelWidth={340} />
+            <LazyContent><FrequencyDemo width={1286} height={480} panelWidth={340} /></LazyContent>
           </div>
           <div className="flex justify-center">
             <div className="rounded-[10px] text-center" style={{ width: '68%', padding: '14px 24px', background: `${colors.accent}08`, border: `1px solid ${colors.accent}20` }}>
@@ -265,7 +266,7 @@ export default function Presentation() {
         <div className="flex flex-col h-full">
           <H>Designed for a Different World</H>
           <P size="20px">Built in the 1950s. One-directional. No flexibility.</P>
-          <GridFlowDemo width="100%" />
+          <LazyContent><GridFlowDemo width="100%" /></LazyContent>
         </div>
         <Notes>
           [MARIO] Power Plants to Transmission to Distribution to Homes.
@@ -434,7 +435,7 @@ export default function Presentation() {
           <H>The Renewable Explosion</H>
           <P size="20px">Germany's electricity from renewables — this is not slowing down.</P>
           <div className="flex-1 flex justify-center items-center">
-            <RenewableGrowthChart width={940} height={440} />
+            <LazyContent><RenewableGrowthChart width={940} height={440} /></LazyContent>
           </div>
         </div>
         <Notes>
@@ -450,7 +451,7 @@ export default function Presentation() {
           <H>The Duck Curve Problem</H>
           <P size="20px">More solar every year. The belly deepens. The evening ramp steepens. Prices go haywire.</P>
           <div className="flex-1 flex justify-center items-center">
-            <DuckCurveChart width={1100} height={480} />
+            <LazyContent><DuckCurveChart width={1100} height={480} /></LazyContent>
           </div>
         </div>
         <Notes>
@@ -466,7 +467,7 @@ export default function Presentation() {
         <div className="flex flex-col h-full">
           <H color={colors.danger}>Clean Energy Has Outgrown the Grid</H>
           <div className="flex-1 flex justify-center items-center">
-            <CurtailmentChart width={940} height={340} />
+            <LazyContent><CurtailmentChart width={940} height={340} /></LazyContent>
           </div>
           <P size="22px" style={{ textAlign: 'center', marginTop: 0, marginBottom: 16 }}><span style={{ color: colors.danger }}>Grid Congestion</span> is overwhelming neighborhood transformers.<br />New long-distance lines won't fix 49% of the problem.</P>
           <div style={{ fontSize: 12, color: colors.textDim, fontFamily: '"Inter", sans-serif', textAlign: 'left', marginTop: 0 }}>Germany — Bundesnetzagentur 2024 data. North-south transmission bottlenecks (SuedLink delayed to 2028)</div>
@@ -518,7 +519,7 @@ export default function Presentation() {
             <H>What Is a Virtual Power Plant?</H>
             <P size="20px">From market signal to battery response — the command flow through our VPP architecture.</P>
           </div>
-          <VPPArchitecture />
+          <LazyContent><VPPArchitecture /></LazyContent>
         </div>
         <Notes>
           [LERENZO] Left: devices — solar panels, batteries, EV chargers, heat pumps.
@@ -536,7 +537,7 @@ export default function Presentation() {
           <div className="px-8"><H>Inside the Architecture</H></div>
           <div className="px-8"><P size="18px">Measurement data every 20 seconds — Protobuf over MQTT through EMQX, into Databricks streaming aggregates powered by Apache Spark.</P></div>
           <div className="flex-1 flex justify-center items-center">
-            <EnpalArchitectureDiagram width={1366} height={528} />
+            <LazyContent><EnpalArchitectureDiagram width={1366} height={528} /></LazyContent>
           </div>
         </div>
         <Notes>
@@ -669,7 +670,7 @@ export default function Presentation() {
                 <div className="text-[26px] font-bold font-mono" style={{ color: colors.success }}>And Fast:</div>
                 <div className="text-[12px] font-mono mt-1" style={{ color: colors.textDim }}>Response Time</div>
               </div>
-              <div className="flex-1"><ResponseTimeline width={840} height={120} delay={2.8} /></div>
+              <div className="flex-1"><LazyContent><ResponseTimeline width={840} height={120} delay={2.8} /></LazyContent></div>
             </div>
           </div>
         </div>
@@ -687,7 +688,7 @@ export default function Presentation() {
       {/* 24: Energy Arbitrage + Peak Shaving */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
-          <VPPScenarioSlide scenario="summer" />
+          <LazyContent><VPPScenarioSlide scenario="summer" /></LazyContent>
         </div>
         <Notes>
           [MARIO] Full-screen Berlin map — walk through each step.
@@ -702,7 +703,7 @@ export default function Presentation() {
       {/* 25: SA Virtual Power Plant, 2019 */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
-          <SAMapHUD width="100%" height="100%" variant="vpp" />
+          <LazyContent><SAMapHUD width="100%" height="100%" variant="vpp" /></LazyContent>
         </div>
         <Notes>
           [MARIO] South Australia proved this works.
@@ -783,7 +784,7 @@ export default function Presentation() {
       {/* 28: Thank You */}
       <Slide backgroundColor={bg} padding="0">
         <div className="relative w-full h-full">
-          <ThankYouBackground width={1366} height={768} />
+          <LazyContent><ThankYouBackground width={1366} height={768} /></LazyContent>
           {/* Radial fade so text is readable over the animation */}
           <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse 55% 50% at center, ${colors.bg}ee 0%, ${colors.bg}aa 50%, transparent 80%)` }} />
           <div className="absolute inset-0 flex flex-col justify-center items-center z-10 text-center">
@@ -825,14 +826,14 @@ export default function Presentation() {
       {/* SA Blackout, 2016 */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
-          <SAMapHUD width="100%" height="100%" variant="blackout" />
+          <LazyContent><SAMapHUD width="100%" height="100%" variant="blackout" /></LazyContent>
         </div>
       </Slide>
 
       {/* Winter Grid Emergency */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
-          <VPPScenarioSlide scenario="winter" />
+          <LazyContent><VPPScenarioSlide scenario="winter" /></LazyContent>
         </div>
       </Slide>
 
@@ -872,7 +873,7 @@ export default function Presentation() {
           <H color={colors.success}>Now We Shift the Load</H>
           <P size="20px">Batteries absorb midday solar. Discharge in the evening. Click "With VPP" below.</P>
           <div className="flex-1 flex justify-center items-center">
-            <DuckCurveVPP width={940} height={440} />
+            <LazyContent><DuckCurveVPP width={940} height={440} /></LazyContent>
           </div>
         </div>
       </Slide>
@@ -932,7 +933,7 @@ export default function Presentation() {
           </div>
           <P size="20px">Instead of building more power plants — reshape the demand. Trip a generator and watch what happens.</P>
           <div className="flex-1 flex justify-center items-center">
-            <DemandResponseDemo width={920} height={420} />
+            <LazyContent><DemandResponseDemo width={920} height={420} /></LazyContent>
           </div>
           <P size="18px" color={colors.textDim} style={{ fontStyle: 'italic' }}>Note: Current deployment is extremely limited. Focus on the challenges — most grids have no demand-side flexibility at scale today.</P>
         </div>

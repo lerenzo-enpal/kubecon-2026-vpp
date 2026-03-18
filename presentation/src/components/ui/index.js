@@ -6,3 +6,4 @@ export { default as Badge } from './Badge';
 export { default as ComparisonRow } from './ComparisonRow';
 export { default as TimelineItem } from './TimelineItem';
 export { default as SectionDivider } from './SectionDivider';
+export { default as LazyContent } from './LazyContent';
