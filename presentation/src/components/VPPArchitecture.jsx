@@ -267,8 +267,8 @@ export default function VPPArchitecture() {
 
       // ── Unified clock ──────────────────────────────────────────────
       // See docs/vpp-animation-cycle.md for full spec
-      // Default: 12s cycle = 1s per 2 hours
-      const CYCLE_SECONDS = 12;
+      // Default: 24s cycle = 1s per hour
+      const CYCLE_SECONDS = 24;
       const hour = ((now % CYCLE_SECONDS) / CYCLE_SECONDS) * 24; // 0..24
 
       // Cosine ease helper (0→1 over [a,b])
@@ -277,54 +277,41 @@ export default function VPPArchitecture() {
         return x * x * (3 - 2 * x);
       };
 
-      // Phase
+      // Phase — aligned with sun/moon timing
       const phase = hour < 6.5 ? 'night-pull'
-        : hour < 7.0 ? 'sunrise'
-        : hour < 9.0 ? 'morning-peak'
+        : hour < 8.5 ? 'sunrise'
+        : hour < 10.0 ? 'morning-peak'
         : hour < 14.0 ? 'charging'
-        : hour < 19.5 ? 'pv-export'
-        : hour < 20.0 ? 'sunset-discharge'
-        : hour < 22.5 ? 'battery-discharge'
+        : hour < 17.0 ? 'pv-export'
+        : hour < 19.0 ? 'sunset-discharge'
+        : hour < 21.0 ? 'battery-discharge'
         : 'night-pull';
 
-      // Sun alpha: 0 (down) → 1 (full) — slow fade over ~3h each way
-      const sunAlpha = hour < 5.5 ? 0
-        : hour < 8.0 ? smoothstep(5.5, 8.0, hour)
+      // Sun alpha: 0 (down) → 1 (full)
+      const sunAlpha = hour < 6.5 ? 0
+        : hour < 8.5 ? smoothstep(6.5, 8.5, hour)
         : hour < 17.0 ? 1
         : hour < 21.0 ? 1 - smoothstep(17.0, 21.0, hour)
         : 0;
 
-      // Sun vertical arc — zenith at solar noon (13:15)
-      const solarNoon = 13.25;
-      const sunHalf = solarNoon - 6.5; // hours from rise to noon
-      const sunArc = Math.max(0, 1 - Math.abs(hour - solarNoon) / sunHalf);
-
-      // Moon alpha (visibility) — fades in after sun is ~25% visible
-      // Stars arrive when sun is at 25% (sunAlpha ~0.25 → hour ~20)
+      // Moon alpha — appears well after sunset, gone before sunrise
       const moonAlpha = hour < 4.0 ? 1
-        : hour < 8.0 ? 1 - smoothstep(4.0, 8.0, hour)
-        : hour < 20.0 ? 0
-        : hour < 23.5 ? smoothstep(20.0, 23.5, hour)
+        : hour < 6.0 ? 1 - smoothstep(4.0, 6.0, hour)
+        : hour < 22.0 ? 0
+        : hour < 23.5 ? smoothstep(22.0, 23.5, hour)
         : 1;
-      // Moon arc — slow arc peaking at midnight (hour 0/24), independent of alpha
-      // Moon is "up" from ~19:00 to ~07:00 (12h window centered on midnight)
-      const moonNoon = 0; // midnight
-      const moonHalf = 6.5; // hours from moonrise to peak
-      // Wrap hour so midnight is 0 (hour 20→-4, hour 4→4)
-      const moonHour = hour > 12 ? hour - 24 : hour;
-      const moonArc = Math.max(0, 1 - Math.abs(moonHour - moonNoon) / moonHalf);
-
-      // Battery level
+      // Battery level — charges during sun, drains once sun is mostly set, empty by 21h
       const BAT_MIN = 0.08;
-      const batteryLevel = hour < 9.0 ? BAT_MIN
-        : hour < 14.0 ? BAT_MIN + (1 - BAT_MIN) * ((hour - 9) / 5)
-        : hour < 19.5 ? 1.0
-        : hour < 22.5 ? Math.max(BAT_MIN, 1.0 - (1 - BAT_MIN) * ((hour - 19.5) / 3))
+      const batteryLevel = hour < 10.0 ? BAT_MIN
+        : hour < 14.0 ? BAT_MIN + (1 - BAT_MIN) * ((hour - 10) / 4)
+        : hour < 20.0 ? 1.0
+        : hour < 21.0 ? Math.max(BAT_MIN, 1.0 - (1 - BAT_MIN) * ((hour - 20.0) / 1))
         : BAT_MIN;
 
-      // Cable flow direction
-      const isExporting = phase === 'pv-export' || phase === 'sunset-discharge' || phase === 'battery-discharge';
-      const isPulling = phase === 'night-pull' || phase === 'sunrise';
+      // Cable flow direction — once battery is empty, pull from grid
+      const batteryEmpty = batteryLevel <= BAT_MIN + 0.02;
+      const isExporting = (phase === 'pv-export' || phase === 'sunset-discharge' || phase === 'battery-discharge') && !batteryEmpty;
+      const isPulling = phase === 'night-pull' || phase === 'sunrise' || batteryEmpty;
       const isCharging = phase === 'charging';
       const isDay = sunAlpha > 0.5;
 
@@ -398,7 +385,6 @@ export default function VPPArchitecture() {
 
       // Moon crescent — rendered on offscreen canvas to avoid compositing bleed
       {
-        const moonAlpha = Math.max(0, 1 - sunAlpha * 2.5);
         if (moonAlpha > 0.01) {
           const moonX = width - 55;
           const moonY = 50;        // fixed position — fades in/out only
@@ -434,6 +420,74 @@ export default function VPPArchitecture() {
         }
       }
 
+      // ── HIDDEN: Analog clock overlay ──────────────────────────────
+      // DO NOT DELETE — intentionally kept for future use.
+      // To re-enable, set SHOW_CLOCK = true. Renders an analog clock
+      // with digital readout showing the simulated hour, positioned at
+      // (width - 255, 55) — left of the sun, same Y level.
+      const SHOW_CLOCK = false;
+      if (SHOW_CLOCK) {
+        const clkX = width - 255;
+        const clkY = 55;
+        const clkR = 22;
+        const h12 = hour % 12;
+        const minuteFrac = (hour % 1);
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(clkX, clkY, clkR, 0, Math.PI * 2);
+        ctx.fillStyle = colors.surface + 'cc';
+        ctx.fill();
+        ctx.strokeStyle = colors.textDim + '50';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        for (let t = 0; t < 12; t++) {
+          const a = (t / 12) * Math.PI * 2 - Math.PI / 2;
+          const inner = t % 3 === 0 ? clkR - 6 : clkR - 4;
+          ctx.beginPath();
+          ctx.moveTo(clkX + Math.cos(a) * inner, clkY + Math.sin(a) * inner);
+          ctx.lineTo(clkX + Math.cos(a) * (clkR - 2), clkY + Math.sin(a) * (clkR - 2));
+          ctx.strokeStyle = colors.textDim + '60';
+          ctx.lineWidth = t % 3 === 0 ? 1.5 : 0.8;
+          ctx.stroke();
+        }
+
+        const hAngle = (h12 / 12) * Math.PI * 2 - Math.PI / 2;
+        ctx.beginPath();
+        ctx.moveTo(clkX, clkY);
+        ctx.lineTo(clkX + Math.cos(hAngle) * (clkR * 0.5), clkY + Math.sin(hAngle) * (clkR * 0.5));
+        ctx.strokeStyle = colors.text + 'cc';
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+
+        const mAngle = minuteFrac * Math.PI * 2 - Math.PI / 2;
+        ctx.beginPath();
+        ctx.moveTo(clkX, clkY);
+        ctx.lineTo(clkX + Math.cos(mAngle) * (clkR * 0.72), clkY + Math.sin(mAngle) * (clkR * 0.72));
+        ctx.strokeStyle = colors.text + '99';
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(clkX, clkY, 2, 0, Math.PI * 2);
+        ctx.fillStyle = colors.primary;
+        ctx.fill();
+
+        const dispH = Math.floor(hour);
+        const dispM = Math.floor(minuteFrac * 60);
+        ctx.font = '10px JetBrains Mono';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = colors.textDim + '80';
+        ctx.fillText(
+          String(dispH).padStart(2, '0') + ':' + String(dispM).padStart(2, '0'),
+          clkX, clkY + clkR + 12
+        );
+
+        ctx.restore();
+      }
+
       // Draw homes with PV, battery, underground grid
       HOMES.forEach((home, i) => {
         const cx = home.x * width + homeW / 2;
@@ -446,42 +500,41 @@ export default function VPPArchitecture() {
         // Underground grid cable — goes down from house then right off edge
         const cableDropY = cy + bodyH / 2 + 32;
         const cableRightX = cx + hw;
+        const cableColor = isPulling ? colors.primary : electricYellow;
         ctx.beginPath();
         ctx.moveTo(cableRightX, cy + bodyH / 2);
         ctx.lineTo(cableRightX, cableDropY);
         ctx.lineTo(width + 20, cableDropY);
-        ctx.strokeStyle = electricYellow + '25';
+        ctx.strokeStyle = cableColor + '25';
         ctx.lineWidth = 2.5;
         ctx.stroke();
         // Underground glow
         ctx.beginPath();
         ctx.moveTo(cableRightX, cableDropY);
         ctx.lineTo(width + 20, cableDropY);
-        ctx.strokeStyle = electricYellow + '10';
+        ctx.strokeStyle = cableColor + '10';
         ctx.lineWidth = 7;
         ctx.shadowBlur = 8;
-        ctx.shadowColor = electricYellow + '30';
+        ctx.shadowColor = cableColor + '30';
         ctx.stroke();
         ctx.shadowBlur = 0;
 
         // Animated electricity particles on L-shaped cable path
         // Path: house base (cableRightX, cy+bodyH/2) → down to (cableRightX, cableDropY) → right to (width+20, cableDropY)
         const hasFlow = isExporting || isPulling;
-        const elecDir = isExporting ? 1 : -1;
         const elecAlpha = hasFlow ? 0.85 : 0.15;
         const vertLen = cableDropY - (cy + bodyH / 2);
         const horizLen = width + 20 - cableRightX;
         const totalLen = vertLen + horizLen;
         const vertFrac = vertLen / totalLen; // fraction of path that is vertical
         ctx.shadowBlur = hasFlow ? 6 : 2;
-        ctx.shadowColor = electricYellow;
-        ctx.fillStyle = electricYellow;
+        ctx.shadowColor = cableColor;
+        ctx.fillStyle = cableColor;
         ctx.globalAlpha = elecAlpha;
         ctx.beginPath();
         for (let ep = 0; ep < 4; ep++) {
-          // t goes 0→1 along full path; pulling = from grid edge toward house
-          const baseP = ((now * 0.25 * elecDir + ep * 0.25 + i * 0.13) % 1 + 1) % 1;
-          // Pulling: t=0 at grid edge (right), t=1 at house. Exporting: reversed.
+          const baseP = ((now * 0.25 + ep * 0.25 + i * 0.13) % 1 + 1) % 1;
+          // t: 0 = grid edge, 1 = house. Pulling = grid→house, exporting = house→grid
           const t = isPulling ? baseP : 1 - baseP;
           let epx, epy;
           if (t > 1 - vertFrac) {

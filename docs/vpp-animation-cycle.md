@@ -1,156 +1,163 @@
-# VPP Home Energy Cycle — Animation Spec
+# VPP Architecture Animation Cycle
 
-Defines the day/night energy cycle for the "What Is a Virtual Power Plant?" slide (`VPPArchitecture.jsx`).
+The `VPPArchitecture.jsx` canvas animation runs a continuous day/night cycle representing a typical summer day for a VPP-connected home.
 
-## Design Principles
+## Architecture: Clock-Driven State Machine
 
-- All animation state derives from a single **fake clock** (0:00–24:00)
-- Real-time speed: 8s full cycle (1s = 3 hours). Configurable via `CYCLE_SECONDS`.
-- No independent timers — sun, moon, battery, PV, cable flow all read from the clock
-- Phase transitions use cosine easing for smooth visual blending
+The animation is structured as a **single-clock state machine**. Every visual element derives its state from one value: `hour` (0–24). There are no independent timers, no callbacks between elements, and no mutable event queues. This is intentional — it makes the system deterministic and easy to reason about.
 
-## 24-Hour Timeline
+### How it works
 
 ```
-Hour  0    3    6    9    12   15   18   21   24
-      |----|----|----|----|----|----|----|----|
-Sun   _______________████████████████▓▓░░__________
-Moon  ████████████▓░░____________________░▓████████
-Bat%  8%.....................0%▒▒▒▒100%████████▒▒8%
-Cable ◄◄◄◄◄◄◄◄◄◄◄◄◄◄◄···········►►►►►►►►►►►►◄◄◄◄
+performance.now() → hour (0–24) → phase → all visual state
 ```
 
-### Phase Breakdown
+1. **Clock**: `hour = ((now % CYCLE_SECONDS) / CYCLE_SECONDS) * 24`
+2. **Phase**: a pure function of `hour` — returns one of 7 phase strings
+3. **Derived state**: sun alpha, moon alpha, battery level, cable direction, particle colors — all pure functions of `hour` and `phase`
+4. **Rendering**: canvas draw loop reads derived state, draws everything
 
-| # | Phase            | Time        | Duration | Sun        | Moon       | Battery         | Cable Flow        | PV Panels |
-|---|------------------|-------------|----------|------------|------------|-----------------|-------------------|-----------|
-| 1 | Night/Grid Pull  | 00:00–06:30 | 6.5h     | Down       | Up (arc)   | Depleted (8%)   | Import ← grid     | Dark      |
-| 2 | Sunrise          | 06:30–07:00 | 0.5h     | Rising     | Fading out | Depleted (8%)   | Import ← grid     | Dim glow  |
-| 3 | Morning Peak     | 07:00–09:00 | 2.0h     | Up         | Gone       | Idle (8%)       | Idle (PV=house)   | Glowing   |
-| 4 | Charging         | 09:00–14:00 | 5.0h     | Up (peak)  | Gone       | Charging 0→100% | Idle               | Glowing   |
-| 5 | PV Export        | 14:00–19:30 | 5.5h     | Descending | Gone       | Full (100%)     | Export → grid (PV) | Glowing   |
-| 6 | Sunset+Discharge | 19:30–20:00 | 0.5h     | Setting    | Fading in  | Starts draining | Export → grid (bat)| Fading    |
-| 7 | Battery Discharge| 20:00–22:30 | 2.5h     | Down       | Up (arc)   | Draining 100→8% | Export → grid (bat)| Dark      |
-| 8 | Night/Grid Pull  | 22:30–00:00 | 1.5h     | Down       | Up (arc)   | Depleted (8%)   | Import ← grid     | Dark      |
+No element "tells" another element to change. The sun doesn't "trigger" the moon. The battery doesn't "emit" a direction change. They all independently read the clock and compute their own state. This means:
 
-### Key Moments
+- You can jump to any hour and get a correct frame
+- Adding a new element means adding one more function of `hour`
+- Changing timing means editing thresholds, not rewiring callbacks
 
-- **06:30** — Sunrise begins (sun alpha 0 → 1 over 30 min)
-- **07:00** — Sun fully up. PV covers house load but consumption too high to charge
-- **09:00** — People leave for work. Low consumption. Battery starts charging from PV
-- **14:00** — Battery full. Excess PV now exports to grid
-- **19:00** — Sunset begins (sun alpha starts fading)
-- **19:30** — Sun 75% down. Battery discharge to grid begins. Moon starts fading in
-- **20:00** — Sun fully down. Moon up. Battery still discharging
-- **22:30** — Battery depleted (8%). House switches to grid import
-- **00:00** — Cycle restarts
+### If you wanted event-driven
 
-## Sun Arc
-
-- Visible: 06:30–20:00
-- Sunrise transition: 06:30–07:00 (cosine ease-in, 30 min)
-- Sunset transition: 19:00–20:00 (cosine ease-out, 60 min)
-- Vertical position: arcs from horizon (low y) to zenith at solar noon (13:15)
-- "75% down" = 19:30 (75% through the 19:00–20:00 sunset window)
-
-## Moon Arc
-
-- Visible: 20:00–06:30 (inverse of sun, with crossfade overlap during transitions)
-- Rises as sun sets, sets as sun rises
-- Rendered as crescent shape
-- Subtle glow halo
-
-## Battery
-
-- Capacity: 0% (displayed as 8% minimum for visual) to 100%
-- Charge rate: linear over 5 hours (09:00–14:00)
-- Discharge rate: linear over 2 hours (19:30–21:30)
-- Color coding:
-  - Green: charging (phase 4)
-  - Accent/blue: full + PV exporting (phase 5)
-  - Accent: discharging to grid (phases 6–7)
-  - Red: depleted, pulling from grid (phases 1, 8)
-- Arrow indicator: ↓ charging, ↑ discharging, none when idle/depleted
-
-## Cable Flow (Underground Grid)
-
-- Export (right →): PV surplus to grid (14:00–19:30), battery to grid (19:30–21:30)
-- Import (left ←): grid to house (21:30–06:30, plus sunrise/morning 06:30–09:00)
-- Idle: during charging when PV is consumed locally (09:00–14:00)
-- Particle brightness: bright during active flow, dim during idle
-
-## Implementation
-
-### Clock
+An event-driven version would look like:
 
 ```js
-const CYCLE_HOURS = 24;
-const CYCLE_SECONDS = 8; // 8s full cycle = 1s per 3 hours
-
-// In animation loop:
-const now = performance.now() / 1000;
-const hour = ((now % CYCLE_SECONDS) / CYCLE_SECONDS) * 24; // 0.0 .. 24.0
+// NOT how it works — but for comparison
+emitter.on('sunset', () => { moon.fadeIn(); stars.show(); });
+emitter.on('battery-empty', () => { cable.setDirection('pull'); });
 ```
 
-### Phase Resolution
+The current approach is simpler for a canvas animation because there's no async behavior, no event ordering issues, and the entire state is always consistent within a single frame.
+
+## Time Scaling
+
+- **Cycle duration**: 12 seconds real time = 24 hours simulated
+- **Scale factor**: 1 second = 2 hours
+- **Hour calculation**: `hour = ((now % 12) / 12) * 24`
+- The cycle repeats indefinitely
+
+## Full Schedule
+
+| Hour | Phase | Sun | Moon | Battery | Grid Direction | Cable Color |
+|---|---|---|---|---|---|---|
+| 0.0–4.0 | night-pull | gone | full | empty (8%) | pulling from grid | cyan |
+| 4.0–6.0 | night-pull | gone | fading out | empty (8%) | pulling from grid | cyan |
+| 6.0–6.5 | night-pull | gone | gone | empty (8%) | pulling from grid | cyan |
+| 6.5–8.5 | sunrise | fading in | gone | empty (8%) | pulling from grid | cyan |
+| 8.5–10.0 | morning-peak | full | gone | empty (8%) | idle (no active flow) | dim yellow |
+| 10.0–14.0 | charging | full | gone | 8% → 100% | idle (charging from PV) | dim yellow |
+| 14.0–17.0 | pv-export | full | gone | full (100%) | exporting to grid | yellow |
+| 17.0–19.0 | sunset-discharge | fading out | gone | full (100%) | exporting to grid | yellow |
+| 19.0–21.0 | battery-discharge | fading out → gone | gone | 100% → 8% | exporting → pulling when empty | yellow → cyan |
+| 21.0–22.0 | night-pull | gone | gone | empty (8%) | pulling from grid | cyan |
+| 22.0–23.5 | night-pull | gone | fading in | empty (8%) | pulling from grid | cyan |
+| 23.5–24.0 | night-pull | gone | full | empty (8%) | pulling from grid | cyan |
+
+## Phase Definitions
 
 ```js
-function getPhase(hour) {
-  if (hour < 6.5)  return 'night-pull';
-  if (hour < 7.0)  return 'sunrise';
-  if (hour < 9.0)  return 'morning-peak';
-  if (hour < 14.0) return 'charging';
-  if (hour < 19.5) return 'pv-export';
-  if (hour < 20.0) return 'sunset-discharge';
-  if (hour < 21.5) return 'battery-discharge';
-  return 'night-pull';
-}
+const phase = hour < 6.5  ? 'night-pull'
+  : hour < 8.5  ? 'sunrise'
+  : hour < 10.0 ? 'morning-peak'
+  : hour < 14.0 ? 'charging'
+  : hour < 17.0 ? 'pv-export'
+  : hour < 19.0 ? 'sunset-discharge'
+  : hour < 21.0 ? 'battery-discharge'
+  : 'night-pull';
 ```
 
-### Derived State (all from `hour`)
+## Element Behaviors
 
-```js
-const phase = getPhase(hour);
+### Sun
 
-// Sun alpha: 0 (down) to 1 (full)
-// Rises 06:30–07:00, sets 19:00–20:00
-const sunAlpha = hour < 6.5 ? 0
-  : hour < 7.0 ? smoothstep(6.5, 7.0, hour)
-  : hour < 19.0 ? 1
-  : hour < 20.0 ? 1 - smoothstep(19.0, 20.0, hour)
-  : 0;
+Fixed position top-right. Fades in/out only (no arc movement).
 
-// Sun vertical position: zenith at solar noon (13:15)
-const solarNoon = 13.25;
-const sunArc = 1 - Math.abs(hour - solarNoon) / (solarNoon - 6.5);
-const sunY = sunYBase - (sunYBase - sunYZenith) * Math.max(0, sunArc) * sunAlpha;
+| Parameter | Value |
+|---|---|
+| Rise start | hour 6.5 |
+| Fully up | hour 8.5 |
+| Sunset start | hour 17.0 |
+| Fully gone | hour 21.0 |
+| Fade function | `smoothstep` (cubic hermite) |
+| Visual | Yellow circle + 12 rays, glow proportional to alpha |
 
-// Moon alpha: inverse of sun with overlap during transitions
-const moonAlpha = Math.max(0, 1 - sunAlpha * 2);
+### Moon
 
-// Battery level
-const batteryLevel = hour < 9.0 ? 0.08
-  : hour < 14.0 ? 0.08 + 0.92 * ((hour - 9) / 5)
-  : hour < 19.5 ? 1.0
-  : hour < 21.5 ? Math.max(0.08, 1.0 - 0.92 * ((hour - 19.5) / 2))
-  : 0.08;
+Same position as sun (top-right). Never overlaps due to timing gaps.
 
-// Cable flow
-const cableDir = (phase === 'pv-export' || phase === 'sunset-discharge' || phase === 'battery-discharge')
-  ? 'export' : (phase === 'charging' || phase === 'morning-peak') ? 'idle' : 'import';
+| Parameter | Value |
+|---|---|
+| Fade in start | hour 22.0 |
+| Fully visible | hour 23.5 |
+| Fade out start | hour 4.0 |
+| Fully gone | hour 6.0 |
+| Gap after sunset | 1h darkness (21.0 → 22.0) |
+| Gap before sunrise | 0.5h darkness (6.0 → 6.5) |
+| Visual | Crescent via offscreen canvas compositing |
+
+### Stars
+
+- Alpha = `1 - sunAlpha` — automatically inverse of sun
+- Twinkle per star via `sin(now * speed + offset)`
+- Larger stars get cross-sparkle lines
+
+### Battery
+
+Per-home indicator bar, right of house.
+
+| Parameter | Value |
+|---|---|
+| Min level (BAT_MIN) | 8% — visual floor |
+| Charge start | hour 10.0 |
+| Fully charged | hour 14.0 |
+| Drain start | hour 19.0 |
+| Fully drained | hour 21.0 |
+| Ramp | Linear in both directions |
+| Color | Green (charging), amber (discharging), red (at BAT_MIN) |
+| Arrow | Down when charging, up when discharging, none when idle/empty |
+
+### Grid Cable & Electricity Particles
+
+L-shaped underground cable per home: vertical drop from house, then horizontal to right edge.
+
+| Parameter | Value |
+|---|---|
+| Direction trigger | `isPulling` flag (true when night-pull, sunrise, or battery empty) |
+| Export color | yellow (`#fbbf24`) |
+| Pull color | cyan (`#22d3ee`) |
+| Particles per home | 4, evenly spaced along L-path |
+| Particle speed | `now * 0.25` |
+| Active alpha | 0.85 |
+| Idle alpha | 0.15 (morning-peak, charging) |
+
+**Key rule**: Once `batteryLevel <= BAT_MIN + 0.02`, the cable switches to pulling regardless of phase name. This ensures the house starts consuming from the grid the moment the battery is empty, even if the phase timer hasn't ticked over to `night-pull` yet.
+
+### PV Panel Glow
+
+- Sun glow: `shadowBlur = 10 * sunAlpha`, amber stroke
+- Only visible when `sunAlpha > 0.01`
+
+## Smoothstep Function
+
+Used for all fade transitions:
+
+```
+smoothstep(a, b, t) = x² * (3 - 2x)  where x = clamp((t - a) / (b - a), 0, 1)
 ```
 
-### Defaults
+Smooth ease-in/ease-out between hours `a` and `b`.
 
-```js
-const DEFAULTS = {
-  cycleSeconds: 8,     // 8s full cycle (1s = 3h)
-  sunRise: 6.5,        // 06:30
-  sunSet: 20.0,        // 20:00
-  chargeStart: 9.0,    // 09:00
-  chargeEnd: 14.0,     // 14:00
-  dischargeStart: 19.5,// 19:30
-  dischargeDuration: 3, // hours (extended for animation visibility)
-  batteryMin: 0.08,    // visual minimum
-};
-```
+## Adding New Elements
+
+To add a new visual element to the cycle:
+
+1. Define its behavior as a pure function of `hour` (and optionally `phase`)
+2. Add the drawing code in the `draw()` function
+3. Update this document with the new element's schedule
+4. No wiring, no events, no callbacks — just read the clock
