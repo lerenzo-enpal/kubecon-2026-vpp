@@ -19,8 +19,8 @@ const VIEWS = {
 const NODES = [
   // Generation
   { id: 'torrens',     pos: [138.523, -34.807], type: 'gas',   cap: 1280, name: 'Torrens Island' },
-  { id: 'pelican',     pos: [138.520, -34.720], type: 'gas',   cap: 480,  name: 'Pelican Point' },
-  { id: 'osborne',     pos: [138.525, -34.835], type: 'gas',   cap: 180,  name: 'Osborne' },
+  { id: 'pelican',     pos: [138.506, -34.765], type: 'gas',   cap: 480,  name: 'Pelican Point' },
+  { id: 'osborne',     pos: [138.508, -34.798], type: 'gas',   cap: 180,  name: 'Osborne' },
   // Wind farms (tripped 2016)
   { id: 'hornsdale',   pos: [138.540, -33.056], type: 'wind',  cap: 315,  name: 'Hornsdale' },
   { id: 'snowtown',    pos: [138.135, -33.732], type: 'wind',  cap: 369,  name: 'Snowtown 1&2' },
@@ -31,14 +31,14 @@ const NODES = [
   { id: 'clements',    pos: [138.151, -33.721], type: 'wind',  cap: 57,   name: 'Clements Gap' },
   // Wind farms (survived)
   { id: 'waterloo',    pos: [138.900, -33.980], type: 'wind',  cap: 111,  name: 'Waterloo', survived: true },
-  { id: 'canunda',     pos: [140.700, -37.680], type: 'wind',  cap: 46,   name: 'Canunda', survived: true },
-  { id: 'lakebonney',  pos: [140.360, -37.300], type: 'wind',  cap: 279,  name: 'Lake Bonney 1-3', survived: true },
+  { id: 'canunda',     pos: [140.417, -37.810], type: 'wind',  cap: 46,   name: 'Canunda', survived: true },
+  { id: 'lakebonney',  pos: [140.407, -37.771], type: 'wind',  cap: 279,  name: 'Lake Bonney 1-3', survived: true },
   // Substations
   { id: 'davenport',   pos: [137.820, -32.510], type: 'sub',   cap: 0,    name: 'Davenport Sub' },
   { id: 'belalie',     pos: [138.500, -33.150], type: 'sub',   cap: 0,    name: 'Belalie Sub' },
   { id: 'para',        pos: [138.630, -34.730], type: 'sub',   cap: 0,    name: 'Para Sub' },
   // Interconnector
-  { id: 'heywood',     pos: [141.100, -37.800], type: 'ic',    cap: 460,  name: 'Heywood IC' },
+  { id: 'heywood',     pos: [140.841, -37.733], type: 'ic',    cap: 460,  name: 'Heywood IC' },
   // Battery (for VPP variant)
   { id: 'hpr',         pos: [138.520, -33.080], type: 'battery', cap: 150, name: 'Hornsdale Power Reserve' },
 ];
@@ -210,25 +210,29 @@ const VPP_LOGS = [
 // SA VPP Phase 2 concentrated on Housing SA properties — public housing estates
 // across northern, western, and southern Adelaide suburbs.
 const ADELAIDE_CLUSTERS = [
-  // Northern suburbs — large Housing SA estates
-  { lng: 138.665, lat: -34.710, weight: 0.14, spread: 0.025, name: 'Elizabeth/Davoren Park' },
-  { lng: 138.680, lat: -34.760, weight: 0.10, spread: 0.018, name: 'Salisbury/Para Hills' },
-  { lng: 138.660, lat: -34.680, weight: 0.06, spread: 0.015, name: 'Smithfield' },
-  // Inner north
-  { lng: 138.600, lat: -34.850, weight: 0.08, spread: 0.012, name: 'Kilburn/Blair Athol' },
-  // Inner west
-  { lng: 138.530, lat: -34.870, weight: 0.07, spread: 0.014, name: 'Woodville/Findon' },
-  { lng: 138.500, lat: -34.840, weight: 0.05, spread: 0.012, name: 'Port Adelaide' },
-  // Central west
-  { lng: 138.555, lat: -35.010, weight: 0.09, spread: 0.016, name: 'Marion/Mitchell Park' },
-  // Southern suburbs
-  { lng: 138.540, lat: -35.090, weight: 0.11, spread: 0.020, name: 'Hackham/Morphett Vale' },
-  { lng: 138.500, lat: -35.130, weight: 0.08, spread: 0.018, name: 'Noarlunga/Christie Downs' },
-  // Scattered suburban (smaller pockets across metro)
-  { lng: 138.620, lat: -34.930, weight: 0.06, spread: 0.030, name: 'Central suburbs' },
-  { lng: 138.700, lat: -34.880, weight: 0.04, spread: 0.020, name: 'Eastern suburbs' },
-  { lng: 138.580, lat: -34.780, weight: 0.04, spread: 0.020, name: 'Prospect/Enfield' },
-  { lng: 138.560, lat: -35.040, weight: 0.08, spread: 0.015, name: 'Sturt/Bedford Park' },
+  // Northern suburbs — large Housing SA estates (coords from OSM suburb centroids)
+  { lng: 138.669, lat: -34.720, weight: 0.14, spread: 0.022, name: 'Elizabeth/Davoren Park' },    // Elizabeth -34.720/138.669, Davoren Park -34.691/138.668
+  { lng: 138.643, lat: -34.774, weight: 0.10, spread: 0.018, name: 'Salisbury/Para Hills' },      // Salisbury Downs -34.772/138.624, Para Hills -34.812/138.656
+  { lng: 138.686, lat: -34.685, weight: 0.06, spread: 0.015, name: 'Smithfield/Munno Para' },     // Smithfield -34.685/138.686, Munno Para -34.666/138.690
+  // Inner north (OSM: Kilburn -34.860/138.586, Blair Athol -34.859/138.597)
+  { lng: 138.591, lat: -34.860, weight: 0.08, spread: 0.012, name: 'Kilburn/Blair Athol' },
+  // Inner west (OSM: Woodville -34.880/138.539, Findon -34.899/138.531)
+  { lng: 138.535, lat: -34.885, weight: 0.07, spread: 0.014, name: 'Woodville/Findon' },
+  // Port Adelaide (OSM: -34.834/138.512)
+  { lng: 138.512, lat: -34.834, weight: 0.05, spread: 0.012, name: 'Port Adelaide' },
+  // Central south (OSM: Marion -35.006/138.554, Mitchell Park -35.005/138.562)
+  { lng: 138.558, lat: -35.006, weight: 0.09, spread: 0.016, name: 'Marion/Mitchell Park' },
+  // Southern suburbs (OSM: Reynella -35.097/138.522, Woodcroft -35.103/138.562)
+  { lng: 138.542, lat: -35.095, weight: 0.11, spread: 0.020, name: 'Hackham/Morphett Vale' },
+  // Far south (OSM: Hallett Cove -35.073/138.511, Sheidow Park -35.079/138.527)
+  { lng: 138.519, lat: -35.076, weight: 0.08, spread: 0.018, name: 'Noarlunga/Christie Downs' },
+  // Scattered suburban
+  { lng: 138.570, lat: -34.960, weight: 0.06, spread: 0.030, name: 'Central suburbs' },           // Goodwood/Unley area
+  { lng: 138.618, lat: -34.892, weight: 0.04, spread: 0.020, name: 'Eastern suburbs' },           // Walkerville/Prospect area
+  // Prospect/Enfield (OSM: Prospect -34.883/138.593, Enfield -34.861/138.605)
+  { lng: 138.599, lat: -34.872, weight: 0.04, spread: 0.016, name: 'Prospect/Enfield' },
+  // Sturt/Bedford Park (OSM: Sturt -35.023/138.555, Bedford Park -35.023/138.570)
+  { lng: 138.562, lat: -35.023, weight: 0.08, spread: 0.015, name: 'Sturt/Bedford Park' },
 ];
 
 function generateVPPHomes(count, seed = 42) {
