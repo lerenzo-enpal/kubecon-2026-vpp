@@ -449,9 +449,6 @@ function Factory({ x, y, w, h, c, lit, draw, t0 = 0 }) {
         <rect key={`v${i}`} pathLength="1" x={x + w * pct} y={y - 6} width={w * 0.06} height={6}
           stroke={c + '30'} strokeWidth="0.6" fill={c + '05'} style={dSF(draw, t0 + 0.5 + i * 0.1, 0.2)} />
       ))}
-      <text x={x + w * 0.45} y={y + h + 16} textAnchor="middle"
-        fill={c + '30'} fontSize="8" fontFamily="JetBrains Mono" letterSpacing="0.1em"
-        style={flk(draw, t0 + 0.9)}>INDUSTRIAL</text>
     </g>
   );
 }
@@ -474,9 +471,6 @@ function ShoppingCenter({ x, y, w, h, c, lit, draw, t0 = 0 }) {
       ))}
       <rect pathLength="1" x={x + w * 0.3} y={y - 10} width={w * 0.4} height={10}
         stroke={c + '30'} strokeWidth="0.8" fill={c + '04'} style={dSF(draw, t0 + 0.4, 0.3)} />
-      <text x={x + w * 0.5} y={y + h + 14} textAnchor="middle"
-        fill={c + '30'} fontSize="8" fontFamily="JetBrains Mono" letterSpacing="0.1em"
-        style={flk(draw, t0 + 0.7)}>RETAIL</text>
     </g>
   );
 }
@@ -513,8 +507,8 @@ function Plant({ x, y, w, h, c, smoking, label, draw, t0 = 0 }) {
         stroke={activeStroke} strokeWidth="1" fill={activeFill}
         style={{ ...dSF(draw, t0 + 0.3, 0.4), transition: 'fill 0.6s ease, stroke 0.4s ease' }} />
       {/* Label */}
-      <text x={x + w * 0.29} y={y + h * 0.7} textAnchor="middle"
-        fill={c + 'cc'} fontSize="9" fontWeight="600" fontFamily="JetBrains Mono" letterSpacing="0.08em"
+      <text x={x + w * 0.29} y={y + h + 18} textAnchor="middle"
+        fill={c + 'cc'} fontSize="18" fontWeight="600" fontFamily="JetBrains Mono" letterSpacing="0.08em"
         style={flk(draw, t0 + 0.8)}>{label}</text>
       {/* Corner brackets */}
       <line pathLength="1" x1={x - 4} y1={y + h * 0.3 - 4} x2={x + 12} y2={y + h * 0.3 - 4}
@@ -631,8 +625,8 @@ function Substation({ x, y, w, h, c, draw, t0 = 0, energized }) {
           ? { strokeDasharray: 'none', strokeDashoffset: 0, animation: 'coilPulse 1.2s ease-in-out infinite 0.6s' }
           : dS(draw, t0 + 0.45, 0.5)} />
       {/* Label */}
-      <text x={x + w / 2} y={y + h + 14} textAnchor="middle"
-        fill={c + '35'} fontSize="8" fontFamily="JetBrains Mono" letterSpacing="0.1em"
+      <text x={x + w / 2} y={y + h + 18} textAnchor="middle"
+        fill={c + '35'} fontSize="16" fontFamily="JetBrains Mono" letterSpacing="0.1em"
         style={flk(draw, t0 + 0.9)}>SUBSTATION</text>
       {/* Corner brackets */}
       {[[x - 4, y - 4, 1, 1], [x + w + 4, y - 4, -1, 1], [x - 4, y + h + 4, 1, -1], [x + w + 4, y + h + 4, -1, -1]].map(([bx, by, dx, dy], i) => (

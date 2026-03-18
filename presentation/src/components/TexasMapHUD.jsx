@@ -330,16 +330,16 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
     new LineLayer({
       id: 'glow', data: lines,
       getSourcePosition: d => d.from, getTargetPosition: d => d.to,
-      getColor: d => d.glow, getWidth: 10, widthMinPixels: 4,
+      getColor: d => d.glow, getWidth: 4, widthMinPixels: 2,
     }),
     new LineLayer({
       id: 'lines', data: lines,
       getSourcePosition: d => d.from, getTargetPosition: d => d.to,
-      getColor: d => d.color, getWidth: 3, widthMinPixels: 2,
+      getColor: d => d.color, getWidth: 1.5, widthMinPixels: 1,
     }),
     new ScatterplotLayer({
       id: 'plants', data: PLANTS, getPosition: d => d.pos,
-      getRadius: d => d.id === 'comanche' && running ? 16000 : 6000 + d.cap * 2000,
+      getRadius: d => d.id === 'comanche' && running ? 16000 : 3600 * Math.sqrt(d.cap),
       getFillColor: d => {
         if (d.id === 'comanche' && running) return [...COMANCHE_GREEN, 200];
         if (failed.has(d.id)) return [...FAILED_COLOR, 180];
@@ -681,10 +681,10 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
             )}
           </div>
 
-          {/* ── Legend (bottom, offset from left panel) ── */}
+          {/* ── Legend (bottom-center) ── */}
           <div style={{
-            position: 'absolute', bottom: 10, left: 10, zIndex: 10,
-            display: 'flex', gap: 18,
+            position: 'absolute', bottom: 10, left: '50%', transform: 'translateX(-50%)',
+            zIndex: 10, display: 'flex', gap: 18,
             opacity: legendFade,
           }}>
             {legend.map(i => (

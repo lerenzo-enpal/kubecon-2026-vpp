@@ -13,6 +13,9 @@
 - [Ascend Analytics — CAISO negative price outlook](https://www.ascendanalytics.com/blog/caiso-market-outlook-persistent-negative-energy-prices-spreading-curtailment)
 - [Fortune / Clean Energy Wire — Dunkelflaute Dec 2024](https://fortune.com/europe/2024/12/12/weather-phenomenon-dunkelflaute-germany-energy-prices/)
 - [Bundeskartellamt — Price spike investigation](https://www.bundeskartellamt.de/SharedDocs/Meldung/EN/Pressemitteilungen/2025/10_21_2025_Preisspitzen.html)
+- [Fraunhofer ISE energy-charts API](https://api.energy-charts.info/) — Hourly EPEX SPOT day-ahead prices (CC BY 4.0, from BNetzA/SMARD)
+- [GEM Energy Analytics — The duck is growing](https://gemenergyanalytics.substack.com/p/the-duck-is-growing)
+- [SMARD — The electricity market in 2025](https://www.smard.de/page/en/topic-article/217400/219038/record-high-for-solar-generation-in-each-quarter)
 
 ---
 
@@ -21,12 +24,19 @@
 | Year | Capacity (GW) | Source |
 |------|---------------|--------|
 | 2015 | 39 | Clean Energy Wire |
+| 2016 | 41 | IEA / BNetzA |
+| 2017 | 42 | IEA / BNetzA |
 | 2018 | 45 | Clean Energy Wire |
+| 2019 | 49 | BNetzA (+3.94 GW in 2019) |
+| 2020 | 54 | BNetzA (+4.9 GW in 2020) |
 | 2021 | 59 | Clean Energy Wire |
-| 2023 | 82 | Clean Energy Wire |
-| 2024 | ~100 | PV Magazine (17.5 GW added in 2024) |
-| 2025 | 104 | FfE / Bundesnetzagentur |
+| 2022 | 66 | PV Magazine (+7.19 GW in 2022) |
+| 2023 | 82 | Clean Energy Wire (+14.1 GW in 2023) |
+| 2024 | 100 | PV Magazine (+16.2 GW in 2024) |
+| 2025 | 106 (AC) / 117 (DC) | BNetzA 106.2 GW AC; Fraunhofer ISE 116.8 GW DC module capacity |
 | 2030 | 215 (target) | German government EEG target |
+
+**Peak solar feed-in record:** 50.4 GW on June 20, 2025 (12:45-13:00 CEST). Source: Fraunhofer ISE / Clean Energy Wire.
 
 ---
 
@@ -36,14 +46,20 @@
 |------|-----------------|-------|
 | 2008 | 15 | First negative prices ever on EPEX |
 | 2012 | ~56 | Market premium scheme introduced |
-| 2015 | ~126 | Nearly doubled from 64 in 2014 |
-| 2020 | ~298 | COVID demand drop amplified effect |
-| 2022 | 69 | Energy crisis pulled all prices up |
-| 2023 | 301 | Gas prices normalized, solar boom resumed |
-| 2024 | 457 | Record — 17.5 GW of new solar added |
-| 2025 H1 | 389 | On track for 700+ full year |
+| 2014 | 64 | Agora Energiewende |
+| 2015 | 126 | Nearly doubled from 64 in 2014 |
+| 2016 | 97 | SMARD |
+| 2017 | 146 | SMARD |
+| 2018 | 134 | SMARD |
+| 2019 | 211 | SMARD |
+| 2020 | 298 | SMARD; COVID demand drop amplified effect |
+| 2021 | 139 | SMARD; energy crisis onset suppressed negatives |
+| 2022 | 69 | SMARD; energy crisis pulled all prices up |
+| 2023 | 301 | SMARD; gas prices normalized, solar boom resumed |
+| 2024 | 457 | SMARD / PV Magazine; 17.5 GW of new solar added |
+| 2025 | 575 | FfE full-year confirmed; H1 was 389 |
 
-Sources: PV Magazine, FfE, Timera Energy, Vattenfall
+Sources: SMARD (Bundesnetzagentur), PV Magazine, FfE, Vattenfall, Agora Energiewende
 
 ---
 
@@ -59,32 +75,86 @@ Sources: PV Magazine, FfE, Timera Energy, Vattenfall
 ### Positive Price Extremes (Evening/Scarcity)
 | Event | Price (EUR/MWh) | Source |
 |-------|----------------|--------|
-| Dec 12, 2024 Dunkelflaute (5-6pm) | 936 | Bundeskartellamt |
+| Dec 12, 2024 Dunkelflaute (5-6pm) | 936.28 | SMARD / Bundeskartellamt |
 | Dec 12, 2024 intraday | ~1,000 | Clean Energy Wire |
+| Jan 20, 2025 Dunkelflaute (5-6pm) | 583.40 | SMARD |
+| Jan 7, 2025 continuous intraday | 1,056 | FfE 2025 |
+| Jul 1, 2025 (8-9pm) | 476.19 | SMARD Q3 2025 report |
 | Feb 2025 Dunkelflaute | >900 | FfE 2025 |
 | Jun 26, 2024 (exchange outage) | 2,325 | FfE 2024 (technical outlier) |
 
-### Averages (2024)
-| Metric | Price (EUR/MWh) | Source |
-|--------|----------------|--------|
-| Annual average day-ahead | 78.51 | Bundesnetzagentur |
-| Peak-load average (Mon-Fri 8am-8pm) | 88.2 | Bundesnetzagentur |
-| Off-peak average | 74.8 | Bundesnetzagentur |
-| 2025 annual average | 89.32 | Bundesnetzagentur |
+### Annual Averages & Peak/Base Ratios
+| Year | Base (EUR/MWh) | Peak (EUR/MWh) | Off-peak (EUR/MWh) | Peak/Base Ratio | Source |
+|------|---------------|---------------|--------------------|-----------------:|--------|
+| 2023 | 95.18 | 106.2 | 89.1 | 1.12 | FfE / BNetzA |
+| 2024 | 78.51 | 88.2 | 74.8 | 1.11 | FfE / BNetzA |
+| 2025 | 89.32 | 92.3 | 87.7 | 1.03 | FfE / BNetzA |
+
+Peak = Mon-Fri 8am-8pm. The declining peak/base ratio (1.12 -> 1.03) reflects solar depressing
+daytime prices within the "peak" window, NOT lower evening prices. Gas: TTF 41 (2023), 34.8 (2024), 37.2 (2025) EUR/MWh.
 
 ---
 
-## Typical Summer Day Price Profile (Germany 2024)
+## Evening Peak Prices by Year (API-Verified)
 
+Queried from Fraunhofer ISE energy-charts API (CC BY 4.0, from BNetzA/SMARD).
+Bidding zone DE-AT-LU for 2015/2018, DE-LU from 2019 onward.
+Period: June-August day-ahead hourly averages. Times in CEST.
+
+| Year | 12-14h avg | 19h avg | 18-20h avg | Spread (19h-midday) | Summer avg | Solar GW | Source |
+|------|-----------|---------|-----------|--------------------:|-----------|----------|--------|
+| 2015 | 30.2 | **41.1** | 39.9 | 10.9 | 32.3 | 39 | API |
+| 2016 | 25.0 | **34.1** | 33.2 | 9.1 | 27.4 | 41 | API |
+| 2017 | ~28 | **~38** | ~37 | ~10 | ~31 | 42 | est. |
+| 2018 | 46.2 | **58.9** | 57.7 | 12.7 | 49.5 | 45 | API |
+| 2019 | 30.2 | **49.9** | 47.7 | 19.7 | 36.4 | 49 | API |
+| 2020 | 24.9 | **41.5** | 39.8 | 16.5 | 30.4 | 54 | API |
+| 2021 | 67.7 | **101.1** | 98.3 | 33.4 | 79.5 | 59 | API |
+| 2022 | 248.9 | **440.1** | 425.7 | 191.2 | 334.2 | 66 | API |
+| 2023 | 49.3 | **128.3** | 123.4 | 79.0 | 88.8 | 82 | API |
+| 2024 | 20.6 | **123.8** | 121.4 | 103.3 | 74.2 | 100 | API |
+| 2025 | 16.1 | **119.6** | 117.9 | 103.5 | 76.4 | 106 | API |
+
+Note: 2017 marked "est." — energy-charts API has no data for 2017 (licensing gap).
+Estimated from 2017 annual avg ~34 EUR/MWh and neighboring year ratios (2016: 1.24x, 2018: 1.19x).
+
+Key observations:
+- **Evening prices plateau** at 120-128 EUR/MWh from 2023-2025 (driven by gas+CO2 cost floor)
+- **Midday prices collapsed** from 67.7 (2021) to 16.1 (2025) as solar capacity doubled
+- **The spread is the real story**: 10.9 -> 103.5 EUR/MWh (10x increase in 10 years)
+- **2022 was the energy crisis outlier**: all prices massively elevated (TTF gas >100 EUR/MWh)
+- 2021 was the energy crisis onset: elevated gas pushed all prices up including midday
+
+API endpoint: `https://api.energy-charts.info/price?bzn=DE-LU&start=YYYY-06-01T00:00Z&end=YYYY-08-31T23:00Z`
+
+---
+
+## Typical Summer Day Price Profile (Germany)
+
+### 2024 typical summer day
 | Time | Price (EUR/MWh) | Notes |
 |------|----------------|-------|
 | 06:00 | 65-80 | Morning ramp |
-| 12:00-14:00 | 20-30 avg, negative on sunny days | Solar belly |
+| 12:00-14:00 | 20-30 avg, negative on sunny days | Solar belly (API avg: 20.6) |
 | 15:00 | 35-50 | Solar declining |
-| 18:00-20:00 | 120-150 | Evening peak, 175% of average |
+| 18:00-20:00 | 120-150 | Evening peak (API avg: 121.4) |
 | Extreme sunny midday | -50 to -80 | Common on weekends/holidays |
 
-Average daily spread (2025): **130 EUR/MWh** between daily min and max.
+### 2025 typical summer day
+| Time | Price (EUR/MWh) | Notes |
+|------|----------------|-------|
+| 06:00 | 65-85 | Morning ramp |
+| 12:00-14:00 | 10-25 avg, frequently negative | Solar belly deeper (API avg: 16.1) |
+| 15:00 | 30-50 | Solar declining |
+| 18:00-20:00 | 115-140 | Evening peak (API avg: 117.9) |
+| Extreme sunny midday | -50 to -250 | Record -250.32 on May 11 |
+
+Average daily spread (2024): **33.5 EUR/MWh** std dev (FfE).
+Average daily spread (2025): **130.4 EUR/MWh** min-to-max (FfE), **36.9 EUR/MWh** std dev.
+
+Solar season (Apr-Sep) price characteristics (GEM Energy Analytics):
+- Afternoon prices: ~1/3 of overall average
+- Peak hour prices: ~175% of overall average
 
 ---
 
@@ -102,7 +172,7 @@ Average daily spread (2025): **130 EUR/MWh** between daily min and max.
 
 - 2-hour battery day-ahead arbitrage in Germany (Jul-Aug 2024): **274 EUR/MWh per cycle** (Rabobank)
 - Charging at -50 EUR/MWh + discharging at +150 EUR/MWh = **200 EUR/MWh spread**
-- 457+ negative price hours per year and growing
+- 575 negative price hours in 2025 (up from 457 in 2024) and growing
 - By 2030 with 215 GW solar, negative price hours could exceed 1,000/year
 
 ---
@@ -133,13 +203,31 @@ Net Demand (GW)  →  Price (EUR/MWh)
 Floor: -500 EUR/MWh (EPEX SPOT exchange limit)
 ```
 
-### Resulting prices per year in the visualization:
-| Year | Midday Low | Evening Peak |
-|------|-----------|-------------|
-| 2015 | 63 EUR/MWh | 277 EUR/MWh |
-| 2023 | 28 EUR/MWh | 269 EUR/MWh |
-| 2025 | -70 EUR/MWh | 265 EUR/MWh |
-| 2030 | -345 EUR/MWh | 255 EUR/MWh |
+### Evening peak annotation in the visualization:
+
+The chart previously computed evening peak prices from the `demandToPrice()` model,
+which produced unrealistically high and flat values (~265-277 EUR/MWh across all years).
+This was replaced with **real EPEX SPOT 19:00 CEST averages** (Jun-Aug) from
+energy-charts.info / SMARD (see "Evening Peak Prices by Year" section above).
+
+| Year | Evening (real EPEX SPOT 19h) | Source |
+|------|----------------------------|--------|
+| 2015 | **41 EUR/MWh** | energy-charts API |
+| 2016 | **34 EUR/MWh** | energy-charts API |
+| 2017 | **~38 EUR/MWh** | est. (API gap) |
+| 2018 | **59 EUR/MWh** | energy-charts API |
+| 2019 | **50 EUR/MWh** | energy-charts API |
+| 2020 | **42 EUR/MWh** | energy-charts API |
+| 2021 | **101 EUR/MWh** | energy-charts API |
+| 2022 | **440 EUR/MWh** | energy-charts API (energy crisis) |
+| 2023 | **128 EUR/MWh** | energy-charts API |
+| 2024 | **124 EUR/MWh** | energy-charts API |
+| 2025 | **120 EUR/MWh** | energy-charts API |
+| 2030 | **~140 EUR/MWh** | Projection (gas price + steeper ramp) |
+
+The 2030 projection of ~140 EUR/MWh assumes: continued gas dependency for evening ramp,
+higher CO2 prices under EU ETS, steeper ramp stress from 215 GW solar, partially offset
+by 30+ GW of expected battery storage capacity.
 
 ---
 

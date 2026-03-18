@@ -93,3 +93,59 @@ Batteries sit at the bottom of the merit order with near-zero marginal cost, dis
 | Battery cost trend | $800 -> $200/kWh |
 
 **Important:** I was unable to access live web sources (both WebSearch and WebFetch permissions were denied) and could not write the file to the repo (Write permission denied). To save this research, you could either grant write permission and ask me again, or copy this output manually. I also recommend re-running this research with web search enabled to get the latest 2025-2026 figures, particularly on battery costs, German negative price hours, and California storage deployment which are evolving rapidly.
+---
+
+## Verified: German Evening Peak Prices (EPEX SPOT Day-Ahead, 19:00 CEST)
+
+**Verified 2026-03-17. Source: Fraunhofer ISE energy-charts.info API (data origin: Bundesnetzagentur / SMARD.de, CC BY 4.0).**
+
+These are the real average EPEX SPOT day-ahead prices at **19:00 CEST (17:00 UTC)** across **June–August** per year.
+They are used in `DuckCurveChart.jsx` and `DuckCurveVPP.jsx` for the evening ramp price annotation.
+
+### Values used in the chart
+
+| Year | 19:00 CEST avg (Jun–Aug) | 18–21h avg (Jun–Aug) | 19:00 max | 19:00 p90 | Bidding zone |
+|------|--------------------------|----------------------|-----------|-----------|-------------|
+| 2015 | **41 EUR/MWh** | 39.6 | 66.4 | 50.2 | DE-AT-LU |
+| 2018 | **59 EUR/MWh** | 57.5 | 86.0 | 70.9 | DE-AT-LU |
+| 2021 | **101 EUR/MWh** | 98.0 | 150.0 | 126.8 | DE-LU |
+| 2023 | **128 EUR/MWh** | 124.8 | 276.1 | 170.3 | DE-LU |
+| 2025 | **120 EUR/MWh** | 121.9 | 307.3 | 159.0 | DE-LU |
+| 2030 | **~140 EUR/MWh** (projection) | — | — | — | — |
+
+Note: DE-AT-LU was the single German/Austrian/Luxembourg bidding zone until October 2018.
+After October 1 2018, Austria split off and Germany became DE-LU.
+
+### How to reproduce
+
+Using the Fraunhofer ISE energy-charts.info API (free, CC BY 4.0):
+
+```bash
+# 2015 and 2018: use DE-AT-LU zone
+curl "https://api.energy-charts.info/price?bzn=DE-AT-LU&start=2015-06-01&end=2015-08-31"
+curl "https://api.energy-charts.info/price?bzn=DE-AT-LU&start=2018-06-01&end=2018-08-31"
+
+# 2021 onwards: use DE-LU zone
+curl "https://api.energy-charts.info/price?bzn=DE-LU&start=2021-06-01&end=2021-08-31"
+curl "https://api.energy-charts.info/price?bzn=DE-LU&start=2023-06-01&end=2023-08-31"
+curl "https://api.energy-charts.info/price?bzn=DE-LU&start=2025-06-01&end=2025-08-31"
+```
+
+Filter the JSON for hours where `unix_seconds % 86400 / 3600 == 17` (17:00 UTC = 19:00 CEST in summer).
+Then take the average. The API returns an array of `unix_seconds` and a parallel `price` array.
+
+### Context
+
+- The 2021 jump (41→101 EUR/MWh) partly reflects post-COVID gas market tightening, not only duck curve stress.
+- The 2023 peak (128 EUR/MWh) reflects gas-crisis aftermath and tightened capacity margins.
+- The 2025 slight dip to 120 EUR/MWh reflects new battery storage capacity softening peak prices.
+- 2030 (~140) is a projection: steeper ramp stress vs. more storage — net direction is upward.
+- These are **averages**. Spike events are much higher: 2025 saw 307 EUR/MWh max at 19:00 CEST in summer.
+
+### Why the old code was wrong
+
+The previous chart computed `peakPrice = demandToPrice(maxNet)` using a fictional merit-order model.
+`maxNet` was always at hour 18 (baseDemand=60 GW, the highest hour). As solar scale grew, 1 GW of
+residual solar at 18:00 shrank `maxNet` by up to 1.5 GW in 2030. In the steep `≥55 GW` pricing zone
+(+20 EUR/MWh per GW), this produced a false downward drift from ~277 → ~255 EUR/MWh — completely
+backwards from reality.

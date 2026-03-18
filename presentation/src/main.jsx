@@ -12,5 +12,9 @@ import '@fontsource/jetbrains-mono/500.css';
 import '@fontsource/jetbrains-mono/700.css';
 import './index.css';
 import Presentation from './Presentation';
+import StyleGuideReview from './StyleGuideReview';
 
-createRoot(document.getElementById('root')).render(<Presentation />);
+const isStyleGuide = new URLSearchParams(window.location.search).has('styleguide');
+createRoot(document.getElementById('root')).render(
+  isStyleGuide ? <StyleGuideReview /> : <Presentation />
+);
