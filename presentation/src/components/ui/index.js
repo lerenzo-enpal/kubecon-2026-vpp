@@ -7,3 +7,4 @@ export { default as ComparisonRow } from './ComparisonRow';
 export { default as TimelineItem } from './TimelineItem';
 export { default as SectionDivider } from './SectionDivider';
 export { default as LazyContent } from './LazyContent';
+export { default as Corners } from './Corners';

@@ -6,7 +6,7 @@ import { colors } from '../theme';
 // phase: 'trans' = HV backbone (step 2), 'dist' = substation + distribution (step 3)
 const CONN = [
   { d: 'M 200 135 L 290 98', group: 'hv', phase: 'trans', wd: 0 },
-  { d: 'M 200 340 L 290 155', group: 'hv', phase: 'trans', wd: 0.05 },
+  { d: 'M 170 410 L 290 155', group: 'hv', phase: 'trans', wd: 0.05 },
   { d: 'M 335 85 L 445 85', group: 'hv', phase: 'trans', wd: 0.2 },
   { d: 'M 335 98 L 445 98', group: 'hv', phase: 'trans', wd: 0.22 },
   { d: 'M 335 111 L 445 111', group: 'hv', phase: 'trans', wd: 0.24 },
@@ -181,8 +181,8 @@ export default function GridFlowDemo({ width = '100%' }) {
           {/* ═══ STEP 1: POWER PLANTS ═══ */}
           <g style={{ visibility: step >= 1 ? 'visible' : 'hidden' }}>
             <Reticle x={20} y={48} w={190} h={370} c={c} active={drawPlants} delay={0} label="SCANNING: GENERATION" />
-            <Plant x={30} y={68} w={165} h={130} c={c} smoking={step >= 5} label="COAL 800MW" draw={drawPlants} t0={0.3} />
-            <Plant x={30} y={278} w={165} h={130} c={c} smoking={step >= 5} label="GAS 400MW" draw={drawPlants} t0={0.65} />
+            <Plant x={30} y={68} w={165} h={130} c={c} smoking={step >= 5} label="COAL 800MW" type="coal" draw={drawPlants} t0={0.3} />
+            <Plant x={30} y={328} w={165} h={130} c={c} smoking={step >= 5} label="GAS 400MW" type="gas" draw={drawPlants} t0={0.65} />
           </g>
 
           {/* ═══ STEP 2: TRANSMISSION (towers + HV lines) ═══ */}
@@ -464,24 +464,58 @@ function ShoppingCenter({ x, y, w, h, c, lit, draw, t0 = 0 }) {
   );
 }
 
-function Plant({ x, y, w, h, c, smoking, label, draw, t0 = 0 }) {
-  const towerW = w * 0.28;
-  const towerH = h * 0.92;
-  const towerX = x + w * 0.68;
-  const stackX = x + w * 0.22;
-  const stackW = w * 0.07;
-  const stackH = h * 0.32;
+function Plant({ x, y, w, h, c, smoking, label, type = 'coal', draw, t0 = 0 }) {
   const activeFill = smoking ? c + '12' : c + '05';
   const activeStroke = smoking ? c + '80' : c + '60';
+  const isCoal = type === 'coal';
+
+  // Label position: centered in main building rect
+  const labelX = x + w * 0.29;
+  const labelY = y + h * 0.65;
 
   return (
     <g>
-      {/* Main building */}
+      {isCoal ? (
+        <CoalPlantBody x={x} y={y} w={w} h={h} c={c} smoking={smoking}
+          activeFill={activeFill} activeStroke={activeStroke} draw={draw} t0={t0} />
+      ) : (
+        <GasPlantBody x={x} y={y} w={w} h={h} c={c} smoking={smoking}
+          activeFill={activeFill} activeStroke={activeStroke} draw={draw} t0={t0} />
+      )}
+      {/* Label — split into two centered lines */}
+      <text x={labelX} y={labelY} textAnchor="middle"
+        fill={c + 'cc'} fontSize="14" fontWeight="600" fontFamily="JetBrains Mono" letterSpacing="0.08em"
+        style={flk(draw, t0 + 0.8)}>
+        {label.split(' ').map((word, i, arr) => (
+          <tspan key={i} x={labelX} dy={i === 0 ? `${-(arr.length - 1) * 0.5}em` : '1em'}>{word}</tspan>
+        ))}
+      </text>
+    </g>
+  );
+}
+
+function CoalPlantBody({ x, y, w, h, c, smoking, activeFill, activeStroke, draw, t0 }) {
+  const towerW = w * 0.28;
+  const towerH = h * 0.92;
+  const towerX = x + w * 0.68;
+  const towerCX = towerX + towerW * 0.5;
+  const stackX = x + w * 0.22;
+  const stackW = w * 0.07;
+  const stackH = h * 0.32;
+  const stackTop = y + h * 0.3 - stackH;
+
+  return (
+    <g>
+      {/* Main boiler building */}
       <rect pathLength="1" x={x} y={y + h * 0.3} width={w * 0.58} height={h * 0.7}
         stroke={activeStroke} strokeWidth="1.5" fill={activeFill}
         filter={smoking ? 'url(#gf)' : undefined}
         style={{ ...dSF(draw, t0, 0.7), transition: 'fill 0.6s ease, stroke 0.4s ease' }} />
-      {/* Cooling tower */}
+      {/* Smokestack */}
+      <rect pathLength="1" x={stackX} y={stackTop} width={stackW} height={stackH}
+        stroke={activeStroke} strokeWidth="1" fill={activeFill}
+        style={{ ...dSF(draw, t0 + 0.3, 0.4), transition: 'fill 0.6s ease, stroke 0.4s ease' }} />
+      {/* Cooling tower — hyperbolic shape */}
       <path pathLength="1" d={`
         M ${towerX} ${y + towerH}
         Q ${towerX + towerW * 0.12} ${y + towerH * 0.45}, ${towerX + towerW * 0.08} ${y}
@@ -491,57 +525,81 @@ function Plant({ x, y, w, h, c, smoking, label, draw, t0 = 0 }) {
       `} stroke={activeStroke} strokeWidth="1.5" fill={activeFill}
         filter={smoking ? 'url(#gf)' : undefined}
         style={{ ...dSF(draw, t0 + 0.15, 0.7), transition: 'fill 0.6s ease, stroke 0.4s ease' }} />
-      {/* Smokestack */}
-      <rect pathLength="1" x={stackX} y={y + h * 0.3 - stackH} width={stackW} height={stackH}
-        stroke={activeStroke} strokeWidth="1" fill={activeFill}
-        style={{ ...dSF(draw, t0 + 0.3, 0.4), transition: 'fill 0.6s ease, stroke 0.4s ease' }} />
-      {/* Label */}
-      {/* Label — split into two centered lines */}
-      <text x={x + w * 0.29} y={y + h * 0.65} textAnchor="middle"
-        fill={c + 'cc'} fontSize="14" fontWeight="600" fontFamily="JetBrains Mono" letterSpacing="0.08em"
-        style={flk(draw, t0 + 0.8)}>
-        {label.split(' ').map((word, i, arr) => (
-          <tspan key={i} x={x + w * 0.29} dy={i === 0 ? `${-(arr.length - 1) * 0.5}em` : '1em'}>{word}</tspan>
-        ))}
-      </text>
-      {/* Corner brackets */}
-      <line pathLength="1" x1={x - 4} y1={y + h * 0.3 - 4} x2={x + 12} y2={y + h * 0.3 - 4}
-        stroke={c + '25'} strokeWidth="1" style={dS(draw, t0 + 0.7, 0.3)} />
-      <line pathLength="1" x1={x - 4} y1={y + h * 0.3 - 4} x2={x - 4} y2={y + h * 0.3 + 12}
-        stroke={c + '25'} strokeWidth="1" style={dS(draw, t0 + 0.7, 0.3)} />
-
-      {/* Smoke (SMIL) */}
+      {/* Smoke from smokestack + steam from cooling tower */}
       {smoking && (
         <g>
-          <circle cx={stackX + stackW / 2} cy={y + h * 0.3 - stackH} r="5" fill={c + '30'}>
-            <animate attributeName="cy" from={y + h * 0.3 - stackH} to={y + h * 0.3 - stackH - 40} dur="2s" repeatCount="indefinite" />
+          {/* Smokestack smoke */}
+          <circle cx={stackX + stackW / 2} cy={stackTop} r="5" fill={c + '30'}>
+            <animate attributeName="cy" from={stackTop} to={stackTop - 40} dur="2s" repeatCount="indefinite" />
             <animate attributeName="r" from="5" to="14" dur="2s" repeatCount="indefinite" />
             <animate attributeName="opacity" from="0.7" to="0" dur="2s" repeatCount="indefinite" />
           </circle>
-          <circle cx={stackX + stackW / 2 + 4} cy={y + h * 0.3 - stackH} r="4" fill={c + '25'}>
-            <animate attributeName="cy" from={y + h * 0.3 - stackH} to={y + h * 0.3 - stackH - 35} dur="2.5s" repeatCount="indefinite" begin="0.7s" />
+          <circle cx={stackX + stackW / 2 + 4} cy={stackTop} r="4" fill={c + '25'}>
+            <animate attributeName="cy" from={stackTop} to={stackTop - 35} dur="2.5s" repeatCount="indefinite" begin="0.7s" />
             <animate attributeName="r" from="4" to="12" dur="2.5s" repeatCount="indefinite" begin="0.7s" />
             <animate attributeName="opacity" from="0.6" to="0" dur="2.5s" repeatCount="indefinite" begin="0.7s" />
           </circle>
-          <circle cx={stackX + stackW / 2 - 3} cy={y + h * 0.3 - stackH} r="3" fill={c + '20'}>
-            <animate attributeName="cy" from={y + h * 0.3 - stackH} to={y + h * 0.3 - stackH - 30} dur="3s" repeatCount="indefinite" begin="1.3s" />
+          <circle cx={stackX + stackW / 2 - 3} cy={stackTop} r="3" fill={c + '20'}>
+            <animate attributeName="cy" from={stackTop} to={stackTop - 30} dur="3s" repeatCount="indefinite" begin="1.3s" />
             <animate attributeName="r" from="3" to="10" dur="3s" repeatCount="indefinite" begin="1.3s" />
             <animate attributeName="opacity" from="0.5" to="0" dur="3s" repeatCount="indefinite" begin="1.3s" />
           </circle>
-          <circle cx={towerX + towerW * 0.5} cy={y} r="7" fill={c + '22'}>
-            <animate attributeName="cy" from={y} to={y - 40} dur="2.2s" repeatCount="indefinite" begin="0.3s" />
-            <animate attributeName="r" from="7" to="20" dur="2.2s" repeatCount="indefinite" begin="0.3s" />
-            <animate attributeName="opacity" from="0.65" to="0" dur="2.2s" repeatCount="indefinite" begin="0.3s" />
+          {/* Cooling tower steam */}
+          <circle cx={towerCX} cy={y} r="7" fill={c + '25'}>
+            <animate attributeName="cy" from={y} to={y - 42} dur="2s" repeatCount="indefinite" />
+            <animate attributeName="r" from="7" to="20" dur="2s" repeatCount="indefinite" />
+            <animate attributeName="opacity" from="0.7" to="0" dur="2s" repeatCount="indefinite" />
           </circle>
-          <circle cx={towerX + towerW * 0.35} cy={y} r="5" fill={c + '18'}>
-            <animate attributeName="cy" from={y} to={y - 35} dur="2.8s" repeatCount="indefinite" begin="1.1s" />
-            <animate attributeName="r" from="5" to="16" dur="2.8s" repeatCount="indefinite" begin="1.1s" />
-            <animate attributeName="opacity" from="0.55" to="0" dur="2.8s" repeatCount="indefinite" begin="1.1s" />
+          <circle cx={towerCX - 5} cy={y} r="5" fill={c + '20'}>
+            <animate attributeName="cy" from={y} to={y - 38} dur="2.6s" repeatCount="indefinite" begin="0.5s" />
+            <animate attributeName="r" from="5" to="16" dur="2.6s" repeatCount="indefinite" begin="0.5s" />
+            <animate attributeName="opacity" from="0.6" to="0" dur="2.6s" repeatCount="indefinite" begin="0.5s" />
           </circle>
-          <circle cx={towerX + towerW * 0.6} cy={y} r="6" fill={c + '15'}>
-            <animate attributeName="cy" from={y} to={y - 38} dur="3.2s" repeatCount="indefinite" begin="1.8s" />
-            <animate attributeName="r" from="6" to="18" dur="3.2s" repeatCount="indefinite" begin="1.8s" />
-            <animate attributeName="opacity" from="0.5" to="0" dur="3.2s" repeatCount="indefinite" begin="1.8s" />
+          <circle cx={towerCX + 6} cy={y} r="6" fill={c + '18'}>
+            <animate attributeName="cy" from={y} to={y - 36} dur="3s" repeatCount="indefinite" begin="1.2s" />
+            <animate attributeName="r" from="6" to="18" dur="3s" repeatCount="indefinite" begin="1.2s" />
+            <animate attributeName="opacity" from="0.55" to="0" dur="3s" repeatCount="indefinite" begin="1.2s" />
+          </circle>
+        </g>
+      )}
+    </g>
+  );
+}
+
+function GasPlantBody({ x, y, w, h, c, smoking, activeFill, activeStroke, draw, t0 }) {
+  const stackX = x + w * 0.52;
+  const stackW = w * 0.07;
+  const stackH = h * 0.4;
+  const stackTop = y + h * 0.3 - stackH;
+
+  return (
+    <g>
+      {/* Main building — wider, no cooling tower */}
+      <rect pathLength="1" x={x} y={y + h * 0.3} width={w * 0.7} height={h * 0.7}
+        stroke={activeStroke} strokeWidth="1.5" fill={activeFill}
+        filter={smoking ? 'url(#gf)' : undefined}
+        style={{ ...dSF(draw, t0, 0.7), transition: 'fill 0.6s ease, stroke 0.4s ease' }} />
+      {/* Exhaust stack — on top of building */}
+      <rect pathLength="1" x={stackX} y={stackTop} width={stackW} height={stackH}
+        stroke={activeStroke} strokeWidth="1" fill={activeFill}
+        style={{ ...dSF(draw, t0 + 0.2, 0.5), transition: 'fill 0.6s ease, stroke 0.4s ease' }} />
+      {/* Exhaust from stack */}
+      {smoking && (
+        <g>
+          <circle cx={stackX + stackW / 2} cy={stackTop} r="4" fill={c + '28'}>
+            <animate attributeName="cy" from={stackTop} to={stackTop - 36} dur="1.8s" repeatCount="indefinite" />
+            <animate attributeName="r" from="4" to="12" dur="1.8s" repeatCount="indefinite" />
+            <animate attributeName="opacity" from="0.65" to="0" dur="1.8s" repeatCount="indefinite" />
+          </circle>
+          <circle cx={stackX + stackW / 2 + 3} cy={stackTop} r="3" fill={c + '20'}>
+            <animate attributeName="cy" from={stackTop} to={stackTop - 30} dur="2.2s" repeatCount="indefinite" begin="0.6s" />
+            <animate attributeName="r" from="3" to="10" dur="2.2s" repeatCount="indefinite" begin="0.6s" />
+            <animate attributeName="opacity" from="0.55" to="0" dur="2.2s" repeatCount="indefinite" begin="0.6s" />
+          </circle>
+          <circle cx={stackX + stackW / 2 - 2} cy={stackTop} r="3" fill={c + '18'}>
+            <animate attributeName="cy" from={stackTop} to={stackTop - 28} dur="2.6s" repeatCount="indefinite" begin="1.3s" />
+            <animate attributeName="r" from="3" to="9" dur="2.6s" repeatCount="indefinite" begin="1.3s" />
+            <animate attributeName="opacity" from="0.45" to="0" dur="2.6s" repeatCount="indefinite" begin="1.3s" />
           </circle>
         </g>
       )}

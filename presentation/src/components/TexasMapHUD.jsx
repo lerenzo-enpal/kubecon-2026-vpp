@@ -6,6 +6,7 @@ import { ScatterplotLayer, LineLayer, TextLayer } from '@deck.gl/layers';
 
 import MapGL from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { Corners } from './ui';
 
 const FLY_TO = new FlyToInterpolator();
 
@@ -97,28 +98,6 @@ function getStepView(stepIdx, fallback) {
   const spread = Math.max(Math.max(...lons) - Math.min(...lons), Math.max(...lats) - Math.min(...lats));
   const zoom = spread < 0.5 ? 7.5 : spread < 1.5 ? 7.0 : spread < 3 ? 6.5 : 6.0;
   return { longitude: avgLon, latitude: avgLat, zoom, pitch: 45, bearing: -5 };
-}
-
-// ── HUD corner bracket decoration ──────────────────────────
-function Corner({ pos, color }) {
-  const s = 12;
-  const base = { position: 'absolute', width: s, height: s };
-  const borders = {
-    tl: { top: -1, left: -1, borderTop: `2px solid ${color}`, borderLeft: `2px solid ${color}` },
-    tr: { top: -1, right: -1, borderTop: `2px solid ${color}`, borderRight: `2px solid ${color}` },
-    bl: { bottom: -1, left: -1, borderBottom: `2px solid ${color}`, borderLeft: `2px solid ${color}` },
-    br: { bottom: -1, right: -1, borderBottom: `2px solid ${color}`, borderRight: `2px solid ${color}` },
-  };
-  return <div style={{ ...base, ...borders[pos] }} />;
-}
-
-function Corners({ color }) {
-  return <>
-    <Corner pos="tl" color={color} />
-    <Corner pos="tr" color={color} />
-    <Corner pos="bl" color={color} />
-    <Corner pos="br" color={color} />
-  </>;
 }
 
 // ── Main component ──────────────────────────────────────────

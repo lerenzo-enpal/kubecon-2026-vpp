@@ -5,6 +5,7 @@ import { FlyToInterpolator } from '@deck.gl/core';
 import { ScatterplotLayer, LineLayer, TextLayer } from '@deck.gl/layers';
 import MapGL from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { Corners } from './ui';
 
 const FLY_TO = new FlyToInterpolator();
 
@@ -278,26 +279,6 @@ const NODE_MAP = new Map(NODES.map(n => [n.id, n]));
 const getNode = (id) => NODE_MAP.get(id);
 
 // ── HUD corner bracket decoration ──────────────────────────
-function Corner({ pos, color }) {
-  const s = 12;
-  const base = { position: 'absolute', width: s, height: s };
-  const borders = {
-    tl: { top: -1, left: -1, borderTop: `2px solid ${color}`, borderLeft: `2px solid ${color}` },
-    tr: { top: -1, right: -1, borderTop: `2px solid ${color}`, borderRight: `2px solid ${color}` },
-    bl: { bottom: -1, left: -1, borderBottom: `2px solid ${color}`, borderLeft: `2px solid ${color}` },
-    br: { bottom: -1, right: -1, borderBottom: `2px solid ${color}`, borderRight: `2px solid ${color}` },
-  };
-  return <div style={{ ...base, ...borders[pos] }} />;
-}
-
-function Corners({ color }) {
-  return <>
-    <Corner pos="tl" color={color} />
-    <Corner pos="tr" color={color} />
-    <Corner pos="bl" color={color} />
-    <Corner pos="br" color={color} />
-  </>;
-}
 
 // ── Main component ──────────────────────────────────────────
 export default function SAMapHUD({ width = 1024, height = 700, variant = 'blackout' }) {

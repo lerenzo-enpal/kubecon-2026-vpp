@@ -6,6 +6,7 @@ import { ScatterplotLayer } from '@deck.gl/layers';
 import Map from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { colors } from '../theme';
+import { Corners } from './ui';
 import { SUMMER_STEPS, WINTER_STEPS } from './VPPScenarioHomes';
 import DuckCurveHUD from './DuckCurveHUD';
 import HomeDetailView from './HomeDetailView';
@@ -71,28 +72,6 @@ const PHASE_COLORS = {
   respond:   [34, 211, 238],
   stable:    [16, 185, 129],
 };
-
-// ── Corner bracket decoration ──
-function Corner({ pos, color }) {
-  const s = 10;
-  const base = { position: 'absolute', width: s, height: s };
-  const borders = {
-    tl: { top: -1, left: -1, borderTop: `2px solid ${color}`, borderLeft: `2px solid ${color}` },
-    tr: { top: -1, right: -1, borderTop: `2px solid ${color}`, borderRight: `2px solid ${color}` },
-    bl: { bottom: -1, left: -1, borderBottom: `2px solid ${color}`, borderLeft: `2px solid ${color}` },
-    br: { bottom: -1, right: -1, borderBottom: `2px solid ${color}`, borderRight: `2px solid ${color}` },
-  };
-  return <div style={{ ...base, ...borders[pos] }} />;
-}
-
-function Corners({ color }) {
-  return <>
-    <Corner pos="tl" color={color} />
-    <Corner pos="tr" color={color} />
-    <Corner pos="bl" color={color} />
-    <Corner pos="br" color={color} />
-  </>;
-}
 
 // ── Targeting reticle SVG ──
 function TargetingReticle({ visible }) {
@@ -369,7 +348,7 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
         opacity: bootFade(0.5, 0.5),
         transform: `translateY(${(1 - bootFade(0.5, 0.5)) * -10}px)`,
       }}>
-        <Corners color={accentColor + '60'} />
+        <Corners color={accentColor + '60'} size={10} />
         {/* Event type badge */}
         <div style={{
           display: 'inline-block', padding: '2px 8px', borderRadius: 3,
@@ -407,7 +386,7 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
         opacity: bootFade(0.7, 0.5),
         transform: `translateY(${(1 - bootFade(0.7, 0.5)) * -10}px)`,
       }}>
-        <Corners color={accentColor + '60'} />
+        <Corners color={accentColor + '60'} size={10} />
         {scenario === 'summer' ? (
           <>
             <div style={{ fontSize: 9, fontFamily: '"JetBrains Mono"', color: colors.textDim, letterSpacing: '0.1em' }}>
@@ -463,7 +442,7 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
         opacity: bootFade(1.0, 0.5),
         transform: `translateY(${(1 - bootFade(1.0, 0.5)) * 15}px)`,
       }}>
-        <Corners color={accentColor + '40'} />
+        <Corners color={accentColor + '40'} size={10} />
         <DuckCurveHUD
           highlightHour={currentStep.duckHighlightHour}
           blend={currentStep.duckBlend}
