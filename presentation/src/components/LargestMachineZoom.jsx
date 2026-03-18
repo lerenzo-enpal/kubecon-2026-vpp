@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useContext, useMemo, useState, useCallback } 
 import { SlideContext, useSteps } from 'spectacle';
 import DeckGL from '@deck.gl/react';
 import { WebMercatorViewport } from '@deck.gl/core';
-import { ScatterplotLayer } from '@deck.gl/layers';
+import { ScatterplotLayer, LineLayer } from '@deck.gl/layers';
 import Map from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { colors } from '../theme';
@@ -162,14 +162,17 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
 
   // ── Controlled viewState — manual interpolation in RAF loop ──
   const [viewState, setViewState] = useState(WOLFSBURG_VIEW);
+  const viewStateRef = useRef(WOLFSBURG_VIEW); // live view for use inside draw closure
   const zoomProgressRef = useRef(0);  // 0-1 animation progress for light appearance
   const nowRef = useRef(0);           // current time (seconds) for light animation
+  const scanRef = useRef(null);       // { scanY, vp } — screen-space scan line for dot glow
+  const scanStartRef = useRef(null);  // timestamp when scan line first appears
 
   // Light animation tick — 10fps layer updates for blink/fade/pulse effects
   const [lightTick, setLightTick] = useState(0);
   useEffect(() => {
     if (currentStepValue < 2) return;
-    const interval = setInterval(() => setLightTick(t => t + 1), 100);
+    const interval = setInterval(() => setLightTick(t => t + 1), 16);
     return () => clearInterval(interval);
   }, [currentStepValue]);
 
@@ -205,7 +208,34 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
     if (currentStepValue < 2) return [];
     const now = nowRef.current;
     const zp = zoomProgressRef.current;
-    return [
+
+    // Compute scan line position in lat/lng (same tick as dots = perfect sync)
+    let scanVp = null;
+    let scanLat = null;
+    const showScan = zp >= 1;
+    if (showScan) {
+      try {
+        const vs = viewStateRef.current;
+        scanVp = new WebMercatorViewport({ width, height, ...vs });
+        const [, rawTopLat] = scanVp.unproject([width / 2, 0]);
+        const [, rawBotLat] = scanVp.unproject([width / 2, height]);
+        const rawRange = rawTopLat - rawBotLat;
+        // Overshoot 10% on both sides so line fully exits the screen
+        const topLat = rawTopLat + rawRange * 0.1;
+        const latRange = (rawRange * 1.2);
+        if (scanStartRef.current === null) scanStartRef.current = performance.now();
+        const scanElapsed = (performance.now() - scanStartRef.current) / 1000;
+        const scanFrac = (scanElapsed % 13) / 13;
+        scanLat = topLat - scanFrac * latRange;
+        const [, sy] = scanVp.project([vs.longitude, scanLat]);
+        scanRef.current = { scanY: sy, vp: scanVp };
+      } catch (_) { /* viewport not ready */ }
+    } else {
+      scanRef.current = null;
+      scanStartRef.current = null;
+    }
+
+    const result = [
       new ScatterplotLayer({
         id: 'settlements',
         data: SETTLEMENTS,
@@ -238,6 +268,29 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
             }
           }
 
+          // Scan line glow — screen-space comparison, only behind the line
+          const scan = scanRef.current;
+          if (scan) {
+            const [, dotY] = scan.vp.project(d.position);
+            // diff > 0 means scan line is below the dot = line already passed
+            const diff = scan.scanY - dotY;
+            const trail = 200; // 200px smooth fade trail
+            if (diff > 0 && diff < trail) {
+              // Smooth cubic ease-out: bright at contact, gentle fade to baseline
+              const t_decay = diff / trail; // 0 at line, 1 at end
+              const glowT = 1 - t_decay;
+              const smooth = glowT * glowT; // quadratic: gentle fade, no hard edge
+              const boostedAlpha = Math.round(alpha + (255 - alpha) * smooth);
+              const cyan = smooth * 0.8;
+              return [
+                Math.round(255 * (1 - cyan) + 120 * cyan),
+                Math.round(240 * (1 - cyan) + 230 * cyan),
+                Math.round(200 * (1 - cyan) + 255 * cyan),
+                boostedAlpha,
+              ];
+            }
+          }
+
           return [255, 240, 200, Math.round(Math.max(0, Math.min(255, alpha)))];
         },
         radiusMinPixels: 0.3,
@@ -263,7 +316,25 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
         updateTriggers: { getFillColor: [lightTick] },
       }),
     ];
-  }, [currentStepValue, lightTick]);
+
+    // Add scan line as a deck.gl LineLayer — same pipeline as dots = perfect sync
+    if (showScan && scanVp && scanLat !== null) {
+      const [westLng] = scanVp.unproject([0, height / 2]);
+      const [eastLng] = scanVp.unproject([width, height / 2]);
+      result.push(new LineLayer({
+        id: 'scan-line',
+        data: [{ from: [westLng - 10, scanLat], to: [eastLng + 10, scanLat] }],
+        getSourcePosition: d => d.from,
+        getTargetPosition: d => d.to,
+        getColor: [34, 211, 238, 25],
+        getWidth: 2,
+        widthMinPixels: 1,
+        widthMaxPixels: 2,
+      }));
+    }
+
+    return result;
+  }, [currentStepValue, lightTick, width, height]);
 
   // ── Canvas animation loop (Phase 0, 1, 3 + HUD overlay for Phase 2) ──
   useEffect(() => {
@@ -446,9 +517,11 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
         // Push viewState to DeckGL (controlled mode)
         if (t < 1) {
           setViewState(currentView);
+          viewStateRef.current = currentView;
         } else if (t >= 1 && eased < 1.01) {
           // Final state — set once
           setViewState(EUROPE_VIEW);
+          viewStateRef.current = EUROPE_VIEW;
           zoomProgressRef.current = 1;
         }
 
@@ -511,7 +584,7 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
           ctx.strokeStyle = colors.accent;
           ctx.lineWidth = 1.5;
           ctx.beginPath();
-          ctx.moveTo(wx, wy);
+          ctx.moveTo(wx - 3, wy + 6);
           ctx.lineTo(lineEndX, lineEndY);
           ctx.lineTo(labelX, labelY);
           ctx.stroke();
@@ -636,6 +709,9 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
           ctx.restore();
         }
       }
+
+      // ── Horizontal scan line — only after zoom completes ──
+      // Scan line + dot glow are handled entirely in deck.gl layers (useMemo above)
 
       // ── CRT vignette ──
       ctx.save();
