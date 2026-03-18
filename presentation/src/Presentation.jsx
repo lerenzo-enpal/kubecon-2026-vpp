@@ -1,5 +1,5 @@
 import React from 'react';
-import { Deck, Slide, Heading, Text, Notes } from 'spectacle';
+import { Deck, Slide, Heading, Text, Notes, Stepper } from 'spectacle';
 import { colors } from './theme';
 import { LazyContent } from './components/ui';
 import FrequencyDemo from './components/FrequencyDemo';
@@ -11,6 +11,7 @@ import StaticTexasGrid from './components/StaticTexasGrid';
 import TexasMapHUD from './components/TexasMapHUD';
 import { versionA, versionD } from './slides/GridScaleSlides';
 import EUGridHUD from './components/EUGridHUD';
+
 import DemandResponseDemo from './components/DemandResponseDemo';
 import VPPArchitecture from './components/VPPArchitecture';
 import GridFlowDemo from './components/GridFlowDemo';
@@ -22,6 +23,7 @@ import VPPScenarioSlide from './components/VPPScenarioSlide';
 import CurtailmentChart from './components/CurtailmentChart';
 import ResponseTimeline from './components/ResponseTimeline';
 import ThankYouBackground from './components/ThankYouBackground';
+
 
 const theme = {
   colors: { primary: colors.text, secondary: colors.textMuted, tertiary: colors.primary },
@@ -67,8 +69,8 @@ const slideTemplate = ({ slideNumber, numberOfSlides }) => {
           {speaker}
         </div>
       )}
-      <div className="absolute bottom-3 right-5 text-[11px] font-mono flex gap-2 items-center" style={{ color: colors.textDim + '99' }}>
-        {label && <span style={{ color: colors.textDim + '70' }}>{label}</span>}
+      <div className="absolute bottom-3 right-5 text-[12px] font-mono flex gap-2 items-center" style={{ color: colors.textMuted }}>
+        {label && <span style={{ color: colors.textDim }}>{label}</span>}
         <span>{slideNumber} / {numberOfSlides}</span>
       </div>
     </>
@@ -161,7 +163,7 @@ export default function Presentation() {
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[20px] font-semibold text-hud-danger font-mono tracking-[0.15em] uppercase mb-4">Part I</div>
-          <H size="54px" center color={colors.danger}>The Grid</H>
+          <H size="50px" center color={colors.danger}>The Grid</H>
           <P size="20px" center>The world's largest machine.</P>
         </div>
         <Notes>
@@ -278,32 +280,78 @@ export default function Presentation() {
       {/* 10: The Old Playbook */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
-          <H color={colors.accent}><span style={{ color: colors.danger, marginRight: 12, fontSize: '0.6em', verticalAlign: 'middle', opacity: 0.7 }}>[WIP]</span>The Old Playbook</H>
-          <P size="20px">Before batteries and software, this is how the grid stayed stable. Expensive, dirty, and blunt.</P>
-          <div className="flex-1 flex items-center">
-            <div className="flex gap-5 w-full">
-              {[
-                { t: 'Peaker Plants', d: '261 GW of gas turbines in the US alone — sitting idle 95% of the year. They fire up for peak demand at 2–5x the cost of baseload.', c: '#fb923c', stat: '$110–228/MWh' },
-                { t: 'Spinning Reserves', d: 'Generators running at partial load 24/7 "just in case." 15% capacity margin required. Burning fuel to produce nothing.', c: colors.accent, stat: '15% over-provisioned' },
-                { t: 'Load Shedding', d: 'The last resort: deliberate rolling blackouts. Texas 2021 shed 20 GW — the largest in US history. ERCOT kept the $9,000 price cap two days too long — $16B in overcharges.', c: colors.danger, stat: '$16B overcharges' },
-                { t: 'Curtailment', d: 'Too much sun or wind? Turn it off. Germany wasted 19 TWh of clean energy in 2023. California curtailed 3.4 TWh in 2024.', c: colors.textDim, stat: '~EUR 3B/yr (DE, 2023)' },
-              ].map(i => (
-                <div key={i.t} className="bg-hud-surface rounded-xl px-4 py-5 flex-1" style={{ border: `1px solid ${i.c}25` }}>
-                  <div className="text-[20px] font-bold font-sans mb-2" style={{ color: i.c }}>{i.t}</div>
-                  <div className="text-[20px] text-hud-text-muted font-sans leading-normal mb-3">{i.d}</div>
-                  <div className="text-[20px] font-mono font-semibold" style={{ color: i.c }}>{i.stat}</div>
+          <H color={colors.accent}>The Old Playbook</H>
+          <P size="20px">Before batteries and software, this is how Europe kept the lights on. Expensive, dirty, and blunt.</P>
+          <Stepper values={[1, 2, 3, 4]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col">
+            {(visibleCount, step, isActive) => {
+              const vc = visibleCount ?? 0;
+              const cards = [
+                { t: 'Peaker Plants', d: 'EU capacity mechanisms cost EUR 6.5B in 2024 alone — mostly paying gas turbines to sit idle. Over EUR 50B to fossil assets since 2015.', stat: 'EUR 6.5B/yr', c: '#fb923c' },
+                { t: 'Spinning Reserves', d: 'Generators running at partial load 24/7 "just in case." 15% capacity margin mandated. Burning fuel to produce nothing.', stat: '15% over-provisioned', c: colors.accent },
+                { t: 'Load Shedding', d: 'The last resort: deliberate rolling blackouts. Spain/Portugal 2025 shed 15 GW — 60 million people in the dark.', stat: '60M people affected', c: colors.danger },
+                { t: 'Curtailment', d: 'Too much sun or wind? Turn it off. Germany wasted 19 TWh of clean energy in 2023 — enough to power 5.5 million homes.', stat: '~EUR 3B/yr (DE)', c: colors.secondary },
+              ];
+              return (
+                <div className="flex flex-col flex-1">
+                  <div className="flex-1 flex items-center">
+                    <div className="flex gap-5 w-full">
+                      {cards.map((card, i) => {
+                        const visible = i < vc;
+                        const isNew = i === vc - 1 && isActive;
+                        return (
+                          <div key={card.t} className="flex-1 rounded-xl px-4 py-5 relative overflow-hidden flex flex-col" style={{
+                            background: colors.surface,
+                            border: `1px solid ${card.c}40`,
+                            opacity: visible ? 1 : 0,
+                            transform: visible ? 'translateY(0) scale(1)' : 'translateY(16px) scale(0.95)',
+                            transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                            pointerEvents: visible ? 'auto' : 'none',
+                          }}>
+                            {isNew && (
+                              <div className="absolute top-0 left-0 right-0 h-[2px]" style={{
+                                background: `linear-gradient(90deg, transparent, ${card.c}, transparent)`,
+                                animation: 'playbook-edge 0.8s ease-out forwards',
+                              }} />
+                            )}
+                            <div className="text-[20px] font-bold font-sans mb-2" style={{ color: card.c }}>{card.t}</div>
+                            <div className="text-[17px] text-hud-text-muted font-sans leading-relaxed mb-4 flex-1" style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.5s ease 0.15s' }}>{card.d}</div>
+                            <div className="font-mono font-semibold text-[20px]" style={{
+                              color: visible ? card.c : 'transparent',
+                              textShadow: visible ? `0 0 20px ${card.c}30` : 'none',
+                              transition: 'all 0.5s ease 0.25s',
+                            }}>{card.stat}</div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  <div className="mt-2">
+                    <div className="font-sans text-[18px] leading-normal" style={{ fontStyle: 'italic', color: colors.textMuted, opacity: vc >= 4 ? 1 : 0.4, transition: 'opacity 0.6s ease' }}>
+                      "EUR 6.5 billion a year to keep gas turbines on standby. Rolling blackouts as policy. Clean energy thrown away. This is the toolkit we inherited."
+                    </div>
+                    <div className="font-mono text-[12px] mt-2" style={{ color: colors.textDim + '80', opacity: vc >= 4 ? 1 : 0, transition: 'opacity 1.2s ease 0.4s' }}>
+                      Sources: ACER MMR 2024, Beyond Fossil Fuels/Aurora 2025, BNetzA/SMARD, ENTSO-E
+                    </div>
+                  </div>
+                  <style>{`
+                    @keyframes playbook-edge {
+                      0% { opacity: 0; clip-path: inset(0 100% 0 0); }
+                      50% { opacity: 1; }
+                      100% { opacity: 0; clip-path: inset(0 0% 0 0); }
+                    }
+                  `}</style>
                 </div>
-              ))}
-            </div>
-          </div>
-          <P size="20px" style={{ fontStyle: 'italic' }}>"261 GW of capacity that runs 5% of the year. Rolling blackouts as policy. Clean energy thrown away. This is the toolkit we inherited."</P>
+              );
+            }}
+          </Stepper>
         </div>
         <Notes>
-          [MARIO] How did we manage this for 70 years?
-          Peaker plants: 261 GW sitting idle 95% of the year, firing up at 2-5x cost.
+          [MARIO] How did we manage this for 70 years? Arrow through each one.
+          Peaker plants: Europe keeps 100+ GW of gas turbines on standby — firing at 2-5x cost.
           Spinning reserves: generators running at partial load 24/7 "just in case" — burning fuel to produce nothing.
-          Load shedding: deliberate blackouts as policy. Texas shed 20 GW — $16 billion in overcharges from keeping the price cap too long.
+          Load shedding: deliberate blackouts as policy. Spain/Portugal 2025 — 60 million people.
           Curtailment: too much sun? Turn it off. Germany threw away 19 TWh of clean energy in 2023.
+          Sources fade in at the end — don't draw attention to them.
         </Notes>
       </Slide>
 
@@ -451,7 +499,7 @@ export default function Presentation() {
           <H>The Duck Curve Problem</H>
           <P size="20px">More solar every year. The belly deepens. The evening ramp steepens. Prices go haywire.</P>
           <div className="flex-1 flex justify-center items-center">
-            <LazyContent><DuckCurveChart width={1100} height={480} /></LazyContent>
+            <LazyContent><DuckCurveChart width={1100} height={560} /></LazyContent>
           </div>
         </div>
         <Notes>
@@ -788,7 +836,7 @@ export default function Presentation() {
           {/* Radial fade so text is readable over the animation */}
           <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse 55% 50% at center, ${colors.bg}ee 0%, ${colors.bg}aa 50%, transparent 80%)` }} />
           <div className="absolute inset-0 flex flex-col justify-center items-center z-10 text-center">
-            <div className="text-[58px] font-extrabold font-sans leading-[1.1] mb-4" style={{ color: colors.primary, textShadow: `0 0 60px ${colors.primary}30` }}>
+            <div className="text-[56px] font-extrabold font-sans leading-[1.1] mb-4" style={{ color: colors.primary, textShadow: `0 0 60px ${colors.primary}30` }}>
               Thank You
             </div>
             <div className="text-[22px] text-hud-text font-sans mb-2">

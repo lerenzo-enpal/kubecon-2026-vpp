@@ -200,7 +200,7 @@ export default function ResponseTimeline({ width = 720, height = 120, delay = 0 
         ctx.shadowBlur = 0;
 
         // Label above
-        ctx.font = 'bold 15px JetBrains Mono';
+        ctx.font = 'bold 14px JetBrains Mono';
         ctx.fillStyle = src.color;
         ctx.textAlign = 'center';
         ctx.fillText(src.label, x, trackY - trackH / 2 - 14);

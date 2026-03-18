@@ -222,7 +222,7 @@ export default function DuckCurveVPP({ width = 850, height = 360 }) {
 
       // Title
       ctx.fillStyle = colors.text;
-      ctx.font = 'bold 13px JetBrains Mono';
+      ctx.font = 'bold 14px JetBrains Mono';
       ctx.textAlign = 'left';
       ctx.fillText(blend < 0.5 ? 'NET DEMAND — THE DUCK CURVE' : 'NET DEMAND — WITH VPP LOAD SHIFTING', padLeft, 24);
 

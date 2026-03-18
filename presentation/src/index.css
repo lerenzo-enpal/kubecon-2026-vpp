@@ -26,3 +26,14 @@
 @keyframes hudBlink {
   50% { opacity: 0; }
 }
+
+/* MapLibre attribution — subtle, blends with dark theme. Override per-slide if needed. */
+.maplibregl-ctrl-attrib {
+  background: transparent !important;
+  font-size: 9px !important;
+  opacity: 0.7 !important;
+  color: #778 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+.maplibregl-ctrl-attrib a { color: #667 !important; }
+.maplibregl-ctrl-attrib-button { display: none !important; }

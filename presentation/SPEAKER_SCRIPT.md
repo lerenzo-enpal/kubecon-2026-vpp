@@ -68,11 +68,12 @@ Bulleted talking points per slide. Speakers marked as **LERENZO** or **MARIO**.
 - Designed in the 1950s. No flexibility built in.
 
 ### 10. The Old Playbook — MARIO
-- How did we manage this for 70 years?
-- Peaker plants: 261 GW sitting idle 95% of the year, firing up at 2-5x cost
-- Spinning reserves: generators running at partial load 24/7 "just in case" — burning fuel to produce nothing
-- Load shedding: deliberate blackouts as policy. Texas shed 20 GW — $16 billion in overcharges from keeping the price cap too long
-- Curtailment: too much sun? Turn it off. Germany threw away 19 TWh of clean energy in 2023
+- How did we manage this for 70 years? Arrow through each one.
+- [ARROW] Peaker plants: Europe keeps 100+ GW of gas turbines on standby — firing at 2-5x cost
+- [ARROW] Spinning reserves: generators running at partial load 24/7 "just in case" — burning fuel to produce nothing
+- [ARROW] Load shedding: deliberate blackouts as policy. Spain/Portugal 2025 — 60 million people
+- [ARROW] Curtailment: too much sun? Turn it off. Germany threw away 19 TWh of clean energy in 2023
+- Sources fade in at the end — don't draw attention to them
 
 ### 11. Why Texas Failed — LERENZO
 - The gas-electric death spiral — a cascading feedback loop

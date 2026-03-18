@@ -480,9 +480,9 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
           ctx.font = '700 24px "JetBrains Mono"'; ctx.fillStyle = colors.accent;
           ctx.shadowBlur = 10; ctx.shadowColor = colors.accent + '40';
           ctx.fillText('VOLKSWAGEN WOLFSBURG', fCx, baseY + 30); ctx.shadowBlur = 0;
-          ctx.font = '600 15px "JetBrains Mono"'; ctx.fillStyle = colors.text;
+          ctx.font = '600 14px "JetBrains Mono"'; ctx.fillStyle = colors.text;
           ctx.fillText("WORLD'S LARGEST FACTORY", fCx, baseY + 52);
-          ctx.font = '500 13px "JetBrains Mono"'; ctx.fillStyle = colors.textDim;
+          ctx.font = '500 14px "JetBrains Mono"'; ctx.fillStyle = colors.textDim;
           ctx.fillText('60,000 WORKERS \u00b7 6.5 KM\u00b2', fCx, baseY + 70);
           ctx.restore();
         }
@@ -533,9 +533,9 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
           const { x: projX, y: projY } = projectToScreen(
             WOLFSBURG[0], WOLFSBURG[1], currentView, width, height
           );
-          // Phase 1 draws at (width/2, height*0.42). Blend from that to the true
-          // projected position so there's no jump on phase transition.
-          const blendT = Math.min(1, t * 4); // blend over first 25% of zoom
+          // Phase 1 draws at (width/2, height*0.42). Keep factory there while visible,
+          // then blend to projected position once it's mostly faded out.
+          const blendT = Math.max(0, Math.min(1, (t - 0.3) / 0.2)); // blend from 30-50% of zoom
           const sx = lerp(width / 2, projX, blendT);
           const sy = lerp(height * 0.42, projY, blendT);
 
@@ -554,9 +554,9 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
               ctx.shadowBlur = 10; ctx.shadowColor = colors.accent + '40';
               ctx.fillText('VOLKSWAGEN WOLFSBURG', sx, sy + baseH / 2 + 30);
               ctx.shadowBlur = 0;
-              ctx.font = '600 15px "JetBrains Mono"'; ctx.fillStyle = colors.text;
+              ctx.font = '600 14px "JetBrains Mono"'; ctx.fillStyle = colors.text;
               ctx.fillText("WORLD'S LARGEST FACTORY", sx, sy + baseH / 2 + 52);
-              ctx.font = '500 13px "JetBrains Mono"'; ctx.fillStyle = colors.textDim;
+              ctx.font = '500 14px "JetBrains Mono"'; ctx.fillStyle = colors.textDim;
               ctx.fillText('60,000 WORKERS \u00b7 6.5 KM\u00b2', sx, sy + baseH / 2 + 70);
             }
             ctx.restore();

@@ -108,7 +108,7 @@ function lerp(a, b, t) {
   return a + (b - a) * Math.max(0, Math.min(1, t));
 }
 
-export default function DuckCurveChart({ width = 1100, height = 480 }) {
+export default function DuckCurveChart({ width = 1100, height = 560 }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const tRef = useRef(0);
@@ -155,8 +155,8 @@ export default function DuckCurveChart({ width = 1100, height = 480 }) {
 
     const padLeft = 60;
     const padRight = 200;
-    const padTop = 55;
-    const padBottom = 50;
+    const padTop = 100;
+    const padBottom = 90;
     const chartW = width - padLeft - padRight;
     const chartH = height - padTop - padBottom;
     const xScale = chartW / 23;
@@ -495,10 +495,10 @@ export default function DuckCurveChart({ width = 1100, height = 480 }) {
       ctx.fillStyle = colors.text;
       ctx.font = 'bold 13px JetBrains Mono';
       ctx.textAlign = 'left';
-      ctx.fillText('THE DUCK CURVE -- GROWING EVERY YEAR', padLeft, 24);
+      ctx.fillText('THE DUCK CURVE -- GROWING EVERY YEAR', padLeft, padTop - 31);
 
       // Legend — first two left-aligned, last two right-aligned
-      const legendY = height - 8;
+      const legendY = padTop + chartH + 42;
       ctx.font = '10px Inter';
       const leftItems = [
         { color: colors.primary, label: 'Net Demand (current year)', dash: false },

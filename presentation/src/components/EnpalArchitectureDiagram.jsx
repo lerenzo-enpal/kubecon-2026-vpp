@@ -358,7 +358,7 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
       });
 
       // Section labels
-      ctx.font = 'bold 15px JetBrains Mono';
+      ctx.font = 'bold 14px JetBrains Mono';
 
       ctx.textAlign = 'right';
       ctx.fillStyle = colors.success + 'dd';

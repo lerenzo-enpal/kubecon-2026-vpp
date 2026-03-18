@@ -299,7 +299,7 @@ function drawHouse(ctx, x, y, w, h, houseData, time, houseIndex) {
   if (houseData.label) {
     const lx = devX2 + devW / 2;
     const ly = devY2 + devH / 2;
-    ctx.font = '600 13px "JetBrains Mono", monospace';
+    ctx.font = '600 14px "JetBrains Mono", monospace';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 

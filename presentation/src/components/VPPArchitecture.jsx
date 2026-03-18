@@ -170,7 +170,7 @@ export default function VPPArchitecture() {
           const angle = Math.atan2(ty - fy, tx - fx);
           const perpX = -Math.sin(angle) * 12;
           const perpY = Math.cos(angle) * 12;
-          ctx.font = '13px JetBrains Mono';
+          ctx.font = '14px JetBrains Mono';
           ctx.textAlign = 'center';
           ctx.fillStyle = colors.textDim + '70';
           ctx.fillText(edge.protocol, mx + perpX, my + perpY);

@@ -48,7 +48,7 @@ export default function RenewableGrowthChart({ width = 850, height = 360 }) {
 
       // Title
       ctx.fillStyle = colors.text;
-      ctx.font = 'bold 13px JetBrains Mono';
+      ctx.font = 'bold 14px JetBrains Mono';
       ctx.textAlign = 'left';
       ctx.fillText('GERMANY — RENEWABLE SHARE OF ELECTRICITY GENERATION', padLeft, 24);
 

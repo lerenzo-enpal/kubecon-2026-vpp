@@ -505,7 +505,7 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
 
         // Hacker ASCII art
         const hackerFrame = HACKER_FRAMES[Math.floor(t * 2) % 2];
-        ctx.font = '13px JetBrains Mono';
+        ctx.font = '14px JetBrains Mono';
         ctx.textAlign = 'center';
         const artStartY = 40;
         hackerFrame.forEach((line, i) => {
@@ -774,7 +774,7 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
 
       // Status text and timer — only on canvas when no panel
       if (!panelWidth) {
-        ctx.font = '13px JetBrains Mono';
+        ctx.font = '14px JetBrains Mono';
         ctx.textAlign = 'right';
         if (ls.severity >= 3) {
           const flash = Math.sin(warningFlashRef.current * 4) > 0;
@@ -793,7 +793,7 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
           const timeScaleVal = firstSc2.timeScale || 100;
 
           ctx.textAlign = 'left';
-          ctx.font = 'bold 13px JetBrains Mono';
+          ctx.font = 'bold 14px JetBrains Mono';
           ctx.fillStyle = colors.textMuted + 'cc';
           ctx.fillText(`T+${mm}:${ss}`, 10, 22);
 
@@ -829,7 +829,7 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
         ctx.fillText('\u26a0  GRID FAILURE IMMINENT  \u26a0', canvasWidth / 2, height - 52);
       } else if (bn.level === 'shedding') {
         const flash = Math.sin(warningFlashRef.current * 3) > 0.3;
-        ctx.font = '13px JetBrains Mono';
+        ctx.font = '14px JetBrains Mono';
         ctx.textAlign = 'center';
         ctx.fillStyle = flash ? colors.danger + 'cc' : colors.danger + '40';
         ctx.fillText('AUTOMATIC LOAD SHEDDING IN PROGRESS', canvasWidth / 2, height - 48);

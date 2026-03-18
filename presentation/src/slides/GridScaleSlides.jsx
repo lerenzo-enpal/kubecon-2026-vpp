@@ -24,7 +24,7 @@ import LargestMachineZoom from '../components/LargestMachineZoom';
 export function versionA() {
   return [
     /* ── A-2: The Numbers ── */
-    <Slide key="grid-scale-a2" backgroundColor={colors.bg} padding="36px 56px">
+    <Slide key="grid-scale-a2" backgroundColor={colors.bg} padding="36px">
       <div className="flex flex-col h-full w-full">
           <GlowText size="40px" style={{ marginBottom: 20 }}>
             Running the Largest Machine
@@ -116,7 +116,7 @@ export function versionB() {
   ];
 
   return [
-    <Slide key="grid-scale-b2" backgroundColor={colors.bg} padding="36px 56px">
+    <Slide key="grid-scale-b2" backgroundColor={colors.bg} padding="36px">
       <style>{`
         @keyframes gridRowIn {
           0% { opacity: 0; transform: translateX(-30px); filter: blur(4px); }
@@ -227,7 +227,7 @@ export function versionD() {
         <LargestMachineZoom />
 
         {/* Content overlay with padding */}
-        <div className="absolute inset-0 z-10 flex flex-col" style={{ padding: '36px 56px' }}>
+        <div className="absolute inset-0 z-10 flex flex-col" style={{ padding: '36px' }}>
           {/* Title — always visible */}
           <GlowText size="40px">Running the Largest Machine</GlowText>
 
