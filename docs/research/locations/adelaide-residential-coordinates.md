@@ -69,6 +69,47 @@ Random sampling with `random.seed(42)` using Python's `random.sample()` to selec
 - Lat range: -35.1501 to -34.6617
 - Lng range: 138.4677 to 138.7574
 
+## Adelaide Housing Statistics (ABS 2021 Census)
+
+### Greater Adelaide (Metropolitan Area)
+
+| Metric | Value |
+|---|---|
+| Total private dwellings | 593,881 |
+| Occupied private dwellings | 536,048 (90.3%) |
+| Population | 1,387,290 |
+
+Source: [ABS 2021 Census -- Greater Adelaide](https://www.abs.gov.au/census/find-census-data/quickstats/2021/4GADE)
+
+### South Australia (State)
+
+| Metric | Value |
+|---|---|
+| Total private dwellings | 806,982 |
+| Occupied private dwellings | 691,313 (89.2%) |
+
+Source: [ABS 2021 Census -- South Australia](https://www.abs.gov.au/census/find-census-data/quickstats/2021/4)
+
+### Northern Suburbs (SA VPP Program Heartland)
+
+| Council Area | Total Dwellings | Occupied | Population |
+|---|---|---|---|
+| City of Salisbury | 57,079 | 54,223 (95.1%) | 145,806 |
+| City of Playford (incl. Elizabeth) | 39,490 | 35,285 (93.6%) | 99,190 |
+| **Combined** | **96,569** | **89,508** | **244,996** |
+
+These two councils represent ~18% of Greater Adelaide's dwellings and are the primary target area for the SA VPP program (50,000 home target, 250 MW / 650 MWh).
+
+Note: City of Elizabeth was amalgamated into City of Playford in 1997.
+
+Sources:
+- [ABS 2021 -- City of Playford](https://abs.gov.au/census/find-census-data/quickstats/2021/LGA45680)
+- [ABS 2021 -- City of Salisbury](https://abs.gov.au/census/find-census-data/quickstats/2021/LGA47140)
+
+### Representation
+
+Our 10,000 OSM sample represents ~1.7% of actual Adelaide homes. The SA VPP program's 50,000-home target is ~8.4% of the metro area.
+
 ## Notes
 
 - The vast majority of results (99.6%) came from `building=house` tagged ways in OSM. Adelaide has excellent building-level OSM coverage.
