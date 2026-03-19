@@ -46,11 +46,11 @@ const SECTIONS = [
 const SPEAKERS = {
   1: 'SHARED', 2: 'SHARED',
   3: 'LERENZO', 4: 'LERENZO', 5: 'LERENZO',
-  6: 'MARIO', 7: 'MARIO', 8: 'MARIO', 9: 'MARIO', 10: 'MARIO',
-  11: 'LERENZO', 12: 'LERENZO', 13: 'LERENZO',
+  6: 'MARIO', 7: 'MARIO', 8: 'MARIO',
+  9: 'LERENZO', 10: 'LERENZO', 11: 'LERENZO', 12: 'LERENZO', 13: 'LERENZO',
   14: 'MARIO', 15: 'MARIO', 16: 'MARIO', 17: 'MARIO', 18: 'MARIO',
   19: 'LERENZO', 20: 'LERENZO', 21: 'LERENZO', 22: 'LERENZO', 23: 'LERENZO',
-  24: 'MARIO', 25: 'MARIO', 26: 'MARIO',
+  24: 'LERENZO', 25: 'LERENZO', 26: 'MARIO',
   27: 'LERENZO', 28: 'LERENZO',
 };
 
@@ -124,8 +124,9 @@ export default function Presentation() {
           </div>
         </div>
         <Notes>
-          We work at Enpal — we're building Europe's largest virtual power plant.
-          Before we talk about what a VPP is, let's get some context
+          Welcome to KubeCon, thank you for being here.
+          I work at Enpal — we're building Europe's largest virtual power plant.
+          Before we talk about what a VPP is, we need to talk about the thing it's trying to fix.
         </Notes>
       </Slide>
 
@@ -152,8 +153,9 @@ export default function Presentation() {
           </div>
         </div>
         <Notes>
-          We'll go fast.
-          By the end you'll understand why the energy grid is one of the most exciting distributed systems problem on the planet.
+          Four parts: The Grid, Renewables, the VPP itself, and Resilience.
+          ~30 minutes total — we'll go fast.
+          By the end you'll understand why the energy grid is the most exciting distributed systems problem on the planet.
         </Notes>
       </Slide>
 
@@ -252,7 +254,7 @@ export default function Presentation() {
         <Notes>
           [MARIO] The grid maintains exactly 50 Hz — supply and demand balanced every single second.
           The +/-0.2 Hz band is everything — cross it and automated systems start disconnecting.
-          Click scenarios to simulate events:
+          [DEMO] Click scenarios to simulate events:
           Generator trip: 800 MW offline, watch reserves catch it — recovery in ~12 minutes.
           3 GW loss: deep enough to trigger automatic load shedding, but grid survives.
           Demand drop: frequency goes UP — too much supply is also dangerous.
@@ -271,7 +273,7 @@ export default function Presentation() {
           <LazyContent><GridFlowDemo width="100%" /></LazyContent>
         </div>
         <Notes>
-          [MARIO] Power Plants to Transmission to Distribution to Homes.
+          [LERENZO] Power Plants to Transmission to Distribution to Homes.
           One direction. Few large producers. Passive consumers.
           Designed in the 1950s. No flexibility built in.
         </Notes>
@@ -346,11 +348,11 @@ export default function Presentation() {
           </Stepper>
         </div>
         <Notes>
-          [MARIO] How did we manage this for 70 years? Arrow through each one.
-          Peaker plants: Europe keeps 100+ GW of gas turbines on standby — firing at 2-5x cost.
-          Spinning reserves: generators running at partial load 24/7 "just in case" — burning fuel to produce nothing.
-          Load shedding: deliberate blackouts as policy. Spain/Portugal 2025 — 60 million people.
-          Curtailment: too much sun? Turn it off. Germany threw away 19 TWh of clean energy in 2023.
+          [LERENZO] How did we manage this for 70 years? Arrow through each one.
+          [ARROW] Peaker plants: Europe keeps 100+ GW of gas turbines on standby — firing at 2-5x cost.
+          [ARROW] Spinning reserves: generators running at partial load 24/7 "just in case" — burning fuel to produce nothing.
+          [ARROW] Load shedding: deliberate blackouts as policy. Spain/Portugal 2025 — 60 million people.
+          [ARROW] Curtailment: too much sun? Turn it off. Germany threw away 19 TWh of clean energy in 2023.
           Sources fade in at the end — don't draw attention to them.
         </Notes>
       </Slide>
@@ -437,7 +439,7 @@ export default function Presentation() {
           [LERENZO] This isn't a Texas problem — it's a grid architecture problem.
           10 major failures in 23 years across 3 continents.
           2003 Northeast US: 55 million people, $6B. 2016 South Australia: entire state.
-          Spain/Portugal 2025: 60 million people. Berlin arson 2025: three attacks, 45K+ homes.
+          Spain/Portugal 2025: 60 million people. Berlin arson 2025: two attacks, 50K+ homes.
           The common thread? Centralized, inflexible, cascading.
         </Notes>
       </Slide>
@@ -544,7 +546,7 @@ export default function Presentation() {
           [MARIO] Your roof becomes a power plant. Your garage becomes a grid asset.
           Your house becomes a node in the largest distributed system ever built.
           But coordinating millions of these devices? That's a distributed systems problem.
-          Transition: that's where we come in.
+          Transition: that's where we come in
         </Notes>
       </Slide>
 
@@ -573,9 +575,10 @@ export default function Presentation() {
           [LERENZO] Left: devices — solar panels, batteries, EV chargers, heat pumps.
           Center: cloud platform — Kubernetes + Dapr, event-driven control.
           Right: services — frequency regulation, peak shaving, energy arbitrage, demand response.
-          Energy market sends request, Market trader (Entrix), VPP Controller on Kubernetes.
-          Controller publishes commands via Kafka, Enpal cloud, MQTT to individual homes.
+          [ANIMATED] Energy market sends request → Market trader (Entrix) → VPP Controller on Kubernetes.
+          Controller publishes commands via Kafka → Enpal cloud → MQTT to individual homes.
           Watch the data flow — from market signal to battery charge in seconds.
+          Software that aggregates and operates millions of devices as one coordinated power plant.
         </Notes>
       </Slide>
 
@@ -589,13 +592,16 @@ export default function Presentation() {
           </div>
         </div>
         <Notes>
-          [LERENZO] Now let's zoom in — this is the internal data flow.
+          [LERENZO] [ANIMATED] Now let's zoom in — this is the internal data flow.
           Each home has devices — heat pump, PV, battery — connected to an IoT hub.
           The IoT hub connects to our cloud via EMQX, our MQTT broker.
           We ingest both static config data and measurement telemetry every 20 seconds, all aligned in Protobuf schemas.
           Data flows into Databricks — raw, then bronze, silver, gold layers — classic lakehouse.
-          Apache Spark streaming aggregates on Databricks give us near-real-time pattern detection.
+          Here's the game changer: Apache Spark streaming aggregates on Databricks give us near-real-time pattern detection at latencies that would be unthinkable in traditional web request-response cycles.
+          Our BI team, predictive monitoring, and solutions teams all build on these streaming pipelines.
+          We progressively increase aggregation windows to minimize storage — raw data is kept for a limited period.
           The control loop: VPP controller dispatches to the local HEMS, which runs conflict resolution via our WISH protocol.
+          We also integrate S14a grid regulation devices, smart meters via Meterfy, and cloud-to-cloud with Flexa via Event Hub.
           The clever use of streaming aggregates on Databricks is helping us substantially reduce costs while maintaining the low latency that makes real-time grid response possible.
         </Notes>
       </Slide>
@@ -730,13 +736,14 @@ export default function Presentation() {
           </Stepper>
         </div>
         <Notes>
-          [LERENZO] Different timescales, different strategies. [ARROW]
+          [LERENZO] Different timescales, different strategies.
           FCR: under 30 seconds — blackout cost EUR 1-5B per event.
           aFRR: under 5 minutes — gas peaker alternative at EUR 150-300/MWh.
           Peak Shaving: 1-4 hours — VPP capacity 40-60% cheaper than peakers (Brattle).
-          Energy Arbitrage: scheduled day-ahead — curtailment avoided: EUR 554M/yr (DE). [ARROW]
+          Energy Arbitrage: scheduled day-ahead — curtailment avoided: EUR 554M/yr (DE).
           The speed comparison: Coal 2-12 hours. Gas 10-30 minutes. Hydro 15-30 seconds. Battery: 140 milliseconds.
           A battery responds before a gas turbine even knows there's an emergency.
+          This is why batteries + software win.
         </Notes>
       </Slide>
 
@@ -746,7 +753,7 @@ export default function Presentation() {
           <LazyContent><VPPScenarioSlide scenario="summer" /></LazyContent>
         </div>
         <Notes>
-          [MARIO] Full-screen Berlin map — walk through each step.
+          [LERENZO] [MAP HUD] Full-screen Berlin map — walk through each step.
           Sunny July morning. 53,000 homes generating solar.
           Midday — prices collapse. Flexa holds batteries empty on purpose.
           Prices go negative — charge everything. Solar curtailed, batteries and EVs charging from the grid at negative prices, heat pumps pre-heating homes to bank cheap energy as thermal mass.
@@ -761,7 +768,7 @@ export default function Presentation() {
           <LazyContent><SAMapHUD width="100%" height="100%" variant="vpp" /></LazyContent>
         </div>
         <Notes>
-          [MARIO] South Australia proved this works.
+          [LERENZO] South Australia proved this works.
           ~1,000 homes with Tesla Powerwalls.
           One of the world's first demonstrations that distributed home batteries can stabilize a grid.
         </Notes>
@@ -825,8 +832,8 @@ export default function Presentation() {
         </div>
         <Notes>
           [MARIO] Side by side comparison — Without VPP vs. With VPP.
-          Without: cascade failures, gas peakers at EUR 150-300/MWh, EUR 554M/yr curtailment, EUR 35B in grid upgrades, 3.4 Mt avoidable CO2.
-          With: stabilized in 200ms, batteries at EUR 30-60/MWh, revenue from negative prices, 60% deferred infrastructure, near-zero curtailment emissions.
+          Without: cascade failures, gas peakers at EUR 150-300/MWh, EUR 554M/yr curtailment, EUR 35B+ in grid upgrades, ~3.4 Mt avoidable CO2 (BNetzA + UBA, 2024).
+          With: stabilized in 200ms, batteries at EUR 60-100/MWh, revenue from negative prices, VPP capacity 40-60% cheaper (Brattle), near-zero curtailment emissions.
           The cheapest megawatt is the one you never have to generate.
         </Notes>
       </Slide>
