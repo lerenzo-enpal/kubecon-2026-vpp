@@ -282,6 +282,16 @@ const VPP_AMBER = [245, 158, 11];
 const NODE_MAP = new Map(NODES.map(n => [n.id, n]));
 const getNode = (id) => NODE_MAP.get(id);
 
+// ── All Adelaide residential homes (156K from OSM) ──────────
+let _allHomesCache = null;
+function loadAllHomes() {
+  if (_allHomesCache) return Promise.resolve(_allHomesCache);
+  return fetch('/data/adelaide-all-homes.json')
+    .then(r => r.json())
+    .then(data => { _allHomesCache = data; return data; })
+    .catch(() => []);
+}
+
 // ── HUD corner bracket decoration ──────────────────────────
 
 // ── Main component ──────────────────────────────────────────
@@ -293,6 +303,7 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
   const [stepIndex, setStepIndex] = useState(-1);
   const [boot, setBoot] = useState(0);
   const [vppActive, setVppActive] = useState(0); // number of active VPP homes
+  const [allHomes, setAllHomes] = useState(null); // 156K residential coords
   const bootRef = useRef(null);
   const defaultView = VIEWS[variant] || VIEWS.blackout;
   const [viewState, setViewState] = useState(defaultView);
@@ -318,6 +329,7 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
       setViewState(VIEWS[variant] || VIEWS.blackout);
       setBoot(0);
       wasActiveRef.current = true;
+      loadAllHomes().then(setAllHomes);
       const delay = setTimeout(() => {
         const start = performance.now();
         const tick = () => {
@@ -557,6 +569,23 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
   const layers = useMemo(() => {
     const result = [];
 
+    // All Adelaide residential homes (156K dim background — render first = behind everything)
+    if (allHomes && allHomes.length > 0) {
+      result.push(new ScatterplotLayer({
+        id: 'all-homes',
+        data: allHomes,
+        getPosition: d => d,  // [lng, lat] arrays
+        getRadius: 120,
+        getFillColor: isBlackout
+          ? (failed.size > 10 ? [60, 20, 20, 40] : [40, 35, 30, 30])
+          : [50, 45, 35, 25],
+        radiusMinPixels: 0.5,
+        radiusMaxPixels: 3,
+        transitions: { getFillColor: 800 },
+        updateTriggers: { getFillColor: [isBlackout, failed.size > 10] },
+      }));
+    }
+
     // Transmission lines
     result.push(new LineLayer({
       id: 'lines',
@@ -678,7 +707,7 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
     }
 
     return result;
-  }, [lines, visibleNodes, failed, vppHomeDots, vppActive, stepIndex, isBlackout, isGridStable, currentHomePhase]);
+  }, [lines, visibleNodes, failed, vppHomeDots, vppActive, stepIndex, isBlackout, isGridStable, currentHomePhase, allHomes]);
 
   // ── Panel base style ──
   const panelBase = {

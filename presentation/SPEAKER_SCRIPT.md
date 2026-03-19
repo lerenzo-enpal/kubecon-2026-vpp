@@ -71,7 +71,7 @@ Bulleted talking points per slide. Speakers marked as **LERENZO** or **MARIO**.
 - How did we manage this for 70 years? Arrow through each one.
 - [ARROW] Peaker plants: Europe keeps 100+ GW of gas turbines on standby — firing at 2-5x cost
 - [ARROW] Spinning reserves: generators running at partial load 24/7 "just in case" — burning fuel to produce nothing
-- [ARROW] Load shedding: deliberate blackouts as policy. Spain/Portugal 2025 — 60 million people
+- [ARROW] Load shedding: deliberate blackouts as last resort. EU spends EUR 11B/yr to avoid it — and largely succeeds. EU outages are mostly accidental (weather, equipment), not deliberate shedding. But when prevention fails — Texas 2021: ERCOT ordered 20 GW shed, 4.5M homes dark. That's policy, not accident.
 - [ARROW] Curtailment: too much sun? Turn it off. Germany threw away 19 TWh of clean energy in 2023
 - Sources fade in at the end — don't draw attention to them
 

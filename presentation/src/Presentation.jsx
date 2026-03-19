@@ -290,7 +290,7 @@ export default function Presentation() {
               const cards = [
                 { t: 'Peaker Plants', d: 'EU capacity mechanisms cost EUR 6.5B in 2024 alone — mostly paying gas turbines to sit idle. Over EUR 50B to fossil assets since 2015.', stat: 'EUR 6.5B/yr', c: '#fb923c' },
                 { t: 'Spinning Reserves', d: 'Generators running at partial load 24/7 "just in case." 15% capacity margin mandated. Burning fuel to produce nothing.', stat: '15% over-provisioned', c: colors.accent },
-                { t: 'Load Shedding', d: 'The last resort: deliberate rolling blackouts. Spain/Portugal 2025 shed 15 GW — 60 million people in the dark.', stat: '60M people affected', c: colors.danger },
+                { t: 'Load Shedding', d: 'Deliberate rolling blackouts as a last resort. The EU spends EUR 11B/yr to avoid it — and largely succeeds. But when prevention fails: Texas 2021, ERCOT ordered 20 GW shed, 4.5 million homes dark.', stat: 'EUR 11B/yr to prevent (ACER)', c: colors.danger },
                 { t: 'Curtailment', d: 'Too much sun or wind? Turn it off. Germany wasted 19 TWh of clean energy in 2023 — enough to power 5.5 million homes.', stat: '~EUR 3B/yr (DE)', c: colors.secondary },
               ];
               return (
@@ -351,7 +351,7 @@ export default function Presentation() {
           [LERENZO] How did we manage this for 70 years? Arrow through each one.
           [ARROW] Peaker plants: Europe keeps 100+ GW of gas turbines on standby — firing at 2-5x cost.
           [ARROW] Spinning reserves: generators running at partial load 24/7 "just in case" — burning fuel to produce nothing.
-          [ARROW] Load shedding: deliberate blackouts as policy. Spain/Portugal 2025 — 60 million people.
+          [ARROW] Load shedding: deliberate blackouts as last resort. EU spends EUR 11B/yr to avoid it — and largely succeeds. EU outages are mostly accidental (weather, equipment), not deliberate shedding. But when prevention fails — Texas 2021: ERCOT ordered 20 GW shed, 4.5M homes dark. That's policy, not accident.
           [ARROW] Curtailment: too much sun? Turn it off. Germany threw away 19 TWh of clean energy in 2023.
           Sources fade in at the end — don't draw attention to them.
         </Notes>

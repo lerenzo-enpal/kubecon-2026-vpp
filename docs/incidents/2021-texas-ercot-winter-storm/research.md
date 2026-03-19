@@ -92,6 +92,20 @@ Rolling blackouts continued for 70+ hours. $16B in overcharges from keeping the 
 - [docs/cascading_failures_research.md](../../cascading_failures_research.md) — cross-incident comparison, cascade mechanism theory
 - [docs/fact-check-report.md](../../fact-check-report.md) — Items 1, 2, 9 (cost figures, price multiplier, damage estimate)
 
+## Load Shedding vs. Accidental Outages
+
+Texas 2021 was **deliberate load shedding** — ERCOT ordered rolling blackouts as policy to prevent total grid collapse. This is fundamentally different from accidental outages caused by weather or equipment failure.
+
+The EU has been highly successful at avoiding deliberate load shedding. Per ACER's 2025 Security of Supply report, **none of the EU outages in 2024 were due to inadequate electricity supply** — all were distribution/transmission faults, weather events, or equipment failures. The EU spends EUR 11B/yr on security-of-supply measures (capacity mechanisms, reserves, etc.) specifically to prevent deliberate shedding.
+
+Key EU reliability stats (for contrast):
+- **EU-27 average SAIDI: ~60 min/customer/year** (Eurelectric 2020) — almost entirely accidental
+- **Germany SAIDI: 11.7 min/year** (BNetzA 2024) — among the best globally
+- **SAIDI improved 31% and SAIFI improved 25% since 2015** across EU (Eurelectric)
+- Range: Switzerland ~0.2 min to Bulgaria ~346 min
+
+Sources: [ACER Security of EU Electricity Supply 2025](https://www.acer.europa.eu/monitoring/security-of-eu-electricity-supply-2025), [Eurelectric Distribution Grids 2020](https://www.eurelectric.org/wp-content/uploads/2024/06/dso-facts-and-figures-11122020-compressed-2020-030-0721-01-e.pdf), [BNetzA SAIDI 2024](https://www.bundesnetzagentur.de/SharedDocs/Pressemitteilungen/EN/2025/20251009_SAIDI_Strom.html)
+
 ## Fact-Check Notes
 
 - $195B is the Perryman Group high-end estimate; other sources: $26.5B direct, $80-130B total economic

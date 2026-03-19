@@ -320,7 +320,7 @@ export default function DuckCurveHUD({ highlightHour = null, blend = 0, scenario
         const dVal = currentNet[dischHour];
         const dY = padTop + (yMax - dVal) * yScale;
         // Leader goes DOWN-LEFT from curve point (peak is high on chart)
-        const l2endX = dX - 240 * lx;
+        const l2endX = dX - 250 * lx;
         const l2endY = dY + 1 * lx;
 
         // Dot at curve point
