@@ -43,10 +43,10 @@ The transmission grid spans ~37,000 km at 380/220 kV. Below it, ~900 DSOs operat
 
 At 14:05 CET, a busbar coupler at the **Ernestinovo substation in Croatia** tripped automatically. This caused cascading disconnections across southeastern Europe within seconds. The continental grid split into two islands:
 
-- **Northwest island** (most of Europe): overfrequency, peaked ~50.6 Hz
-- **Southeast island** (Balkans, Turkey region): underfrequency, dropped to **48.75 Hz**
+- **Northwest island** (most of Europe): underfrequency, dropped to **49.74 Hz** (0.26 Hz below nominal)
+- **Southeast island** (Balkans, Turkey region): overfrequency, peaked ~50.6 Hz
 
-The southeast island lost ~6.3 GW of generation relative to load. 48.75 Hz is just 1.25 Hz from the 47.5 Hz generator-trip threshold — a total blackout. Automatic load shedding activated in multiple countries. The split lasted ~1 hour before resynchronization.
+The northwest island lost ~6.3 GW of generation relative to load. Frequency dropped to 49.74 Hz — a significant deviation but still 2.5 Hz above the 47.5 Hz generator-trip threshold. Automatic load shedding activated in France (1,300 MW) and Italy (1,000 MW interruptible). The split lasted ~63 minutes before resynchronization.
 
 **Key for the talk**: A single substation in Croatia affected the entire European synchronous area. The cascade unfolded in seconds, but human response takes minutes. This is the core argument for automated, distributed response (VPPs).
 
@@ -178,7 +178,7 @@ Kubernetes Cluster
 ## Key Stats for Slides
 
 - Continental European grid: 400+ GW, 25 countries, all at 50 Hz
-- Jan 2021 split: single Croatian substation → 48.75 Hz (1.25 Hz from total blackout)
+- Jan 2021 split: single Croatian substation → 49.74 Hz (0.26 Hz deviation from nominal; 2.5 Hz from 47.5 Hz collapse threshold)
 - April 2025 Spain/Portugal: ~55-60 million people blacked out
 - Battery response: 140 ms (Hornsdale). Gas turbine: 10 minutes.
 - 500,000 home batteries x 5 kW = 2.5 GW instant response > entire European FCR requirement (~3 GW)

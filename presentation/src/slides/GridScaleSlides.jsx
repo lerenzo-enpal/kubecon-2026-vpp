@@ -258,12 +258,10 @@ export function versionD() {
         </div>
       </div>
       <Notes>
-        [MARIO] "This is the largest machine ever built. Let that sink in.
-        Zero downtime — it has never been turned off. No maintenance window.
-        No 'we'll fix it in staging.' It's production, all the time, forever.
-        And look at the scale: VW Wolfsburg, the world's biggest factory,
-        is a speck compared to this grid. 60,000 workers vs 2.3 million.
-        This is the system we're asking to absorb 50% renewables."
+        [MARIO] Europe's largest car factory is VW Wolfsburg — 60,000 workers over 6.5 km2.
+        The European grid: 2.3 million workers across 5.5 million km2.
+        36 countries, all operating at 50 Hz across interconnected synchronous areas.
+        Zero downtime — this machine has never been turned off. No maintenance window. No staging environment.
       </Notes>
     </Slide>,
   ];

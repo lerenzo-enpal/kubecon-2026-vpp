@@ -22,7 +22,7 @@
 9. **Designed for a Different World** -- One-directional grid architecture (1950s) [GridFlowDemo] [LERENZO]
    > *LERENZO: "Power Plants, Transmission, Distribution, Homes. One direction. Few large producers. Passive consumers. Designed in the 1950s. No flexibility built in."*
 10. **The Old Playbook** -- Peakers, spinning reserves, load shedding, curtailment [WIP] [LERENZO]
-    > *LERENZO: "How did we manage this for 70 years? Peaker plants: 261 GW sitting idle 95% of the year. Spinning reserves: generators running at partial load 24/7 burning fuel to produce nothing. Load shedding: deliberate blackouts as policy -- Texas shed 20 GW, $52.6B in excess charges in 5 days. Curtailment: too much sun? Turn it off. Germany threw away 19 TWh in 2023."*
+    > *LERENZO: "How did we manage this for 70 years? Peaker plants: 261 GW sitting idle 95% of the year. Spinning reserves: generators running at partial load 24/7 burning fuel to produce nothing. Load shedding: deliberate blackouts as policy -- Texas shed 20 GW, $16B in overcharges (Potomac Economics). Curtailment: too much sun? Turn it off. Germany threw away 19 TWh in 2023."*
 11. **Why Texas Failed** -- Gas-electric death spiral, 6-step cascade [LERENZO]
     > *LERENZO: "The gas-electric death spiral -- a cascading feedback loop. Cold hits, generators freeze, load shedding cuts power to gas pipelines, more generators lose fuel. Steps 4-6 are the death spiral -- it accelerates. 52,000 MW offline out of 107,000. ERCOT is isolated -- no interconnection to call for help."*
 12. **Not an Isolated Incident** -- Timeline of grid failures (2003-2026) [LERENZO]

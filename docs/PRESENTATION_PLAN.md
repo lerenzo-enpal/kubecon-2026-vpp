@@ -65,7 +65,7 @@ The current outline is solid in content but needs restructuring for maximum impa
 | 3 | The Grid: Earth's Largest Synchronized Machine | One visual: animated frequency line at 50.000 Hz. "This line must never stop. If it does, everything stops." | 0:45 |
 | 4 | How It Was Built | Centralized model diagram. Few generators → transmission → distribution → homes. "Designed in the 1950s for a world with predictable demand and controllable supply." | 1:00 |
 | 5 | The Cascade | Interactive visualization: dominos falling. "When one node fails, load shifts to neighbors. Neighbors overload. They fail. The system defends itself locally while destroying itself globally." Use the 2003 Northeast blackout: 265 plants, 508 generators, 50 million people, $10B — triggered by a software bug and untrimmed trees. | 1:30 |
-| 6 | It Keeps Happening | Timeline of cascading failures — rapid fire, one every few seconds: Italy 2003 (56M), Europe 2006 (15M), South Australia 2016 (statewide), Texas 2021 (4.5M homes, 240+ deaths, $130B), Europe grid split 2021 (48.75 Hz — 1.25 Hz from total collapse), Spain/Portugal 2025 (60M), Berlin 2025-2026 (arson attacks). | 1:30 |
+| 6 | It Keeps Happening | Timeline of cascading failures — rapid fire, one every few seconds: Italy 2003 (56M), Europe 2006 (15M), South Australia 2016 (statewide), Texas 2021 (4.5M homes, 240+ deaths, $130B), Europe grid split 2021 (49.74 Hz — 0.26 Hz deviation from nominal), Spain/Portugal 2025 (60M), Berlin 2025-2026 (arson attacks). | 1:30 |
 | 7 | The Common Pattern | "Every cascading failure shares three properties: (1) tightly coupled centralized infrastructure, (2) no local generation reserves, (3) degraded or absent system-wide observability." | 1:00 |
 | 8 | Now Add Renewables | Duck curve animation. Solar floods midday, steep ramp evening. Wind is variable. "Renewables are cheap, scalable, and essential — but they make the grid *less* predictable unless you add one thing." | 1:00 |
 
@@ -124,7 +124,7 @@ These are your "mic drop" numbers — use them throughout:
 | FCAS cost reduction in SA | 90% | Aurecon report |
 | VPP cost vs gas peakers | 40-60% cheaper | RMI 2023 |
 | Texas near-blackout margin | 4 minutes | ERCOT Feb 2021 |
-| Europe grid split frequency | 48.75 Hz (1.25 Hz from collapse) | Jan 2021 |
+| Europe grid split frequency | 49.74 Hz (0.26 Hz deviation from nominal) | Jan 2021, ENTSO-E Final Report |
 | Global VPP market growth | $1.7B → $5.9B by 2030 | Grand View Research |
 | US DOE VPP target | 80-160 GW by 2030 | DOE Liftoff Report 2023 |
 | Germany negative price hours | 301 in 2023, trending 400+ | Fraunhofer ISE |

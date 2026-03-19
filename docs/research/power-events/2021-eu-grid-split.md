@@ -170,7 +170,7 @@ The NW island frequency nadir of **49.74 Hz** was **2.24 Hz above the 47.5 Hz co
 
 The SE island faced the opposite problem -- overfrequency. At 50.6 Hz, generators begin to trip on overfrequency protection. The 975 MW Turkish generator that tripped at 14:04:57 was an example. If enough generators had tripped, the SE island could have oscillated between over- and underfrequency, potentially cascading into its own blackout.
 
-### Perspective: 1.25 Hz from UFLS
+### Perspective: 0.74 Hz from UFLS
 
 The NW frequency nadir of 49.74 Hz was only **0.74 Hz** above the typical first stage of automatic UFLS in Continental Europe (49.0 Hz). UFLS involves involuntary disconnection of consumer load in progressive stages -- each stage shedding ~5--10% of total load. Once UFLS activates, the event moves from "managed incident" to "partial blackout."
 
