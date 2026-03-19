@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useContext, useState } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
 
@@ -48,8 +48,6 @@ export default function CurtailmentChart({ width = 900, height = 380 }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const tRef = useRef(0);
-  const [animFrac, setAnimFrac] = useState(0);
-  const lastAnimFracRef = useRef(0);
   const slideContext = useContext(SlideContext);
 
   useEffect(() => {
@@ -167,33 +165,17 @@ export default function CurtailmentChart({ width = 900, height = 380 }) {
         ctx.roundRect(x, barY, barW, cumH, 3);
         ctx.stroke();
 
-        // Annual TWh label on top of bar
-        if (barFrac > 0.5) {
-          ctx.font = 'bold 10px JetBrains Mono';
-          ctx.fillStyle = colors.accent;
-          ctx.textAlign = 'center';
-          ctx.fillText(`+${d.annTwh.toFixed(1)}`, x + barW / 2, barY - 4);
-        }
-
-        // Cumulative value inside bar (if tall enough)
-        if (cumH > 30 && barFrac > 0.5) {
-          ctx.font = '9px JetBrains Mono';
-          ctx.fillStyle = colors.text + 'aa';
-          ctx.textAlign = 'center';
-          ctx.fillText(`${d.twh.toFixed(0)} TWh`, x + barW / 2, barY + 14);
-        }
-
         // Year label
-        ctx.font = '10px JetBrains Mono';
+        ctx.font = 'bold 12px JetBrains Mono';
         ctx.fillStyle = colors.textMuted;
         ctx.textAlign = 'center';
-        ctx.fillText(d.year, x + barW / 2, padTop + chartH + 14);
+        ctx.fillText(d.year, x + barW / 2, padTop + chartH + 15);
 
         // EUR compensation (small text below year)
         if (barFrac > 0.5) {
-          ctx.font = '9px JetBrains Mono';
-          ctx.fillStyle = colors.danger + 'aa';
-          ctx.fillText(`${(d.eurM / 1000).toFixed(1)}B`, x + barW / 2, padTop + chartH + 26);
+          ctx.font = '11px JetBrains Mono';
+          ctx.fillStyle = '#f87171';
+          ctx.fillText(`${(d.eurM / 1000).toFixed(1)}B`, x + barW / 2, padTop + chartH + 28);
         }
       }
 
@@ -218,8 +200,33 @@ export default function CurtailmentChart({ width = 900, height = 380 }) {
       }
       ctx.shadowBlur = 0;
 
+      // Bar text labels — drawn after glow pass so they aren't covered
+      for (let i = 0; i < DATA.length; i++) {
+        const d = CUM[i];
+        const barDelay = i / (DATA.length + 2);
+        const barT = Math.max(0, Math.min(1, (t - barDelay) / (1 - barDelay * 0.8)));
+        const barFrac = 1 - Math.pow(1 - barT, 3);
+        if (barFrac <= 0 || barFrac <= 0.5) continue;
+        const x = padLeft + i * barGroupW + barGap / 2;
+        const cumH = (d.twh / maxTwh) * chartH * barFrac;
+        const barY = padTop + chartH - cumH;
+
+        // Annual TWh label on top of bar
+        ctx.font = 'bold 10px JetBrains Mono';
+        ctx.fillStyle = colors.accent;
+        ctx.textAlign = 'center';
+        ctx.fillText(`+${d.annTwh.toFixed(1)}`, x + barW / 2, barY - 4);
+
+        // Cumulative value inside bar (if tall enough)
+        if (cumH > 30) {
+          ctx.font = 'bold 11px JetBrains Mono';
+          ctx.fillStyle = '#000000';
+          ctx.fillText(`${d.twh.toFixed(0)} TWh`, x + barW / 2, barY + 14);
+        }
+      }
+
       // CO2 line overlay (secondary axis on right) — drawn smoothly like a pen
-      const maxCo2 = 30;
+      const maxCo2 = 24;
       // lineProgress: 0 = nothing drawn, DATA.length-1 = fully drawn
       const lineProgress = Math.max(0, t * (DATA.length - 1));
 
@@ -303,13 +310,6 @@ export default function CurtailmentChart({ width = 900, height = 380 }) {
       ctx.fillText('Cumulative CO2', 0, 0);
       ctx.restore();
 
-      // Push animation progress to React state for bottom stat boxes
-      const newFrac = 1 - Math.pow(1 - Math.min(1, t), 3);
-      if (Math.abs(newFrac - lastAnimFracRef.current) > 0.02) {
-        lastAnimFracRef.current = newFrac;
-        setAnimFrac(newFrac);
-      }
-
       // Legend
       const legY = 22;
       const legX = width - padRight - 200;
@@ -344,64 +344,135 @@ export default function CurtailmentChart({ width = 900, height = 380 }) {
     }
   }, [slideContext?.isSlideActive]);
 
-  const animTwh = CUM[DATA.length - 1].twh * animFrac;
-  const animEurM = CUM[DATA.length - 1].eurM * animFrac;
-  const animCo2 = CUM[DATA.length - 1].co2Mt * animFrac;
-  const animHomes = DATA[DATA.length - 1].homes * animFrac;
+  // ── Stat boxes canvas (HUD trace animation) ──
+  const statsCanvasRef = useRef(null);
+  const statsAnimRef = useRef(null);
+  const statsStartRef = useRef(null);
 
-  const stats = [
-    { label: 'Total Wasted', value: `${animTwh.toFixed(1)} TWh`, color: colors.accent },
-    { label: 'Compensation Paid', value: `EUR ${(animEurM / 1000).toFixed(1)}B`, color: colors.danger },
-    { label: 'Avoidable CO2', value: `${animCo2.toFixed(1)} Mt`, color: colors.textMuted },
-    { label: '2024 Annual Equiv.', value: animHomes, fmt: 'homes', color: colors.primary },
+  const STATS = [
+    { label: 'Total Wasted', valueFn: (f) => `${(CUM[DATA.length-1].twh * f).toFixed(1)} TWh`, color: colors.accent },
+    { label: 'Compensation Paid', valueFn: (f) => `EUR ${(CUM[DATA.length-1].eurM * f / 1000).toFixed(1)}B`, color: colors.danger },
+    { label: 'Avoidable CO2', valueFn: (f) => `${(CUM[DATA.length-1].co2Mt * f).toFixed(1)} Mt`, color: colors.textMuted },
+    { label: '2024 Annual Equiv.', valueFn: (f) => `${(DATA[DATA.length-1].homes * f).toFixed(1)}M homes/yr`, color: colors.primary },
   ];
 
+  const statsH = 80;
+  const statsGap = 10;
+
+  useEffect(() => {
+    const canvas = statsCanvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = width * 2;
+    canvas.height = statsH * 2;
+    ctx.scale(2, 2);
+
+    const boxW = (width - statsGap * (STATS.length - 1)) / STATS.length;
+    const boxH = statsH - 8;
+    const r = 8;
+    statsStartRef.current = null;
+
+    // Timing
+    const traceDur = 0.5;   // seconds to trace one box border
+    const boxStagger = 0.6; // seconds between each box starting
+
+    const drawStats = (now) => {
+      const isActive = slideContext?.isSlideActive;
+      if (!isActive) { statsAnimRef.current = requestAnimationFrame(drawStats); return; }
+      if (tRef.current < 0.7) { statsAnimRef.current = requestAnimationFrame(drawStats); return; }
+      if (!statsStartRef.current) statsStartRef.current = now;
+
+      const elapsed = (now - statsStartRef.current) / 1000;
+      ctx.clearRect(0, 0, width, statsH);
+
+      let anyAnimating = false;
+
+      for (let i = 0; i < STATS.length; i++) {
+        const s = STATS[i];
+        const x = i * (boxW + statsGap);
+        const y = 4;
+
+        // Sequential: each box starts after the previous
+        const boxElapsed = Math.max(0, elapsed - i * boxStagger);
+        if (boxElapsed <= 0) { anyAnimating = true; continue; }
+
+        const traceFrac = Math.min(1, boxElapsed / traceDur);
+        const contentFrac = Math.min(1, Math.max(0, (boxElapsed - traceDur * 0.5) / 0.4));
+        const numFrac = Math.min(1, Math.max(0, (boxElapsed - traceDur * 0.6) / 0.6));
+        const numEased = numFrac < 0.5 ? 2 * numFrac * numFrac : 1 - Math.pow(-2 * numFrac + 2, 2) / 2;
+
+        if (traceFrac < 1 || numFrac < 1) anyAnimating = true;
+
+        // Perimeter length for dash calculation
+        const arcLen = (Math.PI / 2) * r;
+        const perim = 4 * arcLen + 2 * (boxW - 2 * r) + 2 * (boxH - 2 * r);
+
+        // Background fill — fade in with trace
+        ctx.globalAlpha = traceFrac * 0.04;
+        ctx.fillStyle = s.color;
+        ctx.beginPath();
+        ctx.roundRect(x, y, boxW, boxH, r);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+
+        // Border trace — simple stroke-dasharray sweep from top-left, no dots
+        // Multiple tracers: 3 lines at different offsets along the perimeter
+        const tracerOffsets = [0, 0.33, 0.66]; // evenly spaced around perimeter
+        for (const offset of tracerOffsets) {
+          const headFrac = traceFrac;
+          if (headFrac <= 0) continue;
+          const drawLen = headFrac * perim;
+          // Offset the dash start so each tracer begins at a different point
+          const dashOffset = -(offset * perim);
+
+          ctx.strokeStyle = s.color + '30';
+          ctx.lineWidth = 1;
+          ctx.setLineDash([drawLen, perim - drawLen]);
+          ctx.lineDashOffset = dashOffset;
+          ctx.beginPath();
+          ctx.roundRect(x, y, boxW, boxH, r);
+          ctx.stroke();
+        }
+        ctx.setLineDash([]);
+
+        // Label
+        if (contentFrac > 0) {
+          ctx.globalAlpha = contentFrac * 0.8;
+          ctx.font = '15px "JetBrains Mono"';
+          ctx.fillStyle = s.color + 'cc';
+          ctx.textAlign = 'left';
+          ctx.fillText(s.label, x + 14, y + 24);
+          ctx.globalAlpha = 1;
+        }
+
+        // Value (counting up)
+        if (numEased > 0.01) {
+          const valText = s.valueFn(numEased);
+          ctx.globalAlpha = Math.min(1, numFrac * 2.5);
+          ctx.font = 'bold 24px "JetBrains Mono"';
+          ctx.fillStyle = s.color;
+          ctx.textAlign = 'left';
+          ctx.shadowColor = s.color + '30';
+          ctx.shadowBlur = 16;
+          ctx.fillText(valText, x + 14, y + 52);
+          ctx.shadowBlur = 0;
+          ctx.globalAlpha = 1;
+        }
+      }
+
+      if (anyAnimating) {
+        statsAnimRef.current = requestAnimationFrame(drawStats);
+      }
+    };
+
+    statsAnimRef.current = requestAnimationFrame(drawStats);
+    return () => cancelAnimationFrame(statsAnimRef.current);
+  }, [width, slideContext?.isSlideActive]);
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-      <canvas ref={canvasRef} style={{ width, height }} />
-      <div style={{
-        display: 'flex', gap: 10, width: width,
-        opacity: animFrac > 0.01 ? 1 : 0,
-        transform: `translateY(${(1 - Math.min(1, animFrac * 3)) * 12}px)`,
-        transition: 'opacity 0.3s',
-      }}>
-        {stats.map((s, i) => (
-          <div key={i} style={{
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'flex-end',
-            background: s.color + '0a',
-            border: `1px solid ${s.color}30`,
-            borderRadius: 8,
-            padding: '8px 14px',
-            boxShadow: `0 0 20px ${s.color}10`,
-          }}>
-            <div style={{
-              fontSize: 15,
-              fontFamily: '"JetBrains Mono", monospace',
-              color: s.color + 'cc',
-              textTransform: 'uppercase',
-              letterSpacing: '0.04em',
-              marginBottom: 2,
-            }}>
-              {s.label}
-            </div>
-            <div style={{
-              fontSize: 24,
-              fontWeight: 800,
-              fontFamily: '"JetBrains Mono", monospace',
-              color: s.color,
-              textShadow: `0 0 16px ${s.color}30`,
-              whiteSpace: 'nowrap',
-            }}>
-              {s.fmt === 'homes'
-                ? <>{s.value.toFixed(1)}M homes<span style={{ fontSize: 15, fontWeight: 600 }}>/yr</span></>
-                : s.value}
-            </div>
-          </div>
-        ))}
-      </div>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0 }}>
+      <canvas ref={canvasRef} style={{ width, height, marginTop: -50 }} />
+      <canvas ref={statsCanvasRef} style={{ width, height: statsH, marginTop: 8 }} />
     </div>
   );
 }

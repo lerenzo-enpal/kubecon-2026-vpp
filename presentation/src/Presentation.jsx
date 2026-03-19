@@ -23,6 +23,7 @@ import VPPScenarioSlide from './components/VPPScenarioSlide';
 import CurtailmentChart from './components/CurtailmentChart';
 import ResponseTimeline from './components/ResponseTimeline';
 import ThankYouBackground from './components/ThankYouBackground';
+import FrequencyWalkthrough from './components/FrequencyWalkthrough';
 
 
 const theme = {
@@ -36,22 +37,24 @@ const pad = '36px 56px';
 // Section ranges (slide numbers are 1-indexed)
 const SECTIONS = [
   { from: 1, to: 2, name: '' },
-  { from: 3, to: 13, name: 'The Grid' },
-  { from: 14, to: 17, name: 'The Renewable Revolution' },
-  { from: 18, to: 26, name: 'The Virtual Power Plant' },
-  { from: 27, to: 28, name: 'Resilience' },
+  { from: 3, to: 14, name: 'The Grid' },
+  { from: 15, to: 18, name: 'The Renewable Revolution' },
+  { from: 19, to: 27, name: 'The Virtual Power Plant' },
+  { from: 28, to: 29, name: 'Resilience' },
 ];
 
-// Speaker assignments per slide (from SPEAKER_SCRIPT.md)
+// Speaker assignments per slide
+// 9: Frequency Walkthrough, 10: Costs of the Old Playbook,
+// 11: Frequency Demo, 12-14: Why Texas, Not Isolated, No Flexibility
 const SPEAKERS = {
   1: 'SHARED', 2: 'SHARED',
   3: 'LERENZO', 4: 'LERENZO', 5: 'LERENZO',
-  6: 'MARIO', 7: 'MARIO', 8: 'MARIO',
-  9: 'LERENZO', 10: 'LERENZO', 11: 'LERENZO', 12: 'LERENZO', 13: 'LERENZO',
-  14: 'MARIO', 15: 'MARIO', 16: 'MARIO', 17: 'MARIO', 18: 'MARIO',
-  19: 'LERENZO', 20: 'LERENZO', 21: 'LERENZO', 22: 'LERENZO', 23: 'LERENZO',
-  24: 'LERENZO', 25: 'LERENZO', 26: 'MARIO',
-  27: 'LERENZO', 28: 'LERENZO',
+  6: 'MARIO', 7: 'LERENZO', 8: 'MARIO', 9: 'MARIO',
+  10: 'LERENZO', 11: 'MARIO', 12: 'LERENZO', 13: 'LERENZO', 14: 'LERENZO',
+  15: 'MARIO', 16: 'MARIO', 17: 'MARIO', 18: 'MARIO', 19: 'MARIO',
+  20: 'LERENZO', 21: 'LERENZO', 22: 'LERENZO', 23: 'LERENZO', 24: 'LERENZO',
+  25: 'LERENZO', 26: 'LERENZO', 27: 'MARIO',
+  28: 'LERENZO', 29: 'LERENZO',
 };
 
 const DISABLED_VALUES = new Set(['', 'null', 'no', 'disable', 'disabled', 'nein', 'false', '0', 'off']);
@@ -225,47 +228,7 @@ export default function Presentation() {
       {/* 6: Grid Scale */}
       {versionD()}
 
-      {/* 7: EU Grid HUD */}
-      <Slide backgroundColor="#020408" padding="0">
-        <div className="w-full h-full">
-          <LazyContent><EUGridHUD width="100%" height="100%" /></LazyContent>
-        </div>
-        <Notes>
-          [MARIO] This is the Continental European grid — real-time visualization.
-          400 million consumers. 1,100 GW of installed capacity (ENTSO-E, 2024).
-          36 countries, all operating at 50 Hz across interconnected synchronous areas.
-        </Notes>
-      </Slide>
-
-      {/* 8: Frequency Demo */}
-      <Slide backgroundColor={bg} padding="20px 40px">
-        <div className="flex flex-col h-full">
-          <H>The Grid: A Balancing Act</H>
-          <P size="20px">This enormous machine maintains a constant 50 Hz frequency — supply and demand balanced every second.<br />Click an event to simulate what happens when something goes wrong.</P>
-          <div className="flex-1 flex items-center" style={{ width: '100%' }}>
-            <LazyContent><FrequencyDemo width={1286} height={480} panelWidth={340} /></LazyContent>
-          </div>
-          <div className="flex justify-center">
-            <div className="rounded-[10px] text-center" style={{ width: '68%', padding: '14px 24px', background: `${colors.accent}08`, border: `1px solid ${colors.accent}20` }}>
-              <div className="text-[22px] font-sans" style={{ color: colors.textDim }}>The entire European grid operates within a <span className="font-semibold" style={{ color: colors.accent }}>±0.2 Hz</span> band. Cross those thresholds and automated protection systems start disconnecting load or generators.</div>
-            </div>
-          </div>
-        </div>
-        <Notes>
-          [MARIO] The grid maintains exactly 50 Hz — supply and demand balanced every single second.
-          The +/-0.2 Hz band is everything — cross it and automated systems start disconnecting.
-          [DEMO] Click scenarios to simulate events:
-          Generator trip: 800 MW offline, watch reserves catch it — recovery in ~12 minutes.
-          3 GW loss: deep enough to trigger automatic load shedding, but grid survives.
-          Demand drop: frequency goes UP — too much supply is also dangerous.
-          Cyber attack: coordinated SCADA compromise, cascading trips, no recovery — blackout.
-          Notice the accelerated timer — these events play out over minutes in real grid time.
-        </Notes>
-      </Slide>
-
-      {/* ── Grid narrative continues ── */}
-
-      {/* 9: Designed for a Different World */}
+      {/* 7: Designed for a Different World */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H>Designed for a Different World</H>
@@ -279,19 +242,51 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 10: The Old Playbook */}
+      {/* 8: EU Grid HUD */}
+      <Slide backgroundColor="#020408" padding="0">
+        <div className="w-full h-full">
+          <LazyContent><EUGridHUD width="100%" height="100%" /></LazyContent>
+        </div>
+        <Notes>
+          [MARIO] This is the Continental European grid — real-time visualization.
+          400 million consumers. 1,100 GW of installed capacity (ENTSO-E, 2024).
+          36 countries, all operating at 50 Hz across interconnected synchronous areas.
+        </Notes>
+      </Slide>
+
+      {/* 9: Frequency — What "Stabilizing the Grid" Means */}
+      <Slide backgroundColor={bg} padding="20px 40px">
+        <div className="flex flex-col h-full">
+          <H>The Grid: A Balancing Act</H>
+          <P size="20px">This enormous machine maintains a constant 50 Hz frequency — supply and demand balanced every second.</P>
+          <Stepper values={[0, 1, 2, 3, 4, 5]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col" style={{ minHeight: 0 }}>
+            {(stepVal) => <FrequencyWalkthrough step={stepVal ?? 0} />}
+          </Stepper>
+        </div>
+        <Notes>
+          [MARIO] The grid runs at exactly 50 Hz — supply equals demand every second.
+          This is what "stabilizing the grid" means: keeping this one number steady.
+          [ARROW] Normal band: 49.8-50.2 Hz. Spinning reserves on standby.
+          [ARROW] 49.5 Hz: reserves activate. Gas peakers fire up.
+          [ARROW] 49.0 Hz: load shedding begins. Deliberate blackouts.
+          [ARROW] 47.5 Hz: generators disconnect. Total collapse.
+          [ARROW] Punchline: 2.5 Hz between normal and catastrophe — less than you can hear. This is the SLO of the physical world.
+        </Notes>
+      </Slide>
+
+      {/* 10: Costs of the Old Playbook */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
-          <H color={colors.accent}>The Old Playbook</H>
-          <P size="20px">Before batteries and software, this is how Europe kept the lights on. Expensive, dirty, and blunt.</P>
+          <H color={colors.accent}>Costs of the Old Playbook</H>
+          <P size="20px">Before batteries and software, this is how we kept the lights on.</P>
           <Stepper values={[1, 2, 3, 4]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col">
             {(visibleCount, step, isActive) => {
               const vc = visibleCount ?? 0;
               const cards = [
-                { t: 'Peaker Plants', d: 'EU capacity mechanisms cost EUR 6.5B in 2024 alone — mostly paying gas turbines to sit idle. Over EUR 50B to fossil assets since 2015.', stat: 'EUR 6.5B/yr', c: '#fb923c' },
-                { t: 'Spinning Reserves', d: 'Generators running at partial load 24/7 "just in case." 15% capacity margin mandated. Burning fuel to produce nothing.', stat: '15% over-provisioned', c: colors.accent },
-                { t: 'Load Shedding', d: 'Deliberate rolling blackouts as a last resort. The EU spends EUR 11B/yr to avoid it — and largely succeeds. But when prevention fails: Texas 2021, ERCOT ordered 20 GW shed, 4.5 million homes dark.', stat: 'EUR 11B/yr to prevent (ACER)', c: colors.danger },
-                { t: 'Curtailment', d: 'Too much sun or wind? Turn it off. Germany wasted 19 TWh of clean energy in 2023 — enough to power 5.5 million homes.', stat: '~EUR 3B/yr (DE)', c: colors.secondary },
+                { t: 'Peaker Plants', d: 'Gas turbines that sit idle 95% of the year, waiting for a spike. The EU spends EUR 6.5B/yr just keeping them on standby.', stat: 'EUR 6.5B/yr', c: '#fb923c' },
+                { t: 'Spinning Reserves', d: 'Generators running at partial load 24/7 "just in case." 15% of all capacity burns fuel to produce nothing.', stat: '15% wasted capacity', c: colors.accent },
+                { t: 'Congestion', d: 'When the grid can\'t move power where it\'s needed, operators pay billions to reroute it. EUR 4.2B/yr across the EU.', stat: 'EUR 4.2B/yr', c: colors.danger },
+                { t: 'Curtailment', d: 'Too much sun or wind? Turn it off. Germany curtails 10 TWh of clean energy per year — enough to power 2.7 million homes.', stat: '10 TWh/yr wasted', c: colors.secondary },
               ];
               return (
                 <div className="flex flex-col flex-1">
@@ -329,7 +324,7 @@ export default function Presentation() {
                   </div>
                   <div className="mt-2">
                     <div className="font-sans text-[18px] leading-normal" style={{ fontStyle: 'italic', color: colors.textMuted, opacity: vc >= 4 ? 1 : 0.4, transition: 'opacity 0.6s ease' }}>
-                      "EUR 6.5 billion a year to keep gas turbines on standby. Rolling blackouts as policy. Clean energy thrown away. This is the toolkit we inherited."
+                      Over EUR 10 billion per year to keep gas turbines on standby, reroute power, and throw away clean energy. This is the toolkit we inherited.
                     </div>
                     <div className="font-mono text-[12px] mt-2" style={{ color: colors.textDim + '80', opacity: vc >= 4 ? 1 : 0, transition: 'opacity 1.2s ease 0.4s' }}>
                       Sources: ACER MMR 2024, Beyond Fossil Fuels/Aurora 2025, BNetzA/SMARD, ENTSO-E
@@ -348,17 +343,42 @@ export default function Presentation() {
           </Stepper>
         </div>
         <Notes>
-          [LERENZO] How did we manage this for 70 years? Arrow through each one.
-          [ARROW] Peaker plants: Europe keeps 100+ GW of gas turbines on standby — firing at 2-5x cost.
-          [ARROW] Spinning reserves: generators running at partial load 24/7 "just in case" — burning fuel to produce nothing.
-          [ARROW] Load shedding: deliberate blackouts as last resort. EU spends EUR 11B/yr to avoid it — and largely succeeds. EU outages are mostly accidental (weather, equipment), not deliberate shedding. But when prevention fails — Texas 2021: ERCOT ordered 20 GW shed, 4.5M homes dark. That's policy, not accident.
-          [ARROW] Curtailment: too much sun? Turn it off. Germany threw away 19 TWh of clean energy in 2023.
-          Sources fade in at the end — don't draw attention to them.
+          [LERENZO] This is what it costs to keep the lights on the old way. Arrow through each one.
+          [ARROW] Peaker plants: EUR 6.5B/yr in capacity mechanisms — gas turbines that sit idle 95% of the year, just waiting for a spike.
+          [ARROW] Spinning reserves: 15% of all generation capacity burns fuel 24/7 producing nothing — just to be ready.
+          [ARROW] Congestion: EUR 4.2B/yr across the EU rerouting power when the grid can't handle it. Germany alone spends EUR 2.8B.
+          [ARROW] Curtailment: Germany curtails 10 TWh of clean energy per year — enough to power 2.7M homes.
+          Over EUR 10B/yr in hard costs. Sources fade in at the end.
         </Notes>
       </Slide>
 
 
-      {/* 11: Why Texas Failed */}
+      {/* 11: Frequency Demo — Interactive */}
+      <Slide backgroundColor={bg} padding="20px 40px">
+        <div className="flex flex-col h-full">
+          <H>The Grid: A Balancing Act</H>
+          <P size="20px">Now that you know the tools — watch what happens when something goes wrong. Click an event to simulate.</P>
+          <div className="flex-1 flex items-center" style={{ width: '100%' }}>
+            <LazyContent><FrequencyDemo width={1286} height={480} panelWidth={340} /></LazyContent>
+          </div>
+          <div className="flex justify-center">
+            <div className="rounded-[10px] text-center" style={{ width: '68%', padding: '14px 24px', background: `${colors.accent}08`, border: `1px solid ${colors.accent}20` }}>
+              <div className="text-[22px] font-sans" style={{ color: colors.textDim }}>The entire European grid operates within a <span className="font-semibold" style={{ color: colors.accent }}>+/-0.2 Hz</span> band. Cross those thresholds and automated protection systems start disconnecting load or generators.</div>
+            </div>
+          </div>
+        </div>
+        <Notes>
+          [MARIO] Now let's see this in action.
+          [DEMO] Click scenarios to simulate events:
+          Generator trip: 800 MW offline, watch reserves catch it — recovery in ~12 minutes.
+          3 GW loss: deep enough to trigger automatic load shedding, but grid survives.
+          Demand drop: frequency goes UP — too much supply is also dangerous.
+          Cyber attack: coordinated SCADA compromise, cascading trips, no recovery — blackout.
+          Notice the accelerated timer — these events play out over minutes in real grid time.
+        </Notes>
+      </Slide>
+
+      {/* 12: Why Texas Failed */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H color={colors.danger}>Why Texas Failed</H>
@@ -392,7 +412,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 12: It Keeps Happening */}
+      {/* 13: It Keeps Happening */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
         <H color={colors.danger}>Not an Isolated Incident</H>
@@ -445,7 +465,7 @@ export default function Presentation() {
       </Slide>
 
 
-      {/* 13: No Flexibility — Bridge */}
+      {/* 14: No Flexibility — Bridge */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[28px] font-semibold text-hud-text font-sans leading-[1.7] mb-7">
@@ -467,7 +487,7 @@ export default function Presentation() {
 
       {/* ═══════ ACT 2: THE RENEWABLE REVOLUTION ═══════ */}
 
-      {/* 14: The Renewable Revolution */}
+      {/* 15: The Renewable Revolution */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[20px] font-semibold text-hud-accent font-mono tracking-[0.15em] uppercase mb-4">Part II</div>
@@ -479,7 +499,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 15: The Renewable Explosion */}
+      {/* 16: The Renewable Explosion */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H>The Renewable Explosion</H>
@@ -495,7 +515,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 16: The Duck Curve Problem */}
+      {/* 17: The Duck Curve Problem */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H>The Duck Curve Problem</H>
@@ -512,15 +532,14 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 17: The Cost of Wasted Energy */}
+      {/* 18: The Cost of Wasted Energy */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H color={colors.danger}>Clean Energy Has Outgrown the Grid</H>
           <div className="flex-1 flex justify-center items-center">
             <LazyContent><CurtailmentChart width={940} height={340} /></LazyContent>
           </div>
-          <P size="22px" style={{ textAlign: 'center', marginTop: 0, marginBottom: 16 }}><span style={{ color: colors.danger }}>Grid Congestion</span> is overwhelming neighborhood transformers.<br />New long-distance lines won't fix 49% of the problem.</P>
-          <div style={{ fontSize: 12, color: colors.textDim, fontFamily: '"Inter", sans-serif', textAlign: 'left', marginTop: 0 }}>Germany — Bundesnetzagentur 2024 data. North-south transmission bottlenecks (SuedLink delayed to 2028)</div>
+          <div style={{ fontSize: 14, color: colors.textDim, fontFamily: '"Inter", sans-serif', textAlign: 'left', marginTop: 0 }}>While SuedLink is being built by 2028, 49% of curtailment comes from local grid issues. Neighborhood transformers are overwhelmed.</div>
         </div>
         <Notes>
           [MARIO] Germany paid EUR 554 million to generators to NOT produce electricity.
@@ -533,7 +552,7 @@ export default function Presentation() {
 
       {/* ═══════ ACT 3: THE VIRTUAL POWER PLANT ═══════ */}
 
-      {/* 18: Consumers Become Infrastructure */}
+      {/* 19: Consumers Become Infrastructure */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col items-center h-full text-center">
           <H size="42px" center>Consumers Become Infrastructure</H>
@@ -550,7 +569,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 19: The Virtual Power Plant */}
+      {/* 20: The Virtual Power Plant */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-4">Part III</div>
@@ -562,7 +581,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 20: What Is a Virtual Power Plant? */}
+      {/* 21: What Is a Virtual Power Plant? */}
       <Slide backgroundColor={bg} padding="0">
         <div className="relative w-full h-full">
           <div className="absolute inset-0 flex flex-col pt-5 px-10 pointer-events-none z-10">
@@ -582,7 +601,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 21: Inside the Architecture */}
+      {/* 22: Inside the Architecture */}
       <Slide backgroundColor={bg} padding="16px 0px">
         <div className="flex flex-col h-full">
           <div className="px-8"><H>Inside the Architecture</H></div>
@@ -606,7 +625,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 22: The Architecture Parallel */}
+      {/* 23: The Architecture Parallel */}
       <Slide backgroundColor={bg} padding={pad}>
         <style>{`
           @keyframes archLeftIn {
@@ -667,7 +686,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 23: How a VPP Responds to Grid Events */}
+      {/* 24: How a VPP Responds to Grid Events */}
       <Slide backgroundColor={bg} padding={pad}>
         <style>{`
           @keyframes vppEventIn {
@@ -747,7 +766,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 24: Energy Arbitrage + Peak Shaving */}
+      {/* 25: Energy Arbitrage + Peak Shaving */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           <LazyContent><VPPScenarioSlide scenario="summer" /></LazyContent>
@@ -762,7 +781,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 25: SA Virtual Power Plant, 2019 */}
+      {/* 26: SA Virtual Power Plant, 2019 */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           <LazyContent><SAMapHUD width="100%" height="100%" variant="vpp" /></LazyContent>
@@ -774,7 +793,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 26: The Economic Impact of Flexibility */}
+      {/* 27: The Economic Impact of Flexibility */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H color={colors.success}>The Economic Impact of Flexibility</H>
@@ -840,7 +859,7 @@ export default function Presentation() {
 
       {/* ═══════ ACT 4: RESILIENCE ═══════ */}
 
-      {/* 27: Back to Texas */}
+      {/* 28: Back to Texas */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center h-full">
           <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-6">Back to Texas</div>
@@ -865,7 +884,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 28: Thank You */}
+      {/* 29: Thank You */}
       <Slide backgroundColor={bg} padding="0">
         <div className="relative w-full h-full">
           <LazyContent><ThankYouBackground width={1366} height={768} /></LazyContent>

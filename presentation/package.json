@@ -29,5 +29,8 @@
     "spectacle": "^10.2.3",
     "tailwindcss": "^4.2.1",
     "vite": "^7.3.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
   }
 }

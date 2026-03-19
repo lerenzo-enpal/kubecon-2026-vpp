@@ -51,19 +51,23 @@ const SUMMER_STEPS = [
       { pv: 0.5, battery: 0.08, ev: 0.1, heatPump: 0, batteryFlow: 'charge', evFlow: 'charge', pvFlow: 'off', label: '-5 ct/kWh' },
       { pv: 0.55, battery: 0.03, ev: 0.0, heatPump: 0, batteryFlow: 'charge', evFlow: 'charge', pvFlow: 'off', label: '-5 ct/kWh' },
     ],
-    price: { value: -5, trend: 'negative' },
+    price: { value: -13, trend: 'negative' },
     freq: 50.00,
     view: { longitude: 13.2707, latitude: 52.5928, zoom: 17, pitch: 40, bearing: -3 },
     duckHighlightHour: 13,
     duckBlend: 0.3,
     homePhase: 'charge',
     showHomeDetail: true,
+    // Charges to full at proportional rates (duration computed in HomeDetailView):
+    //   Battery: 5 kW / 20 kWh = 25%/hr → 5% to 100% in ~9.5s
+    //   EV:     11 kW / 87 kWh = 12.6%/hr → 12% to 100% in ~17.4s
+    // Battery visibly fills ~2× faster — matching real hardware ratio.
     homeDetail: {
       solar: { status: 'curtailed', flow: 'none', kw: 0 },
       battery: { status: 'charging', level: 0.05, levelTarget: 1.0, flow: 'from-grid', kw: 5.0 },
-      ev: { status: 'charging', level: 0.15, levelTarget: 1.0, flow: 'from-grid', kw: 7.4 },
-      heatPump: { status: 'pre-heat', kw: 2.8, flow: 'from-grid' },
-      gridPrice: '-5 ct/kWh',
+      ev: { status: 'charging', level: 0.12, levelTarget: 1.0, flow: 'from-grid', kw: 11.0 },
+      heatPump: { status: 'pre-heat', kw: 2.8, flow: 'from-grid', temp: 18 },
+      gridPrice: '-13 ct/kWh',
     },
   },
   {

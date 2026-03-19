@@ -11,55 +11,75 @@ import { SUMMER_STEPS, WINTER_STEPS } from './VPPScenarioHomes';
 import DuckCurveHUD from './DuckCurveHUD';
 import HomeDetailView from './HomeDetailView';
 
-// ── Berlin/Brandenburg home clusters ────────────────────────
-const BERLIN_CLUSTERS = [
-  { lng: 13.405, lat: 52.520, weight: 0.12, spread: 0.015, name: 'Mitte' },
-  { lng: 13.440, lat: 52.490, weight: 0.10, spread: 0.012, name: 'Kreuzberg' },
-  { lng: 13.305, lat: 52.516, weight: 0.08, spread: 0.018, name: 'Charlottenburg' },
-  { lng: 13.350, lat: 52.475, weight: 0.07, spread: 0.014, name: 'Schoeneberg' },
-  { lng: 13.460, lat: 52.540, weight: 0.06, spread: 0.012, name: 'Prenzlauer Berg' },
-  { lng: 13.510, lat: 52.510, weight: 0.06, spread: 0.015, name: 'Friedrichshain' },
-  { lng: 13.380, lat: 52.460, weight: 0.05, spread: 0.012, name: 'Tempelhof' },
-  { lng: 13.520, lat: 52.440, weight: 0.05, spread: 0.020, name: 'Neukoelln' },
-  { lng: 13.280, lat: 52.540, weight: 0.04, spread: 0.018, name: 'Spandau' },
-  { lng: 13.580, lat: 52.480, weight: 0.04, spread: 0.018, name: 'Treptow' },
-  // Potsdam & outer suburbs
-  { lng: 13.065, lat: 52.395, weight: 0.06, spread: 0.025, name: 'Potsdam' },
-  { lng: 13.620, lat: 52.420, weight: 0.05, spread: 0.025, name: 'Koepenick' },
-  { lng: 13.250, lat: 52.580, weight: 0.04, spread: 0.030, name: 'Hennigsdorf' },
-  { lng: 13.630, lat: 52.560, weight: 0.04, spread: 0.025, name: 'Marzahn' },
-  // Outer Brandenburg
-  { lng: 13.08, lat: 52.33, weight: 0.05, spread: 0.040, name: 'Brandenburg outskirts' },
-  { lng: 13.75, lat: 52.38, weight: 0.04, spread: 0.035, name: 'East Brandenburg' },
-  { lng: 13.20, lat: 52.65, weight: 0.03, spread: 0.035, name: 'North Brandenburg' },
-  { lng: 13.55, lat: 52.30, weight: 0.02, spread: 0.030, name: 'South Brandenburg' },
-];
-
-function generateVPPHomes(count, seed = 73) {
-  const homes = [];
-  let s = seed;
-  const next = () => { s = (s * 16807 + 0) % 2147483647; return s / 2147483647; };
-  const gauss = () => {
-    const u1 = next(), u2 = next();
-    return Math.sqrt(-2 * Math.log(u1 + 0.001)) * Math.cos(2 * Math.PI * u2);
-  };
-
-  for (let i = 0; i < count; i++) {
-    const r = next();
-    let cumulative = 0;
-    let cluster = BERLIN_CLUSTERS[0];
-    for (const c of BERLIN_CLUSTERS) {
-      cumulative += c.weight;
-      if (r <= cumulative) { cluster = c; break; }
-    }
-    const lng = cluster.lng + gauss() * cluster.spread;
-    const lat = cluster.lat + gauss() * cluster.spread * 0.7;
-    homes.push({ lng, lat, idx: i });
-  }
-  return homes;
+// ── Berlin/Brandenburg residential homes (134K from OSM) ────
+let _berlinHomesCache = null;
+function loadBerlinHomes() {
+  if (_berlinHomesCache) return Promise.resolve(_berlinHomesCache);
+  return fetch('/data/berlin-homes.json')
+    .then(r => r.json())
+    .then(data => { _berlinHomesCache = data; return data; })
+    .catch(() => []);
 }
 
-const VPP_HOMES = generateVPPHomes(600);
+// Select VPP homes from real coords — suburban Berlin where rooftop solar is installed
+let _berlinVppCache = null;
+function selectBerlinVPPHomes(allHomes, count = 600, seed = 73) {
+  if (_berlinVppCache) return _berlinVppCache;
+  let s = seed;
+  const rand = () => { s = (s * 16807 + 0) % 2147483647; return s / 2147483647; };
+
+  // Suburban zones where solar is most common (outer Berlin + Brandenburg)
+  const zones = [
+    { latMin: 52.38, latMax: 52.48, lngMin: 13.08, lngMax: 13.25, weight: 0.15 }, // SW Berlin / Potsdam
+    { latMin: 52.50, latMax: 52.60, lngMin: 13.15, lngMax: 13.32, weight: 0.12 }, // Spandau / NW
+    { latMin: 52.38, latMax: 52.48, lngMin: 13.50, lngMax: 13.76, weight: 0.12 }, // SE Koepenick
+    { latMin: 52.52, latMax: 52.62, lngMin: 13.50, lngMax: 13.70, weight: 0.10 }, // NE Marzahn outskirts
+    { latMin: 52.55, latMax: 52.68, lngMin: 13.20, lngMax: 13.50, weight: 0.10 }, // Pankow / Reinickendorf
+    { latMin: 52.40, latMax: 52.50, lngMin: 13.25, lngMax: 13.45, weight: 0.10 }, // Zehlendorf / Steglitz
+    { latMin: 52.33, latMax: 52.40, lngMin: 13.30, lngMax: 13.60, weight: 0.08 }, // South Brandenburg
+    { latMin: 52.44, latMax: 52.54, lngMin: 13.45, lngMax: 13.60, weight: 0.08 }, // Treptow / Neukoelln outer
+    { latMin: 52.33, latMax: 52.68, lngMin: 13.08, lngMax: 13.76, weight: 0.15 }, // Metro fill
+  ];
+
+  const buckets = zones.map(() => []);
+  allHomes.forEach((coord, idx) => {
+    const lng = coord[0], lat = coord[1];
+    for (let z = 0; z < zones.length; z++) {
+      const zone = zones[z];
+      if (lat >= zone.latMin && lat <= zone.latMax && lng >= zone.lngMin && lng <= zone.lngMax) {
+        buckets[z].push(idx);
+        break;
+      }
+    }
+  });
+
+  for (const bucket of buckets) {
+    for (let i = bucket.length - 1; i > 0; i--) {
+      const j = Math.floor(rand() * (i + 1));
+      [bucket[i], bucket[j]] = [bucket[j], bucket[i]];
+    }
+  }
+
+  const selected = new Set();
+  for (let z = 0; z < zones.length; z++) {
+    const take = Math.floor(count * zones[z].weight);
+    for (let i = 0; i < Math.min(take, buckets[z].length); i++) {
+      selected.add(buckets[z][i]);
+    }
+  }
+  let fill = 0;
+  while (selected.size < count && fill < allHomes.length) {
+    if (!selected.has(fill)) selected.add(fill);
+    fill++;
+  }
+
+  _berlinVppCache = selected;
+  return selected;
+}
+
+// ── Target home (zoom-in address: Mario's mother in law. Riemerstraße 5, 13507 Berlin) ──
+// Position aligned to reticle crosshair (offset 195px right of map center at zoom 17)
+const TARGET_HOME = [13.271603, 52.59247];
 
 // ── Color constants for DeckGL layers ──
 const PHASE_COLORS = {
@@ -73,12 +93,51 @@ const PHASE_COLORS = {
   stable:    [16, 185, 129],
 };
 
+// ── Fleet revenue counter (animated tick-up) ──
+function FleetRevenueCounter({ value }) {
+  const [display, setDisplay] = useState(0);
+  const rafRef = useRef(null);
+  const prevRef = useRef(0);
+
+  useEffect(() => {
+    const from = prevRef.current;
+    const to = value;
+    if (from === to) return;
+    const start = performance.now();
+    const dur = 1500;
+    const tick = (now) => {
+      const t = Math.min((now - start) / dur, 1);
+      const e = 1 - Math.pow(1 - t, 3);
+      setDisplay(Math.round(from + (to - from) * e));
+      if (t < 1) rafRef.current = requestAnimationFrame(tick);
+      else prevRef.current = to;
+    };
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [value]);
+
+  const formatted = display >= 1000
+    ? `€${(display / 1000).toFixed(0)}K`
+    : `€${display}`;
+
+  return (
+    <div style={{
+      fontSize: 20, fontWeight: 700, fontFamily: '"JetBrains Mono"',
+      color: colors.success,
+      textShadow: `0 0 12px ${colors.success}50`,
+    }}>
+      {formatted}
+      <span style={{ fontSize: 10, color: colors.textDim, marginLeft: 4, fontWeight: 400 }}>/ day</span>
+    </div>
+  );
+}
+
 // ── Targeting reticle SVG ──
 function TargetingReticle({ visible }) {
   if (!visible) return null;
   return (
     <div style={{
-      position: 'absolute', top: 'calc(50% - 3px)', left: 'calc(50% + 195px)',
+      position: 'absolute', top: 'calc(50% - 4px)', left: 'calc(50% + 194px)',
       transform: 'translate(-50%, -50%)',
       width: 120, height: 120,
       pointerEvents: 'none', zIndex: 12,
@@ -142,6 +201,7 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
   const [boot, setBoot] = useState(0);
   const bootRef = useRef(null);
   const [viewState, setViewState] = useState(steps[0].view);
+  const [allHomes, setAllHomes] = useState(null);
 
   const slideContext = useContext(SlideContext);
   const slideActive = slideContext?.isSlideActive;
@@ -152,6 +212,7 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
       setStepIndex(0);
       setViewState(steps[0].view);
       setBoot(0);
+      loadBerlinHomes().then(setAllHomes);
       const delay = setTimeout(() => {
         const start = performance.now();
         const tick = () => {
@@ -225,47 +286,70 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
     setHomeDetailReady(false);
   }, [currentStep.showHomeDetail]);
 
-  // ── Home dots data ──
-  const homeDots = useMemo(() => {
-    const phaseColor = PHASE_COLORS[homePhase] || PHASE_COLORS.standby;
-    return VPP_HOMES.map((h) => ({
-      position: [h.lng, h.lat],
-      color: phaseColor,
-      idx: h.idx,
-    }));
-  }, [homePhase]);
+  // ── VPP home set (selected from real 134K coords) ──
+  const vppSet = useMemo(() => {
+    if (!allHomes || allHomes.length === 0) return new Set();
+    return selectBerlinVPPHomes(allHomes, 600);
+  }, [allHomes]);
+
+  const vppHomeData = useMemo(() => {
+    if (!allHomes || vppSet.size === 0) return [];
+    return [...vppSet].map(idx => allHomes[idx]);
+  }, [allHomes, vppSet]);
 
   // ── DeckGL layers ──
   const layers = useMemo(() => {
+    const result = [];
     const phaseColor = PHASE_COLORS[homePhase] || PHASE_COLORS.standby;
     const isAlert = homePhase === 'alert';
-    return [
-      new ScatterplotLayer({
+
+    // All Berlin homes (134K background)
+    if (allHomes && allHomes.length > 0) {
+      result.push(new ScatterplotLayer({
+        id: 'all-homes',
+        data: allHomes,
+        getPosition: d => d,
+        getRadius: 80,
+        getFillColor: isAlert ? [180, 50, 30, 200]
+          : homePhase === 'stable' ? [16, 185, 129, 200]
+          : [55, 50, 40, 200],
+        radiusMinPixels: 0.5,
+        radiusMaxPixels: 2.5,
+        transitions: { getFillColor: 800 },
+        updateTriggers: { getFillColor: [homePhase] },
+      }));
+    }
+
+    // VPP homes overlay — same size, elevated, phase-colored
+    if (vppHomeData.length > 0) {
+      result.push(new ScatterplotLayer({
         id: 'vpp-homes',
-        data: homeDots,
-        getPosition: d => d.position,
-        getRadius: isAlert ? 600 : homePhase === 'respond' || homePhase === 'discharge' ? 500 : 400,
-        getFillColor: d => {
-          if (isAlert) {
-            // Pulse effect via alternating alpha based on index
-            const pulse = d.idx % 3 === 0 ? 220 : 140;
-            return [...phaseColor, pulse];
-          }
-          return [...phaseColor, 180];
-        },
-        getLineColor: [...phaseColor, 255],
-        stroked: homePhase === 'respond' || homePhase === 'discharge',
-        lineWidthMinPixels: 1,
-        radiusMinPixels: 2,
-        radiusMaxPixels: 12,
-        transitions: { getFillColor: 600, getRadius: 400 },
-        updateTriggers: {
-          getFillColor: [homePhase, Date.now() >> 10],
-          getRadius: [homePhase],
-        },
-      }),
-    ];
-  }, [homeDots, homePhase]);
+        data: vppHomeData,
+        getPosition: d => [d[0], d[1], 50],
+        getRadius: 80,
+        getFillColor: [...phaseColor, isAlert ? 240 : 255],
+        radiusMinPixels: 0.5,
+        radiusMaxPixels: 2.5,
+        transitions: { getFillColor: 800 },
+        updateTriggers: { getFillColor: [homePhase] },
+      }));
+    }
+
+    // Target home — Riemerstraße 5, the house we zoom into
+    result.push(new ScatterplotLayer({
+      id: 'target-home',
+      data: [TARGET_HOME],
+      getPosition: d => [d[0], d[1], 50],
+      getRadius: 160,
+      getFillColor: [...phaseColor, isAlert ? 240 : 255],
+      radiusMinPixels: 1,
+      radiusMaxPixels: 5,
+      transitions: { getFillColor: 800 },
+      updateTriggers: { getFillColor: [homePhase] },
+    }));
+
+    return result;
+  }, [homePhase, allHomes, vppHomeData]);
 
   // ── Panel styling ──
   const accentColor = homePhase === 'alert' ? colors.danger :
@@ -343,7 +427,7 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
       <div style={{
         ...panelBase,
         position: 'absolute', top: 10, left: 10,
-        maxWidth: 380, padding: '10px 14px',
+        width: 396, padding: '10px 14px',
         zIndex: 10,
         opacity: bootFade(0.5, 0.5),
         transform: `translateY(${(1 - bootFade(0.5, 0.5)) * -10}px)`,
@@ -378,44 +462,68 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
       </div>
 
       {/* ── Top-right: Metrics panel ── */}
-      <div style={{
-        ...panelBase,
-        position: 'absolute', top: 10, right: 10,
-        padding: '8px 14px',
-        zIndex: 10,
-        opacity: bootFade(0.7, 0.5),
-        transform: `translateY(${(1 - bootFade(0.7, 0.5)) * -10}px)`,
-      }}>
-        <Corners color={accentColor + '60'} size={10} />
-        {scenario === 'summer' ? (
-          <>
-            <div style={{ fontSize: 9, fontFamily: '"JetBrains Mono"', color: colors.textDim, letterSpacing: '0.1em' }}>
-              WHOLESALE PRICE
-            </div>
-            <div style={{
-              fontSize: 24, fontWeight: 700, fontFamily: '"JetBrains Mono"',
-              color: currentStep.price.value < 0 ? colors.success : currentStep.price.value > 15 ? colors.danger : colors.text,
-            }}>
-              {currentStep.price.value > 0 ? '+' : ''}{currentStep.price.value}
-              <span style={{ fontSize: 12, color: colors.textMuted, marginLeft: 4 }}>ct/kWh</span>
-            </div>
-          </>
-        ) : (
-          <>
-            <div style={{ fontSize: 9, fontFamily: '"JetBrains Mono"', color: colors.textDim, letterSpacing: '0.1em' }}>
-              GRID FREQUENCY
-            </div>
-            <div style={{
-              fontSize: 24, fontWeight: 700, fontFamily: '"JetBrains Mono"',
-              color: freqColor,
-              textShadow: `0 0 15px ${freqColor}50`,
-            }}>
-              {freq.toFixed(2)}
-              <span style={{ fontSize: 12, color: colors.textMuted, marginLeft: 4 }}>Hz</span>
-            </div>
-          </>
-        )}
-      </div>
+      {(() => {
+        // Fleet revenue estimate per step (summer scenario):
+        // Avg home: 20 kWh battery + 87 kWh EV + 2.8 kW heat pump
+        // Charging at negative prices: revenue = |price| × kWh ingested
+        // Discharging at peak: revenue = price × kWh exported
+        // Step 0-1: no activity (0), Step 2: charging at -13ct (earning ~€2.45/home),
+        // Step 3: still charging at -5ct (cumulative ~€3.40), Step 4: discharging at +25ct (+€5 battery),
+        // Step 5: total ~€8.40/home × 53,000 = ~€445K fleet
+        const fleetRevenue = scenario === 'summer' ? [0, 0, 130000, 180000, 445000, 445000] : null;
+        const revenue = fleetRevenue ? fleetRevenue[Math.min(stepIndex, fleetRevenue.length - 1)] : null;
+        const priceColor = currentStep.price.value < 0 ? colors.success : currentStep.price.value > 15 ? colors.danger : colors.text;
+
+        return (
+          <div style={{
+            ...panelBase,
+            position: 'absolute', top: 10, right: 10,
+            padding: '8px 14px',
+            zIndex: 10,
+            opacity: bootFade(0.7, 0.5),
+            transform: `translateY(${(1 - bootFade(0.7, 0.5)) * -10}px)`,
+          }}>
+            <Corners color={accentColor + '60'} size={10} />
+            {scenario === 'summer' ? (
+              <>
+                <div style={{ fontSize: 9, fontFamily: '"JetBrains Mono"', color: colors.textDim, letterSpacing: '0.1em' }}>
+                  WHOLESALE PRICE
+                </div>
+                <div style={{
+                  fontSize: 24, fontWeight: 700, fontFamily: '"JetBrains Mono"',
+                  color: priceColor,
+                }}>
+                  {currentStep.price.value > 0 ? '+' : ''}{currentStep.price.value}
+                  <span style={{ fontSize: 12, color: colors.textMuted, marginLeft: 4 }}>ct/kWh</span>
+                </div>
+                {/* Fleet revenue counter */}
+                {revenue > 0 && (
+                  <div style={{ marginTop: 8, paddingTop: 8, borderTop: `1px solid ${colors.primary}20` }}>
+                    <div style={{ fontSize: 9, fontFamily: '"JetBrains Mono"', color: colors.textDim, letterSpacing: '0.1em' }}>
+                      FLEET REVENUE
+                    </div>
+                    <FleetRevenueCounter value={revenue} />
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <div style={{ fontSize: 9, fontFamily: '"JetBrains Mono"', color: colors.textDim, letterSpacing: '0.1em' }}>
+                  GRID FREQUENCY
+                </div>
+                <div style={{
+                  fontSize: 24, fontWeight: 700, fontFamily: '"JetBrains Mono"',
+                  color: freqColor,
+                  textShadow: `0 0 15px ${freqColor}50`,
+                }}>
+                  {freq.toFixed(2)}
+                  <span style={{ fontSize: 12, color: colors.textMuted, marginLeft: 4 }}>Hz</span>
+                </div>
+              </>
+            )}
+          </div>
+        );
+      })()}
 
       {/* ── Center: Targeting reticle (during zoom) ── */}
       <TargetingReticle visible={showReticle} />
@@ -423,31 +531,33 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
       {/* ── Right: Home detail overlay (during zoom steps) ── */}
       {currentStep.showHomeDetail && currentStep.homeDetail && (
         <div style={{
+          ...panelBase,
           position: 'absolute',
-          top: 80, bottom: 160, left: 10,
-          display: 'flex', alignItems: 'center',
+          top: '50%', left: 10, transform: 'translateY(-50%)',
+          width: 396, padding: '10px 14px',
           zIndex: 14,
           opacity: homeDetailReady ? 1 : 0,
           transition: 'opacity 0.8s ease',
         }}>
-          <HomeDetailView homeDetail={currentStep.homeDetail} style={{ transform: 'scale(1.35)', transformOrigin: 'left center' }} />
+          <Corners color={accentColor + '60'} size={10} />
+          <HomeDetailView homeDetail={currentStep.homeDetail} showRevenue={scenario === 'summer'} />
         </div>
       )}
 
       {/* ── Bottom: Duck Curve HUD panel ── */}
       {(() => {
         const isExpanded = stepIndex === steps.length - 1;
-        const duckW = isExpanded ? 760 : 380;
+        const duckW = isExpanded ? 760 : 366;
         const duckH = isExpanded ? 260 : 120;
         return (
           <div style={{
             ...panelBase,
             position: 'absolute', bottom: 24, left: 10,
-            zIndex: 10, padding: isExpanded ? '10px 14px' : '6px 8px',
+            zIndex: 10, padding: isExpanded ? '10px 14px' : '6px 14px',
             opacity: bootFade(1.0, 0.5),
             transform: `translateY(${(1 - bootFade(1.0, 0.5)) * 15}px)`,
             transition: 'width 0.8s cubic-bezier(0.4, 0, 0.2, 1), height 0.8s cubic-bezier(0.4, 0, 0.2, 1), padding 0.8s ease',
-            width: duckW + (isExpanded ? 28 : 16),
+            width: isExpanded ? duckW + 30 : 396,
             height: duckH + (isExpanded ? 20 : 12),
             overflow: 'hidden',
           }}>
