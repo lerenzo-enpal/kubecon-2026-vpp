@@ -127,10 +127,10 @@ const VPP_STEPS = [
   },
   {
     phase: 'risk',
-    label: 'Frequency dropping — 1,100 homes at risk',
-    detail: 'SA VPP fleet detects frequency deviation zone',
+    label: 'Frequency dropping — 600,000 homes at risk',
+    detail: 'Grid instability threatens power to all Adelaide homes',
     freq: 49.55,
-    homesActive: 0,
+    homesActive: 1100,
     homePhase: 'risk',
     view: { longitude: 138.60, latitude: -34.92, zoom: 9.8, pitch: 38, bearing: -8 },
   },
@@ -193,7 +193,7 @@ const VPP_LOGS = [
   { step: 1, text: 'NEM FREQUENCY FALLING — 49.61 Hz', level: 'crit' },
   { step: 1, text: 'LARGEST SINGLE CONTINGENCY IN NEM', level: 'warn' },
   { step: 2, text: 'FREQ BELOW 49.6 Hz — SA FLEET IN RISK ZONE', level: 'warn' },
-  { step: 2, text: '1,100 HOMES MONITORING — DEVIATION DETECTED', level: 'warn' },
+  { step: 2, text: '600,000 HOMES AT RISK — DISRUPTION IMMINENT', level: 'warn' },
   { step: 2, text: 'DROOP THRESHOLD APPROACHING — STANDBY', level: 'warn' },
   { step: 3, text: 'BATTERY INVERTERS — DROOP RESPONSE ACTIVE', level: 'info' },
   { step: 3, text: 'NO CENTRAL DISPATCH — AUTONOMOUS DETECTION', level: 'info' },
@@ -206,64 +206,82 @@ const VPP_LOGS = [
   { step: 5, text: 'VPP FLEET: 2% DEPLOYED — PROOF OF CONCEPT', level: 'info' },
 ];
 
-// ── VPP home locations (clustered around public housing areas in Adelaide) ──
-// SA VPP Phase 2 concentrated on Housing SA properties — public housing estates
-// across northern, western, and southern Adelaide suburbs.
-const ADELAIDE_CLUSTERS = [
-  // Northern suburbs — large Housing SA estates (coords from OSM suburb centroids)
-  { lng: 138.669, lat: -34.720, weight: 0.14, spread: 0.022, name: 'Elizabeth/Davoren Park' },    // Elizabeth -34.720/138.669, Davoren Park -34.691/138.668
-  { lng: 138.643, lat: -34.774, weight: 0.10, spread: 0.018, name: 'Salisbury/Para Hills' },      // Salisbury Downs -34.772/138.624, Para Hills -34.812/138.656
-  { lng: 138.686, lat: -34.685, weight: 0.06, spread: 0.015, name: 'Smithfield/Munno Para' },     // Smithfield -34.685/138.686, Munno Para -34.666/138.690
-  // Inner north (OSM: Kilburn -34.860/138.586, Blair Athol -34.859/138.597)
-  { lng: 138.591, lat: -34.860, weight: 0.08, spread: 0.012, name: 'Kilburn/Blair Athol' },
-  // Inner west (OSM: Woodville -34.880/138.539, Findon -34.899/138.531)
-  { lng: 138.535, lat: -34.885, weight: 0.07, spread: 0.014, name: 'Woodville/Findon' },
-  // Port Adelaide (OSM: -34.834/138.512)
-  { lng: 138.512, lat: -34.834, weight: 0.05, spread: 0.012, name: 'Port Adelaide' },
-  // Central south (OSM: Marion -35.006/138.554, Mitchell Park -35.005/138.562)
-  { lng: 138.558, lat: -35.006, weight: 0.09, spread: 0.016, name: 'Marion/Mitchell Park' },
-  // Southern suburbs (OSM: Reynella -35.097/138.522, Woodcroft -35.103/138.562)
-  { lng: 138.542, lat: -35.095, weight: 0.11, spread: 0.020, name: 'Hackham/Morphett Vale' },
-  // Far south (OSM: Hallett Cove -35.073/138.511, Sheidow Park -35.079/138.527)
-  { lng: 138.519, lat: -35.076, weight: 0.08, spread: 0.018, name: 'Noarlunga/Christie Downs' },
-  // Scattered suburban
-  { lng: 138.570, lat: -34.960, weight: 0.06, spread: 0.030, name: 'Central suburbs' },           // Goodwood/Unley area
-  { lng: 138.618, lat: -34.892, weight: 0.04, spread: 0.020, name: 'Eastern suburbs' },           // Walkerville/Prospect area
-  // Prospect/Enfield (OSM: Prospect -34.883/138.593, Enfield -34.861/138.605)
-  { lng: 138.599, lat: -34.872, weight: 0.04, spread: 0.016, name: 'Prospect/Enfield' },
-  // Sturt/Bedford Park (OSM: Sturt -35.023/138.555, Bedford Park -35.023/138.570)
-  { lng: 138.562, lat: -35.023, weight: 0.08, spread: 0.015, name: 'Sturt/Bedford Park' },
+// ── VPP home selection ───────────────────────────────────────
+// Select 1,100 real homes from the 156K allHomes data, biased toward
+// northern Adelaide (Housing SA estates: Elizabeth, Salisbury, Playford).
+// Homes are selected at load time once allHomes data arrives.
+const VPP_TARGET_ZONES = [
+  // Northern suburbs — primary SA VPP deployment area (Housing SA)
+  { latMin: -34.78, latMax: -34.65, lngMin: 138.60, lngMax: 138.72, weight: 0.35 },
+  // Salisbury / Para Hills
+  { latMin: -34.82, latMax: -34.76, lngMin: 138.60, lngMax: 138.68, weight: 0.12 },
+  // Inner north — Kilburn, Blair Athol, Prospect
+  { latMin: -34.88, latMax: -34.82, lngMin: 138.56, lngMax: 138.62, weight: 0.10 },
+  // Inner west — Woodville, Port Adelaide
+  { latMin: -34.90, latMax: -34.82, lngMin: 138.49, lngMax: 138.56, weight: 0.08 },
+  // Central south — Marion, Mitchell Park
+  { latMin: -35.03, latMax: -34.97, lngMin: 138.53, lngMax: 138.59, weight: 0.10 },
+  // Southern suburbs — Hackham, Morphett Vale, Noarlunga
+  { latMin: -35.12, latMax: -35.03, lngMin: 138.50, lngMax: 138.58, weight: 0.12 },
+  // Scattered metro fill
+  { latMin: -35.10, latMax: -34.70, lngMin: 138.44, lngMax: 138.78, weight: 0.13 },
 ];
 
-function generateVPPHomes(count, seed = 42) {
-  const homes = [];
+let _vppIndicesCache = null;
+function selectVPPHomes(allHomes, count = 1100, seed = 42) {
+  if (_vppIndicesCache) return _vppIndicesCache;
+  // PRNG
   let s = seed;
-  const next = () => { s = (s * 16807 + 0) % 2147483647; return s / 2147483647; };
-  // Gaussian-ish via Box-Muller (using pairs of uniform randoms)
-  const gauss = () => {
-    const u1 = next(), u2 = next();
-    return Math.sqrt(-2 * Math.log(u1 + 0.001)) * Math.cos(2 * Math.PI * u2);
-  };
+  const rand = () => { s = (s * 16807 + 0) % 2147483647; return s / 2147483647; };
 
-  for (let i = 0; i < count; i++) {
-    // Pick a cluster weighted by its share
-    const r = next();
-    let cumulative = 0;
-    let cluster = ADELAIDE_CLUSTERS[0];
-    for (const c of ADELAIDE_CLUSTERS) {
-      cumulative += c.weight;
-      if (r <= cumulative) { cluster = c; break; }
+  // Bucket homes by zone
+  const buckets = VPP_TARGET_ZONES.map(() => []);
+  allHomes.forEach((coord, idx) => {
+    const lng = coord[0], lat = coord[1];
+    for (let z = 0; z < VPP_TARGET_ZONES.length; z++) {
+      const zone = VPP_TARGET_ZONES[z];
+      if (lat >= zone.latMin && lat <= zone.latMax && lng >= zone.lngMin && lng <= zone.lngMax) {
+        buckets[z].push(idx);
+        break; // first matching zone wins (higher priority zones listed first)
+      }
     }
-    const lng = cluster.lng + gauss() * cluster.spread;
-    const lat = cluster.lat + gauss() * cluster.spread * 0.7; // slightly tighter N-S
-    const dist = Math.sqrt((lng - 138.6) ** 2 + (lat + 34.93) ** 2);
-    homes.push({ lng, lat, dist, idx: i });
-  }
-  homes.sort((a, b) => a.dist - b.dist);
-  return homes;
-}
+  });
 
-const VPP_HOMES = generateVPPHomes(1100);
+  // Shuffle each bucket
+  for (const bucket of buckets) {
+    for (let i = bucket.length - 1; i > 0; i--) {
+      const j = Math.floor(rand() * (i + 1));
+      [bucket[i], bucket[j]] = [bucket[j], bucket[i]];
+    }
+  }
+
+  // Draw from each zone proportionally
+  const selected = new Set();
+  for (let z = 0; z < VPP_TARGET_ZONES.length; z++) {
+    const take = Math.floor(count * VPP_TARGET_ZONES[z].weight);
+    for (let i = 0; i < Math.min(take, buckets[z].length); i++) {
+      selected.add(buckets[z][i]);
+    }
+  }
+  // Fill remainder from any bucket
+  let fill = 0;
+  while (selected.size < count && fill < allHomes.length) {
+    if (!selected.has(fill)) selected.add(fill);
+    fill++;
+  }
+
+  // Sort by distance from Adelaide CBD for activation wave effect
+  const indices = [...selected];
+  const cbdLng = 138.6, cbdLat = -34.93;
+  indices.sort((a, b) => {
+    const dA = (allHomes[a][0] - cbdLng) ** 2 + (allHomes[a][1] - cbdLat) ** 2;
+    const dB = (allHomes[b][0] - cbdLng) ** 2 + (allHomes[b][1] - cbdLat) ** 2;
+    return dA - dB;
+  });
+
+  _vppIndicesCache = indices;
+  return indices;
+}
 
 // ── Color constants ─────────────────────────────────────────
 const TYPE_COLORS = {
@@ -522,20 +540,19 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
     return NODES.filter(n => ['torrens', 'pelican', 'osborne', 'para', 'hpr'].includes(n.id));
   }, [isBlackout]);
 
-  // ── VPP home dots data ──
+  // ── VPP home index Set (selected from real 156K coords) ──
+  const vppSet = useMemo(() => {
+    if (!allHomes || allHomes.length === 0) return new Set();
+    return new Set(selectVPPHomes(allHomes, 1100));
+  }, [allHomes]);
+
   const currentHomePhase = (!isBlackout && stepIndex >= 0) ? VPP_STEPS[stepIndex].homePhase : 'standby';
-  const vppHomeDots = useMemo(() => {
-    if (isBlackout) return [];
-    return VPP_HOMES.map((h, i) => {
-      const isActive = i < vppActive;
-      return {
-        position: [h.lng, h.lat],
-        active: isActive,
-        phase: currentHomePhase,
-        idx: i,
-      };
-    });
-  }, [isBlackout, vppActive, currentHomePhase]);
+
+  // VPP home positions (derived from vppSet + allHomes, elevated slightly)
+  const vppHomeData = useMemo(() => {
+    if (!allHomes || vppSet.size === 0) return [];
+    return [...vppSet].map(idx => allHomes[idx]);  // [lng, lat] coords
+  }, [allHomes, vppSet]);
 
   // ── Build line data ──
   const lines = useMemo(() => {
@@ -569,20 +586,24 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
   const layers = useMemo(() => {
     const result = [];
 
-    // All Adelaide residential homes (156K dim background — render first = behind everything)
+    // All Adelaide homes (156K background layer)
     if (allHomes && allHomes.length > 0) {
+      const allAtRisk = !isBlackout && (currentHomePhase === 'risk' || currentHomePhase === 'push');
+      const allStable = !isBlackout && currentHomePhase === 'stable';
       result.push(new ScatterplotLayer({
         id: 'all-homes',
         data: allHomes,
-        getPosition: d => d,  // [lng, lat] arrays
-        getRadius: 120,
+        getPosition: d => d,
+        getRadius: 100,
         getFillColor: isBlackout
-          ? (failed.size > 10 ? [60, 20, 20, 40] : [40, 35, 30, 30])
-          : [50, 45, 35, 25],
+          ? (failed.size > 10 ? [80, 30, 20, 200] : [55, 45, 35, 200])
+          : allStable ? [16, 185, 129, 200]
+          : allAtRisk ? [180, 90, 20, 200]
+          : [55, 50, 40, 200],
         radiusMinPixels: 0.5,
-        radiusMaxPixels: 3,
+        radiusMaxPixels: 2.5,
         transitions: { getFillColor: 800 },
-        updateTriggers: { getFillColor: [isBlackout, failed.size > 10] },
+        updateTriggers: { getFillColor: [isBlackout, failed.size > 10, currentHomePhase] },
       }));
     }
 
@@ -670,44 +691,30 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
       updateTriggers: { getColor: [stepIndex] },
     }));
 
-    // VPP home dots — always visible, color by phase:
-    // standby: dim warm glow → risk: yellow → push: cyan (active) / dark amber (rest) → stable: green
-    if (!isBlackout && vppHomeDots.length > 0) {
+    // VPP homes overlay — same size dots, rendered on top with slight elevation
+    if (!isBlackout && vppHomeData.length > 0) {
       result.push(new ScatterplotLayer({
         id: 'vpp-homes',
-        data: vppHomeDots,
-        getPosition: d => d.position,
-        getRadius: d => {
-          if (d.phase === 'push' && d.active) return 700;
-          if (d.phase === 'stable') return 550;
-          if (d.phase === 'risk') return 450;
-          return 350;
-        },
-        getFillColor: d => {
-          if (d.phase === 'standby') return [200, 170, 80, 70];           // dim warm glow
-          if (d.phase === 'risk') return [...VPP_AMBER, 160];             // yellow — at risk
-          if (d.phase === 'push') return d.active
-            ? [...VPP_CYAN, 230]                                          // cyan — pushing power
-            : [160, 110, 20, 100];                                        // dark amber — waiting
-          if (d.phase === 'stable') return [...VPP_GREEN, 200];           // green — grid held
-          return [200, 170, 80, 70];
-        },
-        getLineColor: d => {
-          if (d.phase === 'push' && d.active) return [...VPP_CYAN, 255];
-          if (d.phase === 'stable') return [...VPP_GREEN, 180];
-          return [0, 0, 0, 0];
-        },
-        stroked: true,
-        lineWidthMinPixels: 1,
-        radiusMinPixels: 2,
-        radiusMaxPixels: 10,
-        transitions: { getFillColor: 600, getRadius: 400 },
-        updateTriggers: { getFillColor: [vppActive, currentHomePhase], getRadius: [vppActive, currentHomePhase] },
+        data: vppHomeData,
+        getPosition: d => [d[0], d[1], 50],  // 50m elevation — float above background
+        getRadius: 100,
+        getFillColor: (() => {
+          switch (currentHomePhase) {
+            case 'risk':   return [255, 180, 30, 255];    // bright amber
+            case 'push':   return [34, 211, 238, 255];    // cyan — discharging
+            case 'stable': return [16, 185, 129, 255];    // green — grid held
+            default:       return [160, 150, 130, 220];   // warm — tagged standby
+          }
+        })(),
+        radiusMinPixels: 0.5,
+        radiusMaxPixels: 2.5,
+        transitions: { getFillColor: 800 },
+        updateTriggers: { getFillColor: [currentHomePhase] },
       }));
     }
 
     return result;
-  }, [lines, visibleNodes, failed, vppHomeDots, vppActive, stepIndex, isBlackout, isGridStable, currentHomePhase, allHomes]);
+  }, [lines, visibleNodes, failed, vppSet, vppActive, stepIndex, isBlackout, isGridStable, currentHomePhase, allHomes, vppHomeData]);
 
   // ── Panel base style ──
   const panelBase = {
