@@ -344,11 +344,11 @@ export default function Presentation() {
         </div>
         <Notes>
           [LERENZO] This is what it costs to keep the lights on the old way. Arrow through each one.
-          [ARROW] Peaker plants: EUR 6.5B/yr in capacity mechanisms — gas turbines that sit idle 95% of the year, just waiting for a spike.
-          [ARROW] Spinning reserves: 15% of all generation capacity burns fuel 24/7 producing nothing — just to be ready.
-          [ARROW] Congestion: EUR 4.2B/yr across the EU rerouting power when the grid can't handle it. Germany alone spends EUR 2.8B.
-          [ARROW] Curtailment: Germany curtails 10 TWh of clean energy per year — enough to power 2.7M homes.
-          Over EUR 10B/yr in hard costs. Sources fade in at the end.
+          [ARROW] Peaker plants: EUR 6.5B/yr — the EU pays gas turbines to sit idle 95% of the year, just waiting for a demand spike. That's the "capacity mechanism" budget — paying plants to exist, not to run.
+          [ARROW] Spinning reserves: 15% of all generation burns fuel 24/7 producing nothing — just to be ready. And that fuel cost isn't even in these numbers — it's a hidden tax on wholesale electricity prices, estimated at another EUR 1-3B/yr.
+          [ARROW] Congestion: EUR 4.2B/yr rerouting power. When transmission lines are full, operators pay wind farms in the north to stop and gas plants in the south to start. Same power delivered, but now it costs twice as much.
+          [ARROW] Curtailment: Germany curtails 10 TWh of clean energy per year — enough to power 2.7 million homes. Too much sun? Turn it off. The grid literally throws away clean energy because the wires can't carry it.
+          That's over EUR 10B/yr in hard costs, plus billions more hidden in fuel waste and inefficiency. And when all of this fails — Texas happens.
         </Notes>
       </Slide>
 
