@@ -259,7 +259,7 @@ export default function Presentation() {
         <div className="flex flex-col h-full">
           <H>The Grid: A Balancing Act</H>
           <P size="20px">This enormous machine maintains a constant 50 Hz frequency — supply and demand balanced every second.</P>
-          <Stepper values={[0, 1, 2, 3, 4, 5]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col" style={{ minHeight: 0 }}>
+          <Stepper values={[1, 2, 3, 4, 5]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col" style={{ minHeight: 0 }}>
             {(stepVal) => <FrequencyWalkthrough step={stepVal ?? 0} />}
           </Stepper>
         </div>
@@ -277,16 +277,16 @@ export default function Presentation() {
       {/* 10: Costs of the Old Playbook */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
-          <H color={colors.accent}>Costs of the Old Playbook</H>
+          <H color={colors.accent}>Balancing the Grid is Expensive</H>
           <P size="20px">Before batteries and software, this is how we kept the lights on.</P>
           <Stepper values={[1, 2, 3, 4]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col">
             {(visibleCount, step, isActive) => {
               const vc = visibleCount ?? 0;
               const cards = [
-                { t: 'Peaker Plants', d: 'Gas turbines that sit idle 95% of the year, waiting for a spike. The EU spends EUR 6.5B/yr just keeping them on standby.', stat: 'EUR 6.5B/yr', c: '#fb923c' },
-                { t: 'Spinning Reserves', d: 'Generators running at partial load 24/7 "just in case." 15% of all capacity burns fuel to produce nothing.', stat: '15% wasted capacity', c: colors.accent },
-                { t: 'Congestion', d: 'When the grid can\'t move power where it\'s needed, operators pay billions to reroute it. EUR 4.2B/yr across the EU.', stat: 'EUR 4.2B/yr', c: colors.danger },
-                { t: 'Curtailment', d: 'Too much sun or wind? Turn it off. Germany curtails 10 TWh of clean energy per year — enough to power 2.7 million homes.', stat: '10 TWh/yr wasted', c: colors.secondary },
+                { t: 'Peaker Plants', d: 'Idle 95% of the year, waiting for a spike.', stat: 'EUR 6.5B/yr', c: '#fb923c' },
+                { t: 'Spinning Reserves', d: '15% of all fuel to produce nothing.', stat: '15% wasted capacity', c: colors.accent },
+                { t: 'Grid Bottlenecks', d: 'Congeestion blocks renewables, gas used instead.', stat: 'EUR 4.2B/yr', c: colors.danger },
+                { t: 'Curtailment', d: 'Too much sun or wind? Turn it off.', stat: '10 TWh/yr wasted (DE)', c: colors.secondary },
               ];
               return (
                 <div className="flex flex-col flex-1">

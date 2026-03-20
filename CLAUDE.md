@@ -15,3 +15,13 @@
 - Vite build, TailwindCSS v4
 - Canvas API for animated diagrams
 - Deployed via Netlify
+
+## Visual Validation
+- **Use the Playwright MCP tools** (`browser_navigate`, `browser_take_screenshot`, `browser_press_key`) for visual validation of slides. Do not write Node scripts for screenshots.
+- Navigate to slides via `http://localhost:5199/?slideIndex=N` (0-indexed).
+- If the Playwright MCP server is not available, ask the user to install it before proceeding with visual work.
+- Always screenshot after making visual changes to verify before asking the user to review.
+
+## Git Workflow
+- **Never push without explicit permission.** Commit freely when asked, but always wait for the user to say "push" before running `git push`.
+- No `Co-Authored-By` lines in commits.
