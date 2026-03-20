@@ -1,0 +1,264 @@
+[  765830ms] ReferenceError: collapseC is not defined
+    at http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995568469:1000:32
+    at Array.map (<anonymous>)
+    at GridDiagram (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995568469:993:14)
+    at renderWithHooks (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:11596:26)
+    at updateFunctionComponent (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14630:28)
+    at beginWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:15972:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3680:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3705:24)
+    at invokeGuardedCallback (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3739:39)
+    at beginWork$1 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19818:15)
+[  765835ms] ReferenceError: collapseC is not defined
+    at http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995568469:1000:32
+    at Array.map (<anonymous>)
+    at GridDiagram (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995568469:993:14)
+    at renderWithHooks (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:11596:26)
+    at updateFunctionComponent (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14630:28)
+    at beginWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:15972:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3680:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3705:24)
+    at invokeGuardedCallback (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3739:39)
+    at beginWork$1 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19818:15)
+[  765837ms] [ERROR] The above error occurred in the <GridDiagram> component:
+
+    at GridDiagram (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995568469:870:24)
+    at div
+    at div
+    at div
+    at FrequencyWalkthrough (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995568469:1589:48)
+    at div
+    at http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:36151:51
+    at SteppedComponent (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45417:5)
+    at Stepper (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45471:5)
+    at div
+    at div
+    at P2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32315:7)
+    at div
+    at P2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32315:7)
+    at div
+    at http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:36151:51
+    at P2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32315:7)
+    at Slide (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:44805:9)
+    at div
+    at div
+    at Le (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32275:40)
+    at http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:43807:11
+    at DefaultDeck (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:44159:5)
+    at View (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45373:5)
+    at KBarProvider2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:3716:50)
+    at CommandBar (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45363:21)
+    at SpectacleDeck (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45396:42)
+    at Presentation
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries. @ http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14079
+[  765841ms] ReferenceError: collapseC is not defined
+    at http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995568469:1000:32
+    at Array.map (<anonymous>)
+    at GridDiagram (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995568469:993:14)
+    at renderWithHooks (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:11596:26)
+    at updateFunctionComponent (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14630:28)
+    at beginWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:15972:22)
+    at beginWork$1 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19806:22)
+    at performUnitOfWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19251:20)
+    at workLoopSync (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19190:13)
+    at renderRootSync (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19169:15)
+[  827044ms] ReferenceError: collapseC is not defined
+    at http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995629637:1079:33
+    at GridDiagram (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995629637:1398:7)
+    at renderWithHooks (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:11596:26)
+    at updateFunctionComponent (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14630:28)
+    at beginWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:15972:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3680:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3705:24)
+    at invokeGuardedCallback (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3739:39)
+    at beginWork$1 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19818:15)
+    at performUnitOfWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19251:20)
+[  827052ms] ReferenceError: collapseC is not defined
+    at http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995629637:1079:33
+    at GridDiagram (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995629637:1398:7)
+    at renderWithHooks (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:11596:26)
+    at updateFunctionComponent (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14630:28)
+    at beginWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:15972:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3680:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3705:24)
+    at invokeGuardedCallback (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3739:39)
+    at beginWork$1 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19818:15)
+    at performUnitOfWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19251:20)
+[  827057ms] [ERROR] The above error occurred in the <GridDiagram> component:
+
+    at GridDiagram (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995629637:870:24)
+    at div
+    at div
+    at div
+    at FrequencyWalkthrough (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995629637:1589:48)
+    at div
+    at http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:36151:51
+    at SteppedComponent (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45417:5)
+    at Stepper (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45471:5)
+    at div
+    at div
+    at P2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32315:7)
+    at div
+    at P2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32315:7)
+    at div
+    at http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:36151:51
+    at P2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32315:7)
+    at Slide (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:44805:9)
+    at div
+    at div
+    at Le (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32275:40)
+    at http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:43807:11
+    at DefaultDeck (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:44159:5)
+    at View (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45373:5)
+    at KBarProvider2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:3716:50)
+    at CommandBar (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45363:21)
+    at SpectacleDeck (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45396:42)
+    at Presentation
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries. @ http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14079
+[  827057ms] ReferenceError: collapseC is not defined
+    at http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995629637:1000:32
+    at Array.map (<anonymous>)
+    at GridDiagram (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995629637:993:14)
+    at renderWithHooks (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:11596:26)
+    at updateFunctionComponent (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14630:28)
+    at beginWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:15972:22)
+    at beginWork$1 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19806:22)
+    at performUnitOfWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19251:20)
+    at workLoopSync (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19190:13)
+    at renderRootSync (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19169:15)
+[  841980ms] ReferenceError: collapseC is not defined
+    at http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995644597:1079:33
+    at GridDiagram (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995644597:1398:7)
+    at renderWithHooks (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:11596:26)
+    at updateFunctionComponent (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14630:28)
+    at beginWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:15972:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3680:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3705:24)
+    at invokeGuardedCallback (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3739:39)
+    at beginWork$1 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19818:15)
+    at performUnitOfWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19251:20)
+[  841987ms] ReferenceError: collapseC is not defined
+    at http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995644597:1079:33
+    at GridDiagram (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995644597:1398:7)
+    at renderWithHooks (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:11596:26)
+    at updateFunctionComponent (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14630:28)
+    at beginWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:15972:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3680:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3705:24)
+    at invokeGuardedCallback (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3739:39)
+    at beginWork$1 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19818:15)
+    at performUnitOfWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19251:20)
+[  841993ms] [ERROR] The above error occurred in the <GridDiagram> component:
+
+    at GridDiagram (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995644597:870:24)
+    at div
+    at div
+    at div
+    at FrequencyWalkthrough (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995644597:1589:48)
+    at div
+    at http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:36151:51
+    at SteppedComponent (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45417:5)
+    at Stepper (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45471:5)
+    at div
+    at div
+    at P2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32315:7)
+    at div
+    at P2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32315:7)
+    at div
+    at http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:36151:51
+    at P2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32315:7)
+    at Slide (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:44805:9)
+    at div
+    at div
+    at Le (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32275:40)
+    at http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:43807:11
+    at DefaultDeck (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:44159:5)
+    at View (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45373:5)
+    at KBarProvider2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:3716:50)
+    at CommandBar (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45363:21)
+    at SpectacleDeck (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45396:42)
+    at Presentation
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries. @ http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14079
+[  841995ms] ReferenceError: collapseC is not defined
+    at http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995644597:1079:33
+    at GridDiagram (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995644597:1398:7)
+    at renderWithHooks (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:11596:26)
+    at updateFunctionComponent (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14630:28)
+    at beginWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:15972:22)
+    at beginWork$1 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19806:22)
+    at performUnitOfWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19251:20)
+    at workLoopSync (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19190:13)
+    at renderRootSync (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19169:15)
+    at recoverFromConcurrentError (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:18786:28)
+[  861353ms] ReferenceError: collapseC is not defined
+    at http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995663970:1079:33
+    at GridDiagram (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995663970:1398:7)
+    at renderWithHooks (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:11596:26)
+    at updateFunctionComponent (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14630:28)
+    at beginWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:15972:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3680:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3705:24)
+    at invokeGuardedCallback (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3739:39)
+    at beginWork$1 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19818:15)
+    at performUnitOfWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19251:20)
+[  861360ms] ReferenceError: collapseC is not defined
+    at http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995663970:1079:33
+    at GridDiagram (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995663970:1398:7)
+    at renderWithHooks (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:11596:26)
+    at updateFunctionComponent (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14630:28)
+    at beginWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:15972:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3680:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3705:24)
+    at invokeGuardedCallback (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3739:39)
+    at beginWork$1 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19818:15)
+    at performUnitOfWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19251:20)
+[  861365ms] [ERROR] The above error occurred in the <GridDiagram> component:
+
+    at GridDiagram (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995663970:870:24)
+    at div
+    at div
+    at div
+    at FrequencyWalkthrough (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995663970:1589:48)
+    at div
+    at http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:36151:51
+    at SteppedComponent (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45417:5)
+    at Stepper (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45471:5)
+    at div
+    at div
+    at P2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32315:7)
+    at div
+    at P2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32315:7)
+    at div
+    at http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:36151:51
+    at P2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32315:7)
+    at Slide (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:44805:9)
+    at div
+    at div
+    at Le (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32275:40)
+    at http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:43807:11
+    at DefaultDeck (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:44159:5)
+    at View (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45373:5)
+    at KBarProvider2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:3716:50)
+    at CommandBar (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45363:21)
+    at SpectacleDeck (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45396:42)
+    at Presentation
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries. @ http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14079
+[  861366ms] ReferenceError: collapseC is not defined
+    at http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995663970:1079:33
+    at GridDiagram (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773995663970:1398:7)
+    at renderWithHooks (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:11596:26)
+    at updateFunctionComponent (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14630:28)
+    at beginWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:15972:22)
+    at beginWork$1 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19806:22)
+    at performUnitOfWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19251:20)
+    at workLoopSync (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19190:13)
+    at renderRootSync (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19169:15)
+    at recoverFromConcurrentError (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:18786:28)

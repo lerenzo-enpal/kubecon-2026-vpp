@@ -1,43 +1,52 @@
-# Astro Starter Kit: Minimal
+# Grid — Educational Website
+
+An interactive educational website about electricity grids, renewable energy, and Virtual Power Plants. Ages 12+.
+
+## Stack
+
+- **Astro 6** — static site framework, zero JS by default
+- **React** — interactive components (game, simulators) as Astro islands
+- **TailwindCSS v4** — styling
+- **MDX** — markdown with embedded React components
+
+See [ADR-001](../docs/website/ADR-001-website-framework.md) for framework selection rationale.
+
+## Development
 
 ```sh
-npm create astro@latest -- --template minimal
+cd website
+npm install
+npm run dev        # http://localhost:4321
+npm run build      # Static output to dist/
+npm run preview    # Preview the build locally
+npm test           # Build check
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Structure
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```
+src/
+  pages/           Page routes (.astro files)
+    index.astro    Landing page (game + module nav)
+    learn/         Hero content pages (7-15 modules)
+  layouts/         Shared layouts (base, content with sidebar)
+  components/      React components (game, interactives)
+  styles/          Global CSS with design tokens
+  content/         Content collections (incidents, research) — planned
+public/            Static assets
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Content Modules
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+1. **How the Grid Works** — 50 Hz heartbeat, supply = demand, frequency collapse
+2. **The Old Way** — peaker plants, spinning reserves, EUR 10B+/yr costs
+3. **The Renewable Revolution** — duck curves, curtailment, negative prices
+4. **The Virtual Power Plant** — homes as infrastructure, Hornsdale success
+5. **The Future** — distributed resilience, software eating the grid
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Related Docs
 
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- [Project Brief](../docs/website/project-brief.md) — vision, audience, content plan
+- [Game Design](../docs/website/game-plan.md) — "Try to Crash the Grid" interactive
+- [Style Guide](../docs/website/style-guide.md) — colors, typography, components
+- [ADR-001](../docs/website/ADR-001-website-framework.md) — framework decision

@@ -1,0 +1,71 @@
+[     800ms] [WARNING] luma.gl: glTF BLEND alphaMode might not work well because it requires mesh sorting @ http://localhost:5199/node_modules/.vite/deps/@deck__gl_mesh-layers.js?v=7bff1249:1860
+[     801ms] [ERROR] deck: update of ScenegraphLayer({id: 'coal-model'}): size: 3 Error: size: 3
+    at makeVertexFormat (http://localhost:5199/node_modules/.vite/deps/chunk-WV2VNJXX.js?v=7bff1249:1093:15)
+    at getVertexFormatFromAttribute (http://localhost:5199/node_modules/.vite/deps/chunk-WV2VNJXX.js?v=7bff1249:1106:10)
+    at getAttributeBuffersFromGeometry (http://localhost:5199/node_modules/.vite/deps/chunk-LGO54HNH.js?v=7bff1249:21346:41)
+    at makeGPUGeometry (http://localhost:5199/node_modules/.vite/deps/chunk-LGO54HNH.js?v=7bff1249:21305:40)
+    at _Model.setGeometry (http://localhost:5199/node_modules/.vite/deps/chunk-LGO54HNH.js?v=7bff1249:22445:37)
+    at new _Model (http://localhost:5199/node_modules/.vite/deps/chunk-LGO54HNH.js?v=7bff1249:22319:12)
+    at createGLTFModel (http://localhost:5199/node_modules/.vite/deps/@deck__gl_mesh-layers.js?v=7bff1249:2072:17)
+    at createPrimitive (http://localhost:5199/node_modules/.vite/deps/@deck__gl_mesh-layers.js?v=7bff1249:2155:21)
+    at http://localhost:5199/node_modules/.vite/deps/@deck__gl_mesh-layers.js?v=7bff1249:2140:65
+    at Array.map (<anonymous>) @ http://localhost:5199/node_modules/.vite/deps/chunk-LGO54HNH.js?v=7bff1249:28652
+[  133795ms] ReferenceError: ScenegraphLayer is not defined
+    at EUGridHUD (http://localhost:5199/src/components/EUGridHUD.jsx?t=1774004702458:483:9)
+    at renderWithHooks (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:11596:26)
+    at updateFunctionComponent (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14630:28)
+    at beginWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:15972:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3680:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3705:24)
+    at invokeGuardedCallback (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3739:39)
+    at beginWork$1 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19818:15)
+    at performUnitOfWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19251:20)
+    at workLoopSync (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19190:13)
+[  133803ms] ReferenceError: ScenegraphLayer is not defined
+    at EUGridHUD (http://localhost:5199/src/components/EUGridHUD.jsx?t=1774004702458:483:9)
+    at renderWithHooks (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:11596:26)
+    at updateFunctionComponent (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14630:28)
+    at beginWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:15972:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3680:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3705:24)
+    at invokeGuardedCallback (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3739:39)
+    at beginWork$1 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19818:15)
+    at performUnitOfWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19251:20)
+    at workLoopSync (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19190:13)
+[  133804ms] [ERROR] The above error occurred in the <EUGridHUD> component:
+
+    at EUGridHUD (http://localhost:5199/src/components/EUGridHUD.jsx?t=1774004702458:294:37)
+    at LazyContent (http://localhost:5199/src/components/ui/LazyContent.jsx:20:39)
+    at div
+    at div
+    at P2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32315:7)
+    at div
+    at P2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32315:7)
+    at div
+    at http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:36151:51
+    at P2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32315:7)
+    at Slide (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:44805:9)
+    at div
+    at div
+    at Le (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32275:40)
+    at http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:43807:11
+    at DefaultDeck (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:44159:5)
+    at View (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45373:5)
+    at KBarProvider2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:3716:50)
+    at CommandBar (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45363:21)
+    at SpectacleDeck (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45396:42)
+    at Presentation
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries. @ http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14079
+[  133825ms] ReferenceError: ScenegraphLayer is not defined
+    at EUGridHUD (http://localhost:5199/src/components/EUGridHUD.jsx?t=1774004702458:483:9)
+    at renderWithHooks (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:11596:26)
+    at updateFunctionComponent (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14630:28)
+    at beginWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:15972:22)
+    at beginWork$1 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19806:22)
+    at performUnitOfWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19251:20)
+    at workLoopSync (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19190:13)
+    at renderRootSync (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19169:15)
+    at recoverFromConcurrentError (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:18786:28)
+    at performSyncWorkOnRoot (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:18932:28)

@@ -1,0 +1,3 @@
+[ 8449775ms] [ERROR] Failed to load resource: the server responded with a status of 504 (Outdated Optimize Dep) @ http://localhost:5199/node_modules/.vite/deps/@deck__gl_mesh-layers.js?v=7bff1249:0
+[ 8449775ms] [ERROR] [vite] Failed to reload /src/components/EUGridHUD.jsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:5199/@vite/client:808
+[ 8508018ms] [ERROR] [vite] Failed to reload /src/components/EUGridHUD.jsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:5199/@vite/client:808

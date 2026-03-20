@@ -1,0 +1,130 @@
+[  976752ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:5199/src/Presentation.jsx?t=1773992924898:0
+[  976752ms] [ERROR] [vite] Failed to reload /src/Presentation.jsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:5199/@vite/client:808
+[  990398ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:5199/src/Presentation.jsx?t=1773992938520:0
+[  990402ms] [ERROR] [vite] Failed to reload /src/Presentation.jsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:5199/@vite/client:808
+[ 1018153ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:5199/src/Presentation.jsx?t=1773992966300:0
+[ 1018153ms] [ERROR] [vite] Failed to reload /src/Presentation.jsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:5199/@vite/client:808
+[ 1460917ms] ReferenceError: isCollapse is not defined
+    at FrequencyWalkthrough (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773993408968:1767:47)
+    at renderWithHooks (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:11596:26)
+    at updateFunctionComponent (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14630:28)
+    at beginWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:15972:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3680:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3705:24)
+    at invokeGuardedCallback (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3739:39)
+    at beginWork$1 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19818:15)
+    at performUnitOfWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19251:20)
+    at workLoopSync (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19190:13)
+[ 1460927ms] ReferenceError: isCollapse is not defined
+    at FrequencyWalkthrough (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773993408968:1767:47)
+    at renderWithHooks (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:11596:26)
+    at updateFunctionComponent (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14630:28)
+    at beginWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:15972:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3680:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3705:24)
+    at invokeGuardedCallback (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3739:39)
+    at beginWork$1 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19818:15)
+    at performUnitOfWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19251:20)
+    at workLoopSync (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19190:13)
+[ 1460929ms] [ERROR] The above error occurred in the <FrequencyWalkthrough> component:
+
+    at FrequencyWalkthrough (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773993408968:1551:48)
+    at div
+    at http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:36151:51
+    at SteppedComponent (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45417:5)
+    at Stepper (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45471:5)
+    at div
+    at div
+    at P2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32315:7)
+    at div
+    at P2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32315:7)
+    at div
+    at http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:36151:51
+    at P2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32315:7)
+    at Slide (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:44805:9)
+    at div
+    at div
+    at Le (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32275:40)
+    at http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:43807:11
+    at DefaultDeck (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:44159:5)
+    at View (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45373:5)
+    at KBarProvider2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:3716:50)
+    at CommandBar (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45363:21)
+    at SpectacleDeck (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45396:42)
+    at Presentation
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries. @ http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14079
+[ 1460936ms] ReferenceError: isCollapse is not defined
+    at FrequencyWalkthrough (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773993408968:1767:47)
+    at renderWithHooks (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:11596:26)
+    at updateFunctionComponent (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14630:28)
+    at beginWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:15972:22)
+    at beginWork$1 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19806:22)
+    at performUnitOfWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19251:20)
+    at workLoopSync (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19190:13)
+    at renderRootSync (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19169:15)
+    at recoverFromConcurrentError (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:18786:28)
+    at performSyncWorkOnRoot (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:18932:28)
+[ 1553715ms] ReferenceError: isCollapse is not defined
+    at FrequencyWalkthrough (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773993408968:1813:5)
+    at renderWithHooks (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:11596:26)
+    at mountIndeterminateComponent (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14974:21)
+    at beginWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:15962:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3680:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3705:24)
+    at invokeGuardedCallback (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3739:39)
+    at beginWork$1 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19818:15)
+    at performUnitOfWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19251:20)
+    at workLoopSync (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19190:13)
+[ 1553728ms] ReferenceError: isCollapse is not defined
+    at FrequencyWalkthrough (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773993408968:1813:5)
+    at renderWithHooks (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:11596:26)
+    at mountIndeterminateComponent (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14974:21)
+    at beginWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:15962:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3680:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3705:24)
+    at invokeGuardedCallback (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:3739:39)
+    at beginWork$1 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19818:15)
+    at performUnitOfWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19251:20)
+    at workLoopSync (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19190:13)
+[ 1553735ms] [ERROR] The above error occurred in the <FrequencyWalkthrough> component:
+
+    at FrequencyWalkthrough (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773993408968:1551:48)
+    at div
+    at http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:36151:51
+    at SteppedComponent (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45417:5)
+    at Stepper (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45471:5)
+    at div
+    at div
+    at P2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32315:7)
+    at div
+    at P2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32315:7)
+    at div
+    at http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:36151:51
+    at P2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32315:7)
+    at Slide (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:44805:9)
+    at div
+    at div
+    at Le (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:32275:40)
+    at http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:43807:11
+    at DefaultDeck (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:44159:5)
+    at View (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45373:5)
+    at KBarProvider2 (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:3716:50)
+    at CommandBar (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45363:21)
+    at SpectacleDeck (http://localhost:5199/node_modules/.vite/deps/spectacle.js?v=7bff1249:45396:42)
+    at Presentation
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries. @ http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14079
+[ 1553737ms] ReferenceError: isCollapse is not defined
+    at FrequencyWalkthrough (http://localhost:5199/src/components/FrequencyWalkthrough.jsx?t=1773993408968:1813:5)
+    at renderWithHooks (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:11596:26)
+    at mountIndeterminateComponent (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:14974:21)
+    at beginWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:15962:22)
+    at beginWork$1 (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19806:22)
+    at performUnitOfWork (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19251:20)
+    at workLoopSync (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19190:13)
+    at renderRootSync (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:19169:15)
+    at recoverFromConcurrentError (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:18786:28)
+    at performSyncWorkOnRoot (http://localhost:5199/node_modules/.vite/deps/chunk-MNF4PNE3.js?v=7bff1249:18932:28)
