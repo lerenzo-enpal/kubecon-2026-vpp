@@ -1,0 +1,187 @@
+---
+import ContentLayout from '../../layouts/ContentLayout.astro';
+---
+
+<ContentLayout title="How the Grid Works" description="The electricity grid is the largest machine ever built. Learn how it maintains a constant 50 Hz frequency — and what happens when it can't.">
+
+<h1>How the Grid Works</h1>
+
+<p class="text-xl" style="color: var(--color-text-muted); max-width: 600px;">
+  The electricity grid is the largest machine ever built by humans. It spans continents,
+  serves billions, and must balance supply and demand <strong>every single second</strong>.
+</p>
+
+<hr />
+
+<h2>The Grid is Huge</h2>
+
+<p>
+  The European electricity grid connects 36 countries, over 400 million consumers, and roughly
+  1.1 terawatts of generation capacity through more than 305,000 kilometers of high-voltage
+  transmission lines. It is, by any measure, the most complex machine in existence.
+</p>
+
+<p>
+  To put that in perspective: the entire internet runs on roughly 500 TWh of electricity per year.
+  The European grid alone delivers about 3,200 TWh. The grid is not just a piece of infrastructure
+  that supports modern life — it <em>is</em> the infrastructure.
+</p>
+
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 my-8 max-w-3xl">
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">36</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">countries connected</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">400M+</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">consumers</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">1.1 TW</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">generation capacity</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">305K km</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">transmission lines</div>
+  </div>
+</div>
+
+<h2>The 50 Hz Heartbeat</h2>
+
+<p>
+  Every electricity grid has a frequency — a constant pulse measured in Hertz (Hz). In Europe,
+  that frequency is 50 Hz. In North America, it's 60 Hz. This isn't arbitrary — every generator
+  on the grid spins at a speed synchronized to this frequency. Every motor, every clock, every
+  device expects it.
+</p>
+
+<p>
+  Think of it like a heartbeat. When the grid is healthy, the frequency sits at exactly
+  50.00 Hz — supply perfectly matching demand. When someone turns on a kettle, demand ticks
+  up, and generators across the continent slow down by an imperceptible fraction. When a cloud
+  passes over a solar farm, supply drops, and the frequency dips slightly.
+</p>
+
+<p>
+  The grid operators' entire job is keeping this number steady.
+</p>
+
+<div class="my-8 p-6 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+  <div class="font-mono text-sm mb-3" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">Normal Operating Range</div>
+  <div class="flex items-center gap-4 flex-wrap">
+    <div>
+      <span class="font-mono font-extrabold text-4xl" style="color: var(--color-success);">50.00</span>
+      <span class="font-mono text-lg" style="color: var(--color-text-dim);"> Hz</span>
+    </div>
+    <div class="text-sm" style="color: var(--color-text-muted);">
+      &plusmn; 0.05 Hz normal band<br />
+      &plusmn; 0.20 Hz acceptable range<br />
+      Anything beyond triggers automatic responses
+    </div>
+  </div>
+</div>
+
+<h2>Supply = Demand, Every Second</h2>
+
+<p>
+  Unlike water or gas, electricity cannot be stored in the grid itself. There is no buffer. At
+  every moment, the amount of electricity being generated must exactly equal the amount being
+  consumed. If generation exceeds demand, frequency rises. If demand exceeds generation,
+  frequency falls.
+</p>
+
+<p>
+  This balance is maintained by thousands of generators across the continent adjusting their
+  output in real time, responding to signals from grid operators and automatic control systems.
+  It is a continuous, never-ending act of coordination.
+</p>
+
+<h2>What Happens When Balance Breaks</h2>
+
+<p>
+  When something goes wrong — a power plant trips offline, a transmission line is damaged, demand
+  surges unexpectedly — the frequency starts to drop. What happens next depends on how far it falls.
+</p>
+
+<div class="my-8 flex flex-col gap-3 max-w-2xl">
+  <!-- 49.8 Hz -->
+  <div class="flex items-start gap-4 p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-success);">
+    <div class="font-mono font-bold text-lg flex-shrink-0" style="color: var(--color-success);">49.8 Hz</div>
+    <div>
+      <div class="font-semibold mb-1">Normal band</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">
+        Spinning reserves are on standby. Small deviations are handled automatically by
+        generators that continuously adjust their output.
+      </div>
+    </div>
+  </div>
+
+  <!-- 49.5 Hz -->
+  <div class="flex items-start gap-4 p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-accent);">
+    <div class="font-mono font-bold text-lg flex-shrink-0" style="color: var(--color-accent);">49.5 Hz</div>
+    <div>
+      <div class="font-semibold mb-1">Reserves activate</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">
+        Gas peaker plants fire up. Backup generators across the grid start ramping.
+        Operators are now actively managing the situation.
+      </div>
+    </div>
+  </div>
+
+  <!-- 49.0 Hz -->
+  <div class="flex items-start gap-4 p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-danger);">
+    <div class="font-mono font-bold text-lg flex-shrink-0" style="color: var(--color-danger);">49.0 Hz</div>
+    <div>
+      <div class="font-semibold mb-1">Load shedding begins</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">
+        Automatic systems start cutting power to entire neighborhoods — deliberate blackouts
+        to save the rest of the grid. This is called Under-Frequency Load Shedding (UFLS).
+      </div>
+    </div>
+  </div>
+
+  <!-- 47.5 Hz -->
+  <div class="flex items-start gap-4 p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid #dc2626;">
+    <div class="font-mono font-bold text-lg flex-shrink-0" style="color: #dc2626;">47.5 Hz</div>
+    <div>
+      <div class="font-semibold mb-1">Total collapse</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">
+        Generators disconnect to protect themselves from physical damage. The grid goes dark.
+        Recovery takes hours to days. In the worst cases — weeks.
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2>2.5 Hz Between Normal and Catastrophe</h2>
+
+<p>
+  The entire margin between a healthy grid and a catastrophic blackout is just 2.5 Hz — from
+  50.0 Hz down to 47.5 Hz. That's less than the difference between two adjacent notes on a piano.
+  You literally cannot hear the difference.
+</p>
+
+<p>
+  And yet this narrow band is all that separates 400 million people from losing power simultaneously.
+  In January 2021, the European grid split into two halves — and came within 0.26 Hz of triggering
+  automatic load shedding. In Texas the same year, the grid came within
+  <strong>4 minutes and 37 seconds</strong> of a complete collapse that engineers estimated would
+  have taken months to recover from.
+</p>
+
+<p>
+  This is the system that every light switch, every hospital, every data center depends on. And it
+  is about to change dramatically.
+</p>
+
+<div class="my-8 p-6 rounded-lg" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
+  <div class="font-mono text-sm mb-2" style="color: var(--color-primary); letter-spacing: 0.08em;">NEXT</div>
+  <a href="/learn/the-old-way" class="text-lg font-semibold hover:underline" style="color: var(--color-text);">
+    The Old Way &rarr;
+  </a>
+  <div class="text-sm mt-1" style="color: var(--color-text-dim);">
+    How we've kept the grid stable for 70 years — and what it costs.
+  </div>
+</div>
+
+</ContentLayout>
