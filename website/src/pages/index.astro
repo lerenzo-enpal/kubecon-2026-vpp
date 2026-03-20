@@ -1,0 +1,108 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import GamePlaceholder from '../components/GamePlaceholder';
+
+const modules = [
+  { num: 1, title: 'How the Grid Works', desc: 'The 50 Hz heartbeat, supply = demand, and the 2.5 Hz between normal and collapse.', href: '/learn/how-the-grid-works', interactive: true },
+  { num: 2, title: 'The Old Way', desc: 'Peaker plants, spinning reserves, and EUR 10B+/yr to keep the lights on.', href: '/learn/the-old-way', interactive: true },
+  { num: 3, title: 'The Renewable Revolution', desc: 'Duck curves, curtailment, and throwing away clean energy.', href: '/learn/the-renewable-revolution', interactive: true },
+  { num: 4, title: 'The Virtual Power Plant', desc: 'Homes as infrastructure. Batteries, EVs, and heat pumps stabilizing the grid.', href: '/learn/the-virtual-power-plant', interactive: true },
+  { num: 5, title: 'The Future', desc: 'Grid resilience through distribution. Software eating the grid.', href: '/learn/the-future', interactive: false },
+];
+---
+
+<BaseLayout title="Grid — Learn How Electricity Works">
+  <div class="min-h-screen flex flex-col">
+    <header class="px-8 py-6 border-b" style="border-color: var(--color-surface-light);">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-2 h-2 rounded-full" style="background: var(--color-primary); box-shadow: 0 0 8px var(--color-primary);"></div>
+          <span class="font-mono font-bold text-lg" style="color: var(--color-text); letter-spacing: 0.05em;">GRID</span>
+        </div>
+        <nav class="flex gap-6 font-mono text-sm" style="color: var(--color-text-dim);">
+          <a href="/learn/how-the-grid-works" class="hover:text-white transition-colors">Learn</a>
+          <a href="/research" class="hover:text-white transition-colors">Research</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="flex-1 px-8 py-12">
+      <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+
+          <div>
+            <h1 class="text-5xl font-extrabold leading-tight mb-4" style="color: var(--color-text);">
+              How does the electricity grid <span style="color: var(--color-primary);">actually</span> work?
+            </h1>
+            <p class="text-lg mb-10" style="color: var(--color-text-muted); max-width: 520px; line-height: 1.7;">
+              The grid is the largest machine ever built. It runs at exactly 50 Hz — and 2.5 Hz
+              separates normal from total collapse. Learn how it works, why it's changing, and what
+              comes next.
+            </p>
+
+            <div class="flex flex-col gap-3">
+              {modules.map((m) => (
+                <a
+                  href={m.href}
+                  class="group flex items-start gap-4 p-4 rounded-lg transition-all duration-200 hover:translate-x-1"
+                  style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);"
+                >
+                  <div
+                    class="flex-shrink-0 w-8 h-8 rounded flex items-center justify-center font-mono font-bold text-sm"
+                    style="background: var(--color-surface); color: var(--color-primary);"
+                  >
+                    {m.num}
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-1">
+                      <span class="font-semibold group-hover:text-white transition-colors" style="color: var(--color-text);">
+                        {m.title}
+                      </span>
+                      {m.interactive && (
+                        <span
+                          class="font-mono text-xs px-2 py-0.5 rounded"
+                          style="background: rgba(34, 211, 238, 0.1); color: var(--color-primary); border: 1px solid rgba(34, 211, 238, 0.2);"
+                        >
+                          Interactive
+                        </span>
+                      )}
+                    </div>
+                    <div class="text-sm" style="color: var(--color-text-dim);">
+                      {m.desc}
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+
+            <div class="mt-8 p-4 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+              <div class="font-mono text-xs mb-2" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">
+                Deep Dives
+              </div>
+              <div class="text-sm" style="color: var(--color-text-muted);">
+                All research is open source — 12 incident analyses, cost breakdowns, market data, and
+                primary sources.
+                <a href="/research" class="ml-1" style="color: var(--color-primary);">Browse the research library</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:sticky lg:top-8">
+            <GamePlaceholder client:load />
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="px-8 py-6 border-t" style="border-color: var(--color-surface-light);">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <div class="font-mono text-xs" style="color: var(--color-text-dim);">
+          Open source educational project
+        </div>
+        <div class="font-mono text-xs" style="color: var(--color-text-dim);">
+          Based on research from KubeCon 2026
+        </div>
+      </div>
+    </footer>
+  </div>
+</BaseLayout>
