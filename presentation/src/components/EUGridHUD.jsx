@@ -3,6 +3,7 @@ import { SlideContext } from 'spectacle';
 import { DeckGL } from '@deck.gl/react';
 import { FlyToInterpolator } from '@deck.gl/core';
 import { ScatterplotLayer, LineLayer, TextLayer } from '@deck.gl/layers';
+// import { ScenegraphLayer } from '@deck.gl/mesh-layers'; // TODO: re-enable when models are properly sized
 import MapGL from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
@@ -388,6 +389,10 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
       getPixelOffset: [0, 16], fontFamily: 'Inter',
     }),
   ];
+
+  // TODO: 3D models on map — ScenegraphLayer experiment
+  // Models need proper sizing/orientation for DeckGL coordinate system
+  // Optimized GLBs available in /models/ (coal_plant_opt.glb = 537KB, gas_plant_opt.glb = 3.3MB)
 
   // Marker for step 0 — show a pulsing dot where the "power plant" is
   if (stepIndex === 0) {

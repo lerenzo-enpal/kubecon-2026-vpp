@@ -74,7 +74,8 @@ function getNetDemand(solar) {
 //   Evening peak: 120-200 EUR/MWh typical, up to 936 (Dec 2024 Dunkelflaute)
 //   Average 2024: ~78 EUR/MWh, peak-load avg: ~88 EUR/MWh
 //   CCGT marginal cost: 80-120 EUR/MWh, OCGT peaker: 150-250 EUR/MWh
-//   EPEX SPOT exchange floor: -500 EUR/MWh
+//   Record negative: -250.32 EUR/MWh (May 11, 2025, FfE/EPEX SPOT)
+//   EPEX SPOT exchange floor: -500 EUR/MWh (never reached in practice)
 function demandToPrice(gw) {
   let price;
   if (gw < -5) price = -50 + (gw + 5) * 10;   // deep negative: -5→-50, -15→-150
@@ -83,7 +84,7 @@ function demandToPrice(gw) {
   else if (gw < 45) price = 65 + (gw - 25) * 2; // mid-merit coal/CCGT: 65-105 EUR/MWh
   else if (gw < 55) price = 105 + (gw - 45) * 8; // CCGT/OCGT ramp: 105-185 EUR/MWh
   else price = 185 + (gw - 55) * 20;             // scarcity/peaker: 185+ EUR/MWh
-  return Math.max(-500, price);                  // EPEX SPOT floor
+  return Math.max(-250, price);                  // Record: -250 EUR/MWh (May 2025)
 }
 
 const Y_MAX = 68;

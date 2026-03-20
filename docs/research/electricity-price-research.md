@@ -70,7 +70,9 @@ Sources: SMARD (Bundesnetzagentur), PV Magazine, FfE, Vattenfall, Agora Energiew
 |-------|----------------|--------|
 | May 11, 2025 (1-2pm) | -250.32 | FfE 2025 |
 | Typical sunny weekend 2024 | -20 to -80 | GridCog |
-| EPEX SPOT exchange floor | -500 | Exchange rules |
+| EPEX SPOT exchange floor | -500 | Exchange rules (never reached in practice) |
+
+**Note:** The -500 EUR/MWh floor has never been reached. The deepest observed negative price is -250.32 EUR/MWh. The duck curve chart uses -250 as the floor for price calculations.
 
 ### Positive Price Extremes (Evening/Scarcity)
 | Event | Price (EUR/MWh) | Source |
