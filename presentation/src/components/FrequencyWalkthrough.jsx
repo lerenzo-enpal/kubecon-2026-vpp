@@ -422,7 +422,7 @@ function GridDiagram({ state, draw }) {
             const pulseC = conn.peakerLine ? colors.accent : c;
             return (
               <path key={`p-${conn.id}`} pathLength="1" d={conn.d}
-                stroke={pulseC} strokeWidth={3} fill="none" strokeDasharray="0.12 0.88" filter="url(#fwG)"
+                stroke={pulseC} strokeWidth={3} fill="none" strokeDasharray="0.12 0.88"
                 style={{ strokeDashoffset: 1, opacity: 0, animation: `fwPulse 0.3s linear ${conn.wd}s forwards` }} />
             );
           })}
@@ -438,7 +438,7 @@ function GridDiagram({ state, draw }) {
               : 1.2 + i * 0.04;
             return (
               <path key={`f-${conn.id}`} d={conn.d} stroke={flowC} strokeWidth={2} fill="none"
-                strokeDasharray="8 10" filter="url(#fwG)"
+                strokeDasharray="8 10"
                 style={{ opacity: 0, animation: `fwFadeIn 0.15s ease ${flowStart}s forwards, fwFlowDash ${dur}s linear ${flowStart}s infinite` }} />
             );
           })}

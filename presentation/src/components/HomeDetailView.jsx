@@ -55,7 +55,7 @@ function DeviceRow({ label, status, level, levelTarget, kw, flow, color, statusC
     };
     rafRef.current = requestAnimationFrame(tick);
     return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
-  }, [isCharging, level, levelTarget]);
+  }, [isCharging, level, levelTarget, capacityKwh, kw]);
 
   const displayLevel = isCharging ? animLevel : level;
 

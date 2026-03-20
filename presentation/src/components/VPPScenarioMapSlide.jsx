@@ -367,7 +367,17 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
   };
 
   const bootFade = (delay, dur = 0.3) => ease((boot - delay) / dur);
-  const freq = currentStep.freq + Math.sin(Date.now() / 300) * 0.01;
+
+  // Frequency jitter: update at 2 Hz instead of every render
+  const [freqJitter, setFreqJitter] = useState(0);
+  useEffect(() => {
+    if (!slideActive) return;
+    const interval = setInterval(() => {
+      setFreqJitter(Math.sin(Date.now() / 300) * 0.01);
+    }, 500);
+    return () => clearInterval(interval);
+  }, [slideActive]);
+  const freq = currentStep.freq + freqJitter;
   const freqColor = freq >= 49.95 ? colors.success : freq >= 49.8 ? colors.accent : colors.danger;
 
   return (
