@@ -1,0 +1,135 @@
+---
+import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import IncidentHero from '../../../components/IncidentHero.astro';
+import QuickFacts from '../../../components/QuickFacts.astro';
+import TimelineEvent from '../../../components/TimelineEvent.astro';
+import SourceList from '../../../components/SourceList.astro';
+---
+
+<IncidentLayout title="2017 South Australia Heatwave" description="Extreme heat overwhelmed South Australia's grid, and a software error tripled the planned load shedding.">
+
+<IncidentHero
+  title="2017 South Australia Heatwave"
+  date="February 8, 2017"
+  location="South Australia"
+  severity="blackout"
+  keyStat="90K"
+  keyStatLabel="homes without power"
+/>
+
+<QuickFacts facts={[
+  { value: "42.4C", label: "Peak temperature in Adelaide" },
+  { value: "300 MW", label: "Load shed (3x what was ordered)" },
+  { value: "37 min", label: "Duration of load shedding" },
+  { value: "96 MW", label: "Wind output at time of crisis" },
+  { value: "5 mo", label: "After SA's statewide blackout" },
+  { value: "A$900K", label: "Fine for Pelican Point gas plant" },
+]} />
+
+<!-- What Happened -->
+<section class="my-10">
+  <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">What Happened</h2>
+
+  <p class="text-sm leading-relaxed mb-4" style="color: var(--color-text-muted);">
+    On one of the hottest days in 80 years, air conditioners across South Australia pushed electricity demand to extreme levels -- far beyond what forecasters predicted. Wind generation collapsed to just 96 MW (a fraction of what was expected), and the state's largest gas plant was sitting idle because its owner found it more profitable to sell gas on the open market.
+  </p>
+  <p class="text-sm leading-relaxed mb-4" style="color: var(--color-text-muted);">
+    The grid operator ordered a controlled disconnection of 100 MW of load to prevent a total collapse. But a software error at the local utility tripled the cut -- 300 MW was shed, blacking out over 90,000 homes for up to 37 minutes.
+  </p>
+  <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
+    Coming just five months after a statewide blackout that left 1.7 million people without power, the heatwave failure triggered a political crisis. The state government responded by commissioning what became the Hornsdale Power Reserve -- the Tesla Big Battery.
+  </p>
+</section>
+
+<!-- Timeline -->
+<section class="my-10">
+  <h2 class="text-2xl font-bold mb-6" style="color: var(--color-text);">Timeline</h2>
+
+  <TimelineEvent
+    time="Throughout the day"
+    title="Demand exceeds every forecast"
+    description="AEMO's predispatch models consistently underestimate actual demand as temperatures climb toward 42.4 degrees C."
+    severity="warning"
+  />
+  <TimelineEvent
+    time="~18:00 AEST"
+    title="Demand approaches 3,100 MW"
+    description="Operational demand hits a P10 level -- a peak that should only occur one year in ten. Wind output has collapsed to 96 MW."
+    severity="critical"
+  />
+  <TimelineEvent
+    time="18:03 AEST"
+    title="AEMO orders 100 MW load shed"
+    description="The grid operator directs ElectraNet to disconnect 100 MW of load to prevent a repeat of the September 2016 statewide blackout."
+    severity="critical"
+  />
+  <TimelineEvent
+    time="18:03-18:30 AEST"
+    title="Software error triples the cut"
+    description="SA Power Networks sheds 300 MW instead of the directed 100 MW due to a software bug. Over 90,000 homes lose power."
+    severity="collapse"
+  />
+  <TimelineEvent
+    time="18:30 AEST"
+    title="Restoration begins"
+    description="AEMO requests ElectraNet to restore 100 MW of load over 10 minutes as generation capacity improves."
+    severity="success"
+  />
+  <TimelineEvent
+    time="18:40 AEST"
+    title="Full power restored"
+    description="AEMO determines sufficient capacity is available and instructs full load restoration. All homes reconnected."
+    severity="success"
+  />
+</section>
+
+<!-- Root Cause -->
+<section class="my-10">
+  <div class="p-6 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <h2 class="text-lg font-bold mb-3" style="color: var(--color-danger);">Root Cause</h2>
+    <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
+      <strong style="color: var(--color-text);">Extreme heat met structural grid weakness.</strong> Demand forecasts failed badly. Wind generation collapsed. The largest gas plant was mothballed for profit. And when controlled load shedding was ordered, a software error at the distribution utility cut three times more homes than necessary. The grid had no flexible, distributed resources to bridge the gap.
+    </p>
+  </div>
+</section>
+
+<!-- VPP Relevance -->
+<section class="my-10">
+  <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">VPP Relevance</h2>
+  <div class="grid gap-3">
+    <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
+      <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Response time gap</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">90,000 homes were disconnected because no demand-side flexibility existed. VPP-connected batteries could have reduced peak demand without cutting anyone off.</div>
+    </div>
+    <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
+      <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Surgical vs. blunt</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">Even "controlled" load shedding is a failure mode. A VPP turns blunt disconnection into precise demand management -- throttling thousands of batteries and appliances instead of cutting entire suburbs.</div>
+    </div>
+    <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
+      <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">The catalyst</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">This event (combined with the 2016 blackout) directly led to the Tesla Big Battery -- proving that grid-scale storage works. A VPP extends that same principle to thousands of home batteries.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Related Incidents -->
+<section class="my-10">
+  <h2 class="text-lg font-bold mb-3" style="color: var(--color-text);">Related Incidents</h2>
+  <div class="flex flex-col gap-2">
+    <a href="/research/incidents/2006-european-grid-split" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
+      2006 European Grid Split -- cascading failure across 20 countries
+    </a>
+    <a href="/research/incidents/2024-dunkelflaute-germany" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
+      2024 Dunkelflaute -- what happens when renewables produce nothing
+    </a>
+  </div>
+</section>
+
+<SourceList sources={[
+  "AEMO: System Event Report -- South Australia, 8 February 2017",
+  "AEMC: Review of the System Black Event in South Australia on 28 September 2016",
+  "Federal Court of Australia: Pelican Point Power Limited penalty, AUD 900,000",
+  "Bureau of Meteorology: Special Climate Statement 61 -- heatwave in southeast Australia, February 2017",
+]} />
+
+</IncidentLayout>

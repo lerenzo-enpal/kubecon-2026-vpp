@@ -1,0 +1,135 @@
+---
+import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import IncidentHero from '../../../components/IncidentHero.astro';
+import QuickFacts from '../../../components/QuickFacts.astro';
+import TimelineEvent from '../../../components/TimelineEvent.astro';
+import SourceList from '../../../components/SourceList.astro';
+---
+
+<IncidentLayout title="2025 Berlin Johannisthal Arson" description="Arsonists targeted two transmission pylons in southeast Berlin, cutting power to 50,000 households for up to 60 hours.">
+
+<IncidentHero
+  title="Berlin Johannisthal Arson"
+  date="September 9, 2025"
+  location="Berlin, Treptow-Kopenick"
+  severity="attack"
+  keyStat="50K"
+  keyStatLabel="households"
+/>
+
+<QuickFacts facts={[
+  { value: "60 hrs", label: "Time to full restoration" },
+  { value: "2", label: "110 kV pylons destroyed" },
+  { value: "~3,000", label: "Businesses affected" },
+  { value: "110 kV", label: "Transmission voltage attacked" },
+  { value: "0", label: "Deaths" },
+  { value: "1st", label: "Of two Berlin grid arsons" },
+]} />
+
+<!-- What Happened -->
+<section class="my-10">
+  <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">What Happened</h2>
+
+  <p class="text-sm leading-relaxed mb-4" style="color: var(--color-text-muted);">
+    At around 3:30 AM, unknown attackers set fire to two 110 kV transmission pylons in the Johannisthal area of southeast Berlin. The pylons stood at the transition point where overhead power lines connect to underground cables -- a critical junction in the grid topology. The fires destroyed multiple high-voltage cables, severing power to several distribution substations at once.
+  </p>
+  <p class="text-sm leading-relaxed mb-4" style="color: var(--color-text-muted);">
+    Around 50,000 households and 3,000 businesses lost power. Stromnetz Berlin restored 14,000 customers by mid-morning, but the remaining 31,000 waited up to 60 hours while engineers built a temporary connection around the damage.
+  </p>
+  <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
+    An anonymous claim on Indymedia said the attack targeted the Adlershof technology park and its military-industrial tenants. The attackers stated cutting residential power was "by no means our intention." This was the first of two arson attacks on Berlin's grid -- the second struck four months later.
+  </p>
+</section>
+
+<!-- Timeline -->
+<section class="my-10">
+  <h2 class="text-2xl font-bold mb-6" style="color: var(--color-text);">Timeline</h2>
+
+  <TimelineEvent
+    time="~3:30 AM, Sep 9"
+    title="Arsonists attack two pylons"
+    description="Perpetrators set fire to two 110 kV overhead-to-underground cable transition pylons in Johannisthal. Steel chains were wrapped around cable insulation with accelerants ignited."
+    severity="collapse"
+  />
+  <TimelineEvent
+    time="Morning, Sep 9"
+    title="Scale of damage becomes clear"
+    description="Fires have destroyed multiple 110 kV cables, cutting power to several distribution substations simultaneously. 50,000 households and 3,000 businesses are dark."
+    severity="critical"
+  />
+  <TimelineEvent
+    time="10:21 AM, Sep 9"
+    title="First 14,000 customers restored"
+    description="Stromnetz Berlin reroutes power through alternative paths to restore a portion of affected customers."
+    severity="success"
+  />
+  <TimelineEvent
+    time="4:28 PM, Sep 9"
+    title="Additional 3,000 restored"
+    description="Further switching operations bring more customers back online, but 31,000 remain without power."
+    severity="warning"
+  />
+  <TimelineEvent
+    time="Sep 9-11"
+    title="Emergency bypass under construction"
+    description="Engineers work around the clock to build a temporary connection between two lines near the damaged pylons. Heavy cable replacement requires civil engineering, not just electrical work."
+    severity="warning"
+  />
+  <TimelineEvent
+    time="4:37 PM, Sep 11"
+    title="Full restoration"
+    description="Power restored to all affected areas after approximately 60 hours. The temporary connection bypasses the destroyed transition point."
+    severity="success"
+  />
+</section>
+
+<!-- Root Cause -->
+<section class="my-10">
+  <div class="p-6 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <h2 class="text-lg font-bold mb-3" style="color: var(--color-accent);">Root Cause</h2>
+    <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
+      <strong style="color: var(--color-text);">Deliberate sabotage at a single point of failure.</strong> The overhead-to-underground cable transition is where multiple critical circuits converge in a physically accessible, unprotected location. Destroying this one junction severed power to an entire district. The attack demonstrated that concentrated grid infrastructure -- no matter how well-engineered electrically -- is vulnerable to physical attack.
+    </p>
+  </div>
+</section>
+
+<!-- VPP Relevance -->
+<section class="my-10">
+  <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">VPP Relevance</h2>
+  <div class="grid gap-3">
+    <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
+      <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Island mode resilience</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">When transmission is physically destroyed, homes with VPP-connected solar and batteries can island -- maintaining power independently until the grid is repaired. 60 hours without power becomes 60 hours of self-sufficiency.</div>
+    </div>
+    <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
+      <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Topology independence</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">A VPP does not depend on any single pylon, cable bridge, or substation. Its generation and storage assets are distributed across thousands of rooftops -- there is no single point to attack.</div>
+    </div>
+    <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
+      <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Priority restoration</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">A VPP controller knows which homes have batteries, medical equipment, or vulnerable residents. It can prioritize power allocation during emergencies instead of the all-or-nothing approach of traditional grid restoration.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Related Incidents -->
+<section class="my-10">
+  <h2 class="text-lg font-bold mb-3" style="color: var(--color-text);">Related Incidents</h2>
+  <div class="flex flex-col gap-2">
+    <a href="/research/incidents/2026-berlin-teltow-canal-arson" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
+      2026 Berlin Teltow Canal Arson -- the second attack, four months later
+    </a>
+    <a href="/research/incidents/2006-european-grid-split" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
+      2006 European Grid Split -- infrastructure concentration as weakness
+    </a>
+  </div>
+</section>
+
+<SourceList sources={[
+  "Stromnetz Berlin: Press statements on Johannisthal power outage, September 9-11, 2025",
+  "Berlin Police: State Security investigation, September 2025",
+  "Tagesspiegel: Coverage of Johannisthal arson and Adlershof impact",
+  "Indymedia: Anonymous claim of responsibility (archived)",
+]} />
+
+</IncidentLayout>

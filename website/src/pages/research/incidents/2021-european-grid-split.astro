@@ -1,0 +1,141 @@
+---
+import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import IncidentHero from '../../../components/IncidentHero.astro';
+import QuickFacts from '../../../components/QuickFacts.astro';
+import TimelineEvent from '../../../components/TimelineEvent.astro';
+import SourceList from '../../../components/SourceList.astro';
+---
+
+<IncidentLayout title="2021 European Grid Split" description="A single relay at a Croatian substation split Continental Europe's grid in two -- in just 42 seconds.">
+
+<IncidentHero
+  title="2021 European Grid Split"
+  date="January 8, 2021"
+  location="Continental Europe (triggered in Croatia)"
+  severity="near-miss"
+  keyStat="42 sec"
+  keyStatLabel="to grid separation"
+/>
+
+<QuickFacts facts={[
+  { value: "6.3 GW", label: "Power imbalance between islands" },
+  { value: "63 min", label: "Duration of grid separation" },
+  { value: "25", label: "Countries in the synchronous area" },
+  { value: "233 MW", label: "Involuntary consumer disconnections" },
+  { value: "2,780 MW", label: "Emergency reserves activated" },
+  { value: "0", label: "Deaths" },
+]} />
+
+<!-- What Happened -->
+<section class="my-10">
+  <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">What Happened</h2>
+
+  <p class="text-sm leading-relaxed mb-4" style="color: var(--color-text-muted);">
+    On a normal winter afternoon, a protection relay at the Ernestinovo substation in Croatia detected too much current flowing through a busbar coupler -- a switch connecting two sections of the substation. The relay tripped automatically, splitting the power flows through the substation.
+  </p>
+  <p class="text-sm leading-relaxed mb-4" style="color: var(--color-text-muted);">
+    Within 42.7 seconds, the resulting overloads cascaded across Croatia, Serbia, Hungary, and Romania. The entire Continental European grid -- serving 400 million people -- fractured into two islands. The northwest lost 6.3 GW of generation. Emergency reserves in France, Italy, and the Nordic countries kicked in within seconds.
+  </p>
+  <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
+    Operators resynchronized the grid in 63 minutes. Consumer impact was limited (233 MW total), but the event proved that the same type of cascading split that hit Europe in 2006 could still happen 15 years later.
+  </p>
+</section>
+
+<!-- Timeline -->
+<section class="my-10">
+  <h2 class="text-2xl font-bold mb-6" style="color: var(--color-text);">Timeline</h2>
+
+  <TimelineEvent
+    time="14:04:18 CET"
+    title="Early warning signs detected"
+    description="Gridradar sensors in Romania detect a phase angle shift -- the system is already under stress from heavy southeast-to-northwest power flows."
+    severity="warning"
+  />
+  <TimelineEvent
+    time="14:04:25 CET"
+    title="Busbar coupler trips at Ernestinovo"
+    description="An overcurrent protection relay at the Croatian substation opens the 400 kV busbar coupler, splitting the substation's two bus sections."
+    severity="critical"
+  />
+  <TimelineEvent
+    time="14:04:48 CET"
+    title="First transmission line trips"
+    description="The 400 kV Subotica-Novi Sad line in Serbia trips on overcurrent as power flow shifts to parallel paths."
+    severity="critical"
+  />
+  <TimelineEvent
+    time="14:04:57 CET"
+    title="Turkish generator disconnects"
+    description="A 975 MW generator in Turkey automatically trips on overfrequency protection in the surplus southeast area."
+    severity="critical"
+  />
+  <TimelineEvent
+    time="14:05:08 CET"
+    title="Grid splits in two"
+    description="Multiple lines across Croatia, Serbia, Hungary, and Romania trip in rapid succession. Continental Europe is now two asynchronous islands."
+    severity="collapse"
+  />
+  <TimelineEvent
+    time="14:05:15 CET"
+    title="Emergency reserves activate"
+    description="France activates 1,300 MW and Italy 1,000 MW of interruptible load. Nordic countries provide 420 MW via HVDC links. Great Britain adds 60 MW."
+    severity="success"
+  />
+  <TimelineEvent
+    time="15:07 CET"
+    title="Grid resynchronized"
+    description="Northwest and southeast islands reconnect via transmission lines in Croatia, Bosnia-Herzegovina, and Serbia. Normal operations resume."
+    severity="success"
+  />
+</section>
+
+<!-- Root Cause -->
+<section class="my-10">
+  <div class="p-6 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <h2 class="text-lg font-bold mb-3" style="color: var(--color-accent);">Root Cause</h2>
+    <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
+      <strong style="color: var(--color-text);">A protection relay operated correctly -- and split a continent.</strong> The Ernestinovo busbar coupler was carrying heavy cross-border power flows near its rated capacity. When the overcurrent relay tripped, power redistributed to neighboring lines which also overloaded and tripped within seconds. Each protection relay did exactly what it was designed to do in isolation, but collectively they destabilized the entire system. Busbar couplers inside substations were not treated as critical elements in security assessments.
+    </p>
+  </div>
+</section>
+
+<!-- VPP Relevance -->
+<section class="my-10">
+  <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">VPP Relevance</h2>
+  <div class="grid gap-3">
+    <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
+      <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Speed of response</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">The cascade completed in 42.7 seconds -- far too fast for human intervention. VPPs with battery storage can respond in milliseconds, injecting or absorbing power to arrest frequency deviations before they cascade.</div>
+    </div>
+    <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
+      <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Distributed frequency support</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">Emergency reserves came from a handful of large assets (French industry, Italian industry, Nordic HVDC). Thousands of VPP-connected batteries spread across the grid could provide the same support with no single point of failure.</div>
+    </div>
+    <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
+      <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Same problem, 15 years later</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">Despite reforms after 2006, the same type of cascading split recurred. The centralized grid architecture remains vulnerable. VPPs represent a fundamentally different topology -- distributed, resilient, and fast.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Related Incidents -->
+<section class="my-10">
+  <h2 class="text-lg font-bold mb-3" style="color: var(--color-text);">Related Incidents</h2>
+  <div class="flex flex-col gap-2">
+    <a href="/research/incidents/2006-european-grid-split" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
+      2006 European Grid Split -- the precedent, 15 years earlier
+    </a>
+    <a href="/research/incidents/2024-dunkelflaute-germany" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
+      2024 Dunkelflaute -- a different kind of grid stress
+    </a>
+  </div>
+</section>
+
+<SourceList sources={[
+  "ENTSO-E: Continental Europe Synchronous Area Separation on 8 January 2021 -- ICS Final Report, July 2021",
+  "ENTSO-E: Technical Report on the January 2021 System Separation",
+  "Gridradar: Phase Angle Forensics of the 8 January 2021 Event",
+  "ACER: Opinion on the Continental Europe System Separation, 2021",
+]} />
+
+</IncidentLayout>

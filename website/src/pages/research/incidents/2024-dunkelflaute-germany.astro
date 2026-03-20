@@ -1,0 +1,135 @@
+---
+import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import IncidentHero from '../../../components/IncidentHero.astro';
+import QuickFacts from '../../../components/QuickFacts.astro';
+import TimelineEvent from '../../../components/TimelineEvent.astro';
+import SourceList from '../../../components/SourceList.astro';
+---
+
+<IncidentLayout title="2024 Dunkelflaute" description="Two weeks of no wind and no sun exposed the limits of Germany's renewable grid -- and sent prices to 18-year highs.">
+
+<IncidentHero
+  title="2024 Dunkelflaute (Dark Doldrums)"
+  date="November-December 2024"
+  location="Germany / Central Europe"
+  severity="price-event"
+  keyStat="14 days"
+  keyStatLabel="below 10% capacity"
+/>
+
+<QuickFacts facts={[
+  { value: "170 GW", label: "Installed renewable capacity" },
+  { value: "~4%", label: "Actual wind output during worst days" },
+  { value: "900+", label: "EUR/MWh peak intraday price" },
+  { value: "30%+", label: "Electricity from coal in November" },
+  { value: "98% to 85%", label: "Gas storage drawdown in weeks" },
+  { value: "0", label: "Outages (managed by fossil backup)" },
+]} />
+
+<!-- What Happened -->
+<section class="my-10">
+  <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">What Happened</h2>
+
+  <p class="text-sm leading-relaxed mb-4" style="color: var(--color-text-muted);">
+    "Dunkelflaute" means "dark wind lull" in German -- a period when both wind and solar output collapse at the same time. In November and December 2024, a persistent high-pressure weather system parked over Central Europe, bringing still air and overcast skies for weeks.
+  </p>
+  <p class="text-sm leading-relaxed mb-4" style="color: var(--color-text-muted);">
+    Germany has over 170 GW of installed renewable capacity. During the worst days, wind turbines produced just 3-4% of their rated output. Solar contributed only 4.3% in November. The grid did not fail -- coal, gas, oil, and imports from France (nuclear) and Poland (coal) filled the gap. But wholesale electricity prices spiked to 18-year highs, peaking above 900 EUR/MWh.
+  </p>
+  <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
+    No homes lost power. But the event demonstrated that a renewable-heavy grid without large-scale storage is deeply vulnerable to weather patterns lasting more than a few days.
+  </p>
+</section>
+
+<!-- Timeline -->
+<section class="my-10">
+  <h2 class="text-2xl font-bold mb-6" style="color: var(--color-text);">Timeline</h2>
+
+  <TimelineEvent
+    time="Early November"
+    title="High-pressure system settles over Central Europe"
+    description="A persistent anticyclonic weather pattern brings still air and overcast skies. Wind and solar output begin declining."
+    severity="warning"
+  />
+  <TimelineEvent
+    time="Nov 4-10"
+    title="First Dunkelflaute event"
+    description="Renewables drop to 30% of electricity generation (normally 50%+). Coal provides over 30% of power. Intraday prices spike above 300 EUR/MWh."
+    severity="warning"
+  />
+  <TimelineEvent
+    time="Nov 6, 5-7 PM"
+    title="November price peak"
+    description="Nearly all available capacity from Germany's five largest producers is deployed. Unused capacity averages just 170 MW."
+    severity="critical"
+  />
+  <TimelineEvent
+    time="Dec 9-14"
+    title="Second, more severe Dunkelflaute"
+    description="Wind output drops to 2.8-3.1 GW -- roughly 4% of installed capacity, 85% below seasonal average. Coincides with rising winter heating demand."
+    severity="critical"
+  />
+  <TimelineEvent
+    time="Dec 12"
+    title="Prices hit 18-year high"
+    description="Intraday wholesale prices peak above 900 EUR/MWh -- the highest since the 2006 European energy crisis. Gas storage drops from 98% to 85%."
+    severity="critical"
+  />
+  <TimelineEvent
+    time="Late December"
+    title="Weather pattern breaks"
+    description="The high-pressure system finally moves. Wind generation returns to normal levels and prices stabilize."
+    severity="success"
+  />
+</section>
+
+<!-- Root Cause -->
+<section class="my-10">
+  <div class="p-6 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <h2 class="text-lg font-bold mb-3" style="color: var(--color-secondary);">Root Cause</h2>
+    <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
+      <strong style="color: var(--color-text);">Weather, not equipment failure.</strong> A persistent high-pressure system simultaneously suppressed wind and solar output for weeks. Germany's grid survived only because coal, gas, and oil plants -- including facilities Germany plans to phase out -- ran at maximum capacity. Cross-border imports from nuclear and coal-heavy neighbors filled the remaining gap. The event was not a grid failure, but a preview of what happens without storage.
+    </p>
+  </div>
+</section>
+
+<!-- VPP Relevance -->
+<section class="my-10">
+  <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">VPP Relevance</h2>
+  <div class="grid gap-3">
+    <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
+      <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">The storage gap</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">170 GW of renewables produced almost nothing for two weeks. Grid-scale and distributed battery storage, coordinated by a VPP, could time-shift energy from windy/sunny periods to cover multi-day lulls.</div>
+    </div>
+    <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
+      <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Price arbitrage</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">Prices swung from near-zero (sunny/windy days) to 900+ EUR/MWh. A VPP optimizes charge/discharge cycles across thousands of batteries, capturing these price signals to reduce costs for homeowners and stabilize the market.</div>
+    </div>
+    <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
+      <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Demand flexibility</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">Beyond batteries, a VPP can orchestrate demand reduction -- shifting heat pump cycles, EV charging, and water heating to off-peak hours, reducing the peak load that fossil plants must serve.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Related Incidents -->
+<section class="my-10">
+  <h2 class="text-lg font-bold mb-3" style="color: var(--color-text);">Related Incidents</h2>
+  <div class="flex flex-col gap-2">
+    <a href="/research/incidents/2017-south-australia-heatwave" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
+      2017 South Australia Heatwave -- extreme weather meets grid limits
+    </a>
+    <a href="/research/incidents/2006-european-grid-split" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
+      2006 European Grid Split -- when wind turbines made it worse
+    </a>
+  </div>
+</section>
+
+<SourceList sources={[
+  "Bundesnetzagentur/Bundeskartellamt: Monitoring Report on Electricity Market, 2024-2025",
+  "Fraunhofer ISE: Energy Charts -- German Electricity Generation Data, November-December 2024",
+  "ENTSO-E Transparency Platform: Day-Ahead Prices, Germany-Luxembourg Bidding Zone",
+  "Clean Energy Wire (CLEW): Germany's Dunkelflaute tests grid resilience, December 2024",
+]} />
+
+</IncidentLayout>

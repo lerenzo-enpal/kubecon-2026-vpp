@@ -1,0 +1,222 @@
+---
+import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+---
+
+<IncidentLayout title="Grid Frequency" description="FCR, aFRR, mFRR — the three layers of frequency defense that keep Europe's grid at exactly 50 Hz.">
+
+<div style="border-left: 4px solid var(--color-primary); padding-left: 20px; margin-bottom: 48px;">
+  <h1 style="color: var(--color-primary);">Grid Frequency</h1>
+  <p class="text-lg" style="color: var(--color-text-muted); max-width: 640px;">
+    The European grid operates at exactly 50.000 Hz — synchronized across 25 countries and 400 GW
+    of generation. Three layers of reserves defend this frequency. Batteries are rewriting the rules.
+  </p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 my-8">
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-primary);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">50.000 Hz</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">nominal frequency</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-primary);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">3,000 MW</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">FCR design basis (CE)</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-primary);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">30 sec</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">FCR full activation</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-primary);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">140 ms</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">Hornsdale actual response</div>
+  </div>
+</div>
+
+<hr />
+
+<h2 id="three-layers" style="color: var(--color-primary);">Three Layers of Frequency Defense</h2>
+
+<p>
+  The European grid uses three sequential reserve products to maintain frequency. Each operates
+  on a different timescale, forming a layered defense against imbalances.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Reserve</th>
+      <th>Full Name</th>
+      <th>Activation</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>FCR</strong></td>
+      <td>Frequency Containment Reserve</td>
+      <td>&lt; 30 seconds</td>
+      <td>Arrest the frequency deviation — stop the bleeding</td>
+    </tr>
+    <tr>
+      <td><strong>aFRR</strong></td>
+      <td>Automatic Frequency Restoration Reserve</td>
+      <td>30s - 5 min</td>
+      <td>Restore frequency to 50 Hz — replace FCR</td>
+    </tr>
+    <tr>
+      <td><strong>mFRR</strong></td>
+      <td>Manual Frequency Restoration Reserve</td>
+      <td>~12.5 min</td>
+      <td>Relieve aFRR, manage congestion — long-term fix</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  FCR is dimensioned for the 3,000 MW "reference incident" — the loss of the two largest
+  generating units in Continental Europe simultaneously. The system self-regulating effect
+  provides approximately 19,500 MW/Hz of natural load response.
+</p>
+
+<h2 id="frequency-thresholds" style="color: var(--color-primary);">Frequency Thresholds</h2>
+
+<p>
+  The operational range from normal to total blackout spans just 2.5 Hz. Each threshold triggers
+  increasingly severe automatic actions.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Frequency</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>49.95-50.05 Hz</strong></td>
+      <td>Normal operating band</td>
+    </tr>
+    <tr>
+      <td><strong>49.80 Hz</strong></td>
+      <td>FCR fully activated (200 mHz deviation)</td>
+    </tr>
+    <tr>
+      <td><strong>49.00 Hz</strong></td>
+      <td>UFLS Stage 1 — 5-10% load automatically shed</td>
+    </tr>
+    <tr>
+      <td><strong>48.50 Hz</strong></td>
+      <td>UFLS Stage 2 — cumulative ~25% load shed</td>
+    </tr>
+    <tr>
+      <td><strong>48.00 Hz</strong></td>
+      <td>UFLS Stage 3 — 40-50% total load shed</td>
+    </tr>
+    <tr>
+      <td><strong>47.50 Hz</strong></td>
+      <td>Total collapse — all generators disconnect</td>
+    </tr>
+    <tr>
+      <td><strong>51.50 Hz</strong></td>
+      <td>Over-frequency — generators trip to prevent damage</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="scenarios" style="color: var(--color-primary);">Real-World Frequency Events</h2>
+
+<h3>Scenario: 800 MW Generator Trip</h3>
+
+<p>
+  For 800 MW loss in the full Continental European system (~300+ GW), the RoCoF (Rate of Change
+  of Frequency) is approximately 0.06 Hz/s — well within the normal contingency range. Inertia
+  absorbs the initial shock within 2-5 seconds. FCR arrests the decline by 30 seconds.
+  Full restoration within approximately 12 minutes.
+</p>
+
+<h3>Scenario: 3 GW Loss of Generation</h3>
+
+<p>
+  This is exactly the ENTSO-E reference incident for which FCR is dimensioned. The full system
+  is designed to contain this within 200 mHz (nadir ~49.8 Hz). In degraded conditions — low
+  inertia, pre-existing deviation — the nadir can reach 48.9 Hz, triggering automatic load shedding.
+</p>
+
+<div class="p-5 rounded-lg my-8" style="background: var(--color-surface); border: 1px solid var(--color-primary);">
+  <div class="font-mono text-xs mb-2" style="color: var(--color-primary);">REAL-WORLD PRECEDENT</div>
+  <p class="mb-2" style="max-width: none;">
+    <strong>January 2021 — CE System Separation:</strong> 6.3 GW imbalance, frequency fell to
+    49.74 Hz. 1.7 GW of interruptible loads disconnected in France and Italy. System reconnected
+    within 63 minutes.
+  </p>
+  <p class="mb-0" style="max-width: none;">
+    <strong>August 2019 — UK Blackout:</strong> ~1.9 GW generation loss in the ~35 GW GB system.
+    Frequency fell to 48.8 Hz, triggering LFDD. Over 1 million customers disconnected.
+  </p>
+</div>
+
+<h3>Scenario: Cyber Attack (SCADA Compromise)</h3>
+
+<p>
+  The 2015 Ukraine cyberattack demonstrated remote breaker opening at 30 substations simultaneously.
+  With protection relays compromised and SCADA systems disabled, the grid loses automated defense.
+  The 2003 Italy blackout showed that uncontrolled frequency collapse from 50 Hz to 47.5 Hz can
+  occur in approximately 2.5 minutes.
+</p>
+
+<h2 id="50-2-problem" style="color: var(--color-primary);">The "50.2 Hz Problem"</h2>
+
+<blockquote>
+  Legacy distributed PV installations in Germany were configured to disconnect at exactly 50.2 Hz.
+  This created a systemic risk: an over-frequency event could cascade into a massive under-frequency
+  emergency by simultaneously losing tens of GW of solar. ENTSO-E mandated national retrofit
+  programs to extend the operating range to 47.5-51.5 Hz.
+</blockquote>
+
+<h2 id="battery-advantage" style="color: var(--color-primary);">Why Batteries Change Everything</h2>
+
+<p>
+  Conventional FCR providers (gas turbines, hydro) respond in seconds. Batteries respond in
+  milliseconds. This is not an incremental improvement — it is a categorical difference that
+  changes what is physically possible during a grid emergency.
+</p>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
+  <div class="p-5 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+    <h3 class="mt-0 text-base font-mono" style="color: var(--color-primary);">Hornsdale (2017)</h3>
+    <p class="mb-0 text-sm">
+      Responded to a coal plant trip in 140 milliseconds — 43x faster than the 6-second contract
+      requirement. The AEMO control system had not even registered the event. This single response
+      prevented a potential cascade across South Australia.
+    </p>
+  </div>
+  <div class="p-5 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+    <h3 class="mt-0 text-base font-mono" style="color: var(--color-primary);">ARENA VPP Trials</h3>
+    <p class="mb-0 text-sm">
+      Demonstrated that aggregated residential batteries could respond to frequency deviations
+      within 200 milliseconds — faster than any conventional generator. UK Enhanced Frequency
+      Response contracts required 1-second response; batteries routinely delivered in under 500 ms.
+    </p>
+  </div>
+</div>
+
+<hr />
+
+<h2 id="related" style="color: var(--color-primary);">Related Topics</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
+  <a href="/research/topics/cascading-failures" class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-sm font-bold" style="color: var(--color-danger);">Cascading Failures</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">When frequency defense fails</div>
+  </a>
+  <a href="/research/topics/demand-response" class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-sm font-bold" style="color: var(--color-success);">Demand Response</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">Speed advantage of batteries</div>
+  </a>
+  <a href="/research/topics/enpal-flexa" class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-sm font-bold" style="color: var(--color-success);">Enpal and Flexa</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">VPP technology stack</div>
+  </a>
+</div>
+
+</IncidentLayout>

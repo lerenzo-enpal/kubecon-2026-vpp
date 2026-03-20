@@ -1,0 +1,147 @@
+---
+import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import IncidentHero from '../../../components/IncidentHero.astro';
+import QuickFacts from '../../../components/QuickFacts.astro';
+import TimelineEvent from '../../../components/TimelineEvent.astro';
+import SourceList from '../../../components/SourceList.astro';
+---
+
+<IncidentLayout title="Northeast US/Canada Blackout" description="August 2003: A software bug and untrimmed trees cascaded into the largest blackout in North American history, affecting 55 million people.">
+
+<IncidentHero
+  title="Northeast US/Canada Blackout"
+  date="August 14, 2003"
+  location="8 US States + Ontario, Canada"
+  keyStat="55M"
+  keyStatLabel="people affected"
+  severity="blackout"
+/>
+
+<QuickFacts facts={[
+  { value: "55M", label: "People in the dark (45M US + 10M Canada)" },
+  { value: "61.8 GW", label: "Load lost across 508 generators" },
+  { value: "~100", label: "Excess deaths reported" },
+  { value: "$6-10B", label: "Estimated economic damage" },
+  { value: "4 days", label: "Maximum restoration time" },
+  { value: "8 min", label: "From first cascade trip to blackout" },
+]} />
+
+<h2>What Happened</h2>
+
+<p>
+  On a hot August afternoon, a software bug silently killed the alarm system at FirstEnergy's control center in Ohio. For over an hour, operators had no idea that transmission lines were failing one after another. They were flying blind.
+</p>
+
+<p>
+  The lines were failing because of untrimmed trees. High electrical load caused transmission cables to heat up and sag into overgrown vegetation, shorting out. Each failed line pushed more current onto its neighbors, heating them up too. The operators who could have intervened never saw the warnings.
+</p>
+
+<p>
+  By 4:05 PM, the cascade was unstoppable. In 8 minutes, 61.8 GW of load collapsed across eight states and Ontario. 508 generators at 265 power plants tripped offline, including 22 nuclear reactors that automatically scrammed. It was the largest blackout in North American history.
+</p>
+
+<h2>Timeline</h2>
+
+<TimelineEvent
+  time="13:31 EDT"
+  title="Eastlake Unit 5 trips in Ohio"
+  description="A generation plant in northern Ohio goes offline, increasing reliance on transmission imports to the Cleveland-Akron load pocket. FirstEnergy operators don't recognize the risk."
+  severity="warning"
+/>
+
+<TimelineEvent
+  time="14:02"
+  title="First transmission line hits trees"
+  description="The Chamberlin-Harding 345 kV line trips from contact with overgrown vegetation. The line was carrying extra load due to the Eastlake trip."
+  severity="warning"
+/>
+
+<TimelineEvent
+  time="14:14"
+  title="Alarm system fails silently"
+  description="A race condition bug in GE's XA/21 software causes the alarm system to enter an infinite loop. Operators receive zero alerts. They have no idea the system has failed."
+  severity="critical"
+/>
+
+<TimelineEvent
+  time="14:54"
+  title="Backup server fails too"
+  description="Both primary and backup EMS servers crash under queued events. Screen refresh degrades from 1-3 seconds to 59 seconds. Operators are now functionally blind."
+  severity="critical"
+/>
+
+<TimelineEvent
+  time="15:05-15:41"
+  title="Three more 345 kV lines trip"
+  description="With no alarms and degraded screens, operators cannot see or respond. Lines sag into trees under increasing load. Fifteen 138 kV lines fail in rapid succession."
+  severity="collapse"
+/>
+
+<TimelineEvent
+  time="16:05:57"
+  title="Point of no return"
+  description="The Sammis-Star 345 kV line trips, destabilizing power flows across the entire northeastern interconnection. The uncontrollable cascade begins."
+  severity="collapse"
+/>
+
+<TimelineEvent
+  time="16:10-16:13"
+  title="Total cascade: 61.8 GW lost"
+  description="In under 8 minutes, hundreds of transmission lines and generators trip across eight states and Ontario. The grid fragments into unsustainable islands. 55 million people lose power."
+  severity="collapse"
+/>
+
+<h2>Root Cause</h2>
+
+<div class="my-8 p-6 rounded-xl" style="background: var(--color-bg-alt); border-left: 4px solid var(--color-danger);">
+  <div class="font-mono text-xs font-semibold mb-3" style="color: var(--color-danger); letter-spacing: 0.08em; text-transform: uppercase;">A Race Condition Changed History</div>
+  <p class="text-sm leading-relaxed mb-3" style="color: var(--color-text-muted);">
+    The GE XA/21 alarm system had a coding error that allowed two processes to write to shared memory simultaneously. This race condition caused the alarm processor to enter an infinite loop. <strong style="color: var(--color-text);">The bug had gone undetected across 3 million operational hours at 100+ installations worldwide.</strong>
+  </p>
+  <p class="text-sm leading-relaxed mb-0" style="color: var(--color-text-muted);">
+    For over an hour before the cascade, operators received zero visual or audio alerts. Phone calls from neighboring utilities warning of problems went unheeded. When the cascade finally hit, it was already too late.
+  </p>
+</div>
+
+<h2>Could This Have Been Prevented?</h2>
+
+<div class="my-8 p-6 rounded-xl" style="background: rgba(16, 185, 129, 0.06); border-left: 4px solid var(--color-success);">
+  <div class="font-mono text-xs font-semibold mb-3" style="color: var(--color-success); letter-spacing: 0.08em; text-transform: uppercase;">VPP Prevention Case</div>
+  <p class="text-sm leading-relaxed mb-3" style="color: var(--color-text-muted);">
+    The 2003 blackout was fundamentally a situational awareness failure. Distributed energy resources with real-time telemetry create thousands of grid sensors, giving operators visibility that no single control center can match.
+  </p>
+  <p class="text-sm leading-relaxed mb-0" style="color: var(--color-text-muted);">
+    A VPP with distributed batteries in the Cleveland-Akron load pocket could have provided local generation when import lines failed, reducing the cascading overload on remaining transmission paths. Distributed resources eliminate single-point-of-failure dependencies.
+  </p>
+</div>
+
+<h2 style="font-size: 22px; margin-top: 48px;">Related Incidents</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3 my-6">
+  <a href="/research/incidents/2003-italy-blackout" class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-xs mb-1" style="color: var(--color-danger);">Blackout</div>
+    <div class="font-semibold text-sm" style="color: var(--color-text);">2003 Italy Blackout</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">Same year, same root cause: trees</div>
+  </a>
+  <a href="/research/incidents/2021-texas-ercot-winter-storm" class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-xs mb-1" style="color: var(--color-danger);">Blackout</div>
+    <div class="font-semibold text-sm" style="color: var(--color-text);">2021 Texas Winter Storm</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">Isolated grid, cascading failure</div>
+  </a>
+  <a href="/research/incidents/2017-hornsdale-battery-response" class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-xs mb-1" style="color: var(--color-success);">Success Story</div>
+    <div class="font-semibold text-sm" style="color: var(--color-text);">2017 Hornsdale Battery</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">140ms response prevented cascade</div>
+  </a>
+</div>
+
+<SourceList sources={[
+  "U.S.-Canada Power System Outage Task Force — Final Report on the August 14, 2003 Blackout (April 2004)",
+  "NERC — Technical Analysis of the August 14, 2003 Blackout",
+  "DOE — Economic impact estimate: $6-10 billion",
+  "GE Energy — XA/21 alarm system software patch advisory (2003)",
+  "FirstEnergy — Post-incident operational review",
+  "FERC — Mandatory reliability standards investigation (led to NERC ERO designation, 2006)",
+]} />
+
+</IncidentLayout>

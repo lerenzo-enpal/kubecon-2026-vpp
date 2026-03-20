@@ -1,0 +1,227 @@
+---
+import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+---
+
+<IncidentLayout title="Electricity Pricing" description="How solar is reshaping the electricity price curve — negative prices, the duck curve, and the arbitrage opportunity.">
+
+<div style="border-left: 4px solid var(--color-primary); padding-left: 20px; margin-bottom: 48px;">
+  <h1 style="color: var(--color-primary);">Electricity Pricing</h1>
+  <p class="text-lg" style="color: var(--color-text-muted); max-width: 640px;">
+    Germany now has 575 hours of negative electricity prices per year. Midday solar crashes prices
+    to below zero while evening peaks hit EUR 120+/MWh. This spread is the business case for VPPs.
+  </p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 my-8">
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-primary);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">575</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">negative price hours (2025)</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-primary);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">10x</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">spread growth in 10 years</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-primary);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">106 GW</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">German solar capacity (2025)</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-primary);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">EUR 936</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">peak price (Dec 2024)</div>
+  </div>
+</div>
+
+<hr />
+
+<h2 id="negative-prices" style="color: var(--color-primary);">The Rise of Negative Prices</h2>
+
+<p>
+  Negative electricity prices mean the grid is literally paying generators to stop producing.
+  They signal a system that cannot absorb its own clean energy. In Germany, negative price hours
+  have grown from 15 in 2008 to 575 in 2025.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Year</th>
+      <th>Negative Hours</th>
+      <th>Solar Capacity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>2008</td>
+      <td>15</td>
+      <td>~5 GW</td>
+    </tr>
+    <tr>
+      <td>2015</td>
+      <td>126</td>
+      <td>39 GW</td>
+    </tr>
+    <tr>
+      <td>2020</td>
+      <td>298</td>
+      <td>54 GW</td>
+    </tr>
+    <tr>
+      <td>2022</td>
+      <td>69</td>
+      <td>66 GW (energy crisis)</td>
+    </tr>
+    <tr>
+      <td>2023</td>
+      <td>301</td>
+      <td>82 GW</td>
+    </tr>
+    <tr>
+      <td>2024</td>
+      <td>457</td>
+      <td>100 GW</td>
+    </tr>
+    <tr>
+      <td>2025</td>
+      <td><strong>575</strong></td>
+      <td>106 GW</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  The deepest negative price recorded was -250.32 EUR/MWh on May 11, 2025. The exchange floor
+  of -500 EUR/MWh has never been reached. Negative prices are not limited to Germany — Spain hit
+  769 negative hours in 2024, Finland reached approximately 700 hours.
+</p>
+
+<h2 id="duck-curve" style="color: var(--color-primary);">The Duck Curve</h2>
+
+<p>
+  The "duck curve" describes the shape of net demand throughout a sunny day. Solar floods the
+  grid at midday, crashing prices. As the sun sets, demand ramps steeply and prices spike.
+  The spread between midday and evening is the economic opportunity for storage.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Year</th>
+      <th>Midday Avg (12-14h)</th>
+      <th>Evening Avg (19h)</th>
+      <th>Spread</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>2015</td>
+      <td>EUR 30.2</td>
+      <td>EUR 41.1</td>
+      <td>EUR 10.9</td>
+    </tr>
+    <tr>
+      <td>2019</td>
+      <td>EUR 30.2</td>
+      <td>EUR 49.9</td>
+      <td>EUR 19.7</td>
+    </tr>
+    <tr>
+      <td>2023</td>
+      <td>EUR 49.3</td>
+      <td>EUR 128.3</td>
+      <td>EUR 79.0</td>
+    </tr>
+    <tr>
+      <td>2024</td>
+      <td>EUR 20.6</td>
+      <td>EUR 123.8</td>
+      <td><strong>EUR 103.3</strong></td>
+    </tr>
+    <tr>
+      <td>2025</td>
+      <td>EUR 16.1</td>
+      <td>EUR 119.6</td>
+      <td><strong>EUR 103.5</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  The spread is the real story: EUR 10.9 in 2015 to EUR 103.5 in 2025 — a 10x increase in
+  10 years. Midday prices collapsed from EUR 30 to EUR 16 as solar capacity nearly tripled.
+  Evening prices plateaued at EUR 120+, driven by gas and CO2 cost floors.
+</blockquote>
+
+<h2 id="merit-order" style="color: var(--color-primary);">The Merit Order Effect</h2>
+
+<p>
+  In wholesale markets, generators bid in order of marginal cost. Renewables have near-zero
+  marginal cost and always dispatch first, pushing expensive gas and coal off the stack. Each
+  additional GW of renewable capacity reduces wholesale prices by 0.5-1.0 EUR/MWh on average.
+</p>
+
+<p>
+  Batteries amplify this effect. They absorb cheap midday solar (preventing negative pricing) and
+  discharge during expensive peaks, spreading the price-reduction effect across more hours. Modeled
+  estimates suggest batteries can extend the merit order price reduction by an additional 20-40%
+  across evening hours.
+</p>
+
+<h2 id="extremes" style="color: var(--color-primary);">Price Extremes</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
+  <div class="p-5 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-danger);">
+    <div class="font-mono text-xs mb-2" style="color: var(--color-danger);">PRICE SPIKE — DUNKELFLAUTE</div>
+    <p class="mb-2 text-sm" style="max-width: none;">
+      Dec 12, 2024: EUR 936.28/MWh during "Dunkelflaute" — the dreaded dark doldrums when both
+      wind and solar collapse simultaneously under high-pressure winter weather.
+    </p>
+    <p class="mb-0 text-sm" style="max-width: none;">
+      Jan 7, 2025: Continuous intraday price reached EUR 1,056/MWh.
+    </p>
+  </div>
+  <div class="p-5 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-success);">
+    <div class="font-mono text-xs mb-2" style="color: var(--color-success);">NEGATIVE EXTREME</div>
+    <p class="mb-2 text-sm" style="max-width: none;">
+      May 11, 2025: -250.32 EUR/MWh at midday. The grid was paying generators EUR 250 per MWh to
+      stop producing electricity. A battery charging at that moment was being paid to store energy.
+    </p>
+    <p class="mb-0 text-sm" style="max-width: none;">
+      Total swing from negative to positive extreme: over EUR 1,300/MWh.
+    </p>
+  </div>
+</div>
+
+<h2 id="arbitrage" style="color: var(--color-primary);">The Arbitrage Opportunity</h2>
+
+<p>
+  A battery that charges at midday (when prices are negative or near-zero) and discharges in the
+  evening (when prices exceed EUR 100/MWh) captures the entire spread. With 2025 summer spreads
+  averaging EUR 103.5, a single daily cycle generates significant revenue.
+</p>
+
+<p>
+  This is precisely what VPPs like Flexa do — coordinating thousands of home batteries to trade
+  on the five-minute continuous intraday market, capturing very short-term arbitrage while
+  simultaneously stabilizing the grid.
+</p>
+
+<hr />
+
+<h2 id="related" style="color: var(--color-primary);">Related Topics</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
+  <a href="/research/topics/german-grid-curtailment" class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-sm font-bold" style="color: var(--color-accent);">German Grid Curtailment</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">The north-south bottleneck driving waste</div>
+  </a>
+  <a href="/research/topics/enpal-flexa" class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-sm font-bold" style="color: var(--color-success);">Enpal and Flexa</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">Capturing the spread at scale</div>
+  </a>
+  <a href="/research/topics/grid-flexibility-costs" class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-sm font-bold" style="color: var(--color-accent);">Grid Flexibility Costs</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">The economics of old vs. new flexibility</div>
+  </a>
+</div>
+
+</IncidentLayout>

@@ -1,0 +1,147 @@
+---
+import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import IncidentHero from '../../../components/IncidentHero.astro';
+import QuickFacts from '../../../components/QuickFacts.astro';
+import TimelineEvent from '../../../components/TimelineEvent.astro';
+import SourceList from '../../../components/SourceList.astro';
+---
+
+<IncidentLayout title="2006 European Grid Split" description="How a cruise ship passage split Europe's power grid into three islands, leaving 15 million households in the dark.">
+
+<IncidentHero
+  title="2006 European Grid Split"
+  date="November 4, 2006"
+  location="Continental Europe"
+  severity="near-miss"
+  keyStat="15M"
+  keyStatLabel="households affected"
+/>
+
+<QuickFacts facts={[
+  { value: "38 min", label: "Time to resynchronize the grid" },
+  { value: "3", label: "Isolated grid islands formed" },
+  { value: "15 sec", label: "From first trip to full split" },
+  { value: "~20", label: "Countries impacted" },
+  { value: "17 GW", label: "Peak load shedding" },
+  { value: "0", label: "Deaths" },
+]} />
+
+<!-- What Happened -->
+<section class="my-10">
+  <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">What Happened</h2>
+
+  <p class="text-sm leading-relaxed mb-4" style="color: var(--color-text-muted);">
+    A cruise ship called the <em>Norwegian Pearl</em> needed to pass under a high-voltage power line crossing the Ems River in northern Germany. To make room, the operator switched off the line -- a routine procedure they had done before. But this time, the rest of the grid was already under stress from heavy wind power flowing south.
+  </p>
+  <p class="text-sm leading-relaxed mb-4" style="color: var(--color-text-muted);">
+    When a control room operator tried to fix the growing overloads by changing a switch at a substation, it had the opposite effect. Within 15 seconds, a chain reaction of automatic safety shutoffs split the entire European grid into three separate islands. Around 15 million households lost power, and wind turbines disconnected themselves -- making the problem worse.
+  </p>
+  <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
+    Operators resynchronized the grid within 38 minutes, and full normal operations returned about two hours later. No one was hurt, but it was the worst disturbance in European grid history.
+  </p>
+</section>
+
+<!-- Timeline -->
+<section class="my-10">
+  <h2 class="text-2xl font-bold mb-6" style="color: var(--color-text);">Timeline</h2>
+
+  <TimelineEvent
+    time="21:38 CET"
+    title="Power line switched off for ship passage"
+    description="E.ON Netz de-energizes both circuits of the 380 kV Conneforde-Diele line so the Norwegian Pearl can pass safely underneath."
+    severity="normal"
+  />
+  <TimelineEvent
+    time="21:39 CET"
+    title="Warning signals appear"
+    description="With the line off, power redistributes to parallel paths. E.ON Netz receives warnings of high power flow on multiple remaining lines."
+    severity="warning"
+  />
+  <TimelineEvent
+    time="~22:05 CET"
+    title="Unexpected load increase"
+    description="Power flow on the Landesbergen-Wehrendorf line jumps by ~100 MW, pushing it toward its thermal limit."
+    severity="warning"
+  />
+  <TimelineEvent
+    time="22:10:00 CET"
+    title="Switching operation backfires"
+    description="An operator couples busbars at Landesbergen substation to relieve the overloaded line. Instead, the maneuver instantly overloads it further."
+    severity="critical"
+  />
+  <TimelineEvent
+    time="22:10:13 CET"
+    title="Cascade begins"
+    description="The Landesbergen-Wehrendorf line trips on overcurrent protection. Overloads propagate across Germany, Austria, Croatia, and Hungary within seconds."
+    severity="collapse"
+  />
+  <TimelineEvent
+    time="22:10:28 CET"
+    title="Europe splits into three islands"
+    description="The entire UCTE synchronous grid fractures into Western, North-Eastern, and South-Eastern islands. Frequency drops to 49.0 Hz in the west and spikes to 51.4 Hz in the northeast."
+    severity="collapse"
+  />
+  <TimelineEvent
+    time="~22:47 CET"
+    title="Resynchronization begins"
+    description="Western and North-Eastern islands reconnect via lines in Germany and Austria. The South-Eastern island follows two minutes later."
+    severity="success"
+  />
+  <TimelineEvent
+    time="~00:00 CET"
+    title="Normal operations restored"
+    description="All European countries return to normal operating conditions, approximately two hours after the split."
+    severity="success"
+  />
+</section>
+
+<!-- Root Cause -->
+<section class="my-10">
+  <div class="p-6 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <h2 class="text-lg font-bold mb-3" style="color: var(--color-accent);">Root Cause</h2>
+    <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
+      <strong style="color: var(--color-text);">N-1 security criterion violated.</strong> The grid must be able to survive the loss of any single element. After the power line was disconnected for the ship, the remaining system had no safety margin left. A last-minute schedule change (from 1:00 AM to 10:00 PM) prevented neighboring grid operators from running a proper joint security analysis. No single control room had a complete picture of the pan-European grid state.
+    </p>
+  </div>
+</section>
+
+<!-- VPP Relevance -->
+<section class="my-10">
+  <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">VPP Relevance</h2>
+  <div class="grid gap-3">
+    <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
+      <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Frequency response gap</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">Wind turbines disconnected on under-frequency, worsening the crisis. VPP-connected batteries could have injected power instead of disappearing.</div>
+    </div>
+    <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
+      <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Distributed vs. centralized</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">The 17 GW load shed was blunt and automatic. A VPP can provide precise, distributed frequency support in milliseconds -- no transmission lines required.</div>
+    </div>
+    <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
+      <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Visibility problem</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">No single operator could see the full grid state. A VPP controller aggregates thousands of real-time data points, providing grid-edge awareness that centralized SCADA systems lack.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Related Incidents -->
+<section class="my-10">
+  <h2 class="text-lg font-bold mb-3" style="color: var(--color-text);">Related Incidents</h2>
+  <div class="flex flex-col gap-2">
+    <a href="/research/incidents/2021-european-grid-split" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
+      2021 European Grid Split -- history repeated 15 years later
+    </a>
+    <a href="/research/incidents/2024-dunkelflaute-germany" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
+      2024 Dunkelflaute -- when wind and solar both disappear
+    </a>
+  </div>
+</section>
+
+<SourceList sources={[
+  "UCTE Final Report: System Disturbance on 4 November 2006, January 2007",
+  "UCTE Interim Report: System Disturbance on 4 November 2006, November 2006",
+  "ENTSO-E: Final Report on the November 4, 2006 Disturbance",
+  "European Commission: Inquiry into the European blackout of November 4, 2006",
+]} />
+
+</IncidentLayout>

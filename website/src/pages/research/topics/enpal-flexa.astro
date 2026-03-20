@@ -1,0 +1,257 @@
+---
+import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+---
+
+<IncidentLayout title="Enpal and Flexa" description="Enpal's 100,000+ connected systems and the Flexa VPP controller — building Europe's largest virtual power plant on Kubernetes.">
+
+<div style="border-left: 4px solid var(--color-success); padding-left: 20px; margin-bottom: 48px;">
+  <h1 style="color: var(--color-success);">Enpal and Flexa</h1>
+  <p class="text-lg" style="color: var(--color-text-muted); max-width: 640px;">
+    Enpal is Germany's largest residential solar installer. Flexa is the VPP controller — a joint
+    venture between Enpal and Entrix — targeting 1 GW of aggregated capacity by 2026.
+  </p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 my-8">
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-success);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-success);">100K+</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">connected energy systems</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-success);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-success);">40K+</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">VPP customers</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-success);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-success);">400 MW</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">bundled VPP output</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-success);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-success);">1 GW</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">2026 target</div>
+  </div>
+</div>
+
+<hr />
+
+<h2 id="enpal" style="color: var(--color-success);">Enpal Overview</h2>
+
+<p>
+  Founded in 2017 in Berlin, Enpal has grown into one of Europe's largest residential solar
+  companies. Their model: lease solar panels and batteries to homeowners, retain the ability to
+  aggregate the batteries for grid services. This creates a massive distributed fleet.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Valuation</td>
+      <td><strong>$2.4 billion</strong> (2023 funding round)</td>
+    </tr>
+    <tr>
+      <td>2024 Revenue</td>
+      <td>~$895 million</td>
+    </tr>
+    <tr>
+      <td>Employees</td>
+      <td>~5,000 (majority are 200+ local installer teams)</td>
+    </tr>
+    <tr>
+      <td>Total Funding</td>
+      <td>$655M+ equity; $698M credit line (Nov 2025)</td>
+    </tr>
+    <tr>
+      <td>Latest Round</td>
+      <td>Series D, $110M (Apr 2025), led by TPG</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="flexa" style="color: var(--color-success);">Flexa: The VPP Controller</h2>
+
+<p>
+  Flexa is a joint venture between Enpal (majority stake) and Entrix, with EUR 100 million
+  invested to build a multi-GW VPP across 80,000+ customers. Flexa is the VPP controller that
+  aggregates and dispatches Enpal's distributed fleet.
+</p>
+
+<div class="p-5 rounded-lg my-8" style="background: var(--color-surface); border: 1px solid var(--color-success);">
+  <div class="font-mono text-xs mb-2" style="color: var(--color-success);">LEADERSHIP</div>
+  <p class="mb-2" style="max-width: none;">
+    <strong>CTO: Sebastien Schikora</strong> — previously led Tesla's global stationary battery and
+    Powerwall VPP development. Direct experience building the system Flexa aims to surpass.
+  </p>
+  <p class="mb-0" style="max-width: none;">
+    <strong>Head of Product: Vjekoslav Salapic</strong> — formerly developed VPP solutions at GridX.
+  </p>
+</div>
+
+<h3>Flexa Key Facts</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Detail</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Trading began</td>
+      <td>October 2024</td>
+    </tr>
+    <tr>
+      <td>Initial deployment</td>
+      <td>1,000 households, 10 MWh storage, 8 MW solar, ~5 MW battery</td>
+    </tr>
+    <tr>
+      <td>Current VPP customers</td>
+      <td>40,000+ (as of Dec 2025)</td>
+    </tr>
+    <tr>
+      <td>Bundled output</td>
+      <td>400 MW</td>
+    </tr>
+    <tr>
+      <td>Target</td>
+      <td>1 GW by 2026, multi-GW within a few years</td>
+    </tr>
+    <tr>
+      <td>Customer earnings</td>
+      <td>EUR 1,000+/year (with EV and storage)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  Flexa's market strategy focuses on the five-minute-interval continuous intraday market, executing
+  very short-term arbitrage. The system combines Entrix's AI-powered electricity trading with
+  Enpal's "Enpal.One" home energy management system.
+</p>
+
+<h2 id="tech-stack" style="color: var(--color-success);">Technology Stack</h2>
+
+<p>
+  Gleaned from job postings and published articles, Flexa's infrastructure runs on modern
+  cloud-native technology — the same stack this presentation was built to showcase.
+</p>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
+  <div class="p-5 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+    <h3 class="mt-0 text-base font-mono" style="color: var(--color-success);">Infrastructure</h3>
+    <ul class="mb-0 text-sm">
+      <li>Cloud: GCP, AWS, Azure</li>
+      <li>Orchestration: <strong>Kubernetes</strong></li>
+      <li>GitOps: ArgoCD</li>
+      <li>Database: MongoDB Atlas (time-series)</li>
+    </ul>
+  </div>
+  <div class="p-5 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+    <h3 class="mt-0 text-base font-mono" style="color: var(--color-success);">Intelligence</h3>
+    <ul class="mb-0 text-sm">
+      <li>ML/Big Data: Spark, Dask</li>
+      <li>AI: Demand forecasting models</li>
+      <li>AI: Grid instability prediction</li>
+      <li>Hardware: Enpal.One HEMS</li>
+    </ul>
+  </div>
+</div>
+
+<h2 id="bottleneck" style="color: var(--color-success);">The Authorization Bottleneck</h2>
+
+<p>
+  Flexa's VPP participation rate sits at approximately 40% of Enpal's portfolio — below the 70%
+  target. The cause is not technology but bureaucracy. Grid operators' slow authorization processes
+  for direct marketing mean infrastructure installed at customer sites sits idle for months while
+  integration is blocked by operator delays.
+</p>
+
+<blockquote>
+  The hardware is installed. The software is ready. The customers are signed up. The bottleneck
+  is a stack of paperwork at 860+ distribution grid operators.
+</blockquote>
+
+<h2 id="german-market" style="color: var(--color-success);">German Battery Market Context</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric (2025)</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Total installed battery storage</td>
+      <td>24 GWh</td>
+    </tr>
+    <tr>
+      <td>New capacity added</td>
+      <td>6.57 GWh</td>
+    </tr>
+    <tr>
+      <td>Residential share</td>
+      <td>56% of total fleet</td>
+    </tr>
+    <tr>
+      <td>New home systems</td>
+      <td>~366,000 (down 20% from 2024)</td>
+    </tr>
+    <tr>
+      <td>Average system size</td>
+      <td>10.3 kWh (up 8%)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="competitors" style="color: var(--color-success);">Competitive Landscape</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-8">
+  <div class="p-5 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+    <h3 class="mt-0 text-base font-mono" style="color: var(--color-text-muted);">Sonnen (Shell)</h3>
+    <p class="mb-0 text-sm">
+      100,000+ batteries in the sonnenCommunity VPP. Each unit 5-15 kWh. Active in FCR and
+      peer-to-peer energy trading.
+    </p>
+  </div>
+  <div class="p-5 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+    <h3 class="mt-0 text-base font-mono" style="color: var(--color-text-muted);">1KOMMA5</h3>
+    <p class="mb-0 text-sm">
+      Hamburg-based startup (valued over $1B). "Heartbeat" VPP aggregating heat pumps, solar,
+      batteries, and EV chargers. ~50,000+ installations.
+    </p>
+  </div>
+  <div class="p-5 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+    <h3 class="mt-0 text-base font-mono" style="color: var(--color-text-muted);">Next Kraftwerke (Shell)</h3>
+    <p class="mb-0 text-sm">
+      Europe's largest VPP operator. 15,000+ assets aggregated across biogas, wind, solar, CHP.
+      ~10 GW networked capacity.
+    </p>
+  </div>
+</div>
+
+<hr />
+
+<h2 id="related" style="color: var(--color-success);">Related Topics</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
+  <a href="/research/topics/vpp-market" class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-sm font-bold" style="color: var(--color-primary);">VPP Market</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">Global market size and projections</div>
+  </a>
+  <a href="/research/topics/electricity-pricing" class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-sm font-bold" style="color: var(--color-primary);">Electricity Pricing</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">The arbitrage opportunity Flexa captures</div>
+  </a>
+  <a href="/research/topics/german-grid-curtailment" class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-sm font-bold" style="color: var(--color-accent);">German Grid Curtailment</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">The problem Flexa helps solve</div>
+  </a>
+</div>
+
+</IncidentLayout>

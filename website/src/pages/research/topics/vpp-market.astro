@@ -1,0 +1,228 @@
+---
+import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+---
+
+<IncidentLayout title="VPP Market" description="The global virtual power plant market is projected to reach $16.65 billion by 2030, with residential battery enrollments growing 153% year-over-year.">
+
+<div style="border-left: 4px solid var(--color-primary); padding-left: 20px; margin-bottom: 48px;">
+  <h1 style="color: var(--color-primary);">VPP Market</h1>
+  <p class="text-lg" style="color: var(--color-text-muted); max-width: 640px;">
+    Virtual power plants are the fastest-growing segment of the energy transition. From $6 billion
+    in 2025 to a projected $16-36 billion by the early 2030s, VPPs are replacing the old grid playbook.
+  </p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 my-8">
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-primary);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">$6.1B</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">global market (2025)</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-primary);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">38 GW</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">US enrolled capacity</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-primary);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">153%</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">residential battery growth (YoY)</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-primary);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">22.3%</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">CAGR through 2030</div>
+  </div>
+</div>
+
+<hr />
+
+<h2 id="market-size" style="color: var(--color-primary);">Market Size and Growth</h2>
+
+<p>
+  Multiple research firms project rapid expansion of the global VPP market. The figures vary
+  by scope and methodology, but the direction is consistent: explosive growth.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Source</th>
+      <th>2025 Value</th>
+      <th>Projected</th>
+      <th>CAGR</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Grand View Research</td>
+      <td>$6.09B</td>
+      <td>$16.65B by 2030</td>
+      <td>22.3%</td>
+    </tr>
+    <tr>
+      <td>Precedence Research</td>
+      <td>$6.28B</td>
+      <td>$7.70B by 2026</td>
+      <td>--</td>
+    </tr>
+    <tr>
+      <td>SNS Insider</td>
+      <td>--</td>
+      <td>$36.39B by 2035</td>
+      <td>--</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  The US DOE's VPP initiative targets 80-160 GW of VPP capacity by 2030 — equivalent to 80-160
+  large natural gas plants. Guidehouse Insights projects global VPP capacity reaching 60-70 GW
+  by 2028, up from approximately 30 GW in 2023.
+</p>
+
+<h2 id="price-impact" style="color: var(--color-primary);">VPPs Reducing Energy Prices</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
+  <div class="p-5 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+    <h3 class="mt-0 text-base font-mono" style="color: var(--color-primary);">South Australia</h3>
+    <p class="mb-0 text-sm">
+      Tesla Powerwalls in the SA VPP discharged collectively during extreme heat events, reducing
+      wholesale spot prices by $50-100/MWh vs. counterfactual scenarios that would have required
+      expensive peaker plants.
+    </p>
+  </div>
+  <div class="p-5 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+    <h3 class="mt-0 text-base font-mono" style="color: var(--color-primary);">California</h3>
+    <p class="mb-0 text-sm">
+      VPPs and demand response programs helped avoid rolling blackouts during heat waves. The CPUC
+      estimated demand-side programs saved ratepayers $1-2 billion during the September 2022 heat
+      dome by avoiding emergency generation.
+    </p>
+  </div>
+</div>
+
+<blockquote>
+  RMI found that VPPs can provide peak capacity at 40-60% lower cost than gas peaker plants —
+  $90-130/kW-year for VPPs vs. $165-215/kW-year for gas peakers. The US DOE estimates VPPs could
+  save the US power system $10-20 billion annually by 2030.
+</blockquote>
+
+<h2 id="european-deployments" style="color: var(--color-primary);">European VPP Deployments</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Operator</th>
+      <th>Country</th>
+      <th>Scale</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Next Kraftwerke (Shell)</strong></td>
+      <td>Germany</td>
+      <td>15,000+ assets, ~10 GW networked capacity</td>
+    </tr>
+    <tr>
+      <td><strong>Sonnen (Shell)</strong></td>
+      <td>Germany</td>
+      <td>100,000+ batteries in VPP community</td>
+    </tr>
+    <tr>
+      <td><strong>1KOMMA5</strong></td>
+      <td>Germany</td>
+      <td>"Heartbeat" VPP, ~50,000+ installations</td>
+    </tr>
+    <tr>
+      <td><strong>Enpal / Flexa</strong></td>
+      <td>Germany</td>
+      <td>40,000+ VPP customers, 400 MW, targeting 1 GW</td>
+    </tr>
+    <tr>
+      <td><strong>Octopus Energy</strong></td>
+      <td>UK</td>
+      <td>~1 GW flexible capacity, "Kraken" platform</td>
+    </tr>
+    <tr>
+      <td><strong>National Grid DFS</strong></td>
+      <td>UK</td>
+      <td>~2.5 GW demand reduction dispatched in 2023/24</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="response-times" style="color: var(--color-primary);">The Response Time Advantage</h2>
+
+<p>
+  This is one of the strongest data points for the VPP case. The speed difference between batteries
+  and conventional generators is not incremental — it is categorical.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Technology</th>
+      <th>Response Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Coal plant</td>
+      <td>1-8 hours (cold start)</td>
+    </tr>
+    <tr>
+      <td>Gas turbine (OCGT)</td>
+      <td>5-15 minutes</td>
+    </tr>
+    <tr>
+      <td>Pumped hydro</td>
+      <td>60-90 seconds</td>
+    </tr>
+    <tr>
+      <td><strong>Grid-scale battery</strong></td>
+      <td><strong>&lt; 200 milliseconds</strong></td>
+    </tr>
+    <tr>
+      <td><strong>Residential VPP</strong></td>
+      <td><strong>200 ms - 2 seconds</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  When a coal unit tripped unexpectedly at Loy Yang A in Australia (2019), Tesla's Hornsdale
+  battery responded in 140 milliseconds — before the AEMO control system even registered the event.
+</p>
+
+<h2 id="tesla-sa" style="color: var(--color-primary);">Tesla VPP in South Australia</h2>
+
+<div class="p-5 rounded-lg my-8" style="background: var(--color-surface); border: 1px solid var(--color-primary);">
+  <div class="font-mono text-xs mb-2" style="color: var(--color-primary);">BENCHMARK</div>
+  <p class="mb-2" style="max-width: none;">
+    The Hornsdale Power Reserve (150 MW / 193.5 MWh) reduced FCAS costs in South Australia
+    by approximately 90% in its first year. FCAS prices dropped from $14/MWh to ~$1.5/MWh.
+    It saved consumers an estimated AUD $150 million in its first two years.
+  </p>
+  <p class="mb-0" style="max-width: none;">
+    Individual Tesla Powerwall VPP participants earned $700-1,100 per year through FCAS markets
+    and wholesale energy arbitrage. The fleet dispatched within milliseconds for frequency regulation.
+  </p>
+</div>
+
+<hr />
+
+<h2 id="related" style="color: var(--color-primary);">Related Topics</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
+  <a href="/research/topics/enpal-flexa" class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-sm font-bold" style="color: var(--color-success);">Enpal and Flexa</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">Europe's largest VPP</div>
+  </a>
+  <a href="/research/topics/demand-response" class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-sm font-bold" style="color: var(--color-success);">Demand Response</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">Reshaping demand at scale</div>
+  </a>
+  <a href="/research/topics/grid-flexibility-costs" class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-sm font-bold" style="color: var(--color-accent);">Grid Flexibility Costs</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">The old playbook's price tag</div>
+  </a>
+</div>
+
+</IncidentLayout>

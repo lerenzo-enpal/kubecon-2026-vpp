@@ -1,0 +1,161 @@
+---
+import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import IncidentHero from '../../../components/IncidentHero.astro';
+import QuickFacts from '../../../components/QuickFacts.astro';
+import TimelineEvent from '../../../components/TimelineEvent.astro';
+import SourceList from '../../../components/SourceList.astro';
+---
+
+<IncidentLayout title="Hornsdale Battery Response" description="December 2017: A 100 MW battery responded 60x faster than conventional generators, preventing a cascade and proving grid-scale batteries work.">
+
+<IncidentHero
+  title="Hornsdale Battery Response"
+  date="December 14, 2017"
+  location="South Australia / Victoria, Australia"
+  keyStat="140ms"
+  keyStatLabel="response time"
+  severity="success"
+/>
+
+<QuickFacts facts={[
+  { value: "560 MW", label: "Coal generation lost (Loy Yang A3)" },
+  { value: "~100ms", label: "Battery response time" },
+  { value: "60x", label: "Faster than conventional FCAS" },
+  { value: "0", label: "Customers lost power" },
+  { value: "A$150M+", label: "FCAS savings in first 2 years" },
+  { value: "13 days", label: "Since battery grid connection" },
+]} />
+
+<h2>What Happened</h2>
+
+<p>
+  Just after 2 AM on December 14, 2017, Loy Yang A Unit 3 -- a massive coal plant in Victoria -- tripped without warning, yanking 560 MW of baseload generation off the National Electricity Market. This is exactly the kind of sudden loss that triggers cascading failures.
+</p>
+
+<p>
+  But something was different this time. The Hornsdale Power Reserve, Tesla's 100 MW battery installed just 13 days earlier, began injecting power before AEMO's monitoring hardware could even record the response. It was the battery's first real-world test, and it passed with flying colors.
+</p>
+
+<p>
+  The battery responded in approximately 100 milliseconds -- 60 times faster than the 6-second industry standard. It arrested the frequency decline before it could trigger under-frequency load shedding. No customers lost power. No cascade occurred.
+</p>
+
+<h2>Timeline</h2>
+
+<TimelineEvent
+  time="01:58:59 AEST"
+  title="Loy Yang A Unit 3 trips"
+  description="560 MW of baseload coal generation vanishes from the National Electricity Market without warning. This is the type of event that caused the 2016 SA blackout."
+  severity="critical"
+/>
+
+<TimelineEvent
+  time="01:58:59 + ms"
+  title="Hornsdale battery begins responding"
+  description="The battery starts injecting power faster than AEMO's data collection hardware can record. The response is essentially instantaneous from the grid's perspective."
+  severity="success"
+/>
+
+<TimelineEvent
+  time="01:59:19"
+  title="Frequency hits 49.80 Hz threshold"
+  description="Grid frequency drops to the contingency FCAS trigger level. HPR's full contingency response activates, injecting 7.3 MW into the grid to arrest the decline."
+  severity="success"
+/>
+
+<TimelineEvent
+  time="01:59:27"
+  title="Gladstone coal plant finally responds"
+  description="The conventional FCAS provider begins responding 28 seconds after the trip -- 8 seconds after the frequency threshold. The battery had already stabilized the situation."
+  severity="normal"
+/>
+
+<TimelineEvent
+  time="Next several minutes"
+  title="Conventional generators ramp up"
+  description="With frequency stabilized by the battery, conventional generators have time to ramp up and replace the lost 560 MW. No load shedding is needed. Zero customers affected."
+  severity="success"
+/>
+
+<h2>Why It Worked</h2>
+
+<div class="my-8 p-6 rounded-xl" style="background: rgba(16, 185, 129, 0.06); border-left: 4px solid var(--color-success);">
+  <div class="font-mono text-xs font-semibold mb-3" style="color: var(--color-success); letter-spacing: 0.08em; text-transform: uppercase;">Speed Changes Everything</div>
+  <p class="text-sm leading-relaxed mb-3" style="color: var(--color-text-muted);">
+    The battery didn't need to replace all 560 MW. It only needed to inject 7.3 MW at exactly the right moment to arrest the frequency decline. By responding in ~100 ms instead of the 6-second standard, it stopped the cascade before it could begin.
+  </p>
+  <p class="text-sm leading-relaxed mb-0" style="color: var(--color-text-muted);">
+    This is the key insight: <strong style="color: var(--color-text);">fast response is qualitatively different from slow response.</strong> A battery prevents cascading failures. A gas turbine recovers from them -- if there's still a grid left to recover.
+  </p>
+</div>
+
+<h2>The Bigger Picture</h2>
+
+<div class="my-8 p-6 rounded-xl" style="background: var(--color-bg-alt); border-left: 4px solid var(--color-primary);">
+  <div class="font-mono text-xs font-semibold mb-3" style="color: var(--color-primary); letter-spacing: 0.08em; text-transform: uppercase;">Market Impact</div>
+  <div class="grid grid-cols-2 gap-4 mt-4">
+    <div>
+      <div class="font-mono font-extrabold text-xl" style="color: var(--color-success);">75%</div>
+      <div class="text-xs mt-1" style="color: var(--color-text-dim);">Regulation FCAS price reduction in SA</div>
+    </div>
+    <div>
+      <div class="font-mono font-extrabold text-xl" style="color: var(--color-success);">91%</div>
+      <div class="text-xs mt-1" style="color: var(--color-text-dim);">Contingency FCAS cost reduction</div>
+    </div>
+    <div>
+      <div class="font-mono font-extrabold text-xl" style="color: var(--color-primary);">&lt;2 yrs</div>
+      <div class="text-xs mt-1" style="color: var(--color-text-dim);">Time to pay for itself (A$90M cost)</div>
+    </div>
+    <div>
+      <div class="font-mono font-extrabold text-xl" style="color: var(--color-primary);">60 days</div>
+      <div class="text-xs mt-1" style="color: var(--color-text-dim);">Construction time (100-day bet)</div>
+    </div>
+  </div>
+</div>
+
+<p>
+  The Hornsdale Power Reserve was born from the 2016 South Australia blackout. Elon Musk bet Tesla could build a 100 MW battery within 100 days of contract signing or it would be free. They finished in about 60 days. The battery paid for itself in under two years through FCAS cost savings alone.
+</p>
+
+<h2>What This Means for VPPs</h2>
+
+<div class="my-8 p-6 rounded-xl" style="background: rgba(16, 185, 129, 0.06); border-left: 4px solid var(--color-success);">
+  <div class="font-mono text-xs font-semibold mb-3" style="color: var(--color-success); letter-spacing: 0.08em; text-transform: uppercase;">From One Battery to Thousands</div>
+  <p class="text-sm leading-relaxed mb-3" style="color: var(--color-text-muted);">
+    Hornsdale proved that a single 100 MW battery can prevent cascading failures. A Virtual Power Plant distributes that capacity across 10,000+ homes, eliminating the single-point-of-failure risk while preserving the speed advantage.
+  </p>
+  <p class="text-sm leading-relaxed mb-0" style="color: var(--color-text-muted);">
+    Think of it like a CDN for the power grid. The value is not in raw capacity but in response latency and geographic distribution. A VPP extends the Hornsdale principle from one large battery to thousands of small ones -- the same architectural pattern as moving from a monolith to microservices.
+  </p>
+</div>
+
+<h2 style="font-size: 22px; margin-top: 48px;">Related Incidents</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3 my-6">
+  <a href="/research/incidents/2016-south-australia-blackout" class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-xs mb-1" style="color: var(--color-danger);">Blackout</div>
+    <div class="font-semibold text-sm" style="color: var(--color-text);">2016 South Australia Blackout</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">The crisis that created this battery</div>
+  </a>
+  <a href="/research/incidents/2021-texas-ercot-winter-storm" class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-xs mb-1" style="color: var(--color-danger);">Blackout</div>
+    <div class="font-semibold text-sm" style="color: var(--color-text);">2021 Texas Winter Storm</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">What happens without fast response</div>
+  </a>
+  <a href="/research/incidents/2025-iberian-peninsula-blackout" class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-xs mb-1" style="color: var(--color-danger);">Blackout</div>
+    <div class="font-semibold text-sm" style="color: var(--color-text);">2025 Iberian Blackout</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">6 seconds -- only batteries fast enough</div>
+  </a>
+</div>
+
+<SourceList sources={[
+  "AEMO — Initial Operation of the Hornsdale Power Reserve Battery Energy Storage System (2018)",
+  "Aurecon — Hornsdale Power Reserve: Year 1 Technical and Market Impact Case Study (2018)",
+  "AEMO — Contingency FCAS data for Loy Yang A3 trip event (Dec 14, 2017)",
+  "Neoen — Hornsdale Power Reserve operational data and commissioning timeline",
+  "Potomac Economics / AEMO — FCAS market price analysis pre- and post-HPR",
+  "Tesla — Hornsdale Power Reserve specifications: 100 MW / 129 MWh",
+]} />
+
+</IncidentLayout>

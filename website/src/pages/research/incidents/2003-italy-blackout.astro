@@ -1,0 +1,146 @@
+---
+import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import IncidentHero from '../../../components/IncidentHero.astro';
+import QuickFacts from '../../../components/QuickFacts.astro';
+import TimelineEvent from '../../../components/TimelineEvent.astro';
+import SourceList from '../../../components/SourceList.astro';
+---
+
+<IncidentLayout title="Italy Nationwide Blackout" description="September 2003: A tree flashover in Switzerland triggered a cascade that isolated Italy from the European grid, blacking out 56 million people in under 27 minutes.">
+
+<IncidentHero
+  title="Italy Nationwide Blackout"
+  date="September 28, 2003"
+  location="Italy (nationwide) + parts of Switzerland"
+  keyStat="56M"
+  keyStatLabel="people affected"
+  severity="blackout"
+/>
+
+<QuickFacts facts={[
+  { value: "56M", label: "People without power" },
+  { value: "27 min", label: "First fault to total blackout" },
+  { value: "6,400 MW", label: "Imports lost (25% of demand)" },
+  { value: "12 sec", label: "All remaining interconnectors cascade-trip" },
+  { value: "18.5 hrs", label: "Full restoration time (Sicily)" },
+  { value: "EUR 1.18B", label: "Total economic cost" },
+]} />
+
+<h2>What Happened</h2>
+
+<p>
+  At 3 AM on a Sunday, a tree too close to a high-voltage line in Switzerland caused an electrical flashover on the 380 kV Lukmanier line. This single line carried Alpine hydropower into Italy, which was importing 25% of its electricity from neighboring countries.
+</p>
+
+<p>
+  Swiss operators spent 24 critical minutes trying to fix the problem but asked Italy to reduce imports by only 300 MW. They needed to cut 2,000 MW. A second line overheated, sagged into trees, and tripped. Within 12 seconds, all remaining interconnectors between Italy and Europe cascade-tripped.
+</p>
+
+<p>
+  Isolated and missing 6,400 MW of imports, Italy's grid collapsed in under 3 minutes. Frequency plummeted from 50 Hz to 47.5 Hz, triggering protective shutdowns across every power plant in the country. Only Sardinia, on a separate connection, was spared.
+</p>
+
+<h2>Timeline</h2>
+
+<TimelineEvent
+  time="03:01:21 CEST"
+  title="Tree flashover on Lukmanier 380 kV line"
+  description="A tree in the right-of-way causes an arc to the conductor. The line trips automatically. Two reclosure attempts fail. Italy loses a major import path."
+  severity="critical"
+/>
+
+<TimelineEvent
+  time="03:01-03:08"
+  title="Swiss operators attempt reclosure"
+  description="ETRANS tries to re-energize the line but a 42-degree phase angle difference has developed, making safe reclosure impossible. The system is already severely stressed."
+  severity="warning"
+/>
+
+<TimelineEvent
+  time="03:10:47"
+  title="Request for 300 MW reduction"
+  description="ETRANS calls GRTN in Rome requesting Italy reduce imports by 300 MW. The investigation later finds at least 2,000 MW was needed. GRTN would have cut 3,000 MW if asked."
+  severity="critical"
+/>
+
+<TimelineEvent
+  time="03:25:21"
+  title="Second line trips: Sils-Soazza 380 kV"
+  description="Overloaded for 24 minutes, the parallel line's conductors overheat and sag into vegetation. A second tree flashover. The cascade is now inevitable."
+  severity="collapse"
+/>
+
+<TimelineEvent
+  time="03:25:21-03:25:34"
+  title="12 seconds: all interconnectors trip"
+  description="Within 12 seconds of the second line loss, all remaining 14+ interconnection lines between Italy and Europe trip on overload and angular instability. Italy is completely isolated."
+  severity="collapse"
+/>
+
+<TimelineEvent
+  time="03:25:34-03:28:00"
+  title="Frequency collapse and total blackout"
+  description="Missing 6,400 MW, frequency drops at 0.3 Hz/second. Critically, 7,500 MW of distributed generators trip on under-voltage protection, making the deficit worse. At 47.5 Hz, all remaining plants shut down."
+  severity="collapse"
+/>
+
+<TimelineEvent
+  time="17:00"
+  title="Mainland restoration complete"
+  description="After a 14-hour restoration effort using 24 black-start units and reconnection to Europe via Switzerland, mainland Italy is fully powered. Sicily follows at 21:40."
+  severity="normal"
+/>
+
+<h2>Root Cause</h2>
+
+<div class="my-8 p-6 rounded-xl" style="background: var(--color-bg-alt); border-left: 4px solid var(--color-danger);">
+  <div class="font-mono text-xs font-semibold mb-3" style="color: var(--color-danger); letter-spacing: 0.08em; text-transform: uppercase;">24 Minutes of Missed Opportunity</div>
+  <p class="text-sm leading-relaxed mb-3" style="color: var(--color-text-muted);">
+    Between the first line trip (03:01) and the second (03:25), there were 24 minutes where the cascade could have been stopped. But Swiss operators didn't know the parallel lines could only sustain the overload for 15 minutes, and they asked Italy to cut too little, too late.
+  </p>
+  <p class="text-sm leading-relaxed mb-0" style="color: var(--color-text-muted);">
+    Italy's structural dependence on imports (25% of demand) made the country uniquely vulnerable. When the interconnectors failed, there was simply not enough domestic generation to keep the lights on. The 7,500 MW of distributed generators that tripped during the frequency decline turned a difficult situation into an unrecoverable one.
+  </p>
+</div>
+
+<h2>Could This Have Been Prevented?</h2>
+
+<div class="my-8 p-6 rounded-xl" style="background: rgba(16, 185, 129, 0.06); border-left: 4px solid var(--color-success);">
+  <div class="font-mono text-xs font-semibold mb-3" style="color: var(--color-success); letter-spacing: 0.08em; text-transform: uppercase;">VPP Prevention Case</div>
+  <p class="text-sm leading-relaxed mb-3" style="color: var(--color-text-muted);">
+    Italy lost 7,500 MW of distributed generation precisely when it was needed most, because small generators disconnected to protect themselves during the frequency drop. Modern smart inverters with ride-through capability would stay connected.
+  </p>
+  <p class="text-sm leading-relaxed mb-0" style="color: var(--color-text-muted);">
+    A VPP coordinating distributed batteries and solar inverters across Italy could have replaced the lost imports in milliseconds, arresting the frequency decline before it triggered the cascade of generator disconnections. Distributed generation becomes an asset instead of a liability.
+  </p>
+</div>
+
+<h2 style="font-size: 22px; margin-top: 48px;">Related Incidents</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3 my-6">
+  <a href="/research/incidents/2003-northeast-us-blackout" class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-xs mb-1" style="color: var(--color-danger);">Blackout</div>
+    <div class="font-semibold text-sm" style="color: var(--color-text);">2003 Northeast US Blackout</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">Same year, same root cause: trees</div>
+  </a>
+  <a href="/research/incidents/2025-iberian-peninsula-blackout" class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-xs mb-1" style="color: var(--color-danger);">Blackout</div>
+    <div class="font-semibold text-sm" style="color: var(--color-text);">2025 Iberian Blackout</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">Import-dependent grid, 6-second collapse</div>
+  </a>
+  <a href="/research/incidents/2016-south-australia-blackout" class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-xs mb-1" style="color: var(--color-danger);">Blackout</div>
+    <div class="font-semibold text-sm" style="color: var(--color-text);">2016 South Australia Blackout</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">87 seconds to system black</div>
+  </a>
+</div>
+
+<SourceList sources={[
+  "UCTE — Final Report of the Investigation Committee on the 28 September 2003 Blackout in Italy",
+  "GRTN (Gestore della Rete di Trasmissione Nazionale) — Incident report (2003)",
+  "ETRANS — Swiss transmission system operator event analysis",
+  "ACER — Security of EU Electricity Supply 2025 (historical context)",
+  "Wikipedia — 2003 Italy blackout (en.wikipedia.org)",
+]} />
+
+</IncidentLayout>
