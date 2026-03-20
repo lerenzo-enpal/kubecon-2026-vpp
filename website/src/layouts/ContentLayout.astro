@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
 
 interface Props {
   title: string;
@@ -27,10 +28,13 @@ const currentPath = Astro.url.pathname;
           <div class="w-2 h-2 rounded-full" style="background: var(--color-primary); box-shadow: 0 0 8px var(--color-primary);"></div>
           <span class="font-mono font-bold" style="color: var(--color-text); letter-spacing: 0.05em;">GRID</span>
         </a>
-        <nav class="flex gap-6 font-mono text-sm" style="color: var(--color-text-dim);">
-          <a href="/learn/how-the-grid-works" class="hover:text-white transition-colors">Learn</a>
-          <a href="/research" class="hover:text-white transition-colors">Research</a>
-        </nav>
+        <div class="flex items-center gap-6">
+          <nav class="flex gap-6 font-mono text-sm" style="color: var(--color-text-dim);">
+            <a href="/learn/how-the-grid-works" class="hover:opacity-70 transition-opacity">Learn</a>
+            <a href="/research" class="hover:opacity-70 transition-opacity">Research</a>
+          </nav>
+          <ThemeToggle />
+        </div>
       </div>
     </header>
 
