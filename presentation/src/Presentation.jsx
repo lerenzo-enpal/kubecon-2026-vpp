@@ -356,7 +356,7 @@ export default function Presentation() {
       {/* 11: Frequency Demo — Interactive */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
-          <H>Balancing the Grid in Action</H>
+          <H>Balancing the Grid - In Action</H>
           <P size="20px">Click an event to simulate what happens when something goes wrong.</P>
           <div className="flex-1 flex items-center" style={{ width: '100%' }}>
             <LazyContent><FrequencyDemo width={1286} height={480} panelWidth={340} /></LazyContent>
