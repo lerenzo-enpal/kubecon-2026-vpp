@@ -4,13 +4,51 @@ import { colors } from '../theme';
 const c = colors.primary;
 
 const STEPS = [
-  { freq: 50.000, freqColor: c, gridState: 'boot', status: null, band: null, scenario: null },
-  { freq: 49.800, freqColor: colors.success, gridState: 'normal', status: 'NOMINAL', band: '49.8 — 50.2 Hz', scenario: 'Normal operating band. Spinning reserves on standby.' },
-  { freq: 49.500, freqColor: colors.accent, gridState: 'reserves', status: 'WARNING', band: '49.8 — 49.0 Hz', scenario: 'Reserves activate. Gas CCGT ramps to max output.' },
-  { freq: 49.000, freqColor: colors.danger, gridState: 'shedding', status: 'EMERGENCY', band: 'Below 49.0 Hz', scenario: 'Reserves maxed. Peaker fires. Load shedding begins.' },
-  { freq: 47.500, freqColor: colors.danger, gridState: 'collapse', status: 'SYSTEM FAILURE', band: '47.5 Hz', scenario: 'Generators disconnect to self-protect. Total collapse.' },
-  { freq: null, freqColor: colors.accent, gridState: 'collapse', status: null, band: null, scenario: null },
+  { freq: 50.000, freqColor: c, gridState: 'boot', status: null, band: null, scenario: null, gridTimeSec: 0 },
+  { freq: 49.800, freqColor: colors.success, gridState: 'normal', status: 'NOMINAL', band: '49.8 — 50.2 Hz', scenario: 'Normal operating band. Spinning reserves on standby.', gridTimeSec: 0 },
+  { freq: 49.500, freqColor: colors.accent, gridState: 'reserves', status: 'WARNING', band: '49.8 — 49.0 Hz', scenario: 'Reserves activate. Gas CCGT ramps to max output.', gridTimeSec: 30 },
+  { freq: 49.000, freqColor: colors.danger, gridState: 'shedding', status: 'EMERGENCY', band: 'Below 49.0 Hz', scenario: 'Reserves maxed. Peaker fires. Load shedding begins.', gridTimeSec: 300 },
+  { freq: 47.500, freqColor: colors.danger, gridState: 'collapse', status: 'SYSTEM FAILURE', band: '47.5 Hz', scenario: 'Generators disconnect to self-protect. Total collapse.', gridTimeSec: 720 },
+  { freq: null, freqColor: colors.accent, gridState: 'collapse', status: null, band: null, scenario: null, gridTimeSec: null },
 ];
+
+// ─── Mission clock (T+MM:SS, spins up on transition) ───
+function GridClock({ targetSec }) {
+  const [display, setDisplay] = useState(targetSec || 0);
+  const rafRef = useRef(null);
+  const prevRef = useRef(0);
+
+  useEffect(() => {
+    if (targetSec == null) return;
+    const from = prevRef.current;
+    const to = targetSec;
+    if (from === to) { setDisplay(to); return; }
+    const start = performance.now();
+    const dur = 800; // spin-up duration in ms
+    const tick = (now) => {
+      const t = Math.min((now - start) / dur, 1);
+      const e = 1 - Math.pow(1 - t, 3);
+      setDisplay(Math.round(from + (to - from) * e));
+      if (t < 1) rafRef.current = requestAnimationFrame(tick);
+      else prevRef.current = to;
+    };
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [targetSec]);
+
+  if (targetSec == null) return null;
+
+  const mins = Math.floor(display / 60);
+  const secs = display % 60;
+  const timeStr = `T+${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+  return (
+    <div className="font-mono text-[11px] font-semibold tracking-[0.1em]" style={{
+      color: display >= 300 ? colors.danger : display >= 30 ? colors.accent : colors.textDim,
+      transition: 'color 0.6s',
+    }}>{timeStr}</div>
+  );
+}
 
 // ─── SVG draw helpers ───
 function dS(on, delay, dur = 0.6) {
@@ -129,11 +167,11 @@ function FreqLine({ step, width = 480, height = 55 }) {
 // ─── Plant unit: self-contained plant with utilization bar + label ───
 // All elements stay within the bounding box [x, y, x+w, y+h+labelSpace]
 function PlantUnit({ x, y, w, h, type, label, status, statusColor, utilization,
-  strokeColor, fillColor, lit, draw, smoking, drawDelay = 0 }) {
+  strokeColor, fillColor, lit, draw, smoking, drawDelay = 0, smokeColor, smokeSpeed }) {
 
   const barW = w - 10;
   const barX = x + 5;
-  const barY = y + h + 4;
+  const barY = y + h + 8;
   const labelY = barY + 14;
   const statusY = labelY + 11;
   const centerX = x + w / 2;
@@ -146,7 +184,7 @@ function PlantUnit({ x, y, w, h, type, label, status, statusColor, utilization,
           lit={lit} draw={draw} smoking={smoking} drawDelay={drawDelay} />
       ) : (
         <GasBody x={x} y={y} w={w} h={h} strokeColor={strokeColor} fillColor={fillColor}
-          lit={lit} draw={draw} smoking={smoking} drawDelay={drawDelay} />
+          lit={lit} draw={draw} smoking={smoking} drawDelay={drawDelay} smokeColor={smokeColor} smokeSpeed={smokeSpeed} />
       )}
       {/* Utilization bar */}
       <rect x={barX} y={barY} width={barW} height={4} rx={2} fill={colors.surface}
@@ -189,16 +227,12 @@ function CoalBody({ x, y, w, h, strokeColor, fillColor, lit, draw, smoking, draw
         stroke={strokeColor} strokeWidth="1.5" fill={fillColor}
         filter={lit ? 'url(#fwG)' : undefined}
         style={{ ...dSF(draw, drawDelay, 0.5), transition: 'stroke 0.5s, fill 0.5s' }} />
-      {/* Roof detail line */}
-      <line pathLength="1" x1={x} y1={hallY + 3} x2={x + hallW} y2={hallY + 3}
-        stroke={strokeColor} strokeWidth="0.5" style={dS(draw, drawDelay + 0.15)} />
-      {/* Smokestack — tapered trapezoid (wider at bottom) */}
+      {/* Smokestack — tapered, starts 1px above roof to avoid alpha overlap */}
       <path pathLength="1" d={`
-        M ${stackCX - stackBotW / 2} ${hallY}
+        M ${stackCX - stackBotW / 2} ${hallY - 1}
         L ${stackCX - stackTopW / 2} ${stackTop}
         L ${stackCX + stackTopW / 2} ${stackTop}
-        L ${stackCX + stackBotW / 2} ${hallY}
-        Z`}
+        L ${stackCX + stackBotW / 2} ${hallY - 1}`}
         stroke={strokeColor} strokeWidth="1" fill={fillColor}
         style={{ ...dSF(draw, drawDelay + 0.12, 0.3), transition: 'stroke 0.5s' }} />
       {/* Cooling tower — hyperbolic shape, bottom at groundY */}
@@ -245,7 +279,7 @@ function CoalBody({ x, y, w, h, strokeColor, fillColor, lit, draw, smoking, draw
 // ─── Gas plant body ───
 // Bell intake (left) → solid shaft → generator building (right) → tapered stack
 // All elements aligned to ground at y+h
-function GasBody({ x, y, w, h, strokeColor, fillColor, lit, draw, smoking, drawDelay }) {
+function GasBody({ x, y, w, h, strokeColor, fillColor, lit, draw, smoking, drawDelay, smokeColor: smokeColorProp, smokeSpeed = 1 }) {
   const groundY = y + h;
   // Generator building: tall narrow rect, right portion, sits on ground
   const bldgW = w * 0.32, bldgH = h * 0.6;
@@ -260,8 +294,9 @@ function GasBody({ x, y, w, h, strokeColor, fillColor, lit, draw, smoking, drawD
   // Bell-shaped air intake (trapezoid, wide at left, same height as shaft area)
   const intakeW = w * 0.18, intakeH = h * 0.3;
   const intakeX = x + 1, intakeY = groundY - intakeH;
-  // Smoke color depends on plant type context (accent for gas)
-  const smokeColor = colors.accent;
+  const smokeColor = smokeColorProp || c;
+  // Speed multiplier: lower = faster. smokeSpeed=1 is normal, 0.5 is double speed
+  const sd = (base) => base * smokeSpeed;
 
   return (
     <g>
@@ -279,13 +314,12 @@ function GasBody({ x, y, w, h, strokeColor, fillColor, lit, draw, smoking, drawD
           style={dSF(draw, drawDelay + 0.2 + yi * 0.03 + xi * 0.02, 0.2)} />
       )))}
 
-      {/* Smokestack — tapered trapezoid, wider at bottom, rises from building roof */}
+      {/* Smokestack — tapered, starts 1px above roof to avoid alpha overlap */}
       <path pathLength="1" d={`
-        M ${stackCX - stackBotW / 2} ${bldgY}
+        M ${stackCX - stackBotW / 2} ${bldgY - 1}
         L ${stackCX - stackTopW / 2} ${stackTop}
         L ${stackCX + stackTopW / 2} ${stackTop}
-        L ${stackCX + stackBotW / 2} ${bldgY}
-        Z`}
+        L ${stackCX + stackBotW / 2} ${bldgY - 1}`}
         stroke={strokeColor} strokeWidth="1" fill={fillColor}
         style={{ ...dSF(draw, drawDelay + 0.06, 0.35), transition: 'stroke 0.5s' }} />
 
@@ -304,23 +338,23 @@ function GasBody({ x, y, w, h, strokeColor, fillColor, lit, draw, smoking, drawD
         stroke={strokeColor} strokeWidth="1.2" fill={fillColor}
         style={{ ...dSF(draw, drawDelay + 0.12, 0.3), transition: 'stroke 0.5s' }} />
 
-      {/* Smoke — bigger, more visible, faster at high load */}
+      {/* Smoke — color and speed controlled by props */}
       {smoking && (
         <g>
           <circle cx={stackCX} cy={stackTop} r={4} fill={smokeColor + '35'}>
-            <animate attributeName="cy" from={stackTop} to={stackTop - 26} dur="1.5s" repeatCount="indefinite" />
-            <animate attributeName="r" from="4" to="13" dur="1.5s" repeatCount="indefinite" />
-            <animate attributeName="opacity" from="0.65" to="0" dur="1.5s" repeatCount="indefinite" />
+            <animate attributeName="cy" from={stackTop} to={stackTop - 26} dur={`${sd(1.5)}s`} repeatCount="indefinite" />
+            <animate attributeName="r" from="4" to="13" dur={`${sd(1.5)}s`} repeatCount="indefinite" />
+            <animate attributeName="opacity" from="0.65" to="0" dur={`${sd(1.5)}s`} repeatCount="indefinite" />
           </circle>
           <circle cx={stackCX + 3} cy={stackTop} r={3} fill={smokeColor + '28'}>
-            <animate attributeName="cy" from={stackTop} to={stackTop - 20} dur="1.9s" repeatCount="indefinite" begin="0.4s" />
-            <animate attributeName="r" from="3" to="10" dur="1.9s" repeatCount="indefinite" begin="0.4s" />
-            <animate attributeName="opacity" from="0.55" to="0" dur="1.9s" repeatCount="indefinite" begin="0.4s" />
+            <animate attributeName="cy" from={stackTop} to={stackTop - 20} dur={`${sd(1.9)}s`} repeatCount="indefinite" begin="0.4s" />
+            <animate attributeName="r" from="3" to="10" dur={`${sd(1.9)}s`} repeatCount="indefinite" begin="0.4s" />
+            <animate attributeName="opacity" from="0.55" to="0" dur={`${sd(1.9)}s`} repeatCount="indefinite" begin="0.4s" />
           </circle>
           <circle cx={stackCX - 2} cy={stackTop} r={2.5} fill={smokeColor + '20'}>
-            <animate attributeName="cy" from={stackTop} to={stackTop - 18} dur="2.2s" repeatCount="indefinite" begin="0.8s" />
-            <animate attributeName="r" from="2.5" to="8" dur="2.2s" repeatCount="indefinite" begin="0.8s" />
-            <animate attributeName="opacity" from="0.45" to="0" dur="2.2s" repeatCount="indefinite" begin="0.8s" />
+            <animate attributeName="cy" from={stackTop} to={stackTop - 18} dur={`${sd(2.2)}s`} repeatCount="indefinite" begin="0.8s" />
+            <animate attributeName="r" from="2.5" to="8" dur={`${sd(2.2)}s`} repeatCount="indefinite" begin="0.8s" />
+            <animate attributeName="opacity" from="0.45" to="0" dur={`${sd(2.2)}s`} repeatCount="indefinite" begin="0.8s" />
           </circle>
         </g>
       )}
@@ -353,10 +387,23 @@ const CONN_ALL = [
   { id: 'res2s',  d: `M ${pr(PLANTS.reserve).rx} ${pr(PLANTS.reserve).cy} Q ${(pr(PLANTS.reserve).rx + SUB.x) / 2} ${pr(PLANTS.reserve).cy} ${SUB.x} ${SUB.y + 12}`, wd: 0.8, group: 'gen' },
   { id: 'coal2s', d: `M ${pr(PLANTS.coal).rx} ${pr(PLANTS.coal).cy} Q ${(pr(PLANTS.coal).rx + SUB.x) / 2} ${pr(PLANTS.coal).cy} ${SUB.x} ${SUB.y + SUB.h - 10}`, wd: 0.8, group: 'gen' },
   { id: 'peak2s', d: `M ${pr(PLANTS.peaker).rx} ${pr(PLANTS.peaker).cy} Q ${(pr(PLANTS.peaker).rx + SUB.x) / 2} ${pr(PLANTS.peaker).cy} ${SUB.x} ${SUB.y + SUB.h / 2}`, wd: 0.8, group: 'gen', peakerLine: true },
-  ...HOUSES.map((h, i) => ({
-    id: `s2h${i}`, d: `M ${SUB.x + SUB.w} ${SUB.y + 8 + i * 6} L ${h.x + 14} ${h.y}`,
-    wd: 1.3 + i * 0.06, group: 'dist', shed: i >= 4,
-  })),
+  // Distribution lines: sorted by target Y so they fan out cleanly without crossing
+  // Substation exit points spread across the full right edge (y+5 to y+h-5)
+  ...[
+    { hi: 1, shed: false },  // h1 y=32  (topmost house)
+    { hi: 0, shed: false },  // h0 y=45
+    { hi: 2, shed: false },  // h2 y=50
+    { hi: 5, shed: true  },  // h5 y=135
+    { hi: 4, shed: true  },  // h4 y=195
+    { hi: 3, shed: false },  // h3 y=225 (bottommost house)
+  ].map(({ hi, shed }, sortIdx) => {
+    const h = HOUSES[hi];
+    const exitY = SUB.y + 5 + sortIdx * (SUB.h - 10) / 5;
+    return {
+      id: `s2h${hi}`, d: `M ${SUB.x + SUB.w} ${exitY} L ${h.x + 14} ${h.y}`,
+      wd: 1.3 + sortIdx * 0.05, group: 'dist', shed,
+    };
+  }),
 ];
 
 // ─── Grid diagram ───
@@ -374,13 +421,14 @@ function GridDiagram({ state, draw }) {
   const coalF = isCollapse ? c + '02' : c + '05';
 
   // Reserve ramps first, peaker only fires after reserve is maxed
-  const reserveUtil = isCollapse ? 0 : isShedding ? 1.0 : isReserves ? 1.0 : 0.6;
+  // Partial load at 50% — typical CCGT spinning reserve, shows clear headroom
+  const reserveUtil = isCollapse ? 0 : isShedding ? 1.0 : isReserves ? 1.0 : 0.5;
   const peakerUtil = isCollapse ? 0 : isShedding ? 0.95 : 0.05;
-  const coalUtil = isCollapse ? 0 : 0.85;
+  const coalUtil = isCollapse ? 0 : isShedding ? 0.90 : isReserves ? 0.88 : 0.85;
 
   const reserveStatus = isCollapse ? 'OFFLINE' : isShedding ? 'MAX OUTPUT' : isReserves ? 'MAX OUTPUT' : 'PARTIAL LOAD';
   const peakerStatus = isCollapse ? 'OFFLINE' : isShedding ? 'RAMPING' : 'IDLE';
-  const coalStatus = isCollapse ? 'OFFLINE' : 'BASELOAD';
+  const coalStatus = isCollapse ? 'OFFLINE' : isShedding ? 'RAMPING' : isReserves ? 'RAMPING' : 'BASELOAD';
 
   const reserveStatusC = isCollapse ? colors.textDim + '40' : isReserves ? colors.accent : colors.success + '99';
   const peakerStatusC = isCollapse ? colors.textDim + '40' : isShedding ? colors.accent : colors.textDim + '50';
@@ -427,9 +475,8 @@ function GridDiagram({ state, draw }) {
 
       <rect width="1000" height="360" fill="url(#fwGrid)" mask="url(#fwGF)" />
 
-      {/* ─── Connection lines (animate LTR) ─── */}
+      {/* ─── Connection lines (animate LTR) — peaker line always drawn ─── */}
       {CONN_ALL.map((conn, i) => {
-        if (conn.peakerLine && !isShedding) return null;
         const dark = isShedding && conn.shed;
         const drawDelay = conn.group === 'gen' ? 0.3 : 0.7 + i * 0.03;
         return (
@@ -512,13 +559,17 @@ function GridDiagram({ state, draw }) {
         statusColor={reserveStatusC} utilization={reserveUtil}
         strokeColor={isReserves && !isCollapse ? colors.accent + '80' : reserveLit ? c + '80' : reserveS}
         fillColor={isReserves && !isCollapse ? colors.accent + '06' : reserveLit ? c + '08' : reserveF}
-        lit={reserveLit || (isReserves && !isCollapse)} draw={draw} smoking={!isCollapse} drawDelay={0} />
+        lit={reserveLit || (isReserves && !isCollapse)} draw={draw} smoking={!isCollapse} drawDelay={0}
+        smokeColor={isReserves ? colors.accent : c}
+        smokeSpeed={isReserves ? 0.6 : 1} />
 
       {/* ─── Gas Peaker (middle) — only fires after reserve is maxed ─── */}
       <PlantUnit {...PLANTS.peaker} type="gas" label="GAS PEAKER" status={peakerStatus}
         statusColor={peakerStatusC} utilization={peakerUtil}
         strokeColor={peakerS} fillColor={peakerF}
-        lit={isShedding && !isCollapse} draw={draw} smoking={isShedding && !isCollapse} drawDelay={0.05} />
+        lit={isShedding && !isCollapse} draw={draw} smoking={isShedding && !isCollapse} drawDelay={0.05}
+        smokeColor={colors.accent}
+        smokeSpeed={0.7} />
 
       {/* ─── Coal Baseload (bottom) ─── */}
       <PlantUnit {...PLANTS.coal} type="coal" label="COAL BASELOAD" status={coalStatus}
@@ -662,6 +713,7 @@ export default function FrequencyWalkthrough({ step = 0 }) {
                 {s.status && <div className="mt-2 text-[10px] font-mono font-semibold" style={{
                   color: step <= 1 ? colors.success : step <= 2 ? colors.accent : colors.danger, transition: 'color 0.6s',
                 }}>{s.status}</div>}
+                {s.gridTimeSec != null && <div className="mt-1"><GridClock targetSec={s.gridTimeSec} /></div>}
               </div>
               <div className="flex-1 rounded-lg p-4 flex flex-col justify-between" style={{
                 background: 'rgba(5,8,16,0.9)', border: `1px solid ${colors.surfaceLight}`,
