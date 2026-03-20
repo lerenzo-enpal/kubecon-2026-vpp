@@ -356,15 +356,15 @@ export default function Presentation() {
       {/* 11: Frequency Demo — Interactive */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
-          <H>The Grid: A Balancing Act</H>
-          <P size="20px">Now that you know the tools — watch what happens when something goes wrong. Click an event to simulate.</P>
+          <H>Balancing the Grid in Action</H>
+          <P size="20px">Click an event to simulate what happens when something goes wrong.</P>
           <div className="flex-1 flex items-center" style={{ width: '100%' }}>
             <LazyContent><FrequencyDemo width={1286} height={480} panelWidth={340} /></LazyContent>
           </div>
-          <div className="flex justify-center">
-            <div className="rounded-[10px] text-center" style={{ width: '68%', padding: '14px 24px', background: `${colors.accent}08`, border: `1px solid ${colors.accent}20` }}>
-              <div className="text-[22px] font-sans" style={{ color: colors.textDim }}>The entire European grid operates within a <span className="font-semibold" style={{ color: colors.accent }}>+/-0.2 Hz</span> band. Cross those thresholds and automated protection systems start disconnecting load or generators.</div>
-            </div>
+          <div className="text-center py-3">
+            <span className="text-[28px] font-mono font-extrabold" style={{ color: colors.danger, textShadow: `0 0 20px ${colors.danger}30` }}>Collapse</span>
+            <span className="text-[28px] font-mono mx-3" style={{ color: colors.textDim }}>=</span>
+            <span className="text-[28px] font-mono font-extrabold" style={{ color: colors.accent, textShadow: `0 0 20px ${colors.accent}30` }}>{'\u0394'} 2.5 Hz</span>
           </div>
         </div>
         <Notes>

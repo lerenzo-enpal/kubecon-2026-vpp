@@ -167,18 +167,20 @@ function PlantUnit({ x, y, w, h, type, label, status, statusColor, utilization,
 }
 
 // ─── Coal plant body ───
-// Main boiler hall (left) + smokestack (tall, on the hall) + hyperbolic cooling tower (right)
+// Main boiler hall (left) + tapered smokestack + hyperbolic cooling tower (right)
+// All elements aligned to ground at y+h
 function CoalBody({ x, y, w, h, strokeColor, fillColor, lit, draw, smoking, drawDelay }) {
-  // Boiler hall: left 55%, bottom 60% of the bounding box
-  const hallW = w * 0.52, hallH = h * 0.58, hallY = y + h - hallH;
-  // Smokestack: thin, tall, rises from hall
-  const stackW = w * 0.05, stackH = h * 0.45;
-  const stackX = x + hallW * 0.35, stackTop = hallY - stackH;
-  // Cooling tower: right side, full height, hyperbolic curve
-  const twW = w * 0.3, twH = h * 0.9;
+  const groundY = y + h;
+  // Boiler hall: left portion, sits on ground
+  const hallW = w * 0.50, hallH = h * 0.55;
+  const hallY = groundY - hallH;
+  // Smokestack: tapered (wider at bottom), rises from hall roof
+  const stackBotW = w * 0.07, stackTopW = w * 0.045, stackH = h * 0.42;
+  const stackCX = x + hallW * 0.4, stackTop = hallY - stackH;
+  // Cooling tower: right side, nearly full height, base aligned to ground
+  const twW = w * 0.28, twH = h * 0.88;
   const twX = x + w * 0.62, twCX = twX + twW / 2;
-  // Small auxiliary building
-  const auxW = w * 0.18, auxH = h * 0.22, auxX = x + hallW + 2, auxY = y + h - auxH;
+  const twBot = groundY; // tower base on ground
 
   return (
     <g>
@@ -190,36 +192,49 @@ function CoalBody({ x, y, w, h, strokeColor, fillColor, lit, draw, smoking, draw
       {/* Roof detail line */}
       <line pathLength="1" x1={x} y1={hallY + 3} x2={x + hallW} y2={hallY + 3}
         stroke={strokeColor} strokeWidth="0.5" style={dS(draw, drawDelay + 0.15)} />
-      {/* Smokestack */}
-      <rect pathLength="1" x={stackX} y={stackTop} width={stackW} height={stackH + 2} rx={0.5}
+      {/* Smokestack — tapered trapezoid (wider at bottom) */}
+      <path pathLength="1" d={`
+        M ${stackCX - stackBotW / 2} ${hallY}
+        L ${stackCX - stackTopW / 2} ${stackTop}
+        L ${stackCX + stackTopW / 2} ${stackTop}
+        L ${stackCX + stackBotW / 2} ${hallY}
+        Z`}
         stroke={strokeColor} strokeWidth="1" fill={fillColor}
         style={{ ...dSF(draw, drawDelay + 0.12, 0.3), transition: 'stroke 0.5s' }} />
-      {/* Cooling tower — hyperbolic shape */}
+      {/* Cooling tower — hyperbolic shape, bottom at groundY */}
       <path pathLength="1" d={`
-        M ${twX} ${y + twH}
-        Q ${twX + twW * 0.1} ${y + twH * 0.42}, ${twX + twW * 0.06} ${y}
-        L ${twX + twW * 0.94} ${y}
-        Q ${twX + twW * 0.9} ${y + twH * 0.42}, ${twX + twW} ${y + twH}
+        M ${twX} ${twBot}
+        Q ${twX + twW * 0.1} ${twBot - twH * 0.55}, ${twX + twW * 0.06} ${twBot - twH}
+        L ${twX + twW * 0.94} ${twBot - twH}
+        Q ${twX + twW * 0.9} ${twBot - twH * 0.55}, ${twX + twW} ${twBot}
         Z`}
         stroke={strokeColor} strokeWidth="1.5" fill={fillColor}
         filter={lit ? 'url(#fwG)' : undefined}
         style={{ ...dSF(draw, drawDelay + 0.06, 0.5), transition: 'stroke 0.5s, fill 0.5s' }} />
-      {/* Auxiliary building */}
-      <rect pathLength="1" x={auxX} y={auxY} width={auxW} height={auxH} rx={1}
-        stroke={strokeColor} strokeWidth="0.8" fill={fillColor}
-        style={{ ...dSF(draw, drawDelay + 0.18, 0.3), transition: 'stroke 0.5s' }} />
-      {/* Smoke */}
+      {/* Smoke — bigger, more visible */}
       {smoking && (
         <g>
-          <circle cx={stackX + stackW / 2} cy={stackTop} r={2} fill={c + '22'}>
-            <animate attributeName="cy" from={stackTop} to={stackTop - 22} dur="2s" repeatCount="indefinite" />
-            <animate attributeName="r" from="2" to="8" dur="2s" repeatCount="indefinite" />
-            <animate attributeName="opacity" from="0.5" to="0" dur="2s" repeatCount="indefinite" />
+          {/* Stack smoke */}
+          <circle cx={stackCX} cy={stackTop} r={4} fill={c + '30'}>
+            <animate attributeName="cy" from={stackTop} to={stackTop - 28} dur="1.8s" repeatCount="indefinite" />
+            <animate attributeName="r" from="4" to="14" dur="1.8s" repeatCount="indefinite" />
+            <animate attributeName="opacity" from="0.6" to="0" dur="1.8s" repeatCount="indefinite" />
           </circle>
-          <circle cx={twCX} cy={y + 2} r={3} fill={c + '18'}>
-            <animate attributeName="cy" from={y + 2} to={y - 20} dur="2.4s" repeatCount="indefinite" begin="0.5s" />
-            <animate attributeName="r" from="3" to="11" dur="2.4s" repeatCount="indefinite" begin="0.5s" />
-            <animate attributeName="opacity" from="0.45" to="0" dur="2.4s" repeatCount="indefinite" begin="0.5s" />
+          <circle cx={stackCX + 3} cy={stackTop} r={3} fill={c + '25'}>
+            <animate attributeName="cy" from={stackTop} to={stackTop - 22} dur="2.3s" repeatCount="indefinite" begin="0.5s" />
+            <animate attributeName="r" from="3" to="11" dur="2.3s" repeatCount="indefinite" begin="0.5s" />
+            <animate attributeName="opacity" from="0.5" to="0" dur="2.3s" repeatCount="indefinite" begin="0.5s" />
+          </circle>
+          {/* Cooling tower steam */}
+          <circle cx={twCX} cy={twBot - twH + 2} r={5} fill={c + '22'}>
+            <animate attributeName="cy" from={twBot - twH + 2} to={twBot - twH - 25} dur="2.2s" repeatCount="indefinite" />
+            <animate attributeName="r" from="5" to="16" dur="2.2s" repeatCount="indefinite" />
+            <animate attributeName="opacity" from="0.55" to="0" dur="2.2s" repeatCount="indefinite" />
+          </circle>
+          <circle cx={twCX - 4} cy={twBot - twH + 2} r={4} fill={c + '18'}>
+            <animate attributeName="cy" from={twBot - twH + 2} to={twBot - twH - 20} dur="2.8s" repeatCount="indefinite" begin="0.7s" />
+            <animate attributeName="r" from="4" to="12" dur="2.8s" repeatCount="indefinite" begin="0.7s" />
+            <animate attributeName="opacity" from="0.45" to="0" dur="2.8s" repeatCount="indefinite" begin="0.7s" />
           </circle>
         </g>
       )}
@@ -228,16 +243,16 @@ function CoalBody({ x, y, w, h, strokeColor, fillColor, lit, draw, smoking, draw
 }
 
 // ─── Gas plant body ───
-// Bell intake (left) → solid shaft → generator building (right) → stack
-// Turbine sits low on the ground, no spindly legs
+// Bell intake (left) → solid shaft → generator building (right) → tapered stack
+// All elements aligned to ground at y+h
 function GasBody({ x, y, w, h, strokeColor, fillColor, lit, draw, smoking, drawDelay }) {
   const groundY = y + h;
   // Generator building: tall narrow rect, right portion, sits on ground
   const bldgW = w * 0.32, bldgH = h * 0.6;
   const bldgX = x + w * 0.58, bldgY = groundY - bldgH;
-  // Smokestack on top of building
-  const stackW = w * 0.05, stackH = h * 0.35;
-  const stackX = bldgX + bldgW * 0.5 - stackW / 2, stackTop = bldgY - stackH;
+  // Smokestack: tapered (wider at bottom), rises from building roof
+  const stackBotW = w * 0.065, stackTopW = w * 0.04, stackH = h * 0.35;
+  const stackCX = bldgX + bldgW * 0.5, stackTop = bldgY - stackH;
   // Turbine shaft: solid horizontal rect connecting intake to building, sits on ground
   const shaftH = h * 0.18;
   const shaftY = groundY - shaftH;
@@ -245,6 +260,8 @@ function GasBody({ x, y, w, h, strokeColor, fillColor, lit, draw, smoking, drawD
   // Bell-shaped air intake (trapezoid, wide at left, same height as shaft area)
   const intakeW = w * 0.18, intakeH = h * 0.3;
   const intakeX = x + 1, intakeY = groundY - intakeH;
+  // Smoke color depends on plant type context (accent for gas)
+  const smokeColor = colors.accent;
 
   return (
     <g>
@@ -262,8 +279,13 @@ function GasBody({ x, y, w, h, strokeColor, fillColor, lit, draw, smoking, drawD
           style={dSF(draw, drawDelay + 0.2 + yi * 0.03 + xi * 0.02, 0.2)} />
       )))}
 
-      {/* Smokestack */}
-      <rect pathLength="1" x={stackX} y={stackTop} width={stackW} height={stackH + 2} rx={0.5}
+      {/* Smokestack — tapered trapezoid, wider at bottom, rises from building roof */}
+      <path pathLength="1" d={`
+        M ${stackCX - stackBotW / 2} ${bldgY}
+        L ${stackCX - stackTopW / 2} ${stackTop}
+        L ${stackCX + stackTopW / 2} ${stackTop}
+        L ${stackCX + stackBotW / 2} ${bldgY}
+        Z`}
         stroke={strokeColor} strokeWidth="1" fill={fillColor}
         style={{ ...dSF(draw, drawDelay + 0.06, 0.35), transition: 'stroke 0.5s' }} />
 
@@ -282,18 +304,23 @@ function GasBody({ x, y, w, h, strokeColor, fillColor, lit, draw, smoking, drawD
         stroke={strokeColor} strokeWidth="1.2" fill={fillColor}
         style={{ ...dSF(draw, drawDelay + 0.12, 0.3), transition: 'stroke 0.5s' }} />
 
-      {/* Smoke */}
+      {/* Smoke — bigger, more visible, faster at high load */}
       {smoking && (
         <g>
-          <circle cx={stackX + stackW / 2} cy={stackTop} r={2} fill={colors.accent + '28'}>
-            <animate attributeName="cy" from={stackTop} to={stackTop - 20} dur="1.8s" repeatCount="indefinite" />
-            <animate attributeName="r" from="2" to="8" dur="1.8s" repeatCount="indefinite" />
-            <animate attributeName="opacity" from="0.5" to="0" dur="1.8s" repeatCount="indefinite" />
+          <circle cx={stackCX} cy={stackTop} r={4} fill={smokeColor + '35'}>
+            <animate attributeName="cy" from={stackTop} to={stackTop - 26} dur="1.5s" repeatCount="indefinite" />
+            <animate attributeName="r" from="4" to="13" dur="1.5s" repeatCount="indefinite" />
+            <animate attributeName="opacity" from="0.65" to="0" dur="1.5s" repeatCount="indefinite" />
           </circle>
-          <circle cx={stackX + stackW / 2 + 2} cy={stackTop} r={1.5} fill={colors.accent + '20'}>
-            <animate attributeName="cy" from={stackTop} to={stackTop - 16} dur="2.2s" repeatCount="indefinite" begin="0.6s" />
-            <animate attributeName="r" from="1.5" to="6" dur="2.2s" repeatCount="indefinite" begin="0.6s" />
-            <animate attributeName="opacity" from="0.4" to="0" dur="2.2s" repeatCount="indefinite" begin="0.6s" />
+          <circle cx={stackCX + 3} cy={stackTop} r={3} fill={smokeColor + '28'}>
+            <animate attributeName="cy" from={stackTop} to={stackTop - 20} dur="1.9s" repeatCount="indefinite" begin="0.4s" />
+            <animate attributeName="r" from="3" to="10" dur="1.9s" repeatCount="indefinite" begin="0.4s" />
+            <animate attributeName="opacity" from="0.55" to="0" dur="1.9s" repeatCount="indefinite" begin="0.4s" />
+          </circle>
+          <circle cx={stackCX - 2} cy={stackTop} r={2.5} fill={smokeColor + '20'}>
+            <animate attributeName="cy" from={stackTop} to={stackTop - 18} dur="2.2s" repeatCount="indefinite" begin="0.8s" />
+            <animate attributeName="r" from="2.5" to="8" dur="2.2s" repeatCount="indefinite" begin="0.8s" />
+            <animate attributeName="opacity" from="0.45" to="0" dur="2.2s" repeatCount="indefinite" begin="0.8s" />
           </circle>
         </g>
       )}
@@ -419,7 +446,13 @@ function GridDiagram({ state, draw }) {
           {CONN_ALL.map(conn => {
             if (isShedding && conn.shed) return null;
             if (conn.peakerLine && !isShedding) return null;
-            const pulseC = conn.peakerLine ? colors.accent : c;
+            // Pulse color matches the line's current state
+            const isPeaker = conn.peakerLine;
+            const isReserve = conn.id === 'res2s';
+            const pulseC = isPeaker ? colors.accent
+              : isReserve && isReserves ? colors.accent
+              : isReserves ? lineC  // distribution lines match grid stress color
+              : c;
             return (
               <path key={`p-${conn.id}`} pathLength="1" d={conn.d}
                 stroke={pulseC} strokeWidth={3} fill="none" strokeDasharray="0.12 0.88"
@@ -432,7 +465,12 @@ function GridDiagram({ state, draw }) {
             const flowStart = conn.wd + 0.25;
             const isPeaker = conn.peakerLine;
             const isReserve = conn.id === 'res2s';
-            const flowC = isPeaker ? colors.accent : isReserve && isReserves ? colors.accent : c;
+            // Flow color matches the line color for visual consistency
+            const flowC = isPeaker ? colors.accent
+              : isReserve && isReserves ? colors.accent
+              : isShedding ? colors.danger + '80'    // red-ish during emergency
+              : isReserves ? colors.accent + '80'     // amber during warning
+              : c;
             const dur = conn.group === 'gen'
               ? (isPeaker ? peakerFlowDur : isReserve ? reserveFlowDur : coalFlowDur)
               : 1.2 + i * 0.04;
