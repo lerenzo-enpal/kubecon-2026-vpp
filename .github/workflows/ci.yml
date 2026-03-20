@@ -7,21 +7,34 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  website:
+    name: Website Build
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: website
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+      - run: npm ci
+      - run: npm test
+
+  presentation:
+    name: Presentation Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: presentation
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
           cache: npm
           cache-dependency-path: presentation/package-lock.json
-
-      - name: Install dependencies
-        working-directory: presentation
-        run: npm ci
-
-      - name: Build
-        working-directory: presentation
-        run: npm run build
+      - run: npm ci
+      - run: npm run build
