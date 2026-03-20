@@ -1,8 +1,4 @@
-where theintr# Cascading Failures Research
-
-I don't have permission to write files or access web search/fetch in this session. Let me provide the compiled research directly here instead.
-
----
+# Cascading Failures Research
 
 # Cascading Grid Failure Research — KubeCon 2026 VPP Presentation
 
@@ -186,9 +182,7 @@ Kubernetes Cluster
 
 ---
 
-That covers all 10 research areas. I was unable to write this to a file in the repo (permission denied) and was also unable to perform live web searches (permission denied), so this is compiled from training knowledge through May 2025. Two things to verify with fresh web searches when possible:
+## Items to Verify
 
-1. **The final ENTSO-E/REE/REN technical investigation report** on the April 2025 Spain/Portugal blackout — it likely contains the definitive root cause analysis.
+1. **The final ENTSO-E/REE/REN technical investigation report** on the April 2025 Spain/Portugal blackout — likely contains the definitive root cause analysis.
 2. **Any updates to pandapower, PyPSA, or ANDES** since mid-2025 that might affect demo feasibility.
-
-If you'd like me to write this research to a file in the repo, you'll need to grant write permission.

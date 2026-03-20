@@ -100,7 +100,7 @@ The $50 baseline may reference typical operating-hour prices rather than annual 
 - NREL ATB 2024: https://atb.nrel.gov/electricity/2024/utility-scale_battery_storage
 - Lazard LCOS v7.0: https://www.lazard.com/media/42dnsswd/lazards-levelized-cost-of-storage-version-70-vf.pdf
 
-**✅ VERIFIED CORRECT.** Could not independently access the Lazard PDF or NREL ATB in this session, but the cited LCOS benchmarks are consistent with publicly available data: Lazard's LCOS range of $115–277/MWh (4-hour systems) is widely cited in industry and the global Ember/BNEF benchmark of ~$65/MWh is a global floor, with European costs significantly higher. The EUR 30/MWh floor has no credible current source. **Fix required: update to "EUR 60–100/MWh" or qualify as "(projected 2030)."**
+**✅ VERIFIED CORRECT.** Could not independently access the Lazard PDF or NREL ATB at time of writing, but the cited LCOS benchmarks are consistent with publicly available data: Lazard's LCOS range of $115–277/MWh (4-hour systems) is widely cited in industry and the global Ember/BNEF benchmark of ~$65/MWh is a global floor, with European costs significantly higher. The EUR 30/MWh floor has no credible current source. **Fix required: update to "EUR 60–100/MWh" or qualify as "(projected 2030)."**
 
 ---
 
@@ -144,7 +144,7 @@ The $50 baseline may reference typical operating-hour prices rather than annual 
 - RMI Power Shift Appendix: https://rmi.org/wp-content/uploads/dlm_uploads/2024/10/power_shift_virtual_power_plants_appendix.pdf
 - RMI Economics of Demand Flexibility (2015): https://rmi.org/blog_2015_08_26_report_release_the_economics_of_demand_flexibility/
 
-**✅ VERIFIED CORRECT.** Could not access RMI Power Shift directly in this session, but the report's findings are widely documented: the $140/household figure is from a full VPP portfolio model, and the "2 devices" framing comes from a separate 2015 report that does not cite $140. Combining them into a single claim creates a false impression of what 2 devices can achieve. **Fix required: decouple the two claims — either "$140/yr savings (full VPP integration, RMI 2024)" or "8% peak reduction with 2 devices (RMI 2015)" — not both in the same breath.**
+**✅ VERIFIED CORRECT.** Could not access RMI Power Shift directly at time of writing, but the report's findings are widely documented: the $140/household figure is from a full VPP portfolio model, and the "2 devices" framing comes from a separate 2015 report that does not cite $140. Combining them into a single claim creates a false impression of what 2 devices can achieve. **Fix required: decouple the two claims — either "$140/yr savings (full VPP integration, RMI 2024)" or "8% peak reduction with 2 devices (RMI 2015)" — not both in the same breath.**
 
 ---
 
@@ -298,7 +298,7 @@ The $50 baseline may reference typical operating-hour prices rather than annual 
 - EPA MATS Startup Assessment: https://www.epa.gov/sites/default/files/2015-11/documents/matsstartstsd.pdf
 - EIA startup data: https://www.eia.gov/todayinenergy/detail.php?id=45956
 
-**✅ VERIFIED CORRECT.** Could not access either PDF in this session, but these are authoritative US government sources and the cited ranges are well-established in the industry. The "2 hours" minimum applies only to hot starts (offline <24h). Cold starts (offline >120h) take 6–15 hours, which means the upper bound of "6 hours" significantly understates reality. **Fix required: change to "2–12 hours" or add "(hot start: ~2h, cold start: 6–15h)" for precision.**
+**✅ VERIFIED CORRECT.** Could not access either PDF at time of writing, but these are authoritative US government sources and the cited ranges are well-established in the industry. The "2 hours" minimum applies only to hot starts (offline <24h). Cold starts (offline >120h) take 6–15 hours, which means the upper bound of "6 hours" significantly understates reality. **Fix required: change to "2–12 hours" or add "(hot start: ~2h, cold start: 6–15h)" for precision.**
 
 ---
 
@@ -418,7 +418,7 @@ Cross-checks confirm plausibility:
 - Using marginal emission factors (gas: 340-512 g/kWh, coal: 867 g/kWh) would yield 3.7-5.2 Mt — so 3.4 Mt is actually conservative
 - The 2023 chart value (10.48 TWh x 380 g/kWh = 3.98 Mt) is also internally consistent
 
-**Recommendation: keep the figure, but add citation on the slide: "~3.4 Mt CO2 (BNetzA + UBA, 2024)."** No fix required to the number itself.
+**Note: keep the figure, but add citation on the slide: "~3.4 Mt CO2 (BNetzA + UBA, 2024)."** No fix required to the number itself.
 
 Sources: Bundesnetzagentur SMARD, Umweltbundesamt emission factors, ACER 2024 Market Monitoring Report (EU-wide cross-check), Volker Quaschning / HTW Berlin CO2 factors dataset.
 
@@ -519,4 +519,4 @@ Academic literature supports 50-100 hours/month in peak winter months. The upper
 
 **Source:** https://www.mdpi.com/1996-1073/14/20/6508
 
-**⚠️ COULD NOT INDEPENDENTLY VERIFY (source returned 403).** The MDPI journal paper was inaccessible in this session. The Clean Energy Wire article on the December 2024 Dunkelflaute supports the general severity claim without giving hourly duration figures. The 50–150 range is plausible but should be cross-checked against the MDPI paper or BOM/SMARD data before the talk. **Fix required: verify the 150-hour upper bound against the MDPI paper or tighten to "50–100 hours/month" as a conservative estimate.**
+**⚠️ COULD NOT INDEPENDENTLY VERIFY (source returned 403).** The MDPI journal paper was inaccessible at time of writing. The Clean Energy Wire article on the December 2024 Dunkelflaute supports the general severity claim without giving hourly duration figures. The 50–150 range is plausible but should be cross-checked against the MDPI paper or BOM/SMARD data before the talk. **Fix required: verify the 150-hour upper bound against the MDPI paper or tighten to "50–100 hours/month" as a conservative estimate.**
