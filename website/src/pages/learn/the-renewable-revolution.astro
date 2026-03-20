@@ -1,0 +1,199 @@
+---
+import ContentLayout from '../../layouts/ContentLayout.astro';
+---
+
+<ContentLayout title="The Renewable Revolution" description="Solar and wind are growing faster than anyone predicted. But the grid wasn't built for energy that comes and goes with the weather.">
+
+<h1>The Renewable Revolution</h1>
+
+<p class="text-xl" style="color: var(--color-text-muted); max-width: 600px;">
+  Solar and wind are growing faster than anyone predicted. But the grid wasn't built for
+  energy that comes and goes with the weather.
+</p>
+
+<hr />
+
+<h2 id="growth">Solar and Wind Growth</h2>
+
+<p>
+  In the year 2000, renewable sources provided just 6% of Germany's electricity. By 2025,
+  that figure exceeded 55%. This is one of the fastest energy transitions in history, and it
+  happened in a country of 84 million people with one of the world's largest industrial economies.
+</p>
+
+<p>
+  Solar capacity alone grew from around 5 GW in 2010 to over 100 GW by 2024 — roughly 18x in
+  under fifteen years. Wind now provides more electricity than coal. The renewable revolution
+  is no longer a future ambition. It is the present reality.
+</p>
+
+<div class="my-8 max-w-2xl">
+  <div class="font-mono text-sm mb-4" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">Renewable Share of German Electricity</div>
+  <div class="flex flex-col gap-3">
+    <div class="flex items-center gap-4 p-4 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+      <div class="font-mono font-bold text-lg flex-shrink-0 w-16" style="color: var(--color-text-dim);">2000</div>
+      <div class="flex-1 rounded-full h-3" style="background: var(--color-surface-light);">
+        <div class="rounded-full h-3" style="background: var(--color-primary); width: 11%;"></div>
+      </div>
+      <div class="font-mono font-extrabold text-lg flex-shrink-0" style="color: var(--color-primary);">6%</div>
+    </div>
+    <div class="flex items-center gap-4 p-4 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+      <div class="font-mono font-bold text-lg flex-shrink-0 w-16" style="color: var(--color-text-dim);">2010</div>
+      <div class="flex-1 rounded-full h-3" style="background: var(--color-surface-light);">
+        <div class="rounded-full h-3" style="background: var(--color-primary); width: 31%;"></div>
+      </div>
+      <div class="font-mono font-extrabold text-lg flex-shrink-0" style="color: var(--color-primary);">17%</div>
+    </div>
+    <div class="flex items-center gap-4 p-4 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+      <div class="font-mono font-bold text-lg flex-shrink-0 w-16" style="color: var(--color-text-dim);">2020</div>
+      <div class="flex-1 rounded-full h-3" style="background: var(--color-surface-light);">
+        <div class="rounded-full h-3" style="background: var(--color-primary); width: 84%;"></div>
+      </div>
+      <div class="font-mono font-extrabold text-lg flex-shrink-0" style="color: var(--color-primary);">46%</div>
+    </div>
+    <div class="flex items-center gap-4 p-4 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+      <div class="font-mono font-bold text-lg flex-shrink-0 w-16" style="color: var(--color-text-dim);">2025</div>
+      <div class="flex-1 rounded-full h-3" style="background: var(--color-surface-light);">
+        <div class="rounded-full h-3" style="background: var(--color-primary); width: 100%;"></div>
+      </div>
+      <div class="font-mono font-extrabold text-lg flex-shrink-0" style="color: var(--color-primary);">55%+</div>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4 my-8 max-w-3xl">
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-solar);">100+ GW</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">solar capacity (2024)</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">62 GW</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">wind capacity</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-solar);">50.4 GW</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">peak solar feed-in record</div>
+  </div>
+</div>
+
+<h2 id="duck-curve">The Duck Curve</h2>
+
+<p>
+  When the sun shines, solar panels flood the grid with cheap electricity. So much, in fact, that
+  demand for conventional generation — coal, gas, nuclear — collapses during the middle of the day.
+  Then, as the sun sets and solar output drops to zero, demand for conventional generation surges
+  back up within a few hours.
+</p>
+
+<p>
+  Plot this demand on a chart and the shape looks unmistakably like a duck: a belly sagging in the
+  afternoon, a neck rising sharply at sunset. California's grid operator (CAISO) coined the term
+  in 2013, and the duck has since waddled its way across every grid with significant solar penetration.
+</p>
+
+<p>
+  The duck curve is not just a curiosity. It is a serious operational problem. Gas plants cannot
+  ramp from idle to full output instantly — they need time to spin up, and each start-stop cycle
+  costs money and causes wear. The steeper the duck's neck, the faster conventional plants must
+  ramp, and the more expensive and precarious the evening transition becomes.
+</p>
+
+<div class="my-8 p-6 rounded-lg flex items-center justify-center" style="background: var(--color-bg-alt); border: 2px dashed var(--color-surface-light); min-height: 200px;">
+  <div class="text-center">
+    <div class="font-mono text-sm mb-2" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">[Interactive]</div>
+    <div class="text-lg font-semibold" style="color: var(--color-text-muted);">Duck Curve Explorer</div>
+    <div class="text-sm mt-2" style="color: var(--color-text-dim);">Coming soon</div>
+  </div>
+</div>
+
+<h2 id="curtailment">Curtailment: Throwing Away Clean Energy</h2>
+
+<p>
+  When solar and wind generate more electricity than the grid can physically absorb, operators
+  have no choice: they tell renewable generators to shut down. This is called curtailment. The
+  turbines stop spinning. The panels are disconnected. Clean, free energy is thrown away.
+</p>
+
+<p>
+  In Germany, approximately 10 TWh of renewable energy is curtailed every year. Solar curtailment
+  nearly doubled in 2024, rising 97% year-over-year as record solar capacity additions outpaced
+  grid expansion. The operators who curtail these plants still have to pay compensation to the
+  generators — in 2024, that bill came to EUR 554 million.
+</p>
+
+<p>
+  The irony is hard to overstate. We are spending billions to build solar panels and wind turbines,
+  then paying hundreds of millions more to switch them off — because the grid cannot handle the
+  energy they produce.
+</p>
+
+<div class="grid grid-cols-2 gap-4 my-8 max-w-2xl">
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-solar);">10 TWh/yr</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">clean energy curtailed</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">2.7M homes</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">could be powered by wasted energy</div>
+  </div>
+</div>
+
+<h2 id="negative-prices">Negative Prices</h2>
+
+<p>
+  In 2024, Germany experienced 457 hours where the price of electricity went negative — meaning
+  generators had to <em>pay</em> to put their electricity on the grid. In 2025, that number rose
+  to 575 hours.
+</p>
+
+<p>
+  Negative prices happen when renewable generation so overwhelms demand that there is literally
+  no one willing to buy the electricity at any positive price. Inflexible plants (nuclear, some
+  coal, biomass with feed-in tariffs) keep running because shutting down and restarting is even
+  more expensive than paying to offload their output. The result: a market where energy is so
+  abundant that its price goes below zero.
+</p>
+
+<p>
+  This might sound like a good problem to have. It is not. When prices go negative, renewable
+  generators lose money on every kilowatt-hour they produce. Sustained negative pricing
+  discourages investment in new solar and wind capacity — the exact opposite of what the energy
+  transition needs.
+</p>
+
+<div class="grid grid-cols-2 gap-4 my-8 max-w-2xl">
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-solar);">457 hrs</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">negative prices in 2024</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-solar);">575 hrs</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">negative prices in 2025</div>
+  </div>
+</div>
+
+<p>
+  The trend is accelerating. Germany went from 15 negative-price hours in 2008, to 298 in 2020,
+  to 575 in 2025. As solar capacity continues to grow — Germany's target is 215 GW by 2030,
+  more than double today's installed base — negative pricing events will only become more frequent
+  without a fundamental change in how the grid absorbs surplus energy.
+</p>
+
+<hr />
+
+<p>
+  The grid needs a way to absorb this energy — to soak up the surplus when the sun shines and
+  release it when it doesn't. That is exactly what a Virtual Power Plant does.
+</p>
+
+<div class="my-8 p-6 rounded-lg" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
+  <div class="font-mono text-sm mb-2" style="color: var(--color-primary); letter-spacing: 0.08em;">NEXT</div>
+  <a href="/learn/the-virtual-power-plant" class="text-lg font-semibold hover:underline" style="color: var(--color-text);">
+    The Virtual Power Plant
+  </a>
+  <div class="text-sm mt-1" style="color: var(--color-text-dim);">
+    Homes as infrastructure. Batteries, EVs, and heat pumps stabilizing the grid.
+  </div>
+</div>
+
+</ContentLayout>

@@ -1,0 +1,108 @@
+---
+import ContentLayout from '../layouts/ContentLayout.astro';
+
+const incidents = [
+  { year: 2003, title: 'Northeast US/Canada Blackout', location: 'United States, Ontario', affected: '55 million', slug: '2003-northeast-us-blackout', color: 'var(--color-danger)' },
+  { year: 2003, title: 'Italy Blackout', location: 'Italy', affected: '56 million', slug: '2003-italy-blackout', color: 'var(--color-danger)' },
+  { year: 2006, title: 'European Grid Split', location: 'Continental Europe', affected: '15M households', slug: '2006-european-grid-split', color: 'var(--color-accent)' },
+  { year: 2016, title: 'South Australia Blackout', location: 'South Australia', affected: '1.7M (entire state)', slug: '2016-south-australia-blackout', color: 'var(--color-danger)' },
+  { year: 2017, title: 'Hornsdale Battery Response', location: 'South Australia', affected: 'Prevented cascade', slug: '2017-hornsdale-battery-response', color: 'var(--color-success)' },
+  { year: 2017, title: 'South Australia Heatwave', location: 'South Australia', affected: '90K homes', slug: '2017-south-australia-heatwave', color: 'var(--color-accent)' },
+  { year: 2021, title: 'Texas ERCOT Winter Storm', location: 'Texas', affected: '4.5M homes, 246 dead', slug: '2021-texas-ercot-winter-storm', color: 'var(--color-danger)' },
+  { year: 2021, title: 'European Grid Split', location: 'Continental Europe', affected: '200M+ at risk', slug: '2021-european-grid-split', color: 'var(--color-accent)' },
+  { year: 2024, title: 'Dunkelflaute', location: 'Germany', affected: 'Price event', slug: '2024-dunkelflaute-germany', color: 'var(--color-secondary)' },
+  { year: 2025, title: 'Iberian Peninsula Blackout', location: 'Spain, Portugal', affected: '55-60 million', slug: '2025-iberian-peninsula-blackout', color: 'var(--color-danger)' },
+  { year: 2025, title: 'Berlin Johannisthal Arson', location: 'Berlin', affected: '50K households', slug: '2025-berlin-johannisthal-arson', color: 'var(--color-accent)' },
+  { year: 2026, title: 'Berlin Teltow Canal Arson', location: 'Berlin', affected: '45K households', slug: '2026-berlin-teltow-canal-arson', color: 'var(--color-accent)' },
+];
+
+const topics = [
+  { title: 'Cascading Failures', desc: 'How single faults propagate across interconnected grids', slug: 'cascading-failures' },
+  { title: 'Grid Flexibility Costs', desc: 'Peaker economics, battery alternatives, demand-side savings', slug: 'grid-flexibility-costs' },
+  { title: 'German Grid Curtailment', desc: 'TSO/DSO dynamics, renewable integration challenges', slug: 'german-grid-curtailment' },
+  { title: 'Electricity Pricing', desc: 'Negative prices, merit order, EPEX SPOT analysis', slug: 'electricity-pricing' },
+  { title: 'Demand Response', desc: 'VPP participation, flexibility markets, battery economics', slug: 'demand-response' },
+  { title: 'VPP Market Analysis', desc: 'Global market size, growth projections, key players', slug: 'vpp-market' },
+  { title: 'Grid Frequency Reference', desc: 'FCR, aFRR, mFRR technical parameters', slug: 'grid-frequency' },
+  { title: 'Enpal and Flexa', desc: 'Company background, VPP fleet, technology stack', slug: 'enpal-flexa' },
+];
+---
+
+<ContentLayout title="Research Library" description="Open source research on grid incidents, costs, and VPP technology.">
+
+<h1>Research Library</h1>
+
+<p class="text-xl" style="color: var(--color-text-muted); max-width: 600px;">
+  All research behind this project — 12 grid incidents, cost analyses, market data, and
+  technical references. Every claim is sourced.
+</p>
+
+<hr />
+
+<h2 id="incidents">Grid Incidents</h2>
+
+<p>
+  Major grid failures and near-misses from the last two decades. Each incident includes
+  a detailed timeline, root cause analysis, and an assessment of how distributed energy
+  resources could have helped.
+</p>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3 my-8 max-w-4xl">
+  {incidents.map((inc) => (
+    <a
+      href={`/research/incidents/${inc.slug}`}
+      class="group flex items-start gap-3 p-4 rounded-lg transition-all duration-200 hover:translate-x-0.5"
+      style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);"
+    >
+      <div
+        class="flex-shrink-0 font-mono font-bold text-sm mt-0.5"
+        style={`color: ${inc.color};`}
+      >
+        {inc.year}
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="font-semibold text-sm group-hover:text-white transition-colors" style="color: var(--color-text);">
+          {inc.title}
+        </div>
+        <div class="text-xs mt-0.5" style="color: var(--color-text-dim);">
+          {inc.location} — {inc.affected}
+        </div>
+      </div>
+    </a>
+  ))}
+</div>
+
+<h2 id="topics">Deep Dives</h2>
+
+<p>
+  Topic research that spans multiple incidents and covers the economics, technology, and
+  policy behind grid modernization.
+</p>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3 my-8 max-w-4xl">
+  {topics.map((t) => (
+    <a
+      href={`/research/topics/${t.slug}`}
+      class="group p-4 rounded-lg transition-all duration-200 hover:translate-x-0.5"
+      style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);"
+    >
+      <div class="font-semibold text-sm group-hover:text-white transition-colors" style="color: var(--color-text);">
+        {t.title}
+      </div>
+      <div class="text-xs mt-1" style="color: var(--color-text-dim);">
+        {t.desc}
+      </div>
+    </a>
+  ))}
+</div>
+
+<div class="my-8 p-5 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+  <div class="font-mono text-xs mb-2" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">
+    Open Source
+  </div>
+  <div class="text-sm" style="color: var(--color-text-muted);">
+    All research is available in the project repository. Corrections and contributions welcome.
+  </div>
+</div>
+
+</ContentLayout>

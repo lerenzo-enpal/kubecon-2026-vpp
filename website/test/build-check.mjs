@@ -32,23 +32,37 @@ function pageContains(path, text) {
 
 console.log('\nBuild check\n');
 
-// Pages exist
+// All pages exist
 check('Landing page exists', pageExists('index.html'));
 check('Module 1 exists', pageExists('learn/how-the-grid-works/index.html'));
+check('Module 2 exists', pageExists('learn/the-old-way/index.html'));
+check('Module 3 exists', pageExists('learn/the-renewable-revolution/index.html'));
+check('Module 4 exists', pageExists('learn/the-virtual-power-plant/index.html'));
+check('Module 5 exists', pageExists('learn/the-future/index.html'));
+check('Research page exists', pageExists('research/index.html'));
+check('About page exists', pageExists('about/index.html'));
 
-// Landing page content
-check('Landing page has title', pageContains('index.html', 'How does the electricity grid'));
-check('Landing page has module links', pageContains('index.html', 'How the Grid Works'));
-check('Landing page has game placeholder', pageContains('index.html', 'Try to Crash the Grid'));
+// Landing page
+check('Landing has title', pageContains('index.html', 'How does the electricity grid'));
+check('Landing has game placeholder', pageContains('index.html', 'Try to Crash the Grid'));
+check('Landing has theme toggle', pageContains('index.html', 'theme-toggle'));
 
-// Module 1 content
-check('Module 1 has heading', pageContains('learn/how-the-grid-works/index.html', 'How the Grid Works'));
-check('Module 1 has 50 Hz section', pageContains('learn/how-the-grid-works/index.html', '50 Hz'));
-check('Module 1 has frequency steps', pageContains('learn/how-the-grid-works/index.html', '47.5 Hz'));
-check('Module 1 has sidebar nav', pageContains('learn/how-the-grid-works/index.html', 'The Old Way'));
+// Module content spot checks
+check('Module 1: 50 Hz', pageContains('learn/how-the-grid-works/index.html', '50 Hz'));
+check('Module 2: Peaker', pageContains('learn/the-old-way/index.html', 'Peaker'));
+check('Module 3: Duck Curve', pageContains('learn/the-renewable-revolution/index.html', 'Duck Curve'));
+check('Module 4: VPP', pageContains('learn/the-virtual-power-plant/index.html', 'Virtual Power Plant'));
+check('Module 5: Future', pageContains('learn/the-future/index.html', 'Distributed'));
+
+// Research library
+check('Research has incidents', pageContains('research/index.html', 'Texas ERCOT'));
+check('Research has topics', pageContains('research/index.html', 'Deep Dives'));
+
+// Sidebar TOC
+check('Sidebar nav present', pageContains('learn/how-the-grid-works/index.html', 'toc-section'));
 
 // Design tokens
-check('Global CSS loaded', pageContains('index.html', 'JetBrains Mono'));
+check('Fonts loaded', pageContains('index.html', 'JetBrains Mono'));
 
 console.log(`\n${failures === 0 ? 'All checks passed.' : `${failures} check(s) failed.`}\n`);
 process.exit(failures > 0 ? 1 : 0);

@@ -1,0 +1,74 @@
+---
+import ContentLayout from '../layouts/ContentLayout.astro';
+---
+
+<ContentLayout title="About This Project" description="About the KubeCon 2026 Virtual Power Plants presentation and educational website.">
+
+<h1>About This Project</h1>
+
+<p class="text-xl" style="color: var(--color-text-muted); max-width: 600px;">
+  An open-source educational resource about Virtual Power Plants and the future of the
+  electricity grid.
+</p>
+
+<hr />
+
+<h2 id="what-this-is">What This Is</h2>
+
+<p>
+  This website accompanies a KubeCon 2026 presentation about Virtual Power Plants — how
+  distributed energy resources like solar panels, home batteries, and heat pumps can be
+  coordinated by software to stabilize the electricity grid.
+</p>
+
+<p>
+  The presentation and this site were built to make grid technology accessible to a broad
+  audience. You do not need an engineering degree to understand how the grid works, why it
+  is changing, or what Virtual Power Plants do. We wrote everything for readers aged 12 and up.
+</p>
+
+<h2 id="who-built-this">Who Built This</h2>
+
+<p>
+  This project was built by <strong>Mario Olivio Flores</strong> and <strong>Lerenzo Tolentino</strong>,
+  engineers at <a href="https://enpal.de" class="hover:underline" style="color: var(--color-primary);">Enpal</a>.
+  Enpal is a German energy company that installs solar panels, batteries, and heat pumps in
+  homes across Europe — the same hardware that powers Virtual Power Plants.
+</p>
+
+<h2 id="open-source">Open Source</h2>
+
+<p>
+  All research behind this project is open source and fact-checked. Every claim on the learning
+  pages links back to primary sources in our research library. If you find an error, please
+  open an issue.
+</p>
+
+<p>
+  The source code is available on GitHub:<br />
+  <a href="https://github.com/marioflores/kubecon-2026-vpp" class="font-mono text-sm hover:underline" style="color: var(--color-primary);">
+    github.com/marioflores/kubecon-2026-vpp
+  </a>
+</p>
+
+<h2 id="built-with">Built With</h2>
+
+<p>
+  This site is built with <a href="https://astro.build" class="hover:underline" style="color: var(--color-primary);">Astro</a>,
+  <a href="https://react.dev" class="hover:underline" style="color: var(--color-primary);">React</a>, and
+  <a href="https://tailwindcss.com" class="hover:underline" style="color: var(--color-primary);">TailwindCSS</a>.
+  The presentation itself uses React with
+  <a href="https://formidable.com/open-source/spectacle/" class="hover:underline" style="color: var(--color-primary);">Spectacle</a>.
+</p>
+
+<div class="my-8 p-6 rounded-lg" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
+  <div class="font-mono text-sm mb-2" style="color: var(--color-primary); letter-spacing: 0.08em;">EXPLORE</div>
+  <a href="/research" class="text-lg font-semibold hover:underline" style="color: var(--color-text);">
+    Research Library
+  </a>
+  <div class="text-sm mt-1" style="color: var(--color-text-dim);">
+    Sources, data, and references behind every claim on this site.
+  </div>
+</div>
+
+</ContentLayout>

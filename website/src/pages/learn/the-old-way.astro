@@ -1,0 +1,238 @@
+---
+import ContentLayout from '../../layouts/ContentLayout.astro';
+---
+
+<ContentLayout title="The Old Way" description="Before batteries and software, this is how we kept the lights on. It cost over EUR 10 billion per year.">
+
+<h1>The Old Way</h1>
+
+<p class="text-xl" style="color: var(--color-text-muted); max-width: 600px;">
+  Before batteries and software, this is how we kept the lights on.
+  It cost over <strong>EUR 10 billion per year</strong>.
+</p>
+
+<hr />
+
+<h2 id="peaker-plants">Peaker Plants</h2>
+
+<p>
+  A peaker plant is a gas turbine that exists for one purpose: to fire up during rare demand
+  spikes. Think of it like keeping a taxi running 24 hours a day, engine idling, burning fuel,
+  just in case someone needs a ride. Most of the time, nobody does.
+</p>
+
+<p>
+  These plants sit idle roughly 95% of the year. In the US alone, peaker plants account for
+  19% of total generation capacity but produce only 3% of electricity. They run fewer than
+  1,500 hours per year — some as few as 250. Yet grid operators keep them on standby because
+  when demand spikes, nothing else can respond fast enough.
+</p>
+
+<p>
+  The cost of maintaining this insurance policy is staggering. Peaker electricity costs
+  EUR 150--250 per MWh — two to three times more expensive than baseload gas. Across Europe,
+  the total bill for peaker capacity reaches an estimated EUR 6.5 billion every year, paid
+  by consumers whether the plants run or not.
+</p>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-8 max-w-3xl">
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-accent);">EUR 6.5B/yr</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">peaker plant costs</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-accent);">95%</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">of the year idle</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-accent);">3%</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">of electricity produced</div>
+  </div>
+</div>
+
+<h2 id="spinning-reserves">Spinning Reserves</h2>
+
+<p>
+  Spinning reserves are generators that run continuously, synchronized with the grid, burning
+  fuel but producing nothing useful. They exist purely as a safety margin — ready to ramp up
+  within seconds if another generator trips offline or demand surges unexpectedly.
+</p>
+
+<p>
+  Imagine leaving your car engine running in the driveway all day, every day, just so you can
+  pull out instantly if you need to. That is what spinning reserves are: thousands of generators
+  across Europe running at partial load, wasting fuel, so the grid has a buffer.
+</p>
+
+<p>
+  The standard margin is roughly 15% of all generation capacity. That means at any given moment,
+  about one in seven generators on the grid is burning fuel to produce nothing. The fuel waste
+  alone is estimated at EUR 1--3 billion per year, but you will never see it on your electricity
+  bill — it is hidden in wholesale prices, buried in the cost of "keeping the lights on."
+</p>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-8 max-w-3xl">
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-accent);">15%</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">of generation wasted on standby</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-accent);">EUR 1-3B/yr</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">hidden fuel waste</div>
+  </div>
+</div>
+
+<h2 id="congestion">Grid Congestion</h2>
+
+<p>
+  The European transmission grid has bottlenecks — places where the wires simply cannot carry
+  enough power from where it is generated to where it is needed. When wind farms in northern
+  Germany produce more electricity than the north-south transmission lines can handle, grid
+  operators face an absurd situation: they pay the wind farms to stop generating, then pay
+  gas plants in the south to start up instead. Same power delivered. Twice the cost.
+</p>
+
+<p>
+  Imagine a highway with a traffic jam. Instead of waiting, you pay a helicopter to fly the
+  cargo to the other side. That is congestion management — an expensive workaround for
+  infrastructure that has not kept up with how the grid actually works.
+</p>
+
+<p>
+  In 2023, managing grid congestion across the EU cost EUR 4.2 billion. Germany alone
+  accounted for EUR 3.1 billion of that, driven by its north-south bottleneck. Remedial
+  action volumes rose 14.5%, reaching 57 TWh of redispatched electricity. And the problem
+  is getting worse: as more renewables come online in locations far from demand centers,
+  congestion costs keep climbing.
+</p>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-8 max-w-3xl">
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-danger);">EUR 4.2B/yr</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">EU congestion costs</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-danger);">57 TWh</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">redispatched in 2023</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-danger);">EUR 3.1B</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">Germany alone</div>
+  </div>
+</div>
+
+<h2 id="curtailment">Curtailment</h2>
+
+<p>
+  Curtailment is when the grid literally throws away free, clean energy because the wires
+  cannot carry it. Too much sun in Bavaria? Turn off the solar panels. Too much wind in
+  Schleswig-Holstein? Shut down the turbines. The energy is there, the demand is there,
+  but the grid between them is full.
+</p>
+
+<p>
+  In Germany alone, over 10 TWh of renewable electricity was curtailed in 2023 — enough to
+  power roughly 2.7 million homes for an entire year. That is clean energy, already generated,
+  with zero fuel cost, dumped because the system was not designed to handle it.
+</p>
+
+<p>
+  And it is not just a German problem. Across Europe, grid congestion curtailed over 12 TWh
+  of renewable electricity in 2023, causing an additional 4.2 million tons of CO2 emissions
+  as fossil plants ran instead. Every megawatt-hour of curtailed wind or solar is a
+  megawatt-hour that a gas plant had to produce in its place.
+</p>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-8 max-w-3xl">
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">10 TWh/yr</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">clean energy wasted (DE)</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">2.7M</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">homes worth of energy</div>
+  </div>
+  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">4.2M tons</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">extra CO2 (EU-wide)</div>
+  </div>
+</div>
+
+<h2 id="real-incidents">Real Incidents</h2>
+
+<p>
+  The old system does not just cost money. When it fails, the consequences are measured in
+  lives lost and millions of people left in the dark. Here are three incidents where the
+  traditional grid failed catastrophically.
+</p>
+
+<div class="my-8 flex flex-col gap-3 max-w-2xl">
+  <a href="/research/incidents/texas-2021" class="flex items-start gap-4 p-4 rounded-lg no-underline" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-danger);">
+    <div class="flex-shrink-0">
+      <div class="font-mono font-bold text-lg" style="color: var(--color-danger);">Texas 2021</div>
+      <div class="font-mono text-xs mt-1" style="color: var(--color-text-dim);">Feb 13-17</div>
+    </div>
+    <div>
+      <div class="font-semibold mb-1" style="color: var(--color-text);">4.5 million homes lost power. 246 people died.</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">
+        A winter storm overwhelmed the Texas grid. Generators froze. Gas supply failed.
+        The grid came within <strong>4 minutes and 37 seconds</strong> of a total collapse
+        that engineers estimated would have taken months to recover from.
+      </div>
+    </div>
+  </a>
+
+  <a href="/research/incidents/south-australia-2016" class="flex items-start gap-4 p-4 rounded-lg no-underline" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-accent);">
+    <div class="flex-shrink-0">
+      <div class="font-mono font-bold text-lg" style="color: var(--color-accent);">South Australia 2016</div>
+      <div class="font-mono text-xs mt-1" style="color: var(--color-text-dim);">Sep 28</div>
+    </div>
+    <div>
+      <div class="font-semibold mb-1" style="color: var(--color-text);">Entire state blacked out in 87 seconds.</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">
+        A severe storm knocked out transmission towers. Wind farms disconnected to protect
+        themselves. The interconnector to Victoria overloaded and tripped. Within 87 seconds,
+        1.7 million people lost power across the entire state.
+      </div>
+    </div>
+  </a>
+
+  <a href="/research/incidents/italy-2003" class="flex items-start gap-4 p-4 rounded-lg no-underline" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
+    <div class="flex-shrink-0">
+      <div class="font-mono font-bold text-lg" style="color: var(--color-primary);">Italy 2003</div>
+      <div class="font-mono text-xs mt-1" style="color: var(--color-text-dim);">Sep 28</div>
+    </div>
+    <div>
+      <div class="font-semibold mb-1" style="color: var(--color-text);">56 million people lost power. Started with a single tree.</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">
+        A tree touched a high-voltage transmission line in Switzerland. The resulting cascade
+        tripped interconnectors across the Alps. Within minutes, Italy was completely islanded
+        from the European grid. The entire country went dark — the largest blackout in
+        European history.
+      </div>
+    </div>
+  </a>
+</div>
+
+<div class="my-8 p-6 rounded-lg" style="background: rgba(239, 68, 68, 0.06); border: 1px solid rgba(239, 68, 68, 0.2);">
+  <div class="font-mono text-sm mb-2" style="color: var(--color-danger); letter-spacing: 0.08em; text-transform: uppercase;">Total Cost</div>
+  <div class="text-lg font-semibold mb-2" style="color: var(--color-text);">
+    Over EUR 10 billion per year in hard costs — plus billions more hidden in fuel waste.
+  </div>
+  <div class="text-sm" style="color: var(--color-text-muted);">
+    And when it fails, people die. The old way of managing the grid was designed for a world
+    of predictable, centralized power plants. That world no longer exists.
+  </div>
+</div>
+
+<div class="my-8 p-6 rounded-lg" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
+  <div class="font-mono text-sm mb-2" style="color: var(--color-primary); letter-spacing: 0.08em;">NEXT</div>
+  <a href="/learn/the-renewable-revolution" class="text-lg font-semibold hover:underline" style="color: var(--color-text);">
+    The Renewable Revolution
+  </a>
+  <div class="text-sm mt-1" style="color: var(--color-text-dim);">
+    What happens when half your electricity comes from sources you cannot control.
+  </div>
+</div>
+
+</ContentLayout>

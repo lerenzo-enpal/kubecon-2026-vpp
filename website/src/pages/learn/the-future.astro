@@ -1,0 +1,164 @@
+---
+import ContentLayout from '../../layouts/ContentLayout.astro';
+---
+
+<ContentLayout title="The Future" description="The grid is being rebuilt from the edges inward. Software is eating the power system.">
+
+<h1>The Future</h1>
+
+<p class="text-xl" style="color: var(--color-text-muted); max-width: 600px;">
+  The grid is being rebuilt from the edges inward. Software is eating the power system.
+</p>
+
+<hr />
+
+<h2 id="distributed-resilience">Distributed Resilience</h2>
+
+<p>
+  The old grid is centralized. A few huge power plants connected by long transmission lines.
+  Every component is a single point of failure. Lose a plant, lose a line, and millions of
+  people can go dark.
+</p>
+
+<p>
+  Virtual Power Plants flip this model. Instead of a few large sources, you get thousands of
+  small ones — rooftop solar panels, home batteries, electric vehicles, heat pumps. If one
+  home's battery fails, nobody notices. If a transmission line goes down, homes with
+  solar and battery storage keep running on their own.
+</p>
+
+<p>
+  This is the same architectural shift that happened in computing. First there were
+  mainframes — massive, centralized, fragile. Then the cloud distributed workloads across
+  data centers. Now edge computing pushes intelligence to the devices themselves. The
+  electricity grid is making the same journey.
+</p>
+
+<div class="my-8 flex flex-col md:flex-row gap-4 max-w-3xl">
+  <div class="flex-1 p-5 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-sm mb-3" style="color: var(--color-danger); letter-spacing: 0.08em; text-transform: uppercase;">Centralized Grid</div>
+    <ul class="text-sm space-y-2" style="color: var(--color-text-muted);">
+      <li>Few large generation sources</li>
+      <li>Long transmission distances</li>
+      <li>Single points of failure</li>
+      <li>Fragile under stress</li>
+      <li>Expensive to maintain</li>
+    </ul>
+  </div>
+  <div class="flex-1 p-5 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-sm mb-3" style="color: var(--color-success); letter-spacing: 0.08em; text-transform: uppercase;">Distributed VPP Grid</div>
+    <ul class="text-sm space-y-2" style="color: var(--color-text-muted);">
+      <li>Thousands of small sources</li>
+      <li>Generation at the point of use</li>
+      <li>No single point of failure</li>
+      <li>Resilient and adaptive</li>
+      <li>Scales with adoption</li>
+    </ul>
+  </div>
+</div>
+
+<h2 id="software-eating-the-grid">Software Eating the Grid</h2>
+
+<p>
+  The grid used to be a physics problem. Massive turbines spinning at precise speeds,
+  transformers stepping voltage up and down, operators watching dials and making phone calls.
+  The tools were mechanical. The expertise was electrical engineering.
+</p>
+
+<p>
+  That world is ending. The modern grid is a software problem. Real-time optimization across
+  millions of distributed devices. Predicting demand and solar output hours in advance.
+  Coordinating battery dispatch across entire cities in milliseconds.
+</p>
+
+<p>
+  The tools are familiar to anyone who builds internet infrastructure. MQTT for lightweight
+  device messaging. Kubernetes for orchestrating containerized control systems. Apache Spark
+  for processing telemetry at scale. Machine learning for forecasting and anomaly detection.
+  The same stack that runs your favorite web application can run the power grid.
+</p>
+
+<div class="my-8 p-6 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+  <div class="font-mono text-sm mb-3" style="color: var(--color-primary); letter-spacing: 0.08em; text-transform: uppercase;">For Tech Workers</div>
+  <p class="text-sm mb-0" style="color: var(--color-text-muted);">
+    This is your field now. Every concept from distributed systems applies directly to grid
+    management — load balancing across generation sources, fault tolerance when devices go
+    offline, eventual consistency across millions of meters, and circuit breakers (literally).
+    If you understand microservices, you understand the architecture of a Virtual Power Plant.
+  </p>
+</div>
+
+<h2 id="what-you-can-do">What You Can Do</h2>
+
+<p>
+  The energy transition is not something that happens to you. It is something you can
+  participate in right now.
+</p>
+
+<div class="my-8 flex flex-col gap-4 max-w-2xl">
+  <div class="flex items-start gap-4 p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
+    <div>
+      <div class="font-semibold mb-1">Homeowners</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">
+        Install solar panels and a home battery. Join a VPP program through your energy
+        provider. Your home becomes part of the solution — earning money while stabilizing
+        the grid. Every home that joins makes the system more resilient.
+      </div>
+    </div>
+  </div>
+
+  <div class="flex items-start gap-4 p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-accent);">
+    <div>
+      <div class="font-semibold mb-1">Software Engineers</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">
+        The energy sector needs you. VPP platforms, grid optimization algorithms, IoT
+        device management at scale, real-time data pipelines, ML-driven forecasting. These
+        are hard, meaningful problems — and the industry is hiring faster than it can find
+        qualified engineers.
+      </div>
+    </div>
+  </div>
+
+  <div class="flex items-start gap-4 p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-success);">
+    <div>
+      <div class="font-semibold mb-1">Students</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">
+        This is the most important infrastructure challenge of the century. It spans
+        electrical engineering, computer science, economics, and policy. And increasingly,
+        it is a software problem. The skills you are learning right now — programming,
+        data analysis, systems thinking — are exactly what the grid needs.
+      </div>
+    </div>
+  </div>
+</div>
+
+<p>
+  The grid that powered the 20th century was built by a handful of utilities with billion-dollar
+  budgets. The grid that powers the 21st century will be built by millions of participants —
+  homeowners, engineers, and communities — coordinated by software. The future of energy is
+  distributed, intelligent, and open. It has already begun.
+</p>
+
+<div class="my-8 flex flex-col gap-4 max-w-2xl">
+  <div class="p-6 rounded-lg" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
+    <div class="font-mono text-sm mb-2" style="color: var(--color-primary); letter-spacing: 0.08em;">START OVER</div>
+    <a href="/learn" class="text-lg font-semibold hover:underline" style="color: var(--color-text);">
+      Back to Learning Modules
+    </a>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">
+      Return to the landing page and explore other modules.
+    </div>
+  </div>
+
+  <div class="p-6 rounded-lg" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
+    <div class="font-mono text-sm mb-2" style="color: var(--color-primary); letter-spacing: 0.08em;">RESEARCH</div>
+    <a href="/research" class="text-lg font-semibold hover:underline" style="color: var(--color-text);">
+      Research Library
+    </a>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">
+      Sources, data, and further reading behind every claim.
+    </div>
+  </div>
+</div>
+
+</ContentLayout>

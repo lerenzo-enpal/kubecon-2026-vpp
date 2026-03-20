@@ -1,10 +1,15 @@
 ---
 import ContentLayout from '../../layouts/ContentLayout.astro';
+import FrequencyPulse from '../../components/FrequencyPulse';
+import AnimatedStat from '../../components/AnimatedStat';
 ---
 
 <ContentLayout title="How the Grid Works" description="The electricity grid is the largest machine ever built. Learn how it maintains a constant 50 Hz frequency.">
 
-<h1>How the Grid Works</h1>
+<div class="flex items-center gap-4 mb-2">
+  <h1 class="!mb-0">How the Grid Works</h1>
+  <FrequencyPulse client:visible width={120} height={32} color="#22d3ee" />
+</div>
 
 <p class="text-xl" style="color: var(--color-text-muted); max-width: 600px;">
   The electricity grid is the largest machine ever built by humans. It spans continents,
@@ -28,22 +33,10 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
 </p>
 
 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 my-8 max-w-3xl">
-  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">36</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">countries connected</div>
-  </div>
-  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">400M+</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">consumers</div>
-  </div>
-  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">1.1 TW</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">generation capacity</div>
-  </div>
-  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">305K km</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">transmission lines</div>
-  </div>
+  <AnimatedStat client:visible value={36} color="var(--color-primary)" label="Countries" sublabel="connected" />
+  <AnimatedStat client:visible value={400} suffix="M+" color="var(--color-primary)" label="Consumers" />
+  <AnimatedStat client:visible value={1.1} decimals={1} suffix=" TW" color="var(--color-primary)" label="Capacity" sublabel="generation" />
+  <AnimatedStat client:visible value={305} suffix="K km" color="var(--color-primary)" label="Lines" sublabel="transmission" />
 </div>
 
 <h2 id="the-50-hz-heartbeat">The 50 Hz Heartbeat</h2>
