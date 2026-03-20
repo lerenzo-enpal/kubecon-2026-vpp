@@ -1,0 +1,23 @@
+---
+interface Props {
+  sources: string[];
+}
+
+const { sources } = Astro.props;
+---
+
+<details class="mt-12 group">
+  <summary
+    class="font-mono text-xs cursor-pointer select-none py-2"
+    style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;"
+  >
+    Sources ({sources.length})
+  </summary>
+  <div class="mt-3 pl-4 border-l flex flex-col gap-1" style="border-color: var(--color-surface-light);">
+    {sources.map((s) => (
+      <div class="font-mono text-xs leading-relaxed" style="color: var(--color-text-dim); word-break: break-all;">
+        {s}
+      </div>
+    ))}
+  </div>
+</details>

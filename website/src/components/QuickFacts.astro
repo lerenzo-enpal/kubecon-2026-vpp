@@ -1,0 +1,44 @@
+---
+interface Fact {
+  value: string;
+  label: string;
+  color?: string;
+}
+
+interface Props {
+  facts: Fact[];
+}
+
+const { facts } = Astro.props;
+
+const defaultColors = [
+  'var(--color-primary)',
+  'var(--color-danger)',
+  'var(--color-accent)',
+  'var(--color-secondary)',
+  'var(--color-success)',
+  'var(--color-primary)',
+];
+---
+
+<div class="grid grid-cols-2 md:grid-cols-3 gap-3 my-8">
+  {facts.map((f, i) => {
+    const color = f.color || defaultColors[i % defaultColors.length];
+    return (
+      <div
+        class="p-4 rounded-lg"
+        style={`background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);`}
+      >
+        <div
+          class="font-mono font-extrabold text-xl leading-tight"
+          style={`color: ${color};`}
+        >
+          {f.value}
+        </div>
+        <div class="text-xs mt-2" style="color: var(--color-text-dim);">
+          {f.label}
+        </div>
+      </div>
+    );
+  })}
+</div>

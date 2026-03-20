@@ -1,0 +1,44 @@
+---
+interface Props {
+  time: string;
+  title: string;
+  description: string;
+  severity?: 'normal' | 'warning' | 'critical' | 'collapse' | 'success';
+}
+
+const { time, title, description, severity = 'normal' } = Astro.props;
+
+const dotColors: Record<string, string> = {
+  normal: 'var(--color-success)',
+  warning: 'var(--color-accent)',
+  critical: 'var(--color-danger)',
+  collapse: '#dc2626',
+  success: 'var(--color-primary)',
+};
+
+const dotColor = dotColors[severity] || dotColors.normal;
+---
+
+<div class="flex gap-4 relative">
+  <!-- Timeline line + dot -->
+  <div class="flex flex-col items-center flex-shrink-0" style="width: 60px;">
+    <div
+      class="w-3 h-3 rounded-full flex-shrink-0 mt-1"
+      style={`background: ${dotColor}; box-shadow: 0 0 8px ${dotColor}60;`}
+    ></div>
+    <div class="flex-1 w-px mt-2" style="background: var(--color-surface-light);"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="pb-6 flex-1">
+    <div class="font-mono text-xs mb-1" style={`color: ${dotColor};`}>
+      {time}
+    </div>
+    <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">
+      {title}
+    </div>
+    <div class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
+      {description}
+    </div>
+  </div>
+</div>

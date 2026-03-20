@@ -1,0 +1,149 @@
+---
+import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import IncidentHero from '../../../components/IncidentHero.astro';
+import QuickFacts from '../../../components/QuickFacts.astro';
+import TimelineEvent from '../../../components/TimelineEvent.astro';
+import SourceList from '../../../components/SourceList.astro';
+---
+
+<IncidentLayout title="Texas ERCOT Winter Storm Uri" description="February 2021: A polar vortex exposed the fragility of Texas's isolated grid, triggering a gas-electric death spiral that left 4.5 million homes without power.">
+
+<IncidentHero
+  title="Texas Winter Storm Uri"
+  date="February 14-19, 2021"
+  location="Texas, USA (ERCOT region)"
+  keyStat="246"
+  keyStatLabel="lives lost"
+  severity="blackout"
+/>
+
+<QuickFacts facts={[
+  { value: "4.5M", label: "Homes without power" },
+  { value: "70+ hrs", label: "Duration of load shedding" },
+  { value: "52 GW", label: "Generation offline (of 107 GW)" },
+  { value: "$195B", label: "Estimated economic damage" },
+  { value: "4m 37s", label: "From total grid collapse" },
+  { value: "$9,000", label: "Peak price per MWh (180x normal)" },
+]} />
+
+<h2>What Happened</h2>
+
+<p>
+  In February 2021, a polar vortex plunged Texas into record-breaking cold. Temperatures crashed well below freezing across the entire state, and electricity demand hit an all-time winter peak. The grid was not ready.
+</p>
+
+<p>
+  Generators began freezing and shutting down. As ERCOT ordered rolling blackouts to prevent total collapse, the power cuts hit natural gas compressor stations and pipelines. Without electricity, gas stopped flowing to the very power plants that needed it most. A self-reinforcing death spiral had begun.
+</p>
+
+<p>
+  At its worst, the grid came within 4 minutes and 37 seconds of a complete cold-start collapse. That would have meant weeks without power instead of days. The blackouts lasted over 70 hours, and 246 people died from hypothermia, carbon monoxide poisoning, and medical emergencies.
+</p>
+
+<h2>Timeline</h2>
+
+<TimelineEvent
+  time="Feb 14"
+  title="Polar vortex strikes Texas"
+  description="Temperatures plummet across the state. Electricity demand surges to an all-time winter peak as millions turn up heaters."
+  severity="warning"
+/>
+
+<TimelineEvent
+  time="Feb 15, 01:25"
+  title="Emergency Alert Level 3 declared"
+  description="ERCOT declares its highest emergency level and begins forced load shedding. Rolling blackouts start across the state."
+  severity="critical"
+/>
+
+<TimelineEvent
+  time="Feb 15"
+  title="4 minutes 37 seconds from total collapse"
+  description="Grid frequency drops to dangerous levels. ERCOT later testifies the entire Texas grid was minutes from a catastrophic cold-start collapse that could have taken weeks to recover from."
+  severity="collapse"
+/>
+
+<TimelineEvent
+  time="Feb 15-16"
+  title="Generation losses accelerate"
+  description="52 GW of generation goes offline out of 107 GW total capacity. Natural gas accounts for 58% of losses, wind 27%, coal 6%."
+  severity="collapse"
+/>
+
+<TimelineEvent
+  time="Feb 16-17"
+  title="Gas-electric death spiral peaks"
+  description="Blackouts cut power to gas compressor stations. Without compressors, gas pipelines lose pressure. Without gas, more generators trip offline. The feedback loop accelerates."
+  severity="collapse"
+/>
+
+<TimelineEvent
+  time="Feb 17-18"
+  title="Wholesale prices hit $9,000/MWh"
+  description="ERCOT keeps the emergency price cap at $9,000/MWh for two days longer than necessary. Retail provider Griddy passes costs directly to customers, generating bills of $7,000+ per week."
+  severity="critical"
+/>
+
+<TimelineEvent
+  time="Feb 19"
+  title="Load shedding finally ends"
+  description="After 70+ hours, rolling blackouts end as temperatures begin to rise and generation slowly returns. The cleanup of $16 billion in overcharges begins."
+  severity="normal"
+/>
+
+<h2>Root Cause</h2>
+
+<div class="my-8 p-6 rounded-xl" style="background: var(--color-bg-alt); border-left: 4px solid var(--color-danger);">
+  <div class="font-mono text-xs font-semibold mb-3" style="color: var(--color-danger); letter-spacing: 0.08em; text-transform: uppercase;">The Gas-Electric Death Spiral</div>
+  <p class="text-sm leading-relaxed mb-0" style="color: var(--color-text-muted);">
+    Extreme cold froze generators. ERCOT ordered load shedding. Load shedding cut power to gas compressor stations. Gas supply dropped. More generators lost fuel and tripped. More load shedding was needed. This self-reinforcing feedback loop is the textbook definition of a cascading failure.
+  </p>
+</div>
+
+<p>
+  Texas's grid is intentionally isolated from the rest of the United States, with only 1,256 MW of DC ties to neighboring grids. When things went wrong, there was no one to call for help. The energy-only market provided no financial incentive for generators to invest in winterization.
+</p>
+
+<h2>Could This Have Been Prevented?</h2>
+
+<div class="my-8 p-6 rounded-xl" style="background: rgba(16, 185, 129, 0.06); border-left: 4px solid var(--color-success);">
+  <div class="font-mono text-xs font-semibold mb-3" style="color: var(--color-success); letter-spacing: 0.08em; text-transform: uppercase;">VPP Prevention Case</div>
+  <p class="text-sm leading-relaxed mb-3" style="color: var(--color-text-muted);">
+    Gas peaker plants take 10-30 minutes to start. Batteries respond in 140 milliseconds. With 10 GW of distributed battery storage across Texas homes, the death spiral never begins because load shedding never cuts power to gas infrastructure.
+  </p>
+  <p class="text-sm leading-relaxed mb-0" style="color: var(--color-text-muted);">
+    A Virtual Power Plant turns 4.5 million passive consumers into active grid participants. Instead of everyone drawing power at once, a VPP coordinates batteries to flatten demand peaks and provide emergency power during supply shortfalls.
+  </p>
+</div>
+
+<h2 style="font-size: 22px; margin-top: 48px;">Related Incidents</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3 my-6">
+  <a href="/research/incidents/2025-iberian-peninsula-blackout" class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-xs mb-1" style="color: var(--color-danger);">Blackout</div>
+    <div class="font-semibold text-sm" style="color: var(--color-text);">2025 Iberian Blackout</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">60M affected in 6 seconds</div>
+  </a>
+  <a href="/research/incidents/2016-south-australia-blackout" class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-xs mb-1" style="color: var(--color-danger);">Blackout</div>
+    <div class="font-semibold text-sm" style="color: var(--color-text);">2016 South Australia Blackout</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">87 seconds to system black</div>
+  </a>
+  <a href="/research/incidents/2017-hornsdale-battery-response" class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-xs mb-1" style="color: var(--color-success);">Success Story</div>
+    <div class="font-semibold text-sm" style="color: var(--color-text);">2017 Hornsdale Battery</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">140ms response prevented cascade</div>
+  </a>
+</div>
+
+<SourceList sources={[
+  "ERCOT — Final Report on February 2021 Winter Storm (ercot.com)",
+  "FERC/NERC — February 2021 Cold Weather Outages in Texas and the South Central United States (ferc.gov, Nov 2021)",
+  "Texas Tribune — $16 billion overcharge analysis (texastribune.org, Mar 2021)",
+  "Potomac Economics — 2021 ERCOT State of the Market Report",
+  "UT Austin Energy Institute — ERCOT Blackout 2021 Analysis",
+  "Texas DSHS — Death toll reporting (246 confirmed deaths)",
+  "EIA — Wholesale electricity price data for ERCOT region (eia.gov)",
+]} />
+
+</IncidentLayout>

@@ -1,0 +1,51 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<BaseLayout title={`${title} — Grid Research`} description={description}>
+  <div class="min-h-screen flex flex-col">
+    <header class="px-8 py-4 border-b" style="border-color: var(--color-surface-light);">
+      <div class="max-w-5xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-6">
+          <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <div class="w-2 h-2 rounded-full" style="background: var(--color-primary); box-shadow: 0 0 8px var(--color-primary);"></div>
+            <span class="font-mono font-bold" style="color: var(--color-text); letter-spacing: 0.05em;">GRID</span>
+          </a>
+          <nav class="flex gap-1 font-mono text-xs" style="color: var(--color-text-dim);">
+            <a href="/research" class="hover:opacity-70 transition-opacity">Research</a>
+            <span style="color: var(--color-surface-light);">/</span>
+            <span style="color: var(--color-text-muted);">{title}</span>
+          </nav>
+        </div>
+        <ThemeToggle />
+      </div>
+    </header>
+
+    <main class="flex-1 px-8 py-8">
+      <div class="max-w-5xl mx-auto">
+        <article class="prose">
+          <slot />
+        </article>
+      </div>
+    </main>
+
+    <footer class="px-8 py-4 border-t" style="border-color: var(--color-surface-light);">
+      <div class="max-w-5xl mx-auto flex items-center justify-between">
+        <a href="/research" class="font-mono text-xs hover:opacity-70 transition-opacity" style="color: var(--color-text-dim);">
+          Back to Research Library
+        </a>
+        <div class="font-mono text-xs" style="color: var(--color-text-dim);">
+          Open source research
+        </div>
+      </div>
+    </footer>
+  </div>
+</BaseLayout>
