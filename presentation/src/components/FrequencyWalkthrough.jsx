@@ -413,13 +413,15 @@ function GridDiagram({ state, draw }) {
   const isShedding = state === 'shedding' || isCollapse;
   const isReserves = state === 'reserves' || isShedding;
 
-  const lineC = isCollapse ? colors.textDim + '30' : isShedding ? colors.danger + '50' : isReserves ? colors.accent + '60' : c + '40';
-  const reserveS = isCollapse ? colors.textDim + '50' : c + '55';
-  const reserveF = isCollapse ? c + '05' : c + '06';
-  const peakerS = isCollapse ? colors.textDim + '50' : isReserves ? colors.accent : c + '30';
-  const peakerF = isCollapse ? c + '05' : isReserves ? colors.accent + '06' : c + '03';
-  const coalS = isCollapse ? colors.textDim + '50' : c + '50';
-  const coalF = isCollapse ? c + '05' : c + '05';
+  // Collapse: same colors as shedding, only differences are: energy stops,
+  // utilization bars drop, labels say OFFLINE, X on all houses, bushing sparks
+  const lineC = (isCollapse || isShedding) ? colors.danger + '50' : isReserves ? colors.accent + '60' : c + '40';
+  const reserveS = (isCollapse || isShedding) ? colors.accent + '80' : c + '55';
+  const reserveF = (isCollapse || isShedding) ? colors.accent + '06' : c + '06';
+  const peakerS = (isCollapse || isShedding) ? colors.accent : isReserves ? colors.accent : c + '30';
+  const peakerF = (isCollapse || isShedding) ? colors.accent + '06' : isReserves ? colors.accent + '06' : c + '03';
+  const coalS = (isCollapse || isShedding) ? c + '50' : c + '50';
+  const coalF = (isCollapse || isShedding) ? c + '05' : c + '05';
 
   // Reserve ramps first, peaker only fires after reserve is maxed
   // Partial load at 50% — typical CCGT spinning reserve, shows clear headroom
@@ -480,7 +482,7 @@ function GridDiagram({ state, draw }) {
         const drawDelay = conn.group === 'gen' ? 0.3 : 0.7 + i * 0.03;
         return (
           <path key={conn.id} d={conn.d}
-            stroke={isCollapse ? colors.danger + '08' : dark ? colors.danger + '25' : lineC}
+            stroke={dark ? colors.danger + '25' : lineC}
             strokeWidth={conn.group === 'gen' ? 1.5 : 1.2} fill="none" pathLength="1"
             style={{ ...dS(draw, drawDelay), transition: 'stroke 0.8s' }} />
         );
@@ -534,18 +536,15 @@ function GridDiagram({ state, draw }) {
       {(() => {
         const subLit = !!litMap.substation && !isCollapse;
         // Substation colors match bushing state for consistency
-        const subS = isCollapse ? colors.danger + '18'
-          : isShedding ? colors.danger + '60'
+        const subS = (isCollapse || isShedding) ? colors.danger + '60'
           : isReserves ? colors.accent + '60'
           : subLit ? c + '80' : c + '45';
-        const coilS = isCollapse ? colors.textDim + '25'
-          : isShedding ? colors.danger + '80'
+        const coilS = (isCollapse || isShedding) ? colors.danger + '80'
           : isReserves ? colors.accent + '80'
           : subLit ? c : c + '55';
         const sx = SUB.x, sy = SUB.y, sw = SUB.w, sh = SUB.h;
         // Bushing colors: normal=cyan, stressed=amber, collapse=dim
-        const bushingC = isCollapse ? colors.textDim + '20'
-          : isShedding ? colors.danger + 'cc'
+        const bushingC = (isCollapse || isShedding) ? colors.danger + 'cc'
           : isReserves ? colors.accent + 'aa'
           : subLit ? c + '90' : c + '40';
         const bushingGlow = isShedding || isReserves;
@@ -676,7 +675,7 @@ function GridDiagram({ state, draw }) {
       {HOUSES.map((h, i) => {
         const dark = (isShedding && i >= 4) || isCollapse;
         const lit = !!litMap[h.id] && !dark;
-        const hs = dark ? (isCollapse ? colors.textDim + '40' : colors.textDim + '15') : lit ? c + '70' : c + '35';
+        const hs = dark ? colors.textDim + '40' : lit ? c + '70' : c + '35';
         const wf = lit ? colors.accent + 'aa' : '#0a0e18';
         const ws = lit ? colors.accent + '50' : c + '18';
         const rW = 28, rH = 18;
@@ -763,13 +762,6 @@ export default function FrequencyWalkthrough({ step = 0 }) {
         @keyframes fwCoilPulse {
           0%, 100% { opacity: 0.7; }
           50% { opacity: 1; }
-        }
-        @keyframes fwGridFlash {
-          0% { opacity: 0; }
-          10% { opacity: 0.3; }
-          30% { opacity: 0; }
-          45% { opacity: 0.15; }
-          100% { opacity: 0; }
         }
         @keyframes fwArc {
           0%, 100% { opacity: 0; } 15% { opacity: 0.8; } 30% { opacity: 0; }
@@ -916,13 +908,6 @@ export default function FrequencyWalkthrough({ step = 0 }) {
         </div>
       )}
 
-      {/* Full-page red flash on collapse */}
-      {isCollapse && !showPunchline && (
-        <div className="absolute inset-0 z-5 pointer-events-none" style={{
-          background: colors.danger,
-          animation: 'fwGridFlash 1s ease forwards',
-        }} />
-      )}
     </div>
   );
 }
