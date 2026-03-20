@@ -21,8 +21,7 @@
 <script is:inline>
   (function() {
     const stored = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const isDark = stored === 'dark' || (!stored && prefersDark);
+    const isDark = stored !== 'light'; // dark unless explicitly chose light
 
     if (!isDark) {
       document.documentElement.classList.add('light');

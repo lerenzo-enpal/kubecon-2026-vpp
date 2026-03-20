@@ -52,28 +52,7 @@ html.light {
   color-scheme: light;
 }
 
-/* Auto light mode for users who prefer it (unless manually overridden) */
-@media (prefers-color-scheme: light) {
-  html:not(.dark) {
-    --color-bg: #f8fafc;
-    --color-bg-alt: #ffffff;
-    --color-surface: #f1f5f9;
-    --color-surface-light: #e2e8f0;
-    --color-text: #0f172a;
-    --color-text-muted: #475569;
-    --color-text-dim: #94a3b8;
-    --color-primary: #0891b2;
-    --color-secondary: #7c3aed;
-    --color-accent: #d97706;
-    --color-danger: #dc2626;
-    --color-success: #059669;
-    --color-grid: #0891b2;
-    --color-battery: #059669;
-    --color-solar: #d97706;
-    --color-cost: #dc2626;
-    color-scheme: light;
-  }
-}
+/* Light mode only activates via explicit toggle (.light class) — never auto */
 
 body {
   min-height: 100vh;
