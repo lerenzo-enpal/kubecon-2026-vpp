@@ -26,7 +26,6 @@ Broader analysis that spans multiple incidents (in `docs/research/`):
 | File | Coverage |
 |------|----------|
 | [cascading_failures_research.md](../research/cascading_failures_research.md) | Cascade theory, RoCoF calculations, VPP prevention mechanisms |
-| [ercot_texas_grid_research.md](../research/ercot_texas_grid_research.md) | Texas grid topology, load zones, Feb 2021 cascade data |
-| [iberian_blackout_2025.md](../research/iberian_blackout_2025.md) | Iberian overvoltage cascade detailed timeline |
+| [grid-infrastructure.md](./2021-texas-ercot-winter-storm/grid-infrastructure.md) | Texas grid topology, load zones, power plant coordinates |
 | [grid-frequency-events-reference.md](../research/grid-frequency-events-reference.md) | Technical basis for frequency demo scenarios |
 | [grid-flexibility-costs-research.md](../research/grid-flexibility-costs-research.md) | Peaker costs, battery LCOS, demand-side savings |

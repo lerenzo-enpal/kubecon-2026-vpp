@@ -2,7 +2,7 @@
 
 ## Manual Deploy (CLI)
 
-> **Note:** Manual deploys are fine for quick previews or urgent fixes, but for regular workflows prefer CI/CD (GitHub Actions) so deploys are tied to commits, reviewable, and reproducible.
+> **Note:** CI Deploys are expensive on netlify. Deploy manually or use the github runbook.
 
 ### Prerequisites
 
