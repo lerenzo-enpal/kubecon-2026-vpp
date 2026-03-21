@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import GamePlaceholder from '../components/GamePlaceholder';
 import ThemeToggle from '../components/ThemeToggle.astro';
+import FontSizeToggle from '../components/FontSizeToggle.astro';
 
 const modules = [
   { num: 1, title: 'How the Grid Works', desc: 'The 50 Hz heartbeat, supply = demand, and the 2.5 Hz between normal and collapse.', href: '/learn/how-the-grid-works', interactive: true },
@@ -20,11 +21,12 @@ const modules = [
           <div class="w-2 h-2 rounded-full" style="background: var(--color-primary); box-shadow: 0 0 8px var(--color-primary);"></div>
           <span class="font-mono font-bold text-lg" style="color: var(--color-text); letter-spacing: 0.05em;">GRID</span>
         </div>
-        <div class="flex items-center gap-6">
+        <div class="flex items-center gap-4">
           <nav class="flex gap-6 font-mono text-sm" style="color: var(--color-text-dim);">
             <a href="/learn/how-the-grid-works" class="hover:opacity-70 transition-opacity">Learn</a>
             <a href="/research" class="hover:opacity-70 transition-opacity">Research</a>
           </nav>
+          <FontSizeToggle />
           <ThemeToggle />
         </div>
       </div>

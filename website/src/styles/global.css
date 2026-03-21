@@ -61,6 +61,18 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* ── Font size toggle ── */
+/* sm = default (current sizes), md = bump up, lg = larger still */
+html.font-md body { font-size: 19px; }
+html.font-md .prose h1 { font-size: 54px; }
+html.font-md .prose h2 { font-size: 36px; }
+html.font-md .prose h3 { font-size: 25px; }
+
+html.font-lg body { font-size: 22px; }
+html.font-lg .prose h1 { font-size: 60px; }
+html.font-lg .prose h2 { font-size: 40px; }
+html.font-lg .prose h3 { font-size: 28px; }
+
 /* ── Prose — content page typography ── */
 .prose h1 { font-size: 48px; font-weight: 800; line-height: 1.1; margin-bottom: 16px; }
 .prose h2 { font-size: 32px; font-weight: 700; line-height: 1.2; margin-top: 64px; margin-bottom: 12px; color: var(--color-primary); }

@@ -1,0 +1,51 @@
+---
+// Font size toggle: small (default), medium, large
+// Adds .font-md or .font-lg class to <html>
+---
+<div id="font-size-toggle" class="flex items-center gap-0.5" role="group" aria-label="Font size">
+  <button
+    data-size="sm"
+    class="font-toggle-btn active px-1.5 py-1 rounded transition-colors cursor-pointer"
+    style="font-size: 11px; font-family: var(--font-mono);"
+    aria-label="Small text"
+  >A</button>
+  <button
+    data-size="md"
+    class="font-toggle-btn px-1.5 py-1 rounded transition-colors cursor-pointer"
+    style="font-size: 14px; font-family: var(--font-mono);"
+    aria-label="Medium text"
+  >A</button>
+  <button
+    data-size="lg"
+    class="font-toggle-btn px-1.5 py-1 rounded transition-colors cursor-pointer"
+    style="font-size: 17px; font-family: var(--font-mono);"
+    aria-label="Large text"
+  >A</button>
+</div>
+
+<script is:inline>
+  (function() {
+    var stored = localStorage.getItem('fontSize') || 'sm';
+    applySize(stored);
+
+    document.querySelectorAll('.font-toggle-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var size = this.getAttribute('data-size');
+        localStorage.setItem('fontSize', size);
+        applySize(size);
+      });
+    });
+
+    function applySize(size) {
+      var html = document.documentElement;
+      html.classList.remove('font-sm', 'font-md', 'font-lg');
+      html.classList.add('font-' + size);
+      document.querySelectorAll('.font-toggle-btn').forEach(function(b) {
+        var isActive = b.getAttribute('data-size') === size;
+        b.classList.toggle('active', isActive);
+        b.style.color = isActive ? 'var(--color-text)' : 'var(--color-text-dim)';
+        b.style.background = isActive ? 'var(--color-surface)' : 'transparent';
+      });
+    }
+  })();
+</script>

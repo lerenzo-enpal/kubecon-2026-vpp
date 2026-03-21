@@ -1,6 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
+import FontSizeToggle from '../components/FontSizeToggle.astro';
 
 interface Props {
   title: string;
@@ -59,6 +60,7 @@ const topics = [
             <a href="/learn/how-the-grid-works" class="hover:opacity-70 transition-opacity">Learn</a>
             <a href="/research" class="hover:opacity-70 transition-opacity">Research</a>
           </nav>
+          <FontSizeToggle />
           <ThemeToggle />
         </div>
       </div>
@@ -68,11 +70,20 @@ const topics = [
       <!-- Sidebar -->
       <aside class="hidden lg:block w-64 flex-shrink-0 py-8 pr-6 border-r" style="border-color: var(--color-surface-light);">
         <div class="sticky top-8">
-          <!-- Learn link -->
-          <a href="/learn" class="flex items-center gap-2 px-3 py-1.5 rounded text-sm mb-4 transition-colors" style="color: var(--color-text-dim);">
-            <span class="font-mono text-xs" style="color: var(--color-text-dim);">&#8592;</span>
-            Learn
-          </a>
+          {/* Learn section — collapsed on research pages */}
+          <details class="group mb-4">
+            <summary class="font-mono text-xs cursor-pointer select-none list-none flex items-center gap-1 mb-2" style="color: var(--color-text-dim); letter-spacing: 0.1em; text-transform: uppercase;">
+              <span class="text-[10px] transition-transform group-open:rotate-90">&#9656;</span>
+              Learn
+            </summary>
+            <div class="ml-4 pl-3 border-l flex flex-col gap-0.5" style="border-color: var(--color-surface-light);">
+              <a href="/learn/how-the-grid-works" class="px-2 py-1 rounded text-[11px] transition-colors" style="color: var(--color-text-dim);">How the Grid Works</a>
+              <a href="/learn/the-old-way" class="px-2 py-1 rounded text-[11px] transition-colors" style="color: var(--color-text-dim);">The Old Way</a>
+              <a href="/learn/the-renewable-revolution" class="px-2 py-1 rounded text-[11px] transition-colors" style="color: var(--color-text-dim);">The Renewable Revolution</a>
+              <a href="/learn/the-virtual-power-plant" class="px-2 py-1 rounded text-[11px] transition-colors" style="color: var(--color-text-dim);">The Virtual Power Plant</a>
+              <a href="/learn/the-future" class="px-2 py-1 rounded text-[11px] transition-colors" style="color: var(--color-text-dim);">The Future</a>
+            </div>
+          </details>
 
           <div class="font-mono text-xs mb-3" style="color: var(--color-text-dim); letter-spacing: 0.1em; text-transform: uppercase;">
             Research
