@@ -5,6 +5,8 @@ import ConnectedHomes from '../../components/illustrations/ConnectedHomes';
 import EVGarage from '../../components/illustrations/EVGarage';
 import VPPHome from '../../components/illustrations/VPPHome';
 import GlowLine from '../../components/GlowLine';
+import DuckCurveVPP from '../../components/DuckCurveVPP';
+import FullscreenWrapper from '../../components/FullscreenWrapper';
 import { url } from '../../utils/url';
 ---
 
@@ -75,43 +77,35 @@ import { url } from '../../utils/url';
   </div>
 </div>
 
-<div class="my-8 grid grid-cols-1 md:grid-cols-2 gap-4 fade-in stagger">
-  <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-solar);">
-    <div class="font-semibold mb-1" style="color: var(--color-solar);">Solar Panels</div>
-    <div class="text-base" style="color: var(--color-text-muted);">
-      Generate electricity from sunlight. A typical residential system produces 5-10 kW
-      peak — enough to power the home and charge the battery during daylight hours.
-    </div>
-  </div>
+<h3 style="color: var(--color-solar);">Solar Panels</h3>
+<p>
+  Generate electricity from sunlight. A typical residential system produces 5-10 kW
+  peak — enough to power the home and charge the battery during daylight hours.
+</p>
 
-  <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-battery);">
-    <div class="font-semibold mb-1" style="color: var(--color-battery);">Home Battery</div>
-    <div class="text-base" style="color: var(--color-text-muted);">
-      Stores excess solar energy for later use. A 10 kWh battery can discharge into the
-      grid when prices are high or when the grid needs emergency support.
-    </div>
-  </div>
+<h3 style="color: var(--color-battery);">Home Battery</h3>
+<p>
+  Stores excess solar energy for later use. A 10 kWh battery can discharge into the
+  grid when prices are high or when the grid needs emergency support.
+</p>
 
-  <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
-    <div class="font-semibold mb-1" style="color: var(--color-primary);">Electric Vehicle</div>
-    <div class="text-base" style="color: var(--color-text-muted);">
-      A 60-80 kWh battery on wheels. <a href={url("/research/topics/demand-response")}>Smart charging</a> shifts demand to times when
-      electricity is cheap and abundant — typically midday solar peaks or overnight wind.
-    </div>
-  </div>
+<h3 style="color: var(--color-primary);">Electric Vehicle</h3>
+<p>
+  A 60-80 kWh battery on wheels. <a href={url("/research/topics/demand-response")}>Smart charging</a> shifts demand to times when
+  electricity is cheap and abundant — typically midday solar peaks or overnight wind.
+</p>
 
-  <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-secondary);">
-    <div class="font-semibold mb-1" style="color: var(--color-secondary);">Heat Pump</div>
-    <div class="text-base" style="color: var(--color-text-muted);">
-      Heats the home using electricity instead of gas. Can pre-heat when electricity is
-      cheap, then coast through expensive peak hours — turning the home itself into
-      thermal storage.
-    </div>
-  </div>
-</div>
+<h3 style="color: var(--color-secondary);">Heat Pump</h3>
+<p>
+  Heats the home using electricity instead of gas. Can pre-heat when electricity is
+  cheap, then coast through expensive peak hours — turning the home itself into
+  thermal storage.
+</p>
 
-<div class="flex gap-6 p-5 rounded-lg items-center my-6" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-  <EVGarage client:visible width={130} height={85} />
+<div class="flex gap-6 p-5 rounded-lg items-center my-8" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+  <div class="flex-shrink-0 w-60 flex justify-center">
+    <EVGarage client:visible width={130} height={85} />
+  </div>
   <div>
     <div class="font-semibold mb-1">The HEMS Coordinator</div>
     <div class="text-base" style="color: var(--color-text-muted);">A small computer called the HEMS (Home Energy Management System) coordinates everything inside each home. It decides when the battery charges or discharges, when the EV draws power, and when the heat pump runs -- all based on grid signals, electricity prices, and the homeowner's preferences.</div>
@@ -119,7 +113,9 @@ import { url } from '../../utils/url';
 </div>
 
 <div class="flex gap-6 p-5 rounded-lg items-center my-8" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-  <VPPHome client:visible width={240} height={170} />
+  <div class="flex-shrink-0 w-60 flex justify-center">
+    <VPPHome client:visible width={240} height={170} />
+  </div>
   <div>
     <div class="font-semibold mb-1">VPP Home View</div>
     <div class="text-base" style="color: var(--color-text-muted);">Solar panels generate power, the battery stores it, and the EV charges when electricity is cheapest. The HEMS orchestrates everything, responding to VPP signals in real time.</div>
@@ -194,6 +190,24 @@ import { url } from '../../utils/url';
       </div>
     </div>
   </div>
+</div>
+
+<h2 id="how-vpp-helps">How VPP Load-Shifting Helps</h2>
+
+<p>
+  The "duck curve" is what happens when solar floods the grid during the day but vanishes
+  at sunset -- just as demand peaks. A VPP smooths this out by charging batteries during
+  midday oversupply and discharging them during the evening ramp. Toggle between modes to
+  see the difference.
+</p>
+
+<div id="duck-curve-vpp" class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
+  <div class="flex items-center justify-between mb-3">
+    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">DUCK CURVE WITH VPP LOAD SHIFTING</div>
+  </div>
+  <FullscreenWrapper client:visible label="Fullscreen">
+    <DuckCurveVPP client:visible height={400} />
+  </FullscreenWrapper>
 </div>
 
 <h2 id="hornsdale">The Hornsdale Story</h2>
