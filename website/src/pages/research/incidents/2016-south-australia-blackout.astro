@@ -37,7 +37,7 @@ import SourceList from '../../../components/SourceList.astro';
 </p>
 
 <p>
-  The single interconnector to Victoria tried to compensate, surging to 850 MW against its 650 MW capacity. It tripped on overload protection, isolating the entire state. Within seconds, every remaining generator shut down. Total blackout.
+  The single interconnector to Victoria tried to compensate, surging to 850 MW against its 650 MW capacity. It tripped on overload protection, isolating the entire state. Within seconds, every remaining generator shut down. Total <a href="/research/topics/cascading-failures">cascading failure</a>.
 </p>
 
 <h2>Timeline</h2>
@@ -108,10 +108,10 @@ import SourceList from '../../../components/SourceList.astro';
 <div class="my-8 p-6 rounded-xl" style="background: rgba(16, 185, 129, 0.06); border-left: 4px solid var(--color-success);">
   <div class="font-mono text-xs font-semibold mb-3" style="color: var(--color-success); letter-spacing: 0.08em; text-transform: uppercase;">VPP Prevention Case</div>
   <p class="text-sm leading-relaxed mb-3" style="color: var(--color-text-muted);">
-    This blackout directly led to the construction of the Hornsdale Power Reserve (Tesla Big Battery). A fleet of distributed batteries could have absorbed the 456 MW shortfall in milliseconds, buying time for operators to manage the interconnector load.
+    This blackout directly led to the construction of the <a href="/research/incidents/2017-hornsdale-battery-response">Hornsdale Power Reserve</a> (Tesla Big Battery). A fleet of distributed batteries could have absorbed the 456 MW shortfall in milliseconds, buying time for operators to manage the interconnector load.
   </p>
   <p class="text-sm leading-relaxed mb-0" style="color: var(--color-text-muted);">
-    At the time, South Australia had zero utility-scale battery storage. Eighteen months later, the Hornsdale battery would prove that 100 MW of fast-acting storage could prevent exactly this type of cascade.
+    At the time, South Australia had zero utility-scale battery storage. Eighteen months later, the <a href="/research/incidents/2017-hornsdale-battery-response">Hornsdale battery</a> would prove that 100 MW of fast-acting storage could prevent exactly this type of cascade.
   </p>
 </div>
 
@@ -128,20 +128,20 @@ import SourceList from '../../../components/SourceList.astro';
     <div class="font-semibold text-sm" style="color: var(--color-text);">2021 Texas Winter Storm</div>
     <div class="text-xs mt-1" style="color: var(--color-text-dim);">246 lives lost, 70+ hours</div>
   </a>
-  <a href="/research/incidents/2025-iberian-peninsula-blackout" class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+  <a href="/research/incidents/2017-south-australia-heatwave" class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
     <div class="font-mono text-xs mb-1" style="color: var(--color-danger);">Blackout</div>
-    <div class="font-semibold text-sm" style="color: var(--color-text);">2025 Iberian Blackout</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">60M affected, 6-second collapse</div>
+    <div class="font-semibold text-sm" style="color: var(--color-text);">2017 SA Heatwave</div>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">5 months later, same grid fails again</div>
   </a>
 </div>
 
 <SourceList sources={[
-  "AEMO — Black System South Australia 28 September 2016: Final Report (March 2017)",
-  "AEMO — Black System Event Compliance Report (2018)",
+  '<a href="https://www.aemo.com.au/-/media/Files/Electricity/NEM/Market_Notices_and_Events/Power_System_Incident_Reports/2017/Integrated-Final-Report-SA-Black-System-28-September-2016.pdf" target="_blank" rel="noopener">AEMO — Black System South Australia 28 September 2016: Final Report (March 2017)</a>',
+  '<a href="https://www.aemo.com.au/-/media/files/electricity/nem/market_notices_and_events/power_system_incident_reports/2018/aemo-compliance-report--sa-black-system-event.pdf" target="_blank" rel="noopener">AEMO — Black System Event Compliance Report (2018)</a>',
   "ElectraNet — Transmission line damage assessment (2016)",
   "Business SA — Economic impact estimate: AUD $367 million",
   "Bureau of Meteorology — Severe weather warning and tornado confirmation (Sep 2016)",
-  "Federal Court of Australia — Snowtown wind farm penalty: $1M; Clements Gap: $1.1M",
+  '<a href="https://en.wikipedia.org/wiki/2016_South_Australian_blackout" target="_blank" rel="noopener">Wikipedia — 2016 South Australian blackout</a>',
 ]} />
 
 </IncidentLayout>

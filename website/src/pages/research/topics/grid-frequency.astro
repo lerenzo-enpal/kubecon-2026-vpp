@@ -73,7 +73,7 @@ import IncidentLayout from '../../../layouts/IncidentLayout.astro';
 
 <p>
   FCR is dimensioned for the 3,000 MW "reference incident" — the loss of the two largest
-  generating units in Continental Europe simultaneously. The system self-regulating effect
+  generating units in Continental Europe simultaneously (source: <a href="https://www.entsoe.eu" target="_blank" rel="noopener">ENTSO-E</a>). The system self-regulating effect
   provides approximately 19,500 MW/Hz of natural load response.
 </p>
 
@@ -145,7 +145,7 @@ import IncidentLayout from '../../../layouts/IncidentLayout.astro';
 <div class="p-5 rounded-lg my-8" style="background: var(--color-surface); border: 1px solid var(--color-primary);">
   <div class="font-mono text-xs mb-2" style="color: var(--color-primary);">REAL-WORLD PRECEDENT</div>
   <p class="mb-2" style="max-width: none;">
-    <strong>January 2021 — CE System Separation:</strong> 6.3 GW imbalance, frequency fell to
+    <strong><a href="/research/incidents/2021-european-grid-split">January 2021 — CE System Separation:</a></strong> 6.3 GW imbalance, frequency fell to
     49.74 Hz. 1.7 GW of interruptible loads disconnected in France and Italy. System reconnected
     within 63 minutes.
   </p>
@@ -160,7 +160,7 @@ import IncidentLayout from '../../../layouts/IncidentLayout.astro';
 <p>
   The 2015 Ukraine cyberattack demonstrated remote breaker opening at 30 substations simultaneously.
   With protection relays compromised and SCADA systems disabled, the grid loses automated defense.
-  The 2003 Italy blackout showed that uncontrolled frequency collapse from 50 Hz to 47.5 Hz can
+  The <a href="/research/incidents/2003-italy-blackout">2003 Italy blackout</a> showed that uncontrolled frequency collapse from 50 Hz to 47.5 Hz can
   occur in approximately 2.5 minutes.
 </p>
 
@@ -178,16 +178,17 @@ import IncidentLayout from '../../../layouts/IncidentLayout.astro';
 <p>
   Conventional FCR providers (gas turbines, hydro) respond in seconds. Batteries respond in
   milliseconds. This is not an incremental improvement — it is a categorical difference that
-  changes what is physically possible during a grid emergency.
+  changes what is physically possible during a grid emergency. <a href="/research/topics/vpp-market">VPPs</a> aggregate thousands of
+  these batteries into grid-scale resources.
 </p>
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
   <div class="p-5 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
-    <h3 class="mt-0 text-base font-mono" style="color: var(--color-primary);">Hornsdale (2017)</h3>
+    <h3 class="mt-0 text-base font-mono" style="color: var(--color-primary);"><a href="/research/incidents/2017-hornsdale-battery-response">Hornsdale (2017)</a></h3>
     <p class="mb-0 text-sm">
       Responded to a coal plant trip in 140 milliseconds — 43x faster than the 6-second contract
-      requirement. The AEMO control system had not even registered the event. This single response
-      prevented a potential cascade across South Australia.
+      requirement. The <a href="https://www.aemo.com.au" target="_blank" rel="noopener">AEMO</a> control system had not even registered the event. This single response
+      prevented a potential <a href="/research/topics/cascading-failures">cascade</a> across South Australia.
     </p>
   </div>
   <div class="p-5 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">

@@ -34,7 +34,7 @@ import SourceList from '../../../components/SourceList.astro';
     A cruise ship called the <em>Norwegian Pearl</em> needed to pass under a high-voltage power line crossing the Ems River in northern Germany. To make room, the operator switched off the line -- a routine procedure they had done before. But this time, the rest of the grid was already under stress from heavy wind power flowing south.
   </p>
   <p class="text-sm leading-relaxed mb-4" style="color: var(--color-text-muted);">
-    When a control room operator tried to fix the growing overloads by changing a switch at a substation, it had the opposite effect. Within 15 seconds, a chain reaction of automatic safety shutoffs split the entire European grid into three separate islands. Around 15 million households lost power, and wind turbines disconnected themselves -- making the problem worse.
+    When a control room operator tried to fix the growing overloads by changing a switch at a substation, it had the opposite effect. Within 15 seconds, a <a href="/research/topics/cascading-failures">chain reaction</a> of automatic safety shutoffs split the entire European grid into three separate islands. Around 15 million households lost power, and wind turbines disconnected themselves -- making the problem worse.
   </p>
   <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
     Operators resynchronized the grid within 38 minutes, and full normal operations returned about two hours later. No one was hurt, but it was the worst disturbance in European grid history.
@@ -110,8 +110,8 @@ import SourceList from '../../../components/SourceList.astro';
   <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">VPP Relevance</h2>
   <div class="grid gap-3">
     <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
-      <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Frequency response gap</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">Wind turbines disconnected on under-frequency, worsening the crisis. VPP-connected batteries could have injected power instead of disappearing.</div>
+      <div class="font-semibold text-sm mb-1" style="color: var(--color-text);"><a href="/research/topics/grid-frequency">Frequency response</a> gap</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">Wind turbines disconnected on under-frequency, worsening the crisis. <a href="/research/topics/vpp-market">VPP</a>-connected batteries could have injected power instead of disappearing.</div>
     </div>
     <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
       <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Distributed vs. centralized</div>
@@ -134,14 +134,18 @@ import SourceList from '../../../components/SourceList.astro';
     <a href="/research/incidents/2024-dunkelflaute-germany" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
       2024 Dunkelflaute -- when wind and solar both disappear
     </a>
+    <a href="/research/incidents/2003-italy-blackout" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
+      2003 Italy Blackout -- cascading interconnector failure
+    </a>
   </div>
 </section>
 
 <SourceList sources={[
-  "UCTE Final Report: System Disturbance on 4 November 2006, January 2007",
+  '<a href="https://eepublicdownloads.entsoe.eu/clean-documents/pre2015/publications/ce/otherreports/Final-Report-20070130.pdf" target="_blank" rel="noopener">UCTE Final Report: System Disturbance on 4 November 2006, January 2007</a>',
   "UCTE Interim Report: System Disturbance on 4 November 2006, November 2006",
   "ENTSO-E: Final Report on the November 4, 2006 Disturbance",
   "European Commission: Inquiry into the European blackout of November 4, 2006",
+  '<a href="https://en.wikipedia.org/wiki/2006_European_blackout" target="_blank" rel="noopener">Wikipedia — 2006 European blackout</a>',
 ]} />
 
 </IncidentLayout>

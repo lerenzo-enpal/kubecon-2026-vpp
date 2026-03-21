@@ -33,7 +33,7 @@ import SourceList from '../../../components/SourceList.astro';
 </p>
 
 <p>
-  Generators began freezing and shutting down. As ERCOT ordered rolling blackouts to prevent total collapse, the power cuts hit natural gas compressor stations and pipelines. Without electricity, gas stopped flowing to the very power plants that needed it most. A self-reinforcing death spiral had begun.
+  Generators began freezing and shutting down. As ERCOT ordered rolling blackouts to prevent total collapse, the power cuts hit natural gas compressor stations and pipelines. Without electricity, gas stopped flowing to the very power plants that needed it most. A self-reinforcing <a href="/research/topics/cascading-failures">cascading failure</a> had begun.
 </p>
 
 <p>
@@ -101,7 +101,7 @@ import SourceList from '../../../components/SourceList.astro';
 </div>
 
 <p>
-  Texas's grid is intentionally isolated from the rest of the United States, with only 1,256 MW of DC ties to neighboring grids. When things went wrong, there was no one to call for help. The energy-only market provided no financial incentive for generators to invest in winterization.
+  Texas's grid is intentionally isolated from the rest of the United States, with only 1,256 MW of DC ties to neighboring grids. When things went wrong, there was no one to call for help. The energy-only <a href="/research/topics/electricity-pricing">market</a> provided no financial incentive for generators to invest in winterization.
 </p>
 
 <h2>Could This Have Been Prevented?</h2>
@@ -112,7 +112,7 @@ import SourceList from '../../../components/SourceList.astro';
     Gas peaker plants take 10-30 minutes to start. Batteries respond in 140 milliseconds. With 10 GW of distributed battery storage across Texas homes, the death spiral never begins because load shedding never cuts power to gas infrastructure.
   </p>
   <p class="text-sm leading-relaxed mb-0" style="color: var(--color-text-muted);">
-    A Virtual Power Plant turns 4.5 million passive consumers into active grid participants. Instead of everyone drawing power at once, a VPP coordinates batteries to flatten demand peaks and provide emergency power during supply shortfalls.
+    A <a href="/research/topics/vpp-market">Virtual Power Plant</a> turns 4.5 million passive consumers into active grid participants. Instead of everyone drawing power at once, a VPP coordinates batteries to flatten <a href="/research/topics/demand-response">demand</a> peaks and provide emergency power during supply shortfalls.
   </p>
 </div>
 
@@ -137,13 +137,13 @@ import SourceList from '../../../components/SourceList.astro';
 </div>
 
 <SourceList sources={[
-  "ERCOT — Final Report on February 2021 Winter Storm (ercot.com)",
-  "FERC/NERC — February 2021 Cold Weather Outages in Texas and the South Central United States (ferc.gov, Nov 2021)",
-  "Texas Tribune — $16 billion overcharge analysis (texastribune.org, Mar 2021)",
+  '<a href="https://www.ercot.com/gridmktinfo/docs/FinalReport-February2021WinterStorm" target="_blank" rel="noopener">ERCOT — Final Report on February 2021 Winter Storm</a>',
+  '<a href="https://www.ferc.gov/media/february-2021-cold-weather-outages-texas-and-south-central-united-states-ferc-nerc-and" target="_blank" rel="noopener">FERC/NERC — February 2021 Cold Weather Outages in Texas and the South Central United States (Nov 2021)</a>',
+  '<a href="https://www.texastribune.org/2021/03/01/texas-electricity-overcharges-ercot/" target="_blank" rel="noopener">Texas Tribune — $16 billion overcharge analysis (Mar 2021)</a>',
   "Potomac Economics — 2021 ERCOT State of the Market Report",
   "UT Austin Energy Institute — ERCOT Blackout 2021 Analysis",
   "Texas DSHS — Death toll reporting (246 confirmed deaths)",
-  "EIA — Wholesale electricity price data for ERCOT region (eia.gov)",
+  '<a href="https://en.wikipedia.org/wiki/2021_Texas_power_crisis" target="_blank" rel="noopener">Wikipedia — 2021 Texas power crisis</a>',
 ]} />
 
 </IncidentLayout>

@@ -37,7 +37,7 @@ import SourceList from '../../../components/SourceList.astro';
     The grid operator ordered a controlled disconnection of 100 MW of load to prevent a total collapse. But a software error at the local utility tripled the cut -- 300 MW was shed, blacking out over 90,000 homes for up to 37 minutes.
   </p>
   <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
-    Coming just five months after a statewide blackout that left 1.7 million people without power, the heatwave failure triggered a political crisis. The state government responded by commissioning what became the Hornsdale Power Reserve -- the Tesla Big Battery.
+    Coming just five months after a <a href="/research/incidents/2016-south-australia-blackout">statewide blackout</a> that left 1.7 million people without power, the heatwave failure triggered a political crisis. The state government responded by commissioning what became the <a href="/research/incidents/2017-hornsdale-battery-response">Hornsdale Power Reserve</a> -- the Tesla Big Battery.
   </p>
 </section>
 
@@ -99,7 +99,7 @@ import SourceList from '../../../components/SourceList.astro';
   <div class="grid gap-3">
     <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
       <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Response time gap</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">90,000 homes were disconnected because no demand-side flexibility existed. VPP-connected batteries could have reduced peak demand without cutting anyone off.</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">90,000 homes were disconnected because no <a href="/research/topics/demand-response">demand-side flexibility</a> existed. <a href="/research/topics/vpp-market">VPP</a>-connected batteries could have reduced peak demand without cutting anyone off.</div>
     </div>
     <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
       <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Surgical vs. blunt</div>
@@ -116,8 +116,11 @@ import SourceList from '../../../components/SourceList.astro';
 <section class="my-10">
   <h2 class="text-lg font-bold mb-3" style="color: var(--color-text);">Related Incidents</h2>
   <div class="flex flex-col gap-2">
-    <a href="/research/incidents/2006-european-grid-split" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
-      2006 European Grid Split -- cascading failure across 20 countries
+    <a href="/research/incidents/2016-south-australia-blackout" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
+      2016 South Australia Blackout -- the statewide blackout 5 months prior
+    </a>
+    <a href="/research/incidents/2017-hornsdale-battery-response" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
+      2017 Hornsdale Battery Response -- the solution this crisis catalyzed
     </a>
     <a href="/research/incidents/2024-dunkelflaute-germany" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
       2024 Dunkelflaute -- what happens when renewables produce nothing
@@ -126,8 +129,8 @@ import SourceList from '../../../components/SourceList.astro';
 </section>
 
 <SourceList sources={[
-  "AEMO: System Event Report -- South Australia, 8 February 2017",
-  "AEMC: Review of the System Black Event in South Australia on 28 September 2016",
+  '<a href="https://www.aemo.com.au/-/media/files/electricity/nem/market_notices_and_events/power_system_incident_reports/2017/system-event-report-south-australia-8-february-2017.pdf" target="_blank" rel="noopener">AEMO: System Event Report -- South Australia, 8 February 2017</a>',
+  '<a href="https://www.aemc.gov.au/markets-reviews-advice/review-of-the-system-black-event-in-south-australi" target="_blank" rel="noopener">AEMC: Review of the System Black Event in South Australia on 28 September 2016</a>',
   "Federal Court of Australia: Pelican Point Power Limited penalty, AUD 900,000",
   "Bureau of Meteorology: Special Climate Statement 61 -- heatwave in southeast Australia, February 2017",
 ]} />

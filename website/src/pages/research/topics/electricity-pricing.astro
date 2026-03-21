@@ -37,8 +37,9 @@ import IncidentLayout from '../../../layouts/IncidentLayout.astro';
 
 <p>
   Negative electricity prices mean the grid is literally paying generators to stop producing.
-  They signal a system that cannot absorb its own clean energy. In Germany, negative price hours
-  have grown from 15 in 2008 to 575 in 2025.
+  They signal a system that cannot absorb its own clean energy — a problem closely tied to
+  <a href="/research/topics/german-grid-curtailment">grid curtailment</a>. In Germany, negative price hours
+  have grown from 15 in 2008 to 575 in 2025 (source: <a href="https://www.smard.de" target="_blank" rel="noopener">SMARD</a>).
 </p>
 
 <table>
@@ -161,7 +162,8 @@ import IncidentLayout from '../../../layouts/IncidentLayout.astro';
 
 <p>
   Batteries amplify this effect. They absorb cheap midday solar (preventing negative pricing) and
-  discharge during expensive peaks, spreading the price-reduction effect across more hours. Modeled
+  discharge during expensive peaks, spreading the price-reduction effect across more hours. This is
+  the core <a href="/research/topics/demand-response">demand response</a> mechanism. Modeled
   estimates suggest batteries can extend the merit order price reduction by an additional 20-40%
   across evening hours.
 </p>
@@ -172,7 +174,7 @@ import IncidentLayout from '../../../layouts/IncidentLayout.astro';
   <div class="p-5 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-danger);">
     <div class="font-mono text-xs mb-2" style="color: var(--color-danger);">PRICE SPIKE — DUNKELFLAUTE</div>
     <p class="mb-2 text-sm" style="max-width: none;">
-      Dec 12, 2024: EUR 936.28/MWh during "Dunkelflaute" — the dreaded dark doldrums when both
+      Dec 12, 2024: EUR 936.28/MWh during the <a href="/research/incidents/2024-dunkelflaute-germany">Dunkelflaute</a> — the dreaded dark doldrums when both
       wind and solar collapse simultaneously under high-pressure winter weather.
     </p>
     <p class="mb-0 text-sm" style="max-width: none;">
@@ -200,7 +202,7 @@ import IncidentLayout from '../../../layouts/IncidentLayout.astro';
 </p>
 
 <p>
-  This is precisely what VPPs like Flexa do — coordinating thousands of home batteries to trade
+  This is precisely what VPPs like <a href="/research/topics/enpal-flexa">Flexa</a> do — coordinating thousands of home batteries to trade
   on the five-minute continuous intraday market, capturing very short-term arbitrage while
   simultaneously stabilizing the grid.
 </p>

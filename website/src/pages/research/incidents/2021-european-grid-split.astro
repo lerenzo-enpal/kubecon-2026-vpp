@@ -37,7 +37,7 @@ import SourceList from '../../../components/SourceList.astro';
     Within 42.7 seconds, the resulting overloads cascaded across Croatia, Serbia, Hungary, and Romania. The entire Continental European grid -- serving 400 million people -- fractured into two islands. The northwest lost 6.3 GW of generation. Emergency reserves in France, Italy, and the Nordic countries kicked in within seconds.
   </p>
   <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
-    Operators resynchronized the grid in 63 minutes. Consumer impact was limited (233 MW total), but the event proved that the same type of cascading split that hit Europe in 2006 could still happen 15 years later.
+    Operators resynchronized the grid in 63 minutes. Consumer impact was limited (233 MW total), but the event proved that the same type of <a href="/research/topics/cascading-failures">cascading</a> split that hit Europe <a href="/research/incidents/2006-european-grid-split">in 2006</a> could still happen 15 years later.
   </p>
 </section>
 
@@ -105,7 +105,7 @@ import SourceList from '../../../components/SourceList.astro';
   <div class="grid gap-3">
     <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
       <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Speed of response</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">The cascade completed in 42.7 seconds -- far too fast for human intervention. VPPs with battery storage can respond in milliseconds, injecting or absorbing power to arrest frequency deviations before they cascade.</div>
+      <div class="text-sm" style="color: var(--color-text-muted);">The cascade completed in 42.7 seconds -- far too fast for human intervention. <a href="/research/topics/vpp-market">VPPs</a> with battery storage can respond in milliseconds, injecting or absorbing power to arrest <a href="/research/topics/grid-frequency">frequency</a> deviations before they cascade.</div>
     </div>
     <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
       <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Distributed frequency support</div>
@@ -128,14 +128,18 @@ import SourceList from '../../../components/SourceList.astro';
     <a href="/research/incidents/2024-dunkelflaute-germany" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
       2024 Dunkelflaute -- a different kind of grid stress
     </a>
+    <a href="/research/incidents/2025-iberian-peninsula-blackout" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
+      2025 Iberian Blackout -- 6-second collapse on the European grid
+    </a>
   </div>
 </section>
 
 <SourceList sources={[
-  "ENTSO-E: Continental Europe Synchronous Area Separation on 8 January 2021 -- ICS Final Report, July 2021",
+  '<a href="https://www.entsoe.eu/news/2021/07/15/continental-europe-synchronous-area-separation-on-8-january-2021-ics-final-report/" target="_blank" rel="noopener">ENTSO-E: Continental Europe Synchronous Area Separation on 8 January 2021 -- ICS Final Report, July 2021</a>',
   "ENTSO-E: Technical Report on the January 2021 System Separation",
   "Gridradar: Phase Angle Forensics of the 8 January 2021 Event",
-  "ACER: Opinion on the Continental Europe System Separation, 2021",
+  '<a href="https://www.acer.europa.eu/official_documents/acts_of_the_agency/opinions/opinions/acer_opinion_01-2021.pdf" target="_blank" rel="noopener">ACER: Opinion on the Continental Europe System Separation, 2021</a>',
+  '<a href="https://en.wikipedia.org/wiki/2021_European_synchronous_grid_split" target="_blank" rel="noopener">Wikipedia — 2021 European synchronous grid split</a>',
 ]} />
 
 </IncidentLayout>
