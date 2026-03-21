@@ -5,6 +5,7 @@ import { FlyToInterpolator } from '@deck.gl/core';
 import { ScatterplotLayer, LineLayer, TextLayer, PolygonLayer } from '@deck.gl/layers';
 import MapGL from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { useIncidentGlow } from './useIncidentGlow';
 
 // TODO: Shared with presentation/src/components/ui/Corners.jsx — combine into shared component
 function Corners({ color = '#22d3ee50', size = 10 }) {
@@ -107,6 +108,7 @@ function getStepView(stepIdx: number, fallback: any) {
 
 export default function IberianCascadeMap({ width: widthProp, height = 700 }: { width?: number; height?: number }) {
   const [failed, setFailed] = useState(new Set<string>());
+  const glow = useIncidentGlow();
   const [mode, setMode] = useState<'idle' | 'stepping' | 'playing'>('idle');
   const [elapsed, setElapsed] = useState(0);
   const [activeStep, setActiveStep] = useState(-1);
@@ -161,18 +163,22 @@ export default function IberianCascadeMap({ width: widthProp, height = 700 }: { 
     if (nextIdx >= CASCADE.length) return;
     setMode('stepping'); setStepIndex(nextIdx);
     const nf = new Set<string>();
-    for (let i = 0; i <= nextIdx; i++) CASCADE[i].ids.forEach(id => nf.add(id));
-    setFailed(nf); setActiveStep(nextIdx); setElapsed(CASCADE[nextIdx].time + 1);
+    for (let i = 0; i < nextIdx; i++) CASCADE[i].ids.forEach(id => nf.add(id));
+    setFailed(nf);
+    glow.triggerIncident(CASCADE[nextIdx].ids, (ids) => {
+      setFailed(prev => { const next = new Set(prev); ids.forEach(id => next.add(id)); return next; });
+    });
+    setActiveStep(nextIdx); setElapsed(CASCADE[nextIdx].time + 1);
     setViewState({ ...getStepView(nextIdx, defaultView), transitionDuration: 800, transitionInterpolator: FLY_TO, transitionEasing: (t: number) => 1 - Math.pow(1 - t, 3) } as any);
   };
 
   const reset = () => {
-    setFailed(new Set()); setMode('idle'); setElapsed(0); setActiveStep(-1); setStepIndex(-1);
+    setFailed(new Set()); glow.clearAll(); setMode('idle'); setElapsed(0); setActiveStep(-1); setStepIndex(-1);
     setViewState({ ...defaultView, transitionDuration: 500, transitionInterpolator: FLY_TO, transitionEasing: (t: number) => 1 - Math.pow(1 - t, 3) } as any);
   };
 
   const skipToEnd = () => {
-    setFailed(new Set()); setElapsed(0); setActiveStep(-1); setStepIndex(-1);
+    setFailed(new Set()); glow.clearAll(); setElapsed(0); setActiveStep(-1); setStepIndex(-1);
     setViewState({ ...defaultView, transitionDuration: mode === 'stepping' ? 600 : 0, transitionInterpolator: FLY_TO, transitionEasing: (t: number) => 1 - Math.pow(1 - t, 3) } as any);
     setMode('playing');
   };
@@ -187,16 +193,26 @@ export default function IberianCascadeMap({ width: widthProp, height = 700 }: { 
     return () => el.removeEventListener('keydown', handler);
   });
 
+  const lastAutoStep = useRef(-1);
   useEffect(() => {
     if (mode !== 'playing') return;
+    lastAutoStep.current = -1; glow.clearAll();
     const start = performance.now();
     let raf: number;
     const tick = () => {
       const sec = (performance.now() - start) / 1000;
       setElapsed(sec);
-      const nf = new Set<string>(); let ms = -1;
-      CASCADE.forEach((step, i) => { if (sec > step.time) { step.ids.forEach(id => nf.add(id)); ms = i; } });
-      setFailed(nf); setActiveStep(ms);
+      let ms = -1;
+      CASCADE.forEach((step, i) => { if (sec > step.time) ms = i; });
+      if (ms > lastAutoStep.current) {
+        for (let i = lastAutoStep.current + 1; i <= ms; i++) {
+          glow.triggerIncident(CASCADE[i].ids, (ids) => {
+            setFailed(prev => { const next = new Set(prev); ids.forEach(id => next.add(id)); return next; });
+          });
+        }
+        lastAutoStep.current = ms;
+      }
+      setActiveStep(ms);
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
@@ -227,41 +243,52 @@ export default function IberianCascadeMap({ width: widthProp, height = 700 }: { 
   const pulse = Math.sin(Date.now() / 250);
   const lines = LINES.map(([a, b]) => {
     const nA = getNode(a), nB = getNode(b);
-    const aF = failed.has(a), bF = failed.has(b);
-    let color, glow;
-    if (aF && bF) { color = [239, 68, 68, 55]; glow = [239, 68, 68, 15]; }
-    else if (aF || bF) { const p = Math.floor(pulse * 40 + 155); color = [239, 68, 68, p]; glow = [239, 68, 68, 40]; }
-    else { color = [34, 211, 238, 150]; glow = [34, 211, 238, 35]; }
-    return { from: nA.pos, to: nB.pos, color, glow };
+    const aF = failed.has(a) || glow.isInIncident(a), bF = failed.has(b) || glow.isInIncident(b);
+    let color, lineGlow;
+    if (aF && bF) { color = [239, 68, 68, 55]; lineGlow = [239, 68, 68, 15]; }
+    else if (aF || bF) { const p = Math.floor(pulse * 40 + 155); color = [239, 68, 68, p]; lineGlow = [239, 68, 68, 40]; }
+    else { color = [34, 211, 238, 150]; lineGlow = [34, 211, 238, 35]; }
+    return { from: nA.pos, to: nB.pos, color, lineGlow };
   });
 
   const layers = [
-    new LineLayer({ id: 'glow', data: lines, getSourcePosition: (d: any) => d.from, getTargetPosition: (d: any) => d.to, getColor: (d: any) => d.glow, getWidth: 4, widthMinPixels: 2 }),
+    new LineLayer({ id: 'line-glow', data: lines, getSourcePosition: (d: any) => d.from, getTargetPosition: (d: any) => d.to, getColor: (d: any) => d.lineGlow, getWidth: 4, widthMinPixels: 2 }),
     new LineLayer({ id: 'lines', data: lines, getSourcePosition: (d: any) => d.from, getTargetPosition: (d: any) => d.to, getColor: (d: any) => d.color, getWidth: 1.5, widthMinPixels: 1 }),
     new ScatterplotLayer({
       id: 'nodes', data: NODES, getPosition: (d: any) => d.pos,
-      getRadius: (d: any) => d.type === 'hub' ? 5000 : 3600 * Math.sqrt(Math.max(d.cap, 200) / 500),
+      getRadius: (d: any) => {
+        if (d.type === 'hub') return glow.isInIncident(d.id) ? 6500 : 5000;
+        const base = 3600 * Math.sqrt(Math.max(d.cap, 200) / 500);
+        return glow.isInIncident(d.id) ? base * 1.3 : base;
+      },
       getFillColor: (d: any) => {
+        if (glow.isInIncident(d.id)) return glow.getFillColor(d.id, [...(TYPE_COLORS[d.type] || [148, 163, 184]), 180]);
         if (failed.has(d.id)) return [...FAILED_COLOR, 180];
         return [...(TYPE_COLORS[d.type] || [148, 163, 184]), 180];
       },
       getLineColor: (d: any) => {
+        if (glow.isInIncident(d.id)) return glow.getLineColor(d.id, [...(TYPE_COLORS[d.type] || [148, 163, 184]), 255]);
         if (failed.has(d.id)) return [...FAILED_COLOR, 255];
         return [...(TYPE_COLORS[d.type] || [148, 163, 184]), 255];
       },
       stroked: true, lineWidthMinPixels: 2, radiusMinPixels: 5, radiusMaxPixels: 24,
-      transitions: { getFillColor: 400, getRadius: 300 },
+      updateTriggers: { getFillColor: [failed, glow.incident, glow.pulseTime], getLineColor: [failed, glow.incident, glow.pulseTime], getRadius: [failed, glow.incident, glow.pulseTime] },
     }),
     new TextLayer({
-      id: 'x-marks', data: NODES.filter(n => failed.has(n.id)),
+      id: 'x-marks', data: NODES.filter(n => failed.has(n.id) && !glow.isInIncident(n.id)),
       getPosition: (d: any) => d.pos, getText: () => '\u2715', getSize: 22,
       getColor: [239, 68, 68, 255], getTextAnchor: 'middle', getAlignmentBaseline: 'center',
       fontFamily: 'JetBrains Mono', fontWeight: 'bold',
     }),
     new TextLayer({
       id: 'labels', data: NODES, getPosition: (d: any) => d.pos, getText: (d: any) => d.name,
-      getSize: 11, getColor: (d: any) => failed.has(d.id) ? [239, 68, 68, 180] : [241, 245, 249, 190],
+      getSize: 11, getColor: (d: any) => {
+        if (glow.isInIncident(d.id)) return glow.getLabelColor(d.id, [241, 245, 249, 190]);
+        if (failed.has(d.id)) return [239, 68, 68, 180];
+        return [241, 245, 249, 190];
+      },
       getTextAnchor: 'middle', getAlignmentBaseline: 'top', getPixelOffset: [0, 18], fontFamily: 'Inter',
+      updateTriggers: { getColor: [failed, glow.incident, glow.pulseTime] },
     }),
   ];
 

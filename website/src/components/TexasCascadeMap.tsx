@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { DeckGL } from '@deck.gl/react';
 import { FlyToInterpolator } from '@deck.gl/core';
 import { ScatterplotLayer, LineLayer, TextLayer } from '@deck.gl/layers';
-
 import MapGL from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { useIncidentGlow } from './useIncidentGlow';
 // TODO: Shared with presentation/src/components/ui/Corners.jsx — combine into shared component
 // Inline Corners component (from presentation ui library)
 function Corners({ color = '#22d3ee50', size = 10 }) {
@@ -114,6 +114,7 @@ function getStepView(stepIdx, fallback) {
 // ── Main component (standalone — no Spectacle dependency) ──
 export default function TexasCascadeMap({ width: widthProp, height = 700, variant = 'hud' }) {
   const [failed, setFailed] = useState(new Set());
+  const glow = useIncidentGlow();
   const [mode, setMode] = useState('idle');
   const [elapsed, setElapsed] = useState(0);
   const [activeStep, setActiveStep] = useState(-1);
@@ -198,10 +199,15 @@ export default function TexasCascadeMap({ width: widthProp, height = 700, varian
     if (nextIdx >= CASCADE.length) return;
     setMode('stepping');
     setStepIndex(nextIdx);
-    const nf = new Set();
-    for (let i = 0; i <= nextIdx; i++) CASCADE[i].ids.forEach(id => nf.add(id));
+    // Previous steps go straight to failed; current step gets amber glow
+    const nf = new Set<string>();
+    for (let i = 0; i < nextIdx; i++) CASCADE[i].ids.forEach(id => nf.add(id));
     nf.delete('comanche');
     setFailed(nf);
+    const newIds = CASCADE[nextIdx].ids.filter(id => id !== 'comanche');
+    glow.triggerIncident(newIds, (ids) => {
+      setFailed(prev => { const next = new Set(prev); ids.forEach(id => next.add(id)); return next; });
+    });
     setActiveStep(nextIdx);
     setElapsed(CASCADE[nextIdx].time + 1);
     const target = getStepView(nextIdx, defaultView);
@@ -215,7 +221,7 @@ export default function TexasCascadeMap({ width: widthProp, height = 700, varian
 
   // Reset function
   const reset = () => {
-    setFailed(new Set()); setMode('idle'); setElapsed(0);
+    setFailed(new Set()); glow.clearAll(); setMode('idle'); setElapsed(0);
     setActiveStep(-1); setStepIndex(-1);
     setViewState({
       ...defaultView,
@@ -238,20 +244,30 @@ export default function TexasCascadeMap({ width: widthProp, height = 700, varian
   });
 
   // Auto-play loop — only runs in 'playing' mode
+  const lastAutoStep = useRef(-1);
   useEffect(() => {
     if (mode !== 'playing') return;
+    lastAutoStep.current = -1;
+    glow.clearAll();
     const start = performance.now();
     let raf;
     const tick = () => {
       const sec = (performance.now() - start) / 1000;
       setElapsed(sec);
-      const nf = new Set();
       let ms = -1;
       CASCADE.forEach((step, i) => {
-        if (sec > step.time) { step.ids.forEach(id => nf.add(id)); ms = i; }
+        if (sec > step.time) { ms = i; }
       });
-      nf.delete('comanche');
-      setFailed(nf);
+      // Trigger amber glow for newly crossed steps
+      if (ms > lastAutoStep.current) {
+        for (let i = lastAutoStep.current + 1; i <= ms; i++) {
+          const ids = CASCADE[i].ids.filter(id => id !== 'comanche');
+          glow.triggerIncident(ids, (completedIds) => {
+            setFailed(prev => { const next = new Set(prev); completedIds.forEach(id => next.add(id)); return next; });
+          });
+        }
+        lastAutoStep.current = ms;
+      }
       setActiveStep(ms);
       raf = requestAnimationFrame(tick);
     };
@@ -263,7 +279,7 @@ export default function TexasCascadeMap({ width: widthProp, height = 700, varian
 
   // Skip to end — play full auto animation at default zoom
   const skipToEnd = () => {
-    setFailed(new Set()); setElapsed(0); setActiveStep(-1); setStepIndex(-1);
+    setFailed(new Set()); glow.clearAll(); setElapsed(0); setActiveStep(-1); setStepIndex(-1);
     setViewState({
       ...defaultView,
       transitionDuration: mode === 'stepping' ? 600 : 0,
@@ -275,7 +291,7 @@ export default function TexasCascadeMap({ width: widthProp, height = 700, varian
 
   // Reset
   const resetAll = () => {
-    setFailed(new Set()); setElapsed(0); setActiveStep(-1); setStepIndex(-1);
+    setFailed(new Set()); glow.clearAll(); setElapsed(0); setActiveStep(-1); setStepIndex(-1);
     setMode('idle');
     setViewState({
       ...defaultView,
@@ -319,25 +335,25 @@ export default function TexasCascadeMap({ width: widthProp, height = 700, varian
   const pulse = Math.sin(Date.now() / 250);
   const lines = TX_LINES.map(([a, b]) => {
     const pA = getPlant(a), pB = getPlant(b);
-    const aF = failed.has(a), bF = failed.has(b);
-    let color, glow;
+    const aF = failed.has(a) || glow.isInIncident(a), bF = failed.has(b) || glow.isInIncident(b);
+    let color, lineGlow;
     if (aF && bF) {
-      color = [239, 68, 68, 55]; glow = [239, 68, 68, 15];
+      color = [239, 68, 68, 55]; lineGlow = [239, 68, 68, 15];
     } else if (aF || bF) {
       const p = Math.floor(pulse * 40 + 155);
-      color = [239, 68, 68, p]; glow = [239, 68, 68, 40];
+      color = [239, 68, 68, p]; lineGlow = [239, 68, 68, 40];
     } else {
-      color = [34, 211, 238, 150]; glow = [34, 211, 238, 35];
+      color = [34, 211, 238, 150]; lineGlow = [34, 211, 238, 35];
     }
-    return { from: pA.pos, to: pB.pos, color, glow };
+    return { from: pA.pos, to: pB.pos, color, lineGlow };
   });
 
   // ── Deck.gl layers ──
   const layers = [
     new LineLayer({
-      id: 'glow', data: lines,
+      id: 'line-glow', data: lines,
       getSourcePosition: d => d.from, getTargetPosition: d => d.to,
-      getColor: d => d.glow, getWidth: 4, widthMinPixels: 2,
+      getColor: d => d.lineGlow, getWidth: 4, widthMinPixels: 2,
     }),
     new LineLayer({
       id: 'lines', data: lines,
@@ -346,30 +362,41 @@ export default function TexasCascadeMap({ width: widthProp, height = 700, varian
     }),
     new ScatterplotLayer({
       id: 'plants', data: PLANTS, getPosition: d => d.pos,
-      getRadius: d => d.id === 'comanche' && running ? 16000 : 3600 * Math.sqrt(d.cap),
+      getRadius: d => {
+        if (d.id === 'comanche' && running) return 16000;
+        if (glow.isInIncident(d.id)) return 3600 * Math.sqrt(d.cap) * 1.3;
+        return 3600 * Math.sqrt(d.cap);
+      },
       getFillColor: d => {
         if (d.id === 'comanche' && running) return [...COMANCHE_GREEN, 200];
+        if (glow.isInIncident(d.id)) return glow.getFillColor(d.id, [...TYPE_COLORS[d.type], 180]);
         if (failed.has(d.id)) return [...FAILED_COLOR, 180];
         return [...TYPE_COLORS[d.type], 180];
       },
       getLineColor: d => {
         if (d.id === 'comanche' && running) return [...COMANCHE_GREEN, 255];
+        if (glow.isInIncident(d.id)) return glow.getLineColor(d.id, [...TYPE_COLORS[d.type], 255]);
         if (failed.has(d.id)) return [...FAILED_COLOR, 255];
         return [...TYPE_COLORS[d.type], 255];
       },
       stroked: true, lineWidthMinPixels: 2, radiusMinPixels: 5, radiusMaxPixels: 24,
-      transitions: { getFillColor: 400, getRadius: 300 },
+      updateTriggers: { getFillColor: [failed, glow.incident, glow.pulseTime], getLineColor: [failed, glow.incident, glow.pulseTime], getRadius: [failed, glow.incident, glow.pulseTime] },
     }),
     new TextLayer({
-      id: 'x-marks', data: PLANTS.filter(p => failed.has(p.id)),
+      id: 'x-marks', data: PLANTS.filter(p => failed.has(p.id) && !glow.isInIncident(p.id)),
       getPosition: d => d.pos, getText: () => '\u2715', getSize: 22,
       getColor: [239, 68, 68, 255], getTextAnchor: 'middle', getAlignmentBaseline: 'center',
       fontFamily: 'JetBrains Mono', fontWeight: 'bold',
     }),
     new TextLayer({
       id: 'labels', data: PLANTS, getPosition: d => d.pos, getText: d => d.name,
-      getSize: 11, getColor: d => failed.has(d.id) ? [239, 68, 68, 180] : [241, 245, 249, 190],
+      getSize: 11, getColor: d => {
+        if (glow.isInIncident(d.id)) return glow.getLabelColor(d.id, [241, 245, 249, 190]);
+        if (failed.has(d.id)) return [239, 68, 68, 180];
+        return [241, 245, 249, 190];
+      },
       getTextAnchor: 'middle', getAlignmentBaseline: 'top', getPixelOffset: [0, 18], fontFamily: 'Inter',
+      updateTriggers: { getColor: [failed, glow.incident, glow.pulseTime] },
     }),
   ];
 
