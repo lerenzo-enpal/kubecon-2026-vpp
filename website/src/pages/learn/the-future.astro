@@ -1,5 +1,6 @@
 ---
 import ContentLayout from '../../layouts/ContentLayout.astro';
+import HomeEnergyWireframe from '../../components/illustrations/HomeEnergyWireframe';
 import { url } from '../../utils/url';
 ---
 
@@ -14,6 +15,10 @@ import { url } from '../../utils/url';
 <hr />
 
 <h2 id="distributed-resilience">Distributed Resilience</h2>
+
+<div class="float-right ml-6 mb-2 pt-2 w-[200px]">
+  <HomeEnergyWireframe client:visible width={200} height={130} />
+</div>
 
 <p>
   The <a href={url("/learn/the-old-way")}>old grid</a> is centralized. A few huge power plants connected by long transmission lines.

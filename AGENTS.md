@@ -242,6 +242,67 @@ for (const [color, group] of Object.entries(byColor)) {
 
 ---
 
+## Website: Tailwind v4 Responsive Design
+
+The website (`website/`) uses Tailwind CSS v4 with a **mobile-first** breakpoint system. Font sizes and layout must be responsive.
+
+### Breakpoints (mobile-first — unprefixed = all screens, prefix = that size and up)
+
+| Prefix | Min Width | Use |
+|--------|-----------|-----|
+| *(none)* | 0 | Mobile default — start here |
+| `sm:` | 640px | Large phones / small tablets |
+| `md:` | 768px | Tablets |
+| `lg:` | 1024px | Laptops |
+| `xl:` | 1280px | Desktops |
+| `2xl:` | 1536px | Large screens |
+
+### Font Sizing Rules
+
+- **Body text in callouts/cards:** Use `text-base` (1rem), not `text-sm`. `text-sm` (0.875rem = 14px) is too small for readable paragraphs.
+- **Labels, captions, metadata:** `text-sm` or `text-xs` are fine — these are secondary information.
+- **Responsive scaling:** Write mobile size first, add breakpoint modifiers to scale up: `text-sm md:text-base lg:text-lg`.
+- **Never use `!important` overrides in global CSS to fix font sizes.** Use Tailwind's utility classes directly in markup.
+
+### Common Pattern
+
+```html
+<!-- Label: small is fine -->
+<div class="font-mono text-sm uppercase">Section Label</div>
+
+<!-- Body text: text-base minimum, scale up on larger screens -->
+<p class="text-base lg:text-lg">Readable paragraph content...</p>
+```
+
+### Custom Breakpoints (if needed)
+
+Define in the CSS theme block, not in config files:
+
+```css
+@theme {
+  --breakpoint-tablet: 48rem;
+  --breakpoint-desktop: 80rem;
+}
+```
+
+Then use as `tablet:text-base desktop:text-lg`.
+
+### `max-*` Variants
+
+Target below a breakpoint: `max-md:text-sm` applies only below 768px. Combine for ranges: `md:max-lg:flex`.
+
+### Container Queries (v4)
+
+For component-scoped responsive design (independent of viewport):
+
+```html
+<div class="@container">
+  <p class="text-sm @md:text-base">Scales with container, not viewport</p>
+</div>
+```
+
+---
+
 ## Open Improvements
 
 ### HIGH: Lazy Slide Mounting (Issue #5)

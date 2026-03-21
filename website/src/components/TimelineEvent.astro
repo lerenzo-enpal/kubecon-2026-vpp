@@ -31,13 +31,13 @@ const dotColor = dotColors[severity] || dotColors.normal;
 
   <!-- Content -->
   <div class="pb-6 flex-1">
-    <div class="font-mono text-xs mb-1" style={`color: ${dotColor};`}>
+    <div class="font-mono text-sm mb-1" style={`color: ${dotColor};`}>
       {time}
     </div>
-    <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">
+    <div class="font-semibold text-base mb-1" style="color: var(--color-text);">
       {title}
     </div>
-    <div class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
+    <div class="text-base leading-relaxed" style="color: var(--color-text-muted);">
       {description}
     </div>
   </div>
