@@ -16,22 +16,18 @@ const modules = [
 
 <BaseLayout title="What is a Virtual Power Plant?">
   <div class="min-h-screen flex flex-col">
-    <header class="px-8 py-6 border-b" style="border-color: var(--color-surface-light);">
-      <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <header class="px-8 py-4 border-b" style="border-color: var(--color-surface-light);">
+      <div class="max-w-7xl mx-auto grid grid-cols-3 items-center">
         <a href={url("/")} class="flex items-center gap-3 hover:opacity-80 transition-opacity" style="text-decoration: none;">
           <div class="w-2 h-2 rounded-full" style="background: var(--color-primary); box-shadow: 0 0 8px var(--color-primary);"></div>
-          <span class="font-mono font-bold text-lg" style="color: var(--color-text); letter-spacing: 0.05em;">VPP</span>
+          <span class="font-mono font-bold" style="color: var(--color-text); letter-spacing: 0.05em;">What is a VPP?</span>
         </a>
-        <div class="flex items-center gap-4">
-          <nav class="flex items-center gap-6 font-mono text-sm" style="color: var(--color-text-dim);">
-            <a href={url("/learn/how-the-grid-works")} class="hover:opacity-70 transition-opacity">Learn</a>
-            <a href={url("/research")} class="hover:opacity-70 transition-opacity">Research</a>
-            <a
-              href={url("/slides/")}
-              class="px-3 py-1.5 rounded font-bold text-xs tracking-wide transition-opacity hover:opacity-80"
-              style="background: var(--color-primary); color: var(--color-bg);"
-            >KubeCon 2026 Slides</a>
-          </nav>
+        <nav class="flex justify-center gap-6 font-mono text-sm" style="color: var(--color-text-dim);">
+          <a href={url("/learn/how-the-grid-works")} class="hover:opacity-70 transition-opacity">Learn</a>
+          <a href={url("/research")} class="hover:opacity-70 transition-opacity">Research</a>
+          <a href={url("/slides/")} class="hover:opacity-70 transition-opacity" style="color: var(--color-primary);">Slides</a>
+        </nav>
+        <div class="flex items-center justify-end gap-4">
           <FontSizeToggle />
           <ThemeToggle />
         </div>
@@ -188,16 +184,13 @@ const modules = [
       <div class="max-w-7xl mx-auto flex flex-col gap-3">
         <div class="flex items-center justify-between">
           <div class="font-mono text-xs" style="color: var(--color-text-dim);">
-            Open source educational project
+            Built by <a href="https://continuously-improving.engineer" target="_blank" rel="noopener" class="hover:opacity-70 transition-opacity" style="color: var(--color-text-muted);">LeRenzo</a> & <span style="color: var(--color-text-muted);">Mario</span> at <a href="https://www.enpal.de" target="_blank" rel="noopener" class="hover:opacity-70 transition-opacity" style="color: var(--color-success);">Enpal</a>
           </div>
           <div class="font-mono text-xs" style="color: var(--color-text-dim);">
-            Based on research for KubeCon 2026
+            <a href={url("/research")} class="hover:opacity-70 transition-opacity" style="color: var(--color-text-dim);">Based on research for KubeCon 2026</a>
           </div>
         </div>
-        <div class="flex items-center justify-center gap-6 pt-2 border-t" style="border-color: var(--color-surface-light);">
-          <span class="text-xs" style="color: var(--color-text-dim);">Built by</span>
-          <a href="https://www.enpal.de" target="_blank" rel="noopener" class="font-mono text-xs font-semibold hover:opacity-70 transition-opacity" style="color: var(--color-success);">enpal.de</a>
-          <span class="text-xs" style="color: var(--color-surface-light);">|</span>
+        <div class="flex items-center justify-center gap-5 pt-2 border-t" style="border-color: var(--color-surface-light);">
           <a href="https://www.enpal.de/solar" target="_blank" rel="noopener" class="text-xs hover:opacity-70 transition-opacity" style="color: var(--color-text-dim);">Get Solar</a>
           <span class="text-xs" style="color: var(--color-surface-light);">|</span>
           <a href="https://www.enpal.de/karriere" target="_blank" rel="noopener" class="text-xs hover:opacity-70 transition-opacity" style="color: var(--color-text-dim);">Work in Green Tech</a>
