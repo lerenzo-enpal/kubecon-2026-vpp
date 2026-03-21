@@ -26,38 +26,34 @@ const s = severityColors[severity] || severityColors['blackout'];
   <div class="h-1" style={`background: linear-gradient(90deg, ${s.border}, ${s.border}60, transparent);`}></div>
 
   <div class="p-8">
-    <div class="flex items-start justify-between flex-wrap gap-6">
-      <div>
-        <!-- Badge -->
-        <span
-          class="inline-block font-mono text-xs font-semibold px-3 py-1 rounded-full mb-4"
-          style={`background: ${s.badge}; color: ${s.border}; border: 1px solid ${s.border}30;`}
-        >
-          {s.label}
-        </span>
+    <!-- Badge -->
+    <span
+      class="inline-block font-mono text-xs font-semibold px-3 py-1 rounded-full mb-4"
+      style={`background: ${s.badge}; color: ${s.border}; border: 1px solid ${s.border}30;`}
+    >
+      {s.label}
+    </span>
 
-        <h1 class="text-4xl font-extrabold leading-tight mb-2" style="color: var(--color-text);">
-          {title}
-        </h1>
+    <h1 class="text-3xl font-extrabold leading-tight mb-3" style="color: var(--color-text);">
+      {title}
+    </h1>
 
-        <div class="flex items-center gap-4 font-mono text-sm" style="color: var(--color-text-dim);">
-          <span>{date}</span>
-          <span style={`color: ${s.border}40;`}>|</span>
-          <span>{location}</span>
-        </div>
+    <div class="flex items-center gap-4 font-mono text-sm mb-5" style="color: var(--color-text-dim);">
+      <span>{date}</span>
+      <span style={`color: ${s.border}40;`}>|</span>
+      <span>{location}</span>
+    </div>
+
+    <!-- Key stat — always left-aligned -->
+    <div>
+      <div
+        class="font-mono font-extrabold text-4xl leading-none"
+        style={`color: ${s.border}; text-shadow: 0 0 20px ${s.border}30;`}
+      >
+        {keyStat}
       </div>
-
-      <!-- Key stat -->
-      <div class="text-right">
-        <div
-          class="font-mono font-extrabold text-4xl leading-none"
-          style={`color: ${s.border}; text-shadow: 0 0 20px ${s.border}30;`}
-        >
-          {keyStat}
-        </div>
-        <div class="font-mono text-xs mt-2" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">
-          {keyStatLabel}
-        </div>
+      <div class="font-mono text-xs mt-2" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">
+        {keyStatLabel}
       </div>
     </div>
   </div>
