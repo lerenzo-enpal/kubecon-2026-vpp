@@ -4,6 +4,7 @@ import IncidentHero from '../../../components/IncidentHero.astro';
 import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
 import SourceList from '../../../components/SourceList.astro';
+import EuropeGridMap from '../../../components/EuropeGridMap';
 ---
 
 <IncidentLayout title="2006 European Grid Split" description="How a cruise ship passage split Europe's power grid into three islands, leaving 15 million households in the dark.">
@@ -39,6 +40,11 @@ import SourceList from '../../../components/SourceList.astro';
   <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
     Operators resynchronized the grid within 38 minutes, and full normal operations returned about two hours later. No one was hurt, but it was the worst disturbance in European grid history.
   </p>
+
+  <div class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px;">
+    <div class="font-mono text-xs mb-3" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">European Grid Split -- November 4, 2006</div>
+    <EuropeGridMap client:visible width={660} height={400} />
+  </div>
 </section>
 
 <!-- Timeline -->

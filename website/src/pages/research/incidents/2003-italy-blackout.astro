@@ -5,6 +5,7 @@ import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
 import SourceList from '../../../components/SourceList.astro';
 import TransmissionTower from '../../../components/illustrations/TransmissionTower';
+import ItalyGridMap from '../../../components/ItalyGridMap';
 ---
 
 <IncidentLayout title="Italy Nationwide Blackout" description="September 2003: A tree flashover in Switzerland triggered a cascade that isolated Italy from the European grid, blacking out 56 million people in under 27 minutes.">
@@ -35,6 +36,11 @@ import TransmissionTower from '../../../components/illustrations/TransmissionTow
 
 <div class="flex justify-center my-6 opacity-70">
   <TransmissionTower client:visible width={180} height={110} />
+</div>
+
+<div class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px;">
+  <div class="font-mono text-xs mb-3" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">Italy Grid -- September 28, 2003</div>
+  <ItalyGridMap client:visible width={660} height={400} />
 </div>
 
 <p>

@@ -4,6 +4,7 @@ import IncidentHero from '../../../components/IncidentHero.astro';
 import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
 import SourceList from '../../../components/SourceList.astro';
+import BerlinGridMap from '../../../components/BerlinGridMap';
 ---
 
 <IncidentLayout title="2025 Berlin Johannisthal Arson" description="Arsonists targeted two transmission pylons in southeast Berlin, cutting power to 50,000 households for up to 60 hours.">
@@ -39,6 +40,11 @@ import SourceList from '../../../components/SourceList.astro';
   <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
     An anonymous claim on Indymedia said the attack targeted the Adlershof technology park and its military-industrial tenants. The attackers stated cutting residential power was "by no means our intention." This was the first of two arson attacks on Berlin's grid -- the <a href="/research/incidents/2026-berlin-teltow-canal-arson">second struck four months later</a>.
   </p>
+
+  <div class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px;">
+    <div class="font-mono text-xs mb-3" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">Berlin Grid -- September 9, 2025</div>
+    <BerlinGridMap client:visible width={660} height={400} />
+  </div>
 </section>
 
 <!-- Timeline -->

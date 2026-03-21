@@ -5,6 +5,7 @@ import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
 import SourceList from '../../../components/SourceList.astro';
 import SolarHome from '../../../components/illustrations/SolarHome';
+import IberianGridMap from '../../../components/IberianGridMap';
 ---
 
 <IncidentLayout title="Iberian Peninsula Blackout" description="April 2025: The first major blackout in history caused by overvoltage. High solar penetration without adequate storage led to a 6-second collapse affecting 60 million people.">
@@ -40,6 +41,11 @@ import SolarHome from '../../../components/illustrations/SolarHome';
 <p>
   In just 6 seconds, the entire Iberian peninsula went dark. Fossil fuel, nuclear, and renewable plants all disconnected to protect their equipment. It was the fastest national-scale grid collapse ever recorded, and the first caused entirely by overvoltage.
 </p>
+
+<div class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px;">
+  <div class="font-mono text-xs mb-3" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">Iberian Peninsula -- April 28, 2025</div>
+  <IberianGridMap client:visible width={660} height={400} />
+</div>
 
 <h2>Timeline</h2>
 
