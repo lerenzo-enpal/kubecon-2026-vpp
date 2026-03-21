@@ -48,8 +48,7 @@ const s = severityColors[severity] || severityColors['blackout'];
       )}
     </div>
 
-    <h1 class="text-3xl font-extrabold leading-tight mb-3" style="color: var(--color-text);">
-      {title}
+    <h1 class="text-3xl font-extrabold leading-tight mb-3" style="color: var(--color-text);" set:html={title}>
     </h1>
 
     <div class="flex items-center gap-4 font-mono text-sm mb-5" style="color: var(--color-text-dim);">
