@@ -21,8 +21,8 @@ export default function AnimatedStat({
   sublabel,
   duration = 1200,
 }: Props) {
-  const [display, setDisplay] = useState(0);
-  const [visible, setVisible] = useState(false);
+  const [display, setDisplay] = useState(value);
+  const [hasAnimated, setHasAnimated] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number>(0);
 
@@ -32,8 +32,9 @@ export default function AnimatedStat({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !visible) {
-          setVisible(true);
+        if (entry.isIntersecting && !hasAnimated) {
+          setHasAnimated(true);
+          setDisplay(0);
           const start = performance.now();
           const tick = (now: number) => {
             const t = Math.min(1, (now - start) / duration);
@@ -52,7 +53,7 @@ export default function AnimatedStat({
       observer.disconnect();
       cancelAnimationFrame(rafRef.current);
     };
-  }, [value, duration, visible]);
+  }, [value, duration, hasAnimated]);
 
   return (
     <div
@@ -63,9 +64,8 @@ export default function AnimatedStat({
         borderRadius: 12,
         padding: '20px 24px',
         textAlign: 'center',
-        opacity: visible ? 1 : 0,
-        transform: visible ? 'translateY(0)' : 'translateY(12px)',
-        transition: 'opacity 0.5s ease, transform 0.5s ease',
+        opacity: 1,
+        transform: 'none',
       }}
     >
       <div
