@@ -4,6 +4,7 @@ import SolarHome from '../../components/illustrations/SolarHome';
 import ConnectedHomes from '../../components/illustrations/ConnectedHomes';
 import EVGarage from '../../components/illustrations/EVGarage';
 import VPPHome from '../../components/illustrations/VPPHome';
+import VPPArchitecture from '../../components/VPPArchitecture.tsx';
 import GlowLine from '../../components/GlowLine';
 import DuckCurveVPP from '../../components/DuckCurveVPP';
 import FullscreenWrapper from '../../components/FullscreenWrapper';
@@ -137,6 +138,15 @@ import { url } from '../../utils/url';
   tells thousands of batteries to discharge, EVs to pause charging, and heat pumps to
   reduce load. The aggregate response is faster than any gas plant can achieve.
 </p>
+
+<div id="vpp-architecture" class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
+  <div class="flex items-center justify-between mb-3">
+    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">VPP DATA FLOW</div>
+  </div>
+  <FullscreenWrapper client:visible label="Fullscreen">
+    <VPPArchitecture client:visible height={420} />
+  </FullscreenWrapper>
+</div>
 
 <p>
   The software stack that makes this possible has four layers:
