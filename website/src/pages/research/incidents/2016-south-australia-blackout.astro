@@ -18,6 +18,8 @@ import FullscreenWrapper from '../../../components/FullscreenWrapper';
   keyStat="87 sec"
   keyStatLabel="to total blackout"
   severity="blackout"
+  interactive={true}
+  mapId="sa-map"
 />
 
 <QuickFacts facts={[
@@ -39,10 +41,9 @@ import FullscreenWrapper from '../../../components/FullscreenWrapper';
   A once-in-50-year storm swept across South Australia with twin tornadoes packing winds up to 260 km/h. The tornadoes ripped through transmission corridors, destroying 22 high-voltage towers and severing the lines connecting the state's northern wind farms to Adelaide. <a href="#sa-timeline" class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
 </p>
 
-<div class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px;">
+<div id="sa-map" class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
   <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
     <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">SA Grid — September 28, 2016</div>
-    <span class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7; border: 1px solid rgba(34,211,238,0.2); padding: 1px 8px; border-radius: 3px; cursor: pointer;" onclick="this.closest('div').querySelector('button')?.click()">Interactive</span>
   </div>
   <FullscreenWrapper client:visible label="Fullscreen">
     <SACascadeMap client:visible height={400} />

@@ -198,8 +198,66 @@ html.font-lg aside .text-\[10px\] { font-size: 14px !important; }
 .maplibregl-ctrl-attrib a { color: #667 !important; }
 .maplibregl-ctrl-attrib-button { display: none !important; }
 
+/* Interactive tag — animated border trace-in + left-to-right glow sweep */
+@keyframes interactive-border-trace {
+  0% { clip-path: inset(0 100% 100% 0); }
+  25% { clip-path: inset(0 0 100% 0); }
+  50% { clip-path: inset(0 0 0 0); }
+  100% { clip-path: inset(0 0 0 0); }
+}
+@keyframes interactive-glow-sweep {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.interactive-tag {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 12px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  overflow: hidden;
+  animation: interactive-border-trace 1.2s ease-out forwards;
+  border-color: rgba(34, 211, 238, 0.35);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.interactive-tag-text {
+  color: rgba(34, 211, 238, 0.7);
+  background: linear-gradient(
+    90deg,
+    rgba(34, 211, 238, 0.7) 0%,
+    rgba(34, 211, 238, 0.7) 35%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(34, 211, 238, 0.7) 65%,
+    rgba(34, 211, 238, 0.7) 100%
+  );
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: interactive-glow-sweep 3s ease-in-out infinite;
+  animation-delay: 1.2s;
+}
+
+.interactive-tag:hover {
+  border-color: rgba(34, 211, 238, 0.6);
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.25), 0 0 16px rgba(34, 211, 238, 0.1);
+}
+
+.interactive-tag:hover .interactive-tag-text {
+  animation: none;
+  background: none;
+  -webkit-text-fill-color: rgba(34, 211, 238, 1);
+  color: rgba(34, 211, 238, 1);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .fade-in { opacity: 1; transform: none; transition: none; }
   .stagger > * { transition-delay: 0ms; }
   @keyframes pulse-glow { 0%, 100% { opacity: 1; transform: none; } }
+  .interactive-tag { animation: none; border-color: rgba(34, 211, 238, 0.35); }
+  .interactive-tag-text { animation: none; }
 }

@@ -6,9 +6,11 @@ interface Props {
   keyStat: string;
   keyStatLabel: string;
   severity: 'blackout' | 'near-miss' | 'price-event' | 'success' | 'attack';
+  interactive?: boolean;
+  mapId?: string;
 }
 
-const { title, date, location, keyStat, keyStatLabel, severity } = Astro.props;
+const { title, date, location, keyStat, keyStatLabel, severity, interactive = false, mapId = 'cascade-map' } = Astro.props;
 
 const severityColors: Record<string, { bg: string; border: string; badge: string; label: string }> = {
   'blackout': { bg: 'rgba(239, 68, 68, 0.06)', border: 'var(--color-danger)', badge: 'rgba(239, 68, 68, 0.15)', label: 'Blackout' },
@@ -26,13 +28,25 @@ const s = severityColors[severity] || severityColors['blackout'];
   <div class="h-1" style={`background: linear-gradient(90deg, ${s.border}, ${s.border}60, transparent);`}></div>
 
   <div class="p-6">
-    <!-- Badge -->
-    <span
-      class="inline-block font-mono text-xs font-semibold px-3 py-1 rounded-full mb-4"
-      style={`background: ${s.badge}; color: ${s.border}; border: 1px solid ${s.border}30;`}
-    >
-      {s.label}
-    </span>
+    <!-- Badge row -->
+    <div class="flex items-center justify-between mb-4">
+      <span
+        class="inline-block font-mono text-xs font-semibold px-3 py-1 rounded-full"
+        style={`background: ${s.badge}; color: ${s.border}; border: 1px solid ${s.border}30;`}
+      >
+        {s.label}
+      </span>
+      {interactive && (
+        <a
+          href={`#${mapId}`}
+          class="interactive-tag font-mono text-xs font-semibold"
+          style="text-decoration: none;"
+          title="Scroll to interactive map"
+        >
+          <span class="interactive-tag-text">Interactive</span>
+        </a>
+      )}
+    </div>
 
     <h1 class="text-3xl font-extrabold leading-tight mb-3" style="color: var(--color-text);">
       {title}

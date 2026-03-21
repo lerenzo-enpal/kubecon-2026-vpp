@@ -18,6 +18,8 @@ import FullscreenWrapper from '../../../components/FullscreenWrapper';
   keyStat="60M"
   keyStatLabel="people affected"
   severity="blackout"
+  interactive={true}
+  mapId="iberian-map"
 />
 
 <QuickFacts facts={[
@@ -35,10 +37,9 @@ import FullscreenWrapper from '../../../components/FullscreenWrapper';
   On a sunny spring afternoon, Spain and Portugal's grids were running on roughly 59% solar power. It was a milestone for renewable energy -- and the conditions for a new kind of disaster. Unlike any previous major blackout, this one was caused by <strong>overvoltage</strong>, not undervoltage. <a href="#iberian-timeline" class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
 </p>
 
-<div class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px;">
+<div id="iberian-map" class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
   <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
     <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">Iberian Peninsula -- April 28, 2025</div>
-    <span class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7; border: 1px solid rgba(34,211,238,0.2); padding: 1px 8px; border-radius: 3px; cursor: pointer;" onclick="this.closest('div').querySelector('button')?.click()">Interactive</span>
   </div>
   <FullscreenWrapper client:visible label="Fullscreen">
     <IberianCascadeMap client:visible height={400} />
