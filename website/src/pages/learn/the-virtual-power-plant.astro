@@ -3,6 +3,7 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
 import SolarHome from '../../components/illustrations/SolarHome';
 import ConnectedHomes from '../../components/illustrations/ConnectedHomes';
 import EVGarage from '../../components/illustrations/EVGarage';
+import VPPHome from '../../components/illustrations/VPPHome';
 import GlowLine from '../../components/GlowLine';
 ---
 
@@ -21,8 +22,8 @@ import GlowLine from '../../components/GlowLine';
 
 <h2 id="what-is-a-vpp">What is a VPP?</h2>
 
-<div class="flex justify-center my-6 opacity-80">
-  <ConnectedHomes client:visible width={240} height={140} />
+<div class="float-right ml-6 mb-4" style="width: 200px;">
+  <ConnectedHomes client:visible width={200} height={120} />
 </div>
 
 <p>
@@ -65,14 +66,13 @@ import GlowLine from '../../components/GlowLine';
 
 <h2 id="homes-as-infrastructure">Homes as Infrastructure</h2>
 
-<div class="flex justify-center my-6 opacity-80">
-  <SolarHome client:visible width={200} height={120} />
+<div class="flex gap-6 p-5 rounded-lg items-center my-6" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+  <SolarHome client:visible width={140} height={90} />
+  <div>
+    <div class="font-semibold mb-1">Every Home is a Power Plant</div>
+    <div class="text-sm" style="color: var(--color-text-muted);">A VPP home is not just a consumer of electricity -- it is a piece of grid infrastructure. Each home contains several devices that can generate, store, or shift energy on command.</div>
+  </div>
 </div>
-
-<p>
-  A VPP home is not just a consumer of electricity — it is a piece of grid infrastructure.
-  Each home contains several devices that can generate, store, or shift energy on command.
-</p>
 
 <div class="my-8 grid grid-cols-1 md:grid-cols-2 gap-4 fade-in stagger">
   <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-solar);">
@@ -109,21 +109,19 @@ import GlowLine from '../../components/GlowLine';
   </div>
 </div>
 
-<div class="flex justify-center my-6 opacity-80">
-  <EVGarage client:visible width={180} height={110} />
+<div class="flex gap-6 p-5 rounded-lg items-center my-6" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+  <EVGarage client:visible width={130} height={85} />
+  <div>
+    <div class="font-semibold mb-1">The HEMS Coordinator</div>
+    <div class="text-sm" style="color: var(--color-text-muted);">A small computer called the HEMS (Home Energy Management System) coordinates everything inside each home. It decides when the battery charges or discharges, when the EV draws power, and when the heat pump runs -- all based on grid signals, electricity prices, and the homeowner's preferences.</div>
+  </div>
 </div>
 
-<p>
-  A small computer called the HEMS (Home Energy Management System) coordinates everything
-  inside each home. It decides when the battery charges or discharges, when the EV draws
-  power, and when the heat pump runs — all based on grid signals, electricity prices, and
-  the homeowner's preferences.
-</p>
-
-<div class="my-8 p-6 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px dashed var(--color-surface-light);">
-  <div class="font-mono text-sm mb-2" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">Coming Soon</div>
-  <div class="text-lg font-semibold" style="color: var(--color-text-muted);">
-    [Interactive] VPP Home View — see how devices respond to grid signals
+<div class="flex gap-6 p-5 rounded-lg items-center my-8" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+  <VPPHome client:visible width={240} height={170} />
+  <div>
+    <div class="font-semibold mb-1">VPP Home View</div>
+    <div class="text-sm" style="color: var(--color-text-muted);">Solar panels generate power, the battery stores it, and the EV charges when electricity is cheapest. The HEMS orchestrates everything, responding to VPP signals in real time.</div>
   </div>
 </div>
 

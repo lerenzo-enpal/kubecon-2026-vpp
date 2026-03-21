@@ -195,6 +195,10 @@ html.font-lg aside .text-\[10px\] { font-size: 14px !important; }
 /* Staggered children */
 .stagger > * { transition-delay: calc(var(--i, 0) * 100ms); }
 
+/* Float support inside prose content */
+.prose .float-right { float: right; shape-margin: 12px; }
+.prose .float-left { float: left; shape-margin: 12px; }
+
 @media (prefers-reduced-motion: reduce) {
   .fade-in { opacity: 1; transform: none; transition: none; }
   .stagger > * { transition-delay: 0ms; }
