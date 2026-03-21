@@ -1,5 +1,8 @@
 ---
 import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import FrequencyDemo from '../../../components/FrequencyDemo';
+import FrequencyWalkthrough from '../../../components/FrequencyWalkthrough';
+import FullscreenWrapper from '../../../components/FullscreenWrapper';
 import { url } from '../../../utils/url';
 ---
 
@@ -123,6 +126,36 @@ import { url } from '../../../utils/url';
     </tr>
   </tbody>
 </table>
+
+<div id="frequency-simulator" class="my-10 rounded-lg overflow-hidden p-4 scroll-mt-20" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+  <div class="flex items-center justify-between mb-3">
+    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">Grid Frequency Simulator</div>
+    <span
+      class="font-mono text-xs px-2 py-0.5 rounded"
+      style="background: rgba(34, 211, 238, 0.1); color: var(--color-primary); border: 1px solid rgba(34, 211, 238, 0.2);"
+    >
+      Interactive
+    </span>
+  </div>
+  <FullscreenWrapper client:visible label="Fullscreen">
+    <FrequencyDemo client:visible />
+  </FullscreenWrapper>
+  <div class="text-xs mt-3" style="color: var(--color-text-dim);">
+    Click a scenario to simulate different grid events and watch the frequency response in real time.
+  </div>
+</div>
+
+<div id="frequency-walkthrough" class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
+  <div class="flex items-center justify-between mb-3">
+    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">FREQUENCY THRESHOLD WALKTHROUGH</div>
+  </div>
+  <FullscreenWrapper client:visible label="Fullscreen">
+    <FrequencyWalkthrough client:visible height={480} />
+  </FullscreenWrapper>
+  <div class="text-xs mt-3" style="color: var(--color-text-dim);">
+    Step through each frequency zone from 50 Hz to total collapse. See how generation, reserves, and load shedding respond at each threshold.
+  </div>
+</div>
 
 <h2 id="scenarios" style="color: var(--color-primary);">Real-World Frequency Events</h2>
 

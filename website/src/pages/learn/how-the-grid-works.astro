@@ -1,12 +1,15 @@
 ---
 import ContentLayout from '../../layouts/ContentLayout.astro';
 import FrequencyPulse from '../../components/FrequencyPulse';
+import FrequencyDemo from '../../components/FrequencyDemo';
+import FullscreenWrapper from '../../components/FullscreenWrapper';
 import AnimatedStat from '../../components/AnimatedStat';
 import CoalPlant from '../../components/illustrations/CoalPlant';
 import TransmissionTower from '../../components/illustrations/TransmissionTower';
 import Substation from '../../components/illustrations/Substation';
 import House from '../../components/illustrations/House';
 import GlowLine from '../../components/GlowLine';
+import FrequencyWalkthrough from '../../components/FrequencyWalkthrough';
 import { url } from '../../utils/url';
 ---
 
@@ -161,6 +164,25 @@ import { url } from '../../utils/url';
   </div>
 </div>
 
+<div id="frequency-simulator" class="my-10 rounded-lg overflow-hidden p-4 scroll-mt-20" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+  <div class="flex items-center justify-between mb-3">
+    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">Grid Frequency Simulator</div>
+    <span
+      class="font-mono text-xs px-2 py-0.5 rounded"
+      style="background: rgba(34, 211, 238, 0.1); color: var(--color-primary); border: 1px solid rgba(34, 211, 238, 0.2);"
+    >
+      Interactive
+    </span>
+  </div>
+  <FullscreenWrapper client:visible label="Fullscreen">
+    <FrequencyDemo client:visible />
+  </FullscreenWrapper>
+  <div class="text-xs mt-3" style="color: var(--color-text-dim);">
+    Click a scenario to simulate a grid event. Watch how frequency responds in real time.
+    The Cyber Attack scenario demonstrates what happens when automated defenses are compromised.
+  </div>
+</div>
+
 <h2 id="25-hz-between-normal-and-catastrophe">2.5 Hz Between Normal and Catastrophe</h2>
 
 <p>
@@ -168,6 +190,18 @@ import { url } from '../../utils/url';
   50.0 Hz down to 47.5 Hz. That's less than the difference between two adjacent notes on a piano.
   You literally cannot hear the difference.
 </p>
+
+<div id="frequency-walkthrough" class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
+  <div class="flex items-center justify-between mb-3">
+    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">FREQUENCY THRESHOLD WALKTHROUGH</div>
+  </div>
+  <FullscreenWrapper client:visible label="Fullscreen">
+    <FrequencyWalkthrough client:visible height={480} />
+  </FullscreenWrapper>
+  <div class="text-xs mt-3" style="color: var(--color-text-dim);">
+    Step through the frequency zones from 50 Hz to total collapse. Watch how the grid responds at each threshold.
+  </div>
+</div>
 
 <p>
   And yet this narrow band is all that separates 400 million people from losing power simultaneously.
