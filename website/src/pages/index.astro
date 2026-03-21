@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import GamePlaceholder from '../components/GamePlaceholder';
+
 import ThemeToggle from '../components/ThemeToggle.astro';
 import FontSizeToggle from '../components/FontSizeToggle.astro';
 import { url } from '../utils/url';
@@ -23,9 +23,16 @@ const modules = [
           <span class="font-mono font-bold text-lg" style="color: var(--color-text); letter-spacing: 0.05em;">GRID</span>
         </div>
         <div class="flex items-center gap-4">
-          <nav class="flex gap-6 font-mono text-sm" style="color: var(--color-text-dim);">
+          <nav class="flex items-center gap-6 font-mono text-sm" style="color: var(--color-text-dim);">
             <a href={url("/learn/how-the-grid-works")} class="hover:opacity-70 transition-opacity">Learn</a>
             <a href={url("/research")} class="hover:opacity-70 transition-opacity">Research</a>
+            <a
+              href="https://kubecon-2026-vpp.netlify.app"
+              target="_blank"
+              rel="noopener"
+              class="px-3 py-1.5 rounded font-bold text-xs tracking-wide transition-opacity hover:opacity-80"
+              style="background: var(--color-primary); color: var(--color-bg);"
+            >KubeCon 2026 Slides</a>
           </nav>
           <FontSizeToggle />
           <ThemeToggle />
@@ -95,7 +102,27 @@ const modules = [
           </div>
 
           <div class="lg:sticky lg:top-8">
-            <GamePlaceholder client:load />
+            <a
+              href="https://kubecon-2026-vpp.netlify.app"
+              target="_blank"
+              rel="noopener"
+              class="block p-5 rounded-lg transition-opacity hover:opacity-90"
+              style="background: linear-gradient(135deg, rgba(34, 211, 238, 0.12), rgba(16, 185, 129, 0.08)); border: 1px solid rgba(34, 211, 238, 0.3);"
+            >
+              <div class="flex items-center gap-3 mb-2">
+                <div class="w-2 h-2 rounded-full animate-pulse" style="background: var(--color-primary); box-shadow: 0 0 8px var(--color-primary);"></div>
+                <span class="font-mono text-xs font-bold tracking-widest uppercase" style="color: var(--color-primary);">Live Talk</span>
+              </div>
+              <div class="text-lg font-bold mb-1" style="color: var(--color-text);">
+                Virtual Power Plants — KubeCon Europe 2026
+              </div>
+              <div class="text-sm mb-3" style="color: var(--color-text-muted);">
+                Tuesday, March 25 — Cloud-native infrastructure for the energy grid.
+              </div>
+              <span class="font-mono text-sm font-semibold" style="color: var(--color-primary);">
+                View the slides &rarr;
+              </span>
+            </a>
           </div>
         </div>
       </div>
