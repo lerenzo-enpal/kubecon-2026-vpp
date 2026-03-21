@@ -51,6 +51,31 @@ function GridClock({ targetSec }) {
   );
 }
 
+// ─── Typewriter text ───
+function Typewriter({ text, delay = 0, speed = 30, className, style }) {
+  const [shown, setShown] = useState(0);
+  const timerRef = useRef(null);
+  useEffect(() => {
+    setShown(0);
+    const startTimeout = setTimeout(() => {
+      let i = 0;
+      timerRef.current = setInterval(() => {
+        i++;
+        setShown(i);
+        if (i >= text.length) clearInterval(timerRef.current);
+      }, speed);
+    }, delay);
+    return () => { clearTimeout(startTimeout); clearInterval(timerRef.current); };
+  }, [text, delay, speed]);
+
+  return (
+    <span className={className} style={style}>
+      {text.slice(0, shown)}
+      {shown < text.length && <span style={{ opacity: shown > 0 ? 1 : 0, animation: 'fwCursor 0.6s step-end infinite' }}>_</span>}
+    </span>
+  );
+}
+
 // ─── SVG draw helpers ───
 function dS(on, delay, dur = 0.6) {
   if (!on) return { strokeDasharray: 1, strokeDashoffset: 1 };
@@ -767,6 +792,7 @@ export default function FrequencyWalkthrough({ step = 0 }) {
           0%, 100% { opacity: 0; } 15% { opacity: 0.8; } 30% { opacity: 0; }
           55% { opacity: 0.6; } 70% { opacity: 0; }
         }
+        @keyframes fwCursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
         @keyframes fwFadeIn { from { opacity: 0; } to { opacity: 0.8; } }
         @keyframes fwFlowDash { to { stroke-dashoffset: -18; } }
       `}</style>
@@ -892,18 +918,20 @@ export default function FrequencyWalkthrough({ step = 0 }) {
       {/* ═══ SCENE 3: Punchline ═══ */}
       {showPunchline && (
         <div className="absolute inset-0 flex items-center justify-center z-10" style={{ pointerEvents: 'none' }}>
-          <div className="text-center">
-            <div className="text-[22px] font-sans text-hud-text mb-4" style={{
-              animation: 'fwScan 0.5s ease 0.1s both',
-            }}>The difference between "everything is fine" and "total collapse" is</div>
-            <div className="text-[88px] font-extrabold font-mono leading-none mb-4" style={{
+          <div className="flex flex-col items-center justify-between" style={{ height: '50%' }}>
+            <Typewriter
+              text='The difference between "everything is fine" and "total collapse" is'
+              delay={200} speed={25}
+              className="text-[36px] font-sans text-hud-text" />
+            <div className="text-[88px] font-extrabold font-mono leading-none" style={{
               color: colors.accent,
               animation: 'fwPunchIn 1s ease 0.3s both, fwGlow 2.5s ease-in-out 1.3s infinite',
             }}>2.5 Hz</div>
-            <div className="text-[24px] font-mono tracking-[0.15em] uppercase mt-4" style={{
-              color: colors.textMuted,
-              animation: 'fwScan 0.4s ease 1.1s both',
-            }}>Less than you can hear</div>
+            <Typewriter
+              text="LESS THAN YOU CAN HEAR"
+              delay={1800} speed={40}
+              className="text-[36px] font-mono tracking-[0.12em]"
+              style={{ color: colors.textMuted }} />
           </div>
         </div>
       )}

@@ -9,7 +9,7 @@ import { colors } from '../theme';
 
 const NODES = [
   { id: 'market',     label: 'Energy Market',   sub: 'FCR / aFRR',        x: 0.03,  y: 0.5,  color: colors.accent },
-  { id: 'trader',     label: 'Market Trader',   sub: 'Entrix',            x: 0.22,  y: 0.5,  color: colors.accent },
+  { id: 'trader',     label: 'Trading Gateway',  sub: 'Entrix',            x: 0.22,  y: 0.5,  color: colors.accent },
   { id: 'controller', label: 'VPP Controller',   sub: 'Flexa',             x: 0.42,  y: 0.5,  color: colors.primary },
   { id: 'enpal',      label: 'Enpal Cloud',     sub: 'Fleet Mgmt',       x: 0.62,  y: 0.5,  color: colors.success },
 ];
@@ -254,14 +254,14 @@ export default function VPPArchitecture() {
         ctx.shadowBlur = 0;
 
         // Label
-        ctx.font = 'bold 16px JetBrains Mono';
+        ctx.font = 'bold 18px JetBrains Mono';
         ctx.fillStyle = node.color;
         ctx.textAlign = 'center';
         ctx.fillText(node.label, nx + nodeW / 2, ny + 28);
 
         // Sub-label
-        ctx.font = '12px JetBrains Mono';
-        ctx.fillStyle = colors.textDim + 'aa';
+        ctx.font = '14px JetBrains Mono';
+        ctx.fillStyle = colors.text + 'dd';
         ctx.fillText(node.sub, nx + nodeW / 2, ny + 50);
       });
 

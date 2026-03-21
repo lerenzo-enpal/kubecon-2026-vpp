@@ -180,7 +180,7 @@ export default function Presentation() {
       {/* 4: Texas Cascade — deck.gl HUD */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
-          <LazyContent><TexasMapHUD width="100%" height="100%" variant="hud" /></LazyContent>
+          <TexasMapHUD width="100%" height="100%" variant="hud" />
         </div>
         <Notes>
           [LERENZO] February 2021 — a polar vortex hits Texas.
@@ -245,7 +245,7 @@ export default function Presentation() {
       {/* 8: EU Grid HUD */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="w-full h-full">
-          <LazyContent><EUGridHUD width="100%" height="100%" /></LazyContent>
+          <EUGridHUD width="100%" height="100%" />
         </div>
         <Notes>
           [MARIO] This is the Continental European grid — real-time visualization.
@@ -536,10 +536,17 @@ export default function Presentation() {
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H color={colors.danger}>Clean Energy Has Outgrown the Grid</H>
-          <div className="flex-1 flex justify-center items-center">
-            <LazyContent><CurtailmentChart width={940} height={340} /></LazyContent>
-          </div>
-          <div style={{ fontSize: 14, color: colors.textDim, fontFamily: '"Inter", sans-serif', textAlign: 'left', marginTop: 0 }}>While SuedLink is being built by 2028, 49% of curtailment comes from local grid issues. Neighborhood transformers are overwhelmed.</div>
+          <Stepper values={[1, 2, 3, 4]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col">
+            {(vc) => {
+              const v = vc ?? 0;
+              return (
+                <div className="flex-1 flex flex-col justify-center">
+                  <LazyContent><CurtailmentChart width={940} height={340} statsVisible={v} /></LazyContent>
+                </div>
+              );
+            }}
+          </Stepper>
+          <div style={{ fontSize: 12, color: colors.textDim, fontFamily: '"Inter", sans-serif', marginTop: 4 }}>While SuedLink is being built by 2028, 49% of curtailment comes from local grid issues. Neighborhood transformers are overwhelmed.</div>
         </div>
         <Notes>
           [MARIO] Germany paid EUR 554 million to generators to NOT produce electricity.
@@ -594,7 +601,7 @@ export default function Presentation() {
           [LERENZO] Left: devices — solar panels, batteries, EV chargers, heat pumps.
           Center: cloud platform — Kubernetes + Dapr, event-driven control.
           Right: services — frequency regulation, peak shaving, energy arbitrage, demand response.
-          [ANIMATED] Energy market sends request → Market trader (Entrix) → VPP Controller on Kubernetes.
+          [ANIMATED] Energy market sends request → Trading gateway (Entrix) → VPP Controller on Kubernetes.
           Controller publishes commands via Kafka → Enpal cloud → MQTT to individual homes.
           Watch the data flow — from market signal to battery charge in seconds.
           Software that aggregates and operates millions of devices as one coordinated power plant.
@@ -769,7 +776,7 @@ export default function Presentation() {
       {/* 25: Energy Arbitrage + Peak Shaving */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
-          <LazyContent><VPPScenarioSlide scenario="summer" /></LazyContent>
+          <VPPScenarioSlide scenario="summer" />
         </div>
         <Notes>
           [LERENZO] [MAP HUD] Full-screen Berlin map — walk through each step.
@@ -784,7 +791,7 @@ export default function Presentation() {
       {/* 26: SA Virtual Power Plant, 2019 */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
-          <LazyContent><SAMapHUD width="100%" height="100%" variant="vpp" /></LazyContent>
+          <SAMapHUD width="100%" height="100%" variant="vpp" />
         </div>
         <Notes>
           [LERENZO] South Australia proved this works.
@@ -929,14 +936,14 @@ export default function Presentation() {
       {/* SA Blackout, 2016 */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
-          <LazyContent><SAMapHUD width="100%" height="100%" variant="blackout" /></LazyContent>
+          <SAMapHUD width="100%" height="100%" variant="blackout" />
         </div>
       </Slide>
 
       {/* Winter Grid Emergency */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
-          <LazyContent><VPPScenarioSlide scenario="winter" /></LazyContent>
+          <VPPScenarioSlide scenario="winter" />
         </div>
       </Slide>
 

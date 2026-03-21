@@ -44,7 +44,7 @@ function lerp(a, b, t) {
   return a + (b - a) * Math.max(0, Math.min(1, t));
 }
 
-export default function CurtailmentChart({ width = 900, height = 380 }) {
+export default function CurtailmentChart({ width = 900, height = 380, hideStats = false, statsVisible = 4 }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const tRef = useRef(0);
@@ -347,7 +347,9 @@ export default function CurtailmentChart({ width = 900, height = 380 }) {
   // ── Stat boxes canvas (HUD trace animation) ──
   const statsCanvasRef = useRef(null);
   const statsAnimRef = useRef(null);
-  const statsStartRef = useRef(null);
+  const boxStartTimes = useRef({}); // per-box start times
+  const prevStatsVisible = useRef(0);
+  const statsVisibleRef = useRef(statsVisible);
 
   const STATS = [
     { label: 'Total Wasted', valueFn: (f) => `${(CUM[DATA.length-1].twh * f).toFixed(1)} TWh`, color: colors.accent },
@@ -358,6 +360,19 @@ export default function CurtailmentChart({ width = 900, height = 380 }) {
 
   const statsH = 80;
   const statsGap = 10;
+
+  // When statsVisible increases, record start time for new boxes
+  useEffect(() => {
+    statsVisibleRef.current = statsVisible;
+    const prev = prevStatsVisible.current;
+    if (statsVisible > prev) {
+      const now = performance.now();
+      for (let i = prev; i < statsVisible; i++) {
+        if (!boxStartTimes.current[i]) boxStartTimes.current[i] = now;
+      }
+    }
+    prevStatsVisible.current = statsVisible;
+  }, [statsVisible]);
 
   useEffect(() => {
     const canvas = statsCanvasRef.current;
@@ -370,31 +385,27 @@ export default function CurtailmentChart({ width = 900, height = 380 }) {
     const boxW = (width - statsGap * (STATS.length - 1)) / STATS.length;
     const boxH = statsH - 8;
     const r = 8;
-    statsStartRef.current = null;
 
     // Timing
     const traceDur = 0.5;   // seconds to trace one box border
-    const boxStagger = 0.6; // seconds between each box starting
 
     const drawStats = (now) => {
       const isActive = slideContext?.isSlideActive;
       if (!isActive) { statsAnimRef.current = requestAnimationFrame(drawStats); return; }
-      if (tRef.current < 0.7) { statsAnimRef.current = requestAnimationFrame(drawStats); return; }
-      if (!statsStartRef.current) statsStartRef.current = now;
 
-      const elapsed = (now - statsStartRef.current) / 1000;
       ctx.clearRect(0, 0, width, statsH);
 
       let anyAnimating = false;
 
-      for (let i = 0; i < STATS.length; i++) {
+      for (let i = 0; i < Math.min(STATS.length, statsVisibleRef.current); i++) {
         const s = STATS[i];
         const x = i * (boxW + statsGap);
         const y = 4;
 
-        // Sequential: each box starts after the previous
-        const boxElapsed = Math.max(0, elapsed - i * boxStagger);
-        if (boxElapsed <= 0) { anyAnimating = true; continue; }
+        // Each box animates from its own start time
+        const startTime = boxStartTimes.current[i];
+        if (!startTime) { anyAnimating = true; continue; }
+        const boxElapsed = Math.max(0, (now - startTime) / 1000);
 
         const traceFrac = Math.min(1, boxElapsed / traceDur);
         const contentFrac = Math.min(1, Math.max(0, (boxElapsed - traceDur * 0.5) / 0.4));
@@ -460,9 +471,8 @@ export default function CurtailmentChart({ width = 900, height = 380 }) {
         }
       }
 
-      if (anyAnimating) {
-        statsAnimRef.current = requestAnimationFrame(drawStats);
-      }
+      // Always keep running to pick up newly revealed boxes
+      statsAnimRef.current = requestAnimationFrame(drawStats);
     };
 
     statsAnimRef.current = requestAnimationFrame(drawStats);
@@ -472,7 +482,7 @@ export default function CurtailmentChart({ width = 900, height = 380 }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0 }}>
       <canvas ref={canvasRef} style={{ width, height, marginTop: -50 }} />
-      <canvas ref={statsCanvasRef} style={{ width, height: statsH, marginTop: 8 }} />
+      {!hideStats && <canvas ref={statsCanvasRef} style={{ width, height: statsH, marginTop: 8 }} />}
     </div>
   );
 }
