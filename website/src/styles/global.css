@@ -62,16 +62,48 @@ body {
 }
 
 /* ── Font size toggle ── */
-/* sm = default (current sizes), md = bump up, lg = larger still */
+/* sm = compact, md = default (min 14px everywhere), lg = accessible */
+
+/* md: bump body + headings, enforce 14px floor on all small text */
 html.font-md body { font-size: 19px; }
 html.font-md .prose h1 { font-size: 54px; }
 html.font-md .prose h2 { font-size: 36px; }
 html.font-md .prose h3 { font-size: 25px; }
+html.font-md .prose th { font-size: 13px; }
+html.font-md .prose td { font-size: 15px; }
 
+/* Floor: nothing below 14px in md mode */
+html.font-md .text-xs,
+html.font-md .text-\[10px\],
+html.font-md .text-\[11px\],
+html.font-md .text-\[12px\] { font-size: 14px !important; }
+
+/* TOC sidebar text */
+html.font-md aside .text-xs,
+html.font-md aside .text-\[11px\],
+html.font-md aside .text-\[10px\] { font-size: 13px !important; }
+
+/* Stat box sublabels */
+html.font-md .font-mono.text-xs { font-size: 13px !important; }
+
+/* lg: everything bigger */
 html.font-lg body { font-size: 22px; }
 html.font-lg .prose h1 { font-size: 60px; }
 html.font-lg .prose h2 { font-size: 40px; }
 html.font-lg .prose h3 { font-size: 28px; }
+html.font-lg .prose th { font-size: 14px; }
+html.font-lg .prose td { font-size: 17px; }
+
+/* Floor: nothing below 15px in lg mode */
+html.font-lg .text-xs,
+html.font-lg .text-\[10px\],
+html.font-lg .text-\[11px\],
+html.font-lg .text-\[12px\],
+html.font-lg .text-sm { font-size: 15px !important; }
+
+html.font-lg aside .text-xs,
+html.font-lg aside .text-\[11px\],
+html.font-lg aside .text-\[10px\] { font-size: 14px !important; }
 
 /* ── Prose — content page typography ── */
 .prose h1 { font-size: 48px; font-weight: 800; line-height: 1.1; margin-bottom: 16px; }
