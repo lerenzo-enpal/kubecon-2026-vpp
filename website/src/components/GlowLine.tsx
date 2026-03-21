@@ -43,7 +43,6 @@ export default function GlowLine({
   const glowStyle: CSSProperties = {
     position: 'absolute',
     top: 0,
-    left: '-80px',
     width: '80px',
     height: '100%',
     borderRadius: `${height}px`,
