@@ -179,6 +179,14 @@ export interface CascadeMapProps {
   freqStatusLabel: FreqStatusLabel;
   computeDanger: DangerComputer;
 
+  // ── Frequency display overrides ──
+  /** Label above the primary metric (default "FREQUENCY") */
+  freqDisplayLabel?: string;
+  /** Unit shown after the primary metric value (default "Hz") */
+  freqDisplayUnit?: string;
+  /** Custom formatter for the primary metric value (default: freq.toFixed(3)) */
+  freqDisplayFormat?: (freq: number) => string;
+
   // ── Node overrides ──
   nodeOverrides?: NodeOverrides;
 
@@ -252,6 +260,9 @@ export default function CascadeMap({
   showOfflineBar = true,
   freqStatusLabel,
   computeDanger,
+  freqDisplayLabel = 'FREQUENCY',
+  freqDisplayUnit = 'Hz',
+  freqDisplayFormat,
   nodeOverrides,
   zoomThresholds,
   extraTimelineContent,
@@ -666,10 +677,10 @@ export default function CascadeMap({
           {/* ── Right: Frequency readout ── */}
           <div style={{ ...panelBase, position: 'absolute', top: 10, right: 10, zIndex: 10, padding: '14px 20px', minWidth: 190, background: 'rgba(5, 8, 16, 0.92)', opacity: rpExpand > 0 ? 1 : 0, transformOrigin: 'top right', transform: `scale(${rpExpand}, ${rpExpand})` }}>
             <Corners color={glowColor} />
-            <div style={{ fontSize: 10, fontFamily: '"JetBrains Mono"', color: '#64748bcc', letterSpacing: '0.1em', marginBottom: 6, opacity: rpContent }}>FREQUENCY</div>
+            <div style={{ fontSize: 10, fontFamily: '"JetBrains Mono"', color: '#64748bcc', letterSpacing: '0.1em', marginBottom: 6, opacity: rpContent }}>{freqDisplayLabel}</div>
             <div style={{ fontSize: 36, fontWeight: 800, fontFamily: '"JetBrains Mono"', color: freqColor, textShadow: `0 0 22px ${freqColor}40`, opacity: rpContent }}>
-              {freq === 0 ? '0.000' : freq.toFixed(3)}
-              <span style={{ fontSize: 18, marginLeft: 4 }}>Hz</span>
+              {freqDisplayFormat ? freqDisplayFormat(freq) : (freq === 0 ? '0.000' : freq.toFixed(3))}
+              <span style={{ fontSize: 18, marginLeft: 4 }}>{freqDisplayUnit}</span>
             </div>
             <div style={{ fontSize: 13, fontFamily: '"JetBrains Mono"', color: freqColor, marginTop: 4, fontWeight: 600, opacity: rpContent }}>
               {freqStatus}
