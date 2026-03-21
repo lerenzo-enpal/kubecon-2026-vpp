@@ -21,11 +21,11 @@ const severityColors: Record<string, { bg: string; border: string; badge: string
 const s = severityColors[severity] || severityColors['blackout'];
 ---
 
-<div class="mb-10 rounded-xl overflow-hidden" style={`background: ${s.bg}; border: 1px solid ${s.border}30;`}>
+<div class="mb-6 rounded-xl overflow-hidden" style={`background: ${s.bg}; border: 1px solid ${s.border}30;`}>
   <!-- Severity stripe -->
   <div class="h-1" style={`background: linear-gradient(90deg, ${s.border}, ${s.border}60, transparent);`}></div>
 
-  <div class="p-8">
+  <div class="p-6">
     <!-- Badge -->
     <span
       class="inline-block font-mono text-xs font-semibold px-3 py-1 rounded-full mb-4"
