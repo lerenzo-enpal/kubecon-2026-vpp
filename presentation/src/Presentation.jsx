@@ -3,6 +3,9 @@ import { Deck, Slide, Heading, Text, Notes, Stepper } from 'spectacle';
 import { colors } from './theme';
 import { LazyContent } from './components/ui';
 import FrequencyDemo from './components/FrequencyDemo';
+
+/** Resolve public assets relative to Vite's base URL (handles subpath deployment) */
+const asset = (path) => `${(import.meta.env.BASE_URL || '/').replace(/\/$/, '')}${path}`;
 import RenewableGrowthChart from './components/RenewableGrowthChart';
 import DuckCurveChart from './components/DuckCurveChart';
 import DuckCurveVPP from './components/DuckCurveVPP';
@@ -118,7 +121,7 @@ export default function Presentation() {
               Cloud-Native Infrastructure for the Energy Grid
             </div>
             <div className="flex gap-6 justify-center items-center">
-              <img src="/enpal-logo.svg" alt="Enpal" style={{ height: 36 }} />
+              <img src={asset("/enpal-logo.svg")} alt="Enpal" style={{ height: 36 }} />
             </div>
           </div>
         </div>
@@ -135,12 +138,12 @@ export default function Presentation() {
           {/* Speakers */}
           <div className="flex gap-16 mb-12">
             <div className="flex flex-col items-center">
-              <img src="/lerenzo.png" alt="LeRenzo" className="w-28 h-28 rounded-full mb-4 object-cover object-[center_35%] border-2" style={{ borderColor: `${colors.primary}40`, boxShadow: `0 0 20px ${colors.primary}15` }} />
+              <img src={asset("/lerenzo.png")} alt="LeRenzo" className="w-28 h-28 rounded-full mb-4 object-cover object-[center_35%] border-2" style={{ borderColor: `${colors.primary}40`, boxShadow: `0 0 20px ${colors.primary}15` }} />
               <div className="text-xl font-bold text-hud-text font-sans">LeRenzo Tolbert-Malcolm</div>
               <div className="text-lg text-hud-text-muted font-sans mt-1">Staff Engineer, VPP</div>
             </div>
             <div className="flex flex-col items-center">
-              <img src="/mario.png" alt="Mario" className="w-28 h-28 rounded-full mb-4 object-cover object-[center_35%] border-2" style={{ borderColor: `${colors.primary}40`, boxShadow: `0 0 20px ${colors.primary}15` }} />
+              <img src={asset("/mario.png")} alt="Mario" className="w-28 h-28 rounded-full mb-4 object-cover object-[center_35%] border-2" style={{ borderColor: `${colors.primary}40`, boxShadow: `0 0 20px ${colors.primary}15` }} />
               <div className="text-xl font-bold text-hud-text font-sans">Mario Olivio Flores</div>
               <div className="text-lg text-hud-text-muted font-sans mt-1">Engineering Manager, VPP</div>
             </div>
@@ -148,7 +151,7 @@ export default function Presentation() {
 
           {/* Main brand */}
           <div className="mb-10 flex flex-col items-center">
-            <img src="/enpal-logo.svg" alt="Enpal" className="h-32" />
+            <img src={asset("/enpal-logo.svg")} alt="Enpal" className="h-32" />
             <div className="text-lg text-hud-text-muted font-sans mt-4">
               Building Europe's Largest Virtual Power Plant
             </div>
@@ -158,8 +161,7 @@ export default function Presentation() {
           <div className="flex flex-col items-center gap-2">
             <span className="text-lg text-hud-text-dim font-mono mb-1">Partners</span>
             <div className="flex items-center gap-3">
-              {/* TODO: Replace with logo images */}
-              <span className="text-xl font-bold font-mono" style={{ color: colors.accent }}>Flexa</span>
+              <img src={asset("/flexa-logo.svg")} alt="Flexa" className="h-10" />
               <span className="text-hud-text-dim opacity-30">|</span>
               <span className="text-xl font-bold font-mono" style={{ color: colors.secondary }}>Entrix</span>
               <span className="text-hud-text-dim opacity-30">|</span>
