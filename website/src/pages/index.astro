@@ -27,9 +27,7 @@ const modules = [
             <a href={url("/learn/how-the-grid-works")} class="hover:opacity-70 transition-opacity">Learn</a>
             <a href={url("/research")} class="hover:opacity-70 transition-opacity">Research</a>
             <a
-              href="https://kubecon-2026-vpp.netlify.app"
-              target="_blank"
-              rel="noopener"
+              href={url("/slides/")}
               class="px-3 py-1.5 rounded font-bold text-xs tracking-wide transition-opacity hover:opacity-80"
               style="background: var(--color-primary); color: var(--color-bg);"
             >KubeCon 2026 Slides</a>
@@ -89,21 +87,12 @@ const modules = [
               ))}
             </div>
 
-            <div class="mt-8 p-4 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
-              <div class="font-mono text-xs mb-2" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">
-                Deep Dives
-              </div>
-              <div class="text-base" style="color: var(--color-text-muted);">
-                All research is open source — 12 incident analyses, cost breakdowns, market data, and
-                primary sources.
-                <a href={url("/research")} class="ml-1" style="color: var(--color-primary);">Browse the research library</a>
-              </div>
-            </div>
           </div>
 
-          <div class="lg:sticky lg:top-8">
+          <div class="flex flex-col gap-5">
+            {/* Conference Talk */}
             <a
-              href="https://kubecon-2026-vpp.netlify.app"
+              href={url("/slides/")}
               target="_blank"
               rel="noopener"
               class="block p-5 rounded-lg transition-opacity hover:opacity-90"
@@ -123,6 +112,75 @@ const modules = [
                 View the slides &rarr;
               </span>
             </a>
+
+            {/* Deep Dives */}
+            <a href={url("/research")} class="block p-4 rounded-lg transition-opacity hover:opacity-90" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+              <div class="font-mono text-xs mb-2 tracking-widest uppercase" style="color: var(--color-text-dim);">
+                Deep Dives
+              </div>
+              <div class="text-sm" style="color: var(--color-text-muted);">
+                12 incident analyses, cost breakdowns, market data, and primary sources — all open source.
+              </div>
+              <span class="font-mono text-xs font-semibold mt-2 inline-block" style="color: var(--color-primary);">
+                Browse the research library &rarr;
+              </span>
+            </a>
+
+            {/* Incident Reports with map teasers */}
+            <div class="rounded-lg overflow-hidden" style="border: 1px solid var(--color-surface-light);">
+              <div class="px-4 py-3" style="background: var(--color-surface);">
+                <div class="font-mono text-xs tracking-widest uppercase" style="color: var(--color-text-dim);">
+                  Incident Reports
+                </div>
+              </div>
+              <div class="flex flex-col">
+                <a href={url("/research/incidents/2021-texas-ercot-winter-storm")} class="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-white/5" style="border-bottom: 1px solid var(--color-surface-light);">
+                  <div class="flex-shrink-0 w-10 h-10 rounded flex items-center justify-center" style="background: rgba(239, 68, 68, 0.1);">
+                    <div class="w-5 h-5 rounded-full" style="background: rgba(239, 68, 68, 0.6); box-shadow: 0 0 6px rgba(239, 68, 68, 0.3);"></div>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-sm font-semibold truncate" style="color: var(--color-text);">2021 Texas ERCOT</div>
+                    <div class="text-xs truncate" style="color: var(--color-text-dim);">4.5M homes, 246 lives lost</div>
+                  </div>
+                  <span class="interactive-tag-text font-mono text-xs flex-shrink-0">Map</span>
+                </a>
+                <a href={url("/research/incidents/2025-iberian-peninsula-blackout")} class="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-white/5" style="border-bottom: 1px solid var(--color-surface-light);">
+                  <div class="flex-shrink-0 w-10 h-10 rounded flex items-center justify-center" style="background: rgba(239, 68, 68, 0.1);">
+                    <div class="w-5 h-5 rounded-full" style="background: rgba(239, 68, 68, 0.6); box-shadow: 0 0 6px rgba(239, 68, 68, 0.3);"></div>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-sm font-semibold truncate" style="color: var(--color-text);">2025 Iberian Blackout</div>
+                    <div class="text-xs truncate" style="color: var(--color-text-dim);">60M people, 6 seconds</div>
+                  </div>
+                  <span class="interactive-tag-text font-mono text-xs flex-shrink-0">Map</span>
+                </a>
+                <a href={url("/research/incidents/2016-south-australia-blackout")} class="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-white/5" style="border-bottom: 1px solid var(--color-surface-light);">
+                  <div class="flex-shrink-0 w-10 h-10 rounded flex items-center justify-center" style="background: rgba(239, 68, 68, 0.1);">
+                    <div class="w-5 h-5 rounded-full" style="background: rgba(239, 68, 68, 0.6); box-shadow: 0 0 6px rgba(239, 68, 68, 0.3);"></div>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-sm font-semibold truncate" style="color: var(--color-text);">2016 South Australia</div>
+                    <div class="text-xs truncate" style="color: var(--color-text-dim);">System black in 43 seconds</div>
+                  </div>
+                  <span class="interactive-tag-text font-mono text-xs flex-shrink-0">Map</span>
+                </a>
+                <a href={url("/research/incidents/2017-hornsdale-battery-response")} class="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-white/5" style="border-bottom: 1px solid var(--color-surface-light);">
+                  <div class="flex-shrink-0 w-10 h-10 rounded flex items-center justify-center" style="background: rgba(16, 185, 129, 0.1);">
+                    <div class="w-5 h-5 rounded-full" style="background: rgba(16, 185, 129, 0.6); box-shadow: 0 0 6px rgba(16, 185, 129, 0.3);"></div>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-sm font-semibold truncate" style="color: var(--color-text);">2017 Hornsdale Battery</div>
+                    <div class="text-xs truncate" style="color: var(--color-success);">140ms response prevented cascade</div>
+                  </div>
+                  <span class="interactive-tag-text font-mono text-xs flex-shrink-0">Map</span>
+                </a>
+                <a href={url("/research")} class="flex items-center justify-center px-4 py-3 transition-colors hover:bg-white/5">
+                  <span class="font-mono text-xs font-semibold" style="color: var(--color-primary);">
+                    All 12 incidents &rarr;
+                  </span>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -134,7 +192,7 @@ const modules = [
           Open source educational project
         </div>
         <div class="font-mono text-xs" style="color: var(--color-text-dim);">
-          Based on research from KubeCon 2026
+          Based on research for KubeCon 2026
         </div>
       </div>
     </footer>
