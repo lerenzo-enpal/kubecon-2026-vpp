@@ -46,33 +46,41 @@ public/            Static assets
 
 ## Deployment
 
-The site deploys to GitHub Pages with the website at `/` and the presentation at `/slides/`.
+Two independent deployments:
 
-### Deploy via GitHub Actions (recommended)
+| Host | What | Trigger | Config |
+|------|------|---------|--------|
+| **Netlify** | Presentation only | Auto on push to main | `netlify.toml` |
+| **GitHub Pages** | Website + presentation combined | Manual (workflow_dispatch) | `.github/workflows/deploy.yml` |
+
+### Netlify (presentation)
+
+Deploys automatically on every push. Builds `presentation/dist` and serves it. See `netlify.toml` and `docs/netlify-deploy.md` for manual CLI deploy.
+
+### GitHub Pages (full site)
 
 1. Push your changes to `main`
 2. Go to [Actions > Deploy](https://github.com/lerenzo-enpal/kubecon-2026-vpp/actions/workflows/deploy.yml)
 3. Click **Run workflow**
 
-This is a manual trigger — it never auto-deploys on push.
+This is a manual trigger — it never auto-deploys on push. Builds both the website and presentation, serves them combined.
 
 ### Pre-deploy check (optional)
-
-If you want to verify the combined output before deploying:
 
 ```sh
 ./scripts/build-deploy.sh   # builds both into _site/
 npx serve _site              # static preview (no hot reload)
 ```
 
-This is NOT for development. For development with hot reload, use:
+For development with hot reload, use the dev servers directly:
 
 ```sh
 cd website && npm run dev       # website at localhost:4321
 cd presentation && npm run dev  # slides at localhost:3000
+# or run both: ./scripts/dev.sh
 ```
 
-### URL structure
+### URL structure (GitHub Pages)
 
 | Path | Content |
 |------|---------|
