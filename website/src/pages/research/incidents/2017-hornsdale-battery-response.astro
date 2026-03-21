@@ -5,6 +5,8 @@ import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
 import SourceList from '../../../components/SourceList.astro';
 import ConnectedHomes from '../../../components/illustrations/ConnectedHomes';
+import HornsdaleCascadeMap from '../../../components/HornsdaleCascadeMap';
+import FullscreenWrapper from '../../../components/FullscreenWrapper';
 ---
 
 <IncidentLayout title="Hornsdale Battery Response" description="December 2017: A 100 MW battery responded 60x faster than conventional generators, preventing a cascade and proving grid-scale batteries work.">
@@ -16,6 +18,8 @@ import ConnectedHomes from '../../../components/illustrations/ConnectedHomes';
   keyStat="140ms"
   keyStatLabel="response time"
   severity="success"
+  interactive={true}
+  mapId="hornsdale-map"
 />
 
 <QuickFacts facts={[
@@ -30,14 +34,23 @@ import ConnectedHomes from '../../../components/illustrations/ConnectedHomes';
 <h2>What Happened</h2>
 
 <p>
-  Just after 2 AM on December 14, 2017, Loy Yang A Unit 3 -- a massive coal plant in Victoria -- tripped without warning, yanking 560 MW of baseload generation off the National Electricity Market. This is exactly the kind of sudden loss that triggers cascading failures.
+  Just after 2 AM on December 14, 2017, Loy Yang A Unit 3 -- a massive coal plant in Victoria -- tripped without warning, yanking 560 MW of baseload generation off the National Electricity Market. This is exactly the kind of sudden loss that triggers cascading failures. <a href="#hornsdale-timeline" class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
 </p>
+
+<div id="hornsdale-map" class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
+  <div class="flex items-center justify-between mb-3">
+    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">NEM Grid -- December 14, 2017</div>
+  </div>
+  <FullscreenWrapper client:visible label="Fullscreen">
+    <HornsdaleCascadeMap client:visible height={400} />
+  </FullscreenWrapper>
+</div>
 
 <p>
   But something was different this time. The Hornsdale Power Reserve, Tesla's 100 MW battery installed just 13 days earlier, began injecting power before AEMO's monitoring hardware could even record the response. It was the battery's first real-world test, and it passed with flying colors.
 </p>
 
-<p>
+<p id="hornsdale-timeline">
   The battery responded in approximately 100 milliseconds -- 60 times faster than the 6-second industry standard. It arrested the <a href="/research/topics/grid-frequency">frequency</a> decline before it could trigger under-frequency load shedding. No customers lost power. No <a href="/research/topics/cascading-failures">cascade</a> occurred.
 </p>
 
@@ -81,11 +94,11 @@ import ConnectedHomes from '../../../components/illustrations/ConnectedHomes';
 <h2>Why It Worked</h2>
 
 <div class="my-8 p-6 rounded-xl" style="background: rgba(16, 185, 129, 0.06); border-left: 4px solid var(--color-success);">
-  <div class="font-mono text-xs font-semibold mb-3" style="color: var(--color-success); letter-spacing: 0.08em; text-transform: uppercase;">Speed Changes Everything</div>
-  <p class="text-sm leading-relaxed mb-3" style="color: var(--color-text-muted);">
+  <div class="font-mono text-sm font-semibold mb-3" style="color: var(--color-success); letter-spacing: 0.08em; text-transform: uppercase;">Speed Changes Everything</div>
+  <p class="text-base leading-relaxed mb-3" style="color: var(--color-text-muted);">
     The battery didn't need to replace all 560 MW. It only needed to inject 7.3 MW at exactly the right moment to arrest the frequency decline. By responding in ~100 ms instead of the 6-second standard, it stopped the cascade before it could begin.
   </p>
-  <p class="text-sm leading-relaxed mb-0" style="color: var(--color-text-muted);">
+  <p class="text-base leading-relaxed mb-0" style="color: var(--color-text-muted);">
     This is the key insight: <strong style="color: var(--color-text);">fast response is qualitatively different from slow response.</strong> A battery prevents cascading failures. A gas turbine recovers from them -- if there's still a grid left to recover.
   </p>
 </div>
@@ -93,7 +106,7 @@ import ConnectedHomes from '../../../components/illustrations/ConnectedHomes';
 <h2>The Bigger Picture</h2>
 
 <div class="my-8 p-6 rounded-xl" style="background: var(--color-bg-alt); border-left: 4px solid var(--color-primary);">
-  <div class="font-mono text-xs font-semibold mb-3" style="color: var(--color-primary); letter-spacing: 0.08em; text-transform: uppercase;">Market Impact</div>
+  <div class="font-mono text-sm font-semibold mb-3" style="color: var(--color-primary); letter-spacing: 0.08em; text-transform: uppercase;">Market Impact</div>
   <div class="grid grid-cols-2 gap-4 mt-4">
     <div>
       <div class="font-mono font-extrabold text-xl" style="color: var(--color-success);">75%</div>
@@ -120,21 +133,21 @@ import ConnectedHomes from '../../../components/illustrations/ConnectedHomes';
 
 <h2>What This Means for VPPs</h2>
 
-<div class="float-right ml-6 mb-4" style="width: 170px;">
+<div class="float-right ml-6 mb-4 w-[170px]">
   <ConnectedHomes client:visible width={170} height={105} />
 </div>
 
 <div class="my-8 p-6 rounded-xl" style="background: rgba(16, 185, 129, 0.06); border-left: 4px solid var(--color-success);">
-  <div class="font-mono text-xs font-semibold mb-3" style="color: var(--color-success); letter-spacing: 0.08em; text-transform: uppercase;">From One Battery to Thousands</div>
-  <p class="text-sm leading-relaxed mb-3" style="color: var(--color-text-muted);">
+  <div class="font-mono text-sm font-semibold mb-3" style="color: var(--color-success); letter-spacing: 0.08em; text-transform: uppercase;">From One Battery to Thousands</div>
+  <p class="text-base leading-relaxed mb-3" style="color: var(--color-text-muted);">
     Hornsdale proved that a single 100 MW battery can prevent <a href="/research/topics/cascading-failures">cascading failures</a>. A <a href="/research/topics/vpp-market">Virtual Power Plant</a> distributes that capacity across 10,000+ homes, eliminating the single-point-of-failure risk while preserving the speed advantage.
   </p>
-  <p class="text-sm leading-relaxed mb-0" style="color: var(--color-text-muted);">
+  <p class="text-base leading-relaxed mb-0" style="color: var(--color-text-muted);">
     Think of it like a CDN for the power grid. The value is not in raw capacity but in response latency and geographic distribution. A VPP extends the Hornsdale principle from one large battery to thousands of small ones -- the same architectural pattern as moving from a monolith to microservices.
   </p>
 </div>
 
-<h2 style="font-size: 22px; margin-top: 48px;">Related Incidents</h2>
+<h2 class="text-xl mt-12">Related Incidents</h2>
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-3 my-6">
   <a href="/research/incidents/2016-south-australia-blackout" class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
