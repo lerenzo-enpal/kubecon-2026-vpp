@@ -12,7 +12,7 @@ import { url } from '../../../utils/url';
 <IncidentLayout title="2024 Dunkelflaute" description="Two weeks of no wind and no sun exposed the limits of Germany's renewable grid -- and sent prices to 18-year highs.">
 
 <IncidentHero
-  title="2024 Dunkelflaute (Dark Doldrums)"
+  title="2024 Dunkelflaute <br />(Dark Doldrums)"
   date="November-December 2024"
   location="Germany / Central Europe"
   severity="price-event"
@@ -113,7 +113,11 @@ import { url } from '../../../utils/url';
   <div class="grid gap-3">
     <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
       <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">The storage gap</div>
-      <div class="text-base" style="color: var(--color-text-muted);">170 GW of renewables produced almost nothing for two weeks. Grid-scale and distributed battery storage, coordinated by a <a href={url("/research/topics/vpp-market")}>VPP</a>, could time-shift energy from windy/sunny periods to cover multi-day lulls.</div>
+      <div class="text-base" style="color: var(--color-text-muted);">170 GW of renewables produced almost nothing for two weeks. Distributed battery storage coordinated by a <a href={url("/research/topics/vpp-market")}>VPP</a> can smooth short gaps — hours to a few days — by time-shifting energy from windy or sunny periods.</div>
+    </div>
+    <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-accent);">
+      <div class="font-semibold text-sm mb-1" style="color: var(--color-accent);">Beyond what batteries can do</div>
+      <div class="text-base" style="color: var(--color-text-muted);">A typical home battery stores 10 kWh — enough for 4-8 hours. A 14-day Dunkelflaute is far beyond what distributed batteries can cover, even aggregated across millions of homes. Events like this require seasonal storage: green hydrogen, pumped hydro, or large-scale thermal storage. A VPP is part of the answer, not the whole answer. In normal conditions, Germany faces the opposite problem: <a href={url("/research/topics/german-grid-curtailment")}>curtailing excess renewables</a> because the <a href={url("/research/topics/grid-flexibility-costs")}>transmission grid</a> cannot move power from where it is generated to where it is needed.</div>
     </div>
     <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
       <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Price arbitrage</div>
