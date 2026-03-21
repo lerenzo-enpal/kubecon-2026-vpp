@@ -14,14 +14,14 @@ const modules = [
 ];
 ---
 
-<BaseLayout title="Grid — Learn How Electricity Works">
+<BaseLayout title="What is a Virtual Power Plant?">
   <div class="min-h-screen flex flex-col">
     <header class="px-8 py-6 border-b" style="border-color: var(--color-surface-light);">
       <div class="max-w-7xl mx-auto flex items-center justify-between">
-        <div class="flex items-center gap-3">
+        <a href={url("/")} class="flex items-center gap-3 hover:opacity-80 transition-opacity" style="text-decoration: none;">
           <div class="w-2 h-2 rounded-full" style="background: var(--color-primary); box-shadow: 0 0 8px var(--color-primary);"></div>
-          <span class="font-mono font-bold text-lg" style="color: var(--color-text); letter-spacing: 0.05em;">GRID</span>
-        </div>
+          <span class="font-mono font-bold text-lg" style="color: var(--color-text); letter-spacing: 0.05em;">VPP</span>
+        </a>
         <div class="flex items-center gap-4">
           <nav class="flex items-center gap-6 font-mono text-sm" style="color: var(--color-text-dim);">
             <a href={url("/learn/how-the-grid-works")} class="hover:opacity-70 transition-opacity">Learn</a>
@@ -185,12 +185,22 @@ const modules = [
     </main>
 
     <footer class="px-8 py-6 border-t" style="border-color: var(--color-surface-light);">
-      <div class="max-w-7xl mx-auto flex items-center justify-between">
-        <div class="font-mono text-xs" style="color: var(--color-text-dim);">
-          Open source educational project
+      <div class="max-w-7xl mx-auto flex flex-col gap-3">
+        <div class="flex items-center justify-between">
+          <div class="font-mono text-xs" style="color: var(--color-text-dim);">
+            Open source educational project
+          </div>
+          <div class="font-mono text-xs" style="color: var(--color-text-dim);">
+            Based on research for KubeCon 2026
+          </div>
         </div>
-        <div class="font-mono text-xs" style="color: var(--color-text-dim);">
-          Based on research for KubeCon 2026
+        <div class="flex items-center justify-center gap-6 pt-2 border-t" style="border-color: var(--color-surface-light);">
+          <span class="text-xs" style="color: var(--color-text-dim);">Built by</span>
+          <a href="https://www.enpal.de" target="_blank" rel="noopener" class="font-mono text-xs font-semibold hover:opacity-70 transition-opacity" style="color: var(--color-success);">enpal.de</a>
+          <span class="text-xs" style="color: var(--color-surface-light);">|</span>
+          <a href="https://www.enpal.de/solar" target="_blank" rel="noopener" class="text-xs hover:opacity-70 transition-opacity" style="color: var(--color-text-dim);">Get Solar</a>
+          <span class="text-xs" style="color: var(--color-surface-light);">|</span>
+          <a href="https://www.enpal.de/karriere" target="_blank" rel="noopener" class="text-xs hover:opacity-70 transition-opacity" style="color: var(--color-text-dim);">Work in Green Tech</a>
         </div>
       </div>
     </footer>

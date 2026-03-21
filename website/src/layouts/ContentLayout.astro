@@ -119,7 +119,7 @@ const topics = [
       <div class="max-w-7xl mx-auto flex items-center justify-between">
         <a href={url("/")} class="flex items-center gap-3 hover:opacity-80 transition-opacity">
           <div class="w-2 h-2 rounded-full" style="background: var(--color-primary); box-shadow: 0 0 8px var(--color-primary);"></div>
-          <span class="font-mono font-bold" style="color: var(--color-text); letter-spacing: 0.05em;">GRID</span>
+          <span class="font-mono font-bold" style="color: var(--color-text); letter-spacing: 0.05em;">VPP</span>
         </a>
         <div class="flex items-center gap-4">
           <nav class="flex gap-6 font-mono text-sm" style="color: var(--color-text-dim);">
@@ -136,9 +136,9 @@ const topics = [
       <!-- Sidebar TOC -->
       <aside class="hidden lg:block w-72 flex-shrink-0 py-8 pr-6 border-r" style="border-color: var(--color-surface-light);">
         <div class="sticky top-8">
-          <div class="font-mono text-xs mb-4" style="color: var(--color-text-dim); letter-spacing: 0.1em; text-transform: uppercase;">
+          <a href={url("/learn")} class="block font-mono text-xs mb-4 hover:opacity-70 transition-opacity" style="color: var(--color-text-dim); letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none;">
             Learn
-          </div>
+          </a>
           <nav class="flex flex-col gap-0.5">
             {modules.map((m, i) => {
               const isActive = currentPath.startsWith(m.href);
@@ -277,6 +277,10 @@ const topics = [
                 The talk that started this project
               </div>
             </a>
+            <div class="flex gap-4 mt-3">
+              <a href="https://www.enpal.de/solar" target="_blank" rel="noopener" class="text-[10px] hover:opacity-70 transition-opacity" style="color: var(--color-text-dim);">Get Solar</a>
+              <a href="https://www.enpal.de/karriere" target="_blank" rel="noopener" class="text-[10px] hover:opacity-70 transition-opacity" style="color: var(--color-text-dim);">Work in Green Tech</a>
+            </div>
           </div>
         </div>
       </aside>
