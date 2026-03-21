@@ -44,6 +44,39 @@ public/            Static assets
 4. **The Virtual Power Plant** — homes as infrastructure, Hornsdale success
 5. **The Future** — distributed resilience, software eating the grid
 
+## Deployment
+
+The site deploys to GitHub Pages with the website at `/` and the presentation at `/slides/`.
+
+### Deploy via GitHub Actions (recommended)
+
+1. Push your changes to `main`
+2. Go to [Actions > Deploy](https://github.com/lerenzo-enpal/kubecon-2026-vpp/actions/workflows/deploy.yml)
+3. Click **Run workflow**
+
+This is a manual trigger — it never auto-deploys on push.
+
+### Deploy locally (preview)
+
+```sh
+# From the repo root:
+./scripts/build-deploy.sh
+
+# Preview the combined site:
+npx serve _site
+```
+
+This builds both the website and presentation, assembles them into `_site/`, and gives you a local preview. The presentation lives at `http://localhost:3000/slides/`.
+
+### URL structure
+
+| Path | Content |
+|------|---------|
+| `/` | Educational website (Astro) |
+| `/learn/*` | Content modules |
+| `/research/*` | Incident and topic pages |
+| `/slides/` | KubeCon 2026 presentation (Spectacle) |
+
 ## Related Docs
 
 - [Project Brief](../docs/website/project-brief.md) — vision, audience, content plan
