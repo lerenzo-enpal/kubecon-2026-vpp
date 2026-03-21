@@ -1,7 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
-import ThemeToggle from '../components/ThemeToggle.astro';
-import FontSizeToggle from '../components/FontSizeToggle.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import { url } from '../utils/url';
 
 interface Section {
@@ -121,7 +121,7 @@ const topics = [
           <div class="w-2 h-2 rounded-full" style="background: var(--color-primary); box-shadow: 0 0 8px var(--color-primary);"></div>
           <span class="font-mono font-bold" style="color: var(--color-text); letter-spacing: 0.05em;">What is a VPP?</span>
         </a>
-        <nav class="flex justify-center gap-6 font-mono text-sm" style="color: var(--color-text-dim);">
+        <nav class="flex justify-center items-center gap-6 font-mono text-sm" style="color: var(--color-text-dim);">
           <a href={url("/learn/how-the-grid-works")} class="hover:opacity-70 transition-opacity">Learn</a>
           <a href={url("/research")} class="hover:opacity-70 transition-opacity">Research</a>
           <a
@@ -297,6 +297,8 @@ const topics = [
         </article>
       </main>
     </div>
+
+    <SiteFooter />
   </div>
 
   <!-- Scroll-spy: highlight current section in TOC -->

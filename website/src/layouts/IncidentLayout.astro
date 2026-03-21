@@ -2,6 +2,7 @@
 import BaseLayout from './BaseLayout.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
 import FontSizeToggle from '../components/FontSizeToggle.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import { url } from '../utils/url';
 
 interface Props {
@@ -175,22 +176,6 @@ const topics = [
       </main>
     </div>
 
-    <footer class="px-8 py-4 border-t" style="border-color: var(--color-surface-light);">
-      <div class="max-w-7xl mx-auto flex flex-col gap-2">
-        <div class="flex items-center justify-between">
-          <a href={url("/research")} class="font-mono text-xs hover:opacity-70 transition-opacity" style="color: var(--color-text-dim);">
-            Back to Research Library
-          </a>
-          <div class="font-mono text-xs" style="color: var(--color-text-dim);">
-            Open source research
-          </div>
-        </div>
-        <div class="flex items-center justify-center gap-5 pt-2 border-t" style="border-color: var(--color-surface-light);">
-          <a href="https://www.enpal.de" target="_blank" rel="noopener" class="font-mono text-xs hover:opacity-70 transition-opacity" style="color: var(--color-text-dim);">enpal.de</a>
-          <a href="https://www.enpal.de/solar" target="_blank" rel="noopener" class="text-xs hover:opacity-70 transition-opacity" style="color: var(--color-text-dim);">Get Solar</a>
-          <a href="https://www.enpal.de/karriere" target="_blank" rel="noopener" class="text-xs hover:opacity-70 transition-opacity" style="color: var(--color-text-dim);">Work in Green Tech</a>
-        </div>
-      </div>
-    </footer>
+    <SiteFooter />
   </div>
 </BaseLayout>

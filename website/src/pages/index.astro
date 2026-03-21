@@ -1,8 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-import ThemeToggle from '../components/ThemeToggle.astro';
-import FontSizeToggle from '../components/FontSizeToggle.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import { url } from '../utils/url';
 
 const modules = [
@@ -16,27 +16,7 @@ const modules = [
 
 <BaseLayout title="What is a Virtual Power Plant?">
   <div class="min-h-screen flex flex-col">
-    <header class="px-8 py-4 border-b" style="border-color: var(--color-surface-light);">
-      <div class="max-w-7xl mx-auto grid grid-cols-3 items-center">
-        <a href={url("/")} class="flex items-center gap-3 hover:opacity-80 transition-opacity" style="text-decoration: none;">
-          <div class="w-2 h-2 rounded-full" style="background: var(--color-primary); box-shadow: 0 0 8px var(--color-primary);"></div>
-          <span class="font-mono font-bold" style="color: var(--color-text); letter-spacing: 0.05em;">What is a VPP?</span>
-        </a>
-        <nav class="flex justify-center gap-6 font-mono text-sm" style="color: var(--color-text-dim);">
-          <a href={url("/learn/how-the-grid-works")} class="hover:opacity-70 transition-opacity">Learn</a>
-          <a href={url("/research")} class="hover:opacity-70 transition-opacity">Research</a>
-          <a
-            href={url("/slides/")}
-            class="px-3 py-1.5 rounded font-bold text-xs tracking-wide transition-opacity hover:opacity-80"
-            style="background: var(--color-primary); color: var(--color-bg);"
-          >Slides</a>
-        </nav>
-        <div class="flex items-center justify-end gap-4">
-          <FontSizeToggle />
-          <ThemeToggle />
-        </div>
-      </div>
-    </header>
+    <SiteHeader />
 
     <main class="flex-1 px-8 py-12">
       <div class="max-w-7xl mx-auto">
@@ -183,7 +163,7 @@ const modules = [
             {/* Enpal + Partners */}
             <div class="rounded-lg p-4 text-center" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
               <a href="https://www.enpal.de" target="_blank" rel="noopener" class="inline-block hover:opacity-80 transition-opacity">
-                <img src={url("/enpal-logo.svg")} alt="Enpal" class="h-7 mx-auto" />
+                <img src={url("/enpal-logo.svg")} alt="Enpal" class="h-10 mx-auto" />
               </a>
               <div class="text-xs mt-2" style="color: var(--color-text-dim);">
                 Europe's largest residential solar + storage installer
@@ -198,22 +178,6 @@ const modules = [
       </div>
     </main>
 
-    <footer class="px-8 py-6 border-t" style="border-color: var(--color-surface-light);">
-      <div class="max-w-7xl mx-auto flex flex-col gap-3">
-        <div class="flex items-center justify-between">
-          <div class="font-mono text-xs" style="color: var(--color-text-dim);">
-            Built by <span style="color: var(--color-text-muted);">LeRenzo</span> & <a href="https://continuously.improving.engineer/" target="_blank" rel="noopener" class="hover:opacity-70 transition-opacity" style="color: var(--color-text-muted);">Mario</a> at <a href="https://www.enpal.de" target="_blank" rel="noopener" class="hover:opacity-70 transition-opacity" style="color: var(--color-success);">Enpal</a>
-          </div>
-          <div class="font-mono text-xs" style="color: var(--color-text-dim);">
-            <a href={url("/research")} class="hover:opacity-70 transition-opacity" style="color: var(--color-text-dim);">Based on research for KubeCon 2026</a>
-          </div>
-        </div>
-        <div class="flex items-center justify-center gap-5 pt-2 border-t" style="border-color: var(--color-surface-light);">
-          <a href="https://www.enpal.de/solar" target="_blank" rel="noopener" class="text-xs hover:opacity-70 transition-opacity" style="color: var(--color-text-dim);">Get Solar</a>
-          <span class="text-xs" style="color: var(--color-surface-light);">|</span>
-          <a href="https://www.enpal.de/karriere" target="_blank" rel="noopener" class="text-xs hover:opacity-70 transition-opacity" style="color: var(--color-text-dim);">Work in Green Tech</a>
-        </div>
-      </div>
-    </footer>
+    <SiteFooter />
   </div>
 </BaseLayout>
