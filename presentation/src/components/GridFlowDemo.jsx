@@ -692,6 +692,10 @@ function Tower({ x, y, h, c, draw, t0 = 0, energized }) {
 function Substation({ x, y, w, h, c, draw, t0 = 0, energized }) {
   const coilStroke = energized ? c : c + '45';
   const coilFilter = energized ? 'url(#gf)' : undefined;
+  const bushingC = energized ? c + '90' : c + '40';
+  const b1x = x + w * 0.3, b2x = x + w * 0.7;
+  const bushingH = 30, bushingTop = y - bushingH;
+  const discW = 8;
 
   return (
     <g>
@@ -713,6 +717,27 @@ function Substation({ x, y, w, h, c, draw, t0 = 0, energized }) {
         style={energized
           ? { strokeDasharray: 'none', strokeDashoffset: 0, animation: 'coilPulse 1.2s ease-in-out infinite 0.6s' }
           : dS(draw, t0 + 0.45, 0.5)} />
+      {/* Bushings (two vertical posts with insulator discs) */}
+      {[b1x, b2x].map((bx, bi) => (
+        <g key={`bush${bi}`}>
+          <line pathLength="1" x1={bx} y1={y} x2={bx} y2={bushingTop}
+            stroke={bushingC} strokeWidth="1.5"
+            style={{ ...dS(draw, t0 + 0.5 + bi * 0.03), transition: 'stroke 0.5s' }} />
+          {[0.25, 0.5, 0.75].map((p, di) => {
+            const dy = y - bushingH * p;
+            return (
+              <line key={di} pathLength="1" x1={bx - discW} y1={dy} x2={bx + discW} y2={dy}
+                stroke={bushingC} strokeWidth="1"
+                style={{ ...dS(draw, t0 + 0.52 + bi * 0.03 + di * 0.02), transition: 'stroke 0.5s' }} />
+            );
+          })}
+          <circle cx={bx} cy={bushingTop} r={2.5}
+            fill={energized ? bushingC : c + '25'}
+            stroke={bushingC} strokeWidth="0.5"
+            filter={energized ? 'url(#gf)' : undefined}
+            style={{ ...dSF(draw, t0 + 0.55 + bi * 0.03, 0.2), transition: 'fill 0.5s, stroke 0.5s' }} />
+        </g>
+      ))}
       {/* Label */}
       <text x={x + w / 2} y={y + h + 23} textAnchor="middle"
         fill={c + '35'} fontSize="13" fontFamily="JetBrains Mono" letterSpacing="0.1em"
