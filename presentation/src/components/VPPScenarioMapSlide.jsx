@@ -543,8 +543,8 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
         <div style={{
           ...panelBase,
           position: 'absolute',
-          top: '50%', left: 10, transform: 'translateY(-50%)',
-          width: 396, padding: '10px 14px',
+          bottom: 10, left: 10,
+          width: 500, padding: '10px 14px',
           zIndex: 14,
           opacity: homeDetailReady ? 1 : 0,
           transition: 'opacity 0.8s ease',
