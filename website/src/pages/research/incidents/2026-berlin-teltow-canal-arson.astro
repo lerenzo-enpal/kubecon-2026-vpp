@@ -4,6 +4,8 @@ import IncidentHero from '../../../components/IncidentHero.astro';
 import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
 import SourceList from '../../../components/SourceList.astro';
+import BerlinTeltowCascadeMap from '../../../components/BerlinTeltowCascadeMap';
+import FullscreenWrapper from '../../../components/FullscreenWrapper';
 ---
 
 <IncidentLayout title="2026 Berlin Teltow Canal Arson" description="Arsonists destroyed a cable bridge over the Teltow Canal, causing Berlin's longest power outage since 1945.">
@@ -15,6 +17,8 @@ import SourceList from '../../../components/SourceList.astro';
   severity="attack"
   keyStat="4 days"
   keyStatLabel="longest Berlin outage since 1945"
+  interactive={true}
+  mapId="teltow-map"
 />
 
 <QuickFacts facts={[
@@ -30,13 +34,22 @@ import SourceList from '../../../components/SourceList.astro';
 <section class="my-10">
   <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">What Happened</h2>
 
-  <p class="text-sm leading-relaxed mb-4" style="color: var(--color-text-muted);">
-    At around 6:00 AM on a freezing January morning, attackers set fire to a cable bridge spanning the Teltow Canal in southwest Berlin. The bridge carried five 110 kV high-voltage cables and ten 10 kV medium-voltage cables to the Lichterfelde combined heat and power plant. The fire destroyed all fifteen cables, collapsing power across multiple districts.
+  <p class="text-base leading-relaxed mb-4" style="color: var(--color-text-muted);">
+    At around 6:00 AM on a freezing January morning, attackers set fire to a cable bridge spanning the Teltow Canal in southwest Berlin. The bridge carried five 110 kV high-voltage cables and ten 10 kV medium-voltage cables to the Lichterfelde combined heat and power plant. The fire destroyed all fifteen cables, collapsing power across multiple districts. <a href="#teltow-map" class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
   </p>
-  <p class="text-sm leading-relaxed mb-4" style="color: var(--color-text-muted);">
+
+  <div id="teltow-map" class="my-8 rounded-lg overflow-hidden p-4 scroll-mt-20" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="flex items-center justify-between mb-3">
+      <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">Berlin Grid -- January 3, 2026</div>
+    </div>
+    <FullscreenWrapper client:visible label="Fullscreen">
+      <BerlinTeltowCascadeMap client:visible height={400} />
+    </FullscreenWrapper>
+  </div>
+  <p class="text-base leading-relaxed mb-4" style="color: var(--color-text-muted);">
     Around 45,000 households and 2,200 businesses lost electricity. Because the attack also severed the connection to the Lichterfelde CHP plant, thousands also lost heating in sub-zero temperatures. Hospitals and nursing homes were affected. An emergency shelter was set up at a sports center. Restoration took 4-5 days -- the longest power outage in Berlin since 1945.
   </p>
-  <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
+  <p class="text-base leading-relaxed" style="color: var(--color-text-muted);">
     The Vulkangruppe claimed responsibility, calling the attack "an act of resistance" targeting fossil fuel infrastructure. The investigation was escalated to the Federal Prosecutor under terrorism statutes. The BKA offered a 1 million EUR reward.
   </p>
 </section>
@@ -87,7 +100,7 @@ import SourceList from '../../../components/SourceList.astro';
 <section class="my-10">
   <div class="p-6 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
     <h2 class="text-lg font-bold mb-3" style="color: var(--color-accent);">Root Cause</h2>
-    <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
+    <p class="text-base leading-relaxed" style="color: var(--color-text-muted);">
       <strong style="color: var(--color-text);">Physical destruction of a distribution chokepoint.</strong> The cable bridge concentrated 15 critical cables -- both transmission and distribution level -- in a single accessible location over a waterway. No redundant paths existed. Destroying this one structure severed both electricity and heating supply to an entire section of the city. The same pattern as the <a href="/research/incidents/2025-berlin-johannisthal-arson">Johannisthal attack</a> four months earlier: exposed, above-ground infrastructure with no security and no redundancy.
     </p>
   </div>
@@ -99,15 +112,15 @@ import SourceList from '../../../components/SourceList.astro';
   <div class="grid gap-3">
     <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
       <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">4 days of self-sufficiency</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">Homes with solar panels and <a href="/research/topics/vpp-market">VPP</a>-connected batteries could have maintained power through the entire 4-day outage -- especially critical in freezing winter conditions where heating loss is life-threatening.</div>
+      <div class="text-base" style="color: var(--color-text-muted);">Homes with solar panels and <a href="/research/topics/vpp-market">VPP</a>-connected batteries could have maintained power through the entire 4-day outage -- especially critical in freezing winter conditions where heating loss is life-threatening.</div>
     </div>
     <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
       <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">No cable bridge to burn</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">A VPP's generation and storage assets sit on rooftops and in garages across the city. There is no single bridge, pylon, or substation whose destruction can black out 45,000 homes.</div>
+      <div class="text-base" style="color: var(--color-text-muted);">A VPP's generation and storage assets sit on rooftops and in garages across the city. There is no single bridge, pylon, or substation whose destruction can black out 45,000 homes.</div>
     </div>
     <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
       <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Microgrid formation</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">When the grid goes down, a VPP controller like <a href="/research/topics/enpal-flexa">Flexa</a> can coordinate nearby homes into microgrids -- sharing solar generation and battery reserves among neighbors to extend autonomy far beyond what a single home battery provides.</div>
+      <div class="text-base" style="color: var(--color-text-muted);">When the grid goes down, a VPP controller like <a href="/research/topics/enpal-flexa">Flexa</a> can coordinate nearby homes into microgrids -- sharing solar generation and battery reserves among neighbors to extend autonomy far beyond what a single home battery provides.</div>
     </div>
   </div>
 </section>
