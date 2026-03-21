@@ -1,7 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
-import ThemeToggle from '../components/ThemeToggle.astro';
-import FontSizeToggle from '../components/FontSizeToggle.astro';
+import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { url } from '../utils/url';
 
@@ -44,27 +43,7 @@ const topics = [
 
 <BaseLayout title={`${title} — Grid Research`} description={description}>
   <div class="min-h-screen flex flex-col">
-    <header class="px-8 py-4 border-b" style="border-color: var(--color-surface-light);">
-      <div class="max-w-7xl mx-auto grid grid-cols-3 items-center">
-        <a href={url("/")} class="flex items-center gap-3 hover:opacity-80 transition-opacity">
-          <div class="w-2 h-2 rounded-full" style="background: var(--color-primary); box-shadow: 0 0 8px var(--color-primary);"></div>
-          <span class="font-mono font-bold" style="color: var(--color-text); letter-spacing: 0.05em;">What is a VPP?</span>
-        </a>
-        <nav class="flex justify-center gap-6 font-mono text-sm" style="color: var(--color-text-dim);">
-          <a href={url("/learn/how-the-grid-works")} class="hover:opacity-70 transition-opacity">Learn</a>
-          <a href={url("/research")} class="hover:opacity-70 transition-opacity">Research</a>
-          <a
-            href={url("/slides/")}
-            class="px-3 py-1.5 rounded font-bold text-xs tracking-wide transition-opacity hover:opacity-80"
-            style="background: var(--color-primary); color: var(--color-bg);"
-          >Slides</a>
-        </nav>
-        <div class="flex items-center justify-end gap-4">
-          <FontSizeToggle />
-          <ThemeToggle />
-        </div>
-      </div>
-    </header>
+    <SiteHeader />
 
     <div class="flex-1 flex max-w-7xl mx-auto w-full">
       <!-- Sidebar -->
