@@ -206,7 +206,7 @@ html.font-lg aside .text-\[10px\] { font-size: 14px !important; }
   100% { clip-path: inset(0 0 0 0); }
 }
 @keyframes interactive-glow-sweep {
-  0% { background-position: -200% 0; }
+  0% { background-position: -100% 0; }
   100% { background-position: 200% 0; }
 }
 
@@ -229,16 +229,16 @@ html.font-lg aside .text-\[10px\] { font-size: 14px !important; }
   background: linear-gradient(
     90deg,
     rgba(34, 211, 238, 0.7) 0%,
-    rgba(34, 211, 238, 0.7) 35%,
+    rgba(34, 211, 238, 0.7) 40%,
     rgba(255, 255, 255, 0.95) 50%,
-    rgba(34, 211, 238, 0.7) 65%,
+    rgba(34, 211, 238, 0.7) 60%,
     rgba(34, 211, 238, 0.7) 100%
   );
-  background-size: 200% 100%;
+  background-size: 300% 100%;
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: interactive-glow-sweep 3s ease-in-out infinite;
+  animation: interactive-glow-sweep 2s linear infinite;
   animation-delay: 1.2s;
 }
 
