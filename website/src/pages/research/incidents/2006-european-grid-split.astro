@@ -4,7 +4,8 @@ import IncidentHero from '../../../components/IncidentHero.astro';
 import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
 import SourceList from '../../../components/SourceList.astro';
-import EuropeGridMap from '../../../components/EuropeGridMap';
+import EuropeCascadeMap from '../../../components/EuropeCascadeMap';
+import FullscreenWrapper from '../../../components/FullscreenWrapper';
 ---
 
 <IncidentLayout title="2006 European Grid Split" description="How a cruise ship passage split Europe's power grid into three islands, leaving 15 million households in the dark.">
@@ -16,6 +17,8 @@ import EuropeGridMap from '../../../components/EuropeGridMap';
   severity="near-miss"
   keyStat="15M"
   keyStatLabel="households affected"
+  interactive={true}
+  mapId="europe-map"
 />
 
 <QuickFacts facts={[
@@ -32,19 +35,24 @@ import EuropeGridMap from '../../../components/EuropeGridMap';
   <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">What Happened</h2>
 
   <p class="text-sm leading-relaxed mb-4" style="color: var(--color-text-muted);">
-    A cruise ship called the <em>Norwegian Pearl</em> needed to pass under a high-voltage power line crossing the Ems River in northern Germany. To make room, the operator switched off the line -- a routine procedure they had done before. But this time, the rest of the grid was already under stress from heavy wind power flowing south.
+    A cruise ship called the <em>Norwegian Pearl</em> needed to pass under a high-voltage power line crossing the Ems River in northern Germany. To make room, the operator switched off the line -- a routine procedure they had done before. But this time, the rest of the grid was already under stress from heavy wind power flowing south. <a href="#europe-map" class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
   </p>
+
+  <div id="europe-map" class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+      <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">UCTE Grid -- November 4, 2006</div>
+    </div>
+    <FullscreenWrapper client:visible label="Fullscreen">
+      <EuropeCascadeMap client:visible height={400} />
+    </FullscreenWrapper>
+  </div>
+
   <p class="text-sm leading-relaxed mb-4" style="color: var(--color-text-muted);">
     When a control room operator tried to fix the growing overloads by changing a switch at a substation, it had the opposite effect. Within 15 seconds, a <a href="/research/topics/cascading-failures">chain reaction</a> of automatic safety shutoffs split the entire European grid into three separate islands. Around 15 million households lost power, and wind turbines disconnected themselves -- making the problem worse.
   </p>
   <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
     Operators resynchronized the grid within 38 minutes, and full normal operations returned about two hours later. No one was hurt, but it was the worst disturbance in European grid history.
   </p>
-
-  <div class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px;">
-    <div class="font-mono text-xs mb-3" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">European Grid Split -- November 4, 2006</div>
-    <EuropeGridMap client:visible width={660} height={400} />
-  </div>
 </section>
 
 <!-- Timeline -->
