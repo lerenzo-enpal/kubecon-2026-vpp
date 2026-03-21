@@ -21,7 +21,7 @@ const { title, description, sections = [] } = Astro.props;
 const modules = [
   {
     title: 'How the Grid Works',
-    href: '/learn/how-the-grid-works',
+    href: url('/learn/how-the-grid-works'),
     interactive: true,
     sections: [
       { id: 'the-grid-is-huge', title: 'The Grid is Huge' },
@@ -33,7 +33,7 @@ const modules = [
   },
   {
     title: 'The Old Way',
-    href: '/learn/the-old-way',
+    href: url('/learn/the-old-way'),
     interactive: true,
     sections: [
       { id: 'peaker-plants', title: 'Peaker Plants' },
@@ -45,7 +45,7 @@ const modules = [
   },
   {
     title: 'The Renewable Revolution',
-    href: '/learn/the-renewable-revolution',
+    href: url('/learn/the-renewable-revolution'),
     interactive: true,
     sections: [
       { id: 'growth', title: 'Solar & Wind Growth' },
@@ -56,7 +56,7 @@ const modules = [
   },
   {
     title: 'The Virtual Power Plant',
-    href: '/learn/the-virtual-power-plant',
+    href: url('/learn/the-virtual-power-plant'),
     interactive: true,
     sections: [
       { id: 'what-is-a-vpp', title: 'What is a VPP?' },
@@ -67,7 +67,7 @@ const modules = [
   },
   {
     title: 'The Future',
-    href: '/learn/the-future',
+    href: url('/learn/the-future'),
     interactive: false,
     sections: [
       { id: 'distributed-resilience', title: 'Distributed Resilience' },
@@ -214,7 +214,7 @@ const topics = [
                     const isActiveInc = currentPath.includes(inc.slug);
                     return (
                       <a
-                        href={`/research/incidents/${inc.slug}`}
+                        href={url(`/research/incidents/${inc.slug}`)}
                         class="px-2 py-1 rounded text-[11px] transition-colors truncate"
                         style={isActiveInc
                           ? 'background: var(--color-surface); color: var(--color-text);'
@@ -242,7 +242,7 @@ const topics = [
                     const isActiveTopic = currentPath.includes(t.slug);
                     return (
                       <a
-                        href={`/research/topics/${t.slug}`}
+                        href={url(`/research/topics/${t.slug}`)}
                         class="px-2 py-1 rounded text-[11px] transition-colors truncate"
                         style={isActiveTopic
                           ? 'background: var(--color-surface); color: var(--color-text);'
