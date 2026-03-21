@@ -4,6 +4,8 @@ import IncidentHero from '../../../components/IncidentHero.astro';
 import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
 import SourceList from '../../../components/SourceList.astro';
+import DunkelflauteCascadeMap from '../../../components/DunkelflauteCascadeMap';
+import FullscreenWrapper from '../../../components/FullscreenWrapper';
 ---
 
 <IncidentLayout title="2024 Dunkelflaute" description="Two weeks of no wind and no sun exposed the limits of Germany's renewable grid -- and sent prices to 18-year highs.">
@@ -26,17 +28,26 @@ import SourceList from '../../../components/SourceList.astro';
   { value: "0", label: "Outages (managed by fossil backup)" },
 ]} />
 
+<div id="dunkelflaute-map" class="my-8 rounded-lg overflow-hidden p-4 scroll-mt-20" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+  <div class="flex items-center justify-between mb-3">
+    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">German Grid -- November 2024</div>
+  </div>
+  <FullscreenWrapper client:visible label="Fullscreen">
+    <DunkelflauteCascadeMap client:visible height={400} />
+  </FullscreenWrapper>
+</div>
+
 <!-- What Happened -->
 <section class="my-10">
   <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">What Happened</h2>
 
-  <p class="text-sm leading-relaxed mb-4" style="color: var(--color-text-muted);">
+  <p class="text-base leading-relaxed mb-4" style="color: var(--color-text-muted);">
     "Dunkelflaute" means "dark wind lull" in German -- a period when both wind and solar output collapse at the same time. In November and December 2024, a persistent high-pressure weather system parked over Central Europe, bringing still air and overcast skies for weeks.
   </p>
-  <p class="text-sm leading-relaxed mb-4" style="color: var(--color-text-muted);">
+  <p class="text-base leading-relaxed mb-4" style="color: var(--color-text-muted);">
     Germany has over 170 GW of installed renewable capacity. During the worst days, wind turbines produced just 3-4% of their rated output. Solar contributed only 4.3% in November. The grid did not fail -- coal, gas, oil, and imports from France (nuclear) and Poland (coal) filled the gap. But wholesale <a href="/research/topics/electricity-pricing">electricity prices</a> spiked to 18-year highs, peaking above 900 EUR/MWh.
   </p>
-  <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
+  <p class="text-base leading-relaxed" style="color: var(--color-text-muted);">
     No homes lost power. But the event demonstrated that a renewable-heavy grid without large-scale storage is deeply vulnerable to weather patterns lasting more than a few days.
   </p>
 </section>
@@ -87,7 +98,7 @@ import SourceList from '../../../components/SourceList.astro';
 <section class="my-10">
   <div class="p-6 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
     <h2 class="text-lg font-bold mb-3" style="color: var(--color-secondary);">Root Cause</h2>
-    <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
+    <p class="text-base leading-relaxed" style="color: var(--color-text-muted);">
       <strong style="color: var(--color-text);">Weather, not equipment failure.</strong> A persistent high-pressure system simultaneously suppressed wind and solar output for weeks. Germany's grid survived only because coal, gas, and oil plants -- including facilities Germany plans to phase out -- ran at maximum capacity. Cross-border imports from nuclear and coal-heavy neighbors filled the remaining gap. The event was not a grid failure, but a preview of what happens without storage. In normal conditions, Germany faces the opposite problem: <a href="/research/topics/german-grid-curtailment">curtailing excess renewables</a>.
     </p>
   </div>
@@ -99,15 +110,15 @@ import SourceList from '../../../components/SourceList.astro';
   <div class="grid gap-3">
     <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
       <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">The storage gap</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">170 GW of renewables produced almost nothing for two weeks. Grid-scale and distributed battery storage, coordinated by a <a href="/research/topics/vpp-market">VPP</a>, could time-shift energy from windy/sunny periods to cover multi-day lulls.</div>
+      <div class="text-base" style="color: var(--color-text-muted);">170 GW of renewables produced almost nothing for two weeks. Grid-scale and distributed battery storage, coordinated by a <a href="/research/topics/vpp-market">VPP</a>, could time-shift energy from windy/sunny periods to cover multi-day lulls.</div>
     </div>
     <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
       <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Price arbitrage</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">Prices swung from near-zero (sunny/windy days) to 900+ EUR/MWh. A VPP optimizes charge/discharge cycles across thousands of batteries, capturing these price signals to reduce costs for homeowners and stabilize the market.</div>
+      <div class="text-base" style="color: var(--color-text-muted);">Prices swung from near-zero (sunny/windy days) to 900+ EUR/MWh. A VPP optimizes charge/discharge cycles across thousands of batteries, capturing these price signals to reduce costs for homeowners and stabilize the market.</div>
     </div>
     <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
       <div class="font-semibold text-sm mb-1" style="color: var(--color-text);"><a href="/research/topics/demand-response">Demand flexibility</a></div>
-      <div class="text-sm" style="color: var(--color-text-muted);">Beyond batteries, a VPP can orchestrate demand reduction -- shifting heat pump cycles, EV charging, and water heating to off-peak hours, reducing the peak load that fossil plants must serve.</div>
+      <div class="text-base" style="color: var(--color-text-muted);">Beyond batteries, a VPP can orchestrate demand reduction -- shifting heat pump cycles, EV charging, and water heating to off-peak hours, reducing the peak load that fossil plants must serve.</div>
     </div>
   </div>
 </section>
