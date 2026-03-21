@@ -82,7 +82,7 @@ const LOG_MSGS = [
 
 const TYPE_COLORS = { wind: [96, 165, 250], gas: [251, 146, 60], coal: [148, 163, 184], nuclear: [167, 139, 250] };
 const FAILED_COLOR = [239, 68, 68];
-const AMBER_COLOR = [245, 158, 11];
+const AMBER_COLOR = [217, 119, 6];
 const COMANCHE_GREEN = [16, 185, 129];
 const INCIDENT_DURATION = 2500; // ms — amber glow before transitioning to red
 const PLANT_MAP = new Map(PLANTS.map(p => [p.id, p]));
@@ -480,27 +480,11 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
     color: '#ef4444', fontWeight: 700,
   };
 
-  // ── Legend (dynamic: hides type colors for fully-offline types, adds Incident/Offline) ──
-  const TYPE_LEGEND = [
-    { c: 'rgb(96,165,250)', l: 'Wind', type: 'wind' },
-    { c: 'rgb(251,146,60)', l: 'Gas', type: 'gas' },
-    { c: 'rgb(148,163,184)', l: 'Coal', type: 'coal' },
-    { c: 'rgb(167,139,250)', l: 'Nuclear', type: 'nuclear' },
+  // ── Legend ──
+  const legend = [
+    { c: 'rgb(96,165,250)', l: 'Wind' }, { c: 'rgb(251,146,60)', l: 'Gas' },
+    { c: 'rgb(148,163,184)', l: 'Coal' }, { c: 'rgb(167,139,250)', l: 'Nuclear' },
   ];
-  const legend = (() => {
-    if (!running) return TYPE_LEGEND;
-    const items = [];
-    // Only show type colors for types that still have active (non-failed) plants
-    for (const entry of TYPE_LEGEND) {
-      const hasActive = PLANTS.some(p => p.type === entry.type && !failed.has(p.id));
-      if (hasActive) items.push(entry);
-    }
-    // Add incident (amber) and offline (red) entries when applicable
-    if (incident.size > 0) items.push({ c: 'rgb(245,158,11)', l: 'Incident' });
-    const hasOffline = [...failed].some(id => !incident.has(id));
-    if (hasOffline) items.push({ c: 'rgb(239,68,68)', l: 'Offline' });
-    return items;
-  })();
 
   return (
     <div style={{ position: 'relative', width, height, overflow: 'hidden', background: '#020408' }}>
