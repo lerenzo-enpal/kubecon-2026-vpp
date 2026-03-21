@@ -1,5 +1,6 @@
 ---
 import ContentLayout from '../../layouts/ContentLayout.astro';
+import DuckCurveExplorer from '../../components/DuckCurveExplorer.tsx';
 ---
 
 <ContentLayout title="The Renewable Revolution" description="Solar and wind are growing faster than anyone predicted. But the grid wasn't built for energy that comes and goes with the weather.">
@@ -27,9 +28,9 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
   is no longer a future ambition. It is the present reality.
 </p>
 
-<div class="my-8 max-w-2xl">
+<div class="my-8 max-w-2xl fade-in">
   <div class="font-mono text-sm mb-4" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">Renewable Share of German Electricity</div>
-  <div class="flex flex-col gap-3">
+  <div class="flex flex-col gap-3 stagger">
     <div class="flex items-center gap-4 p-4 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
       <div class="font-mono font-bold text-lg flex-shrink-0 w-16" style="color: var(--color-text-dim);">2000</div>
       <div class="flex-1 rounded-full h-3" style="background: var(--color-surface-light);">
@@ -61,7 +62,7 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
   </div>
 </div>
 
-<div class="grid grid-cols-2 md:grid-cols-3 gap-4 my-8 max-w-3xl">
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4 my-8 max-w-3xl fade-in stagger">
   <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
     <div class="font-mono font-extrabold text-2xl" style="color: var(--color-solar);">100+ GW</div>
     <div class="text-xs mt-1" style="color: var(--color-text-dim);">solar capacity (2024)</div>
@@ -98,12 +99,8 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
   ramp, and the more expensive and precarious the evening transition becomes.
 </p>
 
-<div class="my-8 p-6 rounded-lg flex items-center justify-center" style="background: var(--color-bg-alt); border: 2px dashed var(--color-surface-light); min-height: 200px;">
-  <div class="text-center">
-    <div class="font-mono text-sm mb-2" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">[Interactive]</div>
-    <div class="text-lg font-semibold" style="color: var(--color-text-muted);">Duck Curve Explorer</div>
-    <div class="text-sm mt-2" style="color: var(--color-text-dim);">Coming soon</div>
-  </div>
+<div class="my-8">
+  <DuckCurveExplorer client:visible />
 </div>
 
 <h2 id="curtailment">Curtailment: Throwing Away Clean Energy</h2>
@@ -127,7 +124,7 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
   energy they produce.
 </p>
 
-<div class="grid grid-cols-2 gap-4 my-8 max-w-2xl">
+<div class="grid grid-cols-2 gap-4 my-8 max-w-2xl fade-in stagger">
   <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
     <div class="font-mono font-extrabold text-2xl" style="color: var(--color-solar);">10 TWh/yr</div>
     <div class="text-xs mt-1" style="color: var(--color-text-dim);">clean energy curtailed</div>
@@ -161,7 +158,7 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
   transition needs.
 </p>
 
-<div class="grid grid-cols-2 gap-4 my-8 max-w-2xl">
+<div class="grid grid-cols-2 gap-4 my-8 max-w-2xl fade-in stagger">
   <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
     <div class="font-mono font-extrabold text-2xl" style="color: var(--color-solar);">457 hrs</div>
     <div class="text-xs mt-1" style="color: var(--color-text-dim);">negative prices in 2024</div>

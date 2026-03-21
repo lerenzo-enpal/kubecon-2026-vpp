@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css'
+import ScrollAnimations from '../components/ScrollAnimations.astro';
 
 interface Props {
   title: string;
@@ -21,5 +22,6 @@ const { title, description = 'Learn how electricity grids work, why they are cha
 </head>
 <body>
   <slot />
+  <ScrollAnimations />
 </body>
 </html>

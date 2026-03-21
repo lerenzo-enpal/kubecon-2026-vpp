@@ -32,7 +32,7 @@ import AnimatedStat from '../../components/AnimatedStat';
   that supports modern life — it <em>is</em> the infrastructure.
 </p>
 
-<div class="grid grid-cols-2 md:grid-cols-4 gap-4 my-8 max-w-3xl">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 my-8 max-w-3xl fade-in stagger">
   <AnimatedStat client:visible value={36} color="var(--color-primary)" label="Countries" sublabel="connected" />
   <AnimatedStat client:visible value={400} suffix="M+" color="var(--color-primary)" label="Consumers" />
   <AnimatedStat client:visible value={1.1} decimals={1} suffix=" TW" color="var(--color-primary)" label="Capacity" sublabel="generation" />
@@ -59,7 +59,7 @@ import AnimatedStat from '../../components/AnimatedStat';
   The grid operators' entire job is keeping this number steady.
 </p>
 
-<div class="my-8 p-6 rounded-lg no-arrow" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+<div class="my-8 p-6 rounded-lg no-arrow fade-in" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
   <div class="font-mono text-sm mb-3" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">Normal Operating Range</div>
   <div class="flex items-center gap-4 flex-wrap">
     <div>
@@ -96,7 +96,7 @@ import AnimatedStat from '../../components/AnimatedStat';
   surges unexpectedly — the frequency starts to drop. What happens next depends on how far it falls.
 </p>
 
-<div class="my-8 flex flex-col gap-3 max-w-2xl">
+<div class="my-8 flex flex-col gap-3 max-w-2xl fade-in stagger">
   <div class="flex items-start gap-4 p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-success);">
     <div class="font-mono font-bold text-lg flex-shrink-0" style="color: var(--color-success);">49.8 Hz</div>
     <div>

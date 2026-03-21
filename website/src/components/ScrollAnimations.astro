@@ -1,0 +1,28 @@
+<script is:inline>
+(function () {
+  if (typeof IntersectionObserver === 'undefined') return;
+
+  // Set --i CSS variable on stagger children for sequential delays
+  document.querySelectorAll('.stagger').forEach(function (container) {
+    Array.from(container.children).forEach(function (child, i) {
+      child.style.setProperty('--i', i);
+    });
+  });
+
+  var observer = new IntersectionObserver(
+    function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15 }
+  );
+
+  document.querySelectorAll('.fade-in').forEach(function (el) {
+    observer.observe(el);
+  });
+})();
+</script>
