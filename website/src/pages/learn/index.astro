@@ -1,5 +1,6 @@
 ---
 import ContentLayout from '../../layouts/ContentLayout.astro';
+import { url } from '../../utils/url';
 
 const modules = [
   { num: 1, title: 'How the Grid Works', desc: 'The 50 Hz heartbeat, supply = demand, and the 2.5 Hz between normal and collapse.', href: '/learn/how-the-grid-works', interactive: true },
@@ -29,8 +30,8 @@ const modules = [
       style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);"
     >
       <div
-        class="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center font-mono font-bold"
-        style="background: var(--color-surface); color: var(--color-primary); font-size: 18px;"
+        class="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center font-mono font-bold text-lg"
+        style="background: var(--color-surface); color: var(--color-primary);"
       >
         {m.num}
       </div>
@@ -60,8 +61,8 @@ const modules = [
   <div class="font-mono text-xs mb-2" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">
     Want to go deeper?
   </div>
-  <div class="text-sm" style="color: var(--color-text-muted);">
-    The <a href="/research" style="color: var(--color-primary);">Research Library</a> has 12 detailed
+  <div class="text-base" style="color: var(--color-text-muted);">
+    The <a href={url("/research")} style="color: var(--color-primary);">Research Library</a> has 12 detailed
     incident analyses, cost breakdowns, and primary sources behind everything in these modules.
   </div>
 </div>

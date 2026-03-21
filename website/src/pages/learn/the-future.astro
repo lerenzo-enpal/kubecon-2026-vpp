@@ -1,5 +1,6 @@
 ---
 import ContentLayout from '../../layouts/ContentLayout.astro';
+import { url } from '../../utils/url';
 ---
 
 <ContentLayout title="The Future" description="The grid is being rebuilt from the edges inward. Software is eating the power system.">
@@ -15,13 +16,13 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
 <h2 id="distributed-resilience">Distributed Resilience</h2>
 
 <p>
-  The <a href="/learn/the-old-way">old grid</a> is centralized. A few huge power plants connected by long transmission lines.
-  Every component is a single point of failure. Lose a plant, lose a line, and <a href="/research/topics/cascading-failures">millions of
+  The <a href={url("/learn/the-old-way")}>old grid</a> is centralized. A few huge power plants connected by long transmission lines.
+  Every component is a single point of failure. Lose a plant, lose a line, and <a href={url("/research/topics/cascading-failures")}>millions of
   people can go dark</a>.
 </p>
 
 <p>
-  <a href="/research/topics/vpp-market">Virtual Power Plants</a> flip this model. Instead of a few large sources, you get thousands of
+  <a href={url("/research/topics/vpp-market")}>Virtual Power Plants</a> flip this model. Instead of a few large sources, you get thousands of
   small ones — rooftop solar panels, home batteries, electric vehicles, heat pumps. If one
   home's battery fails, nobody notices. If a transmission line goes down, homes with
   solar and battery storage keep running on their own.
@@ -37,7 +38,7 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
 <div class="my-8 flex flex-col md:flex-row gap-4 fade-in stagger">
   <div class="flex-1 p-5 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
     <div class="font-mono text-sm mb-3" style="color: var(--color-danger); letter-spacing: 0.08em; text-transform: uppercase;">Centralized Grid</div>
-    <ul class="text-sm space-y-2" style="color: var(--color-text-muted);">
+    <ul class="text-base space-y-2" style="color: var(--color-text-muted);">
       <li>Few large generation sources</li>
       <li>Long transmission distances</li>
       <li>Single points of failure</li>
@@ -47,7 +48,7 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
   </div>
   <div class="flex-1 p-5 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
     <div class="font-mono text-sm mb-3" style="color: var(--color-success); letter-spacing: 0.08em; text-transform: uppercase;">Distributed VPP Grid</div>
-    <ul class="text-sm space-y-2" style="color: var(--color-text-muted);">
+    <ul class="text-base space-y-2" style="color: var(--color-text-muted);">
       <li>Thousands of small sources</li>
       <li>Generation at the point of use</li>
       <li>No single point of failure</li>
@@ -74,13 +75,13 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
 <p>
   The tools are familiar to anyone who builds internet infrastructure. MQTT for lightweight
   device messaging. Kubernetes for orchestrating containerized control systems. Apache Spark
-  for processing telemetry at scale. Machine learning for forecasting and <a href="/research/topics/demand-response">demand response</a>.
+  for processing telemetry at scale. Machine learning for forecasting and <a href={url("/research/topics/demand-response")}>demand response</a>.
   The same stack that runs your favorite web application can run the power grid.
 </p>
 
 <div class="my-8 p-6 rounded-lg no-arrow fade-in" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
   <div class="font-mono text-sm mb-3" style="color: var(--color-primary); letter-spacing: 0.08em; text-transform: uppercase;">For Tech Workers</div>
-  <p class="text-sm mb-0" style="color: var(--color-text-muted);">
+  <p class="text-base mb-0" style="color: var(--color-text-muted);">
     This is your field now. Every concept from distributed systems applies directly to grid
     management — load balancing across generation sources, fault tolerance when devices go
     offline, eventual consistency across millions of meters, and circuit breakers (literally).
@@ -99,7 +100,7 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
   <div class="flex items-start gap-4 p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
     <div>
       <div class="font-semibold mb-1">Homeowners</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">
+      <div class="text-base" style="color: var(--color-text-muted);">
         Install solar panels and a home battery. Join a VPP program through your energy
         provider. Your home becomes part of the solution — earning money while stabilizing
         the grid. Every home that joins makes the system more resilient.
@@ -110,7 +111,7 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
   <div class="flex items-start gap-4 p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-accent);">
     <div>
       <div class="font-semibold mb-1">Software Engineers</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">
+      <div class="text-base" style="color: var(--color-text-muted);">
         The energy sector needs you. VPP platforms, grid optimization algorithms, IoT
         device management at scale, real-time data pipelines, ML-driven forecasting. These
         are hard, meaningful problems — and the industry is hiring faster than it can find
@@ -122,7 +123,7 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
   <div class="flex items-start gap-4 p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-success);">
     <div>
       <div class="font-semibold mb-1">Students</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">
+      <div class="text-base" style="color: var(--color-text-muted);">
         This is the most important infrastructure challenge of the century. It spans
         electrical engineering, computer science, economics, and policy. And increasingly,
         it is a software problem. The skills you are learning right now — programming,
@@ -142,7 +143,7 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
 <div class="my-8 flex flex-col gap-4">
   <div class="p-6 rounded-lg" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
     <div class="font-mono text-sm mb-2" style="color: var(--color-primary); letter-spacing: 0.08em;">START OVER</div>
-    <a href="/learn" class="text-lg font-semibold" style="color: var(--color-text);">
+    <a href={url("/learn")} class="text-lg font-semibold" style="color: var(--color-text);">
       Back to Learning Modules
     </a>
     <div class="text-sm mt-1" style="color: var(--color-text-dim);">
@@ -152,7 +153,7 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
 
   <div class="p-6 rounded-lg" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
     <div class="font-mono text-sm mb-2" style="color: var(--color-primary); letter-spacing: 0.08em;">RESEARCH</div>
-    <a href="/research" class="text-lg font-semibold" style="color: var(--color-text);">
+    <a href={url("/research")} class="text-lg font-semibold" style="color: var(--color-text);">
       Research Library
     </a>
     <div class="text-sm mt-1" style="color: var(--color-text-dim);">

@@ -1,5 +1,6 @@
 ---
 import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import { url } from '../../../utils/url';
 ---
 
 <IncidentLayout title="Grid Flexibility Costs" description="The staggering cost of keeping the old grid running — peaker plants, spinning reserves, and redispatch.">
@@ -8,7 +9,7 @@ import IncidentLayout from '../../../layouts/IncidentLayout.astro';
   <h1 style="color: var(--color-accent);">Grid Flexibility Costs</h1>
   <p class="text-lg" style="color: var(--color-text-muted); max-width: 640px;">
     The old playbook for grid flexibility costs billions. Peaker plants sit idle 95% of the year.
-    Spinning reserves burn fuel to produce nothing. <a href="/research/topics/vpp-market">VPP</a> batteries are changing the math.
+    Spinning reserves burn fuel to produce nothing. <a href={url("/research/topics/vpp-market")}>VPP</a> batteries are changing the math.
   </p>
 </div>
 
@@ -97,7 +98,7 @@ import IncidentLayout from '../../../layouts/IncidentLayout.astro';
 
 <p>
   Adding a 1 MW battery allows an increase in average generator loading by 10%, reducing annual
-  fuel consumption by 1%. Battery storage provides spinning reserve services with 100 ms <a href="/research/topics/grid-frequency">response
+  fuel consumption by 1%. Battery storage provides spinning reserve services with 100 ms <a href={url("/research/topics/grid-frequency")}>response
   times</a> vs. 6,000 ms for conventional generators — 60x faster.
 </p>
 
@@ -143,7 +144,7 @@ import IncidentLayout from '../../../layouts/IncidentLayout.astro';
 
 <p>
   EU-wide, managing grid congestion cost EUR 4.2 billion in 2023 (source: <a href="https://www.acer.europa.eu" target="_blank" rel="noopener">ACER</a>). Remedial action volumes rose
-  14.5%, reaching 57.28 TWh. <a href="/research/topics/german-grid-curtailment">Grid congestion curtailed</a> over 12 TWh of renewable electricity,
+  14.5%, reaching 57.28 TWh. <a href={url("/research/topics/german-grid-curtailment")}>Grid congestion curtailed</a> over 12 TWh of renewable electricity,
   causing an additional 4.2 million tons of CO2 emissions.
 </p>
 
@@ -208,15 +209,15 @@ import IncidentLayout from '../../../layouts/IncidentLayout.astro';
 <h2 id="related" style="color: var(--color-accent);">Related Topics</h2>
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
-  <a href="/research/topics/german-grid-curtailment" class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+  <a href={url("/research/topics/german-grid-curtailment")} class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
     <div class="font-mono text-sm font-bold" style="color: var(--color-accent);">German Grid Curtailment</div>
     <div class="text-xs mt-1" style="color: var(--color-text-dim);">The north-south bottleneck</div>
   </a>
-  <a href="/research/topics/electricity-pricing" class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+  <a href={url("/research/topics/electricity-pricing")} class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
     <div class="font-mono text-sm font-bold" style="color: var(--color-primary);">Electricity Pricing</div>
     <div class="text-xs mt-1" style="color: var(--color-text-dim);">Negative prices and the duck curve</div>
   </a>
-  <a href="/research/topics/demand-response" class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+  <a href={url("/research/topics/demand-response")} class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
     <div class="font-mono text-sm font-bold" style="color: var(--color-success);">Demand Response</div>
     <div class="text-xs mt-1" style="color: var(--color-text-dim);">Reshaping demand with VPPs</div>
   </a>

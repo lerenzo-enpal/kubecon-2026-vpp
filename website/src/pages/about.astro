@@ -1,5 +1,6 @@
 ---
 import ContentLayout from '../layouts/ContentLayout.astro';
+import { url } from '../utils/url';
 ---
 
 <ContentLayout title="About This Project" description="About the KubeCon 2026 Virtual Power Plants presentation and educational website.">
@@ -63,7 +64,7 @@ import ContentLayout from '../layouts/ContentLayout.astro';
 
 <div class="my-8 p-6 rounded-lg" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
   <div class="font-mono text-sm mb-2" style="color: var(--color-primary); letter-spacing: 0.08em;">EXPLORE</div>
-  <a href="/research" class="text-lg font-semibold" style="color: var(--color-text);">
+  <a href={url("/research")} class="text-lg font-semibold" style="color: var(--color-text);">
     Research Library
   </a>
   <div class="text-sm mt-1" style="color: var(--color-text-dim);">

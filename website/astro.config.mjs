@@ -7,6 +7,8 @@ import mdx from '@astrojs/mdx';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://lerenzo-enpal.github.io',
+  base: '/kubecon-2026-vpp',
   integrations: [react(), mdx()],
 
   vite: {

@@ -6,6 +6,7 @@ import TimelineEvent from '../../../components/TimelineEvent.astro';
 import SourceList from '../../../components/SourceList.astro';
 import EuropeCascadeMap from '../../../components/EuropeCascadeMap';
 import FullscreenWrapper from '../../../components/FullscreenWrapper';
+import { url } from '../../../utils/url';
 ---
 
 <IncidentLayout title="2006 European Grid Split" description="How a cruise ship passage split Europe's power grid into three islands, leaving 15 million households in the dark.">
@@ -34,12 +35,12 @@ import FullscreenWrapper from '../../../components/FullscreenWrapper';
 <section class="my-10">
   <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">What Happened</h2>
 
-  <p class="text-sm leading-relaxed mb-4" style="color: var(--color-text-muted);">
+  <p class="text-base leading-relaxed mb-4" style="color: var(--color-text-muted);">
     A cruise ship called the <em>Norwegian Pearl</em> needed to pass under a high-voltage power line crossing the Ems River in northern Germany. To make room, the operator switched off the line -- a routine procedure they had done before. But this time, the rest of the grid was already under stress from heavy wind power flowing south. <a href="#europe-map" class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
   </p>
 
-  <div id="europe-map" class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
-    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+  <div id="europe-map" class="my-8 rounded-lg overflow-hidden p-4 scroll-mt-20" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="flex items-center justify-between mb-3">
       <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">UCTE Grid -- November 4, 2006</div>
     </div>
     <FullscreenWrapper client:visible label="Fullscreen">
@@ -47,10 +48,10 @@ import FullscreenWrapper from '../../../components/FullscreenWrapper';
     </FullscreenWrapper>
   </div>
 
-  <p class="text-sm leading-relaxed mb-4" style="color: var(--color-text-muted);">
-    When a control room operator tried to fix the growing overloads by changing a switch at a substation, it had the opposite effect. Within 15 seconds, a <a href="/research/topics/cascading-failures">chain reaction</a> of automatic safety shutoffs split the entire European grid into three separate islands. Around 15 million households lost power, and wind turbines disconnected themselves -- making the problem worse.
+  <p class="text-base leading-relaxed mb-4" style="color: var(--color-text-muted);">
+    When a control room operator tried to fix the growing overloads by changing a switch at a substation, it had the opposite effect. Within 15 seconds, a <a href={url("/research/topics/cascading-failures")}>chain reaction</a> of automatic safety shutoffs split the entire European grid into three separate islands. Around 15 million households lost power, and wind turbines disconnected themselves -- making the problem worse.
   </p>
-  <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
+  <p class="text-base leading-relaxed" style="color: var(--color-text-muted);">
     Operators resynchronized the grid within 38 minutes, and full normal operations returned about two hours later. No one was hurt, but it was the worst disturbance in European grid history.
   </p>
 </section>
@@ -113,7 +114,7 @@ import FullscreenWrapper from '../../../components/FullscreenWrapper';
 <section class="my-10">
   <div class="p-6 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
     <h2 class="text-lg font-bold mb-3" style="color: var(--color-accent);">Root Cause</h2>
-    <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
+    <p class="text-base leading-relaxed" style="color: var(--color-text-muted);">
       <strong style="color: var(--color-text);">N-1 security criterion violated.</strong> The grid must be able to survive the loss of any single element. After the power line was disconnected for the ship, the remaining system had no safety margin left. A last-minute schedule change (from 1:00 AM to 10:00 PM) prevented neighboring grid operators from running a proper joint security analysis. No single control room had a complete picture of the pan-European grid state.
     </p>
   </div>
@@ -124,16 +125,16 @@ import FullscreenWrapper from '../../../components/FullscreenWrapper';
   <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">VPP Relevance</h2>
   <div class="grid gap-3">
     <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
-      <div class="font-semibold text-sm mb-1" style="color: var(--color-text);"><a href="/research/topics/grid-frequency">Frequency response</a> gap</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">Wind turbines disconnected on under-frequency, worsening the crisis. <a href="/research/topics/vpp-market">VPP</a>-connected batteries could have injected power instead of disappearing.</div>
+      <div class="font-semibold text-sm mb-1" style="color: var(--color-text);"><a href={url("/research/topics/grid-frequency")}>Frequency response</a> gap</div>
+      <div class="text-base" style="color: var(--color-text-muted);">Wind turbines disconnected on under-frequency, worsening the crisis. <a href={url("/research/topics/vpp-market")}>VPP</a>-connected batteries could have injected power instead of disappearing.</div>
     </div>
     <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
       <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Distributed vs. centralized</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">The 17 GW load shed was blunt and automatic. A VPP can provide precise, distributed frequency support in milliseconds -- no transmission lines required.</div>
+      <div class="text-base" style="color: var(--color-text-muted);">The 17 GW load shed was blunt and automatic. A VPP can provide precise, distributed frequency support in milliseconds -- no transmission lines required.</div>
     </div>
     <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
       <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Visibility problem</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">No single operator could see the full grid state. A VPP controller aggregates thousands of real-time data points, providing grid-edge awareness that centralized SCADA systems lack.</div>
+      <div class="text-base" style="color: var(--color-text-muted);">No single operator could see the full grid state. A VPP controller aggregates thousands of real-time data points, providing grid-edge awareness that centralized SCADA systems lack.</div>
     </div>
   </div>
 </section>
@@ -142,13 +143,13 @@ import FullscreenWrapper from '../../../components/FullscreenWrapper';
 <section class="my-10">
   <h2 class="text-lg font-bold mb-3" style="color: var(--color-text);">Related Incidents</h2>
   <div class="flex flex-col gap-2">
-    <a href="/research/incidents/2021-european-grid-split" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
+    <a href={url("/research/incidents/2021-european-grid-split")} class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
       2021 European Grid Split -- history repeated 15 years later
     </a>
-    <a href="/research/incidents/2024-dunkelflaute-germany" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
+    <a href={url("/research/incidents/2024-dunkelflaute-germany")} class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
       2024 Dunkelflaute -- when wind and solar both disappear
     </a>
-    <a href="/research/incidents/2003-italy-blackout" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
+    <a href={url("/research/incidents/2003-italy-blackout")} class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
       2003 Italy Blackout -- cascading interconnector failure
     </a>
   </div>

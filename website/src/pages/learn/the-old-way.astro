@@ -3,6 +3,7 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
 import GasPlant from '../../components/illustrations/GasPlant';
 import TransmissionTower from '../../components/illustrations/TransmissionTower';
 import GlowLine from '../../components/GlowLine';
+import { url } from '../../utils/url';
 ---
 
 <ContentLayout title="The Old Way" description="Before batteries and software, this is how we kept the lights on. It cost over EUR 10 billion per year.">
@@ -20,7 +21,7 @@ import GlowLine from '../../components/GlowLine';
 
 <h2 id="peaker-plants">Peaker Plants</h2>
 
-<div class="float-right ml-6 mb-4" style="width: 180px;">
+<div class="float-right ml-6 mb-4 w-[180px]">
   <GasPlant client:visible width={180} height={110} />
 </div>
 
@@ -62,7 +63,7 @@ import GlowLine from '../../components/GlowLine';
 <h2 id="spinning-reserves">Spinning Reserves</h2>
 
 <p>
-  <a href="/research/topics/grid-flexibility-costs">Spinning reserves</a> are generators that run continuously, synchronized with the grid, burning
+  <a href={url("/research/topics/grid-flexibility-costs")}>Spinning reserves</a> are generators that run continuously, synchronized with the grid, burning
   fuel but producing nothing useful. They exist purely as a safety margin — ready to ramp up
   within seconds if another generator trips offline or demand surges unexpectedly.
 </p>
@@ -77,7 +78,7 @@ import GlowLine from '../../components/GlowLine';
   The standard margin is roughly 15% of all generation capacity. That means at any given moment,
   about one in seven generators on the grid is burning fuel to produce nothing. The fuel waste
   alone is estimated at EUR 1--3 billion per year, but you will never see it on your electricity
-  bill — it is hidden in <a href="/research/topics/electricity-pricing">wholesale prices</a>, buried in the cost of "keeping the lights on."
+  bill — it is hidden in <a href={url("/research/topics/electricity-pricing")}>wholesale prices</a>, buried in the cost of "keeping the lights on."
 </p>
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-8 fade-in stagger">
@@ -93,7 +94,7 @@ import GlowLine from '../../components/GlowLine';
 
 <h2 id="congestion">Grid Congestion</h2>
 
-<div class="float-right ml-6 mb-4" style="width: 150px;">
+<div class="float-right ml-6 mb-4 w-[150px]">
   <TransmissionTower client:visible width={150} height={110} />
 </div>
 
@@ -137,7 +138,7 @@ import GlowLine from '../../components/GlowLine';
 <h2 id="curtailment">Curtailment</h2>
 
 <p>
-  <a href="/research/topics/german-grid-curtailment">Curtailment</a> is when the grid literally throws away free, clean energy because the wires
+  <a href={url("/research/topics/german-grid-curtailment")}>Curtailment</a> is when the grid literally throws away free, clean energy because the wires
   cannot carry it. Too much sun in Bavaria? Turn off the solar panels. Too much wind in
   Schleswig-Holstein? Shut down the turbines. The energy is there, the demand is there,
   but the grid between them is full.
@@ -180,14 +181,14 @@ import GlowLine from '../../components/GlowLine';
 </p>
 
 <div class="my-8 flex flex-col gap-3 fade-in stagger">
-  <a href="/research/incidents/2021-texas-ercot-winter-storm" class="flex items-start gap-4 p-4 rounded-lg no-underline" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-danger);">
-    <div class="flex-shrink-0">
+  <a href={url("/research/incidents/2021-texas-ercot-winter-storm")} class="flex items-start gap-4 p-4 rounded-lg no-underline" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-danger);">
+    <div class="flex-shrink-0 w-44">
       <div class="font-mono font-bold text-lg" style="color: var(--color-danger);">Texas 2021</div>
       <div class="font-mono text-xs mt-1" style="color: var(--color-text-dim);">Feb 13-17</div>
     </div>
     <div>
       <div class="font-semibold mb-1" style="color: var(--color-text);">4.5 million homes lost power. 246 people died.</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">
+      <div class="text-base" style="color: var(--color-text-muted);">
         A winter storm overwhelmed the Texas grid. Generators froze. Gas supply failed.
         The grid came within <strong>4 minutes and 37 seconds</strong> of a total collapse
         that engineers estimated would have taken months to recover from.
@@ -195,14 +196,14 @@ import GlowLine from '../../components/GlowLine';
     </div>
   </a>
 
-  <a href="/research/incidents/2016-south-australia-blackout" class="flex items-start gap-4 p-4 rounded-lg no-underline" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-accent);">
-    <div class="flex-shrink-0">
+  <a href={url("/research/incidents/2016-south-australia-blackout")} class="flex items-start gap-4 p-4 rounded-lg no-underline" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-accent);">
+    <div class="flex-shrink-0 w-44">
       <div class="font-mono font-bold text-lg" style="color: var(--color-accent);">South Australia 2016</div>
       <div class="font-mono text-xs mt-1" style="color: var(--color-text-dim);">Sep 28</div>
     </div>
     <div>
       <div class="font-semibold mb-1" style="color: var(--color-text);">Entire state blacked out in 87 seconds.</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">
+      <div class="text-base" style="color: var(--color-text-muted);">
         A severe storm knocked out transmission towers. Wind farms disconnected to protect
         themselves. The interconnector to Victoria overloaded and tripped. Within 87 seconds,
         1.7 million people lost power across the entire state.
@@ -210,14 +211,14 @@ import GlowLine from '../../components/GlowLine';
     </div>
   </a>
 
-  <a href="/research/incidents/2003-italy-blackout" class="flex items-start gap-4 p-4 rounded-lg no-underline" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
-    <div class="flex-shrink-0">
+  <a href={url("/research/incidents/2003-italy-blackout")} class="flex items-start gap-4 p-4 rounded-lg no-underline" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
+    <div class="flex-shrink-0 w-44">
       <div class="font-mono font-bold text-lg" style="color: var(--color-primary);">Italy 2003</div>
       <div class="font-mono text-xs mt-1" style="color: var(--color-text-dim);">Sep 28</div>
     </div>
     <div>
       <div class="font-semibold mb-1" style="color: var(--color-text);">56 million people lost power. Started with a single tree.</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">
+      <div class="text-base" style="color: var(--color-text-muted);">
         A tree touched a high-voltage transmission line in Switzerland. The resulting cascade
         tripped interconnectors across the Alps. Within minutes, Italy was completely islanded
         from the European grid. The entire country went dark — the largest blackout in
@@ -232,9 +233,9 @@ import GlowLine from '../../components/GlowLine';
   <div class="text-lg font-semibold mb-2" style="color: var(--color-text);">
     Over EUR 10 billion per year in hard costs — plus billions more hidden in fuel waste.
   </div>
-  <div class="text-sm" style="color: var(--color-text-muted);">
+  <div class="text-base" style="color: var(--color-text-muted);">
     And when it fails, people die. The old way of managing the grid was designed for a world
-    of predictable, centralized power plants. That world <a href="/learn/the-renewable-revolution">no longer exists</a>.
+    of predictable, centralized power plants. That world <a href={url("/learn/the-renewable-revolution")}>no longer exists</a>.
   </div>
 </div>
 
@@ -244,7 +245,7 @@ import GlowLine from '../../components/GlowLine';
 
 <div class="my-8 p-6 rounded-lg no-arrow" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
   <div class="font-mono text-sm mb-2" style="color: var(--color-primary); letter-spacing: 0.08em;">NEXT</div>
-  <a href="/learn/the-renewable-revolution" class="text-lg font-semibold" style="color: var(--color-text);">
+  <a href={url("/learn/the-renewable-revolution")} class="text-lg font-semibold" style="color: var(--color-text);">
     The Renewable Revolution
   </a>
   <div class="text-sm mt-1" style="color: var(--color-text-dim);">

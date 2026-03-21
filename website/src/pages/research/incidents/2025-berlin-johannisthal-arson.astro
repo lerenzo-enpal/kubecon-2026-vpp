@@ -6,6 +6,7 @@ import TimelineEvent from '../../../components/TimelineEvent.astro';
 import SourceList from '../../../components/SourceList.astro';
 import BerlinCascadeMap from '../../../components/BerlinCascadeMap';
 import FullscreenWrapper from '../../../components/FullscreenWrapper';
+import { url } from '../../../utils/url';
 ---
 
 <IncidentLayout title="2025 Berlin Johannisthal Arson" description="Arsonists targeted two transmission pylons in southeast Berlin, cutting power to 50,000 households for up to 60 hours.">
@@ -34,12 +35,12 @@ import FullscreenWrapper from '../../../components/FullscreenWrapper';
 <section class="my-10">
   <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">What Happened</h2>
 
-  <p class="text-sm leading-relaxed mb-4" style="color: var(--color-text-muted);">
+  <p class="text-base leading-relaxed mb-4" style="color: var(--color-text-muted);">
     At around 3:30 AM, unknown attackers set fire to two 110 kV transmission pylons in the Johannisthal area of southeast Berlin. The pylons stood at the transition point where overhead power lines connect to underground cables -- a critical junction in the grid topology. The fires destroyed multiple high-voltage cables, severing power to several distribution substations at once. <a href="#berlin-map" class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
   </p>
 
-  <div id="berlin-map" class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
-    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+  <div id="berlin-map" class="my-8 rounded-lg overflow-hidden p-4 scroll-mt-20" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="flex items-center justify-between mb-3">
       <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">Berlin Grid -- September 9, 2025</div>
     </div>
     <FullscreenWrapper client:visible label="Fullscreen">
@@ -47,11 +48,11 @@ import FullscreenWrapper from '../../../components/FullscreenWrapper';
     </FullscreenWrapper>
   </div>
 
-  <p class="text-sm leading-relaxed mb-4" style="color: var(--color-text-muted);">
+  <p class="text-base leading-relaxed mb-4" style="color: var(--color-text-muted);">
     Around 50,000 households and 3,000 businesses lost power. Stromnetz Berlin restored 14,000 customers by mid-morning, but the remaining 31,000 waited up to 60 hours while engineers built a temporary connection around the damage.
   </p>
-  <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
-    An anonymous claim on Indymedia said the attack targeted the Adlershof technology park and its military-industrial tenants. The attackers stated cutting residential power was "by no means our intention." This was the first of two arson attacks on Berlin's grid -- the <a href="/research/incidents/2026-berlin-teltow-canal-arson">second struck four months later</a>.
+  <p class="text-base leading-relaxed" style="color: var(--color-text-muted);">
+    An anonymous claim on Indymedia said the attack targeted the Adlershof technology park and its military-industrial tenants. The attackers stated cutting residential power was "by no means our intention." This was the first of two arson attacks on Berlin's grid -- the <a href={url("/research/incidents/2026-berlin-teltow-canal-arson")}>second struck four months later</a>.
   </p>
 </section>
 
@@ -101,7 +102,7 @@ import FullscreenWrapper from '../../../components/FullscreenWrapper';
 <section class="my-10">
   <div class="p-6 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
     <h2 class="text-lg font-bold mb-3" style="color: var(--color-accent);">Root Cause</h2>
-    <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
+    <p class="text-base leading-relaxed" style="color: var(--color-text-muted);">
       <strong style="color: var(--color-text);">Deliberate sabotage at a single point of failure.</strong> The overhead-to-underground cable transition is where multiple critical circuits converge in a physically accessible, unprotected location. Destroying this one junction severed power to an entire district. The attack demonstrated that concentrated grid infrastructure -- no matter how well-engineered electrically -- is vulnerable to physical attack.
     </p>
   </div>
@@ -113,15 +114,15 @@ import FullscreenWrapper from '../../../components/FullscreenWrapper';
   <div class="grid gap-3">
     <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
       <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Island mode resilience</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">When transmission is physically destroyed, homes with <a href="/research/topics/vpp-market">VPP</a>-connected solar and batteries can island -- maintaining power independently until the grid is repaired. 60 hours without power becomes 60 hours of self-sufficiency.</div>
+      <div class="text-base" style="color: var(--color-text-muted);">When transmission is physically destroyed, homes with <a href={url("/research/topics/vpp-market")}>VPP</a>-connected solar and batteries can island -- maintaining power independently until the grid is repaired. 60 hours without power becomes 60 hours of self-sufficiency.</div>
     </div>
     <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
       <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Topology independence</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">A VPP does not depend on any single pylon, cable bridge, or substation. Its generation and storage assets are distributed across thousands of rooftops -- there is no single point to attack.</div>
+      <div class="text-base" style="color: var(--color-text-muted);">A VPP does not depend on any single pylon, cable bridge, or substation. Its generation and storage assets are distributed across thousands of rooftops -- there is no single point to attack.</div>
     </div>
     <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
       <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Priority restoration</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">A VPP controller like <a href="/research/topics/enpal-flexa">Flexa</a> knows which homes have batteries, medical equipment, or vulnerable residents. It can prioritize power allocation during emergencies instead of the all-or-nothing approach of traditional grid restoration.</div>
+      <div class="text-base" style="color: var(--color-text-muted);">A VPP controller like <a href={url("/research/topics/enpal-flexa")}>Flexa</a> knows which homes have batteries, medical equipment, or vulnerable residents. It can prioritize power allocation during emergencies instead of the all-or-nothing approach of traditional grid restoration.</div>
     </div>
   </div>
 </section>
@@ -130,10 +131,10 @@ import FullscreenWrapper from '../../../components/FullscreenWrapper';
 <section class="my-10">
   <h2 class="text-lg font-bold mb-3" style="color: var(--color-text);">Related Incidents</h2>
   <div class="flex flex-col gap-2">
-    <a href="/research/incidents/2026-berlin-teltow-canal-arson" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
+    <a href={url("/research/incidents/2026-berlin-teltow-canal-arson")} class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
       2026 Berlin Teltow Canal Arson -- the second attack, four months later
     </a>
-    <a href="/research/incidents/2006-european-grid-split" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
+    <a href={url("/research/incidents/2006-european-grid-split")} class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
       2006 European Grid Split -- infrastructure concentration as weakness
     </a>
   </div>

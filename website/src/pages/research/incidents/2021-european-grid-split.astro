@@ -6,6 +6,7 @@ import TimelineEvent from '../../../components/TimelineEvent.astro';
 import SourceList from '../../../components/SourceList.astro';
 import EuropeGridSplit2021CascadeMap from '../../../components/EuropeGridSplit2021CascadeMap';
 import FullscreenWrapper from '../../../components/FullscreenWrapper';
+import { url } from '../../../utils/url';
 ---
 
 <IncidentLayout title="2021 European Grid Split" description="A single relay at a Croatian substation split Continental Europe's grid in two -- in just 42 seconds.">
@@ -48,7 +49,7 @@ import FullscreenWrapper from '../../../components/FullscreenWrapper';
     Within 42.7 seconds, the resulting overloads cascaded across Croatia, Serbia, Hungary, and Romania. The entire Continental European grid -- serving 400 million people -- fractured into two islands. The northwest lost 6.3 GW of generation. Emergency reserves in France, Italy, and the Nordic countries kicked in within seconds.
   </p>
   <p class="text-base leading-relaxed" style="color: var(--color-text-muted);">
-    Operators resynchronized the grid in 63 minutes. Consumer impact was limited (233 MW total), but the event proved that the same type of <a href="/research/topics/cascading-failures">cascading</a> split that hit Europe <a href="/research/incidents/2006-european-grid-split">in 2006</a> could still happen 15 years later.
+    Operators resynchronized the grid in 63 minutes. Consumer impact was limited (233 MW total), but the event proved that the same type of <a href={url("/research/topics/cascading-failures")}>cascading</a> split that hit Europe <a href={url("/research/incidents/2006-european-grid-split")}>in 2006</a> could still happen 15 years later.
   </p>
 </section>
 
@@ -116,7 +117,7 @@ import FullscreenWrapper from '../../../components/FullscreenWrapper';
   <div class="grid gap-3">
     <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
       <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Speed of response</div>
-      <div class="text-base" style="color: var(--color-text-muted);">The cascade completed in 42.7 seconds -- far too fast for human intervention. <a href="/research/topics/vpp-market">VPPs</a> with battery storage can respond in milliseconds, injecting or absorbing power to arrest <a href="/research/topics/grid-frequency">frequency</a> deviations before they cascade.</div>
+      <div class="text-base" style="color: var(--color-text-muted);">The cascade completed in 42.7 seconds -- far too fast for human intervention. <a href={url("/research/topics/vpp-market")}>VPPs</a> with battery storage can respond in milliseconds, injecting or absorbing power to arrest <a href={url("/research/topics/grid-frequency")}>frequency</a> deviations before they cascade.</div>
     </div>
     <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
       <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Distributed frequency support</div>
@@ -133,13 +134,13 @@ import FullscreenWrapper from '../../../components/FullscreenWrapper';
 <section class="my-10">
   <h2 class="text-lg font-bold mb-3" style="color: var(--color-text);">Related Incidents</h2>
   <div class="flex flex-col gap-2">
-    <a href="/research/incidents/2006-european-grid-split" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
+    <a href={url("/research/incidents/2006-european-grid-split")} class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
       2006 European Grid Split -- the precedent, 15 years earlier
     </a>
-    <a href="/research/incidents/2024-dunkelflaute-germany" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
+    <a href={url("/research/incidents/2024-dunkelflaute-germany")} class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
       2024 Dunkelflaute -- a different kind of grid stress
     </a>
-    <a href="/research/incidents/2025-iberian-peninsula-blackout" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
+    <a href={url("/research/incidents/2025-iberian-peninsula-blackout")} class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--color-primary);">
       2025 Iberian Blackout -- 6-second collapse on the European grid
     </a>
   </div>

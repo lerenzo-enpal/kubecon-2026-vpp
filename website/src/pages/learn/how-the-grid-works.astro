@@ -7,6 +7,7 @@ import TransmissionTower from '../../components/illustrations/TransmissionTower'
 import Substation from '../../components/illustrations/Substation';
 import House from '../../components/illustrations/House';
 import GlowLine from '../../components/GlowLine';
+import { url } from '../../utils/url';
 ---
 
 <ContentLayout title="How the Grid Works" description="The electricity grid is the largest machine ever built. Learn how it maintains a constant 50 Hz frequency.">
@@ -59,7 +60,7 @@ import GlowLine from '../../components/GlowLine';
 <h2 id="the-50-hz-heartbeat">The 50 Hz Heartbeat</h2>
 
 <p>
-  Every electricity grid has a <a href="/research/topics/grid-frequency">frequency</a> — a constant pulse measured in Hertz (Hz). In Europe,
+  Every electricity grid has a <a href={url("/research/topics/grid-frequency")}>frequency</a> — a constant pulse measured in Hertz (Hz). In Europe,
   that frequency is 50 Hz. In North America, it's 60 Hz. This isn't arbitrary — every generator
   on the grid spins at a speed synchronized to this frequency. Every motor, every clock, every
   device expects it.
@@ -83,7 +84,7 @@ import GlowLine from '../../components/GlowLine';
       <span class="font-mono font-extrabold text-4xl" style="color: var(--color-success);">50.00</span>
       <span class="font-mono text-lg" style="color: var(--color-text-dim);"> Hz</span>
     </div>
-    <div class="text-sm" style="color: var(--color-text-muted);">
+    <div class="text-base" style="color: var(--color-text-muted);">
       +/- 0.05 Hz normal band<br />
       +/- 0.20 Hz acceptable range<br />
       Anything beyond triggers automatic responses
@@ -118,8 +119,8 @@ import GlowLine from '../../components/GlowLine';
     <div class="font-mono font-bold text-lg flex-shrink-0" style="color: var(--color-success);">49.8 Hz</div>
     <div>
       <div class="font-semibold mb-1">Normal band</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">
-        <a href="/research/topics/grid-flexibility-costs">Spinning reserves</a> are on standby. Small deviations are handled automatically by
+      <div class="text-base" style="color: var(--color-text-muted);">
+        <a href={url("/research/topics/grid-flexibility-costs")}>Spinning reserves</a> are on standby. Small deviations are handled automatically by
         generators that continuously adjust their output.
       </div>
     </div>
@@ -129,7 +130,7 @@ import GlowLine from '../../components/GlowLine';
     <div class="font-mono font-bold text-lg flex-shrink-0" style="color: var(--color-accent);">49.5 Hz</div>
     <div>
       <div class="font-semibold mb-1">Reserves activate</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">
+      <div class="text-base" style="color: var(--color-text-muted);">
         Gas peaker plants fire up. Backup generators across the grid start ramping.
         Operators are now actively managing the situation.
       </div>
@@ -140,7 +141,7 @@ import GlowLine from '../../components/GlowLine';
     <div class="font-mono font-bold text-lg flex-shrink-0" style="color: var(--color-danger);">49.0 Hz</div>
     <div>
       <div class="font-semibold mb-1">Load shedding begins</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">
+      <div class="text-base" style="color: var(--color-text-muted);">
         Automatic systems start cutting power to entire neighborhoods — deliberate blackouts
         to save the rest of the grid. This is called Under-Frequency Load Shedding (UFLS).
       </div>
@@ -151,9 +152,9 @@ import GlowLine from '../../components/GlowLine';
     <div class="font-mono font-bold text-lg flex-shrink-0" style="color: #dc2626;">47.5 Hz</div>
     <div>
       <div class="font-semibold mb-1">Total collapse</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">
+      <div class="text-base" style="color: var(--color-text-muted);">
         Generators disconnect to protect themselves from physical damage. The grid goes dark —
-        a <a href="/research/topics/cascading-failures">cascading failure</a>.
+        a <a href={url("/research/topics/cascading-failures")}>cascading failure</a>.
         Recovery takes hours to days. In the worst cases — weeks.
       </div>
     </div>
@@ -170,8 +171,8 @@ import GlowLine from '../../components/GlowLine';
 
 <p>
   And yet this narrow band is all that separates 400 million people from losing power simultaneously.
-  In <a href="/research/incidents/2021-european-grid-split">January 2021, the European grid split into two halves</a> — and came within 0.26 Hz of triggering
-  automatic load shedding. In <a href="/research/incidents/2021-texas-ercot-winter-storm">Texas the same year</a>, the grid came within
+  In <a href={url("/research/incidents/2021-european-grid-split")}>January 2021, the European grid split into two halves</a> — and came within 0.26 Hz of triggering
+  automatic load shedding. In <a href={url("/research/incidents/2021-texas-ercot-winter-storm")}>Texas the same year</a>, the grid came within
   <strong>4 minutes and 37 seconds</strong> of a complete collapse that engineers estimated would
   have taken months to recover from.
 </p>
@@ -187,7 +188,7 @@ import GlowLine from '../../components/GlowLine';
 
 <div class="my-8 p-6 rounded-lg no-arrow" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
   <div class="font-mono text-sm mb-2" style="color: var(--color-primary); letter-spacing: 0.08em;">NEXT</div>
-  <a href="/learn/the-old-way" class="text-lg font-semibold" style="color: var(--color-text);">
+  <a href={url("/learn/the-old-way")} class="text-lg font-semibold" style="color: var(--color-text);">
     The Old Way
   </a>
   <div class="text-sm mt-1" style="color: var(--color-text-dim);">

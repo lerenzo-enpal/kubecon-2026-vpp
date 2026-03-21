@@ -1,5 +1,6 @@
 ---
 import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import { url } from '../../../utils/url';
 ---
 
 <IncidentLayout title="Grid Frequency" description="FCR, aFRR, mFRR — the three layers of frequency defense that keep Europe's grid at exactly 50 Hz.">
@@ -145,7 +146,7 @@ import IncidentLayout from '../../../layouts/IncidentLayout.astro';
 <div class="p-5 rounded-lg my-8" style="background: var(--color-surface); border: 1px solid var(--color-primary);">
   <div class="font-mono text-xs mb-2" style="color: var(--color-primary);">REAL-WORLD PRECEDENT</div>
   <p class="mb-2" style="max-width: none;">
-    <strong><a href="/research/incidents/2021-european-grid-split">January 2021 — CE System Separation:</a></strong> 6.3 GW imbalance, frequency fell to
+    <strong><a href={url("/research/incidents/2021-european-grid-split")}>January 2021 — CE System Separation:</a></strong> 6.3 GW imbalance, frequency fell to
     49.74 Hz. 1.7 GW of interruptible loads disconnected in France and Italy. System reconnected
     within 63 minutes.
   </p>
@@ -160,7 +161,7 @@ import IncidentLayout from '../../../layouts/IncidentLayout.astro';
 <p>
   The 2015 Ukraine cyberattack demonstrated remote breaker opening at 30 substations simultaneously.
   With protection relays compromised and SCADA systems disabled, the grid loses automated defense.
-  The <a href="/research/incidents/2003-italy-blackout">2003 Italy blackout</a> showed that uncontrolled frequency collapse from 50 Hz to 47.5 Hz can
+  The <a href={url("/research/incidents/2003-italy-blackout")}>2003 Italy blackout</a> showed that uncontrolled frequency collapse from 50 Hz to 47.5 Hz can
   occur in approximately 2.5 minutes.
 </p>
 
@@ -178,17 +179,17 @@ import IncidentLayout from '../../../layouts/IncidentLayout.astro';
 <p>
   Conventional FCR providers (gas turbines, hydro) respond in seconds. Batteries respond in
   milliseconds. This is not an incremental improvement — it is a categorical difference that
-  changes what is physically possible during a grid emergency. <a href="/research/topics/vpp-market">VPPs</a> aggregate thousands of
+  changes what is physically possible during a grid emergency. <a href={url("/research/topics/vpp-market")}>VPPs</a> aggregate thousands of
   these batteries into grid-scale resources.
 </p>
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
   <div class="p-5 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
-    <h3 class="mt-0 text-base font-mono" style="color: var(--color-primary);"><a href="/research/incidents/2017-hornsdale-battery-response">Hornsdale (2017)</a></h3>
+    <h3 class="mt-0 text-base font-mono" style="color: var(--color-primary);"><a href={url("/research/incidents/2017-hornsdale-battery-response")}>Hornsdale (2017)</a></h3>
     <p class="mb-0 text-sm">
       Responded to a coal plant trip in 140 milliseconds — 43x faster than the 6-second contract
       requirement. The <a href="https://www.aemo.com.au" target="_blank" rel="noopener">AEMO</a> control system had not even registered the event. This single response
-      prevented a potential <a href="/research/topics/cascading-failures">cascade</a> across South Australia.
+      prevented a potential <a href={url("/research/topics/cascading-failures")}>cascade</a> across South Australia.
     </p>
   </div>
   <div class="p-5 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
@@ -206,15 +207,15 @@ import IncidentLayout from '../../../layouts/IncidentLayout.astro';
 <h2 id="related" style="color: var(--color-primary);">Related Topics</h2>
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
-  <a href="/research/topics/cascading-failures" class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+  <a href={url("/research/topics/cascading-failures")} class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
     <div class="font-mono text-sm font-bold" style="color: var(--color-danger);">Cascading Failures</div>
     <div class="text-xs mt-1" style="color: var(--color-text-dim);">When frequency defense fails</div>
   </a>
-  <a href="/research/topics/demand-response" class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+  <a href={url("/research/topics/demand-response")} class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
     <div class="font-mono text-sm font-bold" style="color: var(--color-success);">Demand Response</div>
     <div class="text-xs mt-1" style="color: var(--color-text-dim);">Speed advantage of batteries</div>
   </a>
-  <a href="/research/topics/enpal-flexa" class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+  <a href={url("/research/topics/enpal-flexa")} class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
     <div class="font-mono text-sm font-bold" style="color: var(--color-success);">Enpal and Flexa</div>
     <div class="text-xs mt-1" style="color: var(--color-text-dim);">VPP technology stack</div>
   </a>

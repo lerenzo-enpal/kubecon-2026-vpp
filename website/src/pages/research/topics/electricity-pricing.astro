@@ -1,5 +1,6 @@
 ---
 import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import { url } from '../../../utils/url';
 ---
 
 <IncidentLayout title="Electricity Pricing" description="How solar is reshaping the electricity price curve — negative prices, the duck curve, and the arbitrage opportunity.">
@@ -38,7 +39,7 @@ import IncidentLayout from '../../../layouts/IncidentLayout.astro';
 <p>
   Negative electricity prices mean the grid is literally paying generators to stop producing.
   They signal a system that cannot absorb its own clean energy — a problem closely tied to
-  <a href="/research/topics/german-grid-curtailment">grid curtailment</a>. In Germany, negative price hours
+  <a href={url("/research/topics/german-grid-curtailment")}>grid curtailment</a>. In Germany, negative price hours
   have grown from 15 in 2008 to 575 in 2025 (source: <a href="https://www.smard.de" target="_blank" rel="noopener">SMARD</a>).
 </p>
 
@@ -163,7 +164,7 @@ import IncidentLayout from '../../../layouts/IncidentLayout.astro';
 <p>
   Batteries amplify this effect. They absorb cheap midday solar (preventing negative pricing) and
   discharge during expensive peaks, spreading the price-reduction effect across more hours. This is
-  the core <a href="/research/topics/demand-response">demand response</a> mechanism. Modeled
+  the core <a href={url("/research/topics/demand-response")}>demand response</a> mechanism. Modeled
   estimates suggest batteries can extend the merit order price reduction by an additional 20-40%
   across evening hours.
 </p>
@@ -174,7 +175,7 @@ import IncidentLayout from '../../../layouts/IncidentLayout.astro';
   <div class="p-5 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-danger);">
     <div class="font-mono text-xs mb-2" style="color: var(--color-danger);">PRICE SPIKE — DUNKELFLAUTE</div>
     <p class="mb-2 text-sm" style="max-width: none;">
-      Dec 12, 2024: EUR 936.28/MWh during the <a href="/research/incidents/2024-dunkelflaute-germany">Dunkelflaute</a> — the dreaded dark doldrums when both
+      Dec 12, 2024: EUR 936.28/MWh during the <a href={url("/research/incidents/2024-dunkelflaute-germany")}>Dunkelflaute</a> — the dreaded dark doldrums when both
       wind and solar collapse simultaneously under high-pressure winter weather.
     </p>
     <p class="mb-0 text-sm" style="max-width: none;">
@@ -202,7 +203,7 @@ import IncidentLayout from '../../../layouts/IncidentLayout.astro';
 </p>
 
 <p>
-  This is precisely what VPPs like <a href="/research/topics/enpal-flexa">Flexa</a> do — coordinating thousands of home batteries to trade
+  This is precisely what VPPs like <a href={url("/research/topics/enpal-flexa")}>Flexa</a> do — coordinating thousands of home batteries to trade
   on the five-minute continuous intraday market, capturing very short-term arbitrage while
   simultaneously stabilizing the grid.
 </p>
@@ -212,15 +213,15 @@ import IncidentLayout from '../../../layouts/IncidentLayout.astro';
 <h2 id="related" style="color: var(--color-primary);">Related Topics</h2>
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
-  <a href="/research/topics/german-grid-curtailment" class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+  <a href={url("/research/topics/german-grid-curtailment")} class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
     <div class="font-mono text-sm font-bold" style="color: var(--color-accent);">German Grid Curtailment</div>
     <div class="text-xs mt-1" style="color: var(--color-text-dim);">The north-south bottleneck driving waste</div>
   </a>
-  <a href="/research/topics/enpal-flexa" class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+  <a href={url("/research/topics/enpal-flexa")} class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
     <div class="font-mono text-sm font-bold" style="color: var(--color-success);">Enpal and Flexa</div>
     <div class="text-xs mt-1" style="color: var(--color-text-dim);">Capturing the spread at scale</div>
   </a>
-  <a href="/research/topics/grid-flexibility-costs" class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+  <a href={url("/research/topics/grid-flexibility-costs")} class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
     <div class="font-mono text-sm font-bold" style="color: var(--color-accent);">Grid Flexibility Costs</div>
     <div class="text-xs mt-1" style="color: var(--color-text-dim);">The economics of old vs. new flexibility</div>
   </a>

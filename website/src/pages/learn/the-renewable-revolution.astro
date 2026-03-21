@@ -3,6 +3,7 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
 import DuckCurveExplorer from '../../components/DuckCurveExplorer.tsx';
 import SolarHome from '../../components/illustrations/SolarHome';
 import GlowLine from '../../components/GlowLine';
+import { url } from '../../utils/url';
 ---
 
 <ContentLayout title="The Renewable Revolution" description="Solar and wind are growing faster than anyone predicted. But the grid wasn't built for energy that comes and goes with the weather.">
@@ -20,7 +21,7 @@ import GlowLine from '../../components/GlowLine';
 
 <h2 id="growth">Solar and Wind Growth</h2>
 
-<div class="float-right ml-6 mb-4" style="width: 180px;">
+<div class="float-right ml-6 mb-4 w-[180px]">
   <SolarHome client:visible width={180} height={110} />
 </div>
 
@@ -101,7 +102,7 @@ import GlowLine from '../../components/GlowLine';
 </p>
 
 <p>
-  The duck curve is not just a curiosity. It is a serious operational problem. <a href="/research/topics/grid-flexibility-costs">Gas plants cannot
+  The duck curve is not just a curiosity. It is a serious operational problem. <a href={url("/research/topics/grid-flexibility-costs")}>Gas plants cannot
   ramp from idle to full output instantly</a> — they need time to spin up, and each start-stop cycle
   costs money and causes wear. The steeper the duck's neck, the faster conventional plants must
   ramp, and the more expensive and precarious the evening transition becomes.
@@ -115,7 +116,7 @@ import GlowLine from '../../components/GlowLine';
 
 <p>
   When solar and wind generate more electricity than the grid can physically absorb, operators
-  have no choice: they tell renewable generators to shut down. This is called <a href="/research/topics/german-grid-curtailment">curtailment</a>. The
+  have no choice: they tell renewable generators to shut down. This is called <a href={url("/research/topics/german-grid-curtailment")}>curtailment</a>. The
   turbines stop spinning. The panels are disconnected. Clean, free energy is thrown away.
 </p>
 
@@ -146,7 +147,7 @@ import GlowLine from '../../components/GlowLine';
 <h2 id="negative-prices">Negative Prices</h2>
 
 <p>
-  In 2024, Germany experienced 457 hours where the <a href="/research/topics/electricity-pricing">price of electricity</a> went negative — meaning
+  In 2024, Germany experienced 457 hours where the <a href={url("/research/topics/electricity-pricing")}>price of electricity</a> went negative — meaning
   generators had to <em>pay</em> to put their electricity on the grid. In 2025, that number rose
   to 575 hours.
 </p>
@@ -186,7 +187,7 @@ import GlowLine from '../../components/GlowLine';
 
 <p>
   The grid needs a way to absorb this energy — to soak up the surplus when the sun shines and
-  release it when it doesn't. That is exactly what a <a href="/learn/the-virtual-power-plant">Virtual Power Plant</a> does.
+  release it when it doesn't. That is exactly what a <a href={url("/learn/the-virtual-power-plant")}>Virtual Power Plant</a> does.
 </p>
 
 <div class="my-8">
@@ -195,7 +196,7 @@ import GlowLine from '../../components/GlowLine';
 
 <div class="my-8 p-6 rounded-lg no-arrow" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
   <div class="font-mono text-sm mb-2" style="color: var(--color-primary); letter-spacing: 0.08em;">NEXT</div>
-  <a href="/learn/the-virtual-power-plant" class="text-lg font-semibold" style="color: var(--color-text);">
+  <a href={url("/learn/the-virtual-power-plant")} class="text-lg font-semibold" style="color: var(--color-text);">
     The Virtual Power Plant
   </a>
   <div class="text-sm mt-1" style="color: var(--color-text-dim);">
