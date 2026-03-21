@@ -56,17 +56,21 @@ The site deploys to GitHub Pages with the website at `/` and the presentation at
 
 This is a manual trigger — it never auto-deploys on push.
 
-### Deploy locally (preview)
+### Pre-deploy check (optional)
+
+If you want to verify the combined output before deploying:
 
 ```sh
-# From the repo root:
-./scripts/build-deploy.sh
-
-# Preview the combined site:
-npx serve _site
+./scripts/build-deploy.sh   # builds both into _site/
+npx serve _site              # static preview (no hot reload)
 ```
 
-This builds both the website and presentation, assembles them into `_site/`, and gives you a local preview. The presentation lives at `http://localhost:3000/slides/`.
+This is NOT for development. For development with hot reload, use:
+
+```sh
+cd website && npm run dev       # website at localhost:4321
+cd presentation && npm run dev  # slides at localhost:3000
+```
 
 ### URL structure
 
