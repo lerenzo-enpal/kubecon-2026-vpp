@@ -4,6 +4,8 @@ import IncidentHero from '../../../components/IncidentHero.astro';
 import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
 import SourceList from '../../../components/SourceList.astro';
+import EuropeGridSplit2021CascadeMap from '../../../components/EuropeGridSplit2021CascadeMap';
+import FullscreenWrapper from '../../../components/FullscreenWrapper';
 ---
 
 <IncidentLayout title="2021 European Grid Split" description="A single relay at a Croatian substation split Continental Europe's grid in two -- in just 42 seconds.">
@@ -15,6 +17,8 @@ import SourceList from '../../../components/SourceList.astro';
   severity="near-miss"
   keyStat="42 sec"
   keyStatLabel="to grid separation"
+  interactive={true}
+  mapId="europe-2021-map"
 />
 
 <QuickFacts facts={[
@@ -26,17 +30,24 @@ import SourceList from '../../../components/SourceList.astro';
   { value: "0", label: "Deaths" },
 ]} />
 
+<!-- Interactive Map -->
+<section class="my-10" id="europe-2021-map">
+  <FullscreenWrapper client:visible label="Fullscreen">
+    <EuropeGridSplit2021CascadeMap client:visible height={400} />
+  </FullscreenWrapper>
+</section>
+
 <!-- What Happened -->
 <section class="my-10">
   <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">What Happened</h2>
 
-  <p class="text-sm leading-relaxed mb-4" style="color: var(--color-text-muted);">
+  <p class="text-base leading-relaxed mb-4" style="color: var(--color-text-muted);">
     On a normal winter afternoon, a protection relay at the Ernestinovo substation in Croatia detected too much current flowing through a busbar coupler -- a switch connecting two sections of the substation. The relay tripped automatically, splitting the power flows through the substation.
   </p>
-  <p class="text-sm leading-relaxed mb-4" style="color: var(--color-text-muted);">
+  <p class="text-base leading-relaxed mb-4" style="color: var(--color-text-muted);">
     Within 42.7 seconds, the resulting overloads cascaded across Croatia, Serbia, Hungary, and Romania. The entire Continental European grid -- serving 400 million people -- fractured into two islands. The northwest lost 6.3 GW of generation. Emergency reserves in France, Italy, and the Nordic countries kicked in within seconds.
   </p>
-  <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
+  <p class="text-base leading-relaxed" style="color: var(--color-text-muted);">
     Operators resynchronized the grid in 63 minutes. Consumer impact was limited (233 MW total), but the event proved that the same type of <a href="/research/topics/cascading-failures">cascading</a> split that hit Europe <a href="/research/incidents/2006-european-grid-split">in 2006</a> could still happen 15 years later.
   </p>
 </section>
@@ -93,7 +104,7 @@ import SourceList from '../../../components/SourceList.astro';
 <section class="my-10">
   <div class="p-6 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
     <h2 class="text-lg font-bold mb-3" style="color: var(--color-accent);">Root Cause</h2>
-    <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
+    <p class="text-base leading-relaxed" style="color: var(--color-text-muted);">
       <strong style="color: var(--color-text);">A protection relay operated correctly -- and split a continent.</strong> The Ernestinovo busbar coupler was carrying heavy cross-border power flows near its rated capacity. When the overcurrent relay tripped, power redistributed to neighboring lines which also overloaded and tripped within seconds. Each protection relay did exactly what it was designed to do in isolation, but collectively they destabilized the entire system. Busbar couplers inside substations were not treated as critical elements in security assessments.
     </p>
   </div>
@@ -105,15 +116,15 @@ import SourceList from '../../../components/SourceList.astro';
   <div class="grid gap-3">
     <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
       <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Speed of response</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">The cascade completed in 42.7 seconds -- far too fast for human intervention. <a href="/research/topics/vpp-market">VPPs</a> with battery storage can respond in milliseconds, injecting or absorbing power to arrest <a href="/research/topics/grid-frequency">frequency</a> deviations before they cascade.</div>
+      <div class="text-base" style="color: var(--color-text-muted);">The cascade completed in 42.7 seconds -- far too fast for human intervention. <a href="/research/topics/vpp-market">VPPs</a> with battery storage can respond in milliseconds, injecting or absorbing power to arrest <a href="/research/topics/grid-frequency">frequency</a> deviations before they cascade.</div>
     </div>
     <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
       <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Distributed frequency support</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">Emergency reserves came from a handful of large assets (French industry, Italian industry, Nordic HVDC). Thousands of VPP-connected batteries spread across the grid could provide the same support with no single point of failure.</div>
+      <div class="text-base" style="color: var(--color-text-muted);">Emergency reserves came from a handful of large assets (French industry, Italian industry, Nordic HVDC). Thousands of VPP-connected batteries spread across the grid could provide the same support with no single point of failure.</div>
     </div>
     <div class="p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
       <div class="font-semibold text-sm mb-1" style="color: var(--color-text);">Same problem, 15 years later</div>
-      <div class="text-sm" style="color: var(--color-text-muted);">Despite reforms after 2006, the same type of cascading split recurred. The centralized grid architecture remains vulnerable. VPPs represent a fundamentally different topology -- distributed, resilient, and fast.</div>
+      <div class="text-base" style="color: var(--color-text-muted);">Despite reforms after 2006, the same type of cascading split recurred. The centralized grid architecture remains vulnerable. VPPs represent a fundamentally different topology -- distributed, resilient, and fast.</div>
     </div>
   </div>
 </section>
