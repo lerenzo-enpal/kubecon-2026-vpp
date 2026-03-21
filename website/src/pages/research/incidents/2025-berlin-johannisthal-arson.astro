@@ -4,7 +4,8 @@ import IncidentHero from '../../../components/IncidentHero.astro';
 import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
 import SourceList from '../../../components/SourceList.astro';
-import BerlinGridMap from '../../../components/BerlinGridMap';
+import BerlinCascadeMap from '../../../components/BerlinCascadeMap';
+import FullscreenWrapper from '../../../components/FullscreenWrapper';
 ---
 
 <IncidentLayout title="2025 Berlin Johannisthal Arson" description="Arsonists targeted two transmission pylons in southeast Berlin, cutting power to 50,000 households for up to 60 hours.">
@@ -16,6 +17,8 @@ import BerlinGridMap from '../../../components/BerlinGridMap';
   severity="attack"
   keyStat="50K"
   keyStatLabel="households"
+  interactive={true}
+  mapId="berlin-map"
 />
 
 <QuickFacts facts={[
@@ -32,19 +35,24 @@ import BerlinGridMap from '../../../components/BerlinGridMap';
   <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">What Happened</h2>
 
   <p class="text-sm leading-relaxed mb-4" style="color: var(--color-text-muted);">
-    At around 3:30 AM, unknown attackers set fire to two 110 kV transmission pylons in the Johannisthal area of southeast Berlin. The pylons stood at the transition point where overhead power lines connect to underground cables -- a critical junction in the grid topology. The fires destroyed multiple high-voltage cables, severing power to several distribution substations at once.
+    At around 3:30 AM, unknown attackers set fire to two 110 kV transmission pylons in the Johannisthal area of southeast Berlin. The pylons stood at the transition point where overhead power lines connect to underground cables -- a critical junction in the grid topology. The fires destroyed multiple high-voltage cables, severing power to several distribution substations at once. <a href="#berlin-map" class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
   </p>
+
+  <div id="berlin-map" class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+      <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">Berlin Grid -- September 9, 2025</div>
+    </div>
+    <FullscreenWrapper client:visible label="Fullscreen">
+      <BerlinCascadeMap client:visible height={400} />
+    </FullscreenWrapper>
+  </div>
+
   <p class="text-sm leading-relaxed mb-4" style="color: var(--color-text-muted);">
     Around 50,000 households and 3,000 businesses lost power. Stromnetz Berlin restored 14,000 customers by mid-morning, but the remaining 31,000 waited up to 60 hours while engineers built a temporary connection around the damage.
   </p>
   <p class="text-sm leading-relaxed" style="color: var(--color-text-muted);">
     An anonymous claim on Indymedia said the attack targeted the Adlershof technology park and its military-industrial tenants. The attackers stated cutting residential power was "by no means our intention." This was the first of two arson attacks on Berlin's grid -- the <a href="/research/incidents/2026-berlin-teltow-canal-arson">second struck four months later</a>.
   </p>
-
-  <div class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px;">
-    <div class="font-mono text-xs mb-3" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">Berlin Grid -- September 9, 2025</div>
-    <BerlinGridMap client:visible width={660} height={400} />
-  </div>
 </section>
 
 <!-- Timeline -->

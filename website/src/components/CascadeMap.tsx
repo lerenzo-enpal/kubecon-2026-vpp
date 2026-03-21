@@ -189,6 +189,10 @@ export interface CascadeMapProps {
   /** Extra content to render inside the timeline panel, after cascade steps */
   extraTimelineContent?: ExtraTimelineContent;
 
+  // ── Extra deck.gl layers ──
+  /** Additional deck.gl layers rendered below the default node/line layers */
+  extraLayers?: any[];
+
   // ── Cinematic variant (Texas only) ──
   /** Whether to render the cinematic variant. Only used when variant='cinematic'. */
   renderCinematicHUD?: (ctx: CinematicCtx) => React.ReactNode;
@@ -251,6 +255,7 @@ export default function CascadeMap({
   nodeOverrides,
   zoomThresholds,
   extraTimelineContent,
+  extraLayers,
   renderCinematicHUD,
 }: CascadeMapProps) {
   const nodeMap = React.useMemo(() => new Map(nodes.map(n => [n.id, n])), [nodes]);
@@ -482,6 +487,7 @@ export default function CascadeMap({
   const defaultTypeColor = (type: string) => typeColors[type] || [148, 163, 184];
 
   const layers = [
+    ...(extraLayers || []),
     new LineLayer({
       id: 'line-glow', data: lines,
       getSourcePosition: (d: any) => d.from, getTargetPosition: (d: any) => d.to,
