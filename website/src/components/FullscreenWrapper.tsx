@@ -1,5 +1,5 @@
 // TODO: Shared between website and presentation — combine into shared component
-import { useRef, useState, useEffect, type ReactNode } from 'react';
+import { useRef, useState, useEffect, cloneElement, isValidElement, type ReactNode, type ReactElement } from 'react';
 
 const GLOW_KEYFRAMES = `
 @keyframes fs-btn-glow {
@@ -44,28 +44,41 @@ export default function FullscreenWrapper({ children, label }: Props) {
     document.exitFullscreen?.();
   }
 
+  // In fullscreen, override child's height to fill the screen
+  const renderedChildren = isFullscreen
+    ? (() => {
+        const child = Array.isArray(children) ? children[0] : children;
+        if (isValidElement(child)) {
+          return cloneElement(child as ReactElement<any>, {
+            width: window.innerWidth,
+            height: window.innerHeight,
+          });
+        }
+        return children;
+      })()
+    : children;
+
   return (
     <div
       ref={wrapperRef}
       style={{
         position: 'relative',
-        background: isFullscreen ? '#0a0a0f' : 'transparent',
-        display: isFullscreen ? 'flex' : 'block',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: isFullscreen ? '100%' : undefined,
-        height: isFullscreen ? '100%' : undefined,
+        background: isFullscreen ? '#020408' : 'transparent',
+        width: isFullscreen ? '100vw' : undefined,
+        height: isFullscreen ? '100vh' : undefined,
+        overflow: 'hidden',
       }}
     >
-      {children}
+      {renderedChildren}
 
       {!isFullscreen && (
         <button
           onClick={enterFullscreen}
           style={{
             position: 'absolute',
-            top: 16,
-            right: 16,
+            top: 6,
+            right: 6,
+            zIndex: 20,
             background: 'rgba(5, 8, 16, 0.7)',
             border: '1px solid rgba(34, 211, 238, 0.15)',
             borderRadius: 4,
@@ -108,6 +121,7 @@ export default function FullscreenWrapper({ children, label }: Props) {
             position: 'absolute',
             top: 12,
             right: 12,
+            zIndex: 40,
             background: 'rgba(255, 255, 255, 0.06)',
             border: '1px solid rgba(161, 161, 170, 0.3)',
             borderRadius: 4,
