@@ -636,8 +636,8 @@ export default function Presentation() {
       {/* 22b: Inside the Architecture — Interactive Explorer */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
-          {/* Full-screen architecture explorer — pushed below title area */}
-          <div className="absolute inset-0" style={{ top: 110 }}>
+          {/* Full-screen architecture explorer */}
+          <div className="absolute inset-0">
             <Stepper values={[1, 2, 3, 4]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="w-full h-full">
               {(stepVal) => {
                 const archStep = stepVal ?? 0;

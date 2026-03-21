@@ -103,9 +103,10 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    canvas.width = width * 2;
-    canvas.height = height * 2;
-    ctx.scale(2, 2);
+    const dpr = 4; // High DPI for crisp rendering when zoomed
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    ctx.scale(dpr, dpr);
 
     const particles = [];
     const BASE_INTERVAL = 0.4;
