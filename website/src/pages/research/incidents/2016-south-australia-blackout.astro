@@ -5,6 +5,7 @@ import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
 import SourceList from '../../../components/SourceList.astro';
 import TransmissionTower from '../../../components/illustrations/TransmissionTower';
+import SAGridMap from '../../../components/SAGridMap';
 ---
 
 <IncidentLayout title="South Australia Statewide Blackout" description="September 2016: Twin tornadoes and a hidden wind farm vulnerability combined to black out an entire state in 87 seconds.">
@@ -44,6 +45,11 @@ import TransmissionTower from '../../../components/illustrations/TransmissionTow
 <p>
   The single interconnector to Victoria tried to compensate, surging to 850 MW against its 650 MW capacity. It tripped on overload protection, isolating the entire state. Within seconds, every remaining generator shut down. Total <a href="/research/topics/cascading-failures">cascading failure</a>.
 </p>
+
+<div class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px;">
+  <div class="font-mono text-xs mb-3" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">SA Grid — September 28, 2016</div>
+  <SAGridMap client:visible width={660} height={400} />
+</div>
 
 <h2>Timeline</h2>
 
