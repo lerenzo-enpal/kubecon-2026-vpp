@@ -6,3 +6,4 @@ presentation/dist
 .netlify
 _site/
 .playwright-mcp/
+.astro/
