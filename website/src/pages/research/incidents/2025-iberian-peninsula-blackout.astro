@@ -5,7 +5,8 @@ import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
 import SourceList from '../../../components/SourceList.astro';
 import SolarHome from '../../../components/illustrations/SolarHome';
-import IberianGridMap from '../../../components/IberianGridMap';
+import IberianCascadeMap from '../../../components/IberianCascadeMap';
+import FullscreenWrapper from '../../../components/FullscreenWrapper';
 ---
 
 <IncidentLayout title="Iberian Peninsula Blackout" description="April 2025: The first major blackout in history caused by overvoltage. High solar penetration without adequate storage led to a 6-second collapse affecting 60 million people.">
@@ -43,8 +44,12 @@ import IberianGridMap from '../../../components/IberianGridMap';
 </p>
 
 <div class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px;">
-  <div class="font-mono text-xs mb-3" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">Iberian Peninsula -- April 28, 2025</div>
-  <IberianGridMap client:visible width={660} height={400} />
+  <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px;">
+    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">Iberian Peninsula -- April 28, 2025</div>
+  </div>
+  <FullscreenWrapper client:visible label="Fullscreen">
+    <IberianCascadeMap client:visible height={400} />
+  </FullscreenWrapper>
 </div>
 
 <h2>Timeline</h2>
