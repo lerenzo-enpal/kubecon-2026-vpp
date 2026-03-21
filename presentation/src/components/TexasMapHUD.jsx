@@ -82,7 +82,9 @@ const LOG_MSGS = [
 
 const TYPE_COLORS = { wind: [96, 165, 250], gas: [251, 146, 60], coal: [148, 163, 184], nuclear: [167, 139, 250] };
 const FAILED_COLOR = [239, 68, 68];
+const AMBER_COLOR = [245, 158, 11];
 const COMANCHE_GREEN = [16, 185, 129];
+const INCIDENT_DURATION = 2500; // ms — amber glow before transitioning to red
 const PLANT_MAP = new Map(PLANTS.map(p => [p.id, p]));
 const getPlant = (id) => PLANT_MAP.get(id);
 
@@ -103,14 +105,46 @@ function getStepView(stepIdx, fallback) {
 // ── Main component ──────────────────────────────────────────
 export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud' }) {
   const [failed, setFailed] = useState(new Set());
+  const [incident, setIncident] = useState(new Map()); // id → startTime (amber-glow plants)
   const [mode, setMode] = useState('idle'); // 'idle' | 'stepping' | 'playing'
   const [elapsed, setElapsed] = useState(0);
   const [activeStep, setActiveStep] = useState(-1);
   const [stepIndex, setStepIndex] = useState(-1);
   const [boot, setBoot] = useState(0);
   const bootRef = useRef(null);
+  const incidentTimers = useRef([]);
+  const lastAutoStep = useRef(-1);
+  const pulseRef = useRef(null);
+  const [pulseTime, setPulseTime] = useState(() => Date.now());
   const defaultView = VIEWS[variant] || VIEWS.hud;
   const [viewState, setViewState] = useState(defaultView);
+
+  // Helper: clear all pending incident→offline timers and flush the incident map
+  const clearIncidentTimers = () => {
+    incidentTimers.current.forEach(t => clearTimeout(t));
+    incidentTimers.current = [];
+    setIncident(new Map());
+  };
+
+  // Helper: trigger incident for a set of plant IDs — amber first, then red after delay
+  const triggerIncident = (ids) => {
+    const plantIds = ids.filter(id => id !== 'comanche');
+    if (plantIds.length === 0) return;
+    const now = Date.now();
+    setIncident(prev => {
+      const next = new Map(prev);
+      plantIds.forEach(id => next.set(id, now));
+      return next;
+    });
+    const timer = setTimeout(() => {
+      setIncident(prev => {
+        const next = new Map(prev);
+        plantIds.forEach(id => next.delete(id));
+        return next;
+      });
+    }, INCIDENT_DURATION);
+    incidentTimers.current.push(timer);
+  };
 
   // Derived — keeps all existing JSX refs working
   const running = mode !== 'idle';
@@ -127,9 +161,9 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
   useEffect(() => {
     if (slideActive) {
       // Always reset when slide becomes active (entering from any direction)
-      setFailed(new Set()); setMode('idle'); setElapsed(0); setActiveStep(-1);
+      setFailed(new Set()); setIncident(new Map()); setMode('idle'); setElapsed(0); setActiveStep(-1);
       setStepIndex(-1); setViewState(VIEWS[variant] || VIEWS.hud);
-      setBoot(0);
+      setBoot(0); clearIncidentTimers(); lastAutoStep.current = -1;
       prevSpectacleStep.current = spectacleStep; // sync to current step to suppress stale triggers
       wasActiveRef.current = true;
       const delay = setTimeout(() => {
@@ -147,6 +181,17 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
     }
   }, [slideActive]);
 
+  // Pulse animation loop — drives re-renders for amber glow when incident plants exist
+  useEffect(() => {
+    if (incident.size === 0) { cancelAnimationFrame(pulseRef.current); return; }
+    const tick = () => {
+      setPulseTime(Date.now());
+      pulseRef.current = requestAnimationFrame(tick);
+    };
+    pulseRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(pulseRef.current);
+  }, [incident.size > 0]);
+
   // Sync Spectacle steps with cascade
   // Forward: each arrow press triggers one cascade step
   // Backward: reset to idle immediately (skip all intermediate steps)
@@ -157,8 +202,8 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
 
     if (spectacleStep < prevSpectacleStep.current) {
       // Going back — reset to idle
-      setFailed(new Set()); setMode('idle'); setElapsed(0);
-      setActiveStep(-1); setStepIndex(-1);
+      setFailed(new Set()); setIncident(new Map()); setMode('idle'); setElapsed(0);
+      setActiveStep(-1); setStepIndex(-1); clearIncidentTimers(); lastAutoStep.current = -1;
       setViewState({
         ...defaultView,
         transitionDuration: 500,
@@ -170,12 +215,16 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
       if (targetIdx < CASCADE.length) {
         setMode('stepping');
         setStepIndex(targetIdx);
+        // All plants up to this step are in failed set (for MW/freq calculations)
         const nf = new Set();
         for (let i = 0; i <= targetIdx; i++) CASCADE[i].ids.forEach(id => nf.add(id));
         nf.delete('comanche');
         setFailed(nf);
         setActiveStep(targetIdx);
         setElapsed(CASCADE[targetIdx].time + 1);
+        // Current step's plants glow amber first, then transition to red
+        clearIncidentTimers();
+        triggerIncident(CASCADE[targetIdx].ids);
         const target = getStepView(targetIdx, defaultView);
         setViewState({
           ...target,
@@ -204,6 +253,13 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
       nf.delete('comanche');
       setFailed(nf);
       setActiveStep(ms);
+      // Detect new step crossings → trigger amber incident
+      if (ms > lastAutoStep.current) {
+        for (let i = lastAutoStep.current + 1; i <= ms; i++) {
+          triggerIncident(CASCADE[i].ids);
+        }
+        lastAutoStep.current = ms;
+      }
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
@@ -223,6 +279,9 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
     setFailed(nf);
     setActiveStep(next);
     setElapsed(CASCADE[next].time + 1);
+    // Current step's plants glow amber first, then transition to red
+    clearIncidentTimers();
+    triggerIncident(CASCADE[next].ids);
     // Fly camera to focus on this step's target area
     const target = getStepView(next, defaultView);
     setViewState({
@@ -235,7 +294,8 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
 
   // Skip to end — play full auto animation at default zoom
   const skipToEnd = () => {
-    setFailed(new Set()); setElapsed(0); setActiveStep(-1); setStepIndex(-1);
+    setFailed(new Set()); setIncident(new Map()); setElapsed(0); setActiveStep(-1); setStepIndex(-1);
+    clearIncidentTimers(); lastAutoStep.current = -1;
     setViewState({
       ...defaultView,
       transitionDuration: mode === 'stepping' ? 600 : 0,
@@ -247,8 +307,8 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
 
   // Reset
   const resetAll = () => {
-    setFailed(new Set()); setElapsed(0); setActiveStep(-1); setStepIndex(-1);
-    setMode('idle');
+    setFailed(new Set()); setIncident(new Map()); setElapsed(0); setActiveStep(-1); setStepIndex(-1);
+    setMode('idle'); clearIncidentTimers(); lastAutoStep.current = -1;
     setViewState({
       ...defaultView,
       transitionDuration: 500,
@@ -318,30 +378,81 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
     }),
     new ScatterplotLayer({
       id: 'plants', data: PLANTS, getPosition: d => d.pos,
-      getRadius: d => d.id === 'comanche' && running ? 16000 : 3600 * Math.sqrt(d.cap),
+      getRadius: d => {
+        if (d.id === 'comanche' && running) return 16000;
+        if (incident.has(d.id)) {
+          const age = pulseTime - incident.get(d.id);
+          const progress = Math.min(1, age / INCIDENT_DURATION);
+          // Fast pulse that calms down as it approaches red
+          const pulseAmp = 0.18 * (1 - progress * 0.6);
+          const p = Math.sin(pulseTime / 120) * pulseAmp + 1.0 + pulseAmp;
+          return 3600 * Math.sqrt(d.cap) * p;
+        }
+        return 3600 * Math.sqrt(d.cap);
+      },
       getFillColor: d => {
         if (d.id === 'comanche' && running) return [...COMANCHE_GREEN, 200];
+        if (incident.has(d.id)) {
+          const age = pulseTime - incident.get(d.id);
+          const progress = Math.min(1, age / INCIDENT_DURATION);
+          // Fast pulse: ~120ms period (~8Hz), dimming as it blends to red
+          const pulseAmp = 0.25 * (1 - progress * 0.5);
+          const p = Math.sin(pulseTime / 120) * pulseAmp + 0.75 + pulseAmp * 0.3;
+          // Smooth blend from amber → red over the last 40% of the incident
+          const blend = progress < 0.6 ? 0 : (progress - 0.6) / 0.4;
+          const r = AMBER_COLOR[0] + (FAILED_COLOR[0] - AMBER_COLOR[0]) * blend;
+          const g = AMBER_COLOR[1] + (FAILED_COLOR[1] - AMBER_COLOR[1]) * blend;
+          const b = AMBER_COLOR[2] + (FAILED_COLOR[2] - AMBER_COLOR[2]) * blend;
+          return [r, g, b, Math.floor(p * 230)];
+        }
         if (failed.has(d.id)) return [...FAILED_COLOR, 180];
         return [...TYPE_COLORS[d.type], 180];
       },
       getLineColor: d => {
         if (d.id === 'comanche' && running) return [...COMANCHE_GREEN, 255];
+        if (incident.has(d.id)) {
+          const age = pulseTime - incident.get(d.id);
+          const progress = Math.min(1, age / INCIDENT_DURATION);
+          const blend = progress < 0.6 ? 0 : (progress - 0.6) / 0.4;
+          const r = AMBER_COLOR[0] + (FAILED_COLOR[0] - AMBER_COLOR[0]) * blend;
+          const g = AMBER_COLOR[1] + (FAILED_COLOR[1] - AMBER_COLOR[1]) * blend;
+          const b = AMBER_COLOR[2] + (FAILED_COLOR[2] - AMBER_COLOR[2]) * blend;
+          const p = Math.sin(pulseTime / 120) * 0.15 + 0.85;
+          return [r, g, b, Math.floor(p * 255)];
+        }
         if (failed.has(d.id)) return [...FAILED_COLOR, 255];
         return [...TYPE_COLORS[d.type], 255];
       },
       stroked: true, lineWidthMinPixels: 2, radiusMinPixels: 5, radiusMaxPixels: 24,
-      transitions: { getFillColor: 400, getRadius: 300 },
+      updateTriggers: {
+        getFillColor: [failed, incident, pulseTime],
+        getLineColor: [failed, incident, pulseTime],
+        getRadius: [failed, incident, pulseTime],
+      },
     }),
     new TextLayer({
-      id: 'x-marks', data: PLANTS.filter(p => failed.has(p.id)),
+      id: 'x-marks', data: PLANTS.filter(p => failed.has(p.id) && !incident.has(p.id)),
       getPosition: d => d.pos, getText: () => '\u2715', getSize: 22,
       getColor: [239, 68, 68, 255], getTextAnchor: 'middle', getAlignmentBaseline: 'center',
       fontFamily: 'JetBrains Mono', fontWeight: 'bold',
     }),
     new TextLayer({
       id: 'labels', data: PLANTS, getPosition: d => d.pos, getText: d => d.name,
-      getSize: 11, getColor: d => failed.has(d.id) ? [239, 68, 68, 180] : [241, 245, 249, 190],
+      getSize: 11, getColor: d => {
+        if (incident.has(d.id)) {
+          const age = pulseTime - incident.get(d.id);
+          const progress = Math.min(1, age / INCIDENT_DURATION);
+          const blend = progress < 0.6 ? 0 : (progress - 0.6) / 0.4;
+          const r = AMBER_COLOR[0] + (FAILED_COLOR[0] - AMBER_COLOR[0]) * blend;
+          const g = AMBER_COLOR[1] + (FAILED_COLOR[1] - AMBER_COLOR[1]) * blend;
+          const b = AMBER_COLOR[2] + (FAILED_COLOR[2] - AMBER_COLOR[2]) * blend;
+          return [r, g, b, 200];
+        }
+        if (failed.has(d.id)) return [239, 68, 68, 180];
+        return [241, 245, 249, 190];
+      },
       getTextAnchor: 'middle', getAlignmentBaseline: 'top', getPixelOffset: [0, 18], fontFamily: 'Inter',
+      updateTriggers: { getColor: [failed, incident, pulseTime] },
     }),
   ];
 
@@ -369,11 +480,27 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
     color: '#ef4444', fontWeight: 700,
   };
 
-  // ── Legend ──
-  const legend = [
-    { c: 'rgb(96,165,250)', l: 'Wind' }, { c: 'rgb(251,146,60)', l: 'Gas' },
-    { c: 'rgb(148,163,184)', l: 'Coal' }, { c: 'rgb(167,139,250)', l: 'Nuclear' },
+  // ── Legend (dynamic: hides type colors for fully-offline types, adds Incident/Offline) ──
+  const TYPE_LEGEND = [
+    { c: 'rgb(96,165,250)', l: 'Wind', type: 'wind' },
+    { c: 'rgb(251,146,60)', l: 'Gas', type: 'gas' },
+    { c: 'rgb(148,163,184)', l: 'Coal', type: 'coal' },
+    { c: 'rgb(167,139,250)', l: 'Nuclear', type: 'nuclear' },
   ];
+  const legend = (() => {
+    if (!running) return TYPE_LEGEND;
+    const items = [];
+    // Only show type colors for types that still have active (non-failed) plants
+    for (const entry of TYPE_LEGEND) {
+      const hasActive = PLANTS.some(p => p.type === entry.type && !failed.has(p.id));
+      if (hasActive) items.push(entry);
+    }
+    // Add incident (amber) and offline (red) entries when applicable
+    if (incident.size > 0) items.push({ c: 'rgb(245,158,11)', l: 'Incident' });
+    const hasOffline = [...failed].some(id => !incident.has(id));
+    if (hasOffline) items.push({ c: 'rgb(239,68,68)', l: 'Offline' });
+    return items;
+  })();
 
   return (
     <div style={{ position: 'relative', width, height, overflow: 'hidden', background: '#020408' }}>
@@ -509,7 +636,7 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
                     </div>
                     <div style={{
                       fontSize: 11, fontFamily: '"JetBrains Mono"', marginTop: 2,
-                      color: isActive ? '#94a3b870' : '#64748b15',
+                      color: isActive ? '#94a3b8' : '#64748b15',
                     }}>
                       {step.detail}
                     </div>
