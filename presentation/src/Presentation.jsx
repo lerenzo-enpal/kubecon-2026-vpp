@@ -9,7 +9,7 @@ import DuckCurveVPP from './components/DuckCurveVPP';
 import AnimatedStat from './components/AnimatedStat';
 import StaticTexasGrid from './components/StaticTexasGrid';
 import TexasMapHUD from './components/TexasMapHUD';
-import { versionA, versionD } from './slides/GridScaleSlides';
+import { versionD } from './slides/GridScaleSlides';
 import EUGridHUD from './components/EUGridHUD';
 
 import DemandResponseDemo from './components/DemandResponseDemo';

@@ -60,7 +60,7 @@ export default function CurtailmentChart({ width = 900, height = 380, hideStats 
     const padLeft = 50;
     const padRight = 20;
     const padTop = 40;
-    const padBottom = 40;
+    const padBottom = 65;
     const chartW = width - padLeft - padRight;
     const chartH = height - padTop - padBottom;
     const barGroupW = chartW / DATA.length;

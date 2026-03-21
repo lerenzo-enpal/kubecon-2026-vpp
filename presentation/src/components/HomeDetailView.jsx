@@ -257,7 +257,7 @@ function HomeRevenueCounter({ priceCt, maxEnergyKwh, durationMs }) {
     <div style={{
       display: 'flex', alignItems: 'baseline', justifyContent: 'flex-end', gap: 6,
     }}>
-      <span style={{ fontSize: 8, fontFamily: '"JetBrains Mono"', color: colors.textDim, fontWeight: 400, letterSpacing: '0.08em' }}>EARNED</span>
+      <span style={{ fontSize: 11, fontFamily: '"JetBrains Mono"', color: colors.textDim, fontWeight: 400, letterSpacing: '0.08em' }}>EARNED</span>
       <span style={{
         fontSize: 16, fontWeight: 700, fontFamily: '"JetBrains Mono"',
         color: colors.success,

@@ -154,8 +154,8 @@ export default function GridFlowDemo({ width = '100%' }) {
       <div style={{ flex: 1, minHeight: 0, willChange: 'transform', transform: 'translateZ(0)' }}>
         <svg viewBox="0 0 1200 480" style={{ width: '100%', height: '100%' }} preserveAspectRatio="xMidYMid meet">
           <defs>
-            <filter id="gf"><feGaussianBlur stdDeviation="3" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
-            <filter id="wg"><feGaussianBlur stdDeviation="4" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+            <filter id="gf"><feGaussianBlur stdDeviation="1.5" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+            <filter id="wg"><feGaussianBlur stdDeviation="2" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
             {/* Graph paper grid pattern */}
             <pattern id="gridSmall" width="24" height="24" patternUnits="userSpaceOnUse">
               <path d="M 24 0 L 0 0 0 24" fill="none" stroke={c} strokeWidth="0.3" opacity="0.07" />
