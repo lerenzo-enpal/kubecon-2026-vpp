@@ -5,10 +5,12 @@ import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
 
+const isProd = process.env.NODE_ENV === 'production' || process.env.CI === 'true';
+
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://lerenzo-enpal.github.io',
-  base: '/kubecon-2026-vpp',
+  site: isProd ? 'https://lerenzo-enpal.github.io' : undefined,
+  base: isProd ? '/kubecon-2026-vpp' : '/',
   integrations: [react(), mdx()],
 
   vite: {
