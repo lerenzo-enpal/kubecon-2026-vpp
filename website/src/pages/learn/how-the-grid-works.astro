@@ -30,6 +30,8 @@ import { url } from '../../utils/url';
   <GlowLine client:visible />
 </div>
 
+<!-- BLOCK A: The Grid is Huge -->
+
 <h2 id="the-grid-is-huge">The Grid is Huge</h2>
 
 <div id="grid-flow-demo" class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
@@ -70,6 +72,8 @@ import { url } from '../../utils/url';
   <AnimatedStat client:visible value={305} suffix="K km" color="var(--color-primary)" label="Lines" sublabel="transmission" />
 </div>
 
+<!-- BLOCK B: The 50 Hz Heartbeat -->
+
 <h2 id="the-50-hz-heartbeat">The 50 Hz Heartbeat</h2>
 
 <p>
@@ -105,6 +109,8 @@ import { url } from '../../utils/url';
   </div>
 </div>
 
+<!-- BLOCK C: Supply = Demand -->
+
 <h2 id="supply--demand-every-second">Supply = Demand, Every Second</h2>
 
 <p>
@@ -119,6 +125,43 @@ import { url } from '../../utils/url';
   output in real time, responding to signals from grid operators and automatic control systems.
   It is a continuous, never-ending act of coordination.
 </p>
+
+<!-- BLOCK E: 2.5 Hz Between Normal and Catastrophe (moved before D) -->
+
+<h2 id="25-hz-between-normal-and-catastrophe">2.5 Hz Between Normal and Catastrophe</h2>
+
+<p>
+  The entire margin between a healthy grid and a catastrophic blackout is just 2.5 Hz — from
+  50.0 Hz down to 47.5 Hz. That's less than the difference between two adjacent notes on a piano.
+  You literally cannot hear the difference.
+</p>
+
+<div id="frequency-walkthrough" class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
+  <div class="flex items-center justify-between mb-3">
+    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">FREQUENCY THRESHOLD WALKTHROUGH</div>
+  </div>
+  <FullscreenWrapper client:visible label="Fullscreen">
+    <FrequencyWalkthrough client:visible height={480} />
+  </FullscreenWrapper>
+  <div class="text-xs mt-3" style="color: var(--color-text-dim);">
+    Step through the frequency zones from 50 Hz to total collapse. Watch how the grid responds at each threshold.
+  </div>
+</div>
+
+<p>
+  And yet this narrow band is all that separates 400 million people from losing power simultaneously.
+  In <a href={url("/research/incidents/2021-european-grid-split")}>January 2021, the European grid split into two halves</a> — and came within 0.26 Hz of triggering
+  automatic load shedding. In <a href={url("/research/incidents/2021-texas-ercot-winter-storm")}>Texas the same year</a>, the grid came within
+  <strong>4 minutes and 37 seconds</strong> of a complete collapse that engineers estimated would
+  have taken months to recover from.
+</p>
+
+<p>
+  This is the system that every light switch, every hospital, every data center depends on. And it
+  is about to change dramatically.
+</p>
+
+<!-- BLOCK D: What Happens When Balance Breaks (moved after E) -->
 
 <h2 id="what-happens-when-balance-breaks">What Happens When Balance Breaks</h2>
 
@@ -174,6 +217,8 @@ import { url } from '../../utils/url';
   </div>
 </div>
 
+<h2 id="try-to-break-the-grid">Try to Break the Grid!</h2>
+
 <div id="frequency-simulator" class="my-10 rounded-lg overflow-hidden p-4 scroll-mt-20" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
   <div class="flex items-center justify-between mb-3">
     <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">Grid Frequency Simulator</div>
@@ -193,38 +238,7 @@ import { url } from '../../utils/url';
   </div>
 </div>
 
-<h2 id="25-hz-between-normal-and-catastrophe">2.5 Hz Between Normal and Catastrophe</h2>
-
-<p>
-  The entire margin between a healthy grid and a catastrophic blackout is just 2.5 Hz — from
-  50.0 Hz down to 47.5 Hz. That's less than the difference between two adjacent notes on a piano.
-  You literally cannot hear the difference.
-</p>
-
-<div id="frequency-walkthrough" class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
-  <div class="flex items-center justify-between mb-3">
-    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">FREQUENCY THRESHOLD WALKTHROUGH</div>
-  </div>
-  <FullscreenWrapper client:visible label="Fullscreen">
-    <FrequencyWalkthrough client:visible height={480} />
-  </FullscreenWrapper>
-  <div class="text-xs mt-3" style="color: var(--color-text-dim);">
-    Step through the frequency zones from 50 Hz to total collapse. Watch how the grid responds at each threshold.
-  </div>
-</div>
-
-<p>
-  And yet this narrow band is all that separates 400 million people from losing power simultaneously.
-  In <a href={url("/research/incidents/2021-european-grid-split")}>January 2021, the European grid split into two halves</a> — and came within 0.26 Hz of triggering
-  automatic load shedding. In <a href={url("/research/incidents/2021-texas-ercot-winter-storm")}>Texas the same year</a>, the grid came within
-  <strong>4 minutes and 37 seconds</strong> of a complete collapse that engineers estimated would
-  have taken months to recover from.
-</p>
-
-<p>
-  This is the system that every light switch, every hospital, every data center depends on. And it
-  is about to change dramatically.
-</p>
+<!-- FOOTER -->
 
 <div class="my-8">
   <GlowLine client:visible />

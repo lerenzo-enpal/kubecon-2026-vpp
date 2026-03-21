@@ -76,10 +76,10 @@ const slideTemplate = ({ slideNumber, numberOfSlides }) => {
           {speaker}
         </div>
       )}
-      <div className="absolute bottom-3 right-5 text-[12px] font-mono flex gap-2 items-center" style={{ color: colors.textMuted }}>
+      <a href="?slideIndex=2" className="absolute bottom-3 right-5 text-[12px] font-mono flex gap-2 items-center cursor-pointer" style={{ color: colors.textMuted, textDecoration: 'none' }}>
         {label && <span style={{ color: colors.textDim }}>{label}</span>}
         <span>{slideNumber} / {numberOfSlides}</span>
-      </div>
+      </a>
     </>
   );
 };
@@ -181,19 +181,19 @@ export default function Presentation() {
           <H size="36px">Agenda</H>
           <div className="flex flex-col gap-5 mt-6">
             {[
-              { num: '01', title: 'The Grid', sub: 'How the world\'s largest machine works — and how it fails', color: colors.danger, time: '~10 min' },
-              { num: '02', title: 'The Renewable Revolution', sub: 'Why cheap clean energy creates expensive new problems', color: colors.accent, time: '~7 min' },
-              { num: '03', title: 'The Virtual Power Plant', sub: 'Software that turns millions of devices into grid infrastructure', color: colors.primary, time: '~10 min' },
-              { num: '04', title: 'Resilience', sub: 'What the future grid looks like — and why you already know how to build it', color: colors.success, time: '~3 min' },
+              { num: '01', title: 'The Grid', sub: 'How the world\'s largest machine works — and how it fails', color: colors.danger, time: '~10 min', slide: 3 },
+              { num: '02', title: 'The Renewable Revolution', sub: 'Why cheap clean energy creates expensive new problems', color: colors.accent, time: '~7 min', slide: 14 },
+              { num: '03', title: 'The Virtual Power Plant', sub: 'Software that turns millions of devices into grid infrastructure', color: colors.primary, time: '~10 min', slide: 18 },
+              { num: '04', title: 'Resilience', sub: 'What the future grid looks like — and why you already know how to build it', color: colors.success, time: '~3 min', slide: 30 },
             ].map(s => (
-              <div key={s.num} className="flex items-center gap-5">
+              <a key={s.num} href={`?slideIndex=${s.slide}`} className="flex items-center gap-5 no-underline cursor-pointer" style={{ textDecoration: 'none' }}>
                 <div className="text-[28px] font-extrabold font-mono min-w-[48px] text-right" style={{ color: s.color }}>{s.num}</div>
                 <div className="flex-1" style={{ borderLeft: `2px solid ${s.color}40`, paddingLeft: 20 }}>
                   <div className="text-[22px] font-bold text-hud-text font-sans">{s.title}</div>
                   <div className="text-[20px] text-hud-text-muted font-sans mt-0.5">{s.sub}</div>
                 </div>
                 <div className="text-[20px] text-hud-text-dim font-mono">{s.time}</div>
-              </div>
+              </a>
             ))}
           </div>
         </div>
