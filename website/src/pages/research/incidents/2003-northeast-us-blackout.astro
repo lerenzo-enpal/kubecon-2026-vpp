@@ -6,6 +6,8 @@ import TimelineEvent from '../../../components/TimelineEvent.astro';
 import SourceList from '../../../components/SourceList.astro';
 import TransmissionTower from '../../../components/illustrations/TransmissionTower';
 import Substation from '../../../components/illustrations/Substation';
+import NEUSCascadeMap from '../../../components/NEUSCascadeMap';
+import FullscreenWrapper from '../../../components/FullscreenWrapper';
 ---
 
 <IncidentLayout title="Northeast US/Canada Blackout" description="August 2003: A software bug and untrimmed trees cascaded into the largest blackout in North American history, affecting 55 million people.">
@@ -17,6 +19,8 @@ import Substation from '../../../components/illustrations/Substation';
   keyStat="55M"
   keyStatLabel="people affected"
   severity="blackout"
+  interactive={true}
+  mapId="neus-map"
 />
 
 <QuickFacts facts={[
@@ -31,8 +35,17 @@ import Substation from '../../../components/illustrations/Substation';
 <h2>What Happened</h2>
 
 <p>
-  On a hot August afternoon, a software bug silently killed the alarm system at FirstEnergy's control center in Ohio. For over an hour, operators had no idea that transmission lines were failing one after another. They were flying blind.
+  On a hot August afternoon, a software bug silently killed the alarm system at FirstEnergy's control center in Ohio. For over an hour, operators had no idea that transmission lines were failing one after another. They were flying blind. <a href="#neus-map" class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
 </p>
+
+<div id="neus-map" class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">Northeast US/Canada Grid -- August 14, 2003</div>
+  </div>
+  <FullscreenWrapper client:visible label="Fullscreen">
+    <NEUSCascadeMap client:visible height={400} />
+  </FullscreenWrapper>
+</div>
 
 <p>
   The lines were failing because of untrimmed trees. High electrical load caused transmission cables to heat up and sag into overgrown vegetation, shorting out. Each failed line pushed more current onto its neighbors, heating them up too. The operators who could have intervened never saw the warnings.
