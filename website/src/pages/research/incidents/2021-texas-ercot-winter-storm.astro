@@ -33,25 +33,26 @@ import FullscreenWrapper from '../../../components/FullscreenWrapper';
 <h2>What Happened</h2>
 
 <p>
-  In February 2021, a polar vortex plunged Texas into record-breaking cold. Temperatures crashed well below freezing across the entire state, and electricity demand hit an all-time winter peak. The grid was not ready.
-</p>
-
-<p>
-  Generators began freezing and shutting down. As ERCOT ordered rolling blackouts to prevent total collapse, the power cuts hit natural gas compressor stations and pipelines. Without electricity, gas stopped flowing to the very power plants that needed it most. A self-reinforcing <a href="/research/topics/cascading-failures">cascading failure</a> had begun.
-</p>
-
-<p>
-  At its worst, the grid came within 4 minutes and 37 seconds of a complete cold-start collapse. That would have meant weeks without power instead of days. The blackouts lasted over 70 hours, and 246 people died from hypothermia, carbon monoxide poisoning, and medical emergencies.
+  In February 2021, a polar vortex plunged Texas into record-breaking cold. Temperatures crashed well below freezing across the entire state, and electricity demand hit an all-time winter peak. The grid was not ready. <a href="#texas-timeline" class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
 </p>
 
 <div class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px;">
-  <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px;">
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
     <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">ERCOT Grid — February 2021</div>
+    <span class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7; border: 1px solid rgba(34,211,238,0.2); padding: 1px 8px; border-radius: 3px; cursor: pointer;" onclick="this.closest('div').querySelector('button')?.click()">Interactive</span>
   </div>
   <FullscreenWrapper client:visible label="Fullscreen">
     <TexasCascadeMap client:visible height={400} />
   </FullscreenWrapper>
 </div>
+
+<p>
+  Generators began freezing and shutting down. As ERCOT ordered rolling blackouts to prevent total collapse, the power cuts hit natural gas compressor stations and pipelines. Without electricity, gas stopped flowing to the very power plants that needed it most. A self-reinforcing <a href="/research/topics/cascading-failures">cascading failure</a> had begun.
+</p>
+
+<p id="texas-timeline">
+  At its worst, the grid came within 4 minutes and 37 seconds of a complete cold-start collapse. That would have meant weeks without power instead of days. The blackouts lasted over 70 hours, and 246 people died from hypothermia, carbon monoxide poisoning, and medical emergencies.
+</p>
 
 <div class="float-right ml-6 mb-4" style="width: 160px;">
   <FrequencyPulse client:visible width={160} height={100} />

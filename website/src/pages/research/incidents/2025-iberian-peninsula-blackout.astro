@@ -32,25 +32,26 @@ import FullscreenWrapper from '../../../components/FullscreenWrapper';
 <h2>What Happened</h2>
 
 <p>
-  On a sunny spring afternoon, Spain and Portugal's grids were running on roughly 59% solar power. It was a milestone for renewable energy -- and the conditions for a new kind of disaster. Unlike any previous major blackout, this one was caused by <strong>overvoltage</strong>, not undervoltage.
-</p>
-
-<p>
-  Voltage began climbing across the grid. Solar inverters, designed to protect themselves from high voltage, started disconnecting. Each disconnection reduced the grid's ability to absorb reactive power, pushing voltage even higher. More inverters tripped. A <a href="/research/topics/cascading-failures">cascading</a> overvoltage feedback loop spiraled out of control.
-</p>
-
-<p>
-  In just 6 seconds, the entire Iberian peninsula went dark. Fossil fuel, nuclear, and renewable plants all disconnected to protect their equipment. It was the fastest national-scale grid collapse ever recorded, and the first caused entirely by overvoltage.
+  On a sunny spring afternoon, Spain and Portugal's grids were running on roughly 59% solar power. It was a milestone for renewable energy -- and the conditions for a new kind of disaster. Unlike any previous major blackout, this one was caused by <strong>overvoltage</strong>, not undervoltage. <a href="#iberian-timeline" class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
 </p>
 
 <div class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px;">
-  <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px;">
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
     <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">Iberian Peninsula -- April 28, 2025</div>
+    <span class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7; border: 1px solid rgba(34,211,238,0.2); padding: 1px 8px; border-radius: 3px; cursor: pointer;" onclick="this.closest('div').querySelector('button')?.click()">Interactive</span>
   </div>
   <FullscreenWrapper client:visible label="Fullscreen">
     <IberianCascadeMap client:visible height={400} />
   </FullscreenWrapper>
 </div>
+
+<p>
+  Voltage began climbing across the grid. Solar inverters, designed to protect themselves from high voltage, started disconnecting. Each disconnection reduced the grid's ability to absorb reactive power, pushing voltage even higher. More inverters tripped. A <a href="/research/topics/cascading-failures">cascading</a> overvoltage feedback loop spiraled out of control.
+</p>
+
+<p id="iberian-timeline">
+  In just 6 seconds, the entire Iberian peninsula went dark. Fossil fuel, nuclear, and renewable plants all disconnected to protect their equipment. It was the fastest national-scale grid collapse ever recorded, and the first caused entirely by overvoltage.
+</p>
 
 <h2>Timeline</h2>
 

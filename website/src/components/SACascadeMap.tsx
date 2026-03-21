@@ -129,8 +129,6 @@ export default function SACascadeMap({ width: widthProp, height = 700 }: { width
     window.addEventListener('resize', measure);
     return () => window.removeEventListener('resize', measure);
   }, [widthProp]);
-  const width = widthProp || measuredWidth;
-
   // Detect fullscreen
   const [isFullscreen, setIsFullscreen] = useState(false);
   useEffect(() => {
@@ -138,6 +136,9 @@ export default function SACascadeMap({ width: widthProp, height = 700 }: { width
     document.addEventListener('fullscreenchange', fn);
     return () => document.removeEventListener('fullscreenchange', fn);
   }, []);
+
+  const width = isFullscreen ? window.innerWidth : (widthProp || measuredWidth);
+  const actualHeight = isFullscreen ? window.innerHeight : height;
   const compact = !isFullscreen;
   const running = mode !== 'idle';
 
@@ -317,10 +318,10 @@ export default function SACascadeMap({ width: widthProp, height = 700 }: { width
   return (
     <div ref={sizeRef} style={{ width: '100%' }}>
     {ready ? (
-    <div ref={containerRef} tabIndex={0} style={{ position: 'relative', width, height, overflow: 'hidden', background: '#020408', outline: 'none' }}>
+    <div ref={containerRef} tabIndex={0} style={{ position: 'relative', width, height: actualHeight, overflow: 'hidden', background: '#020408', outline: 'none' }}>
 
       {/* ── Map ── */}
-      <DeckGL viewState={viewState} onViewStateChange={({ viewState: vs }: any) => setViewState(vs)} controller={true} layers={layers} width={width} height={height} style={{ position: 'absolute' }}>
+      <DeckGL viewState={viewState} onViewStateChange={({ viewState: vs }: any) => setViewState(vs)} controller={true} layers={layers} width={width} height={actualHeight} style={{ position: 'absolute' }}>
         <MapGL mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json" style={{ width: '100%', height: '100%' }} />
       </DeckGL>
 
@@ -483,7 +484,7 @@ export default function SACascadeMap({ width: widthProp, height = 700 }: { width
 
     </div>
     ) : (
-      <div style={{ width: '100%', height, background: '#020408' }} />
+      <div style={{ width: '100%', height: actualHeight, background: '#020408' }} />
     )}
     </div>
   );

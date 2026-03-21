@@ -1,5 +1,5 @@
 // TODO: Shared between website and presentation — combine into shared component
-import { useRef, useState, useEffect, cloneElement, isValidElement, type ReactNode, type ReactElement } from 'react';
+import { useRef, useState, useEffect, type ReactNode } from 'react';
 
 const GLOW_KEYFRAMES = `
 @keyframes fs-btn-glow {
@@ -44,20 +44,6 @@ export default function FullscreenWrapper({ children, label }: Props) {
     document.exitFullscreen?.();
   }
 
-  // In fullscreen, override child's height to fill the screen
-  const renderedChildren = isFullscreen
-    ? (() => {
-        const child = Array.isArray(children) ? children[0] : children;
-        if (isValidElement(child)) {
-          return cloneElement(child as ReactElement<any>, {
-            width: window.innerWidth,
-            height: window.innerHeight,
-          });
-        }
-        return children;
-      })()
-    : children;
-
   return (
     <div
       ref={wrapperRef}
@@ -69,7 +55,7 @@ export default function FullscreenWrapper({ children, label }: Props) {
         overflow: 'hidden',
       }}
     >
-      {renderedChildren}
+      {children}
 
       {!isFullscreen && (
         <button

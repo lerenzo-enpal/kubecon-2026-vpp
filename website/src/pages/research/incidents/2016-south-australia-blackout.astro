@@ -36,25 +36,26 @@ import FullscreenWrapper from '../../../components/FullscreenWrapper';
 </div>
 
 <p>
-  A once-in-50-year storm swept across South Australia with twin tornadoes packing winds up to 260 km/h. The tornadoes ripped through transmission corridors, destroying 22 high-voltage towers and severing the lines connecting the state's northern wind farms to Adelaide.
-</p>
-
-<p>
-  As transmission lines fell, voltage dips rippled through the grid. Wind turbines are designed to ride through brief voltage drops, but each turbine has a safety limit on how many dips it can handle in quick succession. Nine wind farms hit that limit almost simultaneously, dropping 456 MW of generation in under 7 seconds.
-</p>
-
-<p>
-  The single interconnector to Victoria tried to compensate, surging to 850 MW against its 650 MW capacity. It tripped on overload protection, isolating the entire state. Within seconds, every remaining generator shut down. Total <a href="/research/topics/cascading-failures">cascading failure</a>.
+  A once-in-50-year storm swept across South Australia with twin tornadoes packing winds up to 260 km/h. The tornadoes ripped through transmission corridors, destroying 22 high-voltage towers and severing the lines connecting the state's northern wind farms to Adelaide. <a href="#sa-timeline" class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
 </p>
 
 <div class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px;">
-  <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px;">
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
     <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">SA Grid — September 28, 2016</div>
+    <span class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7; border: 1px solid rgba(34,211,238,0.2); padding: 1px 8px; border-radius: 3px; cursor: pointer;" onclick="this.closest('div').querySelector('button')?.click()">Interactive</span>
   </div>
   <FullscreenWrapper client:visible label="Fullscreen">
     <SACascadeMap client:visible height={400} />
   </FullscreenWrapper>
 </div>
+
+<p>
+  As transmission lines fell, voltage dips rippled through the grid. Wind turbines are designed to ride through brief voltage drops, but each turbine has a safety limit on how many dips it can handle in quick succession. Nine wind farms hit that limit almost simultaneously, dropping 456 MW of generation in under 7 seconds.
+</p>
+
+<p id="sa-timeline">
+  The single interconnector to Victoria tried to compensate, surging to 850 MW against its 650 MW capacity. It tripped on overload protection, isolating the entire state. Within seconds, every remaining generator shut down. Total <a href="/research/topics/cascading-failures">cascading failure</a>.
+</p>
 
 <h2>Timeline</h2>
 

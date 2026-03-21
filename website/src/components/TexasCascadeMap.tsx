@@ -138,8 +138,6 @@ export default function TexasCascadeMap({ width: widthProp, height = 700, varian
     window.addEventListener('resize', measure);
     return () => window.removeEventListener('resize', measure);
   }, [widthProp]);
-  const width = widthProp || measuredWidth;
-
   // Detect fullscreen state
   const [isFullscreen, setIsFullscreen] = useState(false);
   useEffect(() => {
@@ -149,6 +147,10 @@ export default function TexasCascadeMap({ width: widthProp, height = 700, varian
     document.addEventListener('fullscreenchange', onFsChange);
     return () => document.removeEventListener('fullscreenchange', onFsChange);
   }, []);
+
+  // In fullscreen, use screen dimensions; otherwise use measured/prop width
+  const width = isFullscreen ? window.innerWidth : (widthProp || measuredWidth);
+  const actualHeight = isFullscreen ? window.innerHeight : height;
 
   // In compact (non-fullscreen) mode, show final state statically
   const compact = !isFullscreen;
@@ -406,7 +408,7 @@ export default function TexasCascadeMap({ width: widthProp, height = 700, varian
   return (
     <div ref={sizeRef} style={{ width: '100%' }}>
     {ready ? (
-    <div ref={containerRef} tabIndex={0} style={{ position: 'relative', width, height, overflow: 'hidden', background: '#020408', outline: 'none' }}>
+    <div ref={containerRef} tabIndex={0} style={{ position: 'relative', width, height: actualHeight, overflow: 'hidden', background: '#020408', outline: 'none' }}>
       {/* Standalone controls (replaces Spectacle stepper) — fullscreen only */}
       {!compact && (
         <div style={{
@@ -433,7 +435,7 @@ export default function TexasCascadeMap({ width: widthProp, height = 700, varian
         controller={true}
         layers={layers}
         width={width}
-        height={height}
+        height={actualHeight}
         style={{ position: 'absolute' }}
       >
         <MapGL
@@ -967,7 +969,7 @@ export default function TexasCascadeMap({ width: widthProp, height = 700, varian
 
     </div>
     ) : (
-      <div style={{ width: '100%', height, background: '#020408' }} />
+      <div style={{ width: '100%', height: actualHeight, background: '#020408' }} />
     )}
     </div>
   );
