@@ -113,19 +113,6 @@ html.font-lg aside .text-\[10px\] { font-size: 14px !important; }
 .prose p { margin-bottom: 24px; }
 .prose a { color: var(--color-primary); text-decoration: none; }
 .prose a:hover { color: var(--color-text); }
-.prose a::after {
-  content: ' \2197'; /* ↗ arrow */
-  font-size: 0.75em;
-  opacity: 0.5;
-  display: inline-block;
-  transition: opacity 0.2s, transform 0.2s;
-}
-.prose a:hover::after { opacity: 1; transform: translate(1px, -1px); }
-/* No arrow on heading links, hash links, or nav-style links */
-.prose h1 a::after, .prose h2 a::after, .prose h3 a::after,
-.prose a[href^="#"]::after,
-.prose .no-arrow a::after,
-.prose a.no-arrow::after { content: none; }
 .prose strong { color: var(--color-text); font-weight: 600; }
 .prose ul, .prose ol { margin-bottom: 24px; padding-left: 24px; max-width: 720px; }
 .prose li { margin-bottom: 8px; }
