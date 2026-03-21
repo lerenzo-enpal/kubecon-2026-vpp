@@ -50,18 +50,20 @@ Two independent deployments:
 
 | Host | What | Trigger | Config |
 |------|------|---------|--------|
-| **Netlify** | Presentation only | Auto on push to main | `netlify.toml` |
-| **GitHub Pages** | Website + presentation combined | Manual (workflow_dispatch) | `.github/workflows/deploy.yml` |
+| **Netlify** | Presentation only | [Manual trigger](https://github.com/lerenzo-enpal/kubecon-2026-vpp/actions/workflows/deploy-netlify.yml) | `.github/workflows/deploy-netlify.yml` |
+| **GitHub Pages** | Website + presentation | [Manual trigger](https://github.com/lerenzo-enpal/kubecon-2026-vpp/actions/workflows/deploy-ghpages.yml) | `.github/workflows/deploy-ghpages.yml` |
 
-### Netlify (presentation)
+### Netlify (presentation only)
 
-Deploys automatically on every push. Builds `presentation/dist` and serves it. See `netlify.toml` and `docs/netlify-deploy.md` for manual CLI deploy.
+1. Go to [Actions > Deploy to Netlify](https://github.com/lerenzo-enpal/kubecon-2026-vpp/actions/workflows/deploy-netlify.yml)
+2. Click **Run workflow**
+
+Requires `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID` secrets. See `docs/netlify-deploy.md` for CLI deploy.
 
 ### GitHub Pages (full site)
 
-1. Push your changes to `main`
-2. Go to [Actions > Deploy](https://github.com/lerenzo-enpal/kubecon-2026-vpp/actions/workflows/deploy.yml)
-3. Click **Run workflow**
+1. Go to [Actions > Deploy to GitHub Pages](https://github.com/lerenzo-enpal/kubecon-2026-vpp/actions/workflows/deploy-ghpages.yml)
+2. Click **Run workflow**
 
 This is a manual trigger — it never auto-deploys on push. Builds both the website and presentation, serves them combined.
 

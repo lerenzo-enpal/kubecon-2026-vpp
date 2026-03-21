@@ -1,0 +1,29 @@
+name: Deploy to Netlify
+
+on:
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  deploy:
+    name: Build & Deploy Presentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: presentation/package-lock.json
+
+      - name: Install & build
+        working-directory: presentation
+        run: |
+          npm ci
+          npm run build
+
+      - name: Deploy to Netlify
+        run: npx netlify-cli deploy --prod --dir presentation/dist --no-build --message "${{ github.event.head_commit.message || 'Manual deploy' }}"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
