@@ -1,5 +1,8 @@
 ---
 import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import CurtailmentChart from '../../../components/CurtailmentChart.tsx';
+import ChartEnlarger from '../../../components/ChartEnlarger.tsx';
+import FullscreenWrapper from '../../../components/FullscreenWrapper.tsx';
 import { url } from '../../../utils/url';
 ---
 
@@ -155,6 +158,15 @@ import { url } from '../../../utils/url';
 </p>
 
 <h2 id="curtailment-scale" style="color: var(--color-accent);">The Scale of Waste</h2>
+
+<div id="curtailment-chart" class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
+  <div class="flex items-center justify-between mb-3">
+    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">CUMULATIVE CURTAILMENT 2015-2024</div>
+  </div>
+  <ChartEnlarger client:visible>
+    <CurtailmentChart client:visible height={460} />
+  </ChartEnlarger>
+</div>
 
 <table>
   <thead>
