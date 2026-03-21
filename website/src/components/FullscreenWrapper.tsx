@@ -1,4 +1,12 @@
+// TODO: Shared between website and presentation — combine into shared component
 import { useRef, useState, useEffect, type ReactNode } from 'react';
+
+const GLOW_KEYFRAMES = `
+@keyframes fs-btn-glow {
+  0%, 100% { box-shadow: 0 0 4px rgba(34, 211, 238, 0.0), 0 0 8px rgba(34, 211, 238, 0.0); border-color: rgba(34, 211, 238, 0.15); }
+  50% { box-shadow: 0 0 6px rgba(34, 211, 238, 0.25), 0 0 14px rgba(34, 211, 238, 0.1); border-color: rgba(34, 211, 238, 0.45); }
+}
+`;
 
 interface Props {
   children: ReactNode;
@@ -15,6 +23,17 @@ export default function FullscreenWrapper({ children, label }: Props) {
     }
     document.addEventListener('fullscreenchange', onFsChange);
     return () => document.removeEventListener('fullscreenchange', onFsChange);
+  }, []);
+
+  // Inject glow keyframes once
+  useEffect(() => {
+    const id = 'fs-btn-glow-style';
+    if (!document.getElementById(id)) {
+      const style = document.createElement('style');
+      style.id = id;
+      style.textContent = GLOW_KEYFRAMES;
+      document.head.appendChild(style);
+    }
   }, []);
 
   function enterFullscreen() {
@@ -45,28 +64,33 @@ export default function FullscreenWrapper({ children, label }: Props) {
           onClick={enterFullscreen}
           style={{
             position: 'absolute',
-            top: 6,
-            right: 6,
-            background: 'transparent',
-            border: '1px solid rgba(161, 161, 170, 0.25)',
+            top: 16,
+            right: 16,
+            background: 'rgba(5, 8, 16, 0.7)',
+            border: '1px solid rgba(34, 211, 238, 0.15)',
             borderRadius: 4,
-            color: 'rgba(161, 161, 170, 0.5)',
+            color: 'rgba(34, 211, 238, 0.6)',
             cursor: 'pointer',
             fontFamily: '"JetBrains Mono", monospace',
             fontSize: 11,
-            padding: '2px 6px',
+            padding: '3px 8px',
             display: 'flex',
             alignItems: 'center',
             gap: 4,
-            transition: 'color 0.2s, border-color 0.2s',
+            animation: 'fs-btn-glow 3s ease-in-out infinite',
+            transition: 'color 0.2s',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.color = 'rgba(161, 161, 170, 0.9)';
-            e.currentTarget.style.borderColor = 'rgba(161, 161, 170, 0.5)';
+            e.currentTarget.style.color = 'rgba(34, 211, 238, 1)';
+            e.currentTarget.style.animation = 'none';
+            e.currentTarget.style.boxShadow = '0 0 8px rgba(34, 211, 238, 0.4), 0 0 16px rgba(34, 211, 238, 0.15)';
+            e.currentTarget.style.borderColor = 'rgba(34, 211, 238, 0.6)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.color = 'rgba(161, 161, 170, 0.5)';
-            e.currentTarget.style.borderColor = 'rgba(161, 161, 170, 0.25)';
+            e.currentTarget.style.color = 'rgba(34, 211, 238, 0.6)';
+            e.currentTarget.style.animation = 'fs-btn-glow 3s ease-in-out infinite';
+            e.currentTarget.style.boxShadow = '';
+            e.currentTarget.style.borderColor = '';
           }}
           title="Enter fullscreen"
         >

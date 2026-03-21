@@ -6,7 +6,8 @@ import TimelineEvent from '../../../components/TimelineEvent.astro';
 import SourceList from '../../../components/SourceList.astro';
 import GasPlant from '../../../components/illustrations/GasPlant';
 import FrequencyPulse from '../../../components/FrequencyPulse';
-import TexasGridMap from '../../../components/TexasGridMap';
+import TexasCascadeMap from '../../../components/TexasCascadeMap';
+import FullscreenWrapper from '../../../components/FullscreenWrapper';
 ---
 
 <IncidentLayout title="Texas ERCOT Winter Storm Uri" description="February 2021: A polar vortex exposed the fragility of Texas's isolated grid, triggering a gas-electric death spiral that left 4.5 million homes without power.">
@@ -43,10 +44,14 @@ import TexasGridMap from '../../../components/TexasGridMap';
   At its worst, the grid came within 4 minutes and 37 seconds of a complete cold-start collapse. That would have meant weeks without power instead of days. The blackouts lasted over 70 hours, and 246 people died from hypothermia, carbon monoxide poisoning, and medical emergencies.
 </p>
 
-<div class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px;">
-  <div class="font-mono text-xs mb-3" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">ERCOT Grid — February 2021</div>
-  <TexasGridMap client:visible width={660} height={400} />
-</div>
+<FullscreenWrapper client:visible label="Fullscreen">
+  <div class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px;">
+    <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px;">
+      <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">ERCOT Grid — February 2021</div>
+    </div>
+    <TexasCascadeMap client:visible height={400} />
+  </div>
+</FullscreenWrapper>
 
 <div class="float-right ml-6 mb-4" style="width: 160px;">
   <FrequencyPulse client:visible width={160} height={100} />

@@ -186,6 +186,18 @@ html.font-lg aside .text-\[10px\] { font-size: 14px !important; }
 .prose .float-right { float: right; shape-margin: 12px; }
 .prose .float-left { float: left; shape-margin: 12px; }
 
+/* TODO: Shared with presentation/src/index.css — combine into shared map styles */
+/* MapLibre attribution — subtle, blends with dark theme */
+.maplibregl-ctrl-attrib {
+  background: transparent !important;
+  font-size: 9px !important;
+  opacity: 0.7 !important;
+  color: #778 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+.maplibregl-ctrl-attrib a { color: #667 !important; }
+.maplibregl-ctrl-attrib-button { display: none !important; }
+
 @media (prefers-reduced-motion: reduce) {
   .fade-in { opacity: 1; transform: none; transition: none; }
   .stagger > * { transition-delay: 0ms; }
