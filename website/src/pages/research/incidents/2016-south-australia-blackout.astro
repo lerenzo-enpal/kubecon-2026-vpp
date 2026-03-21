@@ -5,7 +5,8 @@ import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
 import SourceList from '../../../components/SourceList.astro';
 import TransmissionTower from '../../../components/illustrations/TransmissionTower';
-import SAGridMap from '../../../components/SAGridMap';
+import SACascadeMap from '../../../components/SACascadeMap';
+import FullscreenWrapper from '../../../components/FullscreenWrapper';
 ---
 
 <IncidentLayout title="South Australia Statewide Blackout" description="September 2016: Twin tornadoes and a hidden wind farm vulnerability combined to black out an entire state in 87 seconds.">
@@ -47,8 +48,12 @@ import SAGridMap from '../../../components/SAGridMap';
 </p>
 
 <div class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px;">
-  <div class="font-mono text-xs mb-3" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">SA Grid — September 28, 2016</div>
-  <SAGridMap client:visible width={660} height={400} />
+  <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px;">
+    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">SA Grid — September 28, 2016</div>
+  </div>
+  <FullscreenWrapper client:visible label="Fullscreen">
+    <SACascadeMap client:visible height={400} />
+  </FullscreenWrapper>
 </div>
 
 <h2>Timeline</h2>
