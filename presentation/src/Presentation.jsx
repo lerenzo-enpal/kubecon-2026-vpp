@@ -135,34 +135,36 @@ export default function Presentation() {
           {/* Speakers */}
           <div className="flex gap-16 mb-12">
             <div className="flex flex-col items-center">
-              <img src="/lerenzo.png" alt="Lerenzo" className="w-28 h-28 rounded-full mb-4" style={{ border: `2px solid ${colors.primary}40`, boxShadow: `0 0 20px ${colors.primary}15` }} />
-              <div className="text-[22px] font-bold text-hud-text font-sans">Lerenzo Luijkx</div>
-              <div className="text-[20px] text-hud-text-muted font-sans mt-1">Staff Engineer</div>
+              <img src="/lerenzo.png" alt="LeRenzo" className="w-28 h-28 rounded-full mb-4 object-cover object-[center_35%] border-2" style={{ borderColor: `${colors.primary}40`, boxShadow: `0 0 20px ${colors.primary}15` }} />
+              <div className="text-xl font-bold text-hud-text font-sans">LeRenzo Tolbert-Malcolm</div>
+              <div className="text-lg text-hud-text-muted font-sans mt-1">Staff Engineer, VPP</div>
             </div>
             <div className="flex flex-col items-center">
-              <img src="/mario.png" alt="Mario" className="w-28 h-28 rounded-full mb-4" style={{ border: `2px solid ${colors.primary}40`, boxShadow: `0 0 20px ${colors.primary}15` }} />
-              <div className="text-[22px] font-bold text-hud-text font-sans">Mario Forzanini</div>
-              <div className="text-[20px] text-hud-text-muted font-sans mt-1">Staff Engineer</div>
+              <img src="/mario.png" alt="Mario" className="w-28 h-28 rounded-full mb-4 object-cover object-[center_35%] border-2" style={{ borderColor: `${colors.primary}40`, boxShadow: `0 0 20px ${colors.primary}15` }} />
+              <div className="text-xl font-bold text-hud-text font-sans">Mario Olivio Flores</div>
+              <div className="text-lg text-hud-text-muted font-sans mt-1">Engineering Manager, VPP</div>
             </div>
           </div>
 
           {/* Main brand */}
           <div className="mb-10 flex flex-col items-center">
-            <img src="/enpal-logo.svg" alt="Enpal" style={{ height: 48 }} />
-            <div className="text-[20px] text-hud-text-muted font-sans mt-4">
+            <img src="/enpal-logo.svg" alt="Enpal" className="h-32" />
+            <div className="text-lg text-hud-text-muted font-sans mt-4">
               Building Europe's Largest Virtual Power Plant
             </div>
           </div>
 
-          {/* Partner logos */}
-          <div className="flex items-center gap-3">
-            <span className="text-[20px] text-hud-text-dim font-mono">Partners</span>
-            <span className="text-hud-text-dim" style={{ opacity: 0.3 }}>|</span>
-            {/* TODO: Replace with Flexa logo image */}
-            <span className="text-[22px] font-bold font-mono" style={{ color: colors.success }}>Flexa</span>
-            <span className="text-hud-text-dim" style={{ opacity: 0.3 }}>|</span>
-            {/* TODO: Replace with Metrify logo image */}
-            <span className="text-[22px] font-bold font-mono" style={{ color: colors.accent }}>Metrify</span>
+          {/* Partners */}
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-lg text-hud-text-dim font-mono mb-1">Partners</span>
+            <div className="flex items-center gap-3">
+              {/* TODO: Replace with logo images */}
+              <span className="text-xl font-bold font-mono" style={{ color: colors.accent }}>Flexa</span>
+              <span className="text-hud-text-dim opacity-30">|</span>
+              <span className="text-xl font-bold font-mono" style={{ color: colors.secondary }}>Entrix</span>
+              <span className="text-hud-text-dim opacity-30">|</span>
+              <span className="text-xl font-bold font-mono" style={{ color: colors.success }}>Metrify</span>
+            </div>
           </div>
         </div>
         <Notes>

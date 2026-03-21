@@ -242,6 +242,18 @@ for (const [color, group] of Object.entries(byColor)) {
 
 ---
 
+## Tailwind: Prefer Utility Classes Over Inline Styles
+
+This applies to **both** the presentation and the website.
+
+- **Always prefer Tailwind classes over inline `style` props.** Use `className="h-32"` not `style={{ height: 128 }}`. Use `text-xl` not `text-[22px]`.
+- **Use Tailwind's built-in size scale** (`text-sm`, `text-base`, `text-lg`, `text-xl`, `text-2xl`, etc.) instead of arbitrary values like `text-[20px]`.
+- **Only use inline styles for dynamic values** that depend on JS variables (e.g., theme color tokens like `colors.primary`).
+- **Use Tailwind shorthand** for common properties: `opacity-30` not `style={{ opacity: 0.3 }}`, `border-2` not `style={{ border: '2px solid ...' }}`, `object-cover object-[center_35%]` not `style={{ objectFit: 'cover', objectPosition: '...' }}`.
+- Arbitrary values (`text-[22px]`, `h-[128px]`) should be the exception, not the default. Check if a standard Tailwind class exists first.
+
+---
+
 ## Website: Tailwind v4 Responsive Design
 
 The website (`website/`) uses Tailwind CSS v4 with a **mobile-first** breakpoint system. Font sizes and layout must be responsive.

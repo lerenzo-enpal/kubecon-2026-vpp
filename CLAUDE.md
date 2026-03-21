@@ -16,6 +16,10 @@
 - Canvas API for animated diagrams
 - Deployed via Netlify
 
+## Styling
+- **Prefer Tailwind utility classes over inline styles.** Use `className="h-32"` not `style={{ height: 128 }}`. Use `text-xl` not `text-[22px]`. Only use inline styles for dynamic values that depend on JS variables (e.g. theme colors).
+- **Use Tailwind's built-in size scale** (`text-sm`, `text-base`, `text-lg`, `text-xl`, `text-2xl`, etc.) instead of arbitrary values like `text-[20px]`. Arbitrary values should be the exception, not the default.
+
 ## Visual Validation
 - **Use the Playwright MCP tools** (`browser_navigate`, `browser_take_screenshot`, `browser_press_key`) for visual validation of slides. Do not write Node scripts for screenshots.
 - Navigate to slides via `http://localhost:5199/?slideIndex=N` (0-indexed).
