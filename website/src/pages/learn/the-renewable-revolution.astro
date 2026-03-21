@@ -1,6 +1,7 @@
 ---
 import ContentLayout from '../../layouts/ContentLayout.astro';
 import DuckCurveExplorer from '../../components/DuckCurveExplorer.tsx';
+import ChartEnlarger from '../../components/ChartEnlarger';
 import SolarHome from '../../components/illustrations/SolarHome';
 import GlowLine from '../../components/GlowLine';
 import { url } from '../../utils/url';
@@ -109,7 +110,9 @@ import { url } from '../../utils/url';
 </p>
 
 <div class="my-8">
-  <DuckCurveExplorer client:visible />
+  <ChartEnlarger client:visible>
+    <DuckCurveExplorer client:visible />
+  </ChartEnlarger>
 </div>
 
 <h2 id="curtailment">Curtailment: Throwing Away Clean Energy</h2>
