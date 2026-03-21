@@ -24,6 +24,7 @@ import CurtailmentChart from './components/CurtailmentChart';
 import ResponseTimeline from './components/ResponseTimeline';
 import ThankYouBackground from './components/ThankYouBackground';
 import FrequencyWalkthrough from './components/FrequencyWalkthrough';
+import ArchitectureExplorer from './components/ArchitectureExplorer';
 
 
 const theme = {
@@ -632,6 +633,187 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
+      {/* 22b: Inside the Architecture — Interactive Explorer */}
+      <Slide backgroundColor="#020408" padding="0">
+        <Stepper values={[1, 2, 3, 4]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="w-full h-full">
+          {(stepVal) => {
+            const archStep = stepVal ?? 0;
+            return <ArchitectureExplorer step={archStep} />;
+          }}
+        </Stepper>
+        <Notes>
+          [LERENZO] Same architecture — now let's zoom in on the key decisions.
+          [ARROW] Home system: Enpal.One edge gateway. Local energy management, WISH protocol for conflict resolution.
+          [ARROW] MQTT + Choreography: No central coordinator. Pub/sub scales linearly. Why not stronger consistency? No shared mutable state.
+          [ARROW] Data pipeline: Databricks lakehouse, Spark streaming. 5M measurements/min. Progressive aggregation reduces storage 10x.
+          [ARROW] Flexa control loop: Market signal to device in under 2 seconds. ArgoCD for GitOps deployment across 100K+ devices.
+        </Notes>
+      </Slide>
+
+      {/* 22c: Cloud Platform — MQTT, Choreography, K8s, ArgoCD */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col h-full">
+          <div className="flex items-end justify-between mb-4">
+            <div>
+              <div className="text-[10px] font-mono font-semibold tracking-[0.2em] uppercase mb-2" style={{ color: colors.textDim }}>CLOUD PLATFORM</div>
+              <H>Event-Driven Control Plane</H>
+            </div>
+            <div className="flex gap-3 pb-1">
+              {[
+                { label: 'RUNTIME', value: 'Dapr', color: colors.primary },
+                { label: 'ORCHESTRATION', value: 'K8s', color: colors.primary },
+                { label: 'GITOPS', value: 'ArgoCD', color: colors.accent },
+                { label: 'BROKER', value: 'EMQX', color: colors.success },
+              ].map((s, i) => (
+                <div key={i} className="rounded px-2 py-1" style={{ background: s.color + '0a', border: `1px solid ${s.color}25` }}>
+                  <div className="text-[8px] font-mono tracking-[0.1em] uppercase" style={{ color: colors.textDim }}>{s.label}</div>
+                  <div className="text-[14px] font-bold font-mono" style={{ color: s.color }}>{s.value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <P size="18px">Choreography over orchestration. MQTT pub/sub with QoS 1. Dapr actors for per-device state. ArgoCD for fleet-wide GitOps deployment.</P>
+
+          <div className="flex-1 flex gap-6 mt-4">
+            {/* Left column: Architecture choices */}
+            <div className="flex-1 flex flex-col gap-4">
+              <div className="rounded-lg p-4" style={{ background: colors.surface, border: `1px solid ${colors.primary}20` }}>
+                <div className="text-[15px] font-semibold font-mono mb-2" style={{ color: colors.primary }}>MQTT + Choreography</div>
+                <div className="text-[14px] text-hud-text-muted font-sans leading-relaxed">
+                  Each device publishes telemetry every 20s. No central coordinator — services react to events independently.
+                  Choreography scales linearly with device count. No single point of failure in the control path.
+                </div>
+              </div>
+              <div className="rounded-lg p-4" style={{ background: colors.surface, border: `1px solid ${colors.success}20` }}>
+                <div className="text-[15px] font-semibold font-mono mb-2" style={{ color: colors.success }}>Dapr Actors</div>
+                <div className="text-[14px] text-hud-text-muted font-sans leading-relaxed">
+                  Each home is a Dapr actor — isolated state, turn-based concurrency.
+                  WISH protocol handles conflict resolution locally when multiple commands arrive simultaneously.
+                </div>
+              </div>
+              <div className="rounded-lg p-4" style={{ background: colors.surface, border: `1px solid ${colors.accent}20` }}>
+                <div className="text-[15px] font-semibold font-mono mb-2" style={{ color: colors.accent }}>ArgoCD + GitOps</div>
+                <div className="text-[14px] text-hud-text-muted font-sans leading-relaxed">
+                  Fleet configuration as code. ArgoCD syncs desired state from Git to Kubernetes.
+                  Rolling updates across 100K+ device configurations without downtime.
+                </div>
+              </div>
+            </div>
+
+            {/* Right column: Consistency model comparison */}
+            <div className="w-[380px] rounded-lg p-4" style={{ background: colors.surface, border: `1px solid ${colors.textDim}20` }}>
+              <div className="text-[12px] font-mono font-semibold tracking-[0.12em] uppercase mb-3" style={{ color: colors.textDim }}>Consistency Model Comparison</div>
+              <div className="flex flex-col gap-2">
+                {[
+                  { model: 'Choreography', desc: 'Services react independently to events', fit: 'Current', fitColor: colors.success, note: 'Scales to millions of devices' },
+                  { model: 'Eventual Consistency', desc: 'State converges over time across replicas', fit: 'Not needed', fitColor: colors.textDim, note: 'No shared mutable state between devices' },
+                  { model: 'Strong Consistency', desc: 'All nodes see same state simultaneously', fit: 'Overkill', fitColor: colors.textDim, note: 'Would bottleneck at fleet scale' },
+                  { model: 'Saga / Orchestration', desc: 'Central coordinator manages transactions', fit: 'Avoided', fitColor: colors.textDim, note: 'Single point of failure risk' },
+                ].map((row, i) => (
+                  <div key={i} className="flex gap-3 items-start py-2" style={{ borderBottom: i < 3 ? `1px solid ${colors.surfaceLight}` : 'none' }}>
+                    <div className="w-[100px] shrink-0">
+                      <div className="text-[12px] font-semibold font-mono" style={{ color: i === 0 ? colors.success : colors.textMuted }}>{row.model}</div>
+                      <div className="text-[10px] font-mono mt-0.5" style={{ color: row.fitColor }}>{row.fit}</div>
+                    </div>
+                    <div>
+                      <div className="text-[11px] text-hud-text-muted font-sans">{row.desc}</div>
+                      <div className="text-[10px] font-mono mt-0.5" style={{ color: colors.textDim }}>{row.note}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+        <Notes>
+          [LERENZO] This is our control plane — how we manage 100K+ devices.
+          MQTT with QoS 1 and choreography — not orchestration. Each service reacts to events independently.
+          Why choreography? No central coordinator = no single point of failure. Scales linearly.
+          Why not stronger consistency? We don't need it. Devices are independent — there's no shared mutable state between homes.
+          Eventual consistency would add complexity for no benefit. Strong consistency would be a bottleneck.
+          Dapr actors give us per-device isolation with turn-based concurrency. The WISH protocol handles conflict resolution.
+          ArgoCD for GitOps — fleet configuration as code. Rolling updates to 100K+ devices from a Git commit.
+        </Notes>
+      </Slide>
+
+      {/* 22d: Data Pipeline — Databricks, Spark, Aggregation */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col h-full">
+          <div className="flex items-end justify-between mb-4">
+            <div>
+              <div className="text-[10px] font-mono font-semibold tracking-[0.2em] uppercase mb-2" style={{ color: colors.textDim }}>DATA PIPELINE</div>
+              <H color="#FF3621">Streaming at Scale</H>
+            </div>
+            <div className="flex gap-3 pb-1">
+              {[
+                { label: 'INGESTION', value: '20s', color: colors.secondary },
+                { label: 'LAKEHOUSE', value: 'Delta', color: '#FF3621' },
+                { label: 'STREAMING', value: 'Spark', color: '#E25A1C' },
+                { label: 'LATENCY', value: '<5s', color: colors.success },
+              ].map((s, i) => (
+                <div key={i} className="rounded px-2 py-1" style={{ background: s.color + '0a', border: `1px solid ${s.color}25` }}>
+                  <div className="text-[8px] font-mono tracking-[0.1em] uppercase" style={{ color: colors.textDim }}>{s.label}</div>
+                  <div className="text-[14px] font-bold font-mono" style={{ color: s.color }}>{s.value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <P size="18px">Protobuf telemetry into Databricks lakehouse. Spark streaming aggregates for near-real-time pattern detection across the fleet.</P>
+
+          <div className="flex-1 flex gap-6 mt-4">
+            {/* Pipeline stages */}
+            <div className="flex-1 flex flex-col gap-3">
+              {[
+                { stage: 'RAW', desc: 'Every measurement lands as-is. Protobuf decoded to Delta Lake. Full fidelity, no transformation.', color: colors.secondary, retention: '7 days' },
+                { stage: 'BRONZE', desc: 'Schema validation, deduplication, late-arrival handling. Partitioned by device and hour.', color: '#FF3621', retention: '30 days' },
+                { stage: 'SILVER', desc: 'Cleaned, enriched with device metadata. Joined with weather and market data. Ready for analytics.', color: '#FF3621', retention: '1 year' },
+                { stage: 'GOLD', desc: 'Streaming aggregates — fleet-wide patterns, anomaly detection, capacity forecasting. Powers the VPP controller.', color: '#E25A1C', retention: 'Indefinite' },
+              ].map((s, i) => (
+                <div key={i} className="flex items-start gap-4 rounded-lg px-4 py-3" style={{ background: s.color + '06', border: `1px solid ${s.color}15` }}>
+                  <div className="shrink-0 w-[70px]">
+                    <div className="text-[14px] font-extrabold font-mono" style={{ color: s.color }}>{s.stage}</div>
+                    <div className="text-[9px] font-mono mt-1" style={{ color: colors.textDim }}>{s.retention}</div>
+                  </div>
+                  <div className="text-[13px] text-hud-text-muted font-sans leading-relaxed">{s.desc}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Key metrics */}
+            <div className="w-[260px] flex flex-col gap-3">
+              <div className="rounded-lg p-4 text-center" style={{ background: '#FF362108', border: `1px solid #FF362120` }}>
+                <div className="text-[28px] font-extrabold font-mono" style={{ color: '#FF3621' }}>100K+</div>
+                <div className="text-[11px] font-mono" style={{ color: colors.textDim }}>devices reporting every 20s</div>
+              </div>
+              <div className="rounded-lg p-4 text-center" style={{ background: '#E25A1C08', border: `1px solid #E25A1C20` }}>
+                <div className="text-[28px] font-extrabold font-mono" style={{ color: '#E25A1C' }}>5M+</div>
+                <div className="text-[11px] font-mono" style={{ color: colors.textDim }}>measurements per minute</div>
+              </div>
+              <div className="rounded-lg p-4 text-center" style={{ background: colors.success + '08', border: `1px solid ${colors.success}20` }}>
+                <div className="text-[28px] font-extrabold font-mono" style={{ color: colors.success }}>{'<'}2s</div>
+                <div className="text-[11px] font-mono" style={{ color: colors.textDim }}>market signal to device response</div>
+              </div>
+              <div className="rounded-lg p-4" style={{ background: colors.surface, border: `1px solid ${colors.surfaceLight}` }}>
+                <div className="text-[11px] font-mono font-semibold tracking-[0.1em] uppercase mb-2" style={{ color: colors.textDim }}>Cost Strategy</div>
+                <div className="text-[12px] text-hud-text-muted font-sans leading-relaxed">
+                  Progressive aggregation reduces storage 10x. Raw data expires after 7 days.
+                  Streaming aggregates on Databricks replace expensive batch jobs.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <Notes>
+          [LERENZO] This is our data pipeline — Databricks lakehouse with Spark streaming.
+          Every device reports every 20 seconds. That's 5 million measurements per minute at scale.
+          Raw → Bronze → Silver → Gold. Each layer adds value and reduces volume.
+          The game changer: Spark streaming aggregates give us near-real-time pattern detection.
+          We progressively increase aggregation windows — raw data is kept 7 days, aggregates are kept indefinitely.
+          This is how we reduce costs while maintaining the sub-second latency that makes real-time grid response possible.
+          The full control loop: market signal → Flexa → Event Hub → Cloud HEMS → EMQX → device — under 2 seconds.
+        </Notes>
+      </Slide>
+
       {/* 23: The Architecture Parallel */}
       <Slide backgroundColor={bg} padding={pad}>
         <style>{`
@@ -649,7 +831,9 @@ export default function Presentation() {
           }
         `}</style>
         <div className="flex flex-col h-full w-full">
+          <div className="text-[10px] font-mono font-semibold tracking-[0.2em] uppercase mb-2" style={{ color: colors.textDim }}>INSIDE THE ARCHITECTURE</div>
           <H>The Architecture Parallel</H>
+          <P size="18px">The same distributed systems principles that run the internet can run the power grid.</P>
           <div className="flex-1 flex flex-col justify-center w-full max-w-[880px] mx-auto gap-5">
             {[
               { grid: 'Few large generators', vpp: 'Distributed edge nodes', color: colors.danger },
