@@ -172,14 +172,14 @@ const topics = [
                       {m.sections.map((s) => (
                         <a
                           href={`#${s.id}`}
-                          class="toc-section flex items-center gap-2 px-2 py-1.5 rounded text-xs transition-colors"
+                          class="toc-section flex items-center gap-2 px-2 py-1.5 rounded text-sm transition-colors"
                           style="color: var(--color-text-dim);"
                           data-section={s.id}
                         >
                           <span>{s.title}</span>
                           {s.interactive && (
                             <span
-                              class="font-mono text-[10px] px-1.5 py-0.5 rounded flex-shrink-0"
+                              class="font-mono text-xs px-1.5 py-0.5 rounded flex-shrink-0"
                               style="background: rgba(34, 211, 238, 0.08); color: var(--color-primary); border: 1px solid rgba(34, 211, 238, 0.15);"
                             >
                               Interactive
@@ -206,10 +206,10 @@ const topics = [
 
               {/* Incidents — expandable */}
               <details class="group" open={isResearchIncident}>
-                <summary class="px-3 py-1.5 rounded text-xs cursor-pointer select-none list-none flex items-center gap-1 transition-colors" style="color: var(--color-text-dim);">
-                  <span class="text-[10px] transition-transform group-open:rotate-90" style="color: var(--color-text-dim);">&#9656;</span>
+                <summary class="px-3 py-1.5 rounded text-sm cursor-pointer select-none list-none flex items-center gap-1 transition-colors" style="color: var(--color-text-dim);">
+                  <span class="text-xs transition-transform group-open:rotate-90" style="color: var(--color-text-dim);">&#9656;</span>
                   Grid Incidents
-                  <span class="ml-auto font-mono text-[10px]" style="color: var(--color-surface-light);">12</span>
+                  <span class="ml-auto font-mono text-xs" style="color: var(--color-surface-light);">12</span>
                 </summary>
                 <div class="ml-4 pl-3 border-l mt-0.5 mb-1 flex flex-col gap-0" style="border-color: var(--color-surface-light);">
                   {incidents.map((inc) => {
@@ -217,7 +217,7 @@ const topics = [
                     return (
                       <a
                         href={url(`/research/incidents/${inc.slug}`)}
-                        class="px-2 py-1 rounded text-[11px] transition-colors truncate"
+                        class="px-2 py-1.5 rounded text-sm transition-colors truncate"
                         style={isActiveInc
                           ? 'background: var(--color-surface); color: var(--color-text);'
                           : 'color: var(--color-text-dim);'
@@ -234,10 +234,10 @@ const topics = [
 
               {/* Topics — expandable */}
               <details class="group" open={isResearchTopic}>
-                <summary class="px-3 py-1.5 rounded text-xs cursor-pointer select-none list-none flex items-center gap-1 transition-colors" style="color: var(--color-text-dim);">
-                  <span class="text-[10px] transition-transform group-open:rotate-90" style="color: var(--color-text-dim);">&#9656;</span>
+                <summary class="px-3 py-1.5 rounded text-sm cursor-pointer select-none list-none flex items-center gap-1 transition-colors" style="color: var(--color-text-dim);">
+                  <span class="text-xs transition-transform group-open:rotate-90" style="color: var(--color-text-dim);">&#9656;</span>
                   Deep Dives
-                  <span class="ml-auto font-mono text-[10px]" style="color: var(--color-surface-light);">8</span>
+                  <span class="ml-auto font-mono text-xs" style="color: var(--color-surface-light);">8</span>
                 </summary>
                 <div class="ml-4 pl-3 border-l mt-0.5 mb-1 flex flex-col gap-0" style="border-color: var(--color-surface-light);">
                   {topics.map((t) => {
@@ -245,7 +245,7 @@ const topics = [
                     return (
                       <a
                         href={url(`/research/topics/${t.slug}`)}
-                        class="px-2 py-1 rounded text-[11px] transition-colors truncate"
+                        class="px-2 py-1.5 rounded text-sm transition-colors truncate"
                         style={isActiveTopic
                           ? 'background: var(--color-surface); color: var(--color-text);'
                           : 'color: var(--color-text-dim);'
@@ -268,7 +268,7 @@ const topics = [
               class="block p-3 rounded-lg transition-colors"
               style="background: rgba(34, 211, 238, 0.06); border: 1px solid rgba(34, 211, 238, 0.15);"
             >
-              <div class="font-mono text-[10px] mb-1" style="color: var(--color-primary); letter-spacing: 0.1em; text-transform: uppercase;">
+              <div class="font-mono text-xs mb-1" style="color: var(--color-primary); letter-spacing: 0.1em; text-transform: uppercase;">
                 KubeCon 2026
               </div>
               <div class="text-sm font-medium" style="color: var(--color-text);">
@@ -279,8 +279,8 @@ const topics = [
               </div>
             </a>
             <div class="flex gap-4 mt-3">
-              <a href="https://www.enpal.de/solar" target="_blank" rel="noopener" class="text-[10px] hover:opacity-70 transition-opacity" style="color: var(--color-text-dim);">Get Solar</a>
-              <a href="https://www.enpal.de/karriere" target="_blank" rel="noopener" class="text-[10px] hover:opacity-70 transition-opacity" style="color: var(--color-text-dim);">Work in Green Tech</a>
+              <a href="https://www.enpal.de/solar" target="_blank" rel="noopener" class="text-xs hover:opacity-70 transition-opacity" style="color: var(--color-text-dim);">Get Solar</a>
+              <a href="https://www.enpal.de/karriere" target="_blank" rel="noopener" class="text-xs hover:opacity-70 transition-opacity" style="color: var(--color-text-dim);">Work in Green Tech</a>
             </div>
           </div>
         </div>
