@@ -4,6 +4,7 @@ import IncidentHero from '../../../components/IncidentHero.astro';
 import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
 import SourceList from '../../../components/SourceList.astro';
+import TransmissionTower from '../../../components/illustrations/TransmissionTower';
 ---
 
 <IncidentLayout title="South Australia Statewide Blackout" description="September 2016: Twin tornadoes and a hidden wind farm vulnerability combined to black out an entire state in 87 seconds.">
@@ -27,6 +28,10 @@ import SourceList from '../../../components/SourceList.astro';
 ]} />
 
 <h2>What Happened</h2>
+
+<div class="flex justify-center my-6 opacity-70">
+  <TransmissionTower client:visible width={180} height={110} />
+</div>
 
 <p>
   A once-in-50-year storm swept across South Australia with twin tornadoes packing winds up to 260 km/h. The tornadoes ripped through transmission corridors, destroying 22 high-voltage towers and severing the lines connecting the state's northern wind farms to Adelaide.

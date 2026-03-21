@@ -4,6 +4,7 @@ import IncidentHero from '../../../components/IncidentHero.astro';
 import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
 import SourceList from '../../../components/SourceList.astro';
+import SolarHome from '../../../components/illustrations/SolarHome';
 ---
 
 <IncidentLayout title="Iberian Peninsula Blackout" description="April 2025: The first major blackout in history caused by overvoltage. High solar penetration without adequate storage led to a 6-second collapse affecting 60 million people.">
@@ -101,6 +102,10 @@ import SourceList from '../../../components/SourceList.astro';
   <p class="text-sm leading-relaxed mb-0" style="color: var(--color-text-muted);">
     Each disconnection removed reactive power absorption, driving voltage higher still. This positive feedback loop -- <strong style="color: var(--color-text);">voltage rise causes disconnection, which causes more voltage rise</strong> -- collapsed the entire Iberian grid in 6 seconds. It was simply too fast for any human or conventional system to react.
   </p>
+</div>
+
+<div class="flex justify-center my-6 opacity-70">
+  <SolarHome client:visible width={180} height={110} />
 </div>
 
 <p>

@@ -1,6 +1,8 @@
 ---
 import ContentLayout from '../../layouts/ContentLayout.astro';
 import DuckCurveExplorer from '../../components/DuckCurveExplorer.tsx';
+import SolarHome from '../../components/illustrations/SolarHome';
+import GlowLine from '../../components/GlowLine';
 ---
 
 <ContentLayout title="The Renewable Revolution" description="Solar and wind are growing faster than anyone predicted. But the grid wasn't built for energy that comes and goes with the weather.">
@@ -12,9 +14,15 @@ import DuckCurveExplorer from '../../components/DuckCurveExplorer.tsx';
   energy that comes and goes with the weather.
 </p>
 
-<hr />
+<div class="my-8">
+  <GlowLine client:visible />
+</div>
 
 <h2 id="growth">Solar and Wind Growth</h2>
+
+<div class="flex justify-center my-6 opacity-80">
+  <SolarHome client:visible width={200} height={120} />
+</div>
 
 <p>
   In the year 2000, renewable sources provided just 6% of Germany's electricity. By 2025,
@@ -176,12 +184,18 @@ import DuckCurveExplorer from '../../components/DuckCurveExplorer.tsx';
   without a fundamental change in how the grid absorbs surplus energy.
 </p>
 
-<hr />
+<div class="my-8">
+  <GlowLine client:visible color="var(--color-solar)" />
+</div>
 
 <p>
   The grid needs a way to absorb this energy — to soak up the surplus when the sun shines and
   release it when it doesn't. That is exactly what a <a href="/learn/the-virtual-power-plant">Virtual Power Plant</a> does.
 </p>
+
+<div class="my-8">
+  <GlowLine client:visible />
+</div>
 
 <div class="my-8 p-6 rounded-lg no-arrow" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
   <div class="font-mono text-sm mb-2" style="color: var(--color-primary); letter-spacing: 0.08em;">NEXT</div>

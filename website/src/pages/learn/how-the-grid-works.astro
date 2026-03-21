@@ -2,6 +2,11 @@
 import ContentLayout from '../../layouts/ContentLayout.astro';
 import FrequencyPulse from '../../components/FrequencyPulse';
 import AnimatedStat from '../../components/AnimatedStat';
+import CoalPlant from '../../components/illustrations/CoalPlant';
+import TransmissionTower from '../../components/illustrations/TransmissionTower';
+import Substation from '../../components/illustrations/Substation';
+import House from '../../components/illustrations/House';
+import GlowLine from '../../components/GlowLine';
 ---
 
 <ContentLayout title="How the Grid Works" description="The electricity grid is the largest machine ever built. Learn how it maintains a constant 50 Hz frequency.">
@@ -16,9 +21,21 @@ import AnimatedStat from '../../components/AnimatedStat';
   serves billions, and must balance supply and demand <strong>every single second</strong>.
 </p>
 
-<hr />
+<div class="my-8">
+  <GlowLine client:visible />
+</div>
 
 <h2 id="the-grid-is-huge">The Grid is Huge</h2>
+
+<div class="flex items-center justify-center gap-4 my-8 opacity-80 flex-wrap">
+  <CoalPlant client:visible width={80} height={60} />
+  <span class="font-mono text-lg" style="color: var(--color-text-dim);">&rarr;</span>
+  <TransmissionTower client:visible width={60} height={70} />
+  <span class="font-mono text-lg" style="color: var(--color-text-dim);">&rarr;</span>
+  <Substation client:visible width={70} height={60} />
+  <span class="font-mono text-lg" style="color: var(--color-text-dim);">&rarr;</span>
+  <House client:visible width={60} height={50} />
+</div>
 
 <p>
   The European electricity grid connects 36 countries, over 400 million consumers, and roughly
@@ -163,6 +180,10 @@ import AnimatedStat from '../../components/AnimatedStat';
   This is the system that every light switch, every hospital, every data center depends on. And it
   is about to change dramatically.
 </p>
+
+<div class="my-8">
+  <GlowLine client:visible />
+</div>
 
 <div class="my-8 p-6 rounded-lg no-arrow" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
   <div class="font-mono text-sm mb-2" style="color: var(--color-primary); letter-spacing: 0.08em;">NEXT</div>

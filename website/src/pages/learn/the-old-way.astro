@@ -1,5 +1,8 @@
 ---
 import ContentLayout from '../../layouts/ContentLayout.astro';
+import GasPlant from '../../components/illustrations/GasPlant';
+import TransmissionTower from '../../components/illustrations/TransmissionTower';
+import GlowLine from '../../components/GlowLine';
 ---
 
 <ContentLayout title="The Old Way" description="Before batteries and software, this is how we kept the lights on. It cost over EUR 10 billion per year.">
@@ -11,9 +14,15 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
   It cost over <strong>EUR 10 billion per year</strong>.
 </p>
 
-<hr />
+<div class="my-8">
+  <GlowLine client:visible />
+</div>
 
 <h2 id="peaker-plants">Peaker Plants</h2>
+
+<div class="flex justify-center my-6 opacity-80">
+  <GasPlant client:visible width={200} height={120} />
+</div>
 
 <p>
   A peaker plant is a gas turbine that exists for one purpose: to fire up during rare demand
@@ -83,6 +92,10 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
 </div>
 
 <h2 id="congestion">Grid Congestion</h2>
+
+<div class="flex justify-center my-6 opacity-80">
+  <TransmissionTower client:visible width={160} height={120} />
+</div>
 
 <p>
   The European transmission grid has bottlenecks — places where the wires simply cannot carry
@@ -214,6 +227,10 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
   </a>
 </div>
 
+<div class="my-8">
+  <GlowLine client:visible color="var(--color-danger)" />
+</div>
+
 <div class="my-8 p-6 rounded-lg no-arrow fade-in" style="background: rgba(239, 68, 68, 0.06); border: 1px solid rgba(239, 68, 68, 0.2);">
   <div class="font-mono text-sm mb-2" style="color: var(--color-danger); letter-spacing: 0.08em; text-transform: uppercase;">Total Cost</div>
   <div class="text-lg font-semibold mb-2" style="color: var(--color-text);">
@@ -223,6 +240,10 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
     And when it fails, people die. The old way of managing the grid was designed for a world
     of predictable, centralized power plants. That world <a href="/learn/the-renewable-revolution">no longer exists</a>.
   </div>
+</div>
+
+<div class="my-8">
+  <GlowLine client:visible />
 </div>
 
 <div class="my-8 p-6 rounded-lg no-arrow" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">

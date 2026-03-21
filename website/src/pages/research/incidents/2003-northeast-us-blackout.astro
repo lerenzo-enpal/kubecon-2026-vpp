@@ -4,6 +4,8 @@ import IncidentHero from '../../../components/IncidentHero.astro';
 import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
 import SourceList from '../../../components/SourceList.astro';
+import TransmissionTower from '../../../components/illustrations/TransmissionTower';
+import Substation from '../../../components/illustrations/Substation';
 ---
 
 <IncidentLayout title="Northeast US/Canada Blackout" description="August 2003: A software bug and untrimmed trees cascaded into the largest blackout in North American history, affecting 55 million people.">
@@ -90,6 +92,11 @@ import SourceList from '../../../components/SourceList.astro';
   description="In under 8 minutes, hundreds of transmission lines and generators trip across eight states and Ontario. The grid fragments into unsustainable islands. 55 million people lose power."
   severity="collapse"
 />
+
+<div class="flex justify-center items-end gap-8 my-6 opacity-70">
+  <TransmissionTower client:visible width={120} height={90} />
+  <Substation client:visible width={120} height={90} />
+</div>
 
 <h2>Root Cause</h2>
 

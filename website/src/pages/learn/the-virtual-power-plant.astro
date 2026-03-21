@@ -1,5 +1,9 @@
 ---
 import ContentLayout from '../../layouts/ContentLayout.astro';
+import SolarHome from '../../components/illustrations/SolarHome';
+import ConnectedHomes from '../../components/illustrations/ConnectedHomes';
+import EVGarage from '../../components/illustrations/EVGarage';
+import GlowLine from '../../components/GlowLine';
 ---
 
 <ContentLayout title="The Virtual Power Plant" description="What if every home with a battery could help stabilize the grid? That's not a thought experiment -- it's happening right now.">
@@ -11,9 +15,15 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
   experiment — it's happening right now.
 </p>
 
-<hr />
+<div class="my-8">
+  <GlowLine client:visible />
+</div>
 
 <h2 id="what-is-a-vpp">What is a VPP?</h2>
+
+<div class="flex justify-center my-6 opacity-80">
+  <ConnectedHomes client:visible width={240} height={140} />
+</div>
 
 <p>
   A <a href="/research/topics/vpp-market">Virtual Power Plant</a> is a network of thousands of homes with solar panels, batteries,
@@ -55,6 +65,10 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
 
 <h2 id="homes-as-infrastructure">Homes as Infrastructure</h2>
 
+<div class="flex justify-center my-6 opacity-80">
+  <SolarHome client:visible width={200} height={120} />
+</div>
+
 <p>
   A VPP home is not just a consumer of electricity — it is a piece of grid infrastructure.
   Each home contains several devices that can generate, store, or shift energy on command.
@@ -93,6 +107,10 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
       thermal storage.
     </div>
   </div>
+</div>
+
+<div class="flex justify-center my-6 opacity-80">
+  <EVGarage client:visible width={180} height={110} />
 </div>
 
 <p>
@@ -270,12 +288,18 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
   <a href="/learn/the-old-way">peaker plants</a> for <a href="/research/topics/grid-frequency">frequency control</a>. It was the proof point the industry needed.
 </p>
 
-<hr />
+<div class="my-8">
+  <GlowLine client:visible />
+</div>
 
 <p>
   A VPP turns every home into a tiny power plant. Together, they can do everything peaker
   plants do — faster, cleaner, and at a fraction of the cost.
 </p>
+
+<div class="my-8">
+  <GlowLine client:visible />
+</div>
 
 <div class="my-8 p-6 rounded-lg no-arrow" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
   <div class="font-mono text-sm mb-2" style="color: var(--color-primary); letter-spacing: 0.08em;">NEXT</div>
