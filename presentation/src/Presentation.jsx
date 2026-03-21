@@ -635,12 +635,23 @@ export default function Presentation() {
 
       {/* 22b: Inside the Architecture — Interactive Explorer */}
       <Slide backgroundColor="#020408" padding="0">
-        <Stepper values={[1, 2, 3, 4]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="w-full h-full">
-          {(stepVal) => {
-            const archStep = stepVal ?? 0;
-            return <ArchitectureExplorer step={archStep} />;
-          }}
-        </Stepper>
+        <div className="relative w-full h-full">
+          {/* Full-screen architecture explorer as background */}
+          <div className="absolute inset-0">
+            <Stepper values={[1, 2, 3, 4]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="w-full h-full">
+              {(stepVal) => {
+                const archStep = stepVal ?? 0;
+                return <ArchitectureExplorer step={archStep} />;
+              }}
+            </Stepper>
+          </div>
+          {/* Heading overlay */}
+          <div className="relative z-10 px-8 pt-5 pointer-events-none" style={{ background: 'linear-gradient(to bottom, #020408 0%, #020408cc 60%, transparent 100%)' }}>
+            <div className="text-[10px] font-mono font-semibold tracking-[0.2em] uppercase mb-2" style={{ color: colors.textDim }}>INSIDE THE ARCHITECTURE</div>
+            <H>Inside the Architecture</H>
+            <P size="18px" style={{ opacity: 0.7 }}>Zoom in on the key decisions. Click through to explore each layer.</P>
+          </div>
+        </div>
         <Notes>
           [LERENZO] Same architecture — now let's zoom in on the key decisions.
           [ARROW] Home system: Enpal.One edge gateway. Local energy management, WISH protocol for conflict resolution.
