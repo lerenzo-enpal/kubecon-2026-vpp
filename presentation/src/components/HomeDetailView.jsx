@@ -312,8 +312,8 @@ export default function HomeDetailView({ homeDetail, showRevenue = false, style:
         </div>
       </div>
 
-      {/* Device rows — 2x2 grid for compact layout */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+      {/* Stacked device rows */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <DeviceRow
           label="SOLAR"
           status={solar.status}
