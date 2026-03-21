@@ -5,3 +5,4 @@ presentation/dist
 # Local Netlify folder
 .netlify
 _site/
+.playwright-mcp/
