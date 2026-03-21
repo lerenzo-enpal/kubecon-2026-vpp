@@ -35,9 +35,9 @@ jobs:
         working-directory: presentation
         run: npm ci
 
-      - name: Build presentation with /slides/ base path
+      - name: Build presentation with /kubecon-2026-vpp/slides/ base path
         working-directory: presentation
-        run: npm run build -- --base /slides/
+        run: npm run build -- --base /kubecon-2026-vpp/slides/
 
       - name: Assemble deploy artifact
         run: |
