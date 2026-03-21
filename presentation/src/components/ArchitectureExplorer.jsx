@@ -28,8 +28,8 @@ const FOCUS_STEPS = [
   {
     id: 'home',
     label: 'HOME SYSTEM',
-    zoom: 2.2,
-    cx: 0.22,  // center between IoT HEMS and inverter
+    zoom: 2.0,
+    cx: 0.25,  // center between IoT HEMS and inverter, shifted right to avoid Grid strip overlap
     cy: 0.45,
     panelSide: 'right',
     panelColor: colors.success,
@@ -151,9 +151,9 @@ export default function ArchitectureExplorer({ step = 0 }) {
         transition: 'background 0.8s ease',
       }} />
 
-      {/* Focus label badge (top-left) */}
+      {/* Focus label badge (below title area) */}
       {focus.label && (
-        <div className="absolute top-3 left-4 z-20" style={{
+        <div className="absolute left-4 z-20" style={{ top: 118,
           opacity: isOverview ? 0 : 1,
           transform: isOverview ? 'translateY(-10px)' : 'translateY(0)',
           transition: 'all 0.6s ease 0.4s',
@@ -167,9 +167,9 @@ export default function ArchitectureExplorer({ step = 0 }) {
         </div>
       )}
 
-      {/* Info panel (flies in from left or right) */}
+      {/* Info panel (flies in from left or right, below title area) */}
       {focus.panel !== null && focus.panelSide && (
-        <div className="absolute top-0 bottom-0 z-20 flex items-center" style={{
+        <div className="absolute bottom-0 z-20 flex items-center" style={{ top: 110,
           [focus.panelSide === 'right' ? 'right' : 'left']: 16,
           width: 380,
           opacity: isOverview ? 0 : 1,

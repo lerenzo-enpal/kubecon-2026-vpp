@@ -300,15 +300,15 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
         ctx.shadowBlur = 0;
         // Label rotated vertically — larger
         ctx.save();
-        ctx.translate(gx + 20, height / 2);
+        ctx.translate(gx - 6, height / 2);
         ctx.rotate(-Math.PI / 2);
-        ctx.font = 'bold 24px JetBrains Mono';
+        ctx.font = 'bold 20px JetBrains Mono';
         ctx.fillStyle = colors.danger + 'bb';
         ctx.textAlign = 'center';
         ctx.fillText('GRID', 0, 0);
-        ctx.font = '11px JetBrains Mono';
+        ctx.font = '10px JetBrains Mono';
         ctx.fillStyle = colors.textDim + 'aa';
-        ctx.fillText('Niederspannung', 0, 20);
+        ctx.fillText('Niederspannung', 0, 18);
         ctx.restore();
       }
 

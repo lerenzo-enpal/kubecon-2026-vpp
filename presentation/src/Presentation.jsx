@@ -649,7 +649,7 @@ export default function Presentation() {
           <div className="relative z-10 px-8 pt-5 pointer-events-none" style={{ background: 'linear-gradient(to bottom, #020408 0%, #020408cc 60%, transparent 100%)' }}>
             <div className="text-[10px] font-mono font-semibold tracking-[0.2em] uppercase mb-2" style={{ color: colors.textDim }}>INSIDE THE ARCHITECTURE</div>
             <H>Inside the Architecture</H>
-            <P size="18px" style={{ opacity: 0.7 }}>Zoom in on the key decisions. Click through to explore each layer.</P>
+            <P size="18px" style={{ opacity: 0.7 }}>Click through to explore each layer.</P>
           </div>
         </div>
         <Notes>
@@ -1115,6 +1115,48 @@ export default function Presentation() {
         <Notes>
           [LERENZO] Thank you — Enpal, building Europe's largest virtual power plant.
           Questions? Find us at the booth / connect after.
+        </Notes>
+      </Slide>
+
+      {/* 30: Speakers & Partners */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col justify-center items-center h-full text-center">
+          {/* Speakers */}
+          <div className="flex gap-16 mb-12">
+            <div className="flex flex-col items-center">
+              <img src="/lerenzo.png" alt="Lerenzo" className="w-28 h-28 rounded-full mb-4" style={{ border: `2px solid ${colors.primary}40`, boxShadow: `0 0 20px ${colors.primary}15` }} />
+              <div className="text-[22px] font-bold text-hud-text font-sans">Lerenzo Luijkx</div>
+              <div className="text-[20px] text-hud-text-muted font-sans mt-1">Staff Engineer</div>
+            </div>
+            <div className="flex flex-col items-center">
+              <img src="/mario.png" alt="Mario" className="w-28 h-28 rounded-full mb-4" style={{ border: `2px solid ${colors.primary}40`, boxShadow: `0 0 20px ${colors.primary}15` }} />
+              <div className="text-[22px] font-bold text-hud-text font-sans">Mario Forzanini</div>
+              <div className="text-[20px] text-hud-text-muted font-sans mt-1">Staff Engineer</div>
+            </div>
+          </div>
+
+          {/* Main brand */}
+          <div className="mb-10 flex flex-col items-center">
+            <img src="/enpal-logo.svg" alt="Enpal" style={{ height: 48 }} />
+            <div className="text-[20px] text-hud-text-muted font-sans mt-4">
+              Building Europe's Largest Virtual Power Plant
+            </div>
+          </div>
+
+          {/* Partner logos */}
+          <div className="flex items-center gap-3">
+            <span className="text-[20px] text-hud-text-dim font-mono">Partners</span>
+            <span className="text-hud-text-dim" style={{ opacity: 0.3 }}>|</span>
+            {/* TODO: Replace with Flexa logo image */}
+            <span className="text-[22px] font-bold font-mono" style={{ color: colors.success }}>Flexa</span>
+            <span className="text-hud-text-dim" style={{ opacity: 0.3 }}>|</span>
+            {/* TODO: Replace with Metrify logo image */}
+            <span className="text-[22px] font-bold font-mono" style={{ color: colors.accent }}>Metrify</span>
+          </div>
+        </div>
+        <Notes>
+          Speakers slide — Lerenzo Luijkx and Mario Forzanini, Staff Engineers at Enpal.
+          Partners: Flexa (VPP Controller) and Metrify (Smart Metering).
         </Notes>
       </Slide>
 
