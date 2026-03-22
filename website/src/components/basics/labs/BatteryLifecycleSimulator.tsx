@@ -87,7 +87,7 @@ export default function BatteryLifecycleSimulator() {
 
     // Y labels
     ctx.fillStyle = colors.textDim;
-    ctx.font = `10px ${font}`;
+    ctx.font = `12px ${font}`;
     ctx.textAlign = 'right';
     for (let soh = 60; soh <= 100; soh += 10) {
       const y = yForSoH(soh);
@@ -104,7 +104,7 @@ export default function BatteryLifecycleSimulator() {
     for (let yr = 0; yr <= maxYears; yr += 5) {
       const x = xForYear(yr);
       ctx.fillStyle = colors.textDim;
-      ctx.font = `10px ${font}`;
+      ctx.font = `12px ${font}`;
       ctx.fillText(`${yr}y`, x, padT + chartH + 18);
     }
 
@@ -119,7 +119,7 @@ export default function BatteryLifecycleSimulator() {
     ctx.stroke();
     ctx.setLineDash([]);
     ctx.fillStyle = colors.danger;
-    ctx.font = `9px ${font}`;
+    ctx.font = `12px ${font}`;
     ctx.textAlign = 'left';
     ctx.fillText('END OF LIFE (80%)', padL + 4, eolY - 6);
 
@@ -153,7 +153,7 @@ export default function BatteryLifecycleSimulator() {
       ctx.fillStyle = colors.danger;
       ctx.fill();
       ctx.fillStyle = colors.text;
-      ctx.font = `bold 11px ${font}`;
+      ctx.font = `bold 12px ${font}`;
       ctx.textAlign = 'center';
       ctx.fillText(`${eolYear.toFixed(1)} years`, x, eolY + 20);
     }
@@ -184,7 +184,7 @@ export default function BatteryLifecycleSimulator() {
     }
 
     ctx.fillStyle = colors.textDim;
-    ctx.font = `9px ${font}`;
+    ctx.font = `12px ${font}`;
     ctx.textAlign = 'center';
     ctx.fillText(`${temp}C`, thermX, thermY + thermH + 14);
 
@@ -193,7 +193,7 @@ export default function BatteryLifecycleSimulator() {
     ctx.translate(14, padT + chartH / 2);
     ctx.rotate(-Math.PI / 2);
     ctx.fillStyle = colors.textDim;
-    ctx.font = `10px ${font}`;
+    ctx.font = `12px ${font}`;
     ctx.textAlign = 'center';
     ctx.fillText('State of Health', 0, 0);
     ctx.restore();

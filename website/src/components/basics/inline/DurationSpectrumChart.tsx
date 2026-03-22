@@ -55,7 +55,7 @@ export default function DurationSpectrumChart() {
     const chartH = h - padTop - padBottom;
 
     // X-axis labels
-    ctx.font = '11px "JetBrains Mono", monospace';
+    ctx.font = '12px "JetBrains Mono", monospace';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
     ctx.fillStyle = colors.textDim;
@@ -112,7 +112,7 @@ export default function DurationSpectrumChart() {
       if (progress > 0.3) {
         const labelAlpha = Math.min(1, (progress - 0.3) / 0.3);
         ctx.globalAlpha = labelAlpha;
-        ctx.font = '11px "JetBrains Mono", monospace';
+        ctx.font = '12px "JetBrains Mono", monospace';
         ctx.textAlign = 'right';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = tech.color;

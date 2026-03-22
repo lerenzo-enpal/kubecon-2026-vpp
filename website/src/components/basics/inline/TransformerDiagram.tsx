@@ -177,7 +177,7 @@ export default function TransformerDiagram() {
       ctx.globalAlpha = 1;
 
       // Power loss annotation
-      ctx.font = '11px "JetBrains Mono", monospace';
+      ctx.font = '12px "JetBrains Mono", monospace';
       ctx.fillStyle = c.danger;
       ctx.textAlign = 'center';
       ctx.fillText('P = I\u00B2R  (lower current = less loss)', midX, lineY + 18);

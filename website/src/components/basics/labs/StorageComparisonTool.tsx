@@ -109,7 +109,7 @@ function drawRadar(
     const labelR = maxR + 18;
     const lx = cx + Math.cos(angle) * labelR;
     const ly = cy + Math.sin(angle) * labelR;
-    ctx.font = `9px ${monoFont}`;
+    ctx.font = `12px ${monoFont}`;
     ctx.fillStyle = colors.textMuted;
     ctx.textAlign = Math.abs(Math.cos(angle)) < 0.1 ? 'center' : Math.cos(angle) > 0 ? 'left' : 'right';
     ctx.textBaseline = Math.abs(Math.sin(angle)) < 0.1 ? 'middle' : Math.sin(angle) > 0 ? 'top' : 'bottom';

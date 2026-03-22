@@ -104,7 +104,7 @@ function drawLargeGauge(
 
   // Tick marks and labels
   const ticks = [47.5, 48.0, 49.0, 49.5, 50.0, 50.5, 51.0, 52.5];
-  ctx.font = '11px "JetBrains Mono", monospace';
+  ctx.font = '12px "JetBrains Mono", monospace';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ticks.forEach(tick => {

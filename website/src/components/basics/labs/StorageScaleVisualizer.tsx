@@ -140,14 +140,14 @@ export default function StorageScaleVisualizer() {
           ctx.fillRect(ix + iconSize - 2, iy + 4, 2, iconSize - 8);
         }
         if (stacks > maxIcons) {
-          ctx.font = '500 9px "JetBrains Mono", monospace';
+          ctx.font = '500 12px "JetBrains Mono", monospace';
           ctx.fillStyle = c.textMuted;
           ctx.textAlign = 'right';
           ctx.fillText(`+${stacks - maxIcons} more`, padX + barW - 4, storageY + barH / 2 + 3);
         }
 
         // Label
-        ctx.font = '500 10px "JetBrains Mono", monospace';
+        ctx.font = '500 12px "JetBrains Mono", monospace';
         ctx.fillStyle = c.textMuted;
         ctx.textAlign = 'left';
         ctx.fillText(`${stacks}x Moss Landing (${totalGWh} GWh)`, padX, storageY - 4);
@@ -160,7 +160,7 @@ export default function StorageScaleVisualizer() {
 
         // Markers
         const markerY = storageY + barH + 44;
-        ctx.font = '400 10px "JetBrains Mono", monospace';
+        ctx.font = '400 12px "JetBrains Mono", monospace';
         ctx.fillStyle = c.textDim;
         ctx.textAlign = 'left';
         for (let i = 0; i < MARKERS.length; i++) {
@@ -189,7 +189,7 @@ export default function StorageScaleVisualizer() {
         ctx.fill();
         ctx.globalAlpha = 1;
 
-        ctx.font = '500 10px "JetBrains Mono", monospace';
+        ctx.font = '500 12px "JetBrains Mono", monospace';
         ctx.fillStyle = c.textMuted;
         ctx.textAlign = 'left';
         ctx.fillText(`Global Pumped Hydro: ${PUMPED_HYDRO_GWH.toLocaleString()} GWh`, padX, storageY - 4);
@@ -199,7 +199,7 @@ export default function StorageScaleVisualizer() {
         ctx.textAlign = 'center';
         ctx.fillText(`Powers EU grid for: ${formatDuration(durationSec)}`, w / 2, storageY + barH + 24);
 
-        ctx.font = '400 10px "JetBrains Mono", monospace';
+        ctx.font = '400 12px "JetBrains Mono", monospace';
         ctx.fillStyle = c.textDim;
         ctx.textAlign = 'left';
         ctx.fillText('All pumped hydro on Earth combined.', padX + 8, storageY + barH + 44);

@@ -119,7 +119,7 @@ export default function WaterPipeIllustration() {
       ctx.globalAlpha = 1;
 
       // Labels for pipe
-      ctx.font = '11px "JetBrains Mono", monospace';
+      ctx.font = '12px "JetBrains Mono", monospace';
       ctx.textAlign = 'center';
 
       // Pressure label (left side)
@@ -196,7 +196,7 @@ export default function WaterPipeIllustration() {
       ctx.globalAlpha = 1;
 
       // Wire labels
-      ctx.font = '11px "JetBrains Mono", monospace';
+      ctx.font = '12px "JetBrains Mono", monospace';
       ctx.fillStyle = c.primary;
       ctx.fillText('Voltage', padX + 50, wireY + wireH + 18);
       ctx.fillStyle = c.primary;

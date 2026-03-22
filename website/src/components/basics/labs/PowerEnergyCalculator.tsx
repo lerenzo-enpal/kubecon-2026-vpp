@@ -94,7 +94,7 @@ function drawTank(
   ctx.fillText(formatEnergy(energy), x + tankW / 2, y - termH - 12);
 
   // Device label below
-  ctx.font = `11px ${monoFont}`;
+  ctx.font = `12px ${monoFont}`;
   ctx.fillStyle = isActive ? colors.text : colors.textMuted;
   ctx.textAlign = 'center';
   ctx.fillText(label, x + tankW / 2, y + tankH + 16);
@@ -169,7 +169,7 @@ export default function PowerEnergyCalculator() {
         drawTank(ctx, startX + tankW + gap, topPad, tankW, tankH, energy2 / maxEnergy, energy2, compareDevice.label, colors, time, true);
 
         // "vs" label
-        ctx.font = `10px "JetBrains Mono", monospace`;
+        ctx.font = `12px "JetBrains Mono", monospace`;
         ctx.fillStyle = colors.textDim;
         ctx.textAlign = 'center';
         ctx.fillText('vs', startX + tankW + gap / 2, topPad + tankH / 2);

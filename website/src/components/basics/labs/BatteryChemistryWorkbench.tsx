@@ -95,7 +95,7 @@ export default function BatteryChemistryWorkbench() {
       const lx = cx + Math.cos(a) * (radius + 20);
       const ly = cy + Math.sin(a) * (radius + 20);
       ctx.fillStyle = colors.textMuted;
-      ctx.font = `10px ${font}`;
+      ctx.font = `12px ${font}`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(axes[i], lx, ly);

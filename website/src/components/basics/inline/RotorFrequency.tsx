@@ -98,7 +98,7 @@ function drawGauge(
 
   // Tick marks
   const ticks = [47.5, 48.0, 49.0, 49.5, 50.0, 50.5, 51.0, 52.0, 52.5];
-  ctx.font = '10px "JetBrains Mono", monospace';
+  ctx.font = '12px "JetBrains Mono", monospace';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ticks.forEach(tick => {
@@ -232,7 +232,7 @@ export default function RotorFrequency() {
       drawRotor(ctx, rotorCx, rotorCy, rotorR, angleRef.current, colors, freq);
 
       // Rotor label
-      ctx.font = '11px "JetBrains Mono", monospace';
+      ctx.font = '12px "JetBrains Mono", monospace';
       ctx.fillStyle = colors.textDim;
       ctx.textAlign = 'center';
       ctx.fillText('GENERATOR ROTOR', rotorCx, rotorCy + rotorR + 18);
@@ -254,7 +254,7 @@ export default function RotorFrequency() {
         : freq >= 49.5 ? 'FCR ACTIVE'
         : freq >= 49.0 ? 'aFRR ACTIVE'
         : 'EMERGENCY';
-      ctx.font = '10px "JetBrains Mono", monospace';
+      ctx.font = '12px "JetBrains Mono", monospace';
       ctx.fillStyle = `${freqColor}90`;
       ctx.fillText(status, gaugeCx, gaugeCy + gaugeR * 0.55 + 18);
 

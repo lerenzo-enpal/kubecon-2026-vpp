@@ -224,7 +224,7 @@ export default function GridOperatorGame() {
 
       // Score
       const pct = s.totalSeconds > 0 ? Math.round((s.greenSeconds / s.totalSeconds) * 100) : 100;
-      ctx.font = '500 11px "JetBrains Mono", monospace';
+      ctx.font = '500 12px "JetBrains Mono", monospace';
       ctx.fillStyle = pct >= 80 ? c.success : pct >= 50 ? c.accent : c.danger;
       ctx.textAlign = 'right';
       ctx.fillText(`In-band: ${pct}%`, w - padX, topY + 14);
@@ -277,7 +277,7 @@ export default function GridOperatorGame() {
       ctx.fillText(`${s.frequency.toFixed(3)} Hz`, w / 2, gaugeY + gaugeH + 22);
 
       // Gauge labels
-      ctx.font = '400 9px "JetBrains Mono", monospace';
+      ctx.font = '400 12px "JetBrains Mono", monospace';
       ctx.fillStyle = c.textDim;
       ctx.textAlign = 'left';
       ctx.fillText('47', gaugeX, gaugeY + gaugeH + 12);
@@ -313,13 +313,13 @@ export default function GridOperatorGame() {
         ctx.globalAlpha = 1;
 
         // Label
-        ctx.font = '600 10px "JetBrains Mono", monospace';
+        ctx.font = '600 12px "JetBrains Mono", monospace';
         ctx.fillStyle = c.text;
         ctx.textAlign = 'center';
         ctx.fillText(label, x + bw / 2, y - 6);
 
         // Value
-        ctx.font = '500 9px "JetBrains Mono", monospace';
+        ctx.font = '500 12px "JetBrains Mono", monospace';
         ctx.fillStyle = c.textMuted;
         ctx.fillText(sublabel, x + bw / 2, y + bh + 12);
       };
@@ -329,7 +329,7 @@ export default function GridOperatorGame() {
       drawBar(gasX, panelY + 18, colW * 0.4, panelH - 36, s.assets.gasOutput, GAS_MAX_MW, c.accent, 'GAS', `${Math.round(s.assets.gasOutput)} MW`);
 
       // Gas status indicator
-      ctx.font = '500 9px "JetBrains Mono", monospace';
+      ctx.font = '500 12px "JetBrains Mono", monospace';
       ctx.fillStyle = s.assets.gasOn ? c.success : c.textDim;
       ctx.textAlign = 'center';
       ctx.fillText(s.assets.gasOn ? 'ON' : 'OFF', gasX + colW * 0.2, panelY + panelH + 2);
@@ -339,7 +339,7 @@ export default function GridOperatorGame() {
       drawBar(solarX, panelY + 18, colW * 0.4, panelH - 36, solarOutput, 400, '#f59e0b', 'SOLAR', `${Math.round(solarOutput)} MW`);
 
       if (cloudActive) {
-        ctx.font = '600 9px "JetBrains Mono", monospace';
+        ctx.font = '600 12px "JetBrains Mono", monospace';
         ctx.fillStyle = c.danger;
         ctx.textAlign = 'center';
         ctx.fillText('CLOUDS', solarX + colW * 0.2, panelY + 6);
@@ -352,7 +352,7 @@ export default function GridOperatorGame() {
       drawBar(battX, panelY + 18, colW * 0.4, panelH - 36, s.assets.batteryEnergy, BATTERY_MAX_MWH, c.success, 'BATT', `${Math.round(s.assets.batteryEnergy)} MWh`);
 
       // Battery mode label
-      ctx.font = '500 9px "JetBrains Mono", monospace';
+      ctx.font = '500 12px "JetBrains Mono", monospace';
       const battModeLabel = s.assets.batteryMode === 'discharge' ? '+200 MW'
         : s.assets.batteryMode === 'charge' ? '-200 MW' : 'IDLE';
       ctx.fillStyle = s.assets.batteryMode === 'discharge' ? c.success
@@ -366,7 +366,7 @@ export default function GridOperatorGame() {
 
       // Supply total
       const totalSupply = s.assets.gasOutput + solarOutput + battPower;
-      ctx.font = '500 10px "JetBrains Mono", monospace';
+      ctx.font = '500 12px "JetBrains Mono", monospace';
       ctx.fillStyle = c.textMuted;
       ctx.textAlign = 'left';
       ctx.fillText(`Supply: ${Math.round(totalSupply)} MW`, padX, panelY + 6);

@@ -320,7 +320,7 @@ export default function BufferComparison() {
         ctx.roundRect(tagX, tagY, tagW, 22, 4);
         ctx.fill();
 
-        ctx.font = '11px "JetBrains Mono", monospace';
+        ctx.font = '12px "JetBrains Mono", monospace';
         ctx.fillStyle = sys.tagColor;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';

@@ -244,7 +244,7 @@ export default function GenerationMethods() {
           // NO spinning indicator -- conspicuously still
           ctx.fillStyle = c.accent;
           ctx.globalAlpha = 0.15;
-          ctx.font = '9px "JetBrains Mono", monospace';
+          ctx.font = '12px "JetBrains Mono", monospace';
           ctx.textAlign = 'center';
           ctx.fillText('no moving parts', cx, iconY + 35);
           ctx.globalAlpha = 1;
@@ -258,7 +258,7 @@ export default function GenerationMethods() {
 
         // Spinning indicator
         if (m.spins) {
-          ctx.font = '10px "JetBrains Mono", monospace';
+          ctx.font = '12px "JetBrains Mono", monospace';
           ctx.fillStyle = c.primary;
           ctx.globalAlpha = 0.5;
           ctx.fillText('spins', cx, iconY + 68);
