@@ -845,63 +845,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 28: Data Pipeline — Databricks, Spark, Aggregation */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col h-full">
-          <div className="flex items-end justify-between mb-4">
-            <div>
-              <div className="text-[10px] font-mono font-semibold tracking-[0.2em] uppercase mb-2" style={{ color: colors.textDim }}>DATA PIPELINE</div>
-              <H color="#FF3621">Streaming at Scale</H>
-            </div>
-            <div className="flex gap-3 pb-1">
-              {[
-                { label: 'INGESTION', value: '20s', color: colors.secondary },
-                { label: 'LAKEHOUSE', value: 'Delta', color: '#FF3621' },
-                { label: 'STREAMING', value: 'Spark', color: '#E25A1C' },
-                { label: 'LATENCY', value: '<5s', color: colors.success },
-              ].map((s, i) => (
-                <div key={i} className="rounded px-2 py-1" style={{ background: s.color + '0a', border: `1px solid ${s.color}25` }}>
-                  <div className="text-[8px] font-mono tracking-[0.1em] uppercase" style={{ color: colors.textDim }}>{s.label}</div>
-                  <div className="text-[14px] font-bold font-mono" style={{ color: s.color }}>{s.value}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <P size="18px">Every device reports every 20 seconds. Progressive aggregation compresses volume while preserving real-time pattern detection.</P>
-
-          {/* Streaming aggregation visualization */}
-          <div className="flex-1 flex justify-center items-center">
-            <LazyContent><StreamingAggregation width={1100} height={390} /></LazyContent>
-          </div>
-
-          {/* Bottom: key metrics */}
-          <div className="flex gap-5 mt-2">
-            <div className="flex-1 rounded-lg px-4 py-3 flex items-center gap-3" style={{ background: '#E25A1C08', border: `1px solid #E25A1C20` }}>
-              <div className="text-xl font-extrabold font-mono" style={{ color: '#E25A1C' }}>5M+</div>
-              <div className="text-sm text-hud-text-muted font-sans">measurements/min at fleet scale</div>
-            </div>
-            <div className="flex-1 rounded-lg px-4 py-3 flex items-center gap-3" style={{ background: '#FF362108', border: `1px solid #FF362120` }}>
-              <div className="text-xl font-extrabold font-mono" style={{ color: '#FF3621' }}>10x</div>
-              <div className="text-sm text-hud-text-muted font-sans">storage reduction via progressive aggregation</div>
-            </div>
-            <div className="flex-1 rounded-lg px-4 py-3 flex items-center gap-3" style={{ background: colors.success + '08', border: `1px solid ${colors.success}20` }}>
-              <div className="text-xl font-extrabold font-mono" style={{ color: colors.success }}>{'<'}2s</div>
-              <div className="text-sm text-hud-text-muted font-sans">market signal to device response</div>
-            </div>
-          </div>
-        </div>
-        <Notes>
-          [LERENZO] This is our data pipeline — Databricks lakehouse with Spark streaming.
-          Every device reports every 20 seconds. That's 5 million measurements per minute at scale.
-          Raw → Bronze → Silver → Gold. Each layer adds value and reduces volume.
-          The game changer: Spark streaming aggregates give us near-real-time pattern detection.
-          We progressively increase aggregation windows — raw data is kept 7 days, aggregates are kept indefinitely.
-          This is how we reduce costs while maintaining the sub-second latency that makes real-time grid response possible.
-          The full control loop: market signal → Flexa → Event Hub → Cloud HEMS → EMQX → device — under 2 seconds.
-        </Notes>
-      </Slide>
-
-      {/* 29: Progressive Aggregation Pyramid */}
+      {/* 28: Progressive Aggregation Pyramid */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <div className="flex items-end justify-between mb-3">
