@@ -67,7 +67,7 @@ interface Props {
   height?: number;
 }
 
-export default function VPPArchitecture({ height = 420 }: Props) {
+export default function VPPArchitecture({ height = 420, enlarged = false }: Props & { enlarged?: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const animRef = useRef<number>(0);
@@ -81,9 +81,26 @@ export default function VPPArchitecture({ height = 420 }: Props) {
     if (!ctx) return;
 
     let width = container.clientWidth;
+    const isEnlarged = height > 500;
 
     const nodeW = 110, nodeH = 68;
     const homeW = 48, homeH = 44;
+
+    // In compact mode, skip the trader node and adjust positions
+    const activeNodes = isEnlarged ? NODES : NODES.filter(n => n.id !== 'trader');
+    const activeEdges = isEnlarged ? EDGES : EDGES.filter(e => e.from !== 'trader' && e.to !== 'trader')
+      .map(e => {
+        // Reconnect: market→controller directly when trader is hidden
+        if (e.from === 'market' && e.to === 'trader') return { ...e, to: 'controller' };
+        if (e.from === 'trader' && e.to === 'market') return { ...e, from: 'controller' };
+        return e;
+      });
+    // Adjust x positions when compact: spread 3 nodes + homes evenly
+    const compactPositions: Record<string, number> = { market: 0.02, controller: 0.30, enpal: 0.55 };
+    function getNodeX(node: NodeDef) {
+      if (!isEnlarged && compactPositions[node.id] !== undefined) return compactPositions[node.id];
+      return node.x;
+    }
 
     interface Particle {
       edge: number;
@@ -98,7 +115,7 @@ export default function VPPArchitecture({ height = 420 }: Props) {
     const particles: Particle[] = [];
     const BASE_INTERVAL = 0.3;
     const startTime = performance.now() / 1000;
-    const edgeLastSpawn = EDGES.map(() => startTime);
+    const edgeLastSpawn = activeEdges.map(() => startTime);
 
     const padTop_frac = 0.10;
     const contentH_frac = 0.85;
@@ -114,15 +131,17 @@ export default function VPPArchitecture({ height = 420 }: Props) {
       const isToHome = to.id.startsWith('home');
       const fromW = isFromHome ? homeW : nodeW;
       const toW = isToHome ? homeW : nodeW;
+      const fromX = getNodeX(from);
+      const toX = getNodeX(to);
 
-      const goingRight = from.x < to.x;
+      const goingRight = fromX < toX;
       let fx: number, fy: number, tx: number, ty: number;
       if (goingRight) {
-        fx = from.x * width + fromW;
-        tx = to.x * width;
+        fx = fromX * width + fromW;
+        tx = toX * width;
       } else {
-        fx = from.x * width;
-        tx = to.x * width + toW;
+        fx = fromX * width;
+        tx = toX * width + toW;
       }
       fy = mapY(from.y);
       ty = mapY(to.y);
@@ -130,7 +149,7 @@ export default function VPPArchitecture({ height = 420 }: Props) {
     }
 
     function spawnParticles(now: number) {
-      EDGES.forEach((edge, ei) => {
+      activeEdges.forEach((edge, ei) => {
         const interval = BASE_INTERVAL * (edge.rateMul || 1);
         if (now - edgeLastSpawn[ei] > interval * 3) edgeLastSpawn[ei] = now;
         if (now - edgeLastSpawn[ei] < interval) return;
@@ -246,8 +265,8 @@ export default function VPPArchitecture({ height = 420 }: Props) {
       }
 
       // Draw main nodes
-      NODES.forEach((node) => {
-        const nx = node.x * width;
+      activeNodes.forEach((node) => {
+        const nx = getNodeX(node) * width;
         const ny = mapY(node.y) - nodeH / 2;
         const pulse = 0.5 + 0.5 * Math.sin(now * 2 + node.x * 10);
 
@@ -303,15 +322,15 @@ export default function VPPArchitecture({ height = 420 }: Props) {
         : 'night-pull';
 
       const sunAlpha = hour < 6.5 ? 0
-        : hour < 8.5 ? smoothstep(6.5, 8.5, hour)
+        : hour < 8.0 ? smoothstep(6.5, 8.0, hour)
         : hour < 17.0 ? 1
-        : hour < 21.0 ? 1 - smoothstep(17.0, 21.0, hour)
+        : hour < 18.5 ? 1 - smoothstep(17.0, 18.5, hour)
         : 0;
 
       const moonAlpha = hour < 4.0 ? 1
         : hour < 6.0 ? 1 - smoothstep(4.0, 6.0, hour)
-        : hour < 22.0 ? 0
-        : hour < 23.5 ? smoothstep(22.0, 23.5, hour)
+        : hour < 19.5 ? 0
+        : hour < 21.0 ? smoothstep(19.5, 21.0, hour)
         : 1;
 
       const BAT_MIN = 0.08;
