@@ -1,0 +1,68 @@
+---
+import ContentLayout from '../../layouts/ContentLayout.astro';
+import NoBufferBriefing from '../../components/basics/briefings/NoBufferBriefing';
+import SpinningMassBriefing from '../../components/basics/briefings/SpinningMassBriefing';
+import ThresholdWalkthroughBriefing from '../../components/basics/briefings/ThresholdWalkthroughBriefing';
+import { url } from '../../utils/url';
+---
+
+<ContentLayout title="Supply & Demand" description="The grid has no buffer. Every watt generated must be consumed the instant it's produced.">
+
+<h1>Supply &amp; Demand</h1>
+<p class="text-lg mb-8" style="color: var(--color-text-muted); max-width: 600px;">
+  The grid has no buffer. No cache. No retry. Every watt generated must be consumed the instant it's produced. Here's why.
+</p>
+
+<noscript>
+  <div class="p-4 rounded-lg mb-8" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+    <p style="color: var(--color-text-muted);">This page includes interactive visualizations that require JavaScript. Key concepts covered: why electricity cannot be stored on the wire; how spinning mass links supply, demand, and frequency; the frequency thresholds that protect the grid from collapse.</p>
+  </div>
+</noscript>
+
+<NoBufferBriefing client:visible />
+
+<SpinningMassBriefing client:visible />
+
+<ThresholdWalkthroughBriefing client:visible />
+
+<section id="grid-operator" class="py-12">
+  <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">Grid Operator Simulator</h2>
+  <p style="color: var(--color-text-dim);">Coming soon -- balance supply and demand in real time.</p>
+</section>
+
+<section id="storage-scale" class="py-12">
+  <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">Storage at Scale</h2>
+  <p style="color: var(--color-text-dim);">Coming soon -- explore why storing electricity is so hard.</p>
+</section>
+
+<div class="mt-12 p-5 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+  <div class="font-mono text-xs mb-2" style="color: var(--color-primary); letter-spacing: 0.08em; text-transform: uppercase;">
+    Continue
+  </div>
+  <a href={url("/basics/how-batteries-work")} class="text-lg font-semibold" style="color: var(--color-text);">
+    How Batteries Work &rarr;
+  </a>
+  <div class="text-sm mt-1" style="color: var(--color-text-dim);">
+    From chemical reactions to grid-scale storage.
+  </div>
+</div>
+
+<div class="mt-6 p-5 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+  <div class="font-mono text-xs mb-2" style="color: var(--color-accent); letter-spacing: 0.08em; text-transform: uppercase;">
+    Go Deeper
+  </div>
+  <ul class="space-y-2">
+    <li>
+      <a href={url("/research/topics/grid-frequency")} class="text-sm font-semibold" style="color: var(--color-text);">
+        Research: Grid Frequency &rarr;
+      </a>
+    </li>
+    <li>
+      <a href={url("/research/topics/cascading-failures")} class="text-sm font-semibold" style="color: var(--color-text);">
+        Research: Cascading Failures &rarr;
+      </a>
+    </li>
+  </ul>
+</div>
+
+</ContentLayout>
