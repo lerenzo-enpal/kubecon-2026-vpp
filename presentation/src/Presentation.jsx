@@ -327,9 +327,10 @@ export default function Presentation() {
           <EUGridHUD width="100%" height="100%" />
         </div>
         <Notes>
-          [MARIO] This is the Continental European grid — visualization.
-          400 million consumers. 1,100 GW of installed capacity (ENTSO-E, 2024).
-          36 countries, all operating at 50 Hz across interconnected synchronous areas.
+          - The Continental European synchronous grid — 36 countries, one frequency
+          - [ARROW] Western corridor: France exports 50+ TWh/yr. Undersea cables to UK.
+          - [ARROW] Eastern corridor: the grid reaches every corner of the continent
+          - Backup: largest synchronous grid (China is larger by capacity but not synchronized as one area)
         </Notes>
       </Slide>
 

@@ -6,6 +6,7 @@ import { ScatterplotLayer, LineLayer, TextLayer } from '@deck.gl/layers';
 // import { ScenegraphLayer } from '@deck.gl/mesh-layers'; // TODO: re-enable when models are properly sized
 import MapGL from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { useMapStyle } from '../utils/mapStyle';
 
 // ── EU generation hubs with real coordinates ─────────────────
 const HUBS = [
@@ -125,50 +126,31 @@ const CORRIDORS = [
   ['athens', 'istanbul', 4], ['bucharest', 'istanbul', 3], ['sofia', 'istanbul', 3],
 ];
 
-// ── Journey steps: plant → home → region → nation → continent ──
+// ── Journey steps: focused on continental breadth of infrastructure ──
 const STEPS = [
   {
-    view: { longitude: 11.58, latitude: 48.14, zoom: 11.5, pitch: 50, bearing: -12 },
-    title: 'Generation',
-    subtitle: 'A power plant near Munich, Bavaria',
-    voltage: '10–25 kV',
-    detail: 'Fuel → heat → steam → turbine → 50 Hz alternating current',
-    visibleIds: null, // none — just the map
-  },
-  {
-    view: { longitude: 11.3, latitude: 48.3, zoom: 9, pitch: 45, bearing: -8 },
-    title: 'Step-Up & Transmission',
-    subtitle: 'Voltage multiplied 20× for long-distance transport',
-    voltage: '220–400 kV',
-    detail: 'Transformers step up voltage to minimize losses across hundreds of km',
-    visibleIds: ['munich'],
-  },
-  {
-    view: { longitude: 10.8, latitude: 49.0, zoom: 6.5, pitch: 40, bearing: -5 },
-    title: 'Regional Grid',
-    subtitle: '5 major hubs connected across Southern Germany & Alps',
-    voltage: '110–400 kV',
-    detail: 'Multiple generation sources — gas, solar, hydro, nuclear — feed the regional network',
-    visibleIds: ['munich', 'zurich', 'frankfurt', 'vienna', 'milan', 'prague', 'lyon', 'innsbruck', 'stuttgart', 'turin'],
-  },
-  {
-    view: { longitude: 10.5, latitude: 51.5, zoom: 5.2, pitch: 32, bearing: 0 },
-    title: 'National Grid',
-    subtitle: 'Germany — Europe\'s largest electricity market, 84M people',
-    voltage: 'Full voltage spectrum',
-    detail: '230 GW installed. Hamburg wind farms to Bavarian solar, all synchronized at 50 Hz',
-    visibleIds: ['munich', 'zurich', 'frankfurt', 'vienna', 'milan', 'prague',
-      'lyon', 'berlin', 'hamburg', 'cologne', 'amsterdam', 'brussels',
-      'copenhagen', 'paris', 'warsaw', 'stuttgart', 'leipzig', 'dortmund',
-      'strasbourg', 'innsbruck', 'turin', 'bratislava'],
-  },
-  {
     view: { longitude: 12, latitude: 49, zoom: 3.4, pitch: 15, bearing: 0 },
-    title: 'The Largest Machine Ever Built',
-    subtitle: '36 countries · 400 million people · one standard: 50 Hz',
+    title: 'Continental Infrastructure',
+    subtitle: '36 countries connected by 305,000 km of high-voltage lines',
     voltage: '50.000 Hz',
-    detail: '305,000 km of high-voltage lines. 1,100 GW installed capacity. It has never been turned off.',
+    detail: 'From Lisbon to Helsinki, every node synchronized on one frequency.',
     visibleIds: null, // all
+  },
+  {
+    view: { longitude: 3, latitude: 46, zoom: 4.5, pitch: 20, bearing: 5 },
+    title: 'Western Corridor',
+    subtitle: 'France, Iberia, UK — nuclear, wind, and solar feeding into the backbone',
+    voltage: '400 kV',
+    detail: 'France alone exports 50+ TWh/yr to neighbors. One cable under the Channel connects two grids.',
+    visibleIds: ['lisbon', 'madrid', 'barcelona', 'bilbao', 'seville', 'paris', 'lyon', 'marseille', 'toulouse', 'bordeaux', 'strasbourg', 'london', 'edinburgh', 'manchester', 'dublin', 'amsterdam', 'brussels'],
+  },
+  {
+    view: { longitude: 18, latitude: 52, zoom: 4.5, pitch: 20, bearing: -5 },
+    title: 'Eastern Corridor',
+    subtitle: 'Central and Eastern Europe — coal, nuclear, and growing renewables',
+    voltage: '220–400 kV',
+    detail: 'Poland, Czechia, Hungary, Romania — the grid reaches every corner of the continent.',
+    visibleIds: ['berlin', 'hamburg', 'munich', 'cologne', 'frankfurt', 'warsaw', 'prague', 'budapest', 'bucharest', 'krakow', 'bratislava', 'zagreb', 'belgrade', 'sofia', 'vienna', 'leipzig', 'dortmund', 'stuttgart', 'copenhagen', 'riga', 'vilnius', 'tallinn'],
   },
 ];
 
@@ -196,6 +178,7 @@ const FLY_TO = new FlyToInterpolator();
 
 // ── Main component ──────────────────────────────────────────
 export default function EUGridHUD({ width = '100%', height = '100%' }) {
+  const mapStyle = useMapStyle('europe', 'nolabels');
   const [stepIndex, setStepIndex] = useState(0);
   const [boot, setBoot] = useState(0);
   const bootRef = useRef(null);
@@ -394,29 +377,7 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
   // Models need proper sizing/orientation for DeckGL coordinate system
   // Optimized GLBs available in /models/ (coal_plant_opt.glb = 537KB, gas_plant_opt.glb = 3.3MB)
 
-  // Marker for step 0 — show a pulsing dot where the "power plant" is
-  if (stepIndex === 0) {
-    layers.push(
-      new ScatterplotLayer({
-        id: 'plant-marker',
-        data: [{ pos: [11.58, 48.14] }],
-        getPosition: d => d.pos,
-        getRadius: 200,
-        getFillColor: [167, 139, 250, 200],
-        getLineColor: [167, 139, 250, 255],
-        stroked: true, lineWidthMinPixels: 2,
-        radiusMinPixels: 8, radiusMaxPixels: 14,
-      }),
-      new TextLayer({
-        id: 'plant-label',
-        data: [{ pos: [11.58, 48.14], text: 'Power Plant' }],
-        getPosition: d => d.pos, getText: d => d.text,
-        getSize: 14, getColor: [241, 245, 249, 220],
-        getTextAnchor: 'middle', getAlignmentBaseline: 'top',
-        getPixelOffset: [0, 20], fontFamily: 'Inter', fontWeight: 600,
-      }),
-    );
-  }
+  // (Power plant marker removed — no longer starting at single-plant zoom)
 
   const borderClr = 'rgba(34,211,238,0.3)';
   const glow = '#22d3ee';
@@ -432,7 +393,7 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
         style={{ position: 'absolute', inset: 0 }}
       >
         <MapGL
-          mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json"
+          mapStyle={mapStyle}
           style={{ width: '100%', height: '100%' }}
         />
       </DeckGL>
@@ -494,7 +455,7 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
 
 
       {/* ── Stats bar — bottom right, appears on final steps ── */}
-      {stepIndex >= 3 && (
+      {stepIndex >= 0 && (
         <div className="absolute bottom-4 right-4 z-10">
           <div className="flex gap-4 rounded p-3" style={{
             background: 'rgba(5,8,16,0.92)',
