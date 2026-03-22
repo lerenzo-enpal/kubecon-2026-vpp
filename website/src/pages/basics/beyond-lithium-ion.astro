@@ -1,0 +1,103 @@
+---
+import ContentLayout from '../../layouts/ContentLayout.astro';
+import DurationSpectrumChart from '../../components/basics/inline/DurationSpectrumChart';
+import StorageTechCards from '../../components/basics/inline/StorageTechCards';
+import StorageScenarioBuilder from '../../components/basics/labs/StorageScenarioBuilder';
+import StorageComparisonTool from '../../components/basics/labs/StorageComparisonTool';
+import { url } from '../../utils/url';
+
+const sections = [
+  { id: 'duration-problem', title: 'The Duration Problem' },
+  { id: 'storage-zoo', title: 'The Storage Zoo' },
+  { id: 'scenario-builder', title: 'Pick Your Storage', interactive: true },
+  { id: 'comparison-tool', title: 'Compare Technologies', interactive: true },
+];
+---
+
+<ContentLayout title="Beyond Lithium-Ion" description="Lithium-ion batteries dominate headlines, but the future grid needs a whole portfolio of storage technologies." sections={sections}>
+
+<h1>Beyond Lithium-Ion</h1>
+
+<p class="text-xl" style="color: var(--color-text-muted); max-width: 600px;">
+  Lithium-ion dominates short-duration storage. But the grid needs hours, days, and
+  even seasons of stored energy. No single battery chemistry can do it all.
+</p>
+
+<hr />
+
+<h2 id="duration-problem">The Duration Problem</h2>
+
+<p>
+  Lithium-ion batteries are excellent at what they do: absorb and release energy over
+  minutes to a few hours. They respond in milliseconds, fit in a shipping container,
+  and their costs have dropped 90% since 2010. For short bursts of grid support -- frequency
+  regulation, peak shaving, solar time-shifting -- they are the clear winner.
+</p>
+
+<p>
+  But the grid does not only need short bursts. A winter <em>Dunkelflaute</em> (dark
+  doldrums) in Northern Europe can suppress solar and wind output for two weeks straight.
+  A summer heatwave can drive air-conditioning demand above normal for days. Seasonal
+  mismatches between when the sun shines and when people need heat can span months.
+  Lithium-ion cannot bridge these gaps. The batteries would be enormous, absurdly
+  expensive, and would degrade long before they paid for themselves.
+</p>
+
+<p>
+  The core issue is <strong>cost per duration</strong>. Lithium-ion stores energy in
+  the same cells that deliver power. To double the duration, you double the number of
+  cells -- and double the cost. Other technologies decouple power from energy: the
+  "engine" that delivers power is separate from the "tank" that holds energy. Add a
+  bigger tank, and duration goes up without adding more of the expensive parts.
+</p>
+
+<DurationSpectrumChart client:visible />
+
+<p>
+  No single technology covers the full spectrum. The future grid needs a portfolio --
+  fast-response batteries for seconds-to-hours, medium-duration storage for daily
+  cycling, and long-duration options that can bridge weeks of low renewable output.
+</p>
+
+<h2 id="storage-zoo">The Storage Zoo</h2>
+
+<p>
+  Researchers and engineers are working on dozens of storage technologies. Seven have
+  emerged as serious contenders, each with a different sweet spot on the duration
+  spectrum. Click any card below to learn how it works.
+</p>
+
+<StorageTechCards client:visible />
+
+<h2 id="scenario-builder">Pick Your Storage</h2>
+
+<p>
+  Build a storage portfolio by mixing technologies. See how different combinations
+  cover the duration spectrum.
+</p>
+
+<StorageScenarioBuilder client:visible />
+
+<h2 id="comparison-tool">Compare Technologies</h2>
+
+<p>
+  Select technologies to compare their key characteristics side by side.
+</p>
+
+<StorageComparisonTool client:visible />
+
+<div class="my-8 flex flex-col gap-4">
+  <div class="p-6 rounded-lg" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
+    <div class="font-mono text-sm mb-2" style="color: var(--color-primary); letter-spacing: 0.08em;">GO DEEPER</div>
+    <div class="flex flex-col gap-2">
+      <a href={url("/research/topics/grid-flexibility-costs")} class="text-base font-semibold" style="color: var(--color-text);">
+        Grid Flexibility Costs
+      </a>
+      <a href={url("/research/topics/demand-response")} class="text-base font-semibold" style="color: var(--color-text);">
+        Demand Response
+      </a>
+    </div>
+  </div>
+</div>
+
+</ContentLayout>
