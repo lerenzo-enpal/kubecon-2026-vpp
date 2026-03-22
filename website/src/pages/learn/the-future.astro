@@ -40,26 +40,34 @@ import { url } from '../../utils/url';
   electricity grid is making the same journey.
 </p>
 
-<div class="my-8 flex flex-col md:flex-row gap-4 fade-in stagger">
-  <div class="flex-1 p-5 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-    <div class="font-mono text-sm mb-3" style="color: var(--color-danger); letter-spacing: 0.08em; text-transform: uppercase;">Centralized Grid</div>
-    <ul class="text-base space-y-2" style="color: var(--color-text-muted);">
-      <li>Few large generation sources</li>
-      <li>Long transmission distances</li>
-      <li>Single points of failure</li>
-      <li>Fragile under stress</li>
-      <li>Expensive to maintain</li>
-    </ul>
-  </div>
-  <div class="flex-1 p-5 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-    <div class="font-mono text-sm mb-3" style="color: var(--color-success); letter-spacing: 0.08em; text-transform: uppercase;">Distributed VPP Grid</div>
-    <ul class="text-base space-y-2" style="color: var(--color-text-muted);">
-      <li>Thousands of small sources</li>
-      <li>Generation at the point of use</li>
-      <li>No single point of failure</li>
-      <li>Resilient and adaptive</li>
-      <li>Scales with adoption</li>
-    </ul>
+<div class="my-8 flex flex-col gap-3 fade-in stagger">
+  {[
+    { old: 'Few large generators', vpp: 'Thousands of distributed sources', color: 'var(--color-danger)' },
+    { old: 'Long transmission distances', vpp: 'Generation at the point of use', color: 'var(--color-accent)' },
+    { old: 'Single points of failure', vpp: 'No single point of failure', color: 'var(--color-primary)' },
+    { old: 'Fragile under stress', vpp: 'Resilient and adaptive', color: 'var(--color-secondary)' },
+    { old: 'Expensive to maintain', vpp: 'Scales with adoption', color: 'var(--color-success)' },
+  ].map((row) => (
+    <div class="flex flex-col md:flex-row items-stretch gap-2">
+      <div class="flex-1 p-3 md:p-4 rounded-lg text-base" style={`background: ${row.color}08; border: 1px solid ${row.color}20; color: ${row.color};`}>
+        {row.old}
+      </div>
+      <div class="hidden md:flex items-center px-2">
+        <span class="font-mono text-xs text-text-dim">&rarr;</span>
+      </div>
+      <div class="flex-1 p-3 md:p-4 rounded-lg text-base bg-bg-alt border border-surface-light text-text">
+        {row.vpp}
+      </div>
+    </div>
+  ))}
+  <div class="flex gap-4 mt-2">
+    <div class="flex-1 text-center">
+      <span class="font-mono text-xs tracking-widest uppercase text-danger">Centralized Grid</span>
+    </div>
+    <div class="hidden md:block w-8"></div>
+    <div class="flex-1 text-center">
+      <span class="font-mono text-xs tracking-widest uppercase text-success">VPP-Enabled Grid</span>
+    </div>
   </div>
 </div>
 
