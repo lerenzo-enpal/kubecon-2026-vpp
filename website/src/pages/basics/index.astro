@@ -1,0 +1,69 @@
+---
+import ContentLayout from '../../layouts/ContentLayout.astro';
+import { url } from '../../utils/url';
+
+const pages = [
+  { num: 1, title: 'How Electricity Works', desc: 'Voltage, current, AC vs DC, and how we generate the power that runs everything.', href: url('/basics/how-electricity-works'), interactive: true },
+  { num: 2, title: 'Supply & Demand', desc: "Why the grid must balance supply and demand every second — and what happens when it can't.", href: url('/basics/supply-and-demand'), interactive: true },
+  { num: 3, title: 'How Batteries Work', desc: 'Inside lithium-ion cells, the cost revolution, and the technology coming next.', href: url('/basics/how-batteries-work'), interactive: true },
+  { num: 4, title: 'Beyond Lithium-Ion', desc: 'Flow batteries, pumped hydro, gravity storage, hydrogen, and the portfolio the grid needs.', href: url('/basics/beyond-lithium-ion'), interactive: true },
+];
+---
+
+<ContentLayout title="Basics" description="The foundations of electricity, grid balance, and energy storage.">
+
+<h1>Basics</h1>
+
+<p class="text-xl" style="color: var(--color-text-muted); max-width: 600px;">
+  The foundations of electricity, grid balance, and energy storage.
+  New to energy? Start with How Electricity Works. Already familiar? Jump to any topic.
+</p>
+
+<hr />
+
+<div class="flex flex-col gap-4">
+  {pages.map((p) => (
+    <a
+      href={p.href}
+      class="group flex items-start gap-5 p-5 rounded-xl transition-all duration-200 hover:translate-x-1"
+      style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);"
+    >
+      <div
+        class="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center font-mono font-bold text-lg"
+        style="background: var(--color-surface); color: var(--color-primary);"
+      >
+        {p.num}
+      </div>
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="font-semibold text-lg group-hover:text-white transition-colors" style="color: var(--color-text);">
+            {p.title}
+          </span>
+          {p.interactive && (
+            <span
+              class="font-mono text-xs px-2 py-0.5 rounded"
+              style="background: rgba(34, 211, 238, 0.1); color: var(--color-primary); border: 1px solid rgba(34, 211, 238, 0.2);"
+            >
+              Interactive
+            </span>
+          )}
+        </div>
+        <div class="text-sm" style="color: var(--color-text-dim);">
+          {p.desc}
+        </div>
+      </div>
+    </a>
+  ))}
+</div>
+
+<div class="mt-10 p-5 rounded-lg no-arrow" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+  <div class="font-mono text-xs mb-2" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">
+    Ready for the full story?
+  </div>
+  <div class="text-base" style="color: var(--color-text-muted);">
+    Once you know the basics, the <a href={url("/learn/how-the-grid-works")} style="color: var(--color-primary);">Learn</a> section
+    tells the story of Virtual Power Plants — from grid problems to distributed solutions.
+  </div>
+</div>
+
+</ContentLayout>
