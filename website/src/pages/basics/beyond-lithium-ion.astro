@@ -1,0 +1,55 @@
+---
+import ContentLayout from '../../layouts/ContentLayout.astro';
+import DurationProblemBriefing from '../../components/basics/briefings/DurationProblemBriefing';
+import StorageZooBriefing from '../../components/basics/briefings/StorageZooBriefing';
+import StorageScenarioBuilder from '../../components/basics/labs/StorageScenarioBuilder';
+import StorageComparisonTool from '../../components/basics/labs/StorageComparisonTool';
+import { url } from '../../utils/url';
+---
+
+<ContentLayout title="Beyond Lithium-Ion" description="Lithium-ion batteries dominate short-duration storage. But the grid needs storage from seconds to seasons.">
+
+<h1>Beyond Lithium-Ion</h1>
+<p class="text-lg mb-8" style="color: var(--color-text-muted); max-width: 600px;">
+  Lithium-ion batteries dominate short-duration storage. But the grid needs storage from seconds to seasons. No single technology can do it all.
+</p>
+
+<noscript>
+  <div class="p-4 rounded-lg mb-8" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+    <p style="color: var(--color-text-muted);">This page includes interactive visualizations that require JavaScript. Key concepts covered: why lithium-ion alone is not enough; a tour of alternative storage technologies; matching technologies to grid scenarios; comparing technologies across multiple dimensions.</p>
+  </div>
+</noscript>
+
+<DurationProblemBriefing client:visible />
+
+<StorageZooBriefing client:visible />
+
+<section id="scenario-builder" class="py-12">
+  <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">Storage Scenario Builder</h2>
+  <StorageScenarioBuilder client:visible />
+</section>
+
+<section id="comparison-tool" class="py-12">
+  <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">Storage Comparison Tool</h2>
+  <StorageComparisonTool client:visible />
+</section>
+
+<div class="mt-6 p-5 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+  <div class="font-mono text-xs mb-2" style="color: var(--color-accent); letter-spacing: 0.08em; text-transform: uppercase;">
+    Go Deeper
+  </div>
+  <ul class="space-y-2">
+    <li>
+      <a href={url("/research/topics/grid-flexibility-costs")} class="text-sm font-semibold" style="color: var(--color-text);">
+        Research: Grid Flexibility Costs &rarr;
+      </a>
+    </li>
+    <li>
+      <a href={url("/research/topics/demand-response")} class="text-sm font-semibold" style="color: var(--color-text);">
+        Research: Demand Response &rarr;
+      </a>
+    </li>
+  </ul>
+</div>
+
+</ContentLayout>
