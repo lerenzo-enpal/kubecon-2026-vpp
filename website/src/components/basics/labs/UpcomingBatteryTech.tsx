@@ -69,75 +69,84 @@ export default function UpcomingBatteryTech() {
   const [expanded, setExpanded] = useState<string | null>(null);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="flex flex-col gap-3">
       {techs.map((tech) => {
         const isOpen = expanded === tech.id;
         return (
           <button
             key={tech.id}
             onClick={() => setExpanded(isOpen ? null : tech.id)}
-            className="text-left rounded-lg p-4 transition-colors"
+            className="text-left rounded-lg p-4 transition-colors cursor-pointer"
             style={{
               background: 'var(--color-surface)',
               border: `1px solid ${isOpen ? 'var(--color-primary)' : 'var(--color-surface-light)'}`,
             }}
           >
-            {/* Header */}
-            <div className="flex items-center justify-between mb-2">
-              <h4 className="font-mono text-sm font-bold" style={{ color: 'var(--color-text)', margin: 0 }}>
-                {tech.title}
-              </h4>
-              <span
-                className="font-mono text-xs px-2 py-0.5 rounded"
-                style={{
-                  background: 'rgba(34, 211, 238, 0.08)',
-                  color: 'var(--color-primary)',
-                  border: '1px solid rgba(34, 211, 238, 0.15)',
-                }}
-              >
-                {tech.expected}
+            {/* Top row: title, expected, description */}
+            <div className="flex items-start gap-4 mb-3">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-3 mb-1">
+                  <h4 className="font-mono text-sm font-bold" style={{ color: 'var(--color-text)', margin: 0 }}>
+                    {tech.title}
+                  </h4>
+                  <span
+                    className="font-mono text-xs px-2 py-0.5 rounded flex-shrink-0"
+                    style={{
+                      background: 'rgba(34, 211, 238, 0.08)',
+                      color: 'var(--color-primary)',
+                      border: '1px solid rgba(34, 211, 238, 0.15)',
+                    }}
+                  >
+                    {tech.expected}
+                  </span>
+                </div>
+                <p className="text-sm" style={{ color: 'var(--color-text-muted)', margin: 0 }}>
+                  {tech.desc}
+                </p>
+              </div>
+              <span className="font-mono text-xs flex-shrink-0 mt-1" style={{ color: 'var(--color-text-dim)' }}>
+                {isOpen ? '[-]' : '[+]'}
               </span>
             </div>
 
-            <p className="text-sm mb-3" style={{ color: 'var(--color-text-muted)', margin: '0 0 12px 0' }}>
-              {tech.desc}
-            </p>
+            {/* Bottom row: maturity bar + key facts side by side */}
+            <div className="flex flex-col md:flex-row gap-4">
+              {/* Maturity bar */}
+              <div className="md:w-56 flex-shrink-0">
+                <div className="font-mono text-xs mb-1" style={{ color: 'var(--color-text-dim)' }}>
+                  Maturity
+                </div>
+                <div className="flex gap-1">
+                  {maturityLabels.map((label, i) => (
+                    <div
+                      key={label}
+                      className="flex-1 text-center py-1 rounded text-xs font-mono"
+                      style={{
+                        background: i <= tech.maturity ? 'rgba(34, 211, 238, 0.15)' : 'var(--color-bg-alt)',
+                        color: i <= tech.maturity ? 'var(--color-primary)' : 'var(--color-text-dim)',
+                        border: `1px solid ${i <= tech.maturity ? 'rgba(34, 211, 238, 0.3)' : 'var(--color-surface-light)'}`,
+                      }}
+                    >
+                      {label}
+                    </div>
+                  ))}
+                </div>
+              </div>
 
-            {/* Maturity bar */}
-            <div className="mb-3">
-              <div className="font-mono text-xs mb-1" style={{ color: 'var(--color-text-dim)' }}>
-                Maturity
-              </div>
-              <div className="flex gap-1">
-                {maturityLabels.map((label, i) => (
-                  <div
-                    key={label}
-                    className="flex-1 text-center py-1 rounded text-xs font-mono"
-                    style={{
-                      background: i <= tech.maturity ? 'rgba(34, 211, 238, 0.15)' : 'var(--color-bg-alt)',
-                      color: i <= tech.maturity ? 'var(--color-primary)' : 'var(--color-text-dim)',
-                      border: `1px solid ${i <= tech.maturity ? 'rgba(34, 211, 238, 0.3)' : 'var(--color-surface-light)'}`,
-                    }}
-                  >
-                    {label}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Key facts */}
-            <div className="flex flex-col gap-1 text-xs" style={{ color: 'var(--color-text-muted)' }}>
-              <div>
-                <span className="font-mono" style={{ color: 'var(--color-success)' }}>+</span>{' '}
-                {tech.advantage}
-              </div>
-              <div>
-                <span className="font-mono" style={{ color: 'var(--color-danger)' }}>-</span>{' '}
-                {tech.challenge}
-              </div>
-              <div>
-                <span className="font-mono" style={{ color: 'var(--color-text-dim)' }}>Players:</span>{' '}
-                {tech.players}
+              {/* Key facts */}
+              <div className="flex-1 flex flex-col gap-1 text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                <div>
+                  <span className="font-mono" style={{ color: 'var(--color-success)' }}>+</span>{' '}
+                  {tech.advantage}
+                </div>
+                <div>
+                  <span className="font-mono" style={{ color: 'var(--color-danger)' }}>-</span>{' '}
+                  {tech.challenge}
+                </div>
+                <div>
+                  <span className="font-mono" style={{ color: 'var(--color-text-dim)' }}>Players:</span>{' '}
+                  {tech.players}
+                </div>
               </div>
             </div>
 
@@ -153,11 +162,6 @@ export default function UpcomingBatteryTech() {
                 {tech.detail}
               </div>
             )}
-
-            {/* Expand hint */}
-            <div className="mt-2 font-mono text-xs" style={{ color: 'var(--color-text-dim)' }}>
-              {isOpen ? 'Click to collapse' : 'Click for details'}
-            </div>
           </button>
         );
       })}
