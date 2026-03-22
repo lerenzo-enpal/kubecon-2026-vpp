@@ -16,10 +16,10 @@ const colors = {
 };
 
 const NODES = [
-  { id: 'market',     label: 'Energy Market',   sub: 'FCR / aFRR',   x: 0.03,  y: 0.5,  color: colors.accent },
-  { id: 'trader',     label: 'Trading Gateway',  sub: 'Entrix',       x: 0.22,  y: 0.5,  color: colors.accent },
-  { id: 'controller', label: 'VPP Controller',   sub: 'Flexa',        x: 0.42,  y: 0.5,  color: colors.primary },
-  { id: 'enpal',      label: 'Enpal Cloud',     sub: 'Fleet Mgmt',  x: 0.62,  y: 0.5,  color: colors.success },
+  { id: 'market',     label: 'Energy\nMarket',    sub: 'FCR / aFRR',   x: 0.02,  y: 0.5,  color: colors.accent },
+  { id: 'trader',     label: 'Trading\nGateway',  sub: 'Entrix',       x: 0.22,  y: 0.5,  color: colors.accent },
+  { id: 'controller', label: 'VPP\nController',   sub: 'Flexa',        x: 0.42,  y: 0.5,  color: colors.primary },
+  { id: 'enpal',      label: 'Enpal\nCloud',      sub: 'Fleet Mgmt',  x: 0.62,  y: 0.5,  color: colors.success },
 ];
 
 const HOMES = [
@@ -82,7 +82,7 @@ export default function VPPArchitecture({ height = 420 }: Props) {
 
     let width = container.clientWidth;
 
-    const nodeW = 130, nodeH = 56;
+    const nodeW = 110, nodeH = 68;
     const homeW = 48, homeH = 44;
 
     interface Particle {
@@ -271,14 +271,17 @@ export default function VPPArchitecture({ height = 420 }: Props) {
         ctx!.stroke();
         ctx!.shadowBlur = 0;
 
-        ctx!.font = 'bold 15px JetBrains Mono';
+        ctx!.font = 'bold 13px JetBrains Mono';
         ctx!.fillStyle = node.color;
         ctx!.textAlign = 'center';
-        ctx!.fillText(node.label, nx + nodeW / 2, ny + 24);
+        const labelLines = node.label.split('\n');
+        labelLines.forEach((line: string, li: number) => {
+          ctx!.fillText(line, nx + nodeW / 2, ny + 20 + li * 15);
+        });
 
-        ctx!.font = '12px JetBrains Mono';
+        ctx!.font = '11px JetBrains Mono';
         ctx!.fillStyle = colors.text + 'dd';
-        ctx!.fillText(node.sub, nx + nodeW / 2, ny + 42);
+        ctx!.fillText(node.sub, nx + nodeW / 2, ny + 20 + labelLines.length * 15 + 4);
       });
 
       // Day/night cycle
