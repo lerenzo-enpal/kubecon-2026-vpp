@@ -29,6 +29,7 @@ import ThankYouBackground from './components/ThankYouBackground';
 import FrequencyWalkthrough from './components/FrequencyWalkthrough';
 import ArchitectureExplorer from './components/ArchitectureExplorer';
 import ChoreographyLoop from './components/ChoreographyLoop';
+import StreamingAggregation from './components/StreamingAggregation';
 
 
 const theme = {
@@ -865,48 +866,26 @@ export default function Presentation() {
               ))}
             </div>
           </div>
-          <P size="18px">Protobuf telemetry into Databricks lakehouse. Spark streaming aggregates for near-real-time pattern detection across the fleet.</P>
+          <P size="18px">Every device reports every 20 seconds. Progressive aggregation compresses volume while preserving real-time pattern detection.</P>
 
-          <div className="flex-1 flex gap-6 mt-4">
-            {/* Pipeline stages */}
-            <div className="flex-1 flex flex-col gap-3">
-              {[
-                { stage: 'RAW', desc: 'Every measurement lands as-is. Protobuf decoded to Delta Lake. Full fidelity, no transformation.', color: colors.secondary, retention: '7 days' },
-                { stage: 'BRONZE', desc: 'Schema validation, deduplication, late-arrival handling. Partitioned by device and hour.', color: '#FF3621', retention: '30 days' },
-                { stage: 'SILVER', desc: 'Cleaned, enriched with device metadata. Joined with weather and market data. Ready for analytics.', color: '#FF3621', retention: '1 year' },
-                { stage: 'GOLD', desc: 'Streaming aggregates — fleet-wide patterns, anomaly detection, capacity forecasting. Powers the VPP controller.', color: '#E25A1C', retention: 'Indefinite' },
-              ].map((s, i) => (
-                <div key={i} className="flex items-start gap-4 rounded-lg px-4 py-3" style={{ background: s.color + '06', border: `1px solid ${s.color}15` }}>
-                  <div className="shrink-0 w-[70px]">
-                    <div className="text-[14px] font-extrabold font-mono" style={{ color: s.color }}>{s.stage}</div>
-                    <div className="text-[9px] font-mono mt-1" style={{ color: colors.textDim }}>{s.retention}</div>
-                  </div>
-                  <div className="text-[13px] text-hud-text-muted font-sans leading-relaxed">{s.desc}</div>
-                </div>
-              ))}
+          {/* Streaming aggregation visualization */}
+          <div className="flex-1 flex justify-center items-center">
+            <LazyContent><StreamingAggregation width={1100} height={390} /></LazyContent>
+          </div>
+
+          {/* Bottom: key metrics */}
+          <div className="flex gap-5 mt-2">
+            <div className="flex-1 rounded-lg px-4 py-3 flex items-center gap-3" style={{ background: '#E25A1C08', border: `1px solid #E25A1C20` }}>
+              <div className="text-[22px] font-extrabold font-mono" style={{ color: '#E25A1C' }}>5M+</div>
+              <div className="text-[13px] text-hud-text-muted font-sans">measurements/min at fleet scale</div>
             </div>
-
-            {/* Key metrics */}
-            <div className="w-[260px] flex flex-col gap-3">
-              <div className="rounded-lg p-4 text-center" style={{ background: '#FF362108', border: `1px solid #FF362120` }}>
-                <div className="text-[28px] font-extrabold font-mono" style={{ color: '#FF3621' }}>100K+</div>
-                <div className="text-[11px] font-mono" style={{ color: colors.textDim }}>devices reporting every 20s</div>
-              </div>
-              <div className="rounded-lg p-4 text-center" style={{ background: '#E25A1C08', border: `1px solid #E25A1C20` }}>
-                <div className="text-[28px] font-extrabold font-mono" style={{ color: '#E25A1C' }}>5M+</div>
-                <div className="text-[11px] font-mono" style={{ color: colors.textDim }}>measurements per minute</div>
-              </div>
-              <div className="rounded-lg p-4 text-center" style={{ background: colors.success + '08', border: `1px solid ${colors.success}20` }}>
-                <div className="text-[28px] font-extrabold font-mono" style={{ color: colors.success }}>{'<'}2s</div>
-                <div className="text-[11px] font-mono" style={{ color: colors.textDim }}>market signal to device response</div>
-              </div>
-              <div className="rounded-lg p-4" style={{ background: colors.surface, border: `1px solid ${colors.surfaceLight}` }}>
-                <div className="text-[11px] font-mono font-semibold tracking-[0.1em] uppercase mb-2" style={{ color: colors.textDim }}>Cost Strategy</div>
-                <div className="text-[12px] text-hud-text-muted font-sans leading-relaxed">
-                  Progressive aggregation reduces storage 10x. Raw data expires after 7 days.
-                  Streaming aggregates on Databricks replace expensive batch jobs.
-                </div>
-              </div>
+            <div className="flex-1 rounded-lg px-4 py-3 flex items-center gap-3" style={{ background: '#FF362108', border: `1px solid #FF362120` }}>
+              <div className="text-[22px] font-extrabold font-mono" style={{ color: '#FF3621' }}>10x</div>
+              <div className="text-[13px] text-hud-text-muted font-sans">storage reduction via progressive aggregation</div>
+            </div>
+            <div className="flex-1 rounded-lg px-4 py-3 flex items-center gap-3" style={{ background: colors.success + '08', border: `1px solid ${colors.success}20` }}>
+              <div className="text-[22px] font-extrabold font-mono" style={{ color: colors.success }}>{'<'}2s</div>
+              <div className="text-[13px] text-hud-text-muted font-sans">market signal to device response</div>
             </div>
           </div>
         </div>
