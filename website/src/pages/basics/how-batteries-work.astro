@@ -1,0 +1,199 @@
+---
+import ContentLayout from '../../layouts/ContentLayout.astro';
+import GlowLine from '../../components/GlowLine';
+import BatteryHistoryBriefing from '../../components/basics/briefings/BatteryHistoryBriefing';
+import InsideTheCellBriefing from '../../components/basics/briefings/InsideTheCellBriefing';
+import PriceCrashBriefing from '../../components/basics/briefings/PriceCrashBriefing';
+import BatteryChemistryWorkbench from '../../components/basics/labs/BatteryChemistryWorkbench';
+import BatteryLifecycleSimulator from '../../components/basics/labs/BatteryLifecycleSimulator';
+import UpcomingBatteryTech from '../../components/basics/labs/UpcomingBatteryTech';
+import { url } from '../../utils/url';
+
+const sections = [
+  { id: 'history', title: 'Battery History' },
+  { id: 'inside-the-cell', title: 'Inside the Cell' },
+  { id: 'price-crash', title: 'The Price Crash' },
+  { id: 'chemistry-workbench', title: 'Chemistry Workbench', interactive: true },
+  { id: 'lifecycle', title: 'Lifecycle Simulator', interactive: true },
+  { id: 'whats-next', title: "What's Next" },
+];
+---
+
+<ContentLayout
+  title="How Batteries Work"
+  description="From Volta's pile to grid-scale storage — how lithium-ion batteries work, why they got so cheap, and what comes next."
+  sections={sections}
+>
+
+<h1>How Batteries Work</h1>
+
+<p class="text-xl" style="color: var(--color-text-muted); max-width: 600px;">
+  From Volta's pile to grid-scale storage — how lithium-ion batteries work,
+  why they got so cheap, and what comes next.
+</p>
+
+<noscript>
+  <div class="p-4 rounded-lg my-6" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+    <p style="color: var(--color-text-muted);">
+      This page contains interactive diagrams and simulations that require JavaScript.
+      Please enable JavaScript to experience the full content.
+    </p>
+  </div>
+</noscript>
+
+<div class="my-8">
+  <GlowLine client:visible />
+</div>
+
+<!-- Briefing 1: Battery History Timeline -->
+
+<h2 id="history">From Volta to the Grid</h2>
+
+<p>
+  The battery is older than you think. Alessandro Volta built the first one in 1800 — a stack of
+  zinc and copper discs separated by brine-soaked cloth. It took nearly two centuries to get from
+  that crude pile to the lithium-ion cells that power everything from phones to grid-scale storage.
+</p>
+
+<div class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px;">
+  <BatteryHistoryBriefing client:visible />
+</div>
+
+<p>
+  The 2019 Nobel Prize in Chemistry went to Goodenough, Whittingham, and Yoshino — the three
+  scientists whose work made lithium-ion batteries possible. Today, grid-scale battery installations
+  are measured in gigawatt-hours.
+</p>
+
+<!-- Briefing 2: Inside the Cell -->
+
+<h2 id="inside-the-cell">Inside the Cell</h2>
+
+<p>
+  Every lithium-ion cell has the same basic structure: two electrodes (anode and cathode) separated
+  by an electrolyte. During charging, lithium ions migrate from cathode to anode. During discharging,
+  they flow back — and electrons take the external circuit, powering whatever is connected.
+</p>
+
+<div class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px;">
+  <InsideTheCellBriefing client:visible />
+</div>
+
+<p>
+  Lithium is the lightest metal and has the highest electrochemical potential of any element. That
+  combination makes it ideal for batteries — more energy per gram than any alternative.
+</p>
+
+<!-- Briefing 3: The Price Crash -->
+
+<h2 id="price-crash">The Price Crash</h2>
+
+<p>
+  In 2010, a lithium-ion battery pack cost $1,100 per kilowatt-hour. By 2023, that number had
+  dropped to $139 — an 89% reduction in 13 years. This is one of the fastest cost declines in
+  the history of energy technology.
+</p>
+
+<div class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px;">
+  <PriceCrashBriefing client:visible />
+</div>
+
+<p>
+  Three forces drove the crash: gigafactory-scale manufacturing, reduced dependence on expensive
+  cobalt, and intense competition — especially from Chinese manufacturers like CATL and BYD.
+  Projections suggest pack prices could reach $50-80/kWh by 2030.
+</p>
+
+<div class="my-8">
+  <GlowLine client:visible />
+</div>
+
+<!-- Lab 1: Chemistry Workbench -->
+
+<h2 id="chemistry-workbench">Chemistry Workbench</h2>
+
+<p>
+  Not all lithium-ion batteries are the same. The cathode chemistry determines the battery's
+  character — its energy density, cycle life, safety, and cost. Compare four major chemistries
+  and see why different applications choose different batteries.
+</p>
+
+<div class="my-8 rounded-lg overflow-hidden p-4 scroll-mt-20" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+  <div class="flex items-center justify-between mb-3">
+    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">BATTERY CHEMISTRY RADAR</div>
+    <span
+      class="font-mono text-xs px-2 py-0.5 rounded"
+      style="background: rgba(34, 211, 238, 0.1); color: var(--color-primary); border: 1px solid rgba(34, 211, 238, 0.2);"
+    >
+      Interactive
+    </span>
+  </div>
+  <BatteryChemistryWorkbench client:visible />
+  <div class="text-xs mt-3" style="color: var(--color-text-dim);">
+    Select a chemistry to see its radar profile. Use Compare mode to overlay two chemistries.
+  </div>
+</div>
+
+<!-- Lab 2: Lifecycle Simulator -->
+
+<h2 id="lifecycle">Battery Lifecycle Simulator</h2>
+
+<p>
+  How long does a battery last? It depends on how you use it. Deeper discharges, faster charging,
+  higher temperatures, and more frequent cycling all accelerate degradation. Adjust the parameters
+  to see how different usage patterns affect battery lifespan.
+</p>
+
+<div class="my-8 rounded-lg overflow-hidden p-4 scroll-mt-20" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+  <div class="flex items-center justify-between mb-3">
+    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">LIFECYCLE SIMULATOR</div>
+    <span
+      class="font-mono text-xs px-2 py-0.5 rounded"
+      style="background: rgba(34, 211, 238, 0.1); color: var(--color-primary); border: 1px solid rgba(34, 211, 238, 0.2);"
+    >
+      Interactive
+    </span>
+  </div>
+  <BatteryLifecycleSimulator client:visible />
+  <div class="text-xs mt-3" style="color: var(--color-text-dim);">
+    Try the presets to see typical usage patterns, or adjust sliders manually. The red line marks 80% State of Health — the industry standard for "end of life."
+  </div>
+</div>
+
+<!-- Lab 3: What's Next -->
+
+<h2 id="whats-next">What's Next</h2>
+
+<p>
+  Lithium-ion dominates today, but several next-generation technologies are closing in. Some
+  promise higher density, others lower cost, and a few could eliminate lithium entirely.
+</p>
+
+<div class="my-8">
+  <UpcomingBatteryTech client:visible />
+</div>
+
+<!-- Footer -->
+
+<div class="my-8">
+  <GlowLine client:visible />
+</div>
+
+<div class="my-8 p-6 rounded-lg no-arrow" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
+  <div class="font-mono text-sm mb-2" style="color: var(--color-primary); letter-spacing: 0.08em;">CONTINUE</div>
+  <a href={url("/basics/beyond-lithium-ion")} class="text-lg font-semibold" style="color: var(--color-text);">
+    Beyond Lithium-Ion
+  </a>
+  <div class="text-sm mt-1" style="color: var(--color-text-dim);">
+    Long-duration storage, flow batteries, compressed air, and the technologies that will shape the grid of 2030.
+  </div>
+</div>
+
+<div class="my-4 p-4 rounded-lg no-arrow" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+  <div class="font-mono text-xs mb-1" style="color: var(--color-text-dim); letter-spacing: 0.08em;">GO DEEPER</div>
+  <a href={url("/research/topics/electricity-pricing")} class="text-sm" style="color: var(--color-primary);">
+    Research: Electricity Pricing
+  </a>
+</div>
+
+</ContentLayout>

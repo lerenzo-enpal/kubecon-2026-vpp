@@ -1,0 +1,166 @@
+import { useState } from 'react';
+
+interface TechCard {
+  id: string;
+  title: string;
+  desc: string;
+  maturity: number; // 0-3: Research, Prototype, Pilot, Commercial
+  expected: string;
+  advantage: string;
+  challenge: string;
+  players: string;
+  detail: string;
+}
+
+const maturityLabels = ['Research', 'Prototype', 'Pilot', 'Commercial'];
+
+const techs: TechCard[] = [
+  {
+    id: 'solid-state',
+    title: 'Solid-State',
+    desc: 'Replace liquid electrolyte with a solid one.',
+    maturity: 1,
+    expected: 'Late 2020s',
+    advantage: '2x energy density, no fire risk',
+    challenge: 'Manufacturing at scale',
+    players: 'Toyota, QuantumScape',
+    detail:
+      'Solid-state batteries replace the flammable liquid electrolyte with a ceramic or polymer solid. This eliminates dendrite growth (a major cause of fires) and enables lithium metal anodes, roughly doubling energy density. The main barrier is cost-effective manufacturing: solid electrolytes are brittle and difficult to produce in thin, uniform layers at gigafactory scale.',
+  },
+  {
+    id: 'sodium-ion',
+    title: 'Sodium-Ion',
+    desc: 'No lithium needed. Cheaper and more abundant.',
+    maturity: 3,
+    expected: 'Shipping now',
+    advantage: 'Cheaper, abundant materials, no lithium or cobalt',
+    challenge: 'Lower energy density (~60% of Li-ion)',
+    players: 'CATL, BYD',
+    detail:
+      'Sodium-ion batteries use sodium instead of lithium, which is 1,000x more abundant in the Earth\'s crust. CATL began mass production in 2023. While energy density is lower than Li-ion (making them less ideal for EVs), they excel in stationary storage where weight matters less. They also perform better in cold weather and have no risk of over-discharge damage.',
+  },
+  {
+    id: 'silicon-anodes',
+    title: 'Silicon Anodes',
+    desc: '10x the anode capacity of graphite.',
+    maturity: 2,
+    expected: 'Pure silicon late 2020s',
+    advantage: '10x anode capacity, major range boost',
+    challenge: '300% volume swelling during charge',
+    players: 'Sila Nano, Amprius',
+    detail:
+      'Silicon can theoretically store 10x more lithium per gram than graphite. The problem: silicon swells by 300% when lithium ions enter, cracking the electrode and destroying the battery within dozens of cycles. Current solutions blend small amounts of silicon into graphite anodes (5-10%). Pure silicon anodes using nanostructured or porous designs are in pilot production.',
+  },
+  {
+    id: 'lithium-sulfur',
+    title: 'Lithium-Sulfur',
+    desc: '5x theoretical energy density. Ultra-light.',
+    maturity: 0,
+    expected: 'Niche applications 2028+',
+    advantage: '5x theoretical energy density, very light',
+    challenge: 'Cycle life under 500 cycles',
+    players: 'Oxis Energy, Lyten',
+    detail:
+      'Lithium-sulfur batteries promise the highest theoretical energy density of any battery chemistry (2,600 Wh/kg vs ~250 Wh/kg for Li-ion). Sulfur is also extremely cheap and abundant. The catch: polysulfide shuttle effect causes rapid capacity fade, limiting cycle life to under 500 cycles. Best suited for aviation and space where weight matters more than longevity.',
+  },
+];
+
+export default function UpcomingBatteryTech() {
+  const [expanded, setExpanded] = useState<string | null>(null);
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {techs.map((tech) => {
+        const isOpen = expanded === tech.id;
+        return (
+          <button
+            key={tech.id}
+            onClick={() => setExpanded(isOpen ? null : tech.id)}
+            className="text-left rounded-lg p-4 transition-colors"
+            style={{
+              background: 'var(--color-surface)',
+              border: `1px solid ${isOpen ? 'var(--color-primary)' : 'var(--color-surface-light)'}`,
+            }}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="font-mono text-sm font-bold" style={{ color: 'var(--color-text)', margin: 0 }}>
+                {tech.title}
+              </h4>
+              <span
+                className="font-mono text-xs px-2 py-0.5 rounded"
+                style={{
+                  background: 'rgba(34, 211, 238, 0.08)',
+                  color: 'var(--color-primary)',
+                  border: '1px solid rgba(34, 211, 238, 0.15)',
+                }}
+              >
+                {tech.expected}
+              </span>
+            </div>
+
+            <p className="text-sm mb-3" style={{ color: 'var(--color-text-muted)', margin: '0 0 12px 0' }}>
+              {tech.desc}
+            </p>
+
+            {/* Maturity bar */}
+            <div className="mb-3">
+              <div className="font-mono text-xs mb-1" style={{ color: 'var(--color-text-dim)' }}>
+                Maturity
+              </div>
+              <div className="flex gap-1">
+                {maturityLabels.map((label, i) => (
+                  <div
+                    key={label}
+                    className="flex-1 text-center py-1 rounded text-xs font-mono"
+                    style={{
+                      background: i <= tech.maturity ? 'rgba(34, 211, 238, 0.15)' : 'var(--color-bg-alt)',
+                      color: i <= tech.maturity ? 'var(--color-primary)' : 'var(--color-text-dim)',
+                      border: `1px solid ${i <= tech.maturity ? 'rgba(34, 211, 238, 0.3)' : 'var(--color-surface-light)'}`,
+                    }}
+                  >
+                    {label}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Key facts */}
+            <div className="flex flex-col gap-1 text-xs" style={{ color: 'var(--color-text-muted)' }}>
+              <div>
+                <span className="font-mono" style={{ color: 'var(--color-success)' }}>+</span>{' '}
+                {tech.advantage}
+              </div>
+              <div>
+                <span className="font-mono" style={{ color: 'var(--color-danger)' }}>-</span>{' '}
+                {tech.challenge}
+              </div>
+              <div>
+                <span className="font-mono" style={{ color: 'var(--color-text-dim)' }}>Players:</span>{' '}
+                {tech.players}
+              </div>
+            </div>
+
+            {/* Expanded detail */}
+            {isOpen && (
+              <div
+                className="mt-3 pt-3 text-sm"
+                style={{
+                  color: 'var(--color-text-muted)',
+                  borderTop: '1px solid var(--color-surface-light)',
+                }}
+              >
+                {tech.detail}
+              </div>
+            )}
+
+            {/* Expand hint */}
+            <div className="mt-2 font-mono text-xs" style={{ color: 'var(--color-text-dim)' }}>
+              {isOpen ? 'Click to collapse' : 'Click for details'}
+            </div>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
