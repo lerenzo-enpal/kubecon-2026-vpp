@@ -228,43 +228,44 @@ html.font-lg aside .text-\[10px\] { font-size: 14px !important; }
 
 .fs-launch-btn {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 6px;
+  right: 6px;
   z-index: 20;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border: none;
-  border-radius: 6px;
+  gap: 5px;
+  padding: 4px 10px;
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  border-radius: 4px;
   cursor: pointer;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  color: #020408;
-  background: linear-gradient(
-    90deg,
-    #22d3ee 0%,
-    #22d3ee 35%,
-    #7ef3ff 50%,
-    #22d3ee 65%,
-    #22d3ee 100%
-  );
-  background-size: 300% 100%;
-  animation: launch-glow-sweep 2.5s linear infinite;
-  box-shadow: 0 0 12px rgba(34, 211, 238, 0.3), 0 0 4px rgba(34, 211, 238, 0.2);
-  transition: transform 0.15s, box-shadow 0.2s;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(34, 211, 238, 0.8);
+  background: rgba(5, 8, 16, 0.8);
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.1);
+  transition: all 0.2s;
 }
 .fs-launch-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px rgba(34, 211, 238, 0.5), 0 0 8px rgba(34, 211, 238, 0.3);
+  color: #22d3ee;
+  border-color: rgba(34, 211, 238, 0.6);
+  box-shadow: 0 0 14px rgba(34, 211, 238, 0.25), 0 0 6px rgba(34, 211, 238, 0.15);
+  background: rgba(34, 211, 238, 0.08);
 }
 .fs-launch-btn:active {
   transform: scale(0.97);
 }
 .fs-launch-btn svg {
-  stroke: #020408;
+  stroke: currentColor;
+}
+.fs-launch-btn .fs-launch-btn-text {
+  background: linear-gradient(90deg, rgba(34,211,238,0.8) 0%, rgba(34,211,238,0.8) 35%, rgba(120,235,255,0.95) 50%, rgba(34,211,238,0.8) 65%, rgba(34,211,238,0.8) 100%);
+  background-size: 300% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: launch-glow-sweep 2.5s linear infinite;
 }
 
 /* Interactive tag — animated border trace-in + left-to-right glow sweep */
