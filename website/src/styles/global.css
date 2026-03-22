@@ -212,7 +212,7 @@ html.font-lg aside .text-\[10px\] { font-size: 14px !important; }
 /* MapLibre attribution — subtle, blends with dark theme */
 .maplibregl-ctrl-attrib {
   background: transparent !important;
-  font-size: 9px !important;
+  font-size: 12px !important;
   opacity: 0.7 !important;
   color: #778 !important;
   font-family: 'JetBrains Mono', monospace !important;
@@ -239,7 +239,7 @@ html.font-lg aside .text-\[10px\] { font-size: 14px !important; }
   border-radius: 4px;
   cursor: pointer;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.04em;
   color: rgba(34, 211, 238, 0.8);

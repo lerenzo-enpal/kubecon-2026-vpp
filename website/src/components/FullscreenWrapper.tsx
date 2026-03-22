@@ -66,7 +66,7 @@ export default function FullscreenWrapper({ children, label }: Props) {
             color: 'rgba(161, 161, 170, 0.7)',
             cursor: 'pointer',
             fontFamily: '"JetBrains Mono", monospace',
-            fontSize: 11,
+            fontSize: 12,
             padding: '4px 10px',
             display: 'flex',
             alignItems: 'center',
