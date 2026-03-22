@@ -2,7 +2,7 @@
  * Basic build verification — checks that expected pages were generated
  * and contain key content markers. Run via `npm test`.
  */
-import { readFileSync, existsSync } from 'fs';
+import { readFileSync, existsSync, readdirSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -86,8 +86,8 @@ check('Slides link on landing', pageContains('index.html', '/slides/'));
 check('Slides link on content pages', pageContains('learn/how-the-grid-works/index.html', '/slides/'));
 check('Enpal logo on landing', pageContains('index.html', 'enpal-logo'));
 
-// Design tokens
-check('Fonts loaded', pageContains('index.html', 'JetBrains'));
+// Design tokens — fonts are self-hosted via @fontsource, bundled as woff2 into _astro/
+check('Fonts loaded', readdirSync(resolve(dist, '_astro')).some(f => f.startsWith('jetbrains-mono') || f.startsWith('inter-')));
 
 // No broken internal links (spot check key cross-references)
 check('Grid page links to frequency topic', pageContains('learn/how-the-grid-works/index.html', '/research/topics/grid-frequency'));
