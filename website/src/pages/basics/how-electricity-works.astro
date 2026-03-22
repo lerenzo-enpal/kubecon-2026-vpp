@@ -1,0 +1,191 @@
+---
+import ContentLayout from '../../layouts/ContentLayout.astro';
+import WaterPipeIllustration from '../../components/basics/inline/WaterPipeIllustration';
+import ACvsDCWaveform from '../../components/basics/inline/ACvsDCWaveform';
+import TransformerDiagram from '../../components/basics/inline/TransformerDiagram';
+import GenerationMethods from '../../components/basics/inline/GenerationMethods';
+import OhmsLawPlayground from '../../components/basics/inline/OhmsLawPlayground';
+import PowerEnergyCalculator from '../../components/basics/inline/PowerEnergyCalculator';
+import { url } from '../../utils/url';
+---
+
+<ContentLayout
+  title="How Electricity Works"
+  description="Voltage, current, resistance, AC vs DC, and how we generate power. The fundamentals of electricity explained clearly."
+  sections={[
+    { id: 'what-is-this-stuff', title: 'What Is This Stuff?' },
+    { id: 'ac-vs-dc', title: 'AC vs DC' },
+    { id: 'spinning-into-power', title: 'Spinning Into Power' },
+    { id: 'ohms-law-playground', title: "Ohm's Law Playground", interactive: true },
+    { id: 'power-vs-energy', title: 'Power vs Energy', interactive: true },
+  ]}
+>
+
+<h1>How Electricity Works</h1>
+
+<p class="text-xl" style="color: var(--color-text-muted); max-width: 600px;">
+  Electricity powers almost everything in modern life, but most people never learn how it actually works.
+  This page covers the fundamentals: what electricity is, how it flows, and how we generate it.
+</p>
+
+<!-- ═══ SECTION 1: What Is This Stuff? ═══ -->
+
+<h2 id="what-is-this-stuff">What Is This Stuff?</h2>
+
+<p>
+  Electricity is the movement of tiny charged particles called <strong>electrons</strong> through a material, usually a metal wire.
+  When electrons flow, they carry energy from one place to another. That flow is what powers your lights, your phone, and everything else that plugs into a wall.
+</p>
+
+<p>
+  To understand electricity, you need three concepts: <strong>voltage</strong>, <strong>current</strong>, and <strong>resistance</strong>.
+  These three quantities are related by a simple rule called Ohm's Law, and together they describe everything about how electricity behaves in a circuit.
+</p>
+
+<p>
+  The easiest way to grasp them is by analogy. Think of water flowing through pipes.
+</p>
+
+<WaterPipeIllustration client:visible />
+
+<p>
+  <strong>Voltage</strong> is the pressure pushing the water (or electrons) forward. A higher voltage means a stronger push.
+  It is measured in <strong>volts (V)</strong>. A USB charger provides 5 volts. A European wall socket provides 230 volts.
+  A transmission tower carries 400,000 volts.
+</p>
+
+<p>
+  <strong>Current</strong> is the flow rate: how many electrons pass a given point each second.
+  It is measured in <strong>amperes (A)</strong>, usually shortened to "amps."
+  More current means more energy being delivered.
+</p>
+
+<p>
+  <strong>Resistance</strong> is anything that slows the flow down. A narrow pipe restricts water. A thin wire restricts electrons.
+  It is measured in <strong>ohms ({'\u03A9'}</strong>).
+  Higher resistance means less current for the same voltage.
+</p>
+
+<p>
+  The relationship between these three is captured in one equation:
+</p>
+
+<div class="my-6 p-4 rounded-lg font-mono text-lg text-center" style="background: var(--color-surface); border: 1px solid var(--color-surface-light); color: var(--color-primary);">
+  V = I &times; R
+</div>
+
+<p>
+  Voltage equals current times resistance. If you know any two, you can calculate the third.
+  This is <strong>Ohm's Law</strong>, and it is the single most important equation in electrical engineering.
+</p>
+
+<!-- ═══ SECTION 2: AC vs DC ═══ -->
+
+<h2 id="ac-vs-dc">AC vs DC</h2>
+
+<p>
+  There are two fundamentally different ways electricity can flow. In <strong>direct current (DC)</strong>, electrons move in one direction, steadily, like water flowing downhill. Batteries produce DC. Solar panels produce DC. Your phone runs on DC.
+</p>
+
+<p>
+  In <strong>alternating current (AC)</strong>, electrons rapidly switch direction back and forth. In Europe, they alternate 50 times per second (50 Hz). In North America, 60 times per second. This might sound wasteful, but AC has a critical advantage that changed the world.
+</p>
+
+<div class="md:float-right md:ml-6 md:mb-4" style="width: min(100%, 320px);">
+  <ACvsDCWaveform client:visible />
+</div>
+
+<p>
+  In the 1880s, Thomas Edison built the first power stations using DC. But DC had a fatal limitation: it could not travel far. Power is lost as heat in the wires (the formula is P = I&sup2;R), and the only way to reduce losses is to increase voltage and decrease current.
+</p>
+
+<p>
+  Edison's DC system could not easily change voltage. Nikola Tesla and George Westinghouse championed AC because it could be <strong>transformed</strong> to any voltage using a simple device: the transformer.
+</p>
+
+<div class="clear-both"></div>
+
+<p>
+  A transformer uses two coils of wire wrapped around an iron core. AC flowing through one coil creates a changing magnetic field, which induces a voltage in the second coil. By using different numbers of turns on each coil, you can step voltage up or down.
+</p>
+
+<TransformerDiagram client:visible />
+
+<p>
+  This is why AC won the "War of Currents." Power plants step voltage up to 400,000 volts for long-distance transmission (reducing current and therefore losses), then step it back down to 230 volts at your neighborhood substation.
+  Transformers only work with alternating current.
+</p>
+
+<p>
+  Ironically, DC is making a comeback. Solar panels and batteries are inherently DC. Modern electronics run on DC internally. And for very long distances (thousands of kilometers), <strong>high-voltage direct current (HVDC)</strong> lines are actually more efficient than AC. The grid of the future will be a hybrid.
+</p>
+
+<!-- ═══ SECTION 3: Spinning Into Power ═══ -->
+
+<h2 id="spinning-into-power">Spinning Into Power</h2>
+
+<p>
+  Most electricity is generated by spinning a magnet inside a coil of wire (or a coil inside a magnet). This is called <strong>electromagnetic induction</strong>, discovered by Michael Faraday in 1831. A changing magnetic field pushes electrons through a wire, creating current.
+</p>
+
+<p>
+  Nearly every power plant in the world works the same way: something spins a turbine, which spins a generator, which produces electricity. The only question is what provides the force to spin.
+</p>
+
+<p>
+  Coal and gas plants burn fuel to boil water into steam, which hits turbine blades. Nuclear plants do the same, but the heat comes from splitting atoms. Hydroelectric dams use falling water. Wind turbines use wind.
+  The underlying principle is identical: convert motion into electricity through spinning.
+</p>
+
+<GenerationMethods client:visible />
+
+<p>
+  Solar photovoltaic (PV) panels are the striking exception. They convert sunlight directly into electricity using the <strong>photovoltaic effect</strong>: photons knock electrons loose from silicon atoms, creating a flow of current. No turbine. No spinning. No moving parts at all.
+</p>
+
+<p>
+  This makes solar fundamentally different from every other major generation source. It scales differently, fails differently, and changes the grid in ways that spinning generators never did. Understanding this distinction is key to understanding the energy transition.
+</p>
+
+<!-- ═══ SECTION 4: Ohm's Law Playground ═══ -->
+
+<h2 id="ohms-law-playground">Ohm's Law Playground</h2>
+
+<p>
+  Drag the sliders to change voltage and resistance. Watch how the current changes, and see the electrons speed up or slow down in the circuit.
+</p>
+
+<OhmsLawPlayground client:visible />
+
+<!-- ═══ SECTION 5: Power vs Energy ═══ -->
+
+<h2 id="power-vs-energy">Power vs Energy</h2>
+
+<p>
+  People constantly confuse <strong>power</strong> and <strong>energy</strong>, but the difference is simple.
+  Power is a <em>rate</em>: how fast energy is being used right now, measured in <strong>watts (W)</strong> or kilowatts (kW).
+  Energy is a <em>total</em>: how much was used over time, measured in <strong>kilowatt-hours (kWh)</strong>.
+</p>
+
+<p>
+  A 2,000-watt hair dryer uses energy twice as fast as a 1,000-watt microwave.
+  But if you run the hair dryer for 5 minutes and the microwave for 30 minutes, the microwave uses more total energy.
+  Your electricity bill charges for energy (kWh), not power (kW).
+</p>
+
+<PowerEnergyCalculator client:visible />
+
+<!-- ═══ Continue Link ═══ -->
+
+<div class="mt-12 pt-6 border-t flex justify-between items-center" style="border-color: var(--color-surface-light);">
+  <div></div>
+  <a
+    href={url("/learn/how-the-grid-works")}
+    class="flex items-center gap-2 px-4 py-2 rounded-lg font-mono text-sm transition-colors"
+    style="background: var(--color-surface); color: var(--color-primary); border: 1px solid var(--color-surface-light);"
+  >
+    Next: How the Grid Works &rarr;
+  </a>
+</div>
+
+</ContentLayout>
