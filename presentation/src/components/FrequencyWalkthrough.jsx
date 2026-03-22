@@ -219,11 +219,11 @@ function PlantUnit({ x, y, w, h, type, label, status, statusColor, utilization,
         width={barW * utilization} fill={statusColor}
         style={{ transition: 'width 0.8s ease, fill 0.6s', ...flk(draw, drawDelay + 0.3) }} />
       {/* Label */}
-      <text x={centerX} y={labelY} textAnchor="middle" fill={strokeColor} fontSize="9"
+      <text x={centerX} y={labelY} textAnchor="middle" fill={strokeColor} fontSize="11"
         fontFamily="'JetBrains Mono'" fontWeight="600" letterSpacing="0.05em"
         style={{ ...flk(draw, drawDelay + 0.35), transition: 'fill 0.8s' }}>{label}</text>
       {/* Status */}
-      <text x={centerX} y={statusY} textAnchor="middle" fill={statusColor} fontSize="8"
+      <text x={centerX} y={statusY} textAnchor="middle" fill={statusColor} fontSize="10"
         fontFamily="'JetBrains Mono'" fontWeight="700" letterSpacing="0.06em"
         style={{ ...flk(draw, drawDelay + 0.35), transition: 'fill 0.8s' }}>{status}</text>
     </g>
@@ -967,8 +967,8 @@ export default function FrequencyWalkthrough({ step = 0, mode = 'intro' }) {
                   <FreqLine step={scenarioStep} width={480} height={50} />
                 </div>
                 <div className="mt-2">
-                  {s.band && <div className="text-[16px] font-mono font-semibold mb-1" style={{ color: s.freqColor, transition: 'color 0.6s' }}>{s.band}</div>}
-                  {s.scenario && <div className="text-[18px] font-sans" style={{ color: colors.text }}>{s.scenario}</div>}
+                  {s.band && <div className="text-xl font-mono font-semibold mb-1" style={{ color: s.freqColor, transition: 'color 0.6s' }}>{s.band}</div>}
+                  {s.scenario && <div className="text-xl font-sans" style={{ color: colors.text }}>{s.scenario}</div>}
                 </div>
               </div>
             </div>

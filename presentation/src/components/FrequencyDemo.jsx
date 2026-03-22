@@ -514,8 +514,8 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
         });
 
         // Taunt text - types out character by character
-        const tauntIdx = Math.floor((collapseElapsed - 4) / 2) % TAUNT_LINES.length;
-        const tauntProgress = ((collapseElapsed - 4) % 2) / 2;
+        const tauntIdx = Math.floor((collapseElapsed - 3) / 1.5) % TAUNT_LINES.length;
+        const tauntProgress = ((collapseElapsed - 3) % 1.5) / 1.5;
         const currentTaunt = TAUNT_LINES[tauntIdx];
         const visibleChars = Math.floor(tauntProgress * currentTaunt.length * 1.5);
         const displayText = currentTaunt.substring(0, Math.min(visibleChars, currentTaunt.length));
@@ -1016,8 +1016,8 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
 
         // Taunt text
         const hackerElapsed = collapseElapsed - 2.5; // offset for glitch phase
-        const tauntIdx = Math.floor(Math.max(0, hackerElapsed - 1) / 2) % TAUNT_LINES.length;
-        const tauntProgress = (Math.max(0, hackerElapsed - 1) % 2) / 2;
+        const tauntIdx = Math.floor(Math.max(0, hackerElapsed) / 1.5) % TAUNT_LINES.length;
+        const tauntProgress = (Math.max(0, hackerElapsed) % 1.5) / 1.5;
         const currentTaunt = TAUNT_LINES[tauntIdx];
         const visibleChars = Math.floor(tauntProgress * currentTaunt.length * 1.5);
         const displayText = currentTaunt.substring(0, Math.min(visibleChars, currentTaunt.length));
