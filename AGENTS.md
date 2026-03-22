@@ -398,6 +398,19 @@ These came from actual bugs and debugging sessions:
 
 ---
 
+## Development Servers
+
+| Project | Command | Port | Notes |
+|---------|---------|------|-------|
+| Website | `cd website && npx astro dev` | 4321 (fixed) | Astro 6 + React islands |
+| Presentation | `cd presentation && npx vite --port 5199` | 5199 | Spectacle + Vite |
+
+- **Website dev server stale cache**: If you get `TypeError: Cannot read properties of undefined (reading 'call')` or similar Vite transform errors, clear the cache: `rm -rf node_modules/.vite && npx astro dev`
+- **Website build test**: `cd website && npm test` runs `astro build` + 47 content verification checks
+- **Presentation build**: `cd presentation && npm run build`
+
+---
+
 ## For Agents Working on This Codebase
 
 1. **Read `docs/slide-order.md` first** — canonical slide sequence with speaker assignments and timing
@@ -410,3 +423,6 @@ These came from actual bugs and debugging sessions:
 8. **Test with `npm run build`** — Vite production build catches things dev mode misses
 9. **No emoji in components** — dark cinematic aesthetic only
 10. **No Co-Authored-By in commits**
+11. **Website: Astro uses `class` not `className`** — and `style="color: ..."` not `style={{ color: ... }}`. Use CSS custom properties (`var(--color-primary)`) or Tailwind classes (`text-primary`), not JS theme imports.
+12. **Website: `@theme` colors = Tailwind utilities** — `--color-primary` in `global.css` generates `text-primary`, `bg-primary`, `border-primary`, etc. Prefer these over inline `style="color: var(--color-primary)"`.
+13. **Screenshots to `/tmp/`** — never save screenshots in the project directory

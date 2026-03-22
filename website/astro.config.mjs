@@ -13,6 +13,10 @@ export default defineConfig({
   base: isProd ? '/kubecon-2026-vpp' : '/',
   integrations: [react(), mdx()],
 
+  server: {
+    port: 4321,
+  },
+
   vite: {
     plugins: [tailwindcss()]
   }
