@@ -44,11 +44,10 @@ const pad = '36px 56px';
 // Section ranges (slide numbers are 1-indexed)
 // Slide count: 35 main + appendix. Architecture has 4 sub-slides (25-28).
 const SECTIONS = [
-  { from: 1, to: 2, name: '' },
-  { from: 3, to: 16, name: 'The Grid' },
+  { from: 1, to: 3, name: '' },
+  { from: 4, to: 16, name: 'The Grid' },
   { from: 17, to: 20, name: 'The Renewable Revolution' },
-  { from: 21, to: 33, name: 'The Virtual Power Plant' },
-  { from: 34, to: 35, name: 'Resilience' },
+  { from: 21, to: 35, name: 'The Virtual Power Plant' },
 ];
 
 // Speaker assignments per slide (35 main slides)
@@ -81,7 +80,7 @@ const slideTemplate = ({ slideNumber, numberOfSlides }) => {
           {speaker}
         </div>
       )}
-      <a href="?slideIndex=2" className="absolute bottom-3 right-5 text-[12px] font-mono flex gap-2 items-center cursor-pointer" style={{ color: colors.textMuted, textDecoration: 'none' }}>
+      <a href="?slideIndex=0" className="absolute bottom-3 right-5 text-xs font-mono flex gap-2 items-center cursor-pointer hover:opacity-70 transition-opacity" style={{ color: colors.textMuted, textDecoration: 'none' }}>
         {label && <span style={{ color: colors.textDim }}>{label}</span>}
         <span>{slideNumber} / {numberOfSlides}</span>
       </a>
@@ -225,8 +224,7 @@ export default function Presentation() {
             {[
               { num: '01', title: 'The Grid', sub: 'How the world\'s largest machine works — and how it fails', color: colors.danger, time: '~10 min', slide: 3 },
               { num: '02', title: 'The Renewable Revolution', sub: 'Why cheap clean energy creates expensive new problems', color: colors.accent, time: '~7 min', slide: 16 },
-              { num: '03', title: 'The Virtual Power Plant', sub: 'Software that turns millions of devices into grid infrastructure', color: colors.primary, time: '~10 min', slide: 22 },
-              { num: '04', title: 'Resilience', sub: 'What the future grid looks like — and why you already know how to build it', color: colors.success, time: '~3 min', slide: 33 },
+              { num: '03', title: 'The Virtual Power Plant', sub: 'Software that turns millions of devices into grid infrastructure', color: colors.primary, time: '~15 min', slide: 22 },
             ].map(s => (
               <a key={s.num} href={`?slideIndex=${s.slide}`} className="flex items-center gap-5 no-underline cursor-pointer" style={{ textDecoration: 'none' }}>
                 <div className="text-[28px] font-extrabold font-mono min-w-[48px] text-right" style={{ color: s.color }}>{s.num}</div>
@@ -240,8 +238,8 @@ export default function Presentation() {
           </div>
         </div>
         <Notes>
-          Four parts: The Grid, Renewables, the VPP itself, and Resilience.
-          ~30 minutes total — we'll go fast.
+          Three parts: The Grid, Renewables, and the VPP itself.
+          ~35 minutes total — we'll go fast.
           By the end you'll understand why the energy grid is the most exciting distributed systems problem on the planet.
         </Notes>
       </Slide>
@@ -1114,7 +1112,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* ═══════ ACT 4: RESILIENCE ═══════ */}
+      {/* ═══════ CLOSING ═══════ */}
 
       {/* 34: Back to Texas */}
       <Slide backgroundColor={bg} padding={pad}>
