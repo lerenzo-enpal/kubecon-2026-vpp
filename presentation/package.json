@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "export:pdf": "node scripts/export-pdf.mjs"
+    "export:pdf": "node scripts/export-pdf.mjs",
+    "download:assets": "bash scripts/download-tiles.sh"
   },
   "keywords": [],
   "author": "",

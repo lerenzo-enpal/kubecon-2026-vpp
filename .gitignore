@@ -2,7 +2,8 @@ node_modules
 presentation/dist
 *.pdf
 
-# Local Netlify folder
+presentation/public/tiles/
+
 .netlify
 _site/
 .playwright-mcp/

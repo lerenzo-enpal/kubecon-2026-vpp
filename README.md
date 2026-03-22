@@ -54,6 +54,43 @@ presentation/src/
 └── theme.js                      # Colors, fonts, slide styles
 ```
 
+### Offline Map Tiles
+
+The presentation uses 6 MapLibre/DeckGL map components that fetch tiles from CARTO's CDN at runtime. To make them work offline (e.g., during a talk with an unreliable connection), download the tile archives once while online:
+
+```bash
+# Install the pmtiles CLI first (one-time):
+brew install pmtiles                                    # macOS
+# go install github.com/protomaps/go-pmtiles/...@latest # Linux / Go
+
+cd presentation
+npm run download:assets
+```
+
+This extracts regional [PMTiles](https://protomaps.com/docs/pmtiles) archives from the [Protomaps](https://protomaps.com) daily planet build using HTTP range requests — only the tiles for the regions and zoom levels actually used are downloaded. It also downloads the CARTO dark-matter style JSON, sprites, and font glyphs.
+
+| Region file | Covers | Max zoom | Est. size |
+|-------------|--------|----------|-----------|
+| `europe.pmtiles` | EUGridHUD, LargestMachineZoom flyout | z12 | ~80 MB |
+| `wolfsburg.pmtiles` | LargestMachineZoom start (zoom 14) | z14 | ~5 MB |
+| `berlin.pmtiles` | VPPScenarioMapSlide (zoom up to 17, Reinickendorf) | z17 | ~15 MB |
+| `adelaide.pmtiles` | SAMapHUD | z12 | ~10 MB |
+| `texas.pmtiles` | TexasMapHUD | z9 | ~20 MB |
+
+Output goes to `presentation/public/tiles/` which is gitignored — **each presenter needs to run this script on their machine.** Re-run at any time to refresh tiles from the latest Protomaps build.
+
+```bash
+# Force re-download everything:
+npm run download:assets -- --force
+
+# Use a specific build date:
+PROTOMAPS_DATE=20260315 npm run download:assets
+```
+
+> **Note:** The tile files are downloaded but not yet wired into the map components. The integration step (adding the `@protomaps/maplibre-pmtiles` protocol handler and pointing components at local style files) is a separate task.
+
+---
+
 ### Exporting to PDF
 
 With the dev server running in another terminal:
