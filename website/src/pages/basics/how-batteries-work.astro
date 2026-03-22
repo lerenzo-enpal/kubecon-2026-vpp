@@ -1,0 +1,188 @@
+---
+import ContentLayout from '../../layouts/ContentLayout.astro';
+import BatteryTimeline from '../../components/basics/inline/BatteryTimeline';
+import CellCrossSectionWidget from '../../components/basics/inline/CellCrossSectionWidget';
+import CostCurveChart from '../../components/basics/inline/CostCurveChart';
+import BatteryChemistryWorkbench from '../../components/basics/labs/BatteryChemistryWorkbench';
+import BatteryLifecycleSimulator from '../../components/basics/labs/BatteryLifecycleSimulator';
+import UpcomingBatteryTech from '../../components/basics/labs/UpcomingBatteryTech';
+import { url } from '../../utils/url';
+
+const sections = [
+  { id: 'history', title: 'A History of Bottled Lightning' },
+  { id: 'inside-the-cell', title: 'Inside the Cell', interactive: true },
+  { id: 'price-crash', title: 'The Price Crash' },
+  { id: 'chemistry-workbench', title: 'Chemistry Workbench', interactive: true },
+  { id: 'lifecycle', title: 'Lifecycle Simulator', interactive: true },
+  { id: 'whats-next', title: "What's Coming Next", interactive: true },
+];
+---
+
+<ContentLayout title="How Batteries Work" description="From Volta's pile to grid-scale lithium-ion. How batteries store energy, why costs crashed 89%, and what comes next." sections={sections}>
+
+<h1>How Batteries Work</h1>
+
+<p class="text-xl" style="color: var(--color-text-muted); max-width: 600px;">
+  Batteries are the missing piece of the energy transition. Without storage, renewable energy is
+  weather-dependent. With it, solar and wind become dispatchable power -- available whenever the grid needs it.
+</p>
+
+<!-- HISTORY -->
+
+<h2 id="history">A History of Bottled Lightning</h2>
+
+<p>
+  In 1800, Alessandro Volta stacked discs of copper and zinc separated by brine-soaked cloth
+  and produced the first continuous electric current. He called it an "artificial electric organ."
+  The world called it a battery. For the first time, humans could store and release electrical
+  energy on demand.
+</p>
+
+<p>
+  It took another 176 years before anyone figured out how to move lithium ions back and forth
+  inside a cell -- the breakthrough that would eventually power everything from phones to
+  power grids. Stanley Whittingham demonstrated lithium intercalation in 1976 while working
+  at Exxon. John Goodenough identified the cobalt oxide cathode in 1980. Akira Yoshino
+  replaced the dangerous lithium metal anode with carbon in 1985.
+</p>
+
+<p>
+  Sony commercialized the first lithium-ion cell in 1991. Within a decade it had conquered
+  consumer electronics. Within two decades it was powering cars. And in 2017, when South
+  Australia installed the Hornsdale Power Reserve -- a 100 MW Tesla battery -- lithium-ion
+  proved it could stabilize an entire electrical grid. The three pioneers shared the 2019
+  Nobel Prize in Chemistry.
+</p>
+
+<div class="my-8 rounded-lg overflow-hidden p-4" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+  <div class="font-mono text-sm font-semibold tracking-wide uppercase mb-3" style="color: var(--color-text);">BATTERY TECHNOLOGY TIMELINE</div>
+  <BatteryTimeline client:visible />
+</div>
+
+<p>
+  224 years from Volta's pile to grid-scale storage. Three Nobel laureates made it possible.
+  The technology that started as a laboratory curiosity is now the fastest-growing energy
+  asset class on the planet.
+</p>
+
+<!-- INSIDE THE CELL -->
+
+<h2 id="inside-the-cell">Inside the Cell</h2>
+
+<p>
+  Every lithium-ion cell has the same basic structure: two electrodes separated by a liquid
+  electrolyte. The anode (negative side) is typically made of graphite. The cathode (positive
+  side) is a metal oxide -- cobalt, nickel, manganese, or iron phosphate depending on the
+  chemistry. Between them sits the electrolyte, a lithium salt dissolved in an organic
+  solvent that allows lithium ions to pass through but blocks electrons.
+</p>
+
+<p>
+  When the battery discharges, lithium ions flow from the anode through the electrolyte
+  to the cathode. Electrons take the long way around through the external circuit, powering
+  whatever is connected. When you charge the battery, an external power source forces
+  everything in reverse -- ions travel from cathode back to anode, and the cell stores
+  energy again.
+</p>
+
+<p>
+  This is why they are called "rechargeable." The chemical reaction is reversible. You can
+  cycle a modern lithium-ion cell thousands of times before it degrades significantly.
+</p>
+
+<div class="my-8 rounded-lg overflow-hidden p-4" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+  <CellCrossSectionWidget client:visible />
+</div>
+
+<p>
+  Why lithium specifically? It is the lightest metal in the periodic table and has the
+  highest electrochemical potential of any element. That combination means lithium-ion
+  cells pack more energy per kilogram than any other commercially viable battery chemistry.
+  A lithium-ion cell stores roughly 150-250 Wh/kg. A lead-acid battery manages about 35 Wh/kg.
+  That 5x advantage is why lithium won.
+</p>
+
+<!-- THE PRICE CRASH -->
+
+<h2 id="price-crash">The Price Crash</h2>
+
+<p>
+  In 2010, a lithium-ion battery pack cost about $1,100 per kilowatt-hour. At that price,
+  electric cars were luxury curiosities and grid storage was science fiction. No one outside
+  a few research labs seriously believed batteries could compete with gas turbines for
+  grid balancing.
+</p>
+
+<p>
+  Then costs started falling. Tesla built the Gigafactory in Nevada. CATL scaled up in China.
+  Cell chemistry shifted away from expensive cobalt toward nickel-rich and iron phosphate
+  formulations. Dozens of manufacturers entered the market. Every doubling of cumulative
+  production drove costs down by roughly 18% -- a learning rate steeper than solar panels.
+</p>
+
+<p>
+  By 2023, battery pack prices had fallen to about $139/kWh -- an 89% reduction in 13 years.
+  At that price, electric vehicles reached cost parity with combustion engines in many
+  markets. Home battery systems became affordable for middle-class households. And grid-scale
+  storage started displacing gas peaker plants on pure economics.
+</p>
+
+<div class="my-8 rounded-lg overflow-hidden p-4" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+  <div class="font-mono text-sm font-semibold tracking-wide uppercase mb-3" style="color: var(--color-text);">LITHIUM-ION BATTERY PACK COSTS</div>
+  <CostCurveChart client:visible />
+</div>
+
+<p>
+  89% cost reduction in 13 years. No other energy technology has done this. Projections
+  suggest battery pack prices could reach $50-80/kWh by 2030, making storage cheaper than
+  building new gas plants in almost every market on Earth.
+</p>
+
+<!-- CHEMISTRY WORKBENCH -->
+
+<h2 id="chemistry-workbench">Chemistry Workbench</h2>
+
+<div class="my-8">
+  <BatteryChemistryWorkbench client:visible />
+</div>
+
+<!-- LIFECYCLE SIMULATOR -->
+
+<h2 id="lifecycle">Lifecycle Simulator</h2>
+
+<div class="my-8">
+  <BatteryLifecycleSimulator client:visible />
+</div>
+
+<!-- WHAT'S COMING NEXT -->
+
+<h2 id="whats-next">What's Coming Next</h2>
+
+<div class="my-8">
+  <UpcomingBatteryTech client:visible />
+</div>
+
+<!-- FOOTER NAVIGATION -->
+
+<div class="mt-12 flex flex-col gap-3">
+  <div class="p-6 rounded-lg no-arrow" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
+    <div class="font-mono text-sm mb-2" style="color: var(--color-primary); letter-spacing: 0.08em;">CONTINUE</div>
+    <a href={url("/learn/the-renewable-revolution")} class="text-lg font-semibold" style="color: var(--color-text);">
+      The Renewable Revolution
+    </a>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">
+      What happens when half your electricity comes from the weather.
+    </div>
+  </div>
+  <div class="p-4 rounded-lg no-arrow" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+    <div class="font-mono text-xs mb-1" style="color: var(--color-text-dim); letter-spacing: 0.08em;">GO DEEPER</div>
+    <a href={url("/research/topics/electricity-pricing")} class="text-base font-semibold" style="color: var(--color-text);">
+      Electricity Pricing
+    </a>
+    <div class="text-xs mt-1" style="color: var(--color-text-dim);">
+      How batteries are reshaping wholesale electricity markets.
+    </div>
+  </div>
+</div>
+
+</ContentLayout>
