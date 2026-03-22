@@ -22,29 +22,34 @@ export default function AnimatedStat({
   duration = 1200,
 }: Props) {
   const [display, setDisplay] = useState(value);
-  const [hasAnimated, setHasAnimated] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number>(0);
+  const hasAnimated = useRef(false);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasAnimated) {
-          setHasAnimated(true);
-          setDisplay(0);
-          const start = performance.now();
-          const tick = (now: number) => {
-            const t = Math.min(1, (now - start) / duration);
-            const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-            setDisplay(value * eased);
-            if (t < 1) rafRef.current = requestAnimationFrame(tick);
-          };
+    const runAnimation = () => {
+      if (hasAnimated.current) return;
+      hasAnimated.current = true;
+      const start = performance.now();
+      // Start from 0 and animate to target
+      setDisplay(0);
+      requestAnimationFrame(function tick(now: number) {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+        setDisplay(value * eased);
+        if (t < 1) {
           rafRef.current = requestAnimationFrame(tick);
+        } else {
+          setDisplay(value); // ensure exact final value
         }
-      },
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) runAnimation(); },
       { threshold: 0.3 }
     );
 
@@ -53,7 +58,7 @@ export default function AnimatedStat({
       observer.disconnect();
       cancelAnimationFrame(rafRef.current);
     };
-  }, [value, duration, hasAnimated]);
+  }, [value, duration]);
 
   return (
     <div
