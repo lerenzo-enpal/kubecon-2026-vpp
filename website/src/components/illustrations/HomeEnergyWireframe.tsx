@@ -16,6 +16,7 @@ export default function HomeEnergyWireframe({
       xmlns="http://www.w3.org/2000/svg"
       role="img"
       aria-label="Wireframe illustration of a residential home with rooftop solar panels, home battery, EV charger and heat pump"
+      style={{ maxWidth: "100%", height: "auto" }}
     >
       <style>{`
         .main {

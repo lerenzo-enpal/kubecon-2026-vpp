@@ -85,7 +85,7 @@ export default function VPPHome({
       viewBox="0 0 280 180"
       width={width}
       height={height}
-      style={{ overflow: "visible" }}
+      style={{ overflow: "visible", maxWidth: "100%", height: "auto" }}
     >
       <style>{ANIM_STYLES}</style>
 

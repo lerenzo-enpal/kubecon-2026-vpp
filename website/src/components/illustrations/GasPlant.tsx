@@ -63,7 +63,7 @@ export default function GasPlant({
       viewBox="0 0 220 130"
       width={width}
       height={height}
-      style={{ overflow: "visible" }}
+      style={{ overflow: "visible", maxWidth: "100%", height: "auto" }}
     >
       <style>{ANIM_STYLES}</style>
       <defs>

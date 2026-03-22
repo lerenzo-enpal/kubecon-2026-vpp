@@ -41,7 +41,7 @@ export default function EVGarage({
       viewBox="0 0 160 140"
       width={width}
       height={height}
-      style={{ overflow: "visible" }}
+      style={{ overflow: "visible", maxWidth: "100%", height: "auto" }}
     >
       <style>{ANIM_STYLES}</style>
       <defs>
