@@ -58,11 +58,42 @@ check('Module 5: Future', pageContains('learn/the-future/index.html', 'Distribut
 check('Research has incidents', pageContains('research/index.html', 'Texas ERCOT'));
 check('Research has topics', pageContains('research/index.html', 'Deep Dives'));
 
+// Incident pages exist
+const incidents = [
+  '2003-italy-blackout', '2003-northeast-us-blackout', '2006-european-grid-split',
+  '2016-south-australia-blackout', '2017-hornsdale-battery-response', '2017-south-australia-heatwave',
+  '2021-european-grid-split', '2021-texas-ercot-winter-storm', '2024-dunkelflaute-germany',
+  '2025-berlin-johannisthal-arson', '2025-iberian-peninsula-blackout', '2026-berlin-teltow-canal-arson',
+];
+for (const slug of incidents) {
+  check(`Incident: ${slug}`, pageExists(`research/incidents/${slug}/index.html`));
+}
+
+// Topic pages exist
+const topics = [
+  'cascading-failures', 'demand-response', 'electricity-pricing', 'enpal-flexa',
+  'german-grid-curtailment', 'grid-flexibility-costs', 'grid-frequency', 'vpp-market',
+];
+for (const slug of topics) {
+  check(`Topic: ${slug}`, pageExists(`research/topics/${slug}/index.html`));
+}
+
 // Sidebar TOC
 check('Sidebar nav present', pageContains('learn/how-the-grid-works/index.html', 'toc-section'));
 
+// Navigation
+check('Slides link on landing', pageContains('index.html', '/slides/'));
+check('Slides link on content pages', pageContains('learn/how-the-grid-works/index.html', '/slides/'));
+check('Enpal logo on landing', pageContains('index.html', 'enpal-logo'));
+
 // Design tokens
 check('Fonts loaded', pageContains('index.html', 'JetBrains'));
+
+// No broken internal links (spot check key cross-references)
+check('Grid page links to frequency topic', pageContains('learn/how-the-grid-works/index.html', '/research/topics/grid-frequency'));
+check('Old way links to curtailment topic', pageContains('learn/the-old-way/index.html', '/research/topics/german-grid-curtailment'));
+check('VPP page links to Flexa topic', pageContains('learn/the-virtual-power-plant/index.html', '/research/topics/enpal-flexa'));
+check('Texas page links to cascading failures', pageContains('research/incidents/2021-texas-ercot-winter-storm/index.html', '/research/topics/cascading-failures'));
 
 console.log(`\n${failures === 0 ? 'All checks passed.' : `${failures} check(s) failed.`}\n`);
 process.exit(failures > 0 ? 1 : 0);
