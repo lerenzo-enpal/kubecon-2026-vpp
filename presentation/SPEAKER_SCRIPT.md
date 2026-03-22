@@ -46,7 +46,6 @@ Total: 29 slides (+ appendix)
 ### 6. Grid Scale — MARIO
 - Europe's largest car factory is VW Wolfsburg — 60,000 workers over 6.5 km²
 - The European grid: 2.3 million workers across 5.5 million km²
-- 36 countries, all operating at 50 Hz across interconnected synchronous areas
 - Zero downtime — this machine has never been turned off. No maintenance window. No staging environment.
 
 ### 7. Designed for a Different World — LERENZO

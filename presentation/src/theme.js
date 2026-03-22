@@ -15,6 +15,7 @@ export const colors = {
   battery: '#10b981',
   solar: '#f59e0b',
   warning: '#ef4444',
+  entrixBlue: '#1d54f5'
 };
 
 export const theme = {

@@ -22,7 +22,7 @@ const CONN_DIST = CONN.filter(c => c.phase === 'dist');
 const CONN_LOAD = CONN.filter(c => c.phase === 'load');
 
 const PHASES = [
-  { label: 'Generation', sub: 'Few, large, dispatchable', color: colors.accent },
+  { label: 'Generation', sub: 'Few, large, centralized', color: colors.accent },
   { label: 'Transmission', sub: 'High-voltage backbone', color: colors.secondary },
   { label: 'Distribution', sub: 'One-way power flow', color: colors.primary },
   { label: 'Consumers', sub: 'Passive loads', color: colors.textDim },
@@ -182,7 +182,7 @@ export default function GridFlowDemo({ width = '100%' }) {
           <g style={{ visibility: step >= 1 ? 'visible' : 'hidden' }}>
             <Reticle x={20} y={48} w={190} h={370} c={c} active={drawPlants} delay={0} label="SCANNING: GENERATION" />
             <Plant x={30} y={68} w={165} h={130} c={c} smoking={step >= 5} label="COAL 800MW" type="coal" draw={drawPlants} t0={0.3} />
-            <Plant x={30} y={328} w={165} h={130} c={c} smoking={step >= 5} label="GAS 400MW" type="gas" draw={drawPlants} t0={0.65} />
+            <Plant x={30} y={332} w={165} h={130} c={c} smoking={step >= 5} label="GAS 400MW" type="gas" draw={drawPlants} t0={0.65} />
           </g>
 
           {/* ═══ STEP 2: TRANSMISSION (towers + HV lines) ═══ */}
