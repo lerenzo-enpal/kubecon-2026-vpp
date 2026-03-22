@@ -3,6 +3,8 @@ import ContentLayout from '../../layouts/ContentLayout.astro';
 import WaterToWiresBriefing from '../../components/basics/briefings/WaterToWiresBriefing';
 import ACvsDCBriefing from '../../components/basics/briefings/ACvsDCBriefing';
 import SpinningPowerBriefing from '../../components/basics/briefings/SpinningPowerBriefing';
+import OhmsLawPlayground from '../../components/basics/labs/OhmsLawPlayground';
+import PowerEnergyCalculator from '../../components/basics/labs/PowerEnergyCalculator';
 import { url } from '../../utils/url';
 ---
 
@@ -25,15 +27,14 @@ import { url } from '../../utils/url';
 
 <SpinningPowerBriefing client:visible />
 
-<!-- Labs will be added in Task 6 -->
 <section id="ohms-law-playground" class="py-12">
   <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">Ohm's Law Playground</h2>
-  <p style="color: var(--color-text-dim);">Interactive lab coming soon.</p>
+  <OhmsLawPlayground client:visible />
 </section>
 
 <section id="power-vs-energy" class="py-12">
   <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">Power vs Energy Calculator</h2>
-  <p style="color: var(--color-text-dim);">Interactive lab coming soon.</p>
+  <PowerEnergyCalculator client:visible />
 </section>
 
 <div class="mt-12 p-5 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
