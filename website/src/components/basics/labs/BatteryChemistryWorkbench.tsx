@@ -183,7 +183,7 @@ export default function BatteryChemistryWorkbench() {
 
   return (
     <FullscreenWrapper label="Fullscreen">
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 h-full">
         <div className="flex items-center justify-between flex-wrap gap-2">
           <div className="flex gap-2">
             {allChems.map((chem) => (
@@ -220,7 +220,7 @@ export default function BatteryChemistryWorkbench() {
           </div>
         </div>
 
-        <div style={{ width: '100%', height: 380 }}>
+        <div className="flex-1" style={{ width: '100%', minHeight: 380 }}>
           <canvas ref={canvasRef} style={{ width: '100%', height: '100%' }} />
         </div>
 

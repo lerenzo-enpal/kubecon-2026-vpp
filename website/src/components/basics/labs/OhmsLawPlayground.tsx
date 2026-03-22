@@ -323,7 +323,7 @@ export default function OhmsLawPlayground() {
 
   return (
     <FullscreenWrapper label="Ohm's Law Playground">
-      <div className="rounded-lg p-4 md:p-6" style={{ background: 'var(--color-surface)', border: '1px solid var(--color-surface-light)' }}>
+      <div className="rounded-lg p-4 md:p-6 h-full flex flex-col" style={{ background: 'var(--color-surface)', border: '1px solid var(--color-surface-light)' }}>
         {/* Preset buttons */}
         <div className="flex flex-wrap gap-2 mb-4">
           {PRESETS.map((p) => (
@@ -396,8 +396,8 @@ export default function OhmsLawPlayground() {
         {/* Canvas */}
         <canvas
           ref={canvasRef}
-          className="w-full rounded"
-          style={{ height: 260, background: 'var(--color-bg)' }}
+          className="w-full rounded flex-1"
+          style={{ minHeight: 260, background: 'var(--color-bg)' }}
         />
 
         {/* Formula display */}

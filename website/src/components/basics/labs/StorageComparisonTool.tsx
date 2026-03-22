@@ -237,7 +237,7 @@ export default function StorageComparisonTool() {
 
   return (
     <FullscreenWrapper label="Storage Comparison Tool">
-      <div className="rounded-lg p-4 md:p-6" style={{ background: 'var(--color-surface)', border: '1px solid var(--color-surface-light)' }}>
+      <div className="rounded-lg p-4 md:p-6 h-full flex flex-col" style={{ background: 'var(--color-surface)', border: '1px solid var(--color-surface-light)' }}>
         {/* Technology toggles */}
         <div className="flex flex-wrap gap-2 mb-4">
           {TECH_NAMES.map((tech) => {
@@ -294,7 +294,7 @@ export default function StorageComparisonTool() {
         </div>
 
         {/* Radar chart canvas */}
-        <div className="w-full">
+        <div className="w-full flex-1">
           <canvas
             ref={canvasRef}
             role="img"

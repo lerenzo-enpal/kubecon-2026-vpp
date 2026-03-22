@@ -187,7 +187,7 @@ export default function PowerEnergyCalculator() {
 
   return (
     <FullscreenWrapper label="Power vs Energy">
-      <div className="rounded-lg p-4 md:p-6" style={{ background: 'var(--color-surface)', border: '1px solid var(--color-surface-light)' }}>
+      <div className="rounded-lg p-4 md:p-6 h-full flex flex-col" style={{ background: 'var(--color-surface)', border: '1px solid var(--color-surface-light)' }}>
         {/* Device selector */}
         <div className="flex flex-wrap gap-2 mb-4">
           {DEVICES.map((d, idx) => {
@@ -280,8 +280,8 @@ export default function PowerEnergyCalculator() {
         {/* Canvas */}
         <canvas
           ref={canvasRef}
-          className="w-full rounded"
-          style={{ height: 240, background: 'var(--color-bg)' }}
+          className="w-full rounded flex-1"
+          style={{ minHeight: 240, background: 'var(--color-bg)' }}
         />
 
         {/* Key insight */}

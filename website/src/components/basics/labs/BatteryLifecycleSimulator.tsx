@@ -240,7 +240,7 @@ export default function BatteryLifecycleSimulator() {
 
   return (
     <FullscreenWrapper label="Fullscreen">
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 h-full">
         {/* Presets */}
         <div className="flex flex-wrap gap-2">
           {presets.map((p) => (
@@ -347,7 +347,7 @@ export default function BatteryLifecycleSimulator() {
         </div>
 
         {/* Canvas */}
-        <div style={{ width: '100%', height: 320 }}>
+        <div className="flex-1" style={{ width: '100%', minHeight: 320 }}>
           <canvas ref={canvasRef} style={{ width: '100%', height: '100%' }} />
         </div>
       </div>

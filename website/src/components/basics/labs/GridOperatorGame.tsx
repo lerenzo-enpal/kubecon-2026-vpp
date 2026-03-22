@@ -399,9 +399,9 @@ export default function GridOperatorGame() {
 
   return (
     <FullscreenWrapper label="Be the Grid Operator">
-      <div className="flex flex-col" style={{ background: 'var(--color-bg-alt)', border: '1px solid var(--color-surface-light)', borderRadius: 8 }}>
+      <div className="flex flex-col h-full" style={{ background: 'var(--color-bg-alt)', border: '1px solid var(--color-surface-light)', borderRadius: 8 }}>
         {/* Canvas */}
-        <div className="relative w-full" style={{ height: 360 }}>
+        <div className="relative w-full flex-1" style={{ minHeight: 360 }}>
           <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
         </div>
 

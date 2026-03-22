@@ -150,7 +150,7 @@ export default function StorageScenarioBuilder() {
 
   return (
     <FullscreenWrapper label="Storage Scenario Builder">
-      <div className="rounded-lg p-4 md:p-6" style={{ background: 'var(--color-surface)', border: '1px solid var(--color-surface-light)' }}>
+      <div className="rounded-lg p-4 md:p-6 h-full overflow-auto" style={{ background: 'var(--color-surface)', border: '1px solid var(--color-surface-light)' }}>
         {/* Scenario buttons */}
         <div className="flex flex-wrap gap-2 mb-6">
           {SCENARIOS.map((s, i) => (
