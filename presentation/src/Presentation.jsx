@@ -245,7 +245,7 @@ export default function Presentation() {
 
       {/* ═══════ ACT 1: THE GRID ═══════ */}
 
-      {/* 3: Section Title: The Grid */}
+      {/* 4: Section Title: The Grid */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[20px] font-semibold text-hud-danger font-mono tracking-[0.15em] uppercase mb-4">Part I</div>
@@ -258,7 +258,7 @@ export default function Presentation() {
       </Slide>
 
 
-      {/* 4: Texas Cascade — deck.gl HUD */}
+      {/* 5: Texas Cascade — deck.gl HUD */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           <TexasMapHUD width="100%" height="100%" variant="hud" />
@@ -270,7 +270,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 5: Texas Numbers */}
+      {/* 6: Texas Numbers */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-between h-full">
           <div className="py-5 pl-6" style={{ borderLeft: `3px solid ${colors.danger}` }}>
@@ -306,10 +306,10 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 6: Grid Scale */}
+      {/* 7: Grid Scale */}
       {gridScale()}
 
-      {/* 7: Designed for a Different World */}
+      {/* 8: Designed for a Different World */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H>Designed for a Different World</H>
@@ -323,7 +323,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 8: EU Grid HUD */}
+      {/* 9: EU Grid HUD */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="w-full h-full">
           <EUGridHUD width="100%" height="100%" />
@@ -336,7 +336,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 9: Frequency — What "Stabilizing the Grid" Means */}
+      {/* 10: Frequency — What "Stabilizing the Grid" Means */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H>The Grid: Balanced at 0.67c</H>
