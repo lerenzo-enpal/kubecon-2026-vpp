@@ -876,16 +876,16 @@ export default function Presentation() {
           {/* Bottom: key metrics */}
           <div className="flex gap-5 mt-2">
             <div className="flex-1 rounded-lg px-4 py-3 flex items-center gap-3" style={{ background: '#E25A1C08', border: `1px solid #E25A1C20` }}>
-              <div className="text-[22px] font-extrabold font-mono" style={{ color: '#E25A1C' }}>5M+</div>
-              <div className="text-[13px] text-hud-text-muted font-sans">measurements/min at fleet scale</div>
+              <div className="text-xl font-extrabold font-mono" style={{ color: '#E25A1C' }}>5M+</div>
+              <div className="text-sm text-hud-text-muted font-sans">measurements/min at fleet scale</div>
             </div>
             <div className="flex-1 rounded-lg px-4 py-3 flex items-center gap-3" style={{ background: '#FF362108', border: `1px solid #FF362120` }}>
-              <div className="text-[22px] font-extrabold font-mono" style={{ color: '#FF3621' }}>10x</div>
-              <div className="text-[13px] text-hud-text-muted font-sans">storage reduction via progressive aggregation</div>
+              <div className="text-xl font-extrabold font-mono" style={{ color: '#FF3621' }}>10x</div>
+              <div className="text-sm text-hud-text-muted font-sans">storage reduction via progressive aggregation</div>
             </div>
             <div className="flex-1 rounded-lg px-4 py-3 flex items-center gap-3" style={{ background: colors.success + '08', border: `1px solid ${colors.success}20` }}>
-              <div className="text-[22px] font-extrabold font-mono" style={{ color: colors.success }}>{'<'}2s</div>
-              <div className="text-[13px] text-hud-text-muted font-sans">market signal to device response</div>
+              <div className="text-xl font-extrabold font-mono" style={{ color: colors.success }}>{'<'}2s</div>
+              <div className="text-sm text-hud-text-muted font-sans">market signal to device response</div>
             </div>
           </div>
         </div>
