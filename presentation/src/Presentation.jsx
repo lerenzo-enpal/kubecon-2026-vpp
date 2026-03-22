@@ -654,10 +654,10 @@ export default function Presentation() {
 
       {/* ═══════ ACT 3: THE VIRTUAL POWER PLANT ═══════ */}
 
-      {/* 20: Consumers Become Infrastructure */}
+      {/* 20: Homes Become Infrastructure */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col items-center h-full text-center">
-          <H size="42px" center>Consumers Become Infrastructure</H>
+          <H size="42px" center>Homes Become Infrastructure</H>
           <div className="text-[30px] text-hud-text font-sans leading-[1.7] mt-10 whitespace-nowrap">
             Homes with solar and batteries can <span className="font-semibold" style={{ color: colors.solar }}>charge</span>, <span className="font-semibold" style={{ color: colors.success }}>export</span>, and <span className="font-semibold" style={{ color: colors.primary }}>shift consumption</span>.
           </div>
