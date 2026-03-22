@@ -9,9 +9,7 @@ import GlowLine from '../../components/GlowLine';
 import DuckCurveVPP from '../../components/DuckCurveVPP';
 import FullscreenWrapper from '../../components/FullscreenWrapper';
 import ChartEnlarger from '../../components/ChartEnlarger';
-import WithoutVPPExhibit from '../../components/WithoutVPPExhibit';
-import KoganCreekVPPExhibit from '../../components/KoganCreekVPPExhibit.tsx';
-import BerlinArbitrageExhibit from '../../components/BerlinArbitrageExhibit';
+import VPPExhibitTabs from '../../components/VPPExhibitTabs';
 import { url } from '../../utils/url';
 ---
 
@@ -224,194 +222,26 @@ import { url } from '../../utils/url';
   </FullscreenWrapper>
 </div>
 
-<h2 id="hornsdale">The Hornsdale Story</h2>
+<h2 id="vpp-in-action">VPP in Action</h2>
 
 <p>
-  On <a href={url("/research/incidents/2017-hornsdale-battery-response")}>December 14, 2017</a>, at 1:58 AM Australian Eastern time, a 560 MW coal plant at Loy
-  Yang A in Victoria tripped without warning. Half a gigawatt of generation vanished from
-  the grid in an instant. The frequency began to fall.
+  In <a href={url("/research/incidents/2017-hornsdale-battery-response")}>December 2017</a>,
+  the Hornsdale Power Reserve responded to a 560 MW generator trip in 140 milliseconds --
+  43 times faster than the conventional 6-second standard -- and proved that batteries could
+  stabilize a national grid. It was the proof point the industry needed.
 </p>
 
 <p>
-  What happened next changed the energy industry's understanding of what batteries could do.
+  The three exhibits below show what VPPs look like in practice. The first replays a real
+  frequency emergency where 1,100 home batteries autonomously stabilized the grid. The second
+  shows daily energy arbitrage -- the quieter way VPPs earn revenue. The third replays the
+  <a href={url("/research/incidents/2016-south-australia-blackout")}>2016 South Australia blackout</a>:
+  same grid, same homes, zero batteries. Toggle between tabs and compare.
 </p>
 
-<div class="my-8 flex flex-col gap-3 fade-in stagger">
-  <div class="flex items-start gap-4 p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-text-dim);">
-    <div class="font-mono font-bold text-lg flex-shrink-0" style="color: var(--color-text-dim);">0 ms</div>
-    <div>
-      <div class="font-semibold mb-1">Generator trips</div>
-      <div class="text-base" style="color: var(--color-text-muted);">
-        Loy Yang A Unit 3 disconnects. 560 MW of baseload coal generation vanishes from
-        the National Electricity Market. Grid frequency begins dropping.
-      </div>
-    </div>
-  </div>
-
-  <div class="flex items-start gap-4 p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-success);">
-    <div class="font-mono font-bold text-lg flex-shrink-0" style="color: var(--color-success);">140 ms</div>
-    <div>
-      <div class="font-semibold mb-1">Hornsdale battery responds</div>
-      <div class="text-base" style="color: var(--color-text-muted);">
-        The Hornsdale Power Reserve — Tesla's "Big Battery," only 13 days old — detects the
-        frequency drop and begins injecting power. The response is so fast that AEMO's
-        monitoring hardware cannot precisely capture the initial reaction time.
-      </div>
-    </div>
-  </div>
-
-  <div class="flex items-start gap-4 p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-accent);">
-    <div class="font-mono font-bold text-lg flex-shrink-0" style="color: var(--color-accent);">~8 sec</div>
-    <div>
-      <div class="font-semibold mb-1">Nearest conventional generator responds</div>
-      <div class="text-base" style="color: var(--color-text-muted);">
-        The Gladstone coal plant in Queensland — the contracted frequency control provider —
-        begins ramping up. By this point, the battery has already arrested the frequency
-        decline and prevented <a href={url("/research/topics/cascading-failures")}>cascading failure</a>.
-      </div>
-    </div>
-  </div>
-
-  <div class="flex items-start gap-4 p-4 rounded-lg" style="background: var(--color-bg-alt); border-left: 3px solid var(--color-primary);">
-    <div class="font-mono font-bold text-lg flex-shrink-0" style="color: var(--color-primary);">~12 min</div>
-    <div>
-      <div class="font-semibold mb-1">Full recovery</div>
-      <div class="text-base" style="color: var(--color-text-muted);">
-        Conventional generators fully replace the lost capacity. The battery continues
-        providing frequency support throughout. No load shedding occurred. No consumers
-        lost power. The crisis was averted.
-      </div>
-    </div>
-  </div>
-</div>
-
-<p>
-  Those first 140 milliseconds — faster than a human blink — prevented a cascading blackout
-  across <a href={url("/research/incidents/2016-south-australia-blackout")}>South Australia</a>. The battery responded 43 times faster than the conventional
-  6-second standard for frequency control.
-</p>
-
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-8 fade-in stagger">
-  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-success);">90%</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">reduction in SA frequency control costs in year one</div>
-  </div>
-  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-success);">AUD $150M+</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">saved for consumers in first two years</div>
-  </div>
-  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">43x</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">faster than conventional gas response</div>
-  </div>
-  <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-    <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">55%</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">of all SA frequency control after 6 months</div>
-  </div>
-</div>
-
-<p>
-  The Hornsdale battery proved that batteries are faster, cheaper, and cleaner than gas
-  <a href={url("/learn/the-old-way")}>peaker plants</a> for <a href={url("/research/topics/grid-frequency")}>frequency control</a>. It was the proof point the industry needed.
-</p>
-
-<p>
-  A VPP turns every home into a tiny power plant. Together, they can do everything peaker
-  plants do — faster, cleaner, and at a fraction of the cost.
-</p>
-
-<h2 id="kogan-creek">VPP in Action: Kogan Creek Response</h2>
-
-<p>
-  Two years after Hornsdale, a different kind of battery proved the concept at household
-  scale. In November 2019, the Kogan Creek coal plant in Queensland tripped without
-  warning, removing 748 MW from the grid — the largest single contingency event in the
-  National Electricity Market. Frequency dropped from 50.00 Hz to 49.61 Hz. Six hundred
-  thousand Adelaide homes were at risk of disruption.
-</p>
-
-<p>
-  What happened next required zero human intervention. Across Adelaide, 1,100 homes with
-  Tesla Powerwall batteries detected the frequency drop through their inverters' built-in
-  droop response. No central dispatch. No control room operator. Each battery independently
-  sensed the frequency deviation and began injecting power into the grid. Within seconds,
-  300 homes were discharging. Then 900. Then all 1,100. Frequency recovered to 49.95 Hz.
-  Grid stable. Zero humans involved.
-</p>
-
-<div id="kogan-creek-map" class="my-8 rounded-lg overflow-hidden p-4 scroll-mt-20" style="background: var(--color-bg-alt); border: 1px solid rgba(16, 185, 129, 0.2);">
-  <div class="flex items-center justify-between mb-3">
-    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: #10b981;">VPP in Action -- Kogan Creek Response, November 2019</div>
-  </div>
-  <FullscreenWrapper client:visible label="Explore">
-    <KoganCreekVPPExhibit client:visible height={400} />
-  </FullscreenWrapper>
-</div>
-
-<p>
-  This was not a utility-scale battery like Hornsdale. This was 1,100 ordinary homes —
-  just 2% of the SA VPP fleet — acting as distributed grid infrastructure. The response
-  time was under 6 seconds, well within the FCAS 6-second raise specification. It was the
-  first real-world proof that a network of home batteries could autonomously stabilize a
-  national grid.
-</p>
-
-<h2 id="daily-arbitrage">VPP in Action: Daily Energy Arbitrage</h2>
-
-<p>
-  Frequency response is the dramatic use case -- but VPPs earn most of their revenue
-  from a quieter, daily operation: energy arbitrage and peak shaving. The VPP controller
-  watches wholesale electricity prices around the clock. When prices are low (overnight
-  wind, midday solar), it charges every battery in the fleet. When prices spike during the
-  evening peak, it discharges them all simultaneously, injecting power back into the grid
-  at the most expensive moment of the day.
-</p>
-
-<p>
-  The interactive map below shows a typical summer day for a 500-home VPP fleet in Berlin.
-  Watch how the fleet charges during cheap hours, holds at full capacity while prices climb,
-  then discharges during the evening peak -- flattening demand and earning revenue from the
-  price spread.
-</p>
-
-<div id="berlin-arbitrage-map" class="my-8 rounded-lg overflow-hidden p-4 scroll-mt-20" style="background: var(--color-bg-alt); border: 1px solid rgba(245, 158, 11, 0.2);">
-  <div class="flex items-center justify-between mb-3">
-    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: #f59e0b;">VPP in Action -- Daily Energy Arbitrage, Berlin</div>
-  </div>
-  <FullscreenWrapper client:visible label="Fullscreen">
-    <BerlinArbitrageExhibit client:visible height={600} />
-  </FullscreenWrapper>
-</div>
-
-<p>
-  At EUR 2.40 per home per day, a fleet of 500 homes generates roughly EUR 1,200 daily --
-  over EUR 400,000 per year. Scale that to 40,000 homes and the economics become compelling:
-  the VPP pays for itself through arbitrage alone, while simultaneously reducing the grid's
-  evening demand peak and cutting fossil fuel generation.
-</p>
-
-<h2 id="without-vpp">Without a VPP: South Australia 2016</h2>
-
-<p>
-  The Hornsdale battery arrived too late for the 2016 blackout. On September 28 that year,
-  the same grid — same homes, same infrastructure — had zero distributed storage. When two
-  tornadoes tore through transmission corridors, there was nothing to arrest the cascade.
-  The result: total system black in 43 seconds.
-</p>
-
-<p>
-  The interactive map below replays the 2016 blackout as it actually happened. The dim circles
-  around Adelaide mark where VPP battery homes would later be installed — but in September 2016,
-  those batteries did not exist. Watch the cascade unfold, then compare: 6 seconds to stability
-  with a VPP, versus 43 seconds to total darkness without one.
-</p>
-
-<div id="without-vpp-map" class="my-8 rounded-lg overflow-hidden p-4 scroll-mt-20" style="background: var(--color-bg-alt); border: 1px solid rgba(239, 68, 68, 0.2);">
-  <div class="flex items-center justify-between mb-3">
-    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: #ef4444;">Without a VPP -- SA Grid, September 2016</div>
-  </div>
-  <FullscreenWrapper client:visible label="Explore">
-    <WithoutVPPExhibit client:visible height={400} />
+<div id="vpp-exhibits" class="my-8 rounded-lg overflow-hidden scroll-mt-20" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+  <FullscreenWrapper client:visible label="Launch">
+    <VPPExhibitTabs client:visible height={500} />
   </FullscreenWrapper>
 </div>
 
