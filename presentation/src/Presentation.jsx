@@ -221,9 +221,9 @@ export default function Presentation() {
           <div className="flex flex-col gap-5 mt-6">
             {[
               { num: '01', title: 'The Grid', sub: 'How the world\'s largest machine works — and how it fails', color: colors.danger, time: '~10 min', slide: 3 },
-              { num: '02', title: 'The Renewable Revolution', sub: 'Why cheap clean energy creates expensive new problems', color: colors.accent, time: '~7 min', slide: 15 },
-              { num: '03', title: 'The Virtual Power Plant', sub: 'Software that turns millions of devices into grid infrastructure', color: colors.primary, time: '~10 min', slide: 20 },
-              { num: '04', title: 'Resilience', sub: 'What the future grid looks like — and why you already know how to build it', color: colors.success, time: '~3 min', slide: 32 },
+              { num: '02', title: 'The Renewable Revolution', sub: 'Why cheap clean energy creates expensive new problems', color: colors.accent, time: '~7 min', slide: 16 },
+              { num: '03', title: 'The Virtual Power Plant', sub: 'Software that turns millions of devices into grid infrastructure', color: colors.primary, time: '~10 min', slide: 22 },
+              { num: '04', title: 'Resilience', sub: 'What the future grid looks like — and why you already know how to build it', color: colors.success, time: '~3 min', slide: 33 },
             ].map(s => (
               <a key={s.num} href={`?slideIndex=${s.slide}`} className="flex items-center gap-5 no-underline cursor-pointer" style={{ textDecoration: 'none' }}>
                 <div className="text-[28px] font-extrabold font-mono min-w-[48px] text-right" style={{ color: s.color }}>{s.num}</div>
@@ -354,7 +354,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 10: Tools for Balancing the Grid */}
+      {/* 11: Tools for Balancing the Grid */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H>Tools for Balancing the Grid</H>
@@ -372,7 +372,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 11: Frequency Demo — Interactive */}
+      {/* 12: Frequency Demo — Interactive */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H>Balancing the Grid - In Action</H>
@@ -397,7 +397,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 12: Costs of the Old Playbook */}
+      {/* 13: Costs of the Old Playbook */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H color={colors.accent}>Balancing the Grid is Expensive</H>
@@ -475,7 +475,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 13: Why Texas Failed */}
+      {/* 14: Why Texas Failed */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H color={colors.danger}>Why Texas Failed</H>
@@ -509,7 +509,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 14: It Keeps Happening */}
+      {/* 15: It Keeps Happening */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
         <H color={colors.danger}>Not an Isolated Incident</H>
@@ -562,7 +562,7 @@ export default function Presentation() {
       </Slide>
 
 
-      {/* 15: Limited Flexibility — Bridge */}
+      {/* 16: Limited Flexibility — Bridge */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[28px] font-semibold text-hud-text font-sans leading-[1.7] mb-7">
@@ -585,7 +585,7 @@ export default function Presentation() {
 
       {/* ═══════ ACT 2: THE RENEWABLE REVOLUTION ═══════ */}
 
-      {/* 16: The Renewable Revolution */}
+      {/* 17: The Renewable Revolution */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[20px] font-semibold text-hud-accent font-mono tracking-[0.15em] uppercase mb-4">Part II</div>
@@ -597,7 +597,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 17: The Renewable Explosion */}
+      {/* 18: The Renewable Explosion */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H>The Renewable Explosion</H>
@@ -613,7 +613,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 18: The Duck Curve Problem */}
+      {/* 19: The Duck Curve Problem */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H>The Duck Curve Problem</H>
@@ -630,7 +630,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 19: The Cost of Wasted Energy */}
+      {/* 20: The Cost of Wasted Energy */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H color={colors.danger}>Clean Energy Has Outgrown the Grid</H>
@@ -657,7 +657,7 @@ export default function Presentation() {
 
       {/* ═══════ ACT 3: THE VIRTUAL POWER PLANT ═══════ */}
 
-      {/* 20: Bridge — The Solution Is Already Installed */}
+      {/* 21: Bridge — The Solution Is Already Installed */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[28px] font-semibold text-hud-text font-sans leading-[1.7] mb-7">
@@ -677,7 +677,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 21: Homes Become Infrastructure */}
+      {/* 22: Homes Become Infrastructure */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col items-center h-full text-center">
           <H size="42px" center>Homes Become Infrastructure</H>
@@ -694,7 +694,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 22: The Virtual Power Plant */}
+      {/* 23: The Virtual Power Plant */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-4">Part III</div>
@@ -706,7 +706,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 23: What Is a Virtual Power Plant? */}
+      {/* 24: What Is a Virtual Power Plant? */}
       <Slide backgroundColor={bg} padding="0">
         <div className="relative w-full h-full">
           <div className="absolute inset-0 flex flex-col pt-5 px-10 pointer-events-none z-10">
@@ -726,7 +726,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 24: Inside the Architecture */}
+      {/* 25: Inside the Architecture */}
       <Slide backgroundColor={bg} padding="16px 0px">
         <div className="flex flex-col h-full">
           <div className="px-8"><H>Inside the Architecture</H></div>
@@ -750,7 +750,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 22b: Inside the Architecture — Interactive Explorer */}
+      {/* 26: Inside the Architecture — Explorer */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           {/* Full-screen architecture explorer */}
@@ -778,7 +778,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 22c: Cloud Platform — MQTT, Choreography, K8s, ArgoCD */}
+      {/* 27: Cloud Platform — MQTT, Choreography, K8s, ArgoCD */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <div className="flex items-end justify-between mb-4">
@@ -864,7 +864,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 22d: Data Pipeline — Databricks, Spark, Aggregation */}
+      {/* 28: Data Pipeline — Databricks, Spark, Aggregation */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <div className="flex items-end justify-between mb-4">
@@ -942,7 +942,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 25: The Architecture Parallel */}
+      {/* 29: The Architecture Parallel */}
       <Slide backgroundColor={bg} padding={pad}>
         <style>{`
           @keyframes archLeftIn {
@@ -1005,7 +1005,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 26: How a VPP Responds to Grid Events */}
+      {/* 30: How a VPP Responds to Grid Events */}
       <Slide backgroundColor={bg} padding={pad}>
         <style>{`
           @keyframes vppEventIn {
@@ -1085,7 +1085,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 27: Energy Arbitrage + Peak Shaving */}
+      {/* 31: Energy Arbitrage + Peak Shaving */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           <VPPScenarioSlide scenario="summer" />
@@ -1100,7 +1100,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 28: SA Virtual Power Plant, 2019 */}
+      {/* 32: SA Virtual Power Plant, 2019 */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           <SAMapHUD width="100%" height="100%" variant="vpp" />
@@ -1112,7 +1112,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 29: The Economic Impact of Flexibility */}
+      {/* 33: The Economic Impact of Flexibility */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H color={colors.success}>The Economic Impact of Flexibility</H>
@@ -1178,7 +1178,7 @@ export default function Presentation() {
 
       {/* ═══════ ACT 4: RESILIENCE ═══════ */}
 
-      {/* 30: Back to Texas */}
+      {/* 34: Back to Texas */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center h-full">
           <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-6">Back to Texas</div>
@@ -1203,7 +1203,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 31: Thank You */}
+      {/* 35: Thank You */}
       <Slide backgroundColor={bg} padding="0">
         <div className="relative w-full h-full">
           <LazyContent><ThankYouBackground width={1366} height={768} /></LazyContent>
