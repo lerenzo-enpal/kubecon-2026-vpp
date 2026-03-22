@@ -161,14 +161,29 @@ const modules = [
             </div>
 
             {/* Enpal + Partners */}
-            <div class="rounded-lg p-4 text-center" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+            <div class="rounded-lg py-4 text-center overflow-hidden" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+              <div class="font-mono text-xs ml-2 mb-2 tracking-widest uppercase" style="color: var(--color-text-dim);">
+                Created by
+              </div>
+              <div class="flex gap-8 md:gap-16 mb-8 justify-around">
+                <div class="flex flex-col items-center">
+                  <img src={url("/lerenzo.png")} alt="LeRenzo" class="w-12 h-12 rounded-full mb-2 object-cover border-2" style="border-color: rgba(34, 211, 238, 0.25); box-shadow: 0 0 20px rgba(34, 211, 238, 0.08); object-position: center 35%;" />
+                  <div class="text-sm font-bold" style="color: var(--color-text);">LeRenzo Tolbert-Malcolm</div>
+                  <div class="text-xs mt-0.5" style="color: var(--color-text-muted);">Staff Engineer, VPP</div>
+                </div>
+                <div class="flex flex-col items-center">
+                  <img src={url("/mario.png")} alt="Mario" class="w-12 h-12 rounded-full mb-2 object-cover border-2" style="border-color: rgba(34, 211, 238, 0.25); box-shadow: 0 0 20px rgba(34, 211, 238, 0.08); object-position: center 35%;" />
+                  <div class="text-sm font-bold" style="color: var(--color-text);">Mario Olivio Flores</div>
+                  <div class="text-xs mt-0.5" style="color: var(--color-text-muted);">Engineering Manager, VPP</div>
+                </div>
+              </div>
               <a href="https://www.enpal.de" target="_blank" rel="noopener" class="inline-block hover:opacity-80 transition-opacity">
                 <img src={url("/enpal-logo.svg")} alt="Enpal" class="h-20 mx-auto" />
               </a>
-              <div class="text-sm mt-3" style="color: var(--color-text-dim);">
+              <div class="text-base mt-2" style="color: var(--color-text-dim);">
                 Europe's largest residential solar + storage installer
               </div>
-              <div class="flex justify-center gap-3 mt-3">
+              <div class="flex justify-center gap-3 my-3">
                 <a href="https://www.enpal.de/solar" target="_blank" rel="noopener" class="font-mono text-xs px-3 py-1 rounded transition-opacity hover:opacity-80" style="background: rgba(16, 185, 129, 0.1); color: var(--color-success); border: 1px solid rgba(16, 185, 129, 0.2);">Get Solar</a>
                 <a href="https://www.enpal.de/karriere" target="_blank" rel="noopener" class="font-mono text-xs px-3 py-1 rounded transition-opacity hover:opacity-80" style="background: rgba(34, 211, 238, 0.1); color: var(--color-primary); border: 1px solid rgba(34, 211, 238, 0.2);">Join the Team</a>
               </div>
