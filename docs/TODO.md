@@ -28,6 +28,9 @@
 [] sort out limits of vpp (slide in appendix)
 [] look into the presentation-wide margin from Spectacle — slides have unused padding/margin that wastes screen real estate. Consider overriding Deck/Slide defaults or dropping Spectacle entirely
 
+Website
+- Clarify "largest grid" claim: Continental European grid is the largest *synchronously interconnected* system (36 countries, one frequency). China's State Grid is larger by customers (~1.1B) and capacity, but operates as multiple asynchronous regions linked by HVDC. The distinction matters for the VPP/frequency story.
+
 Questions / Tasks
 
 
