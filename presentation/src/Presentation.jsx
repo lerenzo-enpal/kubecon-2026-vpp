@@ -12,7 +12,7 @@ import DuckCurveVPP from './components/DuckCurveVPP';
 import AnimatedStat from './components/AnimatedStat';
 import StaticTexasGrid from './components/StaticTexasGrid';
 import TexasMapHUD from './components/TexasMapHUD';
-import { versionD } from './slides/GridScaleSlides';
+import { gridScale } from './slides/GridScaleSlides';
 import EUGridHUD from './components/EUGridHUD';
 
 import DemandResponseDemo from './components/DemandResponseDemo';
@@ -115,13 +115,13 @@ export default function Presentation() {
           <div className="absolute inset-0 flex flex-col justify-center items-center z-10 text-center">
             <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.2em] uppercase mb-8">KubeCon + CloudNativeCon Europe 2026</div>
             <div className="text-[56px] font-extrabold font-sans leading-[1.1] mb-5" style={{ color: colors.primary, textShadow: `0 0 60px ${colors.primary}30` }}>
-              Virtual Power Plants
+              What is a Virtual Power Plant?
             </div>
             <div className="text-[22px] text-hud-text-muted font-sans mb-12">
               Cloud-Native Infrastructure for the Energy Grid
             </div>
             <div className="flex gap-6 justify-center items-center">
-              <img src={asset("/enpal-logo.svg")} alt="Enpal" style={{ height: 36 }} />
+              <img src={asset("/enpal-logo.svg")} alt="Enpal" className="h-24"/>
             </div>
           </div>
         </div>
@@ -160,19 +160,27 @@ export default function Presentation() {
           {/* Partners */}
           <div className="flex flex-col items-center gap-2">
             <span className="text-lg text-hud-text-dim font-mono mb-1">Partners</span>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               <img src={asset("/flexa-logo.svg")} alt="Flexa" className="h-10" />
-              <span className="text-hud-text-dim opacity-30">|</span>
+              <svg className="h-8 opacity-20" viewBox="0 0 24 40" fill="none" stroke={colors.primary} strokeWidth="1.2" strokeLinecap="round">
+                <line x1="12" y1="2" x2="12" y2="38" />
+                <line x1="5" y1="8" x2="19" y2="8" />
+                <line x1="4" y1="16" x2="20" y2="16" />
+                <line x1="3" y1="24" x2="21" y2="24" />
+                <line x1="2" y1="32" x2="22" y2="32" />
+              </svg>
               <span className="text-xl font-bold font-mono" style={{ color: colors.secondary }}>Entrix</span>
-              <span className="text-hud-text-dim opacity-30">|</span>
+              <svg className="h-8 opacity-20" viewBox="0 0 24 40" fill="none" stroke={colors.primary} strokeWidth="1.2" strokeLinecap="round">
+                <line x1="12" y1="2" x2="12" y2="38" />
+                <line x1="5" y1="8" x2="19" y2="8" />
+                <line x1="4" y1="16" x2="20" y2="16" />
+                <line x1="3" y1="24" x2="21" y2="24" />
+                <line x1="2" y1="32" x2="22" y2="32" />
+              </svg>
               <span className="text-xl font-bold font-mono" style={{ color: colors.success }}>Metrify</span>
             </div>
           </div>
         </div>
-        <Notes>
-          Speakers slide — Lerenzo Luijkx and Mario Forzanini, Staff Engineers at Enpal.
-          Partners: Flexa (VPP Controller) and Metrify (Smart Metering).
-        </Notes>
       </Slide>
 
       {/* 3: Agenda */}
@@ -268,7 +276,7 @@ export default function Presentation() {
       </Slide>
 
       {/* 6: Grid Scale */}
-      {versionD()}
+      {gridScale()}
 
       {/* 7: Designed for a Different World */}
       <Slide backgroundColor={bg} padding={pad}>
@@ -290,7 +298,7 @@ export default function Presentation() {
           <EUGridHUD width="100%" height="100%" />
         </div>
         <Notes>
-          [MARIO] This is the Continental European grid — real-time visualization.
+          [MARIO] This is the Continental European grid — visualization.
           400 million consumers. 1,100 GW of installed capacity (ENTSO-E, 2024).
           36 countries, all operating at 50 Hz across interconnected synchronous areas.
         </Notes>
@@ -299,7 +307,7 @@ export default function Presentation() {
       {/* 9: Frequency — What "Stabilizing the Grid" Means */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
-          <H>The Grid: A Balancing Act</H>
+          <H>The Grid: Balanced Every Second</H>
           <P size="20px">This enormous machine maintains a constant 50 Hz frequency — supply and demand balanced every second.</P>
           <Stepper values={[1, 2, 3, 4, 5]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col" style={{ minHeight: 0 }}>
             {(stepVal) => <FrequencyWalkthrough step={stepVal ?? 0} />}

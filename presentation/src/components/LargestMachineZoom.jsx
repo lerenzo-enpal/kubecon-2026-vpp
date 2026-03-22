@@ -9,12 +9,16 @@ import { colors } from '../theme';
 import SETTLEMENTS_RAW from '../data/europe-settlements';
 
 /**
- * LargestMachineZoom — Full-slide animation (4 phases, 3 arrow presses).
+ * LargestMachineZoom — Full-slide animation (8 phases, 7 arrow presses).
  *
- * Phase 0: Canvas — subtle grid pulse + "HOW BIG? LET'S COMPARE."
- * Phase 1: Canvas — Wolfsburg factory drawn by pen traces
- * Phase 2: deck.gl — Manual zoom-out from Wolfsburg to EU night-lights
- * Phase 3: Canvas overlay — Big "0" ZERO DOWNTIME over the EU map
+ * Phase 0: Canvas — subtle grid pulse
+ * Phase 1: Canvas — "HOW BIG? LET'S COMPARE."
+ * Phase 2: Canvas — Wolfsburg factory drawn by pen traces
+ * Phase 3: deck.gl — Counter duplication animation + manual zoom-out
+ * Phase 4: Stat box 1 (transmission lines)
+ * Phase 5: Stat box 2 (connected consumers)
+ * Phase 6: Remaining stat boxes (capacity, production, frequency)
+ * Phase 7: Canvas overlay — Big "0" ZERO DOWNTIME over the EU map
  */
 
 const hexToRgb = (hex) => {
@@ -23,18 +27,16 @@ const hexToRgb = (hex) => {
 };
 
 // ── Pre-process GeoNames settlements with animation groups ──
-// group: 0=static, 1=blink (0.2s off/1s cycle), 2=fade (smooth), 3=pulse (bright flash/3s)
 const SETTLEMENTS = SETTLEMENTS_RAW.map(([lng, lat, pop], i) => {
   const hash = ((i * 2654435761) >>> 0) % 20;
   let group = 0;
   if (hash === 0) group = 1;
   else if (hash === 1) group = 2;
   else if (hash === 2) group = 3;
-  const seed = ((i * 2654435761) >>> 0) / 4294967296; // 0-1
+  const seed = ((i * 2654435761) >>> 0) / 4294967296;
   return { position: [lng, lat], pop, group, seed };
 });
 
-// Wolfsburg VW factory: 52.4227°N 10.7865°E
 const WOLFSBURG = [10.7865, 52.4227];
 
 // ── Helpers ──
@@ -46,14 +48,13 @@ function easeOutBack(t) {
   return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
 }
 
-// Use deck.gl's own viewport for projection — guarantees alignment with ScatterplotLayer dots
 function projectToScreen(lng, lat, view, screenW, screenH) {
   const vp = new WebMercatorViewport({ width: screenW, height: screenH, ...view });
   const [x, y] = vp.project([lng, lat]);
   return { x, y };
 }
 
-// ── Canvas drawing helpers (Phase 0, 1, 3) ──
+// ── Canvas drawing helpers ──
 
 function drawFactory(ctx, x, y, w, h, alpha, labelAlpha = 1) {
   ctx.save();
@@ -98,16 +99,6 @@ function drawFactory(ctx, x, y, w, h, alpha, labelAlpha = 1) {
     ctx.beginPath(); ctx.moveTo(sx - stackW * 0.3, sy); ctx.lineTo(sx + stackW + stackW * 0.3, sy); ctx.stroke();
   });
 
-  if (labelAlpha > 0.01) {
-    ctx.globalAlpha = alpha * labelAlpha;
-    ctx.fillStyle = colors.accent;
-    ctx.font = `600 ${Math.max(10, w * 0.05)}px "JetBrains Mono"`;
-    ctx.textAlign = 'center';
-    ctx.fillText('VW WOLFSBURG', x + w / 2, baseY + Math.max(14, w * 0.05));
-    ctx.font = `${Math.max(8, w * 0.035)}px "JetBrains Mono"`;
-    ctx.fillStyle = colors.textDim;
-    ctx.fillText('60,000 workers  \u00b7  6.5 km\u00b2', x + w / 2, baseY + Math.max(28, w * 0.09));
-  }
   ctx.restore();
 }
 
@@ -122,9 +113,9 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.arcTo(x, y, x + r, y, r); ctx.closePath();
 }
 
-function drawCounterHUD(ctx, count, label, labelColor, alpha, width) {
+function drawCounterHUD(ctx, count, label, labelColor, alpha, posX, posY = 12) {
   const { w: boxW, h: boxH } = ZERO_BOX;
-  const boxX = width - boxW - 16, boxY = 12;
+  const boxX = posX, boxY = posY;
   ctx.save(); ctx.globalAlpha = alpha;
   ctx.fillStyle = 'rgba(26, 34, 54, 0.8)';
   roundRect(ctx, boxX, boxY, boxW, boxH, 8); ctx.fill();
@@ -138,7 +129,7 @@ function drawCounterHUD(ctx, count, label, labelColor, alpha, width) {
   ctx.fillText('WORKERS', boxX + boxW / 2, boxY + 58);
   if (label) {
     ctx.font = '600 14px "JetBrains Mono"'; ctx.textAlign = 'center';
-    ctx.fillStyle = labelColor; ctx.fillText(label, boxX + boxW / 2, boxY + boxH + 24);
+    ctx.fillStyle = labelColor; ctx.fillText(label, boxX + boxW / 2, boxY + boxH + 20);
   }
   ctx.restore();
 }
@@ -147,44 +138,66 @@ function drawCounterHUD(ctx, count, label, labelColor, alpha, width) {
 const DARK_MAP = 'https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json';
 const WOLFSBURG_VIEW = { longitude: 10.7865, latitude: 52.4227, zoom: 14, pitch: 0, bearing: 0 };
 const EUROPE_VIEW   = { longitude: 10, latitude: 50, zoom: 3.8, pitch: 0, bearing: 0 };
-const ZOOM_DURATION = 7; // seconds — slow enough to track Wolfsburg
+const ZOOM_DURATION = 7;
+const DUP_DURATION = 1.2; // counter duplication animation
+
+// ── Stat boxes data ──
+const STAT_BOXES = [
+  { v: '305,000', u: 'km', c: colors.primary, d: 'transmission lines' },
+  { v: '400,000,000', u: '', c: colors.success, d: 'connected consumers', tight: true },
+  { v: '1,100', u: 'GW', c: colors.secondary, d: 'installed capacity' },
+  { v: '3,000', u: 'TWh', c: colors.accent, d: 'annual production' },
+  { v: '50', u: 'Hz', c: colors.primary, d: 'synchronized frequency' },
+];
 
 export default function LargestMachineZoom({ width = 1024, height = 668 }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const mapRef = useRef(null);
   const slideContext = useContext(SlideContext);
-  const { step: rawStep, placeholder } = useSteps(3);
+  const { step: rawStep, placeholder } = useSteps(7);
   const currentStepValue = rawStep + 1;
   const stepRef = useRef(0);
   const phaseTimeRef = useRef(0);
   const prevStepRef = useRef(-1);
 
-  // ── Controlled viewState — manual interpolation in RAF loop ──
   const [viewState, setViewState] = useState(WOLFSBURG_VIEW);
-  const viewStateRef = useRef(WOLFSBURG_VIEW); // live view for use inside draw closure
-  const zoomProgressRef = useRef(0);  // 0-1 animation progress for light appearance
-  const nowRef = useRef(0);           // current time (seconds) for light animation
-  const scanRef = useRef(null);       // { scanY, vp } — screen-space scan line for dot glow
-  const scanStartRef = useRef(null);  // timestamp when scan line first appears
+  const viewStateRef = useRef(WOLFSBURG_VIEW);
+  const zoomProgressRef = useRef(0);
+  const nowRef = useRef(0);
+  const scanRef = useRef(null);
+  const scanStartRef = useRef(null);
 
-  // Light animation tick — 10fps layer updates for blink/fade/pulse effects
+  // Track zoom completion for stat box visibility
+  const [zoomDone, setZoomDone] = useState(false);
+  const zoomDoneRef = useRef(false);
+
   const [lightTick, setLightTick] = useState(0);
   useEffect(() => {
-    if (currentStepValue < 2) return;
+    if (currentStepValue < 3) return;
     const interval = setInterval(() => setLightTick(t => t + 1), 16);
     return () => clearInterval(interval);
   }, [currentStepValue]);
 
-  // Reset viewState when going back to earlier phases
+  // Reset / jump viewState based on step
   useEffect(() => {
-    if (currentStepValue < 2) {
+    if (currentStepValue < 3) {
       setViewState(WOLFSBURG_VIEW);
+      viewStateRef.current = WOLFSBURG_VIEW;
       zoomProgressRef.current = 0;
+      zoomDoneRef.current = false;
+      setZoomDone(false);
+    } else if (currentStepValue >= 4) {
+      setViewState(EUROPE_VIEW);
+      viewStateRef.current = EUROPE_VIEW;
+      zoomProgressRef.current = 1;
+      if (!zoomDoneRef.current) {
+        zoomDoneRef.current = true;
+        setZoomDone(true);
+      }
     }
   }, [currentStepValue]);
 
-  // Hide borders + darken ocean to near-black night color
   const onMapLoad = useCallback(() => {
     const map = mapRef.current?.getMap?.() || mapRef.current;
     if (!map) return;
@@ -197,19 +210,17 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
           }
         });
       }
-      // Night ocean — nearly black with faint blue
       map.setPaintProperty('water', 'fill-color', '#080a0c');
       if (map.getLayer('waterway')) map.setPaintProperty('waterway', 'line-color', '#0a0e12');
     } catch (_) { /* style not ready */ }
   }, []);
 
-  // deck.gl layers — 46K real European settlements with animated subsets
+  // deck.gl layers
   const layers = useMemo(() => {
-    if (currentStepValue < 2) return [];
+    if (currentStepValue < 3) return [];
     const now = nowRef.current;
     const zp = zoomProgressRef.current;
 
-    // Compute scan line position in lat/lng (same tick as dots = perfect sync)
     let scanVp = null;
     let scanLat = null;
     const showScan = zp >= 1;
@@ -220,7 +231,6 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
         const [, rawTopLat] = scanVp.unproject([width / 2, 0]);
         const [, rawBotLat] = scanVp.unproject([width / 2, height]);
         const rawRange = rawTopLat - rawBotLat;
-        // Overshoot 10% on both sides so line fully exits the screen
         const topLat = rawTopLat + rawRange * 0.1;
         const latRange = (rawRange * 1.2);
         if (scanStartRef.current === null) scanStartRef.current = performance.now();
@@ -243,24 +253,19 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
         getRadius: d => 100 + Math.sqrt(d.pop) * 2,
         getFillColor: d => {
           const popFactor = Math.min(1, Math.sqrt(d.pop) / 130);
-          // Progressive appearance: big cities first, smaller ones later
           const appearT = Math.max(0, Math.min(1, (zp - (1 - popFactor) * 0.7) / 0.3));
           if (appearT < 0.01) return [255, 240, 200, 0];
           let brightness = Math.min(255, 100 + Math.sqrt(d.pop) * 0.5);
           let alpha = brightness * appearT;
 
-          // Animation groups (only when fully appeared)
           if (appearT > 0.5) {
             if (d.group === 1) {
-              // Blink: 1s cycle, 0.2s off
               const cycle = (now + d.seed * 7) % 1;
               if (cycle > 0.8) alpha = 0;
             } else if (d.group === 2) {
-              // Fade in/out: smooth ~2s cycle
               const fade = (Math.sin((now + d.seed * 10) * Math.PI) + 1) / 2;
               alpha *= 0.2 + fade * 0.8;
             } else if (d.group === 3) {
-              // Bright pulse: every 3s, 0.4s flash
               const cycle = (now + d.seed * 20) % 3;
               if (cycle < 0.4) {
                 alpha = Math.min(255, alpha * 2.5);
@@ -268,18 +273,15 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
             }
           }
 
-          // Scan line glow — screen-space comparison, only behind the line
           const scan = scanRef.current;
           if (scan) {
             const [, dotY] = scan.vp.project(d.position);
-            // diff > 0 means scan line is below the dot = line already passed
             const diff = scan.scanY - dotY;
-            const trail = 200; // 200px smooth fade trail
+            const trail = 200;
             if (diff > 0 && diff < trail) {
-              // Smooth cubic ease-out: bright at contact, gentle fade to baseline
-              const t_decay = diff / trail; // 0 at line, 1 at end
+              const t_decay = diff / trail;
               const glowT = 1 - t_decay;
-              const smooth = glowT * glowT; // quadratic: gentle fade, no hard edge
+              const smooth = glowT * glowT;
               const boostedAlpha = Math.round(alpha + (255 - alpha) * smooth);
               const cyan = smooth * 0.8;
               return [
@@ -304,8 +306,6 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
         getRadius: 4000,
         getFillColor: () => {
           const zp = zoomProgressRef.current;
-          // Don't show until factory lines have faded (factory fades at t*1.5, gone at ~0.67)
-          // Start appearing at 60% zoom progress, full brightness at 80%
           if (zp < 0.55) return [245, 158, 11, 0];
           const dotT = Math.max(0, Math.min(1, (zp - 0.55) / 0.25));
           const alpha = Math.round(dotT * 255);
@@ -317,7 +317,6 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
       }),
     ];
 
-    // Add scan line as a deck.gl LineLayer — same pipeline as dots = perfect sync
     if (showScan && scanVp && scanLat !== null) {
       const [westLng] = scanVp.unproject([0, height / 2]);
       const [eastLng] = scanVp.unproject([width, height / 2]);
@@ -336,7 +335,7 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
     return result;
   }, [currentStepValue, lightTick, width, height]);
 
-  // ── Canvas animation loop (Phase 0, 1, 3 + HUD overlay for Phase 2) ──
+  // ── Canvas animation loop ──
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
@@ -360,10 +359,14 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
 
       ctx.clearRect(0, 0, width, height);
 
+      const rightX = width - ZERO_BOX.w - 16;
+      const topY = 12;
+      const bottomY = 12 + ZERO_BOX.h + 50; // stacked below original + label gap
+
       // ════════════════════════════════════════════
-      // PHASE 0: Grid pulse + "HOW BIG? LET'S COMPARE."
+      // PHASE 0–1: Grid pulse
       // ════════════════════════════════════════════
-      if (step === 0) {
+      if (step <= 1) {
         ctx.save();
         ctx.globalAlpha = 0.025 + Math.sin(now / 2000) * 0.008;
         ctx.strokeStyle = colors.primary;
@@ -375,7 +378,12 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
           ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(width, gy); ctx.stroke();
         }
         ctx.restore();
+      }
 
+      // ════════════════════════════════════════════
+      // PHASE 1: "HOW BIG? LET'S COMPARE."
+      // ════════════════════════════════════════════
+      if (step === 1) {
         if (elapsed > 0.3) {
           const t1 = Math.min(1, (elapsed - 0.3) / 0.35);
           ctx.save(); ctx.globalAlpha = t1;
@@ -395,9 +403,9 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
       }
 
       // ════════════════════════════════════════════
-      // PHASE 1: Factory drawn by sequential pen traces
+      // PHASE 2: Factory drawn by sequential pen traces
       // ════════════════════════════════════════════
-      if (step === 1) {
+      if (step === 2) {
         const factoryW = 246, factoryH = factoryW * 0.4;
         const fCx = width / 2, fCy = height * 0.42;
         const factoryX = fCx - factoryW / 2, factoryY = fCy - factoryH / 2;
@@ -480,107 +488,150 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
           ctx.font = '700 24px "JetBrains Mono"'; ctx.fillStyle = colors.accent;
           ctx.shadowBlur = 10; ctx.shadowColor = colors.accent + '40';
           ctx.fillText('VOLKSWAGEN WOLFSBURG', fCx, baseY + 30); ctx.shadowBlur = 0;
-          ctx.font = '600 14px "JetBrains Mono"'; ctx.fillStyle = colors.text;
-          ctx.fillText("WORLD'S LARGEST FACTORY", fCx, baseY + 52);
-          ctx.font = '500 14px "JetBrains Mono"'; ctx.fillStyle = colors.textDim;
-          ctx.fillText('60,000 WORKERS \u00b7 6.5 KM\u00b2', fCx, baseY + 70);
+          ctx.font = '600 16px "JetBrains Mono"'; ctx.fillStyle = colors.text;
+          ctx.fillText("LARGEST CAR FACTORY", fCx, baseY + 62);
+          ctx.font = '500 16px "JetBrains Mono"'; ctx.fillStyle = colors.secondary;
+          ctx.fillText('60,000 WORKERS \u00b7 6.5 KM\u00b2', fCx, baseY + 96);
           ctx.restore();
         }
 
+        // Counter HUD — single, fade in
         if (elapsed > 0.3) {
           const hudAlpha = Math.min(1, (elapsed - 0.3) / 0.5);
-          drawCounterHUD(ctx, 60000, "World's Largest Factory", colors.accent, hudAlpha, width);
+          drawCounterHUD(ctx, 60000, "Largest Car Factory", colors.accent, hudAlpha, rightX);
         }
       }
 
       // ════════════════════════════════════════════
-      // PHASE 2: Manual zoom-out — factory tracks map projection
+      // PHASE 3+: Zoom-out from Wolfsburg to EU
       // ════════════════════════════════════════════
-      if (step === 2) {
-        const t = Math.min(1, elapsed / ZOOM_DURATION);
-        // ease-in-out cubic: slow start (keeps Wolfsburg visible), fast middle, slow end
+      if (step >= 3 && step !== 7) {
+        // Factory fade-out tail at start of phase 3
+        if (step === 3 && elapsed < 0.6) {
+          const fadeAlpha = 1 - elapsed / 0.6;
+          const factoryW = 246, factoryH = factoryW * 0.4;
+          const fCx = width / 2, fCy = height * 0.42;
+          drawFactory(ctx, fCx - factoryW / 2, fCy - factoryH / 2, factoryW, factoryH, fadeAlpha);
+          ctx.save(); ctx.globalAlpha = fadeAlpha; ctx.textAlign = 'center';
+          ctx.font = '700 24px "JetBrains Mono"'; ctx.fillStyle = colors.accent;
+          ctx.fillText('VOLKSWAGEN WOLFSBURG', fCx, fCy + factoryH / 2 + 30);
+          ctx.font = '600 16px "JetBrains Mono"'; ctx.fillStyle = colors.text;
+          ctx.fillText("LARGEST CAR FACTORY", fCx, fCy + factoryH / 2 + 62);
+          ctx.font = '500 16px "JetBrains Mono"'; ctx.fillStyle = colors.secondary;
+          ctx.fillText('60,000 WORKERS \u00b7 6.5 KM\u00b2', fCx, fCy + factoryH / 2 + 96);
+          ctx.restore();
+        }
+
+        // Duplication timing
+        const dupT = step === 3 ? Math.min(1, elapsed / DUP_DURATION) : 1;
+        const zoomElapsed = step === 3 ? Math.max(0, elapsed - DUP_DURATION) : ZOOM_DURATION;
+        const t = Math.min(1, zoomElapsed / ZOOM_DURATION);
         const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
         zoomProgressRef.current = eased;
 
-        // Interpolate viewState: zoom starts immediately, but pan is delayed
-        // so Wolfsburg stays centered for the first half of the animation
-        const panT = Math.max(0, Math.min(1, (eased - 0.4) / 0.6)); // pan starts at 40% zoom progress
-        const panEased = panT * panT * (3 - 2 * panT); // smoothstep for the pan
-        const currentView = {
-          longitude: lerp(WOLFSBURG_VIEW.longitude, EUROPE_VIEW.longitude, panEased),
-          latitude: lerp(WOLFSBURG_VIEW.latitude, EUROPE_VIEW.latitude, panEased),
-          zoom: lerp(WOLFSBURG_VIEW.zoom, EUROPE_VIEW.zoom, eased),
-          pitch: 0,
-          bearing: 0,
-        };
-
-        // Push viewState to DeckGL (controlled mode)
-        if (t < 1) {
-          setViewState(currentView);
-          viewStateRef.current = currentView;
-        } else if (t >= 1 && eased < 1.01) {
-          // Final state — set once
-          setViewState(EUROPE_VIEW);
-          viewStateRef.current = EUROPE_VIEW;
-          zoomProgressRef.current = 1;
+        // Check zoom completion
+        if (eased >= 1 && !zoomDoneRef.current) {
+          zoomDoneRef.current = true;
+          setZoomDone(true);
         }
 
-        // Draw factory at its projected screen position, scaled proportionally to map zoom
-        const zoomDelta = currentView.zoom - WOLFSBURG_VIEW.zoom; // negative (zooming out)
-        const factoryScale = Math.pow(2, zoomDelta); // shrinks as zoom decreases
+        // Interpolate viewState for zoom
+        if (step === 3 && zoomElapsed > 0) {
+          const panT = Math.max(0, Math.min(1, (eased - 0.4) / 0.6));
+          const panEased = panT * panT * (3 - 2 * panT);
+          const currentView = {
+            longitude: lerp(WOLFSBURG_VIEW.longitude, EUROPE_VIEW.longitude, panEased),
+            latitude: lerp(WOLFSBURG_VIEW.latitude, EUROPE_VIEW.latitude, panEased),
+            zoom: lerp(WOLFSBURG_VIEW.zoom, EUROPE_VIEW.zoom, eased),
+            pitch: 0, bearing: 0,
+          };
 
-        if (factoryScale > 0.003) {
-          const { x: projX, y: projY } = projectToScreen(
-            WOLFSBURG[0], WOLFSBURG[1], currentView, width, height
-          );
-          // Phase 1 draws at (width/2, height*0.42). Keep factory there while visible,
-          // then blend to projected position once it's mostly faded out.
-          const blendT = Math.max(0, Math.min(1, (t - 0.3) / 0.2)); // blend from 30-50% of zoom
-          const sx = lerp(width / 2, projX, blendT);
-          const sy = lerp(height * 0.42, projY, blendT);
+          if (t < 1) {
+            setViewState(currentView);
+            viewStateRef.current = currentView;
+          } else if (t >= 1 && eased < 1.01) {
+            setViewState(EUROPE_VIEW);
+            viewStateRef.current = EUROPE_VIEW;
+            zoomProgressRef.current = 1;
+          }
 
-          const fadeAlpha = Math.max(0, 1 - t * 1.5); // fade out over first 2/3 of zoom
-          if (fadeAlpha > 0.01) {
-            const baseW = 246, baseH = baseW * 0.4;
-            ctx.save();
-            ctx.globalAlpha = fadeAlpha;
-            ctx.translate(sx, sy);
-            ctx.scale(factoryScale, factoryScale);
-            ctx.translate(-sx, -sy);
-            drawFactory(ctx, sx - baseW / 2, sy - baseH / 2, baseW, baseH, 1, factoryScale > 0.15 ? 1 : 0);
-            if (factoryScale > 0.15) {
-              ctx.textAlign = 'center';
-              ctx.font = '700 24px "JetBrains Mono"'; ctx.fillStyle = colors.accent;
-              ctx.shadowBlur = 10; ctx.shadowColor = colors.accent + '40';
-              ctx.fillText('VOLKSWAGEN WOLFSBURG', sx, sy + baseH / 2 + 30);
-              ctx.shadowBlur = 0;
-              ctx.font = '600 14px "JetBrains Mono"'; ctx.fillStyle = colors.text;
-              ctx.fillText("WORLD'S LARGEST FACTORY", sx, sy + baseH / 2 + 52);
-              ctx.font = '500 14px "JetBrains Mono"'; ctx.fillStyle = colors.textDim;
-              ctx.fillText('60,000 WORKERS \u00b7 6.5 KM\u00b2', sx, sy + baseH / 2 + 70);
+          // Draw factory at FIXED Y position during zoom (no vertical shift)
+          const zoomDelta = currentView.zoom - WOLFSBURG_VIEW.zoom;
+          const factoryScale = Math.pow(2, zoomDelta);
+
+          if (factoryScale > 0.003) {
+            const fadeAlpha = Math.max(0, 1 - t * 1.5);
+            if (fadeAlpha > 0.01) {
+              const baseW = 246, baseH = baseW * 0.4;
+              const sx = width / 2;
+              const sy = height * 0.42; // FIXED: no vertical blend
+              ctx.save();
+              ctx.globalAlpha = fadeAlpha;
+              ctx.translate(sx, sy);
+              ctx.scale(factoryScale, factoryScale);
+              ctx.translate(-sx, -sy);
+              drawFactory(ctx, sx - baseW / 2, sy - baseH / 2, baseW, baseH, 1, factoryScale > 0.15 ? 1 : 0);
+              if (factoryScale > 0.15) {
+                ctx.textAlign = 'center';
+                ctx.font = '700 24px "JetBrains Mono"'; ctx.fillStyle = colors.accent;
+                ctx.shadowBlur = 10; ctx.shadowColor = colors.accent + '40';
+                ctx.fillText('VOLKSWAGEN WOLFSBURG', sx, sy + baseH / 2 + 30);
+                ctx.shadowBlur = 0;
+                ctx.font = '600 16px "JetBrains Mono"'; ctx.fillStyle = colors.text;
+                ctx.fillText("LARGEST CAR FACTORY", sx, sy + baseH / 2 + 62);
+                ctx.font = '500 16px "JetBrains Mono"'; ctx.fillStyle = colors.secondary;
+                ctx.fillText('60,000 WORKERS \u00b7 6.5 KM\u00b2', sx, sy + baseH / 2 + 96);
+              }
+              ctx.restore();
             }
+          }
+
+          // Wolfsburg callout label
+          if (eased > 0.75) {
+            const calloutAlpha = Math.min(1, (eased - 0.75) / 0.15);
+            const projView = t >= 1 ? EUROPE_VIEW : currentView;
+            const { x: wx, y: wy } = projectToScreen(
+              WOLFSBURG[0], WOLFSBURG[1], projView, width, height
+            );
+            const lineEndX = wx + 20 * calloutAlpha;
+            const lineEndY = wy - 14 * calloutAlpha;
+            const labelX = lineEndX + 30 * calloutAlpha;
+            const labelY = lineEndY;
+
+            ctx.save();
+            ctx.globalAlpha = calloutAlpha;
+            ctx.strokeStyle = colors.accent;
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(wx - 3, wy + 6);
+            ctx.lineTo(lineEndX, lineEndY);
+            ctx.lineTo(labelX, labelY);
+            ctx.stroke();
+            ctx.font = '600 14px "JetBrains Mono"';
+            ctx.fillStyle = colors.accent;
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText('VW FACTORY', labelX + 7, labelY - 2);
+            ctx.font = '500 11px "JetBrains Mono"';
+            ctx.fillStyle = colors.textDim;
+            ctx.fillText('WOLFSBURG', labelX + 7, labelY + 13);
             ctx.restore();
           }
         }
 
-        // Hollywood-style callout label — traces from the deck.gl Wolfsburg dot
-        if (eased > 0.75) {
-          const calloutAlpha = Math.min(1, (eased - 0.75) / 0.15);
-          // Use the FINAL view for projection so the label lands exactly on the dot
-          // at full zoom-out (no drift from interpolation rounding)
-          const projView = t >= 1 ? EUROPE_VIEW : currentView;
+        // Callout label persists for steps 4-6
+        if (step > 3 && step < 7) {
+          const projView = EUROPE_VIEW;
           const { x: wx, y: wy } = projectToScreen(
             WOLFSBURG[0], WOLFSBURG[1], projView, width, height
           );
-          // Angled line from dot to label (kept tight)
-          const lineEndX = wx + 20 * calloutAlpha;
-          const lineEndY = wy - 14 * calloutAlpha;
-          const labelX = lineEndX + 30 * calloutAlpha;
+          const lineEndX = wx + 20;
+          const lineEndY = wy - 14;
+          const labelX = lineEndX + 30;
           const labelY = lineEndY;
 
           ctx.save();
-          ctx.globalAlpha = calloutAlpha;
-          // Line from the dot center — no extra circle, the deck.gl dot IS the anchor
+          ctx.globalAlpha = 1;
           ctx.strokeStyle = colors.accent;
           ctx.lineWidth = 1.5;
           ctx.beginPath();
@@ -588,7 +639,6 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
           ctx.lineTo(lineEndX, lineEndY);
           ctx.lineTo(labelX, labelY);
           ctx.stroke();
-          // Label text
           ctx.font = '600 14px "JetBrains Mono"';
           ctx.fillStyle = colors.accent;
           ctx.textAlign = 'left';
@@ -599,22 +649,107 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
           ctx.fillText('WOLFSBURG', labelX + 7, labelY + 13);
           ctx.restore();
         }
-      }
-      if (step >= 2) {
-        const t3 = step === 2 ? Math.min(elapsed / ZOOM_DURATION, 1) : 1;
-        const eased = t3 * t3 * t3;
-        const displayCount = Math.floor(60000 + eased * (2300000 - 60000));
-        let label = "World's Largest Factory";
-        let labelColor = colors.accent;
-        if (eased > 0.08) label = null;
-        if (eased > 0.85) { label = 'European Power Grid'; labelColor = colors.primary; }
-        drawCounterHUD(ctx, displayCount, label, labelColor, 1, width);
+
+        // ── Counter HUD duplication + counting ──
+        // Stacked vertically on the right: top=static 60K, bottom=counting up
+        if (step === 3 && elapsed < DUP_DURATION) {
+          // ── Duplication animation: ghost slides DOWN from original ──
+
+          // Phase A: Glitch/flicker on original (0–0.3s)
+          let mainAlpha = 1;
+          if (dupT < 0.25) {
+            mainAlpha = 0.65 + 0.35 * (Math.sin(elapsed * 50) > 0 ? 1 : 0);
+            // Scan line across original counter
+            const scanLineY = topY + (dupT / 0.25) * ZERO_BOX.h;
+            ctx.save();
+            ctx.globalAlpha = 0.4;
+            ctx.fillStyle = colors.primary;
+            ctx.fillRect(rightX - 5, scanLineY, ZERO_BOX.w + 10, 2);
+            ctx.restore();
+          }
+          drawCounterHUD(ctx, 60000, "Largest Car Factory", colors.accent, mainAlpha, rightX, topY);
+
+          // Phase B: Ghost separation + slide DOWN (0.25–0.85)
+          if (dupT > 0.2) {
+            const slideProgress = Math.min(1, (dupT - 0.2) / 0.6);
+            const slideEased = slideProgress * slideProgress * (3 - 2 * slideProgress);
+            const ghostY = lerp(topY, bottomY, slideEased);
+            const ghostAlpha = Math.min(1, (dupT - 0.2) / 0.3);
+
+            // Motion trail — subtle glowing boxes sliding down
+            for (let trail = 3; trail >= 1; trail--) {
+              const trailProgress = Math.max(0, slideEased - trail * 0.06);
+              const trailY = lerp(topY, bottomY, trailProgress);
+              ctx.save();
+              ctx.globalAlpha = ghostAlpha * 0.08 / trail;
+              ctx.fillStyle = colors.primary;
+              roundRect(ctx, rightX, trailY, ZERO_BOX.w, ZERO_BOX.h, 8);
+              ctx.fill();
+              ctx.restore();
+            }
+
+            // Cyan glow around ghost during movement
+            if (slideProgress < 0.85) {
+              ctx.save();
+              ctx.globalAlpha = ghostAlpha * 0.15 * (1 - slideProgress);
+              ctx.shadowBlur = 20;
+              ctx.shadowColor = colors.primary;
+              ctx.fillStyle = colors.primary;
+              roundRect(ctx, rightX - 3, ghostY - 3, ZERO_BOX.w + 6, ZERO_BOX.h + 6, 10);
+              ctx.fill();
+              ctx.restore();
+            }
+
+            drawCounterHUD(ctx, 60000, null, null, ghostAlpha, rightX, ghostY);
+          }
+
+          // Phase C: Lock-in flash (0.85–1.0)
+          if (dupT > 0.85) {
+            const lockT = (dupT - 0.85) / 0.15;
+            if (lockT < 0.5) {
+              ctx.save();
+              ctx.globalAlpha = (1 - lockT / 0.5) * 0.25;
+              ctx.fillStyle = colors.primary;
+              roundRect(ctx, rightX - 4, bottomY - 4, ZERO_BOX.w + 8, ZERO_BOX.h + 8, 10);
+              ctx.fill();
+              ctx.restore();
+            }
+            drawCounterHUD(ctx, 60000, null, null, 1, rightX, bottomY);
+          }
+        } else {
+          // Post-duplication: stacked counters on right
+          // Top: static 60K (VW Wolfsburg)
+          drawCounterHUD(ctx, 60000, 'VW Wolfsburg', colors.accent, 1, rightX, topY);
+
+          // Bottom: counting up (European Power Grid)
+          const displayCount = Math.floor(60000 + eased * (2300000 - 60000));
+
+          // "European Power Grid" typewriter animation
+          let bottomLabel = null;
+          let bottomLabelColor = colors.accent;
+          const isZooming = step === 3;
+          if (eased < 0.08) {
+            bottomLabel = null;
+          } else if (eased > 0.85) {
+            const typeT = isZooming ? Math.min(1, (eased - 0.85) / 0.12) : 1;
+            const fullText = 'European Power Grid';
+            const chars = Math.ceil(typeT * fullText.length);
+            bottomLabel = fullText.substring(0, chars) + (typeT < 1 ? '\u2588' : '');
+            bottomLabelColor = colors.primary;
+          }
+
+          drawCounterHUD(ctx, displayCount, bottomLabel, bottomLabelColor, 1, rightX, bottomY);
+        }
       }
 
       // ════════════════════════════════════════════
-      // PHASE 3: Big "0" ZERO DOWNTIME over the EU map
+      // PHASE 7: Big "0" ZERO DOWNTIME over the EU map
       // ════════════════════════════════════════════
-      if (step === 3) {
+      if (step === 7) {
+        // Keep both stacked counters visible behind the overlay
+        drawCounterHUD(ctx, 60000, 'VW Wolfsburg', colors.accent, 1, rightX, topY);
+        drawCounterHUD(ctx, 2300000, 'European Power Grid', colors.primary, 1, rightX, bottomY);
+
         const cx = width / 2, cy = height * 0.42;
         const [cr, cg, cb] = hexToRgb(colors.danger);
 
@@ -699,7 +834,6 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
           ctx.fillStyle = colors.danger;
           ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 0;
           ctx.shadowBlur = 40; ctx.shadowColor = '#000000';
-          // Draw twice to stack the shadow for a heavier dark backdrop
           ctx.fillText('ZERO DOWNTIME', cx, cy + 100);
           ctx.fillText('ZERO DOWNTIME', cx, cy + 100);
           ctx.font = '500 18px "Inter"'; ctx.fillStyle = colors.text;
@@ -709,9 +843,6 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
           ctx.restore();
         }
       }
-
-      // ── Horizontal scan line — only after zoom completes ──
-      // Scan line + dot glow are handled entirely in deck.gl layers (useMemo above)
 
       // ── CRT vignette ──
       ctx.save();
@@ -735,10 +866,10 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
   return (
     <>
       {placeholder}
-      {/* deck.gl map — fades in for Phase 2+ */}
+      {/* deck.gl map — fades in for Phase 3+ */}
       <div style={{
         position: 'absolute', inset: 0, zIndex: 1,
-        opacity: currentStepValue >= 2 ? 1 : 0,
+        opacity: currentStepValue >= 3 ? 1 : 0,
         transition: 'opacity 0.3s ease-in',
       }}>
         <DeckGL
@@ -750,7 +881,7 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
           <Map ref={mapRef} onLoad={onMapLoad} mapStyle={DARK_MAP} style={{ width: '100%', height: '100%' }} />
         </DeckGL>
       </div>
-      {/* Canvas overlay for Phase 0, 1, 3 and HUD */}
+      {/* Canvas overlay */}
       <canvas
         ref={canvasRef}
         style={{
@@ -759,6 +890,34 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
           zIndex: 2, pointerEvents: 'none',
         }}
       />
+      {/* Stat boxes — revealed sequentially after zoom */}
+      <div className="absolute bottom-0 left-0 right-0 z-10 flex gap-3" style={{ padding: '0 36px 36px 36px' }}>
+        {STAT_BOXES.map((s, i) => {
+          const visible = zoomDone && (
+            (i === 0 && currentStepValue >= 4) ||
+            (i === 1 && currentStepValue >= 5) ||
+            (i >= 2 && currentStepValue >= 6)
+          );
+          return (
+            <div key={i}
+              className={`flex-1 min-w-0 rounded-lg ${s.tight ? 'px-1' : 'px-4'} py-4 text-center`}
+              style={{
+                background: `${colors.surface}cc`,
+                border: `1px solid ${s.c}15`,
+                backdropFilter: 'blur(8px)',
+                opacity: visible ? 1 : 0,
+                transform: visible ? 'translateY(0)' : 'translateY(20px)',
+                transition: 'opacity 0.5s ease-out, transform 0.5s ease-out',
+              }}
+            >
+              <div className="text-[32px] font-extrabold font-mono whitespace-nowrap" style={{ color: s.c }}>
+                {s.v}{s.u && <span className="text-[20px] font-normal text-hud-text-muted ml-0.5">{s.u}</span>}
+              </div>
+              <div className="text-[16px] text-hud-text-muted font-sans mt-1">{s.d}</div>
+            </div>
+          );
+        })}
+      </div>
     </>
   );
 }
