@@ -10,6 +10,7 @@ import { Corners } from './ui';
 import { SUMMER_STEPS, WINTER_STEPS } from './VPPScenarioHomes';
 import DuckCurveHUD from './DuckCurveHUD';
 import HomeDetailView from './HomeDetailView';
+import { useMapStyle } from '../utils/mapStyle';
 
 // ── Berlin/Brandenburg residential homes (134K from OSM) ────
 let _berlinHomesCache = null;
@@ -127,7 +128,7 @@ function FleetRevenueCounter({ value }) {
       textShadow: `0 0 12px ${colors.success}50`,
     }}>
       {formatted}
-      <span style={{ fontSize: 10, color: colors.textDim, marginLeft: 4, fontWeight: 400 }}>/ day</span>
+      <span style={{ fontSize: 13, color: colors.textDim, marginLeft: 4, fontWeight: 400 }}>/ day</span>
     </div>
   );
 }
@@ -191,6 +192,7 @@ const ease = (t) => t < 0 ? 0 : t > 1 ? 1 : 1 - Math.pow(1 - t, 3);
 
 // ── Main component ──
 export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
+  const mapStyle = useMapStyle('berlin', 'labeled');
   const steps = scenario === 'summer' ? SUMMER_STEPS : WINTER_STEPS;
   const STEP_COUNT = steps.length;
 
@@ -392,7 +394,7 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
         style={{ position: 'absolute', width: '100%', height: '100%' }}
       >
         <Map
-          mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+          mapStyle={mapStyle}
           style={{ width: '100%', height: '100%' }}
         />
       </DeckGL>
@@ -448,7 +450,7 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
           display: 'inline-block', padding: '2px 8px', borderRadius: 3,
           background: `${currentStep.highlightColor}18`,
           border: `1px solid ${currentStep.highlightColor}40`,
-          fontSize: 10, fontWeight: 700, fontFamily: '"JetBrains Mono"',
+          fontSize: 13, fontWeight: 700, fontFamily: '"JetBrains Mono"',
           color: currentStep.highlightColor, letterSpacing: '0.08em',
           marginBottom: 6,
         }}>
@@ -456,14 +458,14 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
         </div>
         {/* Narration text */}
         <div style={{
-          fontSize: 15, fontFamily: '"Inter"', color: colors.text + 'ee',
+          fontSize: 18, fontFamily: '"Inter"', color: colors.text + 'ee',
           lineHeight: 1.5,
         }}>
           {currentStep.narration}
         </div>
         {/* Home count */}
         <div style={{
-          marginTop: 6, fontSize: 10, fontFamily: '"JetBrains Mono"',
+          marginTop: 6, fontSize: 12, fontFamily: '"JetBrains Mono"',
           color: colors.textDim,
         }}>
           {scenario === 'summer' ? '53,000 HOMES CONNECTED' : '12,000 HOMES CONNECTED'}
@@ -496,7 +498,7 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
             <Corners color={accentColor + '60'} size={10} />
             {scenario === 'summer' ? (
               <>
-                <div style={{ fontSize: 9, fontFamily: '"JetBrains Mono"', color: colors.textDim, letterSpacing: '0.1em' }}>
+                <div style={{ fontSize: 11, fontFamily: '"JetBrains Mono"', color: colors.textDim, letterSpacing: '0.1em' }}>
                   WHOLESALE PRICE
                 </div>
                 <div style={{
@@ -504,12 +506,12 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
                   color: priceColor,
                 }}>
                   {currentStep.price.value > 0 ? '+' : ''}{currentStep.price.value}
-                  <span style={{ fontSize: 12, color: colors.textMuted, marginLeft: 4 }}>ct/kWh</span>
+                  <span style={{ fontSize: 14, color: colors.textMuted, marginLeft: 4 }}>ct/kWh</span>
                 </div>
                 {/* Fleet revenue counter */}
                 {revenue > 0 && (
                   <div style={{ marginTop: 8, paddingTop: 8, borderTop: `1px solid ${colors.primary}20` }}>
-                    <div style={{ fontSize: 9, fontFamily: '"JetBrains Mono"', color: colors.textDim, letterSpacing: '0.1em' }}>
+                    <div style={{ fontSize: 11, fontFamily: '"JetBrains Mono"', color: colors.textDim, letterSpacing: '0.1em' }}>
                       FLEET REVENUE
                     </div>
                     <FleetRevenueCounter value={revenue} />
@@ -518,7 +520,7 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
               </>
             ) : (
               <>
-                <div style={{ fontSize: 9, fontFamily: '"JetBrains Mono"', color: colors.textDim, letterSpacing: '0.1em' }}>
+                <div style={{ fontSize: 11, fontFamily: '"JetBrains Mono"', color: colors.textDim, letterSpacing: '0.1em' }}>
                   GRID FREQUENCY
                 </div>
                 <div style={{
@@ -527,7 +529,7 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
                   textShadow: `0 0 15px ${freqColor}50`,
                 }}>
                   {freq.toFixed(2)}
-                  <span style={{ fontSize: 12, color: colors.textMuted, marginLeft: 4 }}>Hz</span>
+                  <span style={{ fontSize: 14, color: colors.textMuted, marginLeft: 4 }}>Hz</span>
                 </div>
               </>
             )}
