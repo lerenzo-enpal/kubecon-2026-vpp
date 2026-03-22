@@ -9,6 +9,8 @@ import GlowLine from '../../components/GlowLine';
 import DuckCurveVPP from '../../components/DuckCurveVPP';
 import FullscreenWrapper from '../../components/FullscreenWrapper';
 import ChartEnlarger from '../../components/ChartEnlarger';
+import WithoutVPPExhibit from '../../components/WithoutVPPExhibit';
+import KoganCreekVPPExhibit from '../../components/KoganCreekVPPExhibit.tsx';
 import { url } from '../../utils/url';
 ---
 
@@ -316,6 +318,40 @@ import { url } from '../../utils/url';
   A VPP turns every home into a tiny power plant. Together, they can do everything peaker
   plants do — faster, cleaner, and at a fraction of the cost.
 </p>
+
+<h2 id="without-vpp">Without a VPP: South Australia 2016</h2>
+
+<p>
+  The Hornsdale battery arrived too late for the 2016 blackout. On September 28 that year,
+  the same grid — same homes, same infrastructure — had zero distributed storage. When two
+  tornadoes tore through transmission corridors, there was nothing to arrest the cascade.
+  The result: total system black in 43 seconds.
+</p>
+
+<p>
+  The interactive map below replays the 2016 blackout as it actually happened. The dim circles
+  around Adelaide mark where VPP battery homes would later be installed — but in September 2016,
+  those batteries did not exist. Watch the cascade unfold, then compare: 6 seconds to stability
+  with a VPP, versus 43 seconds to total darkness without one.
+</p>
+
+<div id="without-vpp-map" class="my-8 rounded-lg overflow-hidden p-4 scroll-mt-20" style="background: var(--color-bg-alt); border: 1px solid rgba(239, 68, 68, 0.2);">
+  <div class="flex items-center justify-between mb-3">
+    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: #ef4444;">Without a VPP -- SA Grid, September 2016</div>
+  </div>
+  <FullscreenWrapper client:visible label="Fullscreen">
+    <WithoutVPPExhibit client:visible height={400} />
+  </FullscreenWrapper>
+</div>
+
+<div class="my-8 p-5 rounded-lg" style="background: rgba(239, 68, 68, 0.04); border: 1px solid rgba(239, 68, 68, 0.15);">
+  <div class="font-mono text-sm mb-2" style="color: #ef4444; letter-spacing: 0.08em;">THE PUNCHLINE</div>
+  <p class="text-base mb-0" style="color: var(--color-text-muted);">
+    Same grid. Same homes. Same infrastructure. The only difference: zero batteries.
+    One year later, the Hornsdale battery was installed. It has prevented every similar
+    cascade since.
+  </p>
+</div>
 
 <div class="my-8">
   <GlowLine client:visible />
