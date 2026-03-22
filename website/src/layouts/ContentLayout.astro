@@ -177,121 +177,121 @@ const topics = [
       <!-- Sidebar TOC -->
       <aside class="hidden lg:block w-72 flex-shrink-0 py-8 pr-6 border-r" style="border-color: var(--color-surface-light);">
         <div class="sticky top-8">
-          <a href={url("/basics")} class="block font-mono text-xs mb-4 hover:opacity-70 transition-opacity" style="color: var(--color-text-dim); letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none;">
-            Basics
-          </a>
-          <nav class="flex flex-col gap-0.5">
-            {basics.map((b, i) => {
-              const isActive = currentPath.startsWith(b.href);
-              return (
-                <div>
-                  {/* Basics page title */}
-                  <a
-                    href={b.href}
-                    class="flex items-center gap-2 px-3 py-2 rounded text-sm transition-colors"
-                    style={isActive
-                      ? `background: var(--color-surface); color: var(--color-text);`
-                      : `color: var(--color-text-dim);`
-                    }
-                  >
-                    <span
-                      class="font-mono text-xs w-4 text-center flex-shrink-0"
-                      style={isActive ? `color: var(--color-primary);` : ''}
+          <!-- Basics section -->
+          <details class="group" open={isBasics}>
+            <summary class="font-mono text-xs mb-2 cursor-pointer select-none list-none flex items-center gap-1 hover:opacity-70 transition-opacity" style="color: var(--color-text-dim); letter-spacing: 0.1em; text-transform: uppercase;">
+              <span class="text-xs transition-transform group-open:rotate-90" style="color: var(--color-text-dim);">&#9656;</span>
+              <a href={url("/basics")} style="text-decoration: none; color: inherit;">Basics</a>
+            </summary>
+            <nav class="flex flex-col gap-0.5 mb-4">
+              {basics.map((b, i) => {
+                const isActive = currentPath.startsWith(b.href);
+                return (
+                  <div>
+                    <a
+                      href={b.href}
+                      class="flex items-center gap-2 px-3 py-2 rounded text-sm transition-colors"
+                      style={isActive
+                        ? `background: var(--color-surface); color: var(--color-text);`
+                        : `color: var(--color-text-dim);`
+                      }
                     >
-                      {i + 1}
-                    </span>
-                    <span class={isActive ? 'font-medium' : ''}>{b.title}</span>
-                    {b.interactive && (
-                      <span class="ml-auto text-xs flex-shrink-0" style="color: var(--color-primary); opacity: 0.4;">*</span>
+                      <span
+                        class="font-mono text-xs w-4 text-center flex-shrink-0"
+                        style={isActive ? `color: var(--color-primary);` : ''}
+                      >
+                        {i + 1}
+                      </span>
+                      <span class={isActive ? 'font-medium' : ''}>{b.title}</span>
+                      {b.interactive && (
+                        <span class="ml-auto text-xs flex-shrink-0" style="color: var(--color-primary); opacity: 0.4;">*</span>
+                      )}
+                    </a>
+                    {isActive && b.sections && b.sections.length > 0 && (
+                      <div class="ml-4 pl-5 border-l mt-1 mb-2 flex flex-col gap-0.5" style="border-color: var(--color-surface-light);">
+                        {b.sections.map((s) => (
+                          <a
+                            href={`#${s.id}`}
+                            class="toc-section flex items-center gap-2 px-2 py-1.5 rounded text-sm transition-colors"
+                            style="color: var(--color-text-dim);"
+                            data-section={s.id}
+                          >
+                            <span>{s.title}</span>
+                            {s.interactive && (
+                              <span
+                                class="font-mono text-xs px-1.5 py-0.5 rounded flex-shrink-0"
+                                style="background: rgba(34, 211, 238, 0.08); color: var(--color-primary); border: 1px solid rgba(34, 211, 238, 0.15);"
+                              >
+                                Interactive
+                              </span>
+                            )}
+                          </a>
+                        ))}
+                      </div>
                     )}
-                  </a>
+                  </div>
+                );
+              })}
+            </nav>
+          </details>
 
-                  {/* Expanded sections when active */}
-                  {isActive && b.sections && b.sections.length > 0 && (
-                    <div class="ml-4 pl-5 border-l mt-1 mb-2 flex flex-col gap-0.5" style="border-color: var(--color-surface-light);">
-                      {b.sections.map((s) => (
-                        <a
-                          href={`#${s.id}`}
-                          class="toc-section flex items-center gap-2 px-2 py-1.5 rounded text-sm transition-colors"
-                          style="color: var(--color-text-dim);"
-                          data-section={s.id}
-                        >
-                          <span>{s.title}</span>
-                          {s.interactive && (
-                            <span
-                              class="font-mono text-xs px-1.5 py-0.5 rounded flex-shrink-0"
-                              style="background: rgba(34, 211, 238, 0.08); color: var(--color-primary); border: 1px solid rgba(34, 211, 238, 0.15);"
-                            >
-                              Interactive
-                            </span>
-                          )}
-                        </a>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </nav>
-
-          <div class="mt-6 pt-4 border-t" style="border-color: var(--color-surface-light);">
-          <a href={url("/learn")} class="block font-mono text-xs mb-3 hover:opacity-70 transition-opacity" style="color: var(--color-text-dim); letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none;">
-            Learn VPP
-          </a>
-          </div>
-          <nav class="flex flex-col gap-0.5">
-            {modules.map((m, i) => {
-              const isActive = currentPath.startsWith(m.href);
-              return (
-                <div>
-                  {/* Module title */}
-                  <a
-                    href={m.href}
-                    class="flex items-center gap-2 px-3 py-2 rounded text-sm transition-colors"
-                    style={isActive
-                      ? `background: var(--color-surface); color: var(--color-text);`
-                      : `color: var(--color-text-dim);`
-                    }
-                  >
-                    <span
-                      class="font-mono text-xs w-4 text-center flex-shrink-0"
-                      style={isActive ? `color: var(--color-primary);` : ''}
+          <!-- Learn VPP section -->
+          <details class="group mt-2" open={!isBasics && !isResearch}>
+            <summary class="font-mono text-xs mb-2 cursor-pointer select-none list-none flex items-center gap-1 hover:opacity-70 transition-opacity" style="color: var(--color-text-dim); letter-spacing: 0.1em; text-transform: uppercase;">
+              <span class="text-xs transition-transform group-open:rotate-90" style="color: var(--color-text-dim);">&#9656;</span>
+              <a href={url("/learn")} style="text-decoration: none; color: inherit;">Learn VPP</a>
+            </summary>
+            <nav class="flex flex-col gap-0.5 mb-4">
+              {modules.map((m, i) => {
+                const isActive = currentPath.startsWith(m.href);
+                return (
+                  <div>
+                    <a
+                      href={m.href}
+                      class="flex items-center gap-2 px-3 py-2 rounded text-sm transition-colors"
+                      style={isActive
+                        ? `background: var(--color-surface); color: var(--color-text);`
+                        : `color: var(--color-text-dim);`
+                      }
                     >
-                      {i + 1}
-                    </span>
-                    <span class={isActive ? 'font-medium' : ''}>{m.title}</span>
-                    {m.interactive && (
-                      <span class="ml-auto text-xs flex-shrink-0" style="color: var(--color-primary); opacity: 0.4;">*</span>
+                      <span
+                        class="font-mono text-xs w-4 text-center flex-shrink-0"
+                        style={isActive ? `color: var(--color-primary);` : ''}
+                      >
+                        {i + 1}
+                      </span>
+                      <span class={isActive ? 'font-medium' : ''}>{m.title}</span>
+                      {m.interactive && (
+                        <span class="ml-auto text-xs flex-shrink-0" style="color: var(--color-primary); opacity: 0.4;">*</span>
+                      )}
+                    </a>
+                    {isActive && m.sections && m.sections.length > 0 && (
+                      <div class="ml-4 pl-5 border-l mt-1 mb-2 flex flex-col gap-0.5" style="border-color: var(--color-surface-light);">
+                        {m.sections.map((s) => (
+                          <a
+                            href={`#${s.id}`}
+                            class="toc-section flex items-center gap-2 px-2 py-1.5 rounded text-sm transition-colors"
+                            style="color: var(--color-text-dim);"
+                            data-section={s.id}
+                          >
+                            <span>{s.title}</span>
+                            {s.interactive && (
+                              <span
+                                class="font-mono text-xs px-1.5 py-0.5 rounded flex-shrink-0"
+                                style="background: rgba(34, 211, 238, 0.08); color: var(--color-primary); border: 1px solid rgba(34, 211, 238, 0.15);"
+                              >
+                                Interactive
+                              </span>
+                            )}
+                          </a>
+                        ))}
+                      </div>
                     )}
-                  </a>
-
-                  {/* Expanded sections when active */}
-                  {isActive && m.sections && m.sections.length > 0 && (
-                    <div class="ml-4 pl-5 border-l mt-1 mb-2 flex flex-col gap-0.5" style="border-color: var(--color-surface-light);">
-                      {m.sections.map((s) => (
-                        <a
-                          href={`#${s.id}`}
-                          class="toc-section flex items-center gap-2 px-2 py-1.5 rounded text-sm transition-colors"
-                          style="color: var(--color-text-dim);"
-                          data-section={s.id}
-                        >
-                          <span>{s.title}</span>
-                          {s.interactive && (
-                            <span
-                              class="font-mono text-xs px-1.5 py-0.5 rounded flex-shrink-0"
-                              style="background: rgba(34, 211, 238, 0.08); color: var(--color-primary); border: 1px solid rgba(34, 211, 238, 0.15);"
-                            >
-                              Interactive
-                            </span>
-                          )}
-                        </a>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </nav>
+                  </div>
+                );
+              })}
+            </nav>
+          </details>
 
           <!-- Research Library -->
           <div class="mt-6 pt-4 border-t" style="border-color: var(--color-surface-light);">
