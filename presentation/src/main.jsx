@@ -11,7 +11,13 @@ import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/500.css';
 import '@fontsource/jetbrains-mono/700.css';
 import './index.css';
+import maplibregl from 'maplibre-gl';
+import { Protocol } from 'pmtiles';
 import Presentation from './Presentation';
+
+// Register PMTiles protocol — enables local tile files when downloaded via npm run download:assets
+const pmtilesProtocol = new Protocol();
+maplibregl.addProtocol('pmtiles', pmtilesProtocol.tile.bind(pmtilesProtocol));
 import StyleGuideReview from './StyleGuideReview';
 
 const isStyleGuide = new URLSearchParams(window.location.search).has('styleguide');

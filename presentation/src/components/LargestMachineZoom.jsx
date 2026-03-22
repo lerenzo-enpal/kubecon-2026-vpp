@@ -5,6 +5,7 @@ import { WebMercatorViewport } from '@deck.gl/core';
 import { ScatterplotLayer, LineLayer } from '@deck.gl/layers';
 import Map from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { useMapStyle } from '../utils/mapStyle';
 import { colors } from '../theme';
 import SETTLEMENTS_RAW from '../data/europe-settlements';
 
@@ -135,7 +136,6 @@ function drawCounterHUD(ctx, count, label, labelColor, alpha, posX, posY = 12) {
 }
 
 // ── deck.gl config ──
-const DARK_MAP = 'https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json';
 const WOLFSBURG_VIEW = { longitude: 10.7865, latitude: 52.4227, zoom: 14, pitch: 0, bearing: 0 };
 const EUROPE_VIEW   = { longitude: 10, latitude: 50, zoom: 3.8, pitch: 0, bearing: 0 };
 const ZOOM_DURATION = 7;
@@ -151,6 +151,7 @@ const STAT_BOXES = [
 ];
 
 export default function LargestMachineZoom({ width = 1024, height = 668 }) {
+  const DARK_MAP = useMapStyle('europe', 'nolabels');
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const mapRef = useRef(null);

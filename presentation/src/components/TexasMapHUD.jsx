@@ -7,6 +7,7 @@ import { ScatterplotLayer, LineLayer, TextLayer } from '@deck.gl/layers';
 import MapGL from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { Corners } from './ui';
+import { useMapStyle } from '../utils/mapStyle';
 
 const FLY_TO = new FlyToInterpolator();
 
@@ -104,6 +105,7 @@ function getStepView(stepIdx, fallback) {
 
 // ── Main component ──────────────────────────────────────────
 export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud' }) {
+  const mapStyle = useMapStyle('texas', 'labeled');
   const [failed, setFailed] = useState(new Set());
   const [incident, setIncident] = useState(new Map()); // id → startTime (amber-glow plants)
   const [mode, setMode] = useState('idle'); // 'idle' | 'stepping' | 'playing'
@@ -500,7 +502,7 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
         style={{ position: 'absolute' }}
       >
         <MapGL
-          mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+          mapStyle={mapStyle}
           style={{ width: '100%', height: '100%' }}
         />
       </DeckGL>

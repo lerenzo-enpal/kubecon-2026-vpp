@@ -5,6 +5,7 @@ import { ScatterplotLayer, ArcLayer, LineLayer, TextLayer } from '@deck.gl/layer
 import { TripsLayer } from '@deck.gl/geo-layers';
 import Map from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { useMapStyle } from '../utils/mapStyle';
 
 const INITIAL_VIEW = {
   longitude: -98.5,
@@ -77,6 +78,7 @@ function getPlant(id) {
 }
 
 export default function TexasMapGL({ width = 960, height = 600 }) {
+  const mapStyle = useMapStyle('texas', 'labeled');
   const [failed, setFailed] = useState(new Set());
   const [running, setRunning] = useState(false);
   const [elapsed, setElapsed] = useState(0);
@@ -225,7 +227,7 @@ export default function TexasMapGL({ width = 960, height = 600 }) {
         style={{ position: 'absolute' }}
       >
         <Map
-          mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+          mapStyle={mapStyle}
           style={{ width: '100%', height: '100%' }}
         />
       </DeckGL>

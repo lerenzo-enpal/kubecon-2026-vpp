@@ -6,6 +6,7 @@ import { ColumnLayer, SolidPolygonLayer, LineLayer, TextLayer } from '@deck.gl/l
 import MapGL from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { colors } from '../theme';
+import { useMapStyle } from '../utils/mapStyle';
 
 // ── Helper: offset a [lng, lat] by meters ──
 function offsetMeters(center, dx, dy) {
@@ -203,8 +204,6 @@ const SUBSTATIONS = [
   { id: 'sub-4', pos: [12.10, 48.00], name: 'Altotting 110kV' },
 ];
 
-const DARK_MAP = 'https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json';
-
 const STEPS = [
   {
     view: { longitude: 11.68, latitude: 48.10, zoom: 15, pitch: 55, bearing: -20 },
@@ -232,6 +231,7 @@ const STEPS = [
 const FLY_TO = new FlyToInterpolator();
 
 export default function EUGrid3DExperiment({ width = '100%', height = '100%' }) {
+  const DARK_MAP = useMapStyle('europe', 'nolabels');
   const slideContext = useContext(SlideContext);
   const [stepIndex, setStepIndex] = useState(0);
   const [viewState, setViewState] = useState(STEPS[0].view);
