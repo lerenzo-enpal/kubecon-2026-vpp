@@ -1,0 +1,48 @@
+<h2>Three Approaches for the Basics Section</h2>
+<p class="subtitle">Same 4 pages, different philosophies for how users experience them</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>"Mission Control Academy"</h3>
+      <p><strong>Structure:</strong> Each page is a mission briefing. Short intro text sets the scene, then a sequence of standalone interactive widgets teach each concept. Scroll down = next experiment.</p>
+      <p><strong>Interactives:</strong> Self-contained simulations per concept. Circuit builder, battery cell cross-section, grid balancing game, storage tech comparison tool. Each widget is a "station" you can play with independently.</p>
+      <p><strong>Vibe:</strong> Science museum meets spy HQ. Each widget feels like a classified experiment you're running. Glowing borders, data readouts, status indicators.</p>
+      <p><strong>Effort:</strong> ~15-20 interactive components across 4 pages. Each is modular and independent.</p>
+      <p><strong>Pros:</strong> Modular (can build/ship incrementally), each interactive is reusable, easy to maintain</p>
+      <p><strong>Cons:</strong> Less narrative cohesion between widgets, potentially feels like a textbook with fancy illustrations</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>"Explorable Explanations"</h3>
+      <p><strong>Structure:</strong> Each page is one continuous scroll-driven experience. As you scroll, the visualization transforms and responds. Text and interactive are fused &mdash; you can't separate them.</p>
+      <p><strong>Interactives:</strong> The entire page IS the interactive. Scroll position drives animation state. Sticky canvas elements that morph as you read. Inline sliders/toggles that modify the ongoing visualization in real-time.</p>
+      <p><strong>Vibe:</strong> Like a Bartosz Ciechanowski deep-dive or an NYT visual essay, but in mission-control dark mode. Immersive and cinematic.</p>
+      <p><strong>Effort:</strong> ~4 large scroll-driven experiences. Each is a single complex component managing many states.</p>
+      <p><strong>Pros:</strong> Most immersive and memorable, strongest narrative flow, truly unique</p>
+      <p><strong>Cons:</strong> Highest complexity per page, harder to maintain, scroll-driven state machines are tricky, mobile experience needs extra work</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>"Hybrid: Briefings + Labs"</h3>
+      <p><strong>Structure:</strong> Each page has 2 layers. A "briefing" layer (prose + embedded scroll-driven animations for key concepts) and "lab" sections (standalone interactive playgrounds you can explore freely). Best of both worlds.</p>
+      <p><strong>Interactives:</strong> 2-3 scroll-driven explorable sections per page for the core narrative, plus 1-2 standalone "lab" simulations at the end or inline for deeper exploration.</p>
+      <p><strong>Vibe:</strong> Read the briefing, then run the experiment. The briefing builds intuition, the lab lets you test it.</p>
+      <p><strong>Effort:</strong> ~8-10 scroll-driven sections + ~8-10 standalone labs across 4 pages. Medium-high complexity.</p>
+      <p><strong>Pros:</strong> Narrative cohesion from scroll-driven parts, replayability from standalone labs, can ship briefings first and add labs iteratively</p>
+      <p><strong>Cons:</strong> Two interaction paradigms on one page could feel inconsistent if not designed carefully</p>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 2rem; padding: 1.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; background: rgba(255,255,255,0.03);">
+  <h3 style="margin-top: 0;">My Recommendation: C (Hybrid)</h3>
+  <p>The explorable explanation approach (B) creates the most memorable experience, but it's fragile and hard to iterate on. The modular approach (A) is practical but risks feeling like a widget catalog. The hybrid (C) gives you the cinematic scroll-driven storytelling where it matters most (the "aha moment" concepts) while also offering standalone labs that are easier to build, test, and maintain. You can ship the briefing layer first and progressively add labs.</p>
+</div>

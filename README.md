@@ -60,10 +60,10 @@ The presentation uses 6 MapLibre/DeckGL map components that fetch tiles from CAR
 
 ```bash
 # Install the pmtiles CLI (one-time, macOS + Linux):
-npm run install:deps
+npm run offline:install-tools
 
 cd presentation
-npm run download:assets
+npm run offline:download-maps
 ```
 
 This extracts regional [PMTiles](https://protomaps.com/docs/pmtiles) archives from the [Protomaps](https://protomaps.com) daily planet build using HTTP range requests — only the tiles for the regions and zoom levels actually used are downloaded. It also downloads the CARTO dark-matter style JSON, sprites, and font glyphs.
@@ -80,10 +80,10 @@ Output goes to `presentation/public/tiles/` which is gitignored — **each prese
 
 ```bash
 # Force re-download everything:
-npm run download:assets -- --force
+npm run offline:download-maps -- --force
 
 # Use a specific build date:
-PROTOMAPS_DATE=20260315 npm run download:assets
+PROTOMAPS_DATE=20260315 npm run offline:download-maps
 ```
 
 > **Note:** The tile files are downloaded but not yet wired into the map components. The integration step (adding the `@protomaps/maplibre-pmtiles` protocol handler and pointing components at local style files) is a separate task.

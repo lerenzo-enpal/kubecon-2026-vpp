@@ -1,0 +1,2 @@
+{"type":"server-started","port":57705,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:57705","screen_dir":"/home/mario/code/kubekon/kubecon-2026-vpp/.superpowers/brainstorm/890762-1774180491"}
+{"type":"server-stopped","reason":"idle timeout"}

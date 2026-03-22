@@ -1,25 +1,57 @@
 #!/usr/bin/env bash
-# install-deps.sh — Install tools required by presentation scripts
+# offline-install-tools.sh — PRESENTER TOOL — installs the pmtiles CLI
 #
-# Installs:
-#   pmtiles  — CLI for extracting offline map tile archives (npm run download:assets)
+# This script is ONLY needed if you are presenting this talk offline
+# and want the maps to work without an internet connection.
+#
+# If you are a student, contributor, or just exploring the code:
+#   You do NOT need to run this. Skip it entirely.
+#   The presentation works fine online without any extra setup.
+#
+# What this installs:
+#   pmtiles CLI  — a standalone binary (~10 MB) for extracting regional
+#                  map tile archives from the Protomaps planet build.
+#                  It is NOT an npm package. Nothing is added to node_modules.
+#
+# After running this, download the map tiles with:
+#   npm run offline:download-maps   (~130 MB, gitignored)
 #
 # Supports: macOS (arm64, x86_64), Linux (arm64, x86_64)
-# Usage:    npm run install:deps
+# Usage:    npm run offline:install-tools
 
 set -euo pipefail
 
 green() { printf '\033[32m%s\033[0m\n' "$*"; }
 amber() { printf '\033[33m%s\033[0m\n' "$*"; }
 bold()  { printf '\033[1m%s\033[0m\n'  "$*"; }
+dim()   { printf '\033[2m%s\033[0m\n'  "$*"; }
 red()   { printf '\033[31m%s\033[0m\n' "$*"; }
 
-bold "── pmtiles CLI ───────────────────────────────────────────────────────────"
+echo ""
+bold "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+bold "  PRESENTER TOOL: Install offline map tile CLI (pmtiles)"
+bold "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo "  This installs the pmtiles CLI so you can download offline map"
+echo "  tiles for the presentation slides."
+echo ""
+echo "  Only needed for presenters who want offline map support."
+dim "  Students / contributors: press Ctrl+C to cancel — you don't need this."
+echo ""
 
 if command -v pmtiles &>/dev/null; then
-  green "✓ Already installed: $(pmtiles --version 2>&1 | head -1)"
+  green "✓ pmtiles already installed: $(pmtiles --version 2>&1 | head -1)"
+  echo ""
+  echo "  Run 'npm run offline:download-maps' to download the map tiles."
   exit 0
 fi
+
+echo "  Proceeding in 5 seconds — press Ctrl+C to cancel."
+for i in 5 4 3 2 1; do
+  printf "\r  %d..." "$i"
+  sleep 1
+done
+printf "\r             \n\n"
 
 OS="$(uname -s)"
 ARCH="$(uname -m)"
@@ -38,6 +70,8 @@ if [[ "$OS" == "Darwin" ]]; then
     echo "→ Installing via Homebrew..."
     brew install pmtiles
     green "✓ $(pmtiles --version 2>&1 | head -1)"
+    echo ""
+    echo "  Next: npm run offline:download-maps"
     exit 0
   fi
   case "$ARCH" in
@@ -91,7 +125,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 if [[ -n "$INSTALL_DIR" ]]; then
   mv "$TMP/pmtiles" "$INSTALL_DIR/pmtiles"
-  green "✓ pmtiles v${VERSION} → $INSTALL_DIR/pmtiles"
+  green "✓ pmtiles v${VERSION} installed → $INSTALL_DIR/pmtiles"
 else
   mkdir -p "$SCRIPT_DIR/bin"
   mv "$TMP/pmtiles" "$SCRIPT_DIR/bin/pmtiles"
@@ -99,3 +133,6 @@ else
   echo "  Add to your shell profile:"
   echo "    export PATH=\"\$PATH:$SCRIPT_DIR/bin\""
 fi
+
+echo ""
+echo "  Next: npm run offline:download-maps"

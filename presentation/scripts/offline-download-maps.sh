@@ -1,23 +1,26 @@
 #!/usr/bin/env bash
-# download-tiles.sh — Download offline map tiles for the presentation
+# offline-download-maps.sh — PRESENTER TOOL — download offline map tiles
 #
-# Uses the pmtiles CLI to extract regional tile archives from the Protomaps
-# daily planet build via HTTP range requests (downloads only the tiles you need,
-# not the full planet file). Also downloads CARTO dark-matter style assets
-# (style JSON, sprites, fonts).
+# This script is ONLY needed if you are presenting this talk offline
+# and want the maps to work without an internet connection.
 #
-# Output: presentation/public/tiles/ (gitignored — run this on each machine)
+# If you are a student, contributor, or just exploring the code:
+#   You do NOT need to run this. Skip it entirely.
+#   The presentation works fine online without any extra setup.
 #
-# Usage:
-#   ./scripts/download-tiles.sh              # auto-detect latest build
-#   ./scripts/download-tiles.sh --force      # re-download everything
-#   PROTOMAPS_DATE=20260315 ./scripts/download-tiles.sh  # specific build date
+# What this downloads (~130 MB total, into presentation/public/tiles/ which
+# is gitignored — you need to run this on each machine you present from):
+#   Regional PMTiles archives  — offline vector map tiles for Europe, Berlin,
+#                                Adelaide, Texas, and Wolfsburg
+#   CARTO dark-matter styles   — style JSON, sprites, and font glyphs
 #
 # Prerequisites:
-#   pmtiles CLI — install one of:
-#     brew install pmtiles                                  (macOS)
-#     go install github.com/protomaps/go-pmtiles/...@latest (Go installed)
-#     Download binary: https://github.com/protomaps/go-pmtiles/releases
+#   pmtiles CLI — run 'npm run offline:install-tools' first
+#
+# Usage:
+#   npm run offline:download-maps              # auto-detect latest build
+#   npm run offline:download-maps -- --force   # re-download everything
+#   PROTOMAPS_DATE=20260315 npm run offline:download-maps
 
 set -euo pipefail
 
@@ -31,15 +34,37 @@ green() { printf '\033[32m%s\033[0m\n' "$*"; }
 amber() { printf '\033[33m%s\033[0m\n' "$*"; }
 red()   { printf '\033[31m%s\033[0m\n' "$*"; }
 bold()  { printf '\033[1m%s\033[0m\n'  "$*"; }
+dim()   { printf '\033[2m%s\033[0m\n'  "$*"; }
+
+# ── Preamble ───────────────────────────────────────────────────────────────────
+echo ""
+bold "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+bold "  PRESENTER TOOL: Download offline map tiles (~130 MB)"
+bold "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo "  Downloads regional map tiles so the presentation slides work"
+echo "  without an internet connection during the talk."
+echo ""
+echo "  Files go to presentation/public/tiles/ (gitignored)."
+echo "  Re-run at any time to refresh to the latest build."
+echo ""
+dim "  Students / contributors: press Ctrl+C to cancel — you don't need this."
+echo ""
+
+if [[ "$FORCE" == false ]]; then
+  echo "  Proceeding in 5 seconds — press Ctrl+C to cancel."
+  for i in 5 4 3 2 1; do
+    printf "\r  %d..." "$i"
+    sleep 1
+  done
+  printf "\r             \n\n"
+fi
 
 # ── Check pmtiles CLI ──────────────────────────────────────────────────────────
 if ! command -v pmtiles &>/dev/null; then
   red "Error: pmtiles CLI not found."
   echo ""
-  echo "Install it with one of:"
-  echo "  brew install pmtiles"
-  echo "  go install github.com/protomaps/go-pmtiles/...@latest"
-  echo "  Download binary: https://github.com/protomaps/go-pmtiles/releases"
+  echo "  Run this first:  npm run offline:install-tools"
   exit 1
 fi
 

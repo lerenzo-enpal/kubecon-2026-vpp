@@ -8,8 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "export:pdf": "node scripts/export-pdf.mjs",
-    "install:deps": "bash scripts/install-deps.sh",
-    "download:assets": "bash scripts/download-tiles.sh"
+    "offline:install-tools": "bash scripts/offline-install-tools.sh",
+    "offline:download-maps": "bash scripts/offline-download-maps.sh"
   },
   "keywords": [],
   "author": "",
