@@ -1,0 +1,51 @@
+---
+import ContentLayout from '../../layouts/ContentLayout.astro';
+import WaterToWiresBriefing from '../../components/basics/briefings/WaterToWiresBriefing';
+import ACvsDCBriefing from '../../components/basics/briefings/ACvsDCBriefing';
+import SpinningPowerBriefing from '../../components/basics/briefings/SpinningPowerBriefing';
+import { url } from '../../utils/url';
+---
+
+<ContentLayout title="How Electricity Works" description="Voltage, current, AC vs DC, and how we generate the power that runs everything.">
+
+<h1>How Electricity Works</h1>
+<p class="text-lg mb-8" style="color: var(--color-text-muted); max-width: 600px;">
+  Before we can understand why the grid is fragile, we need to understand what electricity actually is and how we make it.
+</p>
+
+<noscript>
+  <div class="p-4 rounded-lg mb-8" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+    <p style="color: var(--color-text-muted);">This page includes interactive visualizations that require JavaScript. Key concepts covered: voltage, current, and resistance (the water pipe analogy); AC vs DC current and why AC won; how generators and solar panels produce electricity; Ohm's Law and power vs energy.</p>
+  </div>
+</noscript>
+
+<WaterToWiresBriefing client:visible />
+
+<ACvsDCBriefing client:visible />
+
+<SpinningPowerBriefing client:visible />
+
+<!-- Labs will be added in Task 6 -->
+<section id="ohms-law-playground" class="py-12">
+  <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">Ohm's Law Playground</h2>
+  <p style="color: var(--color-text-dim);">Interactive lab coming soon.</p>
+</section>
+
+<section id="power-vs-energy" class="py-12">
+  <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">Power vs Energy Calculator</h2>
+  <p style="color: var(--color-text-dim);">Interactive lab coming soon.</p>
+</section>
+
+<div class="mt-12 p-5 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+  <div class="font-mono text-xs mb-2" style="color: var(--color-primary); letter-spacing: 0.08em; text-transform: uppercase;">
+    Continue
+  </div>
+  <a href={url("/basics/supply-and-demand")} class="text-lg font-semibold" style="color: var(--color-text);">
+    Supply &amp; Demand &rarr;
+  </a>
+  <div class="text-sm mt-1" style="color: var(--color-text-dim);">
+    Why the grid must balance supply and demand every single second.
+  </div>
+</div>
+
+</ContentLayout>
