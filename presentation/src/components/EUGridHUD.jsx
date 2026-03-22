@@ -126,31 +126,43 @@ const CORRIDORS = [
   ['athens', 'istanbul', 4], ['bucharest', 'istanbul', 3], ['sofia', 'istanbul', 3],
 ];
 
-// ── Journey steps: focused on continental breadth of infrastructure ──
+// ── Journey steps: zoom out from metro → region → nation → continent ──
+// Content focused on breadth of infrastructure (avoids repeating generation/transmission from slide 7)
 const STEPS = [
   {
-    view: { longitude: 12, latitude: 49, zoom: 3.4, pitch: 15, bearing: 0 },
-    title: 'Continental Infrastructure',
-    subtitle: '36 countries connected by 305,000 km of high-voltage lines',
-    voltage: '50.000 Hz',
-    detail: 'From Lisbon to Helsinki, every node synchronized on one frequency.',
-    visibleIds: null, // all
+    view: { longitude: 11.58, latitude: 48.14, zoom: 11.5, pitch: 50, bearing: -12 },
+    title: 'A Single Metro Area',
+    subtitle: 'Munich — 1.5 million people, dozens of substations',
+    voltage: '110 kV',
+    detail: 'Every neighborhood connected. Every factory, hospital, train — all drawing from the same grid.',
+    visibleIds: null, // none — just the map
   },
   {
-    view: { longitude: 3, latitude: 46, zoom: 4.5, pitch: 20, bearing: 5 },
-    title: 'Western Corridor',
-    subtitle: 'France, Iberia, UK — nuclear, wind, and solar feeding into the backbone',
-    voltage: '400 kV',
-    detail: 'France alone exports 50+ TWh/yr to neighbors. One cable under the Channel connects two grids.',
-    visibleIds: ['lisbon', 'madrid', 'barcelona', 'bilbao', 'seville', 'paris', 'lyon', 'marseille', 'toulouse', 'bordeaux', 'strasbourg', 'london', 'edinburgh', 'manchester', 'dublin', 'amsterdam', 'brussels'],
-  },
-  {
-    view: { longitude: 18, latitude: 52, zoom: 4.5, pitch: 20, bearing: -5 },
-    title: 'Eastern Corridor',
-    subtitle: 'Central and Eastern Europe — coal, nuclear, and growing renewables',
+    view: { longitude: 10.8, latitude: 49.0, zoom: 6.5, pitch: 40, bearing: -5 },
+    title: 'Regional Network',
+    subtitle: 'Southern Germany and the Alps — 10 major hubs interconnected',
     voltage: '220–400 kV',
-    detail: 'Poland, Czechia, Hungary, Romania — the grid reaches every corner of the continent.',
-    visibleIds: ['berlin', 'hamburg', 'munich', 'cologne', 'frankfurt', 'warsaw', 'prague', 'budapest', 'bucharest', 'krakow', 'bratislava', 'zagreb', 'belgrade', 'sofia', 'vienna', 'leipzig', 'dortmund', 'stuttgart', 'copenhagen', 'riga', 'vilnius', 'tallinn'],
+    detail: 'Gas in Munich, hydro in the Alps, solar in Stuttgart, nuclear in Lyon — all feeding one network.',
+    visibleIds: ['munich', 'zurich', 'frankfurt', 'vienna', 'milan', 'prague', 'lyon', 'innsbruck', 'stuttgart', 'turin'],
+  },
+  {
+    view: { longitude: 10.5, latitude: 51.5, zoom: 5.2, pitch: 32, bearing: 0 },
+    title: 'National Scale',
+    subtitle: 'Germany — Europe\'s largest electricity market, 84 million people',
+    voltage: '400 kV backbone',
+    detail: 'Hamburg wind farms and Bavarian solar panels share the same frequency, the same heartbeat.',
+    visibleIds: ['munich', 'zurich', 'frankfurt', 'vienna', 'milan', 'prague',
+      'lyon', 'berlin', 'hamburg', 'cologne', 'amsterdam', 'brussels',
+      'copenhagen', 'paris', 'warsaw', 'stuttgart', 'leipzig', 'dortmund',
+      'strasbourg', 'innsbruck', 'turin', 'bratislava'],
+  },
+  {
+    view: { longitude: 12, latitude: 49, zoom: 3.4, pitch: 15, bearing: 0 },
+    title: 'The Continental Synchronous Grid',
+    subtitle: '36 countries · 400 million people · one frequency: 50 Hz',
+    voltage: '50.000 Hz',
+    detail: 'From Lisbon to Helsinki. It has never been turned off.',
+    visibleIds: null, // all
   },
 ];
 
@@ -455,7 +467,7 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
 
 
       {/* ── Stats bar — bottom right, appears on final steps ── */}
-      {stepIndex >= 0 && (
+      {stepIndex >= 3 && (
         <div className="absolute bottom-4 right-4 z-10">
           <div className="flex gap-4 rounded p-3" style={{
             background: 'rgba(5,8,16,0.92)',
