@@ -743,9 +743,9 @@ export default function VPPArchitecture({ highlightStep = 0 }) {
         ref={canvasRef}
         style={{ width: '100%', height: '100%' }}
       />
-      {/* Bottom drawer for node descriptions */}
+      {/* Bottom drawer for node descriptions — z-index 9999 to overlay slide template page number */}
       <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 50,
+        position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 9999,
         height: 120,
         background: activeDrawer ? 'rgba(5, 8, 16, 0.92)' : 'transparent',
         borderTop: activeDrawer ? `1px solid ${activeDrawer?.color || colors.primary}35` : 'none',
