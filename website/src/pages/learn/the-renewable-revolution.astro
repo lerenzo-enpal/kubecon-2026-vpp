@@ -114,6 +114,12 @@ import { url } from '../../utils/url';
   in 2013, and the duck has since waddled its way across every grid with significant solar penetration.
 </p>
 
+<div class="my-8">
+  <ChartEnlarger client:visible>
+    <DuckCurveExplorer client:visible />
+  </ChartEnlarger>
+</div>
+
 <p>
   The duck curve is not just a curiosity. It is a serious operational problem. <a href={url("/research/topics/grid-flexibility-costs")}>Gas plants cannot
   ramp from idle to full output instantly</a> — they need time to spin up, and each start-stop cycle
@@ -121,11 +127,6 @@ import { url } from '../../utils/url';
   ramp, and the more expensive and precarious the evening transition becomes.
 </p>
 
-<div class="my-8">
-  <ChartEnlarger client:visible>
-    <DuckCurveExplorer client:visible />
-  </ChartEnlarger>
-</div>
 
 <h2 id="curtailment">Curtailment: Throwing Away Clean Energy</h2>
 
@@ -142,12 +143,6 @@ import { url } from '../../utils/url';
   generators — in 2024, that bill came to EUR 554 million.
 </p>
 
-<p>
-  The irony is hard to overstate. We are spending billions to build solar panels and wind turbines,
-  then paying hundreds of millions more to switch them off — because the grid cannot handle the
-  energy they produce.
-</p>
-
 <div id="curtailment-chart" class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
   <div class="flex items-center justify-between mb-3">
     <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">CUMULATIVE CURTAILMENT 2015-2024</div>
@@ -156,6 +151,12 @@ import { url } from '../../utils/url';
     <CurtailmentChart client:visible height={460} />
   </ChartEnlarger>
 </div>
+
+<p>
+  The irony is hard to overstate. We are spending billions to build solar panels and wind turbines,
+  then paying hundreds of millions more to switch them off — because the grid cannot handle the
+  energy they produce.
+</p>
 
 <div class="grid grid-cols-2 gap-4 my-8 fade-in stagger">
   <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">

@@ -11,6 +11,7 @@ import FullscreenWrapper from '../../components/FullscreenWrapper';
 import ChartEnlarger from '../../components/ChartEnlarger';
 import WithoutVPPExhibit from '../../components/WithoutVPPExhibit';
 import KoganCreekVPPExhibit from '../../components/KoganCreekVPPExhibit.tsx';
+import BerlinArbitrageExhibit from '../../components/BerlinArbitrageExhibit';
 import { url } from '../../utils/url';
 ---
 
@@ -218,7 +219,7 @@ import { url } from '../../utils/url';
   <div class="flex items-center justify-between mb-3">
     <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">DUCK CURVE WITH VPP LOAD SHIFTING</div>
   </div>
-  <FullscreenWrapper client:visible label="Fullscreen">
+  <FullscreenWrapper client:visible label="Explore">
     <DuckCurveVPP client:visible height={400} />
   </FullscreenWrapper>
 </div>
@@ -319,6 +320,76 @@ import { url } from '../../utils/url';
   plants do — faster, cleaner, and at a fraction of the cost.
 </p>
 
+<h2 id="kogan-creek">VPP in Action: Kogan Creek Response</h2>
+
+<p>
+  Two years after Hornsdale, a different kind of battery proved the concept at household
+  scale. In November 2019, the Kogan Creek coal plant in Queensland tripped without
+  warning, removing 748 MW from the grid — the largest single contingency event in the
+  National Electricity Market. Frequency dropped from 50.00 Hz to 49.61 Hz. Six hundred
+  thousand Adelaide homes were at risk of disruption.
+</p>
+
+<p>
+  What happened next required zero human intervention. Across Adelaide, 1,100 homes with
+  Tesla Powerwall batteries detected the frequency drop through their inverters' built-in
+  droop response. No central dispatch. No control room operator. Each battery independently
+  sensed the frequency deviation and began injecting power into the grid. Within seconds,
+  300 homes were discharging. Then 900. Then all 1,100. Frequency recovered to 49.95 Hz.
+  Grid stable. Zero humans involved.
+</p>
+
+<div id="kogan-creek-map" class="my-8 rounded-lg overflow-hidden p-4 scroll-mt-20" style="background: var(--color-bg-alt); border: 1px solid rgba(16, 185, 129, 0.2);">
+  <div class="flex items-center justify-between mb-3">
+    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: #10b981;">VPP in Action -- Kogan Creek Response, November 2019</div>
+  </div>
+  <FullscreenWrapper client:visible label="Explore">
+    <KoganCreekVPPExhibit client:visible height={400} />
+  </FullscreenWrapper>
+</div>
+
+<p>
+  This was not a utility-scale battery like Hornsdale. This was 1,100 ordinary homes —
+  just 2% of the SA VPP fleet — acting as distributed grid infrastructure. The response
+  time was under 6 seconds, well within the FCAS 6-second raise specification. It was the
+  first real-world proof that a network of home batteries could autonomously stabilize a
+  national grid.
+</p>
+
+<h2 id="daily-arbitrage">VPP in Action: Daily Energy Arbitrage</h2>
+
+<p>
+  Frequency response is the dramatic use case -- but VPPs earn most of their revenue
+  from a quieter, daily operation: energy arbitrage and peak shaving. The VPP controller
+  watches wholesale electricity prices around the clock. When prices are low (overnight
+  wind, midday solar), it charges every battery in the fleet. When prices spike during the
+  evening peak, it discharges them all simultaneously, injecting power back into the grid
+  at the most expensive moment of the day.
+</p>
+
+<p>
+  The interactive map below shows a typical summer day for a 500-home VPP fleet in Berlin.
+  Watch how the fleet charges during cheap hours, holds at full capacity while prices climb,
+  then discharges during the evening peak -- flattening demand and earning revenue from the
+  price spread.
+</p>
+
+<div id="berlin-arbitrage-map" class="my-8 rounded-lg overflow-hidden p-4 scroll-mt-20" style="background: var(--color-bg-alt); border: 1px solid rgba(245, 158, 11, 0.2);">
+  <div class="flex items-center justify-between mb-3">
+    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: #f59e0b;">VPP in Action -- Daily Energy Arbitrage, Berlin</div>
+  </div>
+  <FullscreenWrapper client:visible label="Fullscreen">
+    <BerlinArbitrageExhibit client:visible height={600} />
+  </FullscreenWrapper>
+</div>
+
+<p>
+  At EUR 2.40 per home per day, a fleet of 500 homes generates roughly EUR 1,200 daily --
+  over EUR 400,000 per year. Scale that to 40,000 homes and the economics become compelling:
+  the VPP pays for itself through arbitrage alone, while simultaneously reducing the grid's
+  evening demand peak and cutting fossil fuel generation.
+</p>
+
 <h2 id="without-vpp">Without a VPP: South Australia 2016</h2>
 
 <p>
@@ -339,7 +410,7 @@ import { url } from '../../utils/url';
   <div class="flex items-center justify-between mb-3">
     <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: #ef4444;">Without a VPP -- SA Grid, September 2016</div>
   </div>
-  <FullscreenWrapper client:visible label="Fullscreen">
+  <FullscreenWrapper client:visible label="Explore">
     <WithoutVPPExhibit client:visible height={400} />
   </FullscreenWrapper>
 </div>
