@@ -780,9 +780,9 @@ export default function Presentation() {
                 { label: 'GITOPS', value: 'ArgoCD', color: colors.accent },
                 { label: 'BROKER', value: 'EMQX', color: colors.success },
               ].map((s, i) => (
-                <div key={i} className="rounded px-2 py-1" style={{ background: s.color + '0a', border: `1px solid ${s.color}25` }}>
-                  <div className="text-[8px] font-mono tracking-[0.1em] uppercase" style={{ color: colors.textDim }}>{s.label}</div>
-                  <div className="text-[14px] font-bold font-mono" style={{ color: s.color }}>{s.value}</div>
+                <div key={i} className="rounded px-3 py-1.5" style={{ background: s.color + '0a', border: `1px solid ${s.color}25` }}>
+                  <div className="text-xs font-mono tracking-widest uppercase" style={{ color: colors.textDim }}>{s.label}</div>
+                  <div className="text-lg font-bold font-mono" style={{ color: s.color }}>{s.value}</div>
                 </div>
               ))}
             </div>
