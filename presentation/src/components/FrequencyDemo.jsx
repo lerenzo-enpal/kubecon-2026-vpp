@@ -47,27 +47,26 @@ const SCENARIOS = [
     color: 'danger',
     timeScale: 240, // 1 real second = 240 grid seconds → ~5s real for full scenario
     // 3 GW = ENTSO-E "reference incident" — the dimensioning event for Continental Europe FCR.
-    // Ref: 2006 EU grid split dropped western area to 49.0 Hz with ~9 GW imbalance.
-    // At 3 GW, frequency reaches ~49.0 Hz, UFLS Stage 1 may trip at exactly 49.0 Hz.
+    // FCR is sized exactly for this: 3,000 MW, full activation within 30s.
+    // Nadir ~49.75-49.80 Hz (well above UFLS at 49.0). No load shedding needed.
+    // Ref: 2006 split was ~9 GW to hit 49.0 Hz. 3 GW stays within normal reserves.
     getDelta: (gt) => {
-      if (gt < 1) return 0;                                                // inertia
-      if (gt < 8) return -((gt - 1) / 7) * 1.0;                           // RoCoF ~0.14 Hz/s
-      if (gt < 15) return -1.0 + 0.06 * Math.sin((gt - 8) * 0.9);        // nadir ~49.0 Hz, UFLS Stage 1 threshold
-      if (gt < 60) return -1.0 + ((gt - 15) / 45) * 0.25;                // load shedding + FCR stabilize
-      if (gt < 300) return -0.75 + ((gt - 60) / 240) * 0.45;             // aFRR + mFRR
-      if (gt < 900) return -0.3 + ((gt - 300) / 600) * 0.25;             // redispatch, plants ramping
-      if (gt < 1200) return -0.05 + ((gt - 900) / 300) * 0.05;           // final restoration
+      if (gt < 1) return 0;                                                // inertia (H ≈ 5-6s for CE)
+      if (gt < 10) return -((gt - 1) / 9) * 0.25;                         // RoCoF ~0.03 Hz/s
+      if (gt < 30) return -0.25 + 0.03 * Math.sin((gt - 10) * 0.4);      // nadir ~49.75, FCR arrests
+      if (gt < 180) return -0.25 + ((gt - 30) / 150) * 0.15;             // aFRR restores (full in 5min)
+      if (gt < 600) return -0.1 + ((gt - 180) / 420) * 0.07;             // mFRR + redispatch
+      if (gt < 900) return -0.03 + ((gt - 600) / 300) * 0.03;            // final settling
       return 0;
     },
     events: [
       { gt: 1, type: 'danger', text: '3 GW offline — ENTSO-E reference incident size' },
-      { gt: 4, type: 'danger', text: 'RoCoF: 140 mHz/s — steep decline' },
-      { gt: 8, type: 'danger', text: 'Nadir: 49.0 Hz — UFLS Stage 1 (10% load shed)' },
-      { gt: 15, type: 'warn', text: 'Load shedding + FCR arrest decline' },
-      { gt: 60, type: 'info', text: 'aFRR activating — secondary reserves' },
-      { gt: 300, type: 'success', text: 'mFRR + redispatch — plants ramping up' },
-      { gt: 900, type: 'success', text: 'Shed load being restored' },
-      { gt: 1200, type: 'nominal', text: 'Frequency restored — 50.000 Hz' },
+      { gt: 5, type: 'warn', text: 'RoCoF: 30 mHz/s — FCR activating' },
+      { gt: 10, type: 'warn', text: 'Nadir: 49.750 Hz — within FCR design envelope' },
+      { gt: 30, type: 'info', text: 'FCR fully deployed (3,000 MW in 30s)' },
+      { gt: 180, type: 'success', text: 'aFRR restoring — frequency rising' },
+      { gt: 600, type: 'success', text: 'mFRR + redispatch completing' },
+      { gt: 900, type: 'nominal', text: 'Frequency nominal — 50.000 Hz' },
     ],
   },
   {
