@@ -78,6 +78,13 @@ for (const slug of topics) {
   check(`Topic: ${slug}`, pageExists(`research/topics/${slug}/index.html`));
 }
 
+// Basics section
+check('Basics index page exists', pageExists('basics/index.html'));
+check('How Electricity Works page exists', pageExists('basics/how-electricity-works/index.html'));
+check('Supply and Demand page exists', pageExists('basics/supply-and-demand/index.html'));
+check('How Batteries Work page exists', pageExists('basics/how-batteries-work/index.html'));
+check('Beyond Lithium-Ion page exists', pageExists('basics/beyond-lithium-ion/index.html'));
+
 // Sidebar TOC
 check('Sidebar nav present', pageContains('learn/how-the-grid-works/index.html', 'toc-section'));
 
