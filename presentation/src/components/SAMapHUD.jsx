@@ -849,6 +849,21 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
           </span>
         </div>
 
+        {/* VPP narrative context */}
+        {!isBlackout && (
+          <div style={{
+            padding: '10px 16px', borderBottom: `1px solid ${borderClr}`,
+            opacity: bootFade(0.5, 0.5),
+          }}>
+            <div style={{ fontSize: 15, fontFamily: '"Inter"', color: '#f1f5f9', fontWeight: 600, lineHeight: 1.5, marginBottom: 4 }}>
+              South Australia VPP — ~1,100 homes with Tesla Powerwalls
+            </div>
+            <div style={{ fontSize: 13, fontFamily: '"Inter"', color: '#94a3b8cc', lineHeight: 1.5 }}>
+              One of the world's first proofs that distributed home batteries can autonomously stabilize a grid — no central dispatch needed.
+            </div>
+          </div>
+        )}
+
         {/* Buttons */}
         <div style={{
           padding: '8px 16px', display: 'flex', gap: 8,
@@ -866,13 +881,13 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
         </div>
 
         {/* Timeline entries */}
-        <div style={{ flex: 1, overflowY: 'hidden', padding: '10px 16px' }}>
+        <div style={{ flex: 1, overflowY: 'hidden', padding: '8px 16px' }}>
           {timelineSteps.map((step, i) => {
             const isActive = stepIndex >= i;
             const isCurrent = stepIndex === i;
             return (
               <div key={i} style={{
-                marginBottom: 8,
+                marginBottom: 6,
                 opacity: isActive ? 1 : 0.25,
                 transition: 'opacity 0.4s, transform 0.4s',
                 borderLeft: isCurrent ? `2px solid ${accentColor}` : '2px solid transparent',
@@ -880,14 +895,14 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
                 transform: `translateX(${isActive ? 0 : -15}px)`,
               }}>
                 <div style={{
-                  fontSize: 14, fontFamily: '"Inter"',
+                  fontSize: 13, fontFamily: '"Inter"',
                   color: isActive ? (isCurrent ? '#f1f5f9' : '#f1f5f9bb') : '#64748b40',
                   fontWeight: isCurrent ? 600 : 400,
                 }}>
                   {step.label}
                 </div>
                 <div style={{
-                  fontSize: 11, fontFamily: '"JetBrains Mono"', marginTop: 2,
+                  fontSize: 10, fontFamily: '"JetBrains Mono"', marginTop: 1,
                   color: isActive ? '#94a3b870' : '#64748b20',
                 }}>
                   {step.detail}
