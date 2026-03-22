@@ -153,11 +153,11 @@ function extraTimelineContent({ running, elapsed, showBanner }: { running: boole
         display: 'flex', alignItems: 'baseline', gap: 8,
         opacity: showBanner ? (Math.sin(Date.now() / 200) * 0.3 + 0.7) : 1,
       }}>
-        <span style={{ fontSize: 11, fontFamily: '"JetBrains Mono"', fontWeight: 700 }}>1:55 AM</span>
+        <span style={{ fontSize: 12, fontFamily: '"JetBrains Mono"', fontWeight: 700 }}>1:55 AM</span>
         TOTAL GRID COLLAPSE
       </div>
       <div style={{
-        fontSize: 11, fontFamily: '"Inter"', marginTop: 2,
+        fontSize: 12, fontFamily: '"Inter"', marginTop: 2,
         color: showBanner ? 'rgba(239,68,68,0.6)' : '#64748b15',
       }}>
         Avoided by 4 min 37 sec. Cold restart = weeks.
@@ -192,7 +192,7 @@ function renderCinematicHUD(ctx: CinematicCtx) {
           {freq.toFixed(3)} Hz
         </div>
         <div style={{
-          fontSize: 11, fontFamily: '"JetBrains Mono"', color: freqColor,
+          fontSize: 12, fontFamily: '"JetBrains Mono"', color: freqColor,
           textShadow: '0 0 8px rgba(0,0,0,0.9)', marginTop: 2, fontWeight: 600,
         }}>
           {freq < 49.0 ? '\u26A0 EMERGENCY' : freq < 49.5 ? 'WARNING' : 'ERCOT \u2014 NOMINAL'}
@@ -225,7 +225,7 @@ function renderCinematicHUD(ctx: CinematicCtx) {
           textAlign: 'center', pointerEvents: 'none', maxWidth: 600,
         }}>
           <div style={{
-            fontSize: 11, fontFamily: '"JetBrains Mono"', fontWeight: 700,
+            fontSize: 12, fontFamily: '"JetBrains Mono"', fontWeight: 700,
             color: elapsed > 9 ? '#ef4444' : '#f59e0b',
             textShadow: '0 0 20px rgba(0,0,0,0.9)',
             letterSpacing: '0.1em', marginBottom: 6,
@@ -283,13 +283,13 @@ function renderCinematicHUD(ctx: CinematicCtx) {
             {legend.map(i => (
               <div key={i.l} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                 <div style={{ width: 7, height: 7, borderRadius: '50%', background: i.c }} />
-                <span style={{ fontSize: 9, color: '#94a3b8aa', fontFamily: '"Inter"' }}>{i.l}</span>
+                <span style={{ fontSize: 12, color: '#94a3b8aa', fontFamily: '"Inter"' }}>{i.l}</span>
               </div>
             ))}
           </div>
           {running && visibleLogs.length > 0 && (
             <div style={{
-              fontSize: 10, fontFamily: '"JetBrains Mono"',
+              fontSize: 12, fontFamily: '"JetBrains Mono"',
               color: visibleLogs[visibleLogs.length - 1].level === 'crit' ? '#ef4444aa' : '#f59e0baa',
             }}>
               {visibleLogs[visibleLogs.length - 1].text}

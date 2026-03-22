@@ -177,7 +177,7 @@ export default function EuropeGridMap({ width = 500, height = 400 }: Props) {
     function drawLabels(progress: number) {
       if (progress <= 0) return;
       ctx.globalAlpha = Math.min(1, progress * 2);
-      ctx.font = '8px "JetBrains Mono", monospace';
+      ctx.font = '12px "JetBrains Mono", monospace';
       ctx.fillStyle = '#71717a';
 
       const cities: { pos: [number, number]; label: string }[] = [
@@ -234,7 +234,7 @@ export default function EuropeGridMap({ width = 500, height = 400 }: Props) {
       // "SPLIT" label at midpoint
       if (progress >= 0.5) {
         const mp = xy(SPLIT_LINE[4][0], SPLIT_LINE[4][1]);
-        ctx.font = 'bold 9px "JetBrains Mono", monospace';
+        ctx.font = 'bold 12px "JetBrains Mono", monospace';
         ctx.fillStyle = RED_ZONE;
         ctx.shadowColor = RED_GLOW;
         ctx.shadowBlur = 4;
@@ -283,7 +283,7 @@ export default function EuropeGridMap({ width = 500, height = 400 }: Props) {
         const labelAlpha = Math.min(1, (progress - 0.4) / 0.6);
         ctx.globalAlpha = labelAlpha;
 
-        ctx.font = 'bold 10px "JetBrains Mono", monospace';
+        ctx.font = 'bold 12px "JetBrains Mono", monospace';
         const wP = xy(FRANCE[0], FRANCE[1]);
         ctx.fillStyle = BLUE;
         ctx.shadowColor = BLUE_GLOW;
@@ -305,7 +305,7 @@ export default function EuropeGridMap({ width = 500, height = 400 }: Props) {
     function drawLegend() {
       const y = height - 10;
       const leftX = 12;
-      ctx.font = '9px "JetBrains Mono", monospace';
+      ctx.font = '12px "JetBrains Mono", monospace';
 
       // West zone
       ctx.fillStyle = BLUE;

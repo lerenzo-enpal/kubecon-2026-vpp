@@ -172,7 +172,7 @@ export default function ItalyGridMap({ width = 500, height = 400 }: Props) {
 
       // City labels
       if (progress >= 1) {
-        ctx.font = '8px "JetBrains Mono", monospace';
+        ctx.font = '12px "JetBrains Mono", monospace';
         ctx.fillStyle = '#a1a1aa';
         const r = xy(ROME[0], ROME[1]);
         ctx.fillText('Rome', r.x + 8, r.y + 3);
@@ -238,7 +238,7 @@ export default function ItalyGridMap({ width = 500, height = 400 }: Props) {
         }
 
         // Label
-        ctx.font = '7px "JetBrains Mono", monospace';
+        ctx.font = '12px "JetBrains Mono", monospace';
         ctx.fillStyle = isTripped ? RED_DIM : '#71717a';
         ctx.fillText(line.label, pFrom.x + 4, pFrom.y - 4);
       }
@@ -264,7 +264,7 @@ export default function ItalyGridMap({ width = 500, height = 400 }: Props) {
         const alpha = Math.min(1, (progress - 0.5) * 2);
         ctx.globalAlpha = alpha;
         const c = xy(42.5, 12.0);
-        ctx.font = 'bold 11px "JetBrains Mono", monospace';
+        ctx.font = 'bold 12px "JetBrains Mono", monospace';
         ctx.fillStyle = RED;
         ctx.shadowColor = RED_GLOW;
         ctx.shadowBlur = 8;
@@ -277,7 +277,7 @@ export default function ItalyGridMap({ width = 500, height = 400 }: Props) {
     function drawLegend() {
       const y = height - 10;
       const leftX = 12;
-      ctx.font = '9px "JetBrains Mono", monospace';
+      ctx.font = '12px "JetBrains Mono", monospace';
 
       ctx.strokeStyle = CYAN;
       ctx.lineWidth = 1.5;

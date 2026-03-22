@@ -207,7 +207,7 @@ export default function BerlinGridMap({ width = 500, height = 400 }: Props) {
 
       // Labels
       if (progress >= 1) {
-        ctx.font = '8px "JetBrains Mono", monospace';
+        ctx.font = '12px "JetBrains Mono", monospace';
         ctx.fillStyle = '#a1a1aa';
         const cp = xy(CITY_CENTER[0], CITY_CENTER[1]);
         ctx.fillText('Mitte', cp.x + 8, cp.y - 4);
@@ -261,7 +261,7 @@ export default function BerlinGridMap({ width = 500, height = 400 }: Props) {
         ctx.stroke();
 
         // Label
-        ctx.font = '8px "JetBrains Mono", monospace';
+        ctx.font = '12px "JetBrains Mono", monospace';
         ctx.fillStyle = RED;
         const dx = i === 0 ? 10 : -70;
         ctx.fillText(site.label, p.x + dx, p.y - 8);
@@ -270,7 +270,7 @@ export default function BerlinGridMap({ width = 500, height = 400 }: Props) {
       // Adlershof label
       if (sitesToShow >= 1) {
         const ap = xy(ADLERSHOF[0], ADLERSHOF[1]);
-        ctx.font = '7px "JetBrains Mono", monospace';
+        ctx.font = '12px "JetBrains Mono", monospace';
         ctx.fillStyle = '#71717a';
         ctx.fillText('Adlershof', ap.x + 10, ap.y + 12);
       }
@@ -296,7 +296,7 @@ export default function BerlinGridMap({ width = 500, height = 400 }: Props) {
         const alpha = Math.min(1, (progress - 0.5) * 2);
         ctx.globalAlpha = alpha;
         const c = xy(52.44, 13.54);
-        ctx.font = 'bold 9px "JetBrains Mono", monospace';
+        ctx.font = 'bold 12px "JetBrains Mono", monospace';
         ctx.fillStyle = RED;
         ctx.shadowColor = RED_GLOW;
         ctx.shadowBlur = 4;
@@ -310,7 +310,7 @@ export default function BerlinGridMap({ width = 500, height = 400 }: Props) {
     function drawLegend() {
       const y = height - 10;
       const leftX = 12;
-      ctx.font = '9px "JetBrains Mono", monospace';
+      ctx.font = '12px "JetBrains Mono", monospace';
 
       // Grid lines
       ctx.strokeStyle = CYAN;

@@ -207,7 +207,7 @@ export default function SAGridMap({ width = 500, height = 400 }: Props) {
 
         // Adelaide label
         const aP = xy(ADELAIDE[0], ADELAIDE[1]);
-        ctx.font = '9px "JetBrains Mono", monospace';
+        ctx.font = '12px "JetBrains Mono", monospace';
         ctx.fillStyle = '#a1a1aa';
         ctx.fillText('Adelaide', aP.x + 8, aP.y - 6);
 
@@ -281,7 +281,7 @@ export default function SAGridMap({ width = 500, height = 400 }: Props) {
       // Label
       if (progress >= 1) {
         const midP = xy(INTERCONNECTOR[2][0], INTERCONNECTOR[2][1]);
-        ctx.font = '8px "JetBrains Mono", monospace';
+        ctx.font = '12px "JetBrains Mono", monospace';
         ctx.fillStyle = tripped ? RED : '#a1a1aa';
         ctx.fillText(tripped ? 'TRIPPED' : 'Heywood', midP.x + 6, midP.y - 4);
       }
@@ -289,7 +289,7 @@ export default function SAGridMap({ width = 500, height = 400 }: Props) {
       // Victoria border label
       if (progress >= 1) {
         const vP = xy(VIC_BORDER[0], VIC_BORDER[1]);
-        ctx.font = '8px "JetBrains Mono", monospace';
+        ctx.font = '12px "JetBrains Mono", monospace';
         ctx.fillStyle = '#71717a';
         ctx.fillText('VIC', vP.x + 4, vP.y + 3);
       }
@@ -298,7 +298,7 @@ export default function SAGridMap({ width = 500, height = 400 }: Props) {
     function drawLegend() {
       const y = height - 10;
       const leftX = 12;
-      ctx.font = '9px "JetBrains Mono", monospace';
+      ctx.font = '12px "JetBrains Mono", monospace';
 
       // Transmission
       ctx.strokeStyle = CYAN;

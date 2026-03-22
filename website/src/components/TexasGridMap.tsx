@@ -174,7 +174,7 @@ export default function TexasGridMap({ width = 500, height = 380 }: Props) {
     function drawLegend() {
       const y = height - 12;
       const leftX = 12;
-      ctx.font = '10px "JetBrains Mono", monospace';
+      ctx.font = '12px "JetBrains Mono", monospace';
 
       // Failed generators
       ctx.strokeStyle = RED;
