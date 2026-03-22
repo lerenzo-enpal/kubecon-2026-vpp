@@ -235,6 +235,14 @@ export default function Presentation() {
                 <div className="text-[20px] text-hud-text-dim font-mono">{s.time}</div>
               </a>
             ))}
+            {/* Appendix — dimmed */}
+            <a href="?slideIndex=35" className="flex items-center gap-5 no-underline cursor-pointer mt-2" style={{ textDecoration: 'none', opacity: 0.35 }}>
+              <div className="text-[28px] font-extrabold font-mono min-w-[48px] text-right" style={{ color: colors.textDim }}></div>
+              <div className="flex-1" style={{ borderLeft: `2px solid ${colors.textDim}30`, paddingLeft: 20 }}>
+                <div className="text-[22px] font-bold text-hud-text font-sans">Appendix</div>
+                <div className="text-[20px] text-hud-text-muted font-sans mt-0.5">Additional scenarios, data, and references</div>
+              </div>
+            </a>
           </div>
         </div>
         <Notes>
@@ -729,37 +737,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 25: Inside the Architecture [DEPRECATED] */}
-      <Slide backgroundColor={bg} padding="16px 0px">
-        <div className="flex flex-col h-full relative">
-          <div className="px-8"><H>Inside the Architecture</H></div>
-          <div className="px-8"><P size="18px">Measurement data every 20 seconds — Protobuf over MQTT through EMQX, into Databricks streaming aggregates powered by Apache Spark.</P></div>
-          <div className="flex-1 flex justify-center items-center">
-            <LazyContent><EnpalArchitectureDiagram width={1366} height={528} /></LazyContent>
-          </div>
-          {/* DEPRECATED overlay */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20" style={{ background: 'rgba(5,8,16,0.7)' }}>
-            <div style={{ fontSize: 180, fontWeight: 900, fontFamily: '"JetBrains Mono"', color: colors.danger, opacity: 0.6, textShadow: `0 0 60px ${colors.danger}40`, transform: 'rotate(-15deg)' }}>
-              DEPRECATED
-            </div>
-          </div>
-        </div>
-        <Notes>
-          [LERENZO] [ANIMATED] Now let's zoom in — this is the internal data flow.
-          Each home has devices — heat pump, PV, battery — connected to an IoT hub.
-          The IoT hub connects to our cloud via EMQX, our MQTT broker.
-          We ingest both static config data and measurement telemetry every 20 seconds, all aligned in Protobuf schemas.
-          Data flows into Databricks — raw, then bronze, silver, gold layers — classic lakehouse.
-          Here's the game changer: Apache Spark streaming aggregates on Databricks give us near-real-time pattern detection at latencies that would be unthinkable in traditional web request-response cycles.
-          Our BI team, predictive monitoring, and solutions teams all build on these streaming pipelines.
-          We progressively increase aggregation windows to minimize storage — raw data is kept for a limited period.
-          The control loop: VPP controller dispatches to the local HEMS, which runs conflict resolution via our WISH protocol.
-          We also integrate S14a grid regulation devices, smart meters via Meterfy, and cloud-to-cloud with Flexa via Event Hub.
-          The clever use of streaming aggregates on Databricks is helping us substantially reduce costs while maintaining the low latency that makes real-time grid response possible.
-        </Notes>
-      </Slide>
-
-      {/* 26: Inside the Architecture — Explorer */}
+      {/* 25: Inside the Architecture — Explorer */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           {/* Full-screen architecture explorer */}
@@ -857,9 +835,9 @@ export default function Presentation() {
                 { label: 'WINDOWS', value: '6 tiers', color: '#FF3621' },
                 { label: 'REDUCTION', value: '4,320:1', color: colors.success },
               ].map((s, i) => (
-                <div key={i} className="rounded px-2 py-1" style={{ background: s.color + '0a', border: `1px solid ${s.color}25` }}>
-                  <div className="text-[8px] font-mono tracking-widest uppercase" style={{ color: colors.textDim }}>{s.label}</div>
-                  <div className="text-sm font-bold font-mono" style={{ color: s.color }}>{s.value}</div>
+                <div key={i} className="rounded px-3 py-1.5" style={{ background: s.color + '0a', border: `1px solid ${s.color}25` }}>
+                  <div className="text-xs font-mono tracking-widest uppercase" style={{ color: colors.textDim }}>{s.label}</div>
+                  <div className="text-lg font-bold font-mono" style={{ color: s.color }}>{s.value}</div>
                 </div>
               ))}
             </div>

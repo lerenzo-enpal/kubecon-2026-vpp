@@ -745,7 +745,7 @@ export default function VPPArchitecture({ highlightStep = 0 }) {
       />
       {/* Bottom drawer for node descriptions */}
       <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 10,
+        position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 50,
         height: 120,
         background: activeDrawer ? 'rgba(5, 8, 16, 0.92)' : 'transparent',
         borderTop: activeDrawer ? `1px solid ${activeDrawer?.color || colors.primary}35` : 'none',
