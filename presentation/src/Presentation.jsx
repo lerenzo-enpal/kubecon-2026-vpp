@@ -43,22 +43,23 @@ const SECTIONS = [
   { from: 1, to: 2, name: '' },
   { from: 3, to: 15, name: 'The Grid' },
   { from: 16, to: 19, name: 'The Renewable Revolution' },
-  { from: 20, to: 28, name: 'The Virtual Power Plant' },
-  { from: 29, to: 30, name: 'Resilience' },
+  { from: 20, to: 29, name: 'The Virtual Power Plant' },
+  { from: 30, to: 31, name: 'Resilience' },
 ];
 
 // Speaker assignments per slide
-// 9: Frequency Balance, 10: Tools for Balancing, 11: Costs of the Old Playbook,
-// 12: Frequency Demo, 13-15: Why Texas, Not Isolated, No Flexibility
+// 9: Frequency Balance, 10: Tools for Balancing, 11: Freq Demo,
+// 12: Costs of Old Playbook, 13-15: Why Texas, Not Isolated, Limited Flexibility
+// 20: Bridge (What if), 21: Homes Become Infrastructure
 const SPEAKERS = {
   1: 'SHARED', 2: 'SHARED',
   3: 'LERENZO', 4: 'LERENZO', 5: 'LERENZO',
   6: 'MARIO', 7: 'LERENZO', 8: 'MARIO', 9: 'MARIO',
-  10: 'MARIO', 11: 'LERENZO', 12: 'MARIO', 13: 'LERENZO', 14: 'LERENZO', 15: 'LERENZO',
-  16: 'MARIO', 17: 'MARIO', 18: 'MARIO', 19: 'MARIO', 20: 'MARIO',
-  21: 'LERENZO', 22: 'LERENZO', 23: 'LERENZO', 24: 'LERENZO', 25: 'LERENZO',
-  26: 'LERENZO', 27: 'LERENZO', 28: 'MARIO',
-  29: 'LERENZO', 30: 'LERENZO',
+  10: 'MARIO', 11: 'MARIO', 12: 'LERENZO', 13: 'MARIO', 14: 'LERENZO', 15: 'LERENZO', 16: 'LERENZO',
+  17: 'MARIO', 18: 'MARIO', 19: 'MARIO', 20: 'MARIO', 21: 'MARIO',
+  22: 'LERENZO', 23: 'LERENZO', 24: 'LERENZO', 25: 'LERENZO', 26: 'LERENZO',
+  27: 'LERENZO', 28: 'LERENZO', 29: 'MARIO',
+  30: 'LERENZO', 31: 'LERENZO',
 };
 
 const DISABLED_VALUES = new Set(['', 'null', 'no', 'disable', 'disabled', 'nein', 'false', '0', 'off']);
@@ -220,8 +221,8 @@ export default function Presentation() {
             {[
               { num: '01', title: 'The Grid', sub: 'How the world\'s largest machine works — and how it fails', color: colors.danger, time: '~10 min', slide: 3 },
               { num: '02', title: 'The Renewable Revolution', sub: 'Why cheap clean energy creates expensive new problems', color: colors.accent, time: '~7 min', slide: 15 },
-              { num: '03', title: 'The Virtual Power Plant', sub: 'Software that turns millions of devices into grid infrastructure', color: colors.primary, time: '~10 min', slide: 19 },
-              { num: '04', title: 'Resilience', sub: 'What the future grid looks like — and why you already know how to build it', color: colors.success, time: '~3 min', slide: 31 },
+              { num: '03', title: 'The Virtual Power Plant', sub: 'Software that turns millions of devices into grid infrastructure', color: colors.primary, time: '~10 min', slide: 20 },
+              { num: '04', title: 'Resilience', sub: 'What the future grid looks like — and why you already know how to build it', color: colors.success, time: '~3 min', slide: 32 },
             ].map(s => (
               <a key={s.num} href={`?slideIndex=${s.slide}`} className="flex items-center gap-5 no-underline cursor-pointer" style={{ textDecoration: 'none' }}>
                 <div className="text-[28px] font-extrabold font-mono min-w-[48px] text-right" style={{ color: s.color }}>{s.num}</div>
@@ -655,7 +656,27 @@ export default function Presentation() {
 
       {/* ═══════ ACT 3: THE VIRTUAL POWER PLANT ═══════ */}
 
-      {/* 20: Homes Become Infrastructure */}
+      {/* 20: Bridge — The Solution Is Already Installed */}
+      <Slide backgroundColor={bg} padding={pad}>
+        <div className="flex flex-col justify-center items-center h-full text-center">
+          <div className="text-[28px] font-semibold text-hud-text font-sans leading-[1.7] mb-7">
+            The grid needs flexibility it doesn't have.
+          </div>
+          <div className="text-[28px] font-semibold text-hud-text font-sans leading-[1.7] mb-9">
+            But millions of homes already have solar, batteries, and heat pumps.
+          </div>
+          <div className="text-[52px] font-extrabold font-sans" style={{ color: colors.primary, textShadow: `0 0 40px ${colors.primary}30` }}>
+            What if they could work together?
+          </div>
+        </div>
+        <Notes>
+          - The grid needs flexibility. Homes already have the hardware.
+          - Pause. "What if they could work together?"
+          - Backup: ~3M homes in Germany with solar, growing 500K/yr. Most have or will have batteries.
+        </Notes>
+      </Slide>
+
+      {/* 21: Homes Become Infrastructure */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col items-center h-full text-center">
           <H size="42px" center>Homes Become Infrastructure</H>
@@ -672,7 +693,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 21: The Virtual Power Plant */}
+      {/* 22: The Virtual Power Plant */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-4">Part III</div>
@@ -684,7 +705,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 22: What Is a Virtual Power Plant? */}
+      {/* 23: What Is a Virtual Power Plant? */}
       <Slide backgroundColor={bg} padding="0">
         <div className="relative w-full h-full">
           <div className="absolute inset-0 flex flex-col pt-5 px-10 pointer-events-none z-10">
@@ -704,7 +725,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 23: Inside the Architecture */}
+      {/* 24: Inside the Architecture */}
       <Slide backgroundColor={bg} padding="16px 0px">
         <div className="flex flex-col h-full">
           <div className="px-8"><H>Inside the Architecture</H></div>
@@ -920,7 +941,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 24: The Architecture Parallel */}
+      {/* 25: The Architecture Parallel */}
       <Slide backgroundColor={bg} padding={pad}>
         <style>{`
           @keyframes archLeftIn {
@@ -983,7 +1004,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 25: How a VPP Responds to Grid Events */}
+      {/* 26: How a VPP Responds to Grid Events */}
       <Slide backgroundColor={bg} padding={pad}>
         <style>{`
           @keyframes vppEventIn {
@@ -1063,7 +1084,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 26: Energy Arbitrage + Peak Shaving */}
+      {/* 27: Energy Arbitrage + Peak Shaving */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           <VPPScenarioSlide scenario="summer" />
@@ -1078,7 +1099,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 27: SA Virtual Power Plant, 2019 */}
+      {/* 28: SA Virtual Power Plant, 2019 */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           <SAMapHUD width="100%" height="100%" variant="vpp" />
@@ -1090,7 +1111,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 28: The Economic Impact of Flexibility */}
+      {/* 29: The Economic Impact of Flexibility */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H color={colors.success}>The Economic Impact of Flexibility</H>
@@ -1156,7 +1177,7 @@ export default function Presentation() {
 
       {/* ═══════ ACT 4: RESILIENCE ═══════ */}
 
-      {/* 29: Back to Texas */}
+      {/* 30: Back to Texas */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center h-full">
           <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-6">Back to Texas</div>
@@ -1181,7 +1202,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 30: Thank You */}
+      {/* 31: Thank You */}
       <Slide backgroundColor={bg} padding="0">
         <div className="relative w-full h-full">
           <LazyContent><ThankYouBackground width={1366} height={768} /></LazyContent>
