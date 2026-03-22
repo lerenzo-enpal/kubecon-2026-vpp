@@ -8,6 +8,7 @@ import VPPArchitecture from '../../components/VPPArchitecture.tsx';
 import GlowLine from '../../components/GlowLine';
 import DuckCurveVPP from '../../components/DuckCurveVPP';
 import FullscreenWrapper from '../../components/FullscreenWrapper';
+import ChartEnlarger from '../../components/ChartEnlarger';
 import { url } from '../../utils/url';
 ---
 
@@ -143,9 +144,9 @@ import { url } from '../../utils/url';
   <div class="flex items-center justify-between mb-3">
     <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">VPP DATA FLOW</div>
   </div>
-  <FullscreenWrapper client:visible label="Fullscreen">
+  <ChartEnlarger client:visible>
     <VPPArchitecture client:visible height={420} />
-  </FullscreenWrapper>
+  </ChartEnlarger>
 </div>
 
 <p>
