@@ -39,27 +39,28 @@ const bg = colors.bg;
 const pad = '36px 56px';
 
 // Section ranges (slide numbers are 1-indexed)
+// Slide count: 35 main + appendix. Architecture has 4 sub-slides (25-28).
 const SECTIONS = [
   { from: 1, to: 2, name: '' },
-  { from: 3, to: 15, name: 'The Grid' },
-  { from: 16, to: 19, name: 'The Renewable Revolution' },
-  { from: 20, to: 29, name: 'The Virtual Power Plant' },
-  { from: 30, to: 31, name: 'Resilience' },
+  { from: 3, to: 16, name: 'The Grid' },
+  { from: 17, to: 20, name: 'The Renewable Revolution' },
+  { from: 21, to: 33, name: 'The Virtual Power Plant' },
+  { from: 34, to: 35, name: 'Resilience' },
 ];
 
-// Speaker assignments per slide
-// 9: Frequency Balance, 10: Tools for Balancing, 11: Freq Demo,
-// 12: Costs of Old Playbook, 13-15: Why Texas, Not Isolated, Limited Flexibility
-// 20: Bridge (What if), 21: Homes Become Infrastructure
+// Speaker assignments per slide (35 main slides)
+// 1-2: Opening, 3: Agenda, 4-16: The Grid, 17-20: Renewables,
+// 21-33: VPP, 34-35: Resilience
 const SPEAKERS = {
   1: 'SHARED', 2: 'SHARED',
-  3: 'LERENZO', 4: 'LERENZO', 5: 'LERENZO',
-  6: 'MARIO', 7: 'LERENZO', 8: 'MARIO', 9: 'MARIO',
-  10: 'MARIO', 11: 'MARIO', 12: 'LERENZO', 13: 'MARIO', 14: 'LERENZO', 15: 'LERENZO', 16: 'LERENZO',
-  17: 'MARIO', 18: 'MARIO', 19: 'MARIO', 20: 'MARIO', 21: 'MARIO',
-  22: 'LERENZO', 23: 'LERENZO', 24: 'LERENZO', 25: 'LERENZO', 26: 'LERENZO',
-  27: 'LERENZO', 28: 'LERENZO', 29: 'MARIO',
-  30: 'LERENZO', 31: 'LERENZO',
+  3: 'SHARED', 4: 'LERENZO', 5: 'LERENZO', 6: 'LERENZO',
+  7: 'MARIO', 8: 'LERENZO', 9: 'MARIO', 10: 'MARIO',
+  11: 'MARIO', 12: 'MARIO', 13: 'LERENZO', 14: 'MARIO', 15: 'LERENZO', 16: 'LERENZO',
+  17: 'LERENZO', 18: 'MARIO', 19: 'MARIO', 20: 'MARIO', 21: 'MARIO',
+  22: 'MARIO', 23: 'MARIO', 24: 'LERENZO', 25: 'LERENZO',
+  26: 'LERENZO', 27: 'LERENZO', 28: 'LERENZO', 29: 'LERENZO',
+  30: 'LERENZO', 31: 'LERENZO', 32: 'LERENZO', 33: 'MARIO',
+  34: 'LERENZO', 35: 'LERENZO',
 };
 
 const DISABLED_VALUES = new Set(['', 'null', 'no', 'disable', 'disabled', 'nein', 'false', '0', 'off']);
