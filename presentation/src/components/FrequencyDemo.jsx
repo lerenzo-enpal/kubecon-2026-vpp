@@ -3,80 +3,95 @@ import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
 
 // Event-based scenarios — getDelta receives GRID TIME in seconds (real time × timeScale)
-// Real grid: primary reserves 0-30s, secondary 30s-15min, tertiary 15min+
+//
+// Sources for all frequency values and timelines:
+//   - ENTSO-E "Policy 1: Load-Frequency Control" (Continental Europe)
+//   - ENTSO-E "Incident Classification Scale" (reference incident = 3,000 MW)
+//   - UCTE Final Report: "System Disturbance on 4 November 2006"
+//   - ENTSO-E "Continental Europe Synchronous Area Separation 8 January 2021"
+//   - FCR: ~3,000 MW total, full activation within 30 seconds
+//   - aFRR: ~3,000-5,000 MW, activates 30s–15min
+//   - mFRR: ~10,000+ MW, activates 15min+
+//   - UFLS thresholds: 49.0 Hz (Stage 1, 10-15%), 48.5 Hz (Stage 2), 48.0 Hz (Stage 3)
+//   - Generator disconnect: 47.5 Hz (protection relay trip)
+//
 // Target: each scenario completes in ~5 real seconds for presentation pacing
 const SCENARIOS = [
   {
     label: 'Generator Trip (800 MW)',
     color: 'accent',
     timeScale: 150, // 1 real second = 150 grid seconds → ~5s real for full scenario
-    // Realistic: inertia → RoCoF → nadir at ~10s → primary arrest → secondary restore → nominal
+    // 800 MW = well within FCR dimensioning (3 GW). Grid handles this routinely.
+    // Ref: ENTSO-E reports ~50 events/yr exceeding 500 MW loss. Recovery typically <15min.
     getDelta: (gt) => {
-      if (gt < 2) return 0;                                                // system inertia absorbs initial shock
-      if (gt < 10) return -((gt - 2) / 8) * 0.5;                          // RoCoF ~0.06 Hz/s
-      if (gt < 30) return -0.5 + 0.05 * Math.sin((gt - 10) * 0.3);       // nadir ~49.5, primary reserves arrest
-      if (gt < 120) return -0.5 + ((gt - 30) / 90) * 0.3;                // secondary reserves (aFRR) restore
-      if (gt < 600) return -0.2 + ((gt - 120) / 480) * 0.15;             // tertiary reserves, redispatch
-      if (gt < 750) return -0.05 + ((gt - 600) / 150) * 0.05;            // final settling
+      if (gt < 2) return 0;                                                // system inertia (H ≈ 5-6s for CE)
+      if (gt < 10) return -((gt - 2) / 8) * 0.2;                          // RoCoF ~0.025 Hz/s (moderate for 800MW in 300GW system)
+      if (gt < 30) return -0.2 + 0.02 * Math.sin((gt - 10) * 0.3);       // nadir ~49.8 Hz, FCR arrests decline
+      if (gt < 120) return -0.2 + ((gt - 30) / 90) * 0.12;               // aFRR restores (30s–15min)
+      if (gt < 600) return -0.08 + ((gt - 120) / 480) * 0.06;            // mFRR + redispatch
+      if (gt < 750) return -0.02 + ((gt - 600) / 150) * 0.02;            // final settling
       return 0;
     },
     events: [
-      { gt: 2, type: 'warn', text: 'Inertia absorbs initial shock' },
-      { gt: 5, type: 'info', text: 'RoCoF detected — 0.06 Hz/s' },
-      { gt: 10, type: 'danger', text: 'Nadir reached — 49.500 Hz' },
-      { gt: 30, type: 'info', text: 'Primary reserves arrest decline' },
-      { gt: 120, type: 'success', text: 'Secondary reserves (aFRR) restoring' },
-      { gt: 600, type: 'success', text: 'Tertiary reserves engaged' },
+      { gt: 2, type: 'warn', text: 'Inertia absorbs initial shock (H ≈ 5s)' },
+      { gt: 5, type: 'info', text: 'RoCoF: 25 mHz/s — within normal range' },
+      { gt: 10, type: 'warn', text: 'Nadir: 49.800 Hz — FCR activating' },
+      { gt: 30, type: 'info', text: 'FCR fully deployed (3,000 MW reserve)' },
+      { gt: 120, type: 'success', text: 'aFRR restoring — replacement reserves' },
+      { gt: 600, type: 'success', text: 'mFRR + redispatch completing' },
       { gt: 750, type: 'nominal', text: 'Frequency nominal — 50.000 Hz' },
     ],
   },
   {
-    label: '3 GW Loss of Generation',
+    label: '3 GW Loss (Reference Incident)',
     color: 'danger',
     timeScale: 240, // 1 real second = 240 grid seconds → ~5s real for full scenario
-    // Severe: steep RoCoF, UFLS activates, load shedding stabilizes, slow full recovery
+    // 3 GW = ENTSO-E "reference incident" — the dimensioning event for Continental Europe FCR.
+    // Ref: 2006 EU grid split dropped western area to 49.0 Hz with ~9 GW imbalance.
+    // At 3 GW, frequency reaches ~49.0 Hz, UFLS Stage 1 may trip at exactly 49.0 Hz.
     getDelta: (gt) => {
       if (gt < 1) return 0;                                                // inertia
-      if (gt < 8) return -((gt - 1) / 7) * 1.1;                           // steep RoCoF ~0.16 Hz/s
-      if (gt < 15) return -1.1 + 0.08 * Math.sin((gt - 8) * 0.9);        // nadir ~48.9, UFLS Stage 1 trips
-      if (gt < 60) return -1.1 + ((gt - 15) / 45) * 0.3;                 // load shedding + primary reserves stabilize
-      if (gt < 300) return -0.8 + ((gt - 60) / 240) * 0.5;               // secondary + tertiary reserves
-      if (gt < 900) return -0.3 + ((gt - 300) / 600) * 0.25;             // redispatch, plants ramping up
+      if (gt < 8) return -((gt - 1) / 7) * 1.0;                           // RoCoF ~0.14 Hz/s
+      if (gt < 15) return -1.0 + 0.06 * Math.sin((gt - 8) * 0.9);        // nadir ~49.0 Hz, UFLS Stage 1 threshold
+      if (gt < 60) return -1.0 + ((gt - 15) / 45) * 0.25;                // load shedding + FCR stabilize
+      if (gt < 300) return -0.75 + ((gt - 60) / 240) * 0.45;             // aFRR + mFRR
+      if (gt < 900) return -0.3 + ((gt - 300) / 600) * 0.25;             // redispatch, plants ramping
       if (gt < 1200) return -0.05 + ((gt - 900) / 300) * 0.05;           // final restoration
       return 0;
     },
     events: [
-      { gt: 1, type: 'danger', text: 'Massive generation loss — 3 GW offline' },
-      { gt: 4, type: 'danger', text: 'Steep RoCoF — 0.16 Hz/s' },
-      { gt: 8, type: 'danger', text: 'Nadir 48.9 Hz — UFLS Stage 1 trips' },
-      { gt: 15, type: 'warn', text: 'Load shedding stabilizes decline' },
-      { gt: 60, type: 'info', text: 'Primary + secondary reserves active' },
-      { gt: 300, type: 'success', text: 'Tertiary reserves & redispatch' },
-      { gt: 900, type: 'success', text: 'Plants ramping up — restoring' },
+      { gt: 1, type: 'danger', text: '3 GW offline — ENTSO-E reference incident size' },
+      { gt: 4, type: 'danger', text: 'RoCoF: 140 mHz/s — steep decline' },
+      { gt: 8, type: 'danger', text: 'Nadir: 49.0 Hz — UFLS Stage 1 (10% load shed)' },
+      { gt: 15, type: 'warn', text: 'Load shedding + FCR arrest decline' },
+      { gt: 60, type: 'info', text: 'aFRR activating — secondary reserves' },
+      { gt: 300, type: 'success', text: 'mFRR + redispatch — plants ramping up' },
+      { gt: 900, type: 'success', text: 'Shed load being restored' },
       { gt: 1200, type: 'nominal', text: 'Frequency restored — 50.000 Hz' },
     ],
   },
   {
-    label: 'Sudden Demand Drop (5 GW)',
+    label: 'Demand Drop (5 GW)',
     color: 'accent',
     timeScale: 120, // 1 real second = 120 grid seconds → ~5s real
-    // Over-frequency: too much supply, generators ramp down, AGC restores
+    // Over-frequency is equally dangerous. At 51.5 Hz generators trip for self-protection.
+    // Ref: 2021 CE grid split — NW area rose to 50.6 Hz from excess generation.
     getDelta: (gt) => {
       if (gt < 1) return 0;                                                // inertia
-      if (gt < 8) return ((gt - 1) / 7) * 0.5;                            // frequency rises — excess generation
-      if (gt < 20) return 0.5 + 0.06 * Math.sin((gt - 8) * 0.5);         // oscillation, generators start tripping
-      if (gt < 90) return 0.5 - ((gt - 20) / 70) * 0.3;                  // AGC ramps down generation
-      if (gt < 300) return 0.2 - ((gt - 90) / 210) * 0.15;               // settling
-      if (gt < 600) return 0.05 - ((gt - 300) / 300) * 0.05;             // final return
+      if (gt < 8) return ((gt - 1) / 7) * 0.6;                            // frequency rises — excess generation
+      if (gt < 20) return 0.6 + 0.04 * Math.sin((gt - 8) * 0.5);         // peak ~50.6 Hz (matches 2021 split)
+      if (gt < 90) return 0.6 - ((gt - 20) / 70) * 0.35;                 // governors + AGC ramp down
+      if (gt < 300) return 0.25 - ((gt - 90) / 210) * 0.18;              // settling
+      if (gt < 600) return 0.07 - ((gt - 300) / 300) * 0.07;             // final return
       return 0;
     },
     events: [
-      { gt: 1, type: 'warn', text: 'Sudden demand drop — 5 GW excess' },
-      { gt: 4, type: 'warn', text: 'Frequency rising — over-generation' },
-      { gt: 8, type: 'danger', text: 'Over-frequency — 50.500 Hz' },
-      { gt: 20, type: 'info', text: 'Generator governors responding' },
-      { gt: 90, type: 'success', text: 'AGC ramping down generation' },
-      { gt: 300, type: 'success', text: 'Frequency settling' },
+      { gt: 1, type: 'warn', text: 'Sudden demand drop — 5 GW excess supply' },
+      { gt: 4, type: 'warn', text: 'Frequency rising — governors responding' },
+      { gt: 8, type: 'danger', text: 'Over-frequency: 50.6 Hz (generator trip risk at 51.5)' },
+      { gt: 20, type: 'info', text: 'Automatic generation control ramping down' },
+      { gt: 90, type: 'success', text: 'Generation curtailed — frequency falling' },
+      { gt: 300, type: 'success', text: 'Frequency settling toward nominal' },
       { gt: 600, type: 'nominal', text: 'Frequency nominal — 50.000 Hz' },
     ],
   },
@@ -84,23 +99,25 @@ const SCENARIOS = [
     label: 'Cyber Attack',
     color: 'danger',
     timeScale: 290, // 1 real second = 290 grid seconds → ~5s real
-    // Coordinated SCADA compromise — cascading trips, no recovery
+    // Hypothetical coordinated SCADA compromise — modeled on Ukraine 2015/2016 attacks
+    // but at Continental European scale. No real precedent at this scale.
+    // Ref: Ukraine Dec 2015 — 230,000 customers, 6 hours. Ukraine Dec 2016 — Kyiv 1/5 capacity, 1 hour.
     getDelta: (gt) => {
       if (gt < 30) return 0;                                               // attacker in system, reconnaissance
       if (gt < 90) return -((gt - 30) / 60) * 0.5;                        // first generators tripped remotely
       if (gt < 150) return -0.5 - ((gt - 90) / 60) * 0.6;                // cascade — protection relays disabled
       if (gt < 210) return -1.1 - ((gt - 150) / 60) * 0.7;               // reserves overwhelmed, no coordination
       if (gt < 270) return -1.8 - ((gt - 210) / 60) * 0.8;               // into collapse
-      return -2.6;                                                         // total blackout
+      return -2.6;                                                         // total blackout — below 47.5 Hz
     },
     events: [
       { gt: 5, type: 'warn', text: 'Anomalous SCADA traffic detected' },
-      { gt: 30, type: 'danger', text: 'Generators tripped remotely' },
+      { gt: 30, type: 'danger', text: 'Generators tripped remotely (cf. Ukraine 2015)' },
       { gt: 60, type: 'danger', text: 'Protection relays compromised' },
-      { gt: 90, type: 'danger', text: 'Cascade — relays disabled' },
-      { gt: 150, type: 'danger', text: 'Reserves overwhelmed' },
-      { gt: 210, type: 'danger', text: 'Uncontrolled collapse' },
-      { gt: 270, type: 'danger', text: 'TOTAL BLACKOUT — 47.4 Hz' },
+      { gt: 90, type: 'danger', text: 'Cascade — safety interlocks disabled' },
+      { gt: 150, type: 'danger', text: 'FCR exhausted — no coordinated response' },
+      { gt: 210, type: 'danger', text: 'Uncontrolled islanding — loss of synchronism' },
+      { gt: 270, type: 'danger', text: 'TOTAL BLACKOUT — below 47.5 Hz' },
     ],
   },
 ];
