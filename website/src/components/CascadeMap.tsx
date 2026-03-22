@@ -298,10 +298,14 @@ export default function CascadeMap({
     return () => window.removeEventListener('resize', measure);
   }, [widthProp]);
 
-  // Detect fullscreen
+  // Detect fullscreen and re-measure width on transition
   const [isFullscreen, setIsFullscreen] = useState(false);
   useEffect(() => {
-    const fn = () => setIsFullscreen(!!document.fullscreenElement);
+    const fn = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+      const el = sizeRef.current;
+      if (el && el.clientWidth > 0) setMeasuredWidth(el.clientWidth);
+    };
     document.addEventListener('fullscreenchange', fn);
     return () => document.removeEventListener('fullscreenchange', fn);
   }, []);
@@ -579,7 +583,7 @@ export default function CascadeMap({
     color: '#ef4444', fontWeight: 700,
   };
 
-  const ready = widthProp || measuredWidth > 0;
+  const ready = widthProp || measuredWidth > 0 || isFullscreen;
 
   return (
     <div ref={sizeRef} style={{ width: '100%' }}>
@@ -753,7 +757,7 @@ export default function CascadeMap({
             {legendItems.map(i => (
               <div key={i.l} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                 <div style={{ width: 7, height: 7, borderRadius: '50%', background: i.c }} />
-                <span style={{ fontSize: 9, color: '#94a3b8aa', fontFamily: '"Inter"' }}>{i.l}</span>
+                <span style={{ fontSize: 12, color: '#94a3b8aa', fontFamily: '"Inter"' }}>{i.l}</span>
               </div>
             ))}
           </div>
