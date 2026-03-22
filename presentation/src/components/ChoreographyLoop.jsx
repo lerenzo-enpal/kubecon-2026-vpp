@@ -211,25 +211,54 @@ export default function ChoreographyLoop({ width = 900, height = 380 }) {
       ctx.fillStyle = colors.text + 'aa';
       ctx.fillText('MQTT Broker', mqttX + mqttW / 2, mqttY + 16);
 
-      // Draw home boxes (left)
+      // Draw homes (matching slide 24 VPPArchitecture style)
       HOMES.forEach((label, i) => {
         const hy = homeY(i);
-        const ny = hy - itemH / 2;
+        const cx = homeX + homeW / 2;
+        const hw = homeW / 2;
+        const roofH = 14;
+        const bodyH = 22;
+        const pulse = 0.5 + 0.5 * Math.sin(now * 2.5 + i * 2);
+
+        // House body with roof peak
+        ctx.beginPath();
+        ctx.moveTo(cx, hy - roofH - bodyH / 2);        // roof peak
+        ctx.lineTo(cx + hw + 4, hy - bodyH / 2);        // right eave
+        ctx.lineTo(cx + hw, hy - bodyH / 2);             // right wall top
+        ctx.lineTo(cx + hw, hy + bodyH / 2);             // right wall bottom
+        ctx.lineTo(cx - hw, hy + bodyH / 2);             // left wall bottom
+        ctx.lineTo(cx - hw, hy - bodyH / 2);             // left wall top
+        ctx.lineTo(cx - hw - 4, hy - bodyH / 2);         // left eave
+        ctx.closePath();
         ctx.fillStyle = colors.surface + 'ee';
-        ctx.strokeStyle = colors.success + '50';
+        ctx.fill();
+        ctx.strokeStyle = colors.success + Math.round(40 + pulse * 30).toString(16).padStart(2, '0');
         ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.roundRect(homeX, ny, homeW, itemH, 8);
-        ctx.fill();
         ctx.stroke();
-        ctx.fillStyle = colors.success + '90';
-        ctx.beginPath();
-        ctx.roundRect(homeX, ny, homeW, 2.5, [8, 8, 0, 0]);
-        ctx.fill();
-        ctx.font = 'bold 12px JetBrains Mono';
-        ctx.fillStyle = colors.success;
+        ctx.shadowBlur = 8 * pulse;
+        ctx.shadowColor = colors.success + '30';
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        // PV panel on right roof slope
+        const pvX = cx + hw * 0.3;
+        const pvY = hy - roofH * 0.5 - bodyH / 2;
+        const roofAngle = Math.atan2(roofH, hw + 4);
+        ctx.save();
+        ctx.translate(pvX, pvY);
+        ctx.rotate(roofAngle);
+        ctx.fillStyle = 'rgba(59, 130, 246, 0.5)';
+        ctx.fillRect(-9, -4, 18, 8);
+        ctx.strokeStyle = 'rgba(59, 130, 246, 0.7)';
+        ctx.lineWidth = 0.8;
+        ctx.strokeRect(-9, -4, 18, 8);
+        ctx.restore();
+
+        // Label
+        ctx.font = 'bold 10px JetBrains Mono';
+        ctx.fillStyle = colors.success + 'cc';
         ctx.textAlign = 'center';
-        ctx.fillText(label, homeX + homeW / 2, hy + 5);
+        ctx.fillText(label, cx, hy + bodyH / 2 + 12);
       });
 
       // Draw actor boxes (right)

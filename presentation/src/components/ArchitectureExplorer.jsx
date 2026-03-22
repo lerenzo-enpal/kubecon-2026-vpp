@@ -96,17 +96,17 @@ const FOCUS_STEPS = [
   {
     id: 'flexa',
     label: 'VPP CONTROLLER',
-    zoom: 2.4,
-    cx: 0.87,
-    cy: 0.75,
+    zoom: 1.5,
+    cx: 0.58,
+    cy: 0.50,
     panelSide: 'left',
     panelColor: colors.accent,
     title: 'The Control Loop',
     subtitle: 'Flexa — Enpal + Entrix',
     bullets: [
-      'Market signal → device in under 2 seconds',
+      'Flexa → Event Hub → Cloud HEMS → EMQX → device',
+      'Full loop in under 2 seconds',
       'ArgoCD GitOps: fleet config as code',
-      'Kubernetes + Dapr: scales horizontally',
     ],
     stats: [
       { label: 'LOOP TIME', value: '<2s', color: colors.success },
