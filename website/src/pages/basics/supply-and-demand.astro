@@ -1,0 +1,129 @@
+---
+import ContentLayout from '../../layouts/ContentLayout.astro';
+import GridOperatorGame from '../../components/basics/labs/GridOperatorGame';
+import StorageScaleVisualizer from '../../components/basics/labs/StorageScaleVisualizer';
+---
+
+<ContentLayout title="Supply and Demand" description="Why the grid must balance supply and demand every second, and what happens when it cannot.">
+
+<h1>Supply and Demand</h1>
+
+<p class="text-xl" style="color: var(--color-text-muted); max-width: 600px;">
+  The grid has no warehouse. Electricity must be generated the instant it is consumed.
+  Balancing supply and demand across an entire continent is the hardest real-time control
+  problem on Earth.
+</p>
+
+<div class="my-6" style="height: 1px; background: linear-gradient(to right, transparent, var(--color-surface-light), transparent);"></div>
+
+<!-- ── Briefing: Why Balance Matters ── -->
+
+<h2 id="why-balance-matters">Why Balance Matters</h2>
+
+<p>
+  Every appliance you turn on draws power from the grid. Every generator feeding the grid
+  must collectively produce exactly as much power as all consumers are drawing -- not a
+  megawatt more, not a megawatt less.
+</p>
+
+<p>
+  When supply exceeds demand, frequency rises above 50 Hz. When demand exceeds supply,
+  frequency drops. Small deviations are normal. But if frequency strays too far, generators
+  disconnect to protect themselves, loads trip offline, and the grid can cascade into
+  blackout.
+</p>
+
+<h2 id="demand-never-stops">Demand Never Stops</h2>
+
+<p>
+  Demand follows predictable daily patterns: low at night when most people sleep,
+  rising in the morning as industry and offices come online, dipping midday, then
+  peaking in the evening when everyone comes home, cooks, and turns on lights and
+  heating. But predictable does not mean easy -- the operator must have enough
+  generation ready for every moment of the day.
+</p>
+
+<p>
+  On top of the daily pattern, demand shifts with weather (heatwaves push air conditioning,
+  cold snaps drive electric heating), holidays, major TV events, and industrial schedules.
+  The grid operator must forecast all of this and dispatch generators accordingly.
+</p>
+
+<h2 id="the-balancing-act">The Balancing Act</h2>
+
+<p>
+  Grid operators use a portfolio of generation assets, each with different response
+  characteristics:
+</p>
+
+<ul>
+  <li><strong>Baseload</strong> -- large coal or nuclear plants that run continuously. Cheap per MWh but slow to adjust.</li>
+  <li><strong>Mid-merit</strong> -- gas turbines that can ramp up or down over minutes. More expensive but flexible.</li>
+  <li><strong>Peakers</strong> -- fast-start gas or diesel generators kept on standby for demand spikes. Expensive, but can respond in seconds.</li>
+  <li><strong>Batteries</strong> -- instant response, but limited by stored energy. Ideal for short bursts.</li>
+  <li><strong>Renewables</strong> -- solar and wind are cheap but variable. The operator cannot control the weather.</li>
+</ul>
+
+<p>
+  The art of grid operation is dispatching these assets so that total supply tracks total
+  demand, keeping frequency within the safe band of 49.8--50.2 Hz.
+</p>
+
+<!-- ── Lab: Grid Operator Game ── -->
+
+<h2 id="grid-operator">Try It: Be the Grid Operator</h2>
+
+<p>
+  Can you keep the grid balanced for 24 simulated hours? Toggle the gas turbine and
+  battery to match supply with demand. Watch out for the cloud event that cuts solar
+  output. The frequency gauge shows whether you are in the green band (49.8--50.2 Hz).
+</p>
+
+<div class="my-8 scroll-mt-20">
+  <GridOperatorGame client:visible />
+</div>
+
+<!-- ── Briefing: Storage at Scale ── -->
+
+<h2 id="why-storage-matters">Why Storage Matters</h2>
+
+<p>
+  If batteries are so fast and flexible, why not just build enough to buffer the entire
+  grid? The answer is scale. Europe draws roughly 300 GW of power on average. The
+  world's largest lithium-ion battery installation -- Moss Landing in California --
+  stores just 3 GWh. That is enough to power Europe for about 36 seconds.
+</p>
+
+<p>
+  Even pumped hydro, which accounts for over 90% of all grid-scale energy storage on
+  Earth, totals only about 9,000 GWh globally. That would cover roughly 30 hours of
+  European demand. Building enough centralised storage to fully buffer a continental
+  grid is simply not feasible with current technology.
+</p>
+
+<!-- ── Lab: Storage Scale Visualizer ── -->
+
+<h2 id="storage-scale">Explore: Storage Scale</h2>
+
+<p>
+  Stack up Moss Landing batteries and see how long they would power the European grid.
+  Compare with all the pumped hydro storage on Earth. The numbers reveal why
+  distributed coordination -- virtual power plants -- is the path forward.
+</p>
+
+<div class="my-8 scroll-mt-20">
+  <StorageScaleVisualizer client:visible />
+</div>
+
+<!-- ── Closing ── -->
+
+<h2 id="what-comes-next">What Comes Next</h2>
+
+<p>
+  The grid cannot store its way out of the balancing problem with giant batteries alone.
+  But what if millions of small batteries -- in homes, electric vehicles, and commercial
+  buildings -- could be coordinated to act as one? That is the idea behind a
+  <strong>virtual power plant</strong>.
+</p>
+
+</ContentLayout>
