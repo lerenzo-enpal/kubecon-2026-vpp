@@ -59,9 +59,8 @@ presentation/src/
 The presentation uses 6 MapLibre/DeckGL map components that fetch tiles from CARTO's CDN at runtime. To make them work offline (e.g., during a talk with an unreliable connection), download the tile archives once while online:
 
 ```bash
-# Install the pmtiles CLI first (one-time):
-brew install pmtiles                                    # macOS
-# go install github.com/protomaps/go-pmtiles/...@latest # Linux / Go
+# Install the pmtiles CLI (one-time, macOS + Linux):
+npm run install:deps
 
 cd presentation
 npm run download:assets
