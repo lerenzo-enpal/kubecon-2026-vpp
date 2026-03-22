@@ -152,9 +152,11 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
   const running = mode !== 'idle';
 
   // Spectacle step integration — arrow keys advance cascade
-  const { step: rawStep, placeholder } = useSteps(CASCADE.length);
-  const spectacleStep = rawStep + 1; // 0 = idle, 1..CASCADE.length = cascade steps
+  // Step 0 = intro (clean map, no HUD), Step 1 = HUDs appear, Steps 2+ = cascade
+  const { step: rawStep, placeholder } = useSteps(CASCADE.length + 1);
+  const spectacleStep = rawStep + 1; // 0 = intro, 1 = HUD reveal, 2..CASCADE.length+1 = cascade steps
   const prevSpectacleStep = useRef(0);
+  const hudVisible = spectacleStep >= 1;
 
   const slideContext = useContext(SlideContext);
   const slideActive = slideContext?.isSlideActive;
@@ -168,20 +170,26 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
       setBoot(0); clearIncidentTimers(); lastAutoStep.current = -1;
       prevSpectacleStep.current = spectacleStep; // sync to current step to suppress stale triggers
       wasActiveRef.current = true;
-      const delay = setTimeout(() => {
-        const start = performance.now();
-        const tick = () => {
-          const s = (performance.now() - start) / 1000;
-          setBoot(s);
-          if (s < 4.0) bootRef.current = requestAnimationFrame(tick);
-        };
-        bootRef.current = requestAnimationFrame(tick);
-      }, 700);
-      return () => { clearTimeout(delay); cancelAnimationFrame(bootRef.current); };
     } else {
       wasActiveRef.current = false;
     }
   }, [slideActive]);
+
+  // Boot animation — only starts when HUDs become visible
+  useEffect(() => {
+    if (!hudVisible || !wasActiveRef.current) return;
+    setBoot(0);
+    const delay = setTimeout(() => {
+      const start = performance.now();
+      const tick = () => {
+        const s = (performance.now() - start) / 1000;
+        setBoot(s);
+        if (s < 4.0) bootRef.current = requestAnimationFrame(tick);
+      };
+      bootRef.current = requestAnimationFrame(tick);
+    }, 200);
+    return () => { clearTimeout(delay); cancelAnimationFrame(bootRef.current); };
+  }, [hudVisible]);
 
   // Pulse animation loop — drives re-renders for amber glow when incident plants exist
   useEffect(() => {
@@ -212,8 +220,9 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
         transitionInterpolator: FLY_TO,
         transitionEasing: t => 1 - Math.pow(1 - t, 3),
       });
-    } else if (spectacleStep >= 1) {
-      const targetIdx = spectacleStep - 1;
+    } else if (spectacleStep >= 2) {
+      // Cascade steps start at spectacleStep 2 (offset by 1 for HUD reveal step)
+      const targetIdx = spectacleStep - 2;
       if (targetIdx < CASCADE.length) {
         setMode('stepping');
         setStepIndex(targetIdx);
@@ -340,11 +349,11 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
   const legendFade = bootFade(1.8, 0.5);
 
   // ── Computed values ──
-  const rawFreq = running ? 50.0 - failed.size * 0.35 - Math.max(0, elapsed - 2) * 0.06 : 50.0;
-  const freq = Math.max(47.5, rawFreq) + Math.sin(Date.now() / 300) * 0.01;
+  const rawFreq = running ? 60.0 - failed.size * 0.35 - Math.max(0, elapsed - 2) * 0.06 : 60.0;
+  const freq = Math.max(57.5, rawFreq) + Math.sin(Date.now() / 300) * 0.01;
   const mwOffline = Math.min(52277, Math.floor(failed.size / PLANTS.length * 52277));
-  const inDanger = freq < 49.0;
-  const freqColor = freq < 49.0 ? '#ef4444' : freq < 49.5 ? '#f59e0b' : '#22d3ee';
+  const inDanger = freq < 59.0;
+  const freqColor = freq < 59.0 ? '#ef4444' : freq < 59.5 ? '#f59e0b' : '#22d3ee';
   const glowColor = inDanger ? '#ef4444' : '#22d3ee';
   const borderClr = inDanger ? 'rgba(239,68,68,0.5)' : 'rgba(34,211,238,0.35)';
   const showWarning = running && elapsed > 12;
@@ -489,34 +498,61 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
   ];
 
   return (
-    <div style={{ position: 'relative', width, height, overflow: 'hidden', background: '#020408' }}>
+    <div style={{ position: 'relative', width, height, overflow: 'hidden', background: hudVisible ? '#020408' : '#0a1020', transition: 'background 0.8s ease' }}>
       {placeholder}
       {/* ── Map ── */}
       <DeckGL
         viewState={viewState}
         onViewStateChange={({ viewState: vs }) => setViewState(vs)}
         controller={true}
-        layers={layers}
+        layers={hudVisible ? layers : [
+          // Intro mode: only show transmission lines and plant nodes (no X marks, softer colors)
+          new LineLayer({
+            id: 'glow', data: lines,
+            getSourcePosition: d => d.from, getTargetPosition: d => d.to,
+            getColor: [34, 211, 238, 20], getWidth: 3, widthMinPixels: 2,
+          }),
+          new LineLayer({
+            id: 'lines', data: lines,
+            getSourcePosition: d => d.from, getTargetPosition: d => d.to,
+            getColor: [34, 211, 238, 80], getWidth: 1.5, widthMinPixels: 1,
+          }),
+          new ScatterplotLayer({
+            id: 'plants', data: PLANTS, getPosition: d => d.pos,
+            getRadius: d => 3600 * Math.sqrt(d.cap),
+            getFillColor: d => [...TYPE_COLORS[d.type], 120],
+            getLineColor: d => [...TYPE_COLORS[d.type], 180],
+            stroked: true, lineWidthMinPixels: 2, radiusMinPixels: 5, radiusMaxPixels: 24,
+          }),
+          new TextLayer({
+            id: 'labels', data: PLANTS, getPosition: d => d.pos, getText: d => d.name,
+            getSize: 11, getColor: [241, 245, 249, 140],
+            getTextAnchor: 'middle', getAlignmentBaseline: 'top', getPixelOffset: [0, 18], fontFamily: 'Inter',
+          }),
+        ]}
         width={width}
         height={height}
         style={{ position: 'absolute' }}
       >
         <MapGL
           mapStyle={mapStyle}
-          style={{ width: '100%', height: '100%' }}
+          style={{ width: '100%', height: '100%', opacity: hudVisible ? 1 : 1.0 }}
         />
       </DeckGL>
 
-      {/* ── Scanline overlay ── */}
+      {/* ── Scanline overlay (only when HUD active) ── */}
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 5,
-        background: 'repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px)',
+        background: hudVisible ? 'repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px)' : 'none',
+        transition: 'opacity 0.8s ease',
+        opacity: hudVisible ? 1 : 0,
       }} />
 
       {/* ── Vignette ── */}
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 4,
-        boxShadow: 'inset 0 0 120px 40px rgba(2,4,8,0.7)',
+        boxShadow: hudVisible ? 'inset 0 0 120px 40px rgba(2,4,8,0.7)' : 'inset 0 0 80px 20px rgba(10,16,32,0.4)',
+        transition: 'box-shadow 0.8s ease',
       }} />
 
       {/* ── Danger atmosphere ── */}
@@ -528,7 +564,7 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
       )}
 
       {/* ── Boot Scan Line (subtle accent, map stays visible) ── */}
-      {boot > 0.08 && boot < 1.8 && (
+      {hudVisible && boot > 0.08 && boot < 1.8 && (
         <div style={{
           position: 'absolute', left: 0, right: 0, pointerEvents: 'none', zIndex: 15,
           top: `${ease((boot - 0.08) / 1.5) * 110}%`,
@@ -541,7 +577,7 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
       {/* ════════════════════════════════════════════════════════
           HUD VARIANT — Full panel layout
           ════════════════════════════════════════════════════════ */}
-      {variant === 'hud' && (
+      {variant === 'hud' && hudVisible && (
         <>
           {/* ── Left: Timeline Panel ── */}
           <div style={{
@@ -739,7 +775,7 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
               fontSize: 13, fontFamily: '"JetBrains Mono"', color: freqColor,
               marginTop: 4, fontWeight: 600, opacity: rpContent,
             }}>
-              {freq < 49.0 ? '\u26A0 EMERGENCY' : freq < 49.5 ? '\u26A0 WARNING' : 'NOMINAL'}
+              {freq < 59.0 ? '\u26A0 EMERGENCY' : freq < 59.5 ? '\u26A0 WARNING' : 'NOMINAL'}
             </div>
             {running && (
               <>
@@ -836,7 +872,7 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
               fontSize: 11, fontFamily: '"JetBrains Mono"', color: freqColor,
               textShadow: '0 0 8px rgba(0,0,0,0.9)', marginTop: 2, fontWeight: 600,
             }}>
-              {freq < 49.0 ? '\u26A0 EMERGENCY' : freq < 49.5 ? 'WARNING' : 'ERCOT \u2014 NOMINAL'}
+              {freq < 59.0 ? '\u26A0 EMERGENCY' : freq < 59.5 ? 'WARNING' : 'ERCOT \u2014 NOMINAL'}
             </div>
             {running && (
               <div style={{

@@ -729,7 +729,7 @@ function GridDiagram({ state, draw }) {
 
 
 // ─── Supply/Demand Balance scene ───
-// step 1: supply < demand (freq drops), step 2: supply > demand (freq rises), step 3: no storage summary
+// step 1: supply < demand (freq drops), step 2: supply > demand (freq rises), step 3: no buffer summary
 function SupplyDemandScene({ active, step = 1 }) {
   const [freq, setFreq] = useState(50.000);
   const rafRef = useRef(null);
@@ -814,14 +814,14 @@ function SupplyDemandScene({ active, step = 1 }) {
         </div>
       </div>
 
-      {/* No storage — on its own arrow press, larger font */}
+      {/* No buffer — on its own arrow press, larger font */}
       <div className="text-center" style={{
         opacity: step >= 3 ? 1 : 0,
         transform: step >= 3 ? 'translateY(0)' : 'translateY(15px)',
         transition: 'all 0.6s ease',
       }}>
         <div className="text-[28px] font-sans font-semibold" style={{ color: colors.text }}>
-          The grid has <span className="font-extrabold" style={{ color: colors.primary }}>no storage</span>. Every watt
+          The grid has <span className="font-extrabold" style={{ color: colors.primary }}>no buffer</span>. Every watt
           produced must be consumed <span className="font-extrabold" style={{ color: colors.primary }}>instantly</span>.
         </div>
       </div>

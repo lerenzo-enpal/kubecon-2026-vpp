@@ -28,6 +28,7 @@ import ResponseTimeline from './components/ResponseTimeline';
 import ThankYouBackground from './components/ThankYouBackground';
 import FrequencyWalkthrough from './components/FrequencyWalkthrough';
 import ArchitectureExplorer from './components/ArchitectureExplorer';
+import ChoreographyLoop from './components/ChoreographyLoop';
 
 
 const theme = {
@@ -348,7 +349,7 @@ export default function Presentation() {
         <Notes>
           - 50 Hz = supply equals demand. Imbalances propagate at 0.67c (two-thirds the speed of light)
           - No buffer, no queue, no retry — physics enforces balance instantaneously
-          - [ARROW] Too little supply = frequency drops. Too much = frequency rises. The grid has no storage.
+          - [ARROW] Too little supply = frequency drops. Too much = frequency rises. The grid has no buffer.
           - [ARROW] 2.5 Hz separates "everything is fine" from total collapse. Less than you can hear.
           - Backup: Continental European grid synchronized since the 1950s, never fully shut down
         </Notes>
@@ -713,7 +714,9 @@ export default function Presentation() {
             <H>What Is a Virtual Power Plant?</H>
             <P size="20px">From market signal to battery response — the command flow through our VPP architecture.</P>
           </div>
-          <LazyContent><VPPArchitecture /></LazyContent>
+          <Stepper values={[1, 2, 3]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="w-full h-full">
+            {(stepVal) => <LazyContent><VPPArchitecture highlightStep={stepVal ?? 0} /></LazyContent>}
+          </Stepper>
         </div>
         <Notes>
           [LERENZO] Left: devices — solar panels, batteries, EV chargers, heat pumps.
@@ -726,13 +729,19 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 25: Inside the Architecture */}
+      {/* 25: Inside the Architecture [DEPRECATED] */}
       <Slide backgroundColor={bg} padding="16px 0px">
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full relative">
           <div className="px-8"><H>Inside the Architecture</H></div>
           <div className="px-8"><P size="18px">Measurement data every 20 seconds — Protobuf over MQTT through EMQX, into Databricks streaming aggregates powered by Apache Spark.</P></div>
           <div className="flex-1 flex justify-center items-center">
             <LazyContent><EnpalArchitectureDiagram width={1366} height={528} /></LazyContent>
+          </div>
+          {/* DEPRECATED overlay */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20" style={{ background: 'rgba(5,8,16,0.7)' }}>
+            <div style={{ fontSize: 180, fontWeight: 900, fontFamily: '"JetBrains Mono"', color: colors.danger, opacity: 0.6, textShadow: `0 0 60px ${colors.danger}40`, transform: 'rotate(-15deg)' }}>
+              DEPRECATED
+            </div>
           </div>
         </div>
         <Notes>
@@ -800,56 +809,26 @@ export default function Presentation() {
               ))}
             </div>
           </div>
-          <P size="18px">Choreography over orchestration. MQTT pub/sub with QoS 1. Dapr actors for per-device state. ArgoCD for fleet-wide GitOps deployment.</P>
+          <P size="18px">No central coordinator. Each home is a Dapr actor. MQTT pub/sub scales linearly. Services react to events independently.</P>
 
-          <div className="flex-1 flex gap-6 mt-4">
-            {/* Left column: Architecture choices */}
-            <div className="flex-1 flex flex-col gap-4">
-              <div className="rounded-lg p-4" style={{ background: colors.surface, border: `1px solid ${colors.primary}20` }}>
-                <div className="text-[15px] font-semibold font-mono mb-2" style={{ color: colors.primary }}>MQTT + Choreography</div>
-                <div className="text-[14px] text-hud-text-muted font-sans leading-relaxed">
-                  Each device publishes telemetry every 20s. No central coordinator — services react to events independently.
-                  Choreography scales linearly with device count. No single point of failure in the control path.
-                </div>
-              </div>
-              <div className="rounded-lg p-4" style={{ background: colors.surface, border: `1px solid ${colors.success}20` }}>
-                <div className="text-[15px] font-semibold font-mono mb-2" style={{ color: colors.success }}>Dapr Actors</div>
-                <div className="text-[14px] text-hud-text-muted font-sans leading-relaxed">
-                  Each home is a Dapr actor — isolated state, turn-based concurrency.
-                  WISH protocol handles conflict resolution locally when multiple commands arrive simultaneously.
-                </div>
-              </div>
-              <div className="rounded-lg p-4" style={{ background: colors.surface, border: `1px solid ${colors.accent}20` }}>
-                <div className="text-[15px] font-semibold font-mono mb-2" style={{ color: colors.accent }}>ArgoCD + GitOps</div>
-                <div className="text-[14px] text-hud-text-muted font-sans leading-relaxed">
-                  Fleet configuration as code. ArgoCD syncs desired state from Git to Kubernetes.
-                  Rolling updates across 100K+ device configurations without downtime.
-                </div>
-              </div>
+          {/* Choreography visualization */}
+          <div className="flex-1 flex justify-center items-center">
+            <LazyContent><ChoreographyLoop width={1100} height={380} /></LazyContent>
+          </div>
+
+          {/* Bottom: key concepts */}
+          <div className="flex gap-5 mt-2">
+            <div className="flex-1 rounded-lg px-4 py-3" style={{ background: colors.surface, border: `1px solid ${colors.success}20` }}>
+              <span className="text-[15px] font-semibold font-mono" style={{ color: colors.success }}>Dapr Actors</span>
+              <span className="text-[15px] text-hud-text-muted font-sans ml-3">One actor per home — isolated state, turn-based concurrency</span>
             </div>
-
-            {/* Right column: Consistency model comparison */}
-            <div className="w-[380px] rounded-lg p-4" style={{ background: colors.surface, border: `1px solid ${colors.textDim}20` }}>
-              <div className="text-[12px] font-mono font-semibold tracking-[0.12em] uppercase mb-3" style={{ color: colors.textDim }}>Consistency Model Comparison</div>
-              <div className="flex flex-col gap-2">
-                {[
-                  { model: 'Choreography', desc: 'Services react independently to events', fit: 'Current', fitColor: colors.success, note: 'Scales to millions of devices' },
-                  { model: 'Eventual Consistency', desc: 'State converges over time across replicas', fit: 'Not needed', fitColor: colors.textDim, note: 'No shared mutable state between devices' },
-                  { model: 'Strong Consistency', desc: 'All nodes see same state simultaneously', fit: 'Overkill', fitColor: colors.textDim, note: 'Would bottleneck at fleet scale' },
-                  { model: 'Saga / Orchestration', desc: 'Central coordinator manages transactions', fit: 'Avoided', fitColor: colors.textDim, note: 'Single point of failure risk' },
-                ].map((row, i) => (
-                  <div key={i} className="flex gap-3 items-start py-2" style={{ borderBottom: i < 3 ? `1px solid ${colors.surfaceLight}` : 'none' }}>
-                    <div className="w-[100px] shrink-0">
-                      <div className="text-[12px] font-semibold font-mono" style={{ color: i === 0 ? colors.success : colors.textMuted }}>{row.model}</div>
-                      <div className="text-[10px] font-mono mt-0.5" style={{ color: row.fitColor }}>{row.fit}</div>
-                    </div>
-                    <div>
-                      <div className="text-[11px] text-hud-text-muted font-sans">{row.desc}</div>
-                      <div className="text-[10px] font-mono mt-0.5" style={{ color: colors.textDim }}>{row.note}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+            <div className="flex-1 rounded-lg px-4 py-3" style={{ background: colors.surface, border: `1px solid ${colors.primary}20` }}>
+              <span className="text-[15px] font-semibold font-mono" style={{ color: colors.primary }}>Choreography</span>
+              <span className="text-[15px] text-hud-text-muted font-sans ml-3">No orchestrator — 100K independent pub/sub channels</span>
+            </div>
+            <div className="flex-1 rounded-lg px-4 py-3" style={{ background: colors.surface, border: `1px solid ${colors.accent}20` }}>
+              <span className="text-[15px] font-semibold font-mono" style={{ color: colors.accent }}>ArgoCD</span>
+              <span className="text-[15px] text-hud-text-muted font-sans ml-3">Fleet config as code — rolling updates from Git</span>
             </div>
           </div>
         </div>
@@ -1065,7 +1044,7 @@ export default function Presentation() {
                         <div className="text-[26px] font-bold font-mono" style={{ color: colors.success }}>And Fast:</div>
                         <div className="text-[12px] font-mono mt-1" style={{ color: colors.textDim }}>Response Time</div>
                       </div>
-                      <div className="flex-1"><LazyContent><ResponseTimeline width={840} height={120} delay={sv >= 2 ? 0.5 : 999} /></LazyContent></div>
+                      <div className="flex-1">{sv >= 2 && <LazyContent key={`rt-${sv}`}><ResponseTimeline width={840} height={120} delay={0} /></LazyContent>}</div>
                     </div>
                   </div>
                 </div>

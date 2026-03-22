@@ -29,17 +29,16 @@ const FOCUS_STEPS = [
     id: 'home',
     label: 'HOME SYSTEM',
     zoom: 2.0,
-    cx: 0.25,  // center between IoT HEMS and inverter, shifted right to avoid Grid strip overlap
-    cy: 0.45,
+    cx: 0.35,  // center on IoT HEMS node
+    cy: 0.35,
     panelSide: 'right',
     panelColor: colors.success,
     title: 'Edge Intelligence',
     subtitle: 'Enpal.One — IoT HEMS',
     bullets: [
-      'Local energy management at the edge — no cloud dependency for basic operation',
-      'Manages inverter, battery, heat pump, wallbox, and Steuerbox',
-      'WISH protocol: conflict resolution when grid operator and VPP send competing commands',
-      'Telemetry every 20s via Protobuf over MQTT (QoS 1)',
+      'Local energy management — runs without cloud',
+      'WISH protocol resolves competing commands',
+      'Telemetry every 20s via MQTT',
     ],
     stats: [
       { label: 'DEVICES', value: '5-6', color: colors.success },
@@ -49,18 +48,17 @@ const FOCUS_STEPS = [
   {
     id: 'mqtt',
     label: 'MESSAGE BROKER',
-    zoom: 2.4,
-    cx: 0.53,
-    cy: 0.45,
+    zoom: 1.6,
+    cx: 0.48,
+    cy: 0.43,
     panelSide: 'left',
     panelColor: colors.primary,
     title: 'Choreography over Orchestration',
     subtitle: 'EMQX — MQTT Broker',
     bullets: [
-      'Pub/sub with QoS 1 — at-least-once delivery without blocking',
-      'No central coordinator — services react to events independently',
-      'Choreography scales linearly: 100K devices = 100K independent pub/sub channels',
-      'Cloud HEMS uses Dapr Actors — one actor per home, turn-based concurrency',
+      'Pub/sub QoS 1 — no central coordinator',
+      'Scales linearly: 100K independent channels',
+      'Cloud HEMS: Dapr Actors, one per home',
     ],
     stats: [
       { label: 'CONNECTIONS', value: '100K+', color: colors.primary },
@@ -84,12 +82,11 @@ const FOCUS_STEPS = [
     panelSide: 'left',
     panelColor: '#FF3621',
     title: 'Streaming at Scale',
-    subtitle: 'Databricks + Spark',
+    subtitle: 'Spark + Databricks',
     bullets: [
-      'Protobuf decoded to Delta Lake — Raw → Bronze → Silver → Gold',
-      'Spark streaming aggregates: near-real-time pattern detection across the fleet',
-      'Progressive aggregation reduces storage 10x — raw data expires after 7 days',
-      '5M+ measurements per minute at full fleet scale',
+      'Raw → Bronze → Silver → Gold lakehouse',
+      'Spark streaming aggregates in near-real-time',
+      '5M+ measurements/min, storage reduced 10x',
     ],
     stats: [
       { label: 'THROUGHPUT', value: '5M/min', color: '#FF3621' },
@@ -107,10 +104,9 @@ const FOCUS_STEPS = [
     title: 'The Control Loop',
     subtitle: 'Flexa — Enpal + Entrix',
     bullets: [
-      'Market signal → Flexa → Event Hub → Cloud HEMS → EMQX → device',
-      'Full loop in under 2 seconds — from price signal to battery response',
-      'ArgoCD for GitOps: fleet configuration as code, rolling updates from Git',
-      'Kubernetes + Dapr runtime — horizontal scaling, self-healing',
+      'Market signal → device in under 2 seconds',
+      'ArgoCD GitOps: fleet config as code',
+      'Kubernetes + Dapr: scales horizontally',
     ],
     stats: [
       { label: 'LOOP TIME', value: '<2s', color: colors.success },
@@ -171,7 +167,7 @@ export default function ArchitectureExplorer({ step = 0 }) {
       {focus.panel !== null && focus.panelSide && (
         <div className="absolute bottom-0 z-20 flex items-center" style={{ top: 110,
           [focus.panelSide === 'right' ? 'right' : 'left']: 16,
-          width: 380,
+          width: 420,
           opacity: isOverview ? 0 : 1,
           transform: isOverview
             ? `translateX(${focus.panelSide === 'right' ? '60px' : '-60px'})`
@@ -184,44 +180,44 @@ export default function ArchitectureExplorer({ step = 0 }) {
             border: `1px solid ${focus.panelColor}35`,
             boxShadow: `0 0 30px ${focus.panelColor}15, inset 0 0 20px ${focus.panelColor}05`,
             backdropFilter: 'blur(12px)',
-            padding: '16px 20px',
+            padding: '20px 24px',
           }}>
             <Corners color={focus.panelColor + '50'} size={10} />
 
             {/* Title */}
-            <div className="text-[10px] font-mono font-semibold tracking-[0.15em] uppercase mb-1" style={{ color: focus.panelColor }}>{focus.subtitle}</div>
-            <div className="text-[20px] font-extrabold font-sans leading-tight mb-3" style={{ color: colors.text }}>{focus.title}</div>
+            <div className="text-[13px] font-mono font-semibold tracking-[0.15em] uppercase mb-1" style={{ color: focus.panelColor }}>{focus.subtitle}</div>
+            <div className="text-[26px] font-extrabold font-sans leading-tight mb-4" style={{ color: colors.text }}>{focus.title}</div>
 
             {/* Stats row */}
             {focus.stats && (
-              <div className="flex gap-3 mb-3">
+              <div className="flex gap-4 mb-4">
                 {focus.stats.map((s, i) => (
-                  <div key={i} className="rounded px-2 py-1" style={{ background: s.color + '0a', border: `1px solid ${s.color}20` }}>
-                    <div className="text-[8px] font-mono tracking-[0.1em] uppercase" style={{ color: colors.textDim }}>{s.label}</div>
-                    <div className="text-[14px] font-bold font-mono" style={{ color: s.color }}>{s.value}</div>
+                  <div key={i} className="rounded px-3 py-1.5" style={{ background: s.color + '0a', border: `1px solid ${s.color}20` }}>
+                    <div className="text-[10px] font-mono tracking-[0.1em] uppercase" style={{ color: colors.textDim }}>{s.label}</div>
+                    <div className="text-[18px] font-bold font-mono" style={{ color: s.color }}>{s.value}</div>
                   </div>
                 ))}
               </div>
             )}
 
             {/* Bullets */}
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-3">
               {focus.bullets.map((b, i) => (
-                <div key={i} className="flex gap-2 items-start">
-                  <div className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: focus.panelColor + '80' }} />
-                  <div className="text-[13px] text-hud-text-muted font-sans leading-relaxed">{b}</div>
+                <div key={i} className="flex gap-3 items-start">
+                  <div className="mt-2 w-2 h-2 rounded-full shrink-0" style={{ background: focus.panelColor + '80' }} />
+                  <div className="text-[17px] text-hud-text-muted font-sans leading-relaxed">{b}</div>
                 </div>
               ))}
             </div>
 
             {/* Extra content (consistency comparison for MQTT) */}
             {focus.extra && (
-              <div className="mt-3 pt-3" style={{ borderTop: `1px solid ${colors.surfaceLight}` }}>
-                <div className="text-[10px] font-mono font-semibold tracking-[0.1em] uppercase mb-2" style={{ color: colors.textDim }}>{focus.extra.title}</div>
+              <div className="mt-4 pt-4" style={{ borderTop: `1px solid ${colors.surfaceLight}` }}>
+                <div className="text-[12px] font-mono font-semibold tracking-[0.1em] uppercase mb-2" style={{ color: colors.textDim }}>{focus.extra.title}</div>
                 {focus.extra.rows.map((r, i) => (
-                  <div key={i} className="flex items-center gap-2 py-1">
-                    <div className="text-[11px] font-mono font-semibold w-[80px]" style={{ color: r.active ? colors.success : colors.textDim }}>{r.model}</div>
-                    <div className="text-[10px] font-sans" style={{ color: r.active ? colors.textMuted : colors.textDim }}>{r.note}</div>
+                  <div key={i} className="flex items-center gap-3 py-1">
+                    <div className="text-[14px] font-mono font-semibold w-[100px]" style={{ color: r.active ? colors.success : colors.textDim }}>{r.model}</div>
+                    <div className="text-[13px] font-sans" style={{ color: r.active ? colors.textMuted : colors.textDim }}>{r.note}</div>
                   </div>
                 ))}
               </div>

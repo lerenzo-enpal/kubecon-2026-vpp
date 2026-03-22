@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useContext } from 'react';
+import React, { useEffect, useRef, useContext, useState } from 'react';
 import { SlideContext } from 'spectacle';
+import { Corners } from './ui';
 import { colors } from '../theme';
 
 /**
@@ -7,11 +8,24 @@ import { colors } from '../theme';
  * Energy Market → Trader (Entrix) → Flexa → Enpal Cloud → IoT Homes
  */
 
+// Drawer info for each highlighted node (steps 1-3)
+const DRAWER_INFO = [
+  { nodeId: 'market', title: 'Energy Market', sub: 'FCR / aFRR', color: colors.accent,
+    desc: 'Grid operators like ENTSO-E auction reserve capacity to keep frequency stable. TSOs procure FCR (30s response) and aFRR (5 min) from qualified providers — including VPPs.',
+    detail: 'Response: 30s (FCR) to 5min (aFRR)' },
+  { nodeId: 'trader', title: 'Trading Gateway', sub: 'Entrix', color: colors.accent,
+    desc: 'Algorithmic trading platform that bids aggregated battery capacity into wholesale energy markets. Entrix optimizes across day-ahead, intraday, and balancing markets.',
+    detail: 'Optimizes across multiple market types' },
+  { nodeId: 'controller', title: 'VPP Controller', sub: 'Flexa (Enpal + Entrix JV)', color: colors.primary,
+    desc: 'The orchestration brain. Flexa receives market commitments and decides which distributed assets respond, when, and how — dispatching commands to thousands of homes in real time.',
+    detail: 'Market signal to device in <2 seconds' },
+];
+
 const NODES = [
-  { id: 'market',     label: 'Energy Market',   sub: 'FCR / aFRR',        x: 0.03,  y: 0.5,  color: colors.accent },
-  { id: 'trader',     label: 'Trading Gateway',  sub: 'Entrix',            x: 0.22,  y: 0.5,  color: colors.accent },
-  { id: 'controller', label: 'VPP Controller',   sub: 'Flexa',             x: 0.42,  y: 0.5,  color: colors.primary },
-  { id: 'enpal',      label: 'Enpal Cloud',     sub: 'Fleet Mgmt',       x: 0.62,  y: 0.5,  color: colors.success },
+  { id: 'market',     label: 'Energy Market',   sub: 'FCR / aFRR',        x: 0.03,  y: 0.42,  color: colors.accent },
+  { id: 'trader',     label: 'Trading Gateway',  sub: 'Entrix',            x: 0.22,  y: 0.42,  color: colors.accent },
+  { id: 'controller', label: 'VPP Controller',   sub: 'Flexa',             x: 0.42,  y: 0.42,  color: colors.primary },
+  { id: 'enpal',      label: 'Enpal Cloud',     sub: 'Fleet Mgmt',       x: 0.62,  y: 0.42,  color: colors.success },
 ];
 
 const HOMES = [
@@ -56,11 +70,13 @@ const ALL_NODES = [...NODES, ...HOMES];
 const NODE_MAP = new Map(ALL_NODES.map(n => [n.id, n]));
 function getNode(id) { return NODE_MAP.get(id); }
 
-export default function VPPArchitecture() {
+export default function VPPArchitecture({ highlightStep = 0 }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const moonCanvasRef = useRef(null);
   const slideContext = useContext(SlideContext);
+  const highlightRef = useRef(highlightStep);
+  highlightRef.current = highlightStep;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -77,7 +93,7 @@ export default function VPPArchitecture() {
     const contentH = height * 0.82;
     const mapY = (frac) => padTop + frac * contentH;
 
-    const nodeW = 150, nodeH = 66;
+    const nodeW = 172, nodeH = 66;
     const homeW = 56, homeH = 52;
 
     const particles = [];
@@ -264,6 +280,53 @@ export default function VPPArchitecture() {
         ctx.fillStyle = colors.text + 'dd';
         ctx.fillText(node.sub, nx + nodeW / 2, ny + 50);
       });
+
+      // Highlight active node and draw connecting line to drawer
+      const hs = highlightRef.current;
+      if (hs >= 1 && hs <= DRAWER_INFO.length) {
+        const info = DRAWER_INFO[hs - 1];
+        const targetNode = NODES.find(n => n.id === info.nodeId);
+        if (targetNode) {
+          const nx = targetNode.x * width;
+          const ny = mapY(targetNode.y) - nodeH / 2;
+
+          // Highlight glow around active node
+          ctx.shadowBlur = 20;
+          ctx.shadowColor = info.color;
+          ctx.strokeStyle = info.color + '80';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.roundRect(nx - 3, ny - 3, nodeW + 6, nodeH + 6, 12);
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+
+          // Connecting line from node bottom to drawer area
+          const lineStartX = nx + nodeW / 2;
+          const lineStartY = ny + nodeH + 4;
+          const drawerTop = height - 120;
+          const lineEndX = lineStartX;
+          const lineEndY = drawerTop;
+
+          // Dashed line
+          ctx.setLineDash([6, 4]);
+          ctx.strokeStyle = info.color + '50';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(lineStartX, lineStartY);
+          ctx.lineTo(lineEndX, lineEndY);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          // Dot at connection points
+          ctx.fillStyle = info.color;
+          ctx.beginPath();
+          ctx.arc(lineStartX, lineStartY, 3, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(lineEndX, lineEndY, 3, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
 
       // ── Unified clock ──────────────────────────────────────────────
       // See docs/vpp-animation-cycle.md for full spec
@@ -672,12 +735,48 @@ export default function VPPArchitecture() {
     return () => cancelAnimationFrame(animRef.current);
   }, [slideContext?.isSlideActive]);
 
+  const activeDrawer = highlightStep >= 1 && highlightStep <= DRAWER_INFO.length ? DRAWER_INFO[highlightStep - 1] : null;
+
   return (
     <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
       <canvas
         ref={canvasRef}
         style={{ width: '100%', height: '100%' }}
       />
+      {/* Bottom drawer for node descriptions */}
+      <div style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 10,
+        height: 120,
+        background: activeDrawer ? 'rgba(5, 8, 16, 0.92)' : 'transparent',
+        borderTop: activeDrawer ? `1px solid ${activeDrawer?.color || colors.primary}35` : 'none',
+        boxShadow: activeDrawer ? `0 -4px 30px rgba(0,0,0,0.4), inset 0 1px 20px ${activeDrawer?.color || colors.primary}06` : 'none',
+        backdropFilter: activeDrawer ? 'blur(12px)' : 'none',
+        opacity: activeDrawer ? 1 : 0,
+        transform: activeDrawer ? 'translateY(0)' : 'translateY(20px)',
+        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+        display: 'flex', alignItems: 'center', padding: '0 40px', gap: 24,
+      }}>
+        {activeDrawer && <Corners color={activeDrawer.color} />}
+        {activeDrawer && (
+          <>
+            <div style={{ flexShrink: 0, minWidth: 200 }}>
+              <div style={{ fontSize: 11, fontFamily: '"JetBrains Mono"', color: activeDrawer.color, letterSpacing: '0.12em', fontWeight: 700, marginBottom: 4, textTransform: 'uppercase' }}>
+                {activeDrawer.sub}
+              </div>
+              <div style={{ fontSize: 22, fontFamily: '"JetBrains Mono"', color: activeDrawer.color, fontWeight: 800 }}>
+                {activeDrawer.title}
+              </div>
+              <div style={{ fontSize: 12, fontFamily: '"JetBrains Mono"', color: colors.textDim, marginTop: 6 }}>
+                {activeDrawer.detail}
+              </div>
+            </div>
+            <div style={{ width: 1, height: 60, background: `${activeDrawer.color}25`, flexShrink: 0 }} />
+            <div style={{ fontSize: 16, fontFamily: '"Inter", sans-serif', color: colors.text + 'dd', lineHeight: 1.6, flex: 1 }}>
+              {activeDrawer.desc}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }

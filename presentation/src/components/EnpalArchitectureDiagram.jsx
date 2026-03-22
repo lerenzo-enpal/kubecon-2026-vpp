@@ -39,9 +39,9 @@ const NODES = [
   { id: 'emqx',        label: 'MQTT',            sub: 'EMQX',              x: 0.53, y: 0.18, color: colors.primary,    w: 94,  h: 42 },
   { id: 'ingestion',   label: 'Data Ingestion',  sub: 'Protobuf · 20s',   x: 0.70, y: 0.18, color: colors.secondary,  w: 110, h: 42 },
 
-  // Middle row — processing (Databricks aligned with Ingestion)
-  { id: 'databricks',  label: 'Databricks',      sub: 'Bronze → Gold',    x: 0.70, y: 0.50, color: '#FF3621',         w: 105, h: 42 },
-  { id: 'spark',       label: 'Spark Streaming', sub: 'Aggregates',       x: 0.87, y: 0.50, color: '#E25A1C',         w: 120, h: 42 },
+  // Middle row — processing (Spark aligned with Ingestion)
+  { id: 'spark',       label: 'Spark Streaming', sub: 'Aggregates',       x: 0.70, y: 0.50, color: '#E25A1C',         w: 120, h: 42 },
+  { id: 'databricks',  label: 'Databricks',      sub: 'Bronze → Gold',    x: 0.87, y: 0.50, color: '#FF3621',         w: 105, h: 42 },
 
   // Bottom row — dispatch / control (Event Hub aligned with Ingestion)
   { id: 'cloud_hems',  label: 'Cloud HEMS',      sub: 'Orchestration\nDapr Actors',  x: 0.53, y: 0.80, color: colors.primary,    w: 105, h: 52 },
@@ -75,11 +75,11 @@ const EDGES = [
   // === DATA: telemetry pipeline (left → right) ===
   { from: 'iot_hems',    to: 'emqx',       label: 'MQTT',      color: colors.primary,   rate: 1.2, offset: -3 },
   { from: 'emqx',        to: 'ingestion',  label: 'Protobuf',  color: colors.secondary, rate: 1 },
-  { from: 'ingestion',   to: 'databricks', label: '',           color: colors.secondary, rate: 1.2 },
-  { from: 'databricks',  to: 'spark',      label: 'Streaming', color: '#E25A1C',        rate: 1 },
+  { from: 'ingestion',   to: 'spark',      label: '',           color: colors.secondary, rate: 1.2 },
+  { from: 'spark',       to: 'databricks', label: 'Streaming', color: '#FF3621',        rate: 1 },
 
-  // === DATA: Spark → Flexa (via Event Hub) ===
-  { from: 'spark',       to: 'event_hub',  label: 'Aggregates', color: '#E25A1C',       rate: 1.5 },
+  // === DATA: Databricks → Flexa (via Event Hub) ===
+  { from: 'databricks',  to: 'event_hub',  label: 'Aggregates', color: '#FF3621',       rate: 1.5 },
   { from: 'event_hub',   to: 'flexa',      label: '',           color: colors.accent,    rate: 1.2 },
 
   // === DATA: Cloud HEMS ↔ EMQX (bidirectional) ===
@@ -189,7 +189,8 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // Draw edges
+      // Draw edges (lines and arrows only — labels deferred to after particles)
+      const edgeLabels = [];
       EDGES.forEach((edge) => {
         const { fx, fy, tx, ty } = edgeEndpoints(edge);
         const isElectric = edge.electric;
@@ -214,16 +215,13 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
         ctx.closePath();
         ctx.fill();
 
-        // Edge label
+        // Collect edge labels for deferred rendering (drawn above particles)
         if (edge.label) {
           const mx = (fx + tx) / 2;
           const my = (fy + ty) / 2;
-          ctx.font = isElectric ? 'bold 10px JetBrains Mono' : '10px JetBrains Mono';
-          ctx.textAlign = 'center';
-          ctx.fillStyle = isElectric ? (ELECTRICITY_COLOR + 'dd') : (colors.text + 'bb');
           const perpLabelX = -Math.sin(angle) * 9;
           const perpLabelY = Math.cos(angle) * 9;
-          ctx.fillText(edge.label, mx + perpLabelX, my + perpLabelY);
+          edgeLabels.push({ text: edge.label, x: mx + perpLabelX, y: my + perpLabelY, isElectric });
         }
       });
 
@@ -273,6 +271,18 @@ export default function EnpalArchitectureDiagram({ width = 960, height = 500 }) 
           ctx.stroke();
         }
       }
+
+      // Draw edge labels above particles with background for readability
+      edgeLabels.forEach(({ text, x, y, isElectric }) => {
+        ctx.font = isElectric ? 'bold 10px JetBrains Mono' : '10px JetBrains Mono';
+        ctx.textAlign = 'center';
+        const metrics = ctx.measureText(text);
+        const pad = 3;
+        ctx.fillStyle = '#050810cc';
+        ctx.fillRect(x - metrics.width / 2 - pad, y - 9 - pad, metrics.width + pad * 2, 12 + pad * 2);
+        ctx.fillStyle = isElectric ? (ELECTRICITY_COLOR + 'dd') : (colors.text + 'bb');
+        ctx.fillText(text, x, y);
+      });
 
       // Draw grid as a tall nebulous glow on the far left
       {
