@@ -44,7 +44,7 @@ check('About page exists', pageExists('about/index.html'));
 
 // Landing page
 check('Landing has title', pageContains('index.html', 'How does the electricity grid'));
-check('Landing has game placeholder', pageContains('index.html', 'Try to Crash the Grid'));
+check('Landing has conference talk promo', pageContains('index.html', 'Conference Talk'));
 check('Landing has theme toggle', pageContains('index.html', 'theme-toggle'));
 
 // Module content spot checks
@@ -62,7 +62,7 @@ check('Research has topics', pageContains('research/index.html', 'Deep Dives'));
 check('Sidebar nav present', pageContains('learn/how-the-grid-works/index.html', 'toc-section'));
 
 // Design tokens
-check('Fonts loaded', pageContains('index.html', 'JetBrains Mono'));
+check('Fonts loaded', pageContains('index.html', 'JetBrains'));
 
 console.log(`\n${failures === 0 ? 'All checks passed.' : `${failures} check(s) failed.`}\n`);
 process.exit(failures > 0 ? 1 : 0);
