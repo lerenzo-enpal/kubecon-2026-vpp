@@ -127,7 +127,7 @@ Note: This mirrors the pattern used in `website/src/components/FrequencyDemo.tsx
 
 - [ ] **Step 2: Verify the file exists and has no syntax errors**
 
-Run: `cd /home/mario/code/kubekon/kubecon-2026-vpp/website && npx tsc --noEmit src/components/basics/shared/canvasTheme.ts 2>&1 || echo "Check for errors"`
+Run: `cd /home/mario/code/kubekon/kubecon-2026-vpp/website && npx astro check 2>&1 | tail -20`
 
 - [ ] **Step 3: Commit**
 
@@ -159,7 +159,7 @@ The component must:
 
 ```tsx
 // website/src/components/basics/briefings/ScrollBriefing.tsx
-import { useEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { getCanvasThemeColors, type CanvasThemeColors } from '../shared/canvasTheme';
 
 interface Props {
@@ -179,13 +179,13 @@ export default function ScrollBriefing({ height = 250, render: renderFn, id, chi
   const rafRef = useRef<number>(0);
   const isVisibleRef = useRef(false);
   const colorsRef = useRef<CanvasThemeColors>(getCanvasThemeColors());
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const reducedMotionRef = useRef(false);
 
   // Check reduced motion preference
   useEffect(() => {
     const mql = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setReducedMotion(mql.matches);
-    const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+    reducedMotionRef.current = mql.matches;
+    const handler = (e: MediaQueryListEvent) => { reducedMotionRef.current = e.matches; };
     mql.addEventListener('change', handler);
     return () => mql.removeEventListener('change', handler);
   }, []);
@@ -235,34 +235,45 @@ export default function ScrollBriefing({ height = 250, render: renderFn, id, chi
     sizeCanvas();
     window.addEventListener('resize', sizeCanvas);
 
+    function frame() {
+      const canvas = canvasRef.current;
+      const ctx = canvas?.getContext('2d');
+      if (ctx && canvas) {
+        const w = canvas.width / (window.devicePixelRatio || 1);
+        const h = canvas.height / (window.devicePixelRatio || 1);
+        const progress = reducedMotionRef.current ? 1 : getProgress();
+        ctx.clearRect(0, 0, w, h);
+        renderFn(ctx, progress, w, h, colorsRef.current);
+      }
+      // Only continue loop while visible (restart via IntersectionObserver)
+      if (isVisibleRef.current) {
+        rafRef.current = requestAnimationFrame(frame);
+      } else {
+        rafRef.current = 0;
+      }
+    }
+
+    // Start/stop loop based on visibility
+    function startLoop() {
+      if (!rafRef.current) rafRef.current = requestAnimationFrame(frame);
+    }
+
     const observer = new IntersectionObserver(
-      ([entry]) => { isVisibleRef.current = entry.isIntersecting; },
+      ([entry]) => {
+        isVisibleRef.current = entry.isIntersecting;
+        if (entry.isIntersecting) startLoop();
+      },
       { threshold: 0 }
     );
     if (containerRef.current) observer.observe(containerRef.current);
-
-    function frame() {
-      if (isVisibleRef.current) {
-        const canvas = canvasRef.current;
-        const ctx = canvas?.getContext('2d');
-        if (ctx && canvas) {
-          const w = canvas.width / (window.devicePixelRatio || 1);
-          const h = canvas.height / (window.devicePixelRatio || 1);
-          const progress = reducedMotion ? 1 : getProgress();
-          ctx.clearRect(0, 0, w, h);
-          renderFn(ctx, progress, w, h, colorsRef.current);
-        }
-      }
-      rafRef.current = requestAnimationFrame(frame);
-    }
-    rafRef.current = requestAnimationFrame(frame);
+    startLoop();
 
     return () => {
       cancelAnimationFrame(rafRef.current);
       window.removeEventListener('resize', sizeCanvas);
       observer.disconnect();
     };
-  }, [renderFn, sizeCanvas, getProgress, reducedMotion]);
+  }, [renderFn, sizeCanvas, getProgress]);
 
   return (
     <section id={id} style={{ height: `${height}vh`, position: 'relative' }}>
@@ -290,7 +301,7 @@ export default function ScrollBriefing({ height = 250, render: renderFn, id, chi
 
 - [ ] **Step 2: Verify compilation**
 
-Run: `cd /home/mario/code/kubekon/kubecon-2026-vpp/website && npx tsc --noEmit src/components/basics/briefings/ScrollBriefing.tsx 2>&1 || echo "Check for errors"`
+Run: `cd /home/mario/code/kubekon/kubecon-2026-vpp/website && npx astro check 2>&1 | tail -20`
 
 - [ ] **Step 3: Commit**
 
@@ -314,7 +325,7 @@ In `website/src/components/SiteHeader.astro`, add a "Basics" link before the "Le
 
 ```astro
 <!-- Add this line before the Learn link -->
-<a href={url("/basics/how-electricity-works")} class="hover:opacity-70 transition-opacity">Basics</a>
+<a href={url("/basics")} class="hover:opacity-70 transition-opacity">Basics</a>
 ```
 
 - [ ] **Step 2: Add basics section to ContentLayout.astro sidebar**
@@ -556,7 +567,7 @@ Text children cover: electromagnetic induction, the universal spinning principle
 Run: `cd /home/mario/code/kubekon/kubecon-2026-vpp/website && npm run build 2>&1 | tail -10`
 
 Then visually validate using Playwright MCP tools:
-1. Navigate to `http://localhost:5173/basics/how-electricity-works`
+1. Navigate to `http://localhost:4321/basics/how-electricity-works`
 2. Take screenshot, verify page renders with briefing components
 3. Scroll down, take screenshots at different scroll positions to verify animation progress
 
@@ -918,24 +929,36 @@ git commit -m "Add Page 4 labs: Storage Scenario Builder and Comparison Tool"
 
 **Files:**
 - Modify: `website/src/pages/learn/how-the-grid-works.astro` — add basics cross-links
+- Modify: `website/src/pages/learn/the-virtual-power-plant.astro` — add battery basics cross-link
 
 - [ ] **Step 1: Add cross-links in Learn pages**
 
-In `how-the-grid-works.astro`, add a callout box (same style as the "Want to go deeper?" box in learn/index.astro) near the top of the page:
+In `how-the-grid-works.astro`, add a callout box near the top of the page (after the `<h1>`). Use the `url()` helper for all hrefs:
 
-```html
+```astro
 <div class="p-4 rounded-lg mb-8" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
   <div class="font-mono text-xs mb-1" style="color: var(--color-primary); letter-spacing: 0.08em; text-transform: uppercase;">
     New to electricity?
   </div>
   <div class="text-sm" style="color: var(--color-text-muted);">
-    Start with <a href="/basics/how-electricity-works" style="color: var(--color-primary);">How Electricity Works</a> and
-    <a href="/basics/supply-and-demand" style="color: var(--color-primary);">Supply & Demand</a> for the foundations.
+    Start with <a href={url("/basics/how-electricity-works")} style="color: var(--color-primary);">How Electricity Works</a> and
+    <a href={url("/basics/supply-and-demand")} style="color: var(--color-primary);">Supply & Demand</a> for the foundations.
   </div>
 </div>
 ```
 
-Use `url()` helper for all hrefs.
+In `the-virtual-power-plant.astro`, add a similar callout near the battery content:
+
+```astro
+<div class="p-4 rounded-lg mb-8" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+  <div class="font-mono text-xs mb-1" style="color: var(--color-primary); letter-spacing: 0.08em; text-transform: uppercase;">
+    New to battery technology?
+  </div>
+  <div class="text-sm" style="color: var(--color-text-muted);">
+    <a href={url("/basics/how-batteries-work")} style="color: var(--color-primary);">Start here</a> for the foundations of how batteries work, their history, and emerging alternatives.
+  </div>
+</div>
+```
 
 - [ ] **Step 2: Run full build + tests**
 
@@ -955,7 +978,7 @@ Use Playwright MCP to navigate through all 5 basics pages (hub + 4 content pages
 - [ ] **Step 4: Commit**
 
 ```bash
-git add website/src/pages/learn/how-the-grid-works.astro
+git add website/src/pages/learn/how-the-grid-works.astro website/src/pages/learn/the-virtual-power-plant.astro
 git commit -m "Add cross-links from Learn to Basics section"
 ```
 
