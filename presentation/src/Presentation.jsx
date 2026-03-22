@@ -30,6 +30,7 @@ import FrequencyWalkthrough from './components/FrequencyWalkthrough';
 import ArchitectureExplorer from './components/ArchitectureExplorer';
 import ChoreographyLoop from './components/ChoreographyLoop';
 import StreamingAggregation from './components/StreamingAggregation';
+import AggregationPyramid from './components/AggregationPyramid';
 
 
 const theme = {
@@ -900,7 +901,42 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 29: The Architecture Parallel */}
+      {/* 29: Progressive Aggregation Pyramid */}
+      <Slide backgroundColor={bg} padding="20px 40px">
+        <div className="flex flex-col h-full">
+          <div className="flex items-end justify-between mb-3">
+            <div>
+              <div className="text-[10px] font-mono font-semibold tracking-widest uppercase mb-2" style={{ color: colors.textDim }}>DATA PIPELINE</div>
+              <H color="#FF3621">Progressive Aggregation</H>
+            </div>
+            <div className="flex gap-3 pb-1">
+              {[
+                { label: 'RAW', value: '20s', color: '#E25A1C' },
+                { label: 'WINDOWS', value: '6 tiers', color: '#FF3621' },
+                { label: 'REDUCTION', value: '4,320:1', color: colors.success },
+              ].map((s, i) => (
+                <div key={i} className="rounded px-2 py-1" style={{ background: s.color + '0a', border: `1px solid ${s.color}25` }}>
+                  <div className="text-[8px] font-mono tracking-widest uppercase" style={{ color: colors.textDim }}>{s.label}</div>
+                  <div className="text-sm font-bold font-mono" style={{ color: s.color }}>{s.value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <P size="18px">Each aggregation tier reduces volume while increasing analytical value. Raw 20-second data compresses 4,320:1 into daily summaries.</P>
+          <div className="flex-1 flex justify-center items-center">
+            <LazyContent><AggregationPyramid width={1100} height={440} /></LazyContent>
+          </div>
+        </div>
+        <Notes>
+          [LERENZO] This is the aggregation pyramid — how we compress data while preserving value.
+          Every 20 seconds, each device reports. Three of those become a 1-minute aggregate.
+          Five 1-minute windows become 5 minutes. Three of those make 15 minutes. Four make an hour. Twenty-four make a day.
+          That's a 4,320:1 compression ratio. Raw data expires after 7 days. Daily aggregates live forever.
+          The pyramid shape tells the story — high frequency at the base, high value at the top.
+        </Notes>
+      </Slide>
+
+      {/* 30: The Architecture Parallel */}
       <Slide backgroundColor={bg} padding={pad}>
         <style>{`
           @keyframes archLeftIn {
