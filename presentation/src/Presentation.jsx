@@ -76,7 +76,7 @@ const slideTemplate = ({ slideNumber, numberOfSlides }) => {
   return (
     <>
       {speaker && (
-        <div className="absolute top-3 left-5 text-[11px] font-mono tracking-widest uppercase" style={{ color: colors.textDim + '80' }}>
+        <div className="absolute top-3 left-5 text-xs font-mono tracking-widest uppercase" style={{ color: colors.textDim + '80' }}>
           {speaker}
         </div>
       )}
