@@ -96,9 +96,9 @@ const FOCUS_STEPS = [
   {
     id: 'flexa',
     label: 'VPP CONTROLLER',
-    zoom: 1.5,
-    cx: 0.58,
-    cy: 0.50,
+    zoom: 1.25,
+    cx: 0.60,
+    cy: 0.55,
     panelSide: 'left',
     panelColor: colors.accent,
     title: 'The Control Loop',
@@ -165,7 +165,7 @@ export default function ArchitectureExplorer({ step = 0 }) {
 
       {/* Info panel (flies in from left or right, below title area) */}
       {focus.panel !== null && focus.panelSide && (
-        <div className="absolute bottom-0 z-20 flex items-center" style={{ top: 110,
+        <div className="absolute bottom-0 z-20 flex items-end" style={{ top: 110,
           [focus.panelSide === 'right' ? 'right' : 'left']: 16,
           width: 420,
           opacity: isOverview ? 0 : 1,
