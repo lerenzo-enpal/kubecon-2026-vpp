@@ -28,7 +28,6 @@ import ResponseTimeline from './components/ResponseTimeline';
 import ThankYouBackground from './components/ThankYouBackground';
 import FrequencyWalkthrough from './components/FrequencyWalkthrough';
 import ArchitectureExplorer from './components/ArchitectureExplorer';
-import PartnerArcs from './components/PartnerArcs';
 
 
 const theme = {
@@ -42,24 +41,24 @@ const pad = '36px 56px';
 // Section ranges (slide numbers are 1-indexed)
 const SECTIONS = [
   { from: 1, to: 2, name: '' },
-  { from: 3, to: 14, name: 'The Grid' },
-  { from: 15, to: 18, name: 'The Renewable Revolution' },
-  { from: 19, to: 27, name: 'The Virtual Power Plant' },
-  { from: 28, to: 29, name: 'Resilience' },
+  { from: 3, to: 15, name: 'The Grid' },
+  { from: 16, to: 19, name: 'The Renewable Revolution' },
+  { from: 20, to: 28, name: 'The Virtual Power Plant' },
+  { from: 29, to: 30, name: 'Resilience' },
 ];
 
 // Speaker assignments per slide
-// 9: Frequency Walkthrough, 10: Costs of the Old Playbook,
-// 11: Frequency Demo, 12-14: Why Texas, Not Isolated, No Flexibility
+// 9: Frequency Balance, 10: Tools for Balancing, 11: Costs of the Old Playbook,
+// 12: Frequency Demo, 13-15: Why Texas, Not Isolated, No Flexibility
 const SPEAKERS = {
   1: 'SHARED', 2: 'SHARED',
   3: 'LERENZO', 4: 'LERENZO', 5: 'LERENZO',
   6: 'MARIO', 7: 'LERENZO', 8: 'MARIO', 9: 'MARIO',
-  10: 'LERENZO', 11: 'MARIO', 12: 'LERENZO', 13: 'LERENZO', 14: 'LERENZO',
-  15: 'MARIO', 16: 'MARIO', 17: 'MARIO', 18: 'MARIO', 19: 'MARIO',
-  20: 'LERENZO', 21: 'LERENZO', 22: 'LERENZO', 23: 'LERENZO', 24: 'LERENZO',
-  25: 'LERENZO', 26: 'LERENZO', 27: 'MARIO',
-  28: 'LERENZO', 29: 'LERENZO',
+  10: 'MARIO', 11: 'LERENZO', 12: 'MARIO', 13: 'LERENZO', 14: 'LERENZO', 15: 'LERENZO',
+  16: 'MARIO', 17: 'MARIO', 18: 'MARIO', 19: 'MARIO', 20: 'MARIO',
+  21: 'LERENZO', 22: 'LERENZO', 23: 'LERENZO', 24: 'LERENZO', 25: 'LERENZO',
+  26: 'LERENZO', 27: 'LERENZO', 28: 'MARIO',
+  29: 'LERENZO', 30: 'LERENZO',
 };
 
 const DISABLED_VALUES = new Set(['', 'null', 'no', 'disable', 'disabled', 'nein', 'false', '0', 'off']);
@@ -158,55 +157,57 @@ export default function Presentation() {
             </div>
           </div>
 
-          {/* Partners */}
+          {/* Partners — connected by transmission lines */}
           <div className="flex flex-col items-center gap-2">
             <span className="text-lg text-hud-text-dim font-mono mb-1">Partners</span>
             <style>{`
-              @keyframes insulatorPulse {
-                0%, 100% { opacity: 0.35; }
-                50% { opacity: 0.7; }
-              }
-              .insulator { animation: insulatorPulse 3s ease-in-out infinite; }
-              .insulator:nth-child(odd) { animation-delay: -1.5s; }
+              @keyframes flowDash { to { stroke-dashoffset: -18; } }
             `}</style>
-            <PartnerArcs>
-              {(setPylonRef) => (
-                <div className="flex items-center gap-6">
-                  <img src={asset("/flexa-logo.svg")} alt="Flexa" className="h-10" />
-                  <svg ref={setPylonRef(0)} className="h-12" viewBox="0 0 36 48" fill="none" style={{ filter: `drop-shadow(0 0 4px ${colors.primary}30)` }}>
-                    {/* Mast */}
-                    <line x1="18" y1="1" x2="18" y2="47" stroke={colors.primary} strokeWidth="1.6" opacity="0.45" />
-                    {/* Crossarms — equal length, subtle catenary droop */}
-                    <path d="M5,9 Q18,12 31,9" stroke={colors.primary} strokeWidth="1.3" opacity="0.4" />
-                    <path d="M5,18 Q18,21 31,18" stroke={colors.primary} strokeWidth="1.3" opacity="0.4" />
-                    <path d="M5,27 Q18,30 31,27" stroke={colors.primary} strokeWidth="1.3" opacity="0.4" />
-                    <path d="M5,36 Q18,39 31,36" stroke={colors.primary} strokeWidth="1.3" opacity="0.4" />
-                    {/* Insulator dots at crossarm tips */}
-                    {[9,18,27,36].map(y => (
-                      <React.Fragment key={y}>
-                        <circle className="insulator" cx="5" cy={y} r="2" fill={colors.primary} />
-                        <circle className="insulator" cx="31" cy={y} r="2" fill={colors.primary} />
-                      </React.Fragment>
-                    ))}
-                  </svg>
-                  <span className="text-xl font-bold font-mono" style={{ color: colors.secondary }}>Entrix</span>
-                  <svg ref={setPylonRef(1)} className="h-12" viewBox="0 0 36 48" fill="none" style={{ filter: `drop-shadow(0 0 4px ${colors.primary}30)` }}>
-                    <line x1="18" y1="1" x2="18" y2="47" stroke={colors.primary} strokeWidth="1.6" opacity="0.45" />
-                    <path d="M5,9 Q18,12 31,9" stroke={colors.primary} strokeWidth="1.3" opacity="0.4" />
-                    <path d="M5,18 Q18,21 31,18" stroke={colors.primary} strokeWidth="1.3" opacity="0.4" />
-                    <path d="M5,27 Q18,30 31,27" stroke={colors.primary} strokeWidth="1.3" opacity="0.4" />
-                    <path d="M5,36 Q18,39 31,36" stroke={colors.primary} strokeWidth="1.3" opacity="0.4" />
-                    {[9,18,27,36].map(y => (
-                      <React.Fragment key={y}>
-                        <circle className="insulator" cx="5" cy={y} r="2" fill={colors.primary} />
-                        <circle className="insulator" cx="31" cy={y} r="2" fill={colors.primary} />
-                      </React.Fragment>
-                    ))}
-                  </svg>
-                  <span className="text-xl font-bold font-mono" style={{ color: colors.success }}>Metrify</span>
-                </div>
-              )}
-            </PartnerArcs>
+            <div className="flex items-center">
+              <img src={asset("/flexa-logo.svg")} alt="Flexa" className="h-10" />
+              {/* Cables: Flexa → pylon 1 */}
+              <svg className="h-14 flex-1 -mx-1" viewBox="0 0 100 48" preserveAspectRatio="none" fill="none">
+                <path d="M0,16 Q50,26 100,9" stroke={colors.primary} strokeWidth="0.7" opacity="0.2" pathLength="1" strokeDasharray="4 3" style={{ animation: 'flowDash 1.5s linear infinite' }} />
+                <path d="M0,20 Q50,32 100,18" stroke={colors.primary} strokeWidth="0.7" opacity="0.18" pathLength="1" strokeDasharray="4 3" style={{ animation: 'flowDash 1.8s linear infinite', animationDelay: '-0.4s' }} />
+                <path d="M0,24 Q50,38 100,27" stroke={colors.primary} strokeWidth="0.6" opacity="0.14" pathLength="1" strokeDasharray="4 3" style={{ animation: 'flowDash 2.1s linear infinite', animationDelay: '-0.9s' }} />
+              </svg>
+              {/* Pylon 1 */}
+              <svg className="h-12 shrink-0" viewBox="0 0 36 48" fill="none" style={{ filter: `drop-shadow(0 0 4px ${colors.primary}30)` }}>
+                <line x1="18" y1="1" x2="18" y2="47" stroke={colors.primary} strokeWidth="1.6" opacity="0.45" />
+                <path d="M5,9 Q18,12 31,9" stroke={colors.primary} strokeWidth="1.3" opacity="0.4" />
+                <path d="M5,18 Q18,21 31,18" stroke={colors.primary} strokeWidth="1.3" opacity="0.4" />
+                <path d="M5,27 Q18,30 31,27" stroke={colors.primary} strokeWidth="1.3" opacity="0.4" />
+                <path d="M5,36 Q18,39 31,36" stroke={colors.primary} strokeWidth="1.3" opacity="0.4" />
+              </svg>
+              {/* Cables: pylon 1 → Entrix */}
+              <svg className="h-14 flex-1 -mx-1" viewBox="0 0 100 48" preserveAspectRatio="none" fill="none">
+                <path d="M0,9 Q50,26 100,16" stroke={colors.primary} strokeWidth="0.7" opacity="0.2" pathLength="1" strokeDasharray="4 3" style={{ animation: 'flowDash 1.6s linear infinite', animationDelay: '-0.2s' }} />
+                <path d="M0,18 Q50,32 100,20" stroke={colors.primary} strokeWidth="0.7" opacity="0.18" pathLength="1" strokeDasharray="4 3" style={{ animation: 'flowDash 1.9s linear infinite', animationDelay: '-0.7s' }} />
+                <path d="M0,27 Q50,38 100,24" stroke={colors.primary} strokeWidth="0.6" opacity="0.14" pathLength="1" strokeDasharray="4 3" style={{ animation: 'flowDash 2.2s linear infinite', animationDelay: '-1.1s' }} />
+              </svg>
+              <span className="text-xl font-bold font-mono shrink-0 px-1" style={{ color: colors.entrixBlue }}>Entrix</span>
+              {/* Cables: Entrix → pylon 2 */}
+              <svg className="h-14 flex-1 -mx-1" viewBox="0 0 100 48" preserveAspectRatio="none" fill="none">
+                <path d="M0,16 Q50,26 100,9" stroke={colors.primary} strokeWidth="0.7" opacity="0.2" pathLength="1" strokeDasharray="4 3" style={{ animation: 'flowDash 1.7s linear infinite', animationDelay: '-0.3s' }} />
+                <path d="M0,20 Q50,32 100,18" stroke={colors.primary} strokeWidth="0.7" opacity="0.18" pathLength="1" strokeDasharray="4 3" style={{ animation: 'flowDash 2.0s linear infinite', animationDelay: '-0.8s' }} />
+                <path d="M0,24 Q50,38 100,27" stroke={colors.primary} strokeWidth="0.6" opacity="0.14" pathLength="1" strokeDasharray="4 3" style={{ animation: 'flowDash 2.3s linear infinite', animationDelay: '-1.3s' }} />
+              </svg>
+              {/* Pylon 2 */}
+              <svg className="h-12 shrink-0" viewBox="0 0 36 48" fill="none" style={{ filter: `drop-shadow(0 0 4px ${colors.primary}30)` }}>
+                <line x1="18" y1="1" x2="18" y2="47" stroke={colors.primary} strokeWidth="1.6" opacity="0.45" />
+                <path d="M5,9 Q18,12 31,9" stroke={colors.primary} strokeWidth="1.3" opacity="0.4" />
+                <path d="M5,18 Q18,21 31,18" stroke={colors.primary} strokeWidth="1.3" opacity="0.4" />
+                <path d="M5,27 Q18,30 31,27" stroke={colors.primary} strokeWidth="1.3" opacity="0.4" />
+                <path d="M5,36 Q18,39 31,36" stroke={colors.primary} strokeWidth="1.3" opacity="0.4" />
+              </svg>
+              {/* Cables: pylon 2 → Metrify */}
+              <svg className="h-14 flex-1 -mx-1" viewBox="0 0 100 48" preserveAspectRatio="none" fill="none">
+                <path d="M0,9 Q50,26 100,16" stroke={colors.primary} strokeWidth="0.7" opacity="0.2" pathLength="1" strokeDasharray="4 3" style={{ animation: 'flowDash 1.5s linear infinite', animationDelay: '-0.5s' }} />
+                <path d="M0,18 Q50,32 100,20" stroke={colors.primary} strokeWidth="0.7" opacity="0.18" pathLength="1" strokeDasharray="4 3" style={{ animation: 'flowDash 1.8s linear infinite', animationDelay: '-1.0s' }} />
+                <path d="M0,27 Q50,38 100,24" stroke={colors.primary} strokeWidth="0.6" opacity="0.14" pathLength="1" strokeDasharray="4 3" style={{ animation: 'flowDash 2.1s linear infinite', animationDelay: '-1.4s' }} />
+              </svg>
+              <span className="text-xl font-bold font-mono shrink-0" style={{ color: colors.success }}>Metrify</span>
+            </div>
           </div>
         </div>
       </Slide>
@@ -218,9 +219,9 @@ export default function Presentation() {
           <div className="flex flex-col gap-5 mt-6">
             {[
               { num: '01', title: 'The Grid', sub: 'How the world\'s largest machine works — and how it fails', color: colors.danger, time: '~10 min', slide: 3 },
-              { num: '02', title: 'The Renewable Revolution', sub: 'Why cheap clean energy creates expensive new problems', color: colors.accent, time: '~7 min', slide: 14 },
-              { num: '03', title: 'The Virtual Power Plant', sub: 'Software that turns millions of devices into grid infrastructure', color: colors.primary, time: '~10 min', slide: 18 },
-              { num: '04', title: 'Resilience', sub: 'What the future grid looks like — and why you already know how to build it', color: colors.success, time: '~3 min', slide: 30 },
+              { num: '02', title: 'The Renewable Revolution', sub: 'Why cheap clean energy creates expensive new problems', color: colors.accent, time: '~7 min', slide: 15 },
+              { num: '03', title: 'The Virtual Power Plant', sub: 'Software that turns millions of devices into grid infrastructure', color: colors.primary, time: '~10 min', slide: 19 },
+              { num: '04', title: 'Resilience', sub: 'What the future grid looks like — and why you already know how to build it', color: colors.success, time: '~3 min', slide: 31 },
             ].map(s => (
               <a key={s.num} href={`?slideIndex=${s.slide}`} className="flex items-center gap-5 no-underline cursor-pointer" style={{ textDecoration: 'none' }}>
                 <div className="text-[28px] font-extrabold font-mono min-w-[48px] text-right" style={{ color: s.color }}>{s.num}</div>
@@ -335,24 +336,65 @@ export default function Presentation() {
       {/* 9: Frequency — What "Stabilizing the Grid" Means */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
-          <H>The Grid: Balanced Every Second</H>
-          <P size="20px">This enormous machine maintains a constant 50 Hz frequency — supply and demand balanced every second.</P>
-          <Stepper values={[1, 2, 3, 4, 5]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col" style={{ minHeight: 0 }}>
-            {(stepVal) => <FrequencyWalkthrough step={stepVal ?? 0} />}
+          <H>The Grid: Balanced at 0.67c</H>
+          <P size="20px">This enormous machine maintains a constant 50 Hz frequency — imbalances propagate at two-thirds the speed of light. There is no buffer.</P>
+          <Stepper values={[1, 2, 3, 4]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col" style={{ minHeight: 0 }}>
+            {(stepVal) => <FrequencyWalkthrough step={stepVal ?? 0} mode="intro" />}
           </Stepper>
         </div>
         <Notes>
-          [MARIO] The grid runs at exactly 50 Hz — supply equals demand every second.
-          This is what "stabilizing the grid" means: keeping this one number steady.
-          [ARROW] Normal band: 49.8-50.2 Hz. Spinning reserves on standby.
-          [ARROW] 49.5 Hz: reserves activate. Gas peakers fire up.
-          [ARROW] 49.0 Hz: load shedding begins. Deliberate blackouts.
-          [ARROW] 47.5 Hz: generators disconnect. Total collapse.
-          [ARROW] Punchline: 2.5 Hz between normal and catastrophe — less than you can hear. This is the SLO of the physical world.
+          - 50 Hz = supply equals demand. Imbalances propagate at 0.67c (two-thirds the speed of light)
+          - No buffer, no queue, no retry — physics enforces balance instantaneously
+          - [ARROW] Too little supply = frequency drops. Too much = frequency rises. The grid has no storage.
+          - [ARROW] 2.5 Hz separates "everything is fine" from total collapse. Less than you can hear.
+          - Backup: Continental European grid synchronized since the 1950s, never fully shut down
         </Notes>
       </Slide>
 
-      {/* 10: Costs of the Old Playbook */}
+      {/* 10: Tools for Balancing the Grid */}
+      <Slide backgroundColor={bg} padding="20px 40px">
+        <div className="flex flex-col h-full">
+          <H>Tools for Balancing the Grid</H>
+          <P size="20px">What happens when supply and demand diverge — and how the grid fights back.</P>
+          <Stepper values={[1, 2, 3, 4]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col" style={{ minHeight: 0 }}>
+            {(stepVal) => <FrequencyWalkthrough step={stepVal ?? 0} mode="scenarios" />}
+          </Stepper>
+        </div>
+        <Notes>
+          - [ARROW] 49.8-50.2 Hz: normal band. Spinning reserves on standby.
+          - [ARROW] 49.5 Hz: reserves activate. Gas CCGT ramps to max.
+          - [ARROW] 49.0 Hz: reserves maxed. Peaker fires. Load shedding (deliberate blackouts).
+          - [ARROW] 47.5 Hz: generators disconnect to self-protect. Total collapse.
+          - Backup: The entire cascade from "fine" to "collapse" can happen in under 12 minutes
+        </Notes>
+      </Slide>
+
+      {/* 11: Frequency Demo — Interactive */}
+      <Slide backgroundColor={bg} padding="20px 40px">
+        <div className="flex flex-col h-full">
+          <H>Balancing the Grid - In Action</H>
+          <P size="20px">Click an event to simulate what happens when something goes wrong.</P>
+          <div className="flex-1 flex items-center" style={{ width: '100%' }}>
+            <LazyContent><FrequencyDemo width={1286} height={480} panelWidth={340} /></LazyContent>
+          </div>
+          <div className="text-center py-3">
+            <span className="text-[28px] font-mono font-extrabold" style={{ color: colors.danger, textShadow: `0 0 20px ${colors.danger}30` }}>Collapse</span>
+            <span className="text-[28px] font-mono mx-3" style={{ color: colors.textDim }}>=</span>
+            <span className="text-[28px] font-mono font-extrabold" style={{ color: colors.accent, textShadow: `0 0 20px ${colors.accent}30` }}>{'\u0394'} 2.5 Hz</span>
+          </div>
+        </div>
+        <Notes>
+          [MARIO] Now let's see this in action.
+          [DEMO] Click scenarios to simulate events:
+          Generator trip: 800 MW offline, watch reserves catch it — recovery in ~12 minutes.
+          3 GW loss: deep enough to trigger automatic load shedding, but grid survives.
+          Demand drop: frequency goes UP — too much supply is also dangerous.
+          Cyber attack: coordinated SCADA compromise, cascading trips, no recovery — blackout.
+          Notice the accelerated timer — these events play out over minutes in real grid time.
+        </Notes>
+      </Slide>
+
+      {/* 12: Costs of the Old Playbook */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H color={colors.accent}>Balancing the Grid is Expensive</H>
@@ -430,33 +472,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-
-      {/* 11: Frequency Demo — Interactive */}
-      <Slide backgroundColor={bg} padding="20px 40px">
-        <div className="flex flex-col h-full">
-          <H>Balancing the Grid - In Action</H>
-          <P size="20px">Click an event to simulate what happens when something goes wrong.</P>
-          <div className="flex-1 flex items-center" style={{ width: '100%' }}>
-            <LazyContent><FrequencyDemo width={1286} height={480} panelWidth={340} /></LazyContent>
-          </div>
-          <div className="text-center py-3">
-            <span className="text-[28px] font-mono font-extrabold" style={{ color: colors.danger, textShadow: `0 0 20px ${colors.danger}30` }}>Collapse</span>
-            <span className="text-[28px] font-mono mx-3" style={{ color: colors.textDim }}>=</span>
-            <span className="text-[28px] font-mono font-extrabold" style={{ color: colors.accent, textShadow: `0 0 20px ${colors.accent}30` }}>{'\u0394'} 2.5 Hz</span>
-          </div>
-        </div>
-        <Notes>
-          [MARIO] Now let's see this in action.
-          [DEMO] Click scenarios to simulate events:
-          Generator trip: 800 MW offline, watch reserves catch it — recovery in ~12 minutes.
-          3 GW loss: deep enough to trigger automatic load shedding, but grid survives.
-          Demand drop: frequency goes UP — too much supply is also dangerous.
-          Cyber attack: coordinated SCADA compromise, cascading trips, no recovery — blackout.
-          Notice the accelerated timer — these events play out over minutes in real grid time.
-        </Notes>
-      </Slide>
-
-      {/* 12: Why Texas Failed */}
+      {/* 13: Why Texas Failed */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H color={colors.danger}>Why Texas Failed</H>
@@ -490,7 +506,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 13: It Keeps Happening */}
+      {/* 14: It Keeps Happening */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
         <H color={colors.danger}>Not an Isolated Incident</H>
@@ -543,29 +559,30 @@ export default function Presentation() {
       </Slide>
 
 
-      {/* 14: No Flexibility — Bridge */}
+      {/* 15: Limited Flexibility — Bridge */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[28px] font-semibold text-hud-text font-sans leading-[1.7] mb-7">
             Every one of these failures shares one root cause:
           </div>
           <div className="text-[52px] font-extrabold font-sans mb-9" style={{ color: colors.danger, textShadow: `0 0 40px ${colors.danger}30` }}>
-            No flexibility.
+            Limited flexibility.
           </div>
           <div className="text-[22px] text-hud-text-muted font-sans leading-[1.6]">
             Now imagine adding the most variable energy source in history.
           </div>
         </div>
         <Notes>
-          [LERENZO] Every one of these failures shares one root cause: no flexibility.
-          Pause. Let that land.
-          "Now imagine adding the most variable energy source in history."
+          - Every one of these failures: limited flexibility to respond
+          - Pause. Let that land.
+          - "Now imagine adding the most variable energy source in history."
+          - Backup: load shedding exists but it's a blunt tool — deliberate blackouts, not flexibility
         </Notes>
       </Slide>
 
       {/* ═══════ ACT 2: THE RENEWABLE REVOLUTION ═══════ */}
 
-      {/* 15: The Renewable Revolution */}
+      {/* 16: The Renewable Revolution */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[20px] font-semibold text-hud-accent font-mono tracking-[0.15em] uppercase mb-4">Part II</div>
@@ -577,7 +594,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 16: The Renewable Explosion */}
+      {/* 17: The Renewable Explosion */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H>The Renewable Explosion</H>
@@ -593,7 +610,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 17: The Duck Curve Problem */}
+      {/* 18: The Duck Curve Problem */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H>The Duck Curve Problem</H>
@@ -610,7 +627,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 18: The Cost of Wasted Energy */}
+      {/* 19: The Cost of Wasted Energy */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H color={colors.danger}>Clean Energy Has Outgrown the Grid</H>
@@ -637,7 +654,7 @@ export default function Presentation() {
 
       {/* ═══════ ACT 3: THE VIRTUAL POWER PLANT ═══════ */}
 
-      {/* 19: Consumers Become Infrastructure */}
+      {/* 20: Consumers Become Infrastructure */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col items-center h-full text-center">
           <H size="42px" center>Consumers Become Infrastructure</H>
@@ -654,7 +671,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 20: The Virtual Power Plant */}
+      {/* 21: The Virtual Power Plant */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-4">Part III</div>
@@ -666,7 +683,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 21: What Is a Virtual Power Plant? */}
+      {/* 22: What Is a Virtual Power Plant? */}
       <Slide backgroundColor={bg} padding="0">
         <div className="relative w-full h-full">
           <div className="absolute inset-0 flex flex-col pt-5 px-10 pointer-events-none z-10">
@@ -686,7 +703,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 22: Inside the Architecture */}
+      {/* 23: Inside the Architecture */}
       <Slide backgroundColor={bg} padding="16px 0px">
         <div className="flex flex-col h-full">
           <div className="px-8"><H>Inside the Architecture</H></div>
@@ -902,7 +919,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 23: The Architecture Parallel */}
+      {/* 24: The Architecture Parallel */}
       <Slide backgroundColor={bg} padding={pad}>
         <style>{`
           @keyframes archLeftIn {
@@ -965,7 +982,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 24: How a VPP Responds to Grid Events */}
+      {/* 25: How a VPP Responds to Grid Events */}
       <Slide backgroundColor={bg} padding={pad}>
         <style>{`
           @keyframes vppEventIn {
@@ -1045,7 +1062,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 25: Energy Arbitrage + Peak Shaving */}
+      {/* 26: Energy Arbitrage + Peak Shaving */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           <VPPScenarioSlide scenario="summer" />
@@ -1060,7 +1077,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 26: SA Virtual Power Plant, 2019 */}
+      {/* 27: SA Virtual Power Plant, 2019 */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           <SAMapHUD width="100%" height="100%" variant="vpp" />
@@ -1072,7 +1089,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 27: The Economic Impact of Flexibility */}
+      {/* 28: The Economic Impact of Flexibility */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H color={colors.success}>The Economic Impact of Flexibility</H>
@@ -1138,7 +1155,7 @@ export default function Presentation() {
 
       {/* ═══════ ACT 4: RESILIENCE ═══════ */}
 
-      {/* 28: Back to Texas */}
+      {/* 29: Back to Texas */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center h-full">
           <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-6">Back to Texas</div>
@@ -1163,7 +1180,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 29: Thank You */}
+      {/* 30: Thank You */}
       <Slide backgroundColor={bg} padding="0">
         <div className="relative w-full h-full">
           <LazyContent><ThankYouBackground width={1366} height={768} /></LazyContent>

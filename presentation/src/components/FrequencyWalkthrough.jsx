@@ -155,7 +155,7 @@ function FreqCounter({ target = 50.000, active }) {
       }}>{phase >= 2 ? 'FREQUENCY LOCKED' : phase >= 1 ? 'LOCKING...' : 'ACQUIRING...'}</div>
       <div className="text-[16px] text-hud-text-muted font-sans mt-5" style={{
         animation: active ? 'fwScan 0.5s ease 1.1s both' : 'none',
-      }}>Supply and demand must balance every single second.</div>
+      }}>Imbalances propagate at 0.67c. There is no buffer.</div>
     </div>
   );
 }
@@ -728,22 +728,134 @@ function GridDiagram({ state, draw }) {
 }
 
 
-export default function FrequencyWalkthrough({ step = 0 }) {
-  const s = STEPS[Math.min(step, STEPS.length - 1)];
-  const showBoot = step === 0;
-  const showHud = step >= 1 && step <= 4;
-  const showPunchline = step >= 5;
-  const isCollapse = s.gridState === 'collapse';
-  const showGrid = step >= 1;
+// ─── Supply/Demand Balance scene ───
+// step 1: supply < demand (freq drops), step 2: supply > demand (freq rises), step 3: no storage summary
+function SupplyDemandScene({ active, step = 1 }) {
+  const [freq, setFreq] = useState(50.000);
+  const rafRef = useRef(null);
+  const prevStepRef = useRef(0);
+
+  useEffect(() => {
+    if (!active) { setFreq(50.000); prevStepRef.current = 0; return; }
+    if (step === prevStepRef.current) return;
+    prevStepRef.current = step;
+
+    const start = performance.now();
+    if (step === 1) {
+      // Animate freq down to 48.8
+      const from = 50.000;
+      const anim = (now) => {
+        const t = Math.min((now - start) / 1200, 1);
+        const e = 1 - Math.pow(1 - t, 3);
+        setFreq(from - e * 1.2);
+        if (t < 1) rafRef.current = requestAnimationFrame(anim);
+      };
+      rafRef.current = requestAnimationFrame(anim);
+    } else if (step === 2) {
+      // Animate freq up to 50.8
+      const from = 48.800;
+      const anim = (now) => {
+        const t = Math.min((now - start) / 1200, 1);
+        const e = 1 - Math.pow(1 - t, 3);
+        setFreq(from + e * 2.0);
+        if (t < 1) rafRef.current = requestAnimationFrame(anim);
+      };
+      rafRef.current = requestAnimationFrame(anim);
+    }
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [active, step]);
+
+  const freqColor = freq < 49.5 ? colors.danger : freq > 50.5 ? colors.accent : colors.success;
+  const freqStr = freq.toFixed(3);
+
+  return (
+    <div className="flex flex-col items-center gap-8">
+      {/* Animated frequency counter */}
+      <div className="text-center">
+        <div className="text-[10px] font-mono font-semibold tracking-[0.2em] uppercase mb-2" style={{ color: colors.textDim }}>
+          GRID FREQUENCY
+        </div>
+        <div className="text-[80px] font-extrabold font-mono leading-none" style={{
+          color: freqColor,
+          textShadow: `0 0 30px ${freqColor}40, 0 0 60px ${freqColor}20`,
+          transition: 'color 0.3s, text-shadow 0.3s',
+        }}>{freqStr}</div>
+        <div className="text-[24px] font-mono font-light mt-1" style={{ color: freqColor + 'aa' }}>Hz</div>
+      </div>
+
+      {/* Supply/demand labels — each on its own arrow press */}
+      <div className="flex gap-16 items-center">
+        <div className="text-center" style={{
+          opacity: step >= 1 ? 1 : 0,
+          transform: step >= 1 ? 'translateY(0)' : 'translateY(10px)',
+          transition: 'all 0.5s ease',
+        }}>
+          <div className="text-[32px] font-extrabold font-mono" style={{
+            color: colors.danger,
+            textShadow: step === 1 ? `0 0 20px ${colors.danger}50` : 'none',
+          }}>SUPPLY &lt; DEMAND</div>
+          <div className="text-lg font-sans mt-2" style={{ color: colors.textMuted }}>
+            Too little power — frequency drops
+          </div>
+        </div>
+
+        <div className="text-center" style={{
+          opacity: step >= 2 ? 1 : 0,
+          transform: step >= 2 ? 'translateY(0)' : 'translateY(10px)',
+          transition: 'all 0.5s ease',
+        }}>
+          <div className="text-[32px] font-extrabold font-mono" style={{
+            color: colors.accent,
+            textShadow: step === 2 ? `0 0 20px ${colors.accent}50` : 'none',
+          }}>SUPPLY &gt; DEMAND</div>
+          <div className="text-lg font-sans mt-2" style={{ color: colors.textMuted }}>
+            Too much power — frequency rises
+          </div>
+        </div>
+      </div>
+
+      {/* No storage — on its own arrow press, larger font */}
+      <div className="text-center" style={{
+        opacity: step >= 3 ? 1 : 0,
+        transform: step >= 3 ? 'translateY(0)' : 'translateY(15px)',
+        transition: 'all 0.6s ease',
+      }}>
+        <div className="text-[28px] font-sans font-semibold" style={{ color: colors.text }}>
+          The grid has <span className="font-extrabold" style={{ color: colors.primary }}>no storage</span>. Every watt
+          produced must be consumed <span className="font-extrabold" style={{ color: colors.primary }}>instantly</span>.
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+// mode="intro": boot → supply/demand → punchline (slide 10)
+// mode="scenarios": grid HUD with degradation steps (slide 11)
+export default function FrequencyWalkthrough({ step = 0, mode = 'intro' }) {
+  // ── Intro mode: step 0=boot, 1=supply/demand, 2=punchline ──
+  // ── Scenarios mode: step 0=nominal, 1=warning, 2=emergency, 3=collapse ──
+  const scenarioStep = mode === 'scenarios' ? step + 1 : step; // map to STEPS index
+  const s = mode === 'scenarios'
+    ? STEPS[Math.min(scenarioStep, STEPS.length - 1)]
+    : STEPS[Math.min(step, STEPS.length - 1)];
+
+  const showBoot = mode === 'intro' && step === 0;
+  const showSupplyDemand = mode === 'intro' && step >= 1 && step <= 3;
+  const supplyDemandStep = step; // 1=drop, 2=rise, 3=no storage
+  const showPunchline = mode === 'intro' && step >= 4;
+  const showHud = mode === 'scenarios' && step >= 0;
+  const isCollapse = mode === 'scenarios' && s.gridState === 'collapse';
+  const showGrid = mode === 'scenarios' || (mode === 'intro' && step >= 1);
 
   const [gridReady, setGridReady] = useState(false);
   useEffect(() => {
-    if (step >= 1 && !gridReady) {
+    if (mode === 'scenarios' && !gridReady) {
       const t = setTimeout(() => setGridReady(true), 800);
       return () => clearTimeout(t);
     }
-    if (step < 1) setGridReady(false);
-  }, [step, gridReady]);
+    if (mode === 'intro') setGridReady(false);
+  }, [step, gridReady, mode]);
 
   return (
     <div className="flex flex-col flex-1 relative" style={{ minHeight: 0 }}>
@@ -808,6 +920,17 @@ export default function FrequencyWalkthrough({ step = 0 }) {
         <FreqCounter target={50.000} active={showBoot} />
       </div>
 
+      {/* ═══ SCENE 1b: Supply/Demand Balance (intro mode only) ═══ */}
+      {mode === 'intro' && (
+        <div className="absolute inset-0 flex items-center justify-center z-20" style={{
+          opacity: showSupplyDemand ? 1 : 0,
+          pointerEvents: showSupplyDemand ? 'auto' : 'none',
+          transition: 'opacity 0.6s ease',
+        }}>
+          <SupplyDemandScene active={showSupplyDemand} step={supplyDemandStep} />
+        </div>
+      )}
+
       {/* ═══ SCENE 2: HUD + Grid ═══ */}
       <div className="flex flex-col flex-1" style={{
         minHeight: 0,
@@ -822,7 +945,7 @@ export default function FrequencyWalkthrough({ step = 0 }) {
             transform: showHud ? 'none' : (showPunchline ? 'translateX(-120px)' : 'none'),
             transition: showPunchline ? 'all 0.6s cubic-bezier(0.4,0,0.2,1)' : 'opacity 0.5s ease',
             width: '100%', maxWidth: 860,
-            animation: (showHud && step === 1) ? 'fwScan 0.6s ease 0.5s both' : 'none',
+            animation: (showHud && step === 0 && mode === 'scenarios') ? 'fwScan 0.6s ease 0.5s both' : 'none',
           }}>
             <div className="flex gap-5 items-stretch">
               <div className="rounded-lg p-4 flex flex-col items-center justify-center" style={{
@@ -841,7 +964,7 @@ export default function FrequencyWalkthrough({ step = 0 }) {
               }}>
                 <div>
                   <div className="text-[10px] font-mono font-semibold tracking-[0.15em] uppercase mb-1" style={{ color: colors.textDim }}>Frequency Trace</div>
-                  <FreqLine step={step} width={480} height={50} />
+                  <FreqLine step={scenarioStep} width={480} height={50} />
                 </div>
                 <div className="mt-2">
                   {s.band && <div className="text-[16px] font-mono font-semibold mb-1" style={{ color: s.freqColor, transition: 'color 0.6s' }}>{s.band}</div>}
@@ -870,14 +993,14 @@ export default function FrequencyWalkthrough({ step = 0 }) {
           <div className="rounded-lg flex items-center" style={{
             width: 340,
             background: 'rgba(5,8,16,0.85)',
-            border: `1px solid ${step <= 1 ? colors.success + '30' : step <= 2 ? colors.accent + '30' : colors.danger + '30'}`,
+            border: `1px solid ${scenarioStep <= 1 ? colors.success + '30' : scenarioStep <= 2 ? colors.accent + '30' : colors.danger + '30'}`,
             transition: 'border-color 0.6s',
           }}>
             <div className="font-mono font-bold tracking-[0.12em] uppercase" style={{
               width: 170, textAlign: 'center', padding: '8px 0',
               fontSize: 16,
-              color: step <= 1 ? colors.success : step <= 2 ? colors.accent : colors.danger,
-              textShadow: step > 1 ? `0 0 12px ${step <= 2 ? colors.accent : colors.danger}40` : 'none',
+              color: scenarioStep <= 1 ? colors.success : scenarioStep <= 2 ? colors.accent : colors.danger,
+              textShadow: scenarioStep > 1 ? `0 0 12px ${scenarioStep <= 2 ? colors.accent : colors.danger}40` : 'none',
               transition: 'color 0.6s',
             }}>{s.status}</div>
             <div style={{ width: 1, height: 22, background: colors.surfaceLight, flexShrink: 0 }} />

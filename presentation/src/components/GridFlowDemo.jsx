@@ -182,7 +182,7 @@ export default function GridFlowDemo({ width = '100%' }) {
           <g style={{ visibility: step >= 1 ? 'visible' : 'hidden' }}>
             <Reticle x={20} y={48} w={190} h={370} c={c} active={drawPlants} delay={0} label="SCANNING: GENERATION" />
             <Plant x={30} y={68} w={165} h={130} c={c} smoking={step >= 5} label="COAL 800MW" type="coal" draw={drawPlants} t0={0.3} />
-            <Plant x={30} y={332} w={165} h={130} c={c} smoking={step >= 5} label="GAS 400MW" type="gas" draw={drawPlants} t0={0.65} />
+            <Plant x={30} y={328} w={165} h={130} c={c} smoking={step >= 5} label="GAS 400MW" type="gas" draw={drawPlants} t0={0.65} />
           </g>
 
           {/* ═══ STEP 2: TRANSMISSION (towers + HV lines) ═══ */}
@@ -471,7 +471,7 @@ function Plant({ x, y, w, h, c, smoking, label, type = 'coal', draw, t0 = 0 }) {
 
   // Label position: centered in main building rect
   const labelX = isCoal ? x + w * 0.25 : x + w * 0.58 + w * 0.16;
-  const labelY = isCoal ? y + h * 0.65 : y + h * 0.52;
+  const labelY = isCoal ? y + h * 0.65 : y + h * 0.52 + 6;
 
   return (
     <g>

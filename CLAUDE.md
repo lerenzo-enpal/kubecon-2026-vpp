@@ -26,6 +26,11 @@
 - If the Playwright MCP server is not available, ask the user to install it before proceeding with visual work.
 - Always screenshot after making visual changes to verify before asking the user to review.
 
+## Speaker Notes
+- **Bullets and main ideas, not a script.** Notes should be concise talking points the speaker can glance at.
+- Include backup points for anticipated audience questions.
+- Never write notes as full sentences meant to be read verbatim.
+
 ## Git Workflow
 - **Never push without explicit permission.** Commit freely when asked, but always wait for the user to say "push" before running `git push`.
 - No `Co-Authored-By` lines in commits.
