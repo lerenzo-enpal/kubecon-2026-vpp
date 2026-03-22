@@ -823,13 +823,13 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
 
       if (bn.level === 'imminent') {
         const flash = Math.sin(warningFlashRef.current * 6) > 0;
-        ctx.font = 'bold 16px JetBrains Mono';
+        ctx.font = 'bold 21px JetBrains Mono';
         ctx.textAlign = 'center';
         ctx.fillStyle = flash ? colors.danger : colors.danger + '40';
         ctx.fillText('\u26a0  GRID FAILURE IMMINENT  \u26a0', canvasWidth / 2, height - 52);
       } else if (bn.level === 'shedding') {
         const flash = Math.sin(warningFlashRef.current * 3) > 0.3;
-        ctx.font = '14px JetBrains Mono';
+        ctx.font = '18px JetBrains Mono';
         ctx.textAlign = 'center';
         ctx.fillStyle = flash ? colors.danger + 'cc' : colors.danger + '40';
         ctx.fillText('AUTOMATIC LOAD SHEDDING IN PROGRESS', canvasWidth / 2, height - 48);

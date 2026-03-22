@@ -356,7 +356,7 @@ export default function Presentation() {
         <div className="flex flex-col h-full">
           <H>Tools for Balancing the Grid</H>
           <P size="20px">What happens when supply and demand diverge — and how the grid fights back.</P>
-          <Stepper values={[1, 2, 3, 4]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col" style={{ minHeight: 0 }}>
+          <Stepper values={[1, 2, 3]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col" style={{ minHeight: 0 }}>
             {(stepVal) => <FrequencyWalkthrough step={stepVal ?? 0} mode="scenarios" />}
           </Stepper>
         </div>
