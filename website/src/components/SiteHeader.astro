@@ -8,7 +8,8 @@ import { url } from '../utils/url';
   <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
     <a href={url("/")} class="flex items-center gap-2 hover:opacity-80 transition-opacity flex-shrink-0" style="text-decoration: none;">
       <div class="w-2 h-2 rounded-full" style="background: var(--color-primary); box-shadow: 0 0 8px var(--color-primary);"></div>
-      <span class="font-mono font-bold text-sm md:text-base" style="color: var(--color-text); letter-spacing: 0.05em;">VPP</span>
+      <span class="font-mono font-bold text-sm md:text-base hidden md:inline" style="color: var(--color-text); letter-spacing: 0.05em;">What is a VPP?</span>
+      <span class="font-mono font-bold text-sm md:hidden" style="color: var(--color-text); letter-spacing: 0.05em;">VPP</span>
     </a>
     <nav class="flex items-center gap-3 md:gap-6 font-mono text-xs md:text-sm" style="color: var(--color-text-dim);">
       <a href={url("/learn/how-the-grid-works")} class="hover:opacity-70 transition-opacity">Learn</a>

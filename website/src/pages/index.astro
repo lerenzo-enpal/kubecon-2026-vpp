@@ -23,10 +23,10 @@ const modules = [
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-12 items-start">
 
           <div>
-            <h1 class="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight mb-4" style="color: var(--color-text);">
-              How does the electricity grid <span style="color: var(--color-primary);">actually</span> work?
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight mb-4 text-text">
+              How does the electricity grid <span class="text-primary">actually</span> work?
             </h1>
-            <p class="text-base md:text-lg mb-8 md:mb-10" style="color: var(--color-text-muted); max-width: 520px; line-height: 1.7;">
+            <p class="text-base md:text-lg mb-8 md:mb-10 text-text-muted max-w-lg leading-relaxed">
               The grid is the largest machine ever built. It runs at exactly 50 Hz — and 2.5 Hz
               separates normal from total collapse. Learn how it works, why it's changing, and what
               comes next.
@@ -36,30 +36,23 @@ const modules = [
               {modules.map((m) => (
                 <a
                   href={m.href}
-                  class="group flex items-start gap-4 p-4 rounded-lg transition-all duration-200 hover:translate-x-1"
-                  style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);"
+                  class="group flex items-start gap-4 p-4 rounded-lg transition-all duration-200 hover:translate-x-1 bg-bg-alt border border-surface-light"
                 >
-                  <div
-                    class="flex-shrink-0 w-8 h-8 rounded flex items-center justify-center font-mono font-bold text-sm"
-                    style="background: var(--color-surface); color: var(--color-primary);"
-                  >
+                  <div class="flex-shrink-0 w-8 h-8 rounded flex items-center justify-center font-mono font-bold text-sm bg-surface text-primary">
                     {m.num}
                   </div>
                   <div class="flex-1 min-w-0">
                     <div class="flex items-center gap-2 mb-1">
-                      <span class="font-semibold group-hover:text-white transition-colors" style="color: var(--color-text);">
+                      <span class="font-semibold text-text group-hover:text-white transition-colors">
                         {m.title}
                       </span>
                       {m.interactive && (
-                        <span
-                          class="font-mono text-xs px-2 py-0.5 rounded"
-                          style="background: rgba(34, 211, 238, 0.1); color: var(--color-primary); border: 1px solid rgba(34, 211, 238, 0.2);"
-                        >
+                        <span class="font-mono text-xs px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">
                           Interactive
                         </span>
                       )}
                     </div>
-                    <div class="text-sm" style="color: var(--color-text-dim);">
+                    <div class="text-sm text-text-dim">
                       {m.desc}
                     </div>
                   </div>
@@ -77,83 +70,83 @@ const modules = [
               style="background: linear-gradient(135deg, rgba(34, 211, 238, 0.12), rgba(16, 185, 129, 0.08)); border: 1px solid rgba(34, 211, 238, 0.3);"
             >
               <div class="flex items-center gap-3 mb-2">
-                <div class="w-2 h-2 rounded-full animate-pulse" style="background: var(--color-primary); box-shadow: 0 0 8px var(--color-primary);"></div>
-                <span class="font-mono text-xs font-bold tracking-widest uppercase" style="color: var(--color-primary);">Conference Talk</span>
+                <div class="w-2 h-2 rounded-full animate-pulse bg-primary" style="box-shadow: 0 0 8px var(--color-primary);"></div>
+                <span class="font-mono text-xs font-bold tracking-widest uppercase text-primary">Conference Talk</span>
               </div>
-              <div class="text-lg font-bold mb-1" style="color: var(--color-text);">
+              <div class="text-lg font-bold mb-1 text-text">
                 Virtual Power Plants — KubeCon Europe 2026
               </div>
-              <div class="text-sm mb-3" style="color: var(--color-text-muted);">
+              <div class="text-sm mb-3 text-text-muted">
                 Tuesday, March 25 — Cloud-native infrastructure for the energy grid.
               </div>
-              <span class="font-mono text-sm font-semibold" style="color: var(--color-primary);">
+              <span class="font-mono text-sm font-semibold text-primary">
                 View the slides &rarr;
               </span>
             </a>
 
             {/* Deep Dives */}
-            <a href={url("/research")} class="block p-4 rounded-lg transition-opacity hover:opacity-90" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
-              <div class="font-mono text-xs mb-2 tracking-widest uppercase" style="color: var(--color-text-dim);">
+            <a href={url("/research")} class="block p-4 rounded-lg transition-opacity hover:opacity-90 bg-surface border border-surface-light">
+              <div class="font-mono text-xs mb-2 tracking-widest uppercase text-text-dim">
                 Deep Dives
               </div>
-              <div class="text-sm" style="color: var(--color-text-muted);">
+              <div class="text-base text-text-muted">
                 12 incident analyses, cost breakdowns, market data, and primary sources — all open source.
               </div>
-              <span class="font-mono text-xs font-semibold mt-2 inline-block" style="color: var(--color-primary);">
+              <span class="font-mono text-sm font-semibold mt-2 inline-block text-primary">
                 Browse the research library &rarr;
               </span>
             </a>
 
             {/* Incident Reports with map teasers */}
-            <div class="rounded-lg overflow-hidden" style="border: 1px solid var(--color-surface-light);">
-              <div class="px-4 py-3" style="background: var(--color-surface);">
-                <div class="font-mono text-xs tracking-widest uppercase" style="color: var(--color-text-dim);">
+            <div class="rounded-lg overflow-hidden border border-surface-light">
+              <div class="px-4 py-3 bg-surface">
+                <div class="font-mono text-xs tracking-widest uppercase text-text-dim">
                   Incident Reports
                 </div>
               </div>
               <div class="flex flex-col">
-                <a href={url("/research/incidents/2021-texas-ercot-winter-storm")} class="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-white/5" style="border-bottom: 1px solid var(--color-surface-light);">
-                  <div class="flex-shrink-0 w-10 h-10 rounded flex items-center justify-center" style="background: rgba(239, 68, 68, 0.1);">
-                    <div class="w-5 h-5 rounded-full" style="background: rgba(239, 68, 68, 0.6); box-shadow: 0 0 6px rgba(239, 68, 68, 0.3);"></div>
+                <a href={url("/research/incidents/2021-texas-ercot-winter-storm")} class="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-white/5 border-b border-surface-light">
+                  <div class="flex-shrink-0 w-10 h-10 rounded flex items-center justify-center bg-danger/10">
+                    <div class="w-5 h-5 rounded-full bg-danger/60" style="box-shadow: 0 0 6px rgba(239, 68, 68, 0.3);"></div>
                   </div>
                   <div class="flex-1 min-w-0">
-                    <div class="text-sm font-semibold truncate" style="color: var(--color-text);">2021 Texas ERCOT</div>
-                    <div class="text-xs truncate" style="color: var(--color-text-dim);">4.5M homes, 246 lives lost</div>
+                    <div class="text-sm font-semibold truncate text-text">2021 Texas ERCOT</div>
+                    <div class="text-xs truncate text-text-dim">4.5M homes, 246 lives lost</div>
                   </div>
                   <span class="interactive-tag-text font-mono text-xs flex-shrink-0">Map</span>
                 </a>
-                <a href={url("/research/incidents/2025-iberian-peninsula-blackout")} class="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-white/5" style="border-bottom: 1px solid var(--color-surface-light);">
-                  <div class="flex-shrink-0 w-10 h-10 rounded flex items-center justify-center" style="background: rgba(239, 68, 68, 0.1);">
-                    <div class="w-5 h-5 rounded-full" style="background: rgba(239, 68, 68, 0.6); box-shadow: 0 0 6px rgba(239, 68, 68, 0.3);"></div>
+                <a href={url("/research/incidents/2025-iberian-peninsula-blackout")} class="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-white/5 border-b border-surface-light">
+                  <div class="flex-shrink-0 w-10 h-10 rounded flex items-center justify-center bg-danger/10">
+                    <div class="w-5 h-5 rounded-full bg-danger/60" style="box-shadow: 0 0 6px rgba(239, 68, 68, 0.3);"></div>
                   </div>
                   <div class="flex-1 min-w-0">
-                    <div class="text-sm font-semibold truncate" style="color: var(--color-text);">2025 Iberian Blackout</div>
-                    <div class="text-xs truncate" style="color: var(--color-text-dim);">60M people, 6 seconds</div>
+                    <div class="text-sm font-semibold truncate text-text">2025 Iberian Blackout</div>
+                    <div class="text-xs truncate text-text-dim">60M people, 6 seconds</div>
                   </div>
                   <span class="interactive-tag-text font-mono text-xs flex-shrink-0">Map</span>
                 </a>
-                <a href={url("/research/incidents/2016-south-australia-blackout")} class="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-white/5" style="border-bottom: 1px solid var(--color-surface-light);">
-                  <div class="flex-shrink-0 w-10 h-10 rounded flex items-center justify-center" style="background: rgba(239, 68, 68, 0.1);">
-                    <div class="w-5 h-5 rounded-full" style="background: rgba(239, 68, 68, 0.6); box-shadow: 0 0 6px rgba(239, 68, 68, 0.3);"></div>
+                <a href={url("/research/incidents/2016-south-australia-blackout")} class="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-white/5 border-b border-surface-light">
+                  <div class="flex-shrink-0 w-10 h-10 rounded flex items-center justify-center bg-danger/10">
+                    <div class="w-5 h-5 rounded-full bg-danger/60" style="box-shadow: 0 0 6px rgba(239, 68, 68, 0.3);"></div>
                   </div>
                   <div class="flex-1 min-w-0">
-                    <div class="text-sm font-semibold truncate" style="color: var(--color-text);">2016 South Australia</div>
-                    <div class="text-xs truncate" style="color: var(--color-text-dim);">System black in 43 seconds</div>
+                    <div class="text-sm font-semibold truncate text-text">2016 South Australia</div>
+                    <div class="text-xs truncate text-text-dim">System black in 43 seconds</div>
                   </div>
                   <span class="interactive-tag-text font-mono text-xs flex-shrink-0">Map</span>
                 </a>
-                <a href={url("/research/incidents/2017-hornsdale-battery-response")} class="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-white/5" style="border-bottom: 1px solid var(--color-surface-light);">
-                  <div class="flex-shrink-0 w-10 h-10 rounded flex items-center justify-center" style="background: rgba(16, 185, 129, 0.1);">
-                    <div class="w-5 h-5 rounded-full" style="background: rgba(16, 185, 129, 0.6); box-shadow: 0 0 6px rgba(16, 185, 129, 0.3);"></div>
+                <a href={url("/research/incidents/2017-hornsdale-battery-response")} class="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-white/5 border-b border-surface-light">
+                  <div class="flex-shrink-0 w-10 h-10 rounded flex items-center justify-center bg-success/10">
+                    <div class="w-5 h-5 rounded-full bg-success/60" style="box-shadow: 0 0 6px rgba(16, 185, 129, 0.3);"></div>
                   </div>
                   <div class="flex-1 min-w-0">
-                    <div class="text-sm font-semibold truncate" style="color: var(--color-text);">2017 Hornsdale Battery</div>
-                    <div class="text-xs truncate" style="color: var(--color-success);">140ms response prevented cascade</div>
+                    <div class="text-sm font-semibold truncate text-text">2017 Hornsdale Battery</div>
+                    <div class="text-xs truncate text-success">140ms response prevented cascade</div>
                   </div>
                   <span class="interactive-tag-text font-mono text-xs flex-shrink-0">Map</span>
                 </a>
                 <a href={url("/research")} class="flex items-center justify-center px-4 py-3 transition-colors hover:bg-white/5">
-                  <span class="font-mono text-xs font-semibold" style="color: var(--color-primary);">
+                  <span class="font-mono text-xs font-semibold text-primary">
                     All 12 incidents &rarr;
                   </span>
                 </a>
@@ -161,31 +154,31 @@ const modules = [
             </div>
 
             {/* Enpal + Partners */}
-            <div class="rounded-lg py-4 text-center overflow-hidden" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
-              <div class="font-mono text-xs ml-2 mb-2 tracking-widest uppercase" style="color: var(--color-text-dim);">
+            <div class="rounded-lg p-4 text-center overflow-hidden bg-surface border border-surface-light">
+              <div class="font-mono text-xs mb-2 text-left tracking-widest uppercase text-text-dim">
                 Created by
               </div>
-              <div class="flex gap-8 md:gap-16 mb-8 justify-around">
+              <div class="flex pt-2 gap-8 md:gap-16 mb-8 justify-around">
                 <div class="flex flex-col items-center">
-                  <img src={url("/lerenzo.png")} alt="LeRenzo" class="w-12 h-12 rounded-full mb-2 object-cover border-2" style="border-color: rgba(34, 211, 238, 0.25); box-shadow: 0 0 20px rgba(34, 211, 238, 0.08); object-position: center 35%;" />
-                  <div class="text-sm font-bold" style="color: var(--color-text);">LeRenzo Tolbert-Malcolm</div>
-                  <div class="text-xs mt-0.5" style="color: var(--color-text-muted);">Staff Engineer, VPP</div>
+                  <img src={url("/lerenzo.png")} alt="LeRenzo" class="w-28 h-28 rounded-full mb-2 object-cover border-2 border-primary/25 object-[center_35%]" style="box-shadow: 0 0 20px rgba(34, 211, 238, 0.08);" />
+                  <div class="text-lg font-bold text-text">LeRenzo Tolbert-Malcolm</div>
+                  <div class="text-base mt-0.5 text-text-muted">Staff Engineer, VPP</div>
                 </div>
                 <div class="flex flex-col items-center">
-                  <img src={url("/mario.png")} alt="Mario" class="w-12 h-12 rounded-full mb-2 object-cover border-2" style="border-color: rgba(34, 211, 238, 0.25); box-shadow: 0 0 20px rgba(34, 211, 238, 0.08); object-position: center 35%;" />
-                  <div class="text-sm font-bold" style="color: var(--color-text);">Mario Olivio Flores</div>
-                  <div class="text-xs mt-0.5" style="color: var(--color-text-muted);">Engineering Manager, VPP</div>
+                  <img src={url("/mario.png")} alt="Mario" class="w-28 h-28 rounded-full mb-2 object-cover border-2 border-primary/25 object-[center_35%]" style="box-shadow: 0 0 20px rgba(34, 211, 238, 0.08);" />
+                  <div class="text-lg font-bold text-text">Mario Olivio Flores</div>
+                  <div class="text-base mt-0.5 text-text-muted">Engineering Manager, VPP</div>
                 </div>
               </div>
               <a href="https://www.enpal.de" target="_blank" rel="noopener" class="inline-block hover:opacity-80 transition-opacity">
-                <img src={url("/enpal-logo.svg")} alt="Enpal" class="h-20 mx-auto" />
+                <img src={url("/enpal-logo.svg")} alt="Enpal" class="h-28" />
               </a>
-              <div class="text-base mt-2" style="color: var(--color-text-dim);">
+              <div class="text-lg mt-1 mb-4 text-text-dim">
                 Europe's largest residential solar + storage installer
               </div>
               <div class="flex justify-center gap-3 my-3">
-                <a href="https://www.enpal.de/solar" target="_blank" rel="noopener" class="font-mono text-xs px-3 py-1 rounded transition-opacity hover:opacity-80" style="background: rgba(16, 185, 129, 0.1); color: var(--color-success); border: 1px solid rgba(16, 185, 129, 0.2);">Get Solar</a>
-                <a href="https://www.enpal.de/karriere" target="_blank" rel="noopener" class="font-mono text-xs px-3 py-1 rounded transition-opacity hover:opacity-80" style="background: rgba(34, 211, 238, 0.1); color: var(--color-primary); border: 1px solid rgba(34, 211, 238, 0.2);">Join the Team</a>
+                <a href="https://www.enpal.de/solar" target="_blank" rel="noopener" class="font-mono text-xs px-3 py-1 rounded transition-opacity hover:opacity-80 bg-success/10 text-success border border-success/20">Get Solar</a>
+                <a href="https://www.enpal.de/karriere" target="_blank" rel="noopener" class="font-mono text-xs px-3 py-1 rounded transition-opacity hover:opacity-80 bg-primary/10 text-primary border border-primary/20">Join the Team</a>
               </div>
             </div>
           </div>
