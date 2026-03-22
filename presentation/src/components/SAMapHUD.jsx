@@ -305,7 +305,7 @@ const getNode = (id) => NODE_MAP.get(id);
 let _allHomesCache = null;
 function loadAllHomes() {
   if (_allHomesCache) return Promise.resolve(_allHomesCache);
-  return fetch('/data/adelaide-all-homes.json')
+  return fetch(`${import.meta.env.BASE_URL}data/adelaide-all-homes.json`)
     .then(r => r.json())
     .then(data => { _allHomesCache = data; return data; })
     .catch(() => []);

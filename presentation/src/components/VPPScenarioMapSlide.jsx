@@ -16,7 +16,7 @@ import { useMapStyle } from '../utils/mapStyle';
 let _berlinHomesCache = null;
 function loadBerlinHomes() {
   if (_berlinHomesCache) return Promise.resolve(_berlinHomesCache);
-  return fetch('/data/berlin-homes.json')
+  return fetch(`${import.meta.env.BASE_URL}data/berlin-homes.json`)
     .then(r => r.json())
     .then(data => { _berlinHomesCache = data; return data; })
     .catch(() => []);
