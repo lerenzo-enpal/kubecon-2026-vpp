@@ -50,7 +50,7 @@ Scroll-driven water-pipe analogy animation.
 
 - Canvas shows a pipe system with water flowing
 - As user scrolls: labels appear mapping voltage → pressure, current → flow rate, resistance → pipe width
-- Sliders within the pipe adjust each property -- wider pipe = more flow for same pressure
+- Scroll-driven changes: pipe width and water flow rate vary as scroll progresses to show the relationships (no interactive sliders here -- the Ohm's Law Playground lab below provides the interactive version)
 - Further scrolling morphs the pipe into a wire with electrons, establishing that the analogy maps directly
 - Key formula appears inline: V = I × R (Ohm's Law)
 
@@ -159,24 +159,25 @@ Interactive component: `GridOperatorGame.tsx`
 
 This is the signature interactive for the Basics section -- nothing like it exists on the site.
 
-- **Display:** Frequency gauge (center), demand curve (right, fluctuating throughout a simulated 24-hour day), available generation assets (left panel)
+**MVP (Phase 1):**
+- **Display:** Frequency gauge (center), demand bar (right, fluctuating), generation stack (left panel)
 - **Assets you control:**
-  - Gas turbine (500 MW, 10 min ramp, moderate cost)
-  - Wind farm (300 MW, variable output -- you can't control the wind)
-  - Solar farm (400 MW peak, follows sun curve, zero at night)
+  - Gas turbine (500 MW, 10 min ramp)
+  - Solar farm (400 MW peak, follows preset sun curve)
   - Battery (200 MW / 800 MWh, instant response, limited energy)
-  - Emergency reserve (1 GW, 30 min ramp, very expensive)
 - **Gameplay:**
-  - Demand fluctuates: morning ramp, midday dip (solar helps), evening peak, night trough
-  - Random events: cloud cover drops solar, wind gust, factory comes online, generator trip
+  - Demand follows a preset 24-hour curve (morning ramp, midday dip, evening peak, night trough) at accelerated speed (~2 min real time = 24 simulated hours)
   - You click to dispatch/retire assets, trying to keep frequency in the 49.8-50.2 Hz band
-  - Score: seconds spent in green band. Penalty for load shedding. Bonus for cost efficiency.
-  - Visual feedback: frequency gauge color, city lights dimming during load shedding, cost counter ticking
-- **Difficulty modes:**
-  - "Calm day" -- smooth demand, steady wind/solar
-  - "Storm" -- volatile renewables, demand spikes
-  - "Dunkelflaute" -- minimal wind+solar for days, you must manage battery carefully
-- **Learning outcome:** Visceral understanding of why balancing is hard, why batteries matter for fast response, why you can't run a grid on solar alone (or gas alone)
+  - Visual feedback: frequency gauge color, simple score counter (seconds in green band)
+  - One event: cloud cover drops solar output at a random time
+- **Learning outcome:** Visceral understanding of why balancing is hard and why batteries matter for fast response
+
+**Phase 2 (later iteration):**
+- Add wind farm (variable output) and emergency reserve (expensive, slow)
+- Random events: generator trip, demand spikes, wind gusts
+- Three difficulty modes (Calm day, Storm, Dunkelflaute)
+- Cost counter, city lights dimming during load shedding
+- Scoring with penalty/bonus system
 
 ### Lab: "Why Can't We Just Store It?"
 
@@ -450,18 +451,45 @@ Interactive component: `StorageComparisonTool.tsx`
 - `StorageScenarioBuilder.tsx` -- Page 4: grid problem → technology match
 - `StorageComparisonTool.tsx` -- Page 4: radar chart comparison
 
+### Component Directory
+
+All new Basics components go in `website/src/components/basics/` to keep the component root clean:
+- `website/src/components/basics/briefings/` -- ScrollBriefing wrapper + 12 briefing components
+- `website/src/components/basics/labs/` -- 9 lab components
+
 ### Shared Infrastructure
 
-**`ScrollBriefing.tsx`** -- The key shared component. Pattern:
-- Renders a tall scrollable container (e.g., 300vh per briefing section)
-- Contains a sticky canvas element that stays fixed in the viewport
-- Calculates scroll progress (0.0 to 1.0) within the container
-- Passes progress to a render callback that drives the canvas animation
-- Text content appears/fades based on scroll position (CSS opacity tied to progress ranges)
+**`ScrollBriefing.tsx`** -- The key shared wrapper component for all scroll-driven briefing sections.
 
-This is a new pattern for the site. Existing interactives are either canvas charts (static data, no scroll) or step-through components (arrow key driven). The scroll-driven pattern adds a third interaction mode.
+**Layout model:**
+- Two-column layout within the ContentLayout main content area: sticky canvas (left/center, ~60% width) + scrolling text column (right, ~40% width)
+- The canvas is `position: sticky; top: 80px` (below the site header, avoiding conflict with the sidebar which is in a separate column)
+- Each briefing section is approximately 200-300vh tall (tuned per-briefing based on content density)
+- Text blocks within the scroll column have `data-progress-start` and `data-progress-end` attributes; CSS opacity transitions are driven by scroll progress via a style variable
 
-**Canvas rendering:** All briefing animations use Canvas 2D (consistent with existing site components). Labs that need complex UI (sliders, buttons, selectors) use React DOM with canvas for the visualization portion.
+**Scroll mechanics:**
+- Uses IntersectionObserver to detect when the briefing container enters the viewport
+- Within the container, scroll progress (0.0 to 1.0) is calculated as: `(scrollTop - containerTop) / (containerHeight - viewportHeight)`
+- Progress is passed to the briefing's `render(ctx, progress, width, height)` callback on each `requestAnimationFrame`
+- Animation loop pauses (cancels rAF) when the container is fully scrolled out of view to avoid unnecessary rendering
+
+**TOC interaction:**
+- Each briefing section has a single `id` attribute for the sidebar scroll-spy (e.g., `id="briefing-ac-vs-dc"`)
+- The TOC links to the briefing section start, not to sub-states within it
+- This is compatible with the existing IntersectionObserver-based scroll-spy in ContentLayout
+
+**Reduced motion:**
+- When `prefers-reduced-motion: reduce` is active, the sticky canvas shows the final state of the animation (progress = 1.0) as a static diagram
+- Text blocks all render at full opacity
+- Effectively becomes a static illustrated page rather than a scroll-driven animation
+
+**Light mode support:**
+- All Canvas 2D drawing uses color constants pulled from CSS custom properties via `getComputedStyle(canvas).getPropertyValue('--color-*')`
+- A shared `getCanvasThemeColors()` utility reads `--color-bg`, `--color-text`, `--color-primary`, `--color-surface`, etc. and returns a colors object
+- This utility is called on mount and on `matchMedia('(prefers-color-scheme: ...)')` change
+- Lab components with React DOM UI use Tailwind classes (which already support dark/light via the existing theme toggle)
+
+**Canvas rendering:** All briefing animations use Canvas 2D (consistent with existing site components). Labs that need complex UI (sliders, buttons, selectors) use React DOM with canvas for the visualization portion. Radar charts in `BatteryChemistryWorkbench.tsx` and `StorageComparisonTool.tsx` are rendered via Canvas 2D using polar coordinate math (no charting library).
 
 ### Data
 
@@ -473,9 +501,18 @@ No external data fetching. All data is hardcoded in component files:
 
 ### Navigation Updates
 
-- `SiteHeader.astro` -- Add "Basics" link between Home and Learn
-- `ContentLayout.astro` -- Add Basics section to sidebar TOC (collapsible, same pattern as Learn and Research)
-- `website/src/pages/learn/how-the-grid-works.astro` -- Add cross-links to Basics pages 01 and 02 where relevant
+**`SiteHeader.astro`:** Add "Basics" nav link. The current header nav has: Learn, Research, Slides. Add "Basics" before Learn. Do not add Home or About links (the logo serves as the home link, matching current behavior).
+
+**`ContentLayout.astro`:** This layout has hardcoded arrays for Learn modules and Research sections in its frontmatter. Add a new `basics` array following the same pattern, and a new collapsible sidebar block. Detection via `isBasics = currentPath.startsWith('/basics')`. The Basics block appears above the Learn block in the sidebar.
+
+**`website/src/pages/learn/how-the-grid-works.astro`:** Add cross-links to Basics pages 01 and 02 where relevant.
+
+### Basics Hub Page (`/basics/index.astro`)
+
+A landing page for the Basics section, following the same pattern as `/learn/index.astro`. Contains:
+- Section title: "Basics" with subtitle: "The foundations of electricity, grid balance, and energy storage"
+- Four cards (one per page) with: title, one-line description, and a small animated preview (reusing each page's hero animation at reduced size)
+- A note: "New to energy? Start with How Electricity Works. Already familiar? Jump to any topic."
 
 ### Cross-linking Strategy
 
@@ -488,6 +525,25 @@ No external data fetching. All data is hardcoded in component files:
 - "How the Grid Works" (Learn) links to Supply & Demand (Basics) with: "Want to understand why frequency is everything? Start with the basics."
 - "The Virtual Power Plant" (Learn) links to How Batteries Work (Basics) with: "New to battery technology? Start here."
 
+### Performance
+
+- Briefing canvas animation loops must cancel their `requestAnimationFrame` when the briefing container is scrolled fully out of view (checked via IntersectionObserver)
+- Lab components use `client:visible` for deferred hydration (canvas only initializes when scrolled into view)
+- Maximum of ~3 concurrent rAF loops on any single page at a time
+
+### Accessibility
+
+- `prefers-reduced-motion: reduce` -- briefing canvases show final-state static diagrams; text at full opacity (see ScrollBriefing spec above)
+- `<noscript>` fallback on each Astro page: a static summary paragraph for each briefing concept, so the page is meaningful without JS
+- All interactive labs have visible labels and keyboard-accessible controls (sliders, buttons)
+- Canvas elements have `role="img"` and descriptive `aria-label`
+
+### Content Boundary: Page 3 vs Page 4
+
+Page 3 ("How Batteries Work") covers lithium-ion and its evolutionary variants (solid-state, sodium-ion, silicon anodes, lithium-sulfur) -- these are all electrochemical cells that store energy chemically.
+
+Page 4 ("Beyond Lithium-Ion") covers fundamentally different storage mechanisms: mechanical (pumped hydro, gravity, flywheels, CAES), thermal (molten salt, ice, carbon blocks), and chemical-but-non-battery (hydrogen). The dividing line is "battery chemistry variants" vs "non-battery storage paradigms."
+
 ---
 
 ## Out of Scope
@@ -498,3 +554,4 @@ No external data fetching. All data is hardcoded in component files:
 - User progress tracking or gamification beyond the Grid Operator game score
 - Video content
 - 3D WebGL visualizations (Canvas 2D is sufficient and consistent with existing site)
+- GridOperatorGame Phase 2 features (difficulty modes, cost scoring, city lights -- see phasing notes above)
