@@ -220,6 +220,53 @@ html.font-lg aside .text-\[10px\] { font-size: 14px !important; }
 .maplibregl-ctrl-attrib a { color: #667 !important; }
 .maplibregl-ctrl-attrib-button { display: none !important; }
 
+/* Launch button — solid cyan with left-to-right glow sweep */
+@keyframes launch-glow-sweep {
+  0% { background-position: -100% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.fs-launch-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #020408;
+  background: linear-gradient(
+    90deg,
+    #22d3ee 0%,
+    #22d3ee 35%,
+    #7ef3ff 50%,
+    #22d3ee 65%,
+    #22d3ee 100%
+  );
+  background-size: 300% 100%;
+  animation: launch-glow-sweep 2.5s linear infinite;
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.3), 0 0 4px rgba(34, 211, 238, 0.2);
+  transition: transform 0.15s, box-shadow 0.2s;
+}
+.fs-launch-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(34, 211, 238, 0.5), 0 0 8px rgba(34, 211, 238, 0.3);
+}
+.fs-launch-btn:active {
+  transform: scale(0.97);
+}
+.fs-launch-btn svg {
+  stroke: #020408;
+}
+
 /* Interactive tag — animated border trace-in + left-to-right glow sweep */
 @keyframes interactive-border-trace {
   0% { clip-path: inset(0 100% 100% 0); }

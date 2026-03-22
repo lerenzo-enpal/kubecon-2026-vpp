@@ -77,41 +77,49 @@ export default function VPPExhibitTabs({ height = 500 }: { height?: number }) {
               onClick={() => setActiveTab(tab.id)}
               style={{
                 flex: 1,
-                padding: '10px 12px 8px',
-                background: 'transparent',
+                padding: '12px 16px 10px',
+                background: isActive
+                  ? `${tab.color}12`
+                  : 'rgba(26, 34, 54, 0.5)',
                 border: 'none',
                 borderBottom: isActive
-                  ? `2px solid ${tab.color}`
-                  : '2px solid transparent',
+                  ? `3px solid ${tab.color}`
+                  : '3px solid rgba(100, 116, 139, 0.2)',
                 cursor: 'pointer',
                 textAlign: 'left',
-                transition: 'border-color 0.2s, opacity 0.2s',
-                opacity: isActive ? 1 : 0.45,
+                transition: 'all 0.2s',
+                opacity: 1,
               }}
               onMouseEnter={(e) => {
-                if (!isActive) e.currentTarget.style.opacity = '0.7';
+                if (!isActive) {
+                  e.currentTarget.style.background = 'rgba(26, 34, 54, 0.8)';
+                  e.currentTarget.style.borderBottomColor = `${tab.color}60`;
+                }
               }}
               onMouseLeave={(e) => {
-                if (!isActive) e.currentTarget.style.opacity = '0.45';
+                if (!isActive) {
+                  e.currentTarget.style.background = 'rgba(26, 34, 54, 0.5)';
+                  e.currentTarget.style.borderBottomColor = 'rgba(100, 116, 139, 0.2)';
+                }
               }}
             >
               <div
                 style={{
                   fontFamily: '"JetBrains Mono", monospace',
-                  fontSize: 12,
-                  fontWeight: 600,
+                  fontSize: 13,
+                  fontWeight: 700,
                   letterSpacing: '0.06em',
                   textTransform: 'uppercase',
-                  color: isActive ? tab.color : 'var(--color-text-dim, #a1a1aa)',
-                  marginBottom: 2,
+                  color: isActive ? tab.color : '#94a3b8',
+                  marginBottom: 3,
                 }}
               >
                 {tab.title}
               </div>
               <div
                 style={{
-                  fontSize: 11,
-                  color: 'var(--color-text-dim, #71717a)',
+                  fontSize: 12,
+                  color: isActive ? '#94a3b8' : '#64748b',
                   lineHeight: 1.3,
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',
