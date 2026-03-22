@@ -28,6 +28,7 @@ import ResponseTimeline from './components/ResponseTimeline';
 import ThankYouBackground from './components/ThankYouBackground';
 import FrequencyWalkthrough from './components/FrequencyWalkthrough';
 import ArchitectureExplorer from './components/ArchitectureExplorer';
+import PartnerArcs from './components/PartnerArcs';
 
 
 const theme = {
@@ -160,25 +161,52 @@ export default function Presentation() {
           {/* Partners */}
           <div className="flex flex-col items-center gap-2">
             <span className="text-lg text-hud-text-dim font-mono mb-1">Partners</span>
-            <div className="flex items-center gap-4">
-              <img src={asset("/flexa-logo.svg")} alt="Flexa" className="h-10" />
-              <svg className="h-8 opacity-20" viewBox="0 0 24 40" fill="none" stroke={colors.primary} strokeWidth="1.2" strokeLinecap="round">
-                <line x1="12" y1="2" x2="12" y2="38" />
-                <line x1="5" y1="8" x2="19" y2="8" />
-                <line x1="4" y1="16" x2="20" y2="16" />
-                <line x1="3" y1="24" x2="21" y2="24" />
-                <line x1="2" y1="32" x2="22" y2="32" />
-              </svg>
-              <span className="text-xl font-bold font-mono" style={{ color: colors.secondary }}>Entrix</span>
-              <svg className="h-8 opacity-20" viewBox="0 0 24 40" fill="none" stroke={colors.primary} strokeWidth="1.2" strokeLinecap="round">
-                <line x1="12" y1="2" x2="12" y2="38" />
-                <line x1="5" y1="8" x2="19" y2="8" />
-                <line x1="4" y1="16" x2="20" y2="16" />
-                <line x1="3" y1="24" x2="21" y2="24" />
-                <line x1="2" y1="32" x2="22" y2="32" />
-              </svg>
-              <span className="text-xl font-bold font-mono" style={{ color: colors.success }}>Metrify</span>
-            </div>
+            <style>{`
+              @keyframes insulatorPulse {
+                0%, 100% { opacity: 0.35; }
+                50% { opacity: 0.7; }
+              }
+              .insulator { animation: insulatorPulse 3s ease-in-out infinite; }
+              .insulator:nth-child(odd) { animation-delay: -1.5s; }
+            `}</style>
+            <PartnerArcs>
+              {(setPylonRef) => (
+                <div className="flex items-center gap-6">
+                  <img src={asset("/flexa-logo.svg")} alt="Flexa" className="h-10" />
+                  <svg ref={setPylonRef(0)} className="h-12" viewBox="0 0 36 48" fill="none" style={{ filter: `drop-shadow(0 0 4px ${colors.primary}30)` }}>
+                    {/* Mast */}
+                    <line x1="18" y1="1" x2="18" y2="47" stroke={colors.primary} strokeWidth="1.6" opacity="0.45" />
+                    {/* Crossarms — equal length, subtle catenary droop */}
+                    <path d="M5,9 Q18,12 31,9" stroke={colors.primary} strokeWidth="1.3" opacity="0.4" />
+                    <path d="M5,18 Q18,21 31,18" stroke={colors.primary} strokeWidth="1.3" opacity="0.4" />
+                    <path d="M5,27 Q18,30 31,27" stroke={colors.primary} strokeWidth="1.3" opacity="0.4" />
+                    <path d="M5,36 Q18,39 31,36" stroke={colors.primary} strokeWidth="1.3" opacity="0.4" />
+                    {/* Insulator dots at crossarm tips */}
+                    {[9,18,27,36].map(y => (
+                      <React.Fragment key={y}>
+                        <circle className="insulator" cx="5" cy={y} r="2" fill={colors.primary} />
+                        <circle className="insulator" cx="31" cy={y} r="2" fill={colors.primary} />
+                      </React.Fragment>
+                    ))}
+                  </svg>
+                  <span className="text-xl font-bold font-mono" style={{ color: colors.secondary }}>Entrix</span>
+                  <svg ref={setPylonRef(1)} className="h-12" viewBox="0 0 36 48" fill="none" style={{ filter: `drop-shadow(0 0 4px ${colors.primary}30)` }}>
+                    <line x1="18" y1="1" x2="18" y2="47" stroke={colors.primary} strokeWidth="1.6" opacity="0.45" />
+                    <path d="M5,9 Q18,12 31,9" stroke={colors.primary} strokeWidth="1.3" opacity="0.4" />
+                    <path d="M5,18 Q18,21 31,18" stroke={colors.primary} strokeWidth="1.3" opacity="0.4" />
+                    <path d="M5,27 Q18,30 31,27" stroke={colors.primary} strokeWidth="1.3" opacity="0.4" />
+                    <path d="M5,36 Q18,39 31,36" stroke={colors.primary} strokeWidth="1.3" opacity="0.4" />
+                    {[9,18,27,36].map(y => (
+                      <React.Fragment key={y}>
+                        <circle className="insulator" cx="5" cy={y} r="2" fill={colors.primary} />
+                        <circle className="insulator" cx="31" cy={y} r="2" fill={colors.primary} />
+                      </React.Fragment>
+                    ))}
+                  </svg>
+                  <span className="text-xl font-bold font-mono" style={{ color: colors.success }}>Metrify</span>
+                </div>
+              )}
+            </PartnerArcs>
           </div>
         </div>
       </Slide>

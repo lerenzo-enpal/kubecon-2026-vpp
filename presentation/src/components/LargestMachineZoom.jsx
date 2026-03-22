@@ -506,22 +506,6 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
       // PHASE 3+: Zoom-out from Wolfsburg to EU
       // ════════════════════════════════════════════
       if (step >= 3 && step !== 7) {
-        // Factory fade-out tail at start of phase 3
-        if (step === 3 && elapsed < 0.6) {
-          const fadeAlpha = 1 - elapsed / 0.6;
-          const factoryW = 246, factoryH = factoryW * 0.4;
-          const fCx = width / 2, fCy = height * 0.42;
-          drawFactory(ctx, fCx - factoryW / 2, fCy - factoryH / 2, factoryW, factoryH, fadeAlpha);
-          ctx.save(); ctx.globalAlpha = fadeAlpha; ctx.textAlign = 'center';
-          ctx.font = '700 24px "JetBrains Mono"'; ctx.fillStyle = colors.accent;
-          ctx.fillText('VOLKSWAGEN WOLFSBURG', fCx, fCy + factoryH / 2 + 30);
-          ctx.font = '600 16px "JetBrains Mono"'; ctx.fillStyle = colors.text;
-          ctx.fillText("LARGEST CAR FACTORY", fCx, fCy + factoryH / 2 + 62);
-          ctx.font = '500 16px "JetBrains Mono"'; ctx.fillStyle = colors.secondary;
-          ctx.fillText('60,000 WORKERS \u00b7 6.5 KM\u00b2', fCx, fCy + factoryH / 2 + 96);
-          ctx.restore();
-        }
-
         // Duplication timing
         const dupT = step === 3 ? Math.min(1, elapsed / DUP_DURATION) : 1;
         const zoomElapsed = step === 3 ? Math.max(0, elapsed - DUP_DURATION) : ZOOM_DURATION;
@@ -536,10 +520,11 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
         }
 
         // Interpolate viewState for zoom
+        let currentView = EUROPE_VIEW;
         if (step === 3 && zoomElapsed > 0) {
           const panT = Math.max(0, Math.min(1, (eased - 0.4) / 0.6));
           const panEased = panT * panT * (3 - 2 * panT);
-          const currentView = {
+          currentView = {
             longitude: lerp(WOLFSBURG_VIEW.longitude, EUROPE_VIEW.longitude, panEased),
             latitude: lerp(WOLFSBURG_VIEW.latitude, EUROPE_VIEW.latitude, panEased),
             zoom: lerp(WOLFSBURG_VIEW.zoom, EUROPE_VIEW.zoom, eased),
@@ -554,38 +539,47 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
             viewStateRef.current = EUROPE_VIEW;
             zoomProgressRef.current = 1;
           }
+        }
 
-          // Draw factory at FIXED Y position during zoom (no vertical shift)
-          const zoomDelta = currentView.zoom - WOLFSBURG_VIEW.zoom;
+        // ── Single unified factory draw for all of step 3 ──
+        // During duplication (before zoom): full size, gentle fade
+        // During zoom: shrinks with map scale, continues fading
+        if (step === 3) {
+          const baseW = 246, baseH = baseW * 0.4;
+          const sx = width / 2;
+          const sy = height * 0.42;
+
+          // Full alpha during duplication, then fade during first half of zoom
+          // (gone before map pan starts at ~40% zoom progress)
+          const fadeAlpha = zoomElapsed <= 0 ? 1 : Math.max(0, 1 - t * 2);
+
+          // Scale: 1.0 during duplication, shrinks once zoom starts
+          const zoomDelta = zoomElapsed > 0 ? (currentView.zoom - WOLFSBURG_VIEW.zoom) : 0;
           const factoryScale = Math.pow(2, zoomDelta);
 
-          if (factoryScale > 0.003) {
-            const fadeAlpha = Math.max(0, 1 - t * 1.5);
-            if (fadeAlpha > 0.01) {
-              const baseW = 246, baseH = baseW * 0.4;
-              const sx = width / 2;
-              const sy = height * 0.42; // FIXED: no vertical blend
-              ctx.save();
-              ctx.globalAlpha = fadeAlpha;
-              ctx.translate(sx, sy);
-              ctx.scale(factoryScale, factoryScale);
-              ctx.translate(-sx, -sy);
-              drawFactory(ctx, sx - baseW / 2, sy - baseH / 2, baseW, baseH, 1, factoryScale > 0.15 ? 1 : 0);
-              if (factoryScale > 0.15) {
-                ctx.textAlign = 'center';
-                ctx.font = '700 24px "JetBrains Mono"'; ctx.fillStyle = colors.accent;
-                ctx.shadowBlur = 10; ctx.shadowColor = colors.accent + '40';
-                ctx.fillText('VOLKSWAGEN WOLFSBURG', sx, sy + baseH / 2 + 30);
-                ctx.shadowBlur = 0;
-                ctx.font = '600 16px "JetBrains Mono"'; ctx.fillStyle = colors.text;
-                ctx.fillText("LARGEST CAR FACTORY", sx, sy + baseH / 2 + 62);
-                ctx.font = '500 16px "JetBrains Mono"'; ctx.fillStyle = colors.secondary;
-                ctx.fillText('60,000 WORKERS \u00b7 6.5 KM\u00b2', sx, sy + baseH / 2 + 96);
-              }
-              ctx.restore();
+          if (fadeAlpha > 0.01 && factoryScale > 0.003) {
+            ctx.save();
+            ctx.globalAlpha = fadeAlpha;
+            ctx.translate(sx, sy);
+            ctx.scale(factoryScale, factoryScale);
+            ctx.translate(-sx, -sy);
+            drawFactory(ctx, sx - baseW / 2, sy - baseH / 2, baseW, baseH, 1, factoryScale > 0.15 ? 1 : 0);
+            if (factoryScale > 0.15) {
+              ctx.textAlign = 'center';
+              ctx.font = '700 24px "JetBrains Mono"'; ctx.fillStyle = colors.accent;
+              ctx.shadowBlur = 10; ctx.shadowColor = colors.accent + '40';
+              ctx.fillText('VOLKSWAGEN WOLFSBURG', sx, sy + baseH / 2 + 30);
+              ctx.shadowBlur = 0;
+              ctx.font = '600 16px "JetBrains Mono"'; ctx.fillStyle = colors.text;
+              ctx.fillText("LARGEST CAR FACTORY", sx, sy + baseH / 2 + 62);
+              ctx.font = '500 16px "JetBrains Mono"'; ctx.fillStyle = colors.secondary;
+              ctx.fillText('60,000 WORKERS \u00b7 6.5 KM\u00b2', sx, sy + baseH / 2 + 96);
             }
+            ctx.restore();
           }
+        }
 
+        if (step === 3 && zoomElapsed > 0) {
           // Wolfsburg callout label
           if (eased > 0.75) {
             const calloutAlpha = Math.min(1, (eased - 0.75) / 0.15);
