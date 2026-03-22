@@ -220,7 +220,7 @@ export default function BatteryChemistryWorkbench() {
           </div>
         </div>
 
-        <div className="flex-1" style={{ width: '100%', minHeight: 380 }}>
+        <div style={{ width: '100%', height: 380 }}>
           <canvas ref={canvasRef} style={{ width: '100%', height: '100%' }} />
         </div>
 

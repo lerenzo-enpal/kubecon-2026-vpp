@@ -347,7 +347,7 @@ export default function BatteryLifecycleSimulator() {
         </div>
 
         {/* Canvas */}
-        <div className="flex-1" style={{ width: '100%', minHeight: 320 }}>
+        <div style={{ width: '100%', height: 320 }}>
           <canvas ref={canvasRef} style={{ width: '100%', height: '100%' }} />
         </div>
       </div>
