@@ -26,6 +26,16 @@ import { url } from '../../utils/url';
   serves billions, and must balance supply and demand <strong>every single second</strong>.
 </p>
 
+<div class="p-4 rounded-lg mb-8" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
+  <div class="font-mono text-xs mb-1" style="color: var(--color-primary); letter-spacing: 0.08em; text-transform: uppercase;">
+    New to electricity?
+  </div>
+  <div class="text-sm" style="color: var(--color-text-muted);">
+    Start with <a href={url("/basics/how-electricity-works")} style="color: var(--color-primary);">How Electricity Works</a> and
+    <a href={url("/basics/supply-and-demand")} style="color: var(--color-primary);">Supply & Demand</a> for the foundations.
+  </div>
+</div>
+
 <div class="my-8">
   <GlowLine client:visible />
 </div>
