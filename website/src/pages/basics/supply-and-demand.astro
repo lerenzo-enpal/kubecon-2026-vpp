@@ -1,129 +1,179 @@
 ---
 import ContentLayout from '../../layouts/ContentLayout.astro';
-import GridOperatorGame from '../../components/basics/labs/GridOperatorGame';
-import StorageScaleVisualizer from '../../components/basics/labs/StorageScaleVisualizer';
+import GlowLine from '../../components/GlowLine';
+import BufferComparison from '../../components/basics/inline/BufferComparison';
+import RotorFrequency from '../../components/basics/inline/RotorFrequency';
+import FrequencyGauge from '../../components/basics/inline/FrequencyGauge';
+import { url } from '../../utils/url';
+
+const sections = [
+  { id: 'no-buffer', title: 'No Buffer' },
+  { id: 'spinning-mass', title: 'The Spinning Mass' },
+  { id: 'thresholds', title: '2.5 Hz to Blackout' },
+  { id: 'grid-operator', title: 'Be the Grid Operator' },
+  { id: 'storage-scale', title: 'Why Not Store It?' },
+];
 ---
 
-<ContentLayout title="Supply and Demand" description="Why the grid must balance supply and demand every second, and what happens when it cannot.">
+<ContentLayout title="Supply & Demand" description="Electricity cannot be stored in the grid. Every watt generated must be consumed the instant it is produced." sections={sections}>
 
-<h1>Supply and Demand</h1>
+<h1>Supply & Demand</h1>
 
 <p class="text-xl" style="color: var(--color-text-muted); max-width: 600px;">
-  The grid has no warehouse. Electricity must be generated the instant it is consumed.
-  Balancing supply and demand across an entire continent is the hardest real-time control
-  problem on Earth.
+  The grid has no warehouse, no stockpile, no buffer. Every watt generated must be consumed the
+  instant it is produced. This single constraint shapes everything about how electricity works.
 </p>
 
-<div class="my-6" style="height: 1px; background: linear-gradient(to right, transparent, var(--color-surface-light), transparent);"></div>
-
-<!-- ── Briefing: Why Balance Matters ── -->
-
-<h2 id="why-balance-matters">Why Balance Matters</h2>
-
-<p>
-  Every appliance you turn on draws power from the grid. Every generator feeding the grid
-  must collectively produce exactly as much power as all consumers are drawing -- not a
-  megawatt more, not a megawatt less.
-</p>
-
-<p>
-  When supply exceeds demand, frequency rises above 50 Hz. When demand exceeds supply,
-  frequency drops. Small deviations are normal. But if frequency strays too far, generators
-  disconnect to protect themselves, loads trip offline, and the grid can cascade into
-  blackout.
-</p>
-
-<h2 id="demand-never-stops">Demand Never Stops</h2>
-
-<p>
-  Demand follows predictable daily patterns: low at night when most people sleep,
-  rising in the morning as industry and offices come online, dipping midday, then
-  peaking in the evening when everyone comes home, cooks, and turns on lights and
-  heating. But predictable does not mean easy -- the operator must have enough
-  generation ready for every moment of the day.
-</p>
-
-<p>
-  On top of the daily pattern, demand shifts with weather (heatwaves push air conditioning,
-  cold snaps drive electric heating), holidays, major TV events, and industrial schedules.
-  The grid operator must forecast all of this and dispatch generators accordingly.
-</p>
-
-<h2 id="the-balancing-act">The Balancing Act</h2>
-
-<p>
-  Grid operators use a portfolio of generation assets, each with different response
-  characteristics:
-</p>
-
-<ul>
-  <li><strong>Baseload</strong> -- large coal or nuclear plants that run continuously. Cheap per MWh but slow to adjust.</li>
-  <li><strong>Mid-merit</strong> -- gas turbines that can ramp up or down over minutes. More expensive but flexible.</li>
-  <li><strong>Peakers</strong> -- fast-start gas or diesel generators kept on standby for demand spikes. Expensive, but can respond in seconds.</li>
-  <li><strong>Batteries</strong> -- instant response, but limited by stored energy. Ideal for short bursts.</li>
-  <li><strong>Renewables</strong> -- solar and wind are cheap but variable. The operator cannot control the weather.</li>
-</ul>
-
-<p>
-  The art of grid operation is dispatching these assets so that total supply tracks total
-  demand, keeping frequency within the safe band of 49.8--50.2 Hz.
-</p>
-
-<!-- ── Lab: Grid Operator Game ── -->
-
-<h2 id="grid-operator">Try It: Be the Grid Operator</h2>
-
-<p>
-  Can you keep the grid balanced for 24 simulated hours? Toggle the gas turbine and
-  battery to match supply with demand. Watch out for the cloud event that cuts solar
-  output. The frequency gauge shows whether you are in the green band (49.8--50.2 Hz).
-</p>
-
-<div class="my-8 scroll-mt-20">
-  <GridOperatorGame client:visible />
+<div class="my-8">
+  <GlowLine client:visible />
 </div>
 
-<!-- ── Briefing: Storage at Scale ── -->
+<!-- SECTION 1: No Buffer -->
 
-<h2 id="why-storage-matters">Why Storage Matters</h2>
+<h2 id="no-buffer">No Buffer, No Storage, Just Physics</h2>
 
 <p>
-  If batteries are so fast and flexible, why not just build enough to buffer the entire
-  grid? The answer is scale. Europe draws roughly 300 GW of power on average. The
-  world's largest lithium-ion battery installation -- Moss Landing in California --
-  stores just 3 GWh. That is enough to power Europe for about 36 seconds.
+  Most infrastructure has buffers built in. A city's water supply sits in reservoirs and tanks.
+  Natural gas is stored in underground caverns and pipelines under pressure. Internet traffic
+  passes through routers with packet queues and caches. If supply hiccups, the buffer absorbs
+  the shock.
 </p>
 
 <p>
-  Even pumped hydro, which accounts for over 90% of all grid-scale energy storage on
-  Earth, totals only about 9,000 GWh globally. That would cover roughly 30 hours of
-  European demand. Building enough centralised storage to fully buffer a continental
-  grid is simply not feasible with current technology.
+  Electricity has no such luxury. The grid is not a battery. There is no reservoir of electrons
+  waiting to be tapped. Wires carry current in real time, and only in real time. The moment a
+  power plant produces a megawatt, that megawatt must be consumed somewhere on the grid. If it
+  is not, voltage rises. If consumption exceeds production, voltage drops.
 </p>
-
-<!-- ── Lab: Storage Scale Visualizer ── -->
-
-<h2 id="storage-scale">Explore: Storage Scale</h2>
 
 <p>
-  Stack up Moss Landing batteries and see how long they would power the European grid.
-  Compare with all the pumped hydro storage on Earth. The numbers reveal why
-  distributed coordination -- virtual power plants -- is the path forward.
+  This makes the electricity grid fundamentally different from every other network humans have
+  built. It is the only one that must be balanced continuously, every second of every day, with
+  zero tolerance for error.
 </p>
 
-<div class="my-8 scroll-mt-20">
-  <StorageScaleVisualizer client:visible />
+<BufferComparison client:visible />
+
+<p>
+  At every instant, generation must exactly equal consumption. Not approximately. Not on average.
+  <strong>Exactly.</strong> The consequences of failure are immediate and physical.
+</p>
+
+<!-- SECTION 2: The Spinning Mass -->
+
+<h2 id="spinning-mass">The Spinning Mass</h2>
+
+<p>
+  The European grid runs at exactly 50 Hz. This is not a setting that someone chose in a
+  control room. It is the physical rotational speed of every large generator connected to the
+  system. Turbines in coal plants, gas plants, nuclear plants, and hydroelectric dams all spin
+  at speeds synchronized to 50 revolutions per second (or a multiple of it).
+</p>
+
+<p>
+  These generators are electromagnetically coupled through the grid. A turbine in Lisbon and a
+  turbine in Istanbul feel the same frequency. When demand increases somewhere in Europe, it
+  acts like a brake on every rotor simultaneously. The generators slow down by a fraction of a
+  revolution, and the frequency dips. When demand decreases, the rotors speed up, and frequency
+  rises.
+</p>
+
+<p>
+  The massive spinning rotors of conventional generators act as a flywheel. Their kinetic energy
+  provides a few seconds of buffer -- called <strong>inertia</strong> -- that gives operators
+  time to respond. But inertia is not storage. It is borrowed time.
+</p>
+
+<RotorFrequency client:visible />
+
+<p>
+  A turbine in Lisbon and a turbine in Istanbul feel the same frequency dip within seconds. The
+  entire continental grid is one synchronized machine.
+</p>
+
+<!-- SECTION 3: Thresholds -->
+
+<h2 id="thresholds">2.5 Hz Between Normal and Blackout</h2>
+
+<p>
+  The entire margin between a healthy grid and a catastrophic blackout is just 2.5 Hz. From
+  50.0 Hz down to 47.5 Hz. That is less than the difference between two adjacent notes on a
+  piano. You literally cannot hear the difference. And yet this narrow band contains a
+  carefully designed defense-in-depth system with multiple automatic responses.
+</p>
+
+<p>
+  Each threshold triggers a different response. The first responders are fast but limited. Each
+  successive layer is slower but more powerful. If all of them fail, the last threshold is
+  irreversible.
+</p>
+
+<FrequencyGauge client:visible />
+
+<p>
+  2.5 Hz is the entire margin. The last threshold -- 47.5 Hz -- is irreversible. Generators
+  physically disconnect to protect themselves from damage. Once they do, recovery takes hours to
+  days. In the worst cases, weeks.
+</p>
+
+<!-- SECTION 4: Be the Grid Operator -->
+
+<h2 id="grid-operator">Be the Grid Operator</h2>
+
+<p>
+  Managing the grid means making split-second decisions about which generators to ramp up, which
+  loads to shed, and which reserves to deploy. The simulator below puts you in the operator's
+  seat.
+</p>
+
+<div class="my-8 p-6 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+  <div class="font-mono text-sm text-center py-8" style="color: var(--color-text-dim);">
+    Grid Operator Game -- coming soon
+  </div>
 </div>
 
-<!-- ── Closing ── -->
+<!-- SECTION 5: Why Can't We Just Store It? -->
 
-<h2 id="what-comes-next">What Comes Next</h2>
+<h2 id="storage-scale">Why Can't We Just Store It?</h2>
 
 <p>
-  The grid cannot store its way out of the balancing problem with giant batteries alone.
-  But what if millions of small batteries -- in homes, electric vehicles, and commercial
-  buildings -- could be coordinated to act as one? That is the idea behind a
-  <strong>virtual power plant</strong>.
+  The obvious question: if the grid's biggest problem is the lack of a buffer, why not just build
+  storage? The answer is scale. The energy flowing through the grid at any moment is staggering,
+  and today's storage technologies can only hold a tiny fraction of it.
 </p>
+
+<div class="my-8 p-6 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+  <div class="font-mono text-sm text-center py-8" style="color: var(--color-text-dim);">
+    Storage Scale Visualizer -- coming soon
+  </div>
+</div>
+
+<!-- FOOTER -->
+
+<div class="my-8">
+  <GlowLine client:visible />
+</div>
+
+<div class="flex flex-col gap-4 my-8">
+  <div class="p-5 rounded-lg no-arrow" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
+    <div class="font-mono text-sm mb-1" style="color: var(--color-primary); letter-spacing: 0.08em;">CONTINUE</div>
+    <a href={url("/learn/the-old-way")} class="text-lg font-semibold" style="color: var(--color-text);">
+      How Batteries Work
+    </a>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">
+      From lithium cells to grid-scale storage.
+    </div>
+  </div>
+
+  <div class="p-5 rounded-lg no-arrow" style="background: rgba(245, 158, 11, 0.04); border: 1px solid rgba(245, 158, 11, 0.15);">
+    <div class="font-mono text-sm mb-1" style="color: var(--color-accent); letter-spacing: 0.08em;">GO DEEPER</div>
+    <a href={url("/learn/how-the-grid-works")} class="text-lg font-semibold" style="color: var(--color-text);">
+      Grid Frequency, Cascading Failures
+    </a>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">
+      The full technical picture of grid stability and what happens when it fails.
+    </div>
+  </div>
+</div>
 
 </ContentLayout>
