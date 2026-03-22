@@ -140,7 +140,7 @@ export default function DuckCurveVPP({ height = 400 }: Props) {
       ctx.stroke();
 
       ctx.fillStyle = colors.textDim + '50';
-      ctx.font = '9px JetBrains Mono';
+      ctx.font = '12px JetBrains Mono';
       ctx.textAlign = 'right';
       ctx.fillText(`${gw} GW`, padLeft - 8, y + 3);
     }
@@ -148,7 +148,7 @@ export default function DuckCurveVPP({ height = 400 }: Props) {
 
     // X-axis hours
     ctx.fillStyle = colors.textDim + '60';
-    ctx.font = '9px JetBrains Mono';
+    ctx.font = '12px JetBrains Mono';
     ctx.textAlign = 'center';
     for (let h = 0; h < 24; h += 3) {
       const x = padLeft + h * xScale;
@@ -270,7 +270,7 @@ export default function DuckCurveVPP({ height = 400 }: Props) {
 
     // Legend
     const legendY = height - 14;
-    ctx.font = '10px Inter';
+    ctx.font = '12px Inter';
     const items: Array<{ color: string; label: string; dash: boolean }> = [
       { color: colors.primary, label: 'Net Demand', dash: false },
       { color: colors.textDim + '60', label: 'Base Demand', dash: true },
@@ -330,7 +330,7 @@ export default function DuckCurveVPP({ height = 400 }: Props) {
                 background: isActive ? `${btn.color}25` : colors.surface,
                 border: `1px solid ${isActive ? btn.color : colors.surfaceLight}`,
                 color: isActive ? btn.color : colors.textMuted,
-                padding: '5px 14px',
+                padding: '12px 14px',
                 borderRadius: 6,
                 cursor: 'pointer',
                 fontSize: 12,

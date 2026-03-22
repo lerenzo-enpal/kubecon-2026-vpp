@@ -210,7 +210,7 @@ export default function DuckCurveExplorer({ width = 700, height = 350 }: { width
         ctx.stroke();
 
         ctx.fillStyle = colors.textDim + '50';
-        ctx.font = '8px JetBrains Mono';
+        ctx.font = '12px JetBrains Mono';
         ctx.textAlign = 'right';
         ctx.fillText(`${gw} GW`, padLeft - 6, y + 3);
       }
@@ -225,13 +225,13 @@ export default function DuckCurveExplorer({ width = 700, height = 350 }: { width
       ctx.lineTo(width - padRight, zeroY);
       ctx.stroke();
       ctx.fillStyle = colors.textDim + '60';
-      ctx.font = '7px JetBrains Mono';
+      ctx.font = '12px JetBrains Mono';
       ctx.textAlign = 'left';
       ctx.fillText('0 GW', padLeft + 3, zeroY - 3);
 
       // X-axis hours
       ctx.fillStyle = colors.textDim + '60';
-      ctx.font = '8px JetBrains Mono';
+      ctx.font = '12px JetBrains Mono';
       ctx.textAlign = 'center';
       for (let h = 0; h < 24; h += 3) {
         const x = padLeft + h * xScale;
@@ -276,7 +276,7 @@ export default function DuckCurveExplorer({ width = 700, height = 350 }: { width
         ctx.setLineDash([]);
         // "NEGATIVE PRICE ZONE" label
         ctx.fillStyle = 'rgba(239, 68, 68, 0.35)';
-        ctx.font = 'bold 9px JetBrains Mono';
+        ctx.font = 'bold 12px JetBrains Mono';
         ctx.textAlign = 'right';
         ctx.fillText('NEGATIVE PRICE ZONE', padLeft + chartW - 6, zeroY + negH - 4);
       }
@@ -323,7 +323,7 @@ export default function DuckCurveExplorer({ width = 700, height = 350 }: { width
           const bellyH = ghostNet.indexOf(ghostMin);
           const lx = padLeft + bellyH * xScale;
           const ly = padTop + (Y_MAX - ghostMin) * yScale;
-          ctx.font = 'bold 8px JetBrains Mono';
+          ctx.font = 'bold 12px JetBrains Mono';
           ctx.fillStyle = colors.primary + Math.floor(Math.max(0.15, alpha) * 255).toString(16).padStart(2, '0');
           ctx.textAlign = 'center';
           ctx.fillText(String(YEARS[yi].year), lx, ly + 10);
@@ -366,7 +366,7 @@ export default function DuckCurveExplorer({ width = 700, height = 350 }: { width
           ctx.font = 'bold 13px JetBrains Mono';
           ctx.fillStyle = `rgba(239, 68, 68, ${0.85 * pulse})`;
           ctx.fillText(`${minPrice} EUR/MWh`, bellyX, bellyY + 36);
-          ctx.font = '10px JetBrains Mono';
+          ctx.font = '12px JetBrains Mono';
           ctx.fillStyle = `rgba(239, 68, 68, ${0.6 * pulse})`;
           ctx.fillText('Paid to NOT generate', bellyX, bellyY + 50);
         } else {
@@ -403,10 +403,10 @@ export default function DuckCurveExplorer({ width = 700, height = 350 }: { width
         ctx.shadowBlur = 0;
 
         const { peakPriceLabel } = YEARS[yearIdx];
-        ctx.font = 'bold 11px JetBrains Mono';
+        ctx.font = 'bold 12px JetBrains Mono';
         ctx.fillStyle = `rgba(239, 68, 68, ${0.85 * pulse})`;
         ctx.fillText(peakPriceLabel, rampX + 14, (rampY1 + rampY2) / 2 + 10);
-        ctx.font = 'bold 9px JetBrains Mono';
+        ctx.font = 'bold 12px JetBrains Mono';
         ctx.fillStyle = `rgba(239, 68, 68, ${0.55 * pulse})`;
         ctx.fillText('avg 19:00 peak (EPEX SPOT)', rampX + 14, (rampY1 + rampY2) / 2 + 24);
       }
@@ -418,7 +418,7 @@ export default function DuckCurveExplorer({ width = 700, height = 350 }: { width
       ctx.font = 'bold 18px JetBrains Mono';
       ctx.textAlign = 'left';
       ctx.fillText(displayYear.label, rpLeft, padTop + 18);
-      ctx.font = '9px Inter';
+      ctx.font = '12px Inter';
       ctx.fillStyle = colors.textMuted;
       const descWords = displayYear.desc.split(' -- ');
       ctx.fillText(descWords[0] || '', rpLeft, padTop + 32);
@@ -449,12 +449,12 @@ export default function DuckCurveExplorer({ width = 700, height = 350 }: { width
           ctx.textAlign = 'left';
           ctx.fillText(value, rpLeft + 2, sy + 15);
 
-          ctx.font = '8px JetBrains Mono';
+          ctx.font = '12px JetBrains Mono';
           ctx.fillStyle = color + '90';
           ctx.fillText(label, rpLeft + 2, sy + 27);
 
           if (unit) {
-            ctx.font = '7px JetBrains Mono';
+            ctx.font = '12px JetBrains Mono';
             ctx.fillStyle = colors.textDim + '60';
             ctx.fillText(unit, rpLeft + 2, sy + 36);
           }
@@ -486,13 +486,13 @@ export default function DuckCurveExplorer({ width = 700, height = 350 }: { width
 
       // Title
       ctx.fillStyle = colors.text;
-      ctx.font = 'bold 11px JetBrains Mono';
+      ctx.font = 'bold 12px JetBrains Mono';
       ctx.textAlign = 'left';
       ctx.fillText('THE DUCK CURVE -- GROWING EVERY YEAR', padLeft, padTop - 22);
 
       // Legend
       const legendY = padTop + chartH + 32;
-      ctx.font = '9px Inter';
+      ctx.font = '12px Inter';
       const leftItems = [
         { color: colors.primary, label: 'Net Demand (current year)', dash: false },
         { color: colors.primary + '30', label: 'Previous years', dash: false },
@@ -568,8 +568,8 @@ export default function DuckCurveExplorer({ width = 700, height = 350 }: { width
             onClick={() => handleYearClick(idx)}
             style={{
               fontFamily: '"JetBrains Mono", monospace',
-              fontSize: 11,
-              padding: '4px 8px',
+              fontSize: 12,
+              padding: '12px 8px',
               borderRadius: 4,
               border: `1px solid ${activeYearIdx === idx ? colors.primary : colors.textDim + '40'}`,
               background: activeYearIdx === idx ? colors.primary + '20' : 'transparent',

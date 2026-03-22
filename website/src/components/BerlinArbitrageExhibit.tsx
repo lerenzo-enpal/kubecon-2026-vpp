@@ -238,14 +238,14 @@ function PriceChart({ currentHour, width = 280, height = 100 }: { currentHour: n
       {/* Y-axis labels */}
       {[0, 100, 180].map(v => (
         <text key={v} x={pad.left - 4} y={toY(v)} fill="#64748b"
-          fontSize={9} fontFamily="'JetBrains Mono', monospace" textAnchor="end" dominantBaseline="middle">
+          fontSize={12} fontFamily="'JetBrains Mono', monospace" textAnchor="end" dominantBaseline="middle">
           {v}
         </text>
       ))}
       {/* X-axis labels */}
       {[0, 6, 12, 18, 23].map(h => (
         <text key={h} x={toX(h)} y={height - 4} fill="#64748b"
-          fontSize={9} fontFamily="'JetBrains Mono', monospace" textAnchor="middle">
+          fontSize={12} fontFamily="'JetBrains Mono', monospace" textAnchor="middle">
           {h.toString().padStart(2, '0')}
         </text>
       ))}
@@ -259,11 +259,11 @@ function PriceChart({ currentHour, width = 280, height = 100 }: { currentHour: n
         stroke={priceColor} strokeWidth={1} strokeDasharray="2 2" opacity={0.4} />
       {/* Price label at marker */}
       <text x={toX(currentHour)} y={toY(currentPrice) - 8} fill={priceColor}
-        fontSize={10} fontFamily="'JetBrains Mono', monospace" textAnchor="middle" fontWeight={700}>
+        fontSize={12} fontFamily="'JetBrains Mono', monospace" textAnchor="middle" fontWeight={700}>
         {currentPrice}
       </text>
       {/* Y-axis title */}
-      <text x={4} y={pad.top + ch / 2} fill="#64748b" fontSize={8}
+      <text x={4} y={pad.top + ch / 2} fill="#64748b" fontSize={12}
         fontFamily="'JetBrains Mono', monospace" textAnchor="middle"
         transform={`rotate(-90, 4, ${pad.top + ch / 2})`}>
         EUR/MWh
@@ -297,7 +297,7 @@ function TerminalLog({ lines }: { lines: string[] }) {
   return (
     <div ref={containerRef} style={{
       fontFamily: "'JetBrains Mono', monospace",
-      fontSize: 10,
+      fontSize: 12,
       lineHeight: 1.6,
       color: '#94a3b8',
       maxHeight: 80,
@@ -517,14 +517,14 @@ export default function BerlinArbitrageExhibit({ width: widthProp, height = 700 
       }}>
         <div style={{
           fontFamily: "'JetBrains Mono', monospace",
-          fontSize: 11, fontWeight: 700, letterSpacing: '0.1em',
+          fontSize: 12, fontWeight: 700, letterSpacing: '0.1em',
           color: '#f59e0b',
         }}>
           BERLIN VPP FLEET
         </div>
         <div style={{
           fontFamily: "'JetBrains Mono', monospace",
-          fontSize: 10, color: '#64748b', letterSpacing: '0.08em',
+          fontSize: 12, color: '#64748b', letterSpacing: '0.08em',
         }}>
           DAILY CYCLE
         </div>
@@ -547,7 +547,7 @@ export default function BerlinArbitrageExhibit({ width: widthProp, height = 700 
           display: 'inline-block', padding: '2px 8px', borderRadius: 3,
           background: `${accentColor}18`,
           border: `1px solid ${accentColor}40`,
-          fontSize: 10, fontWeight: 700,
+          fontSize: 12, fontWeight: 700,
           fontFamily: "'JetBrains Mono', monospace",
           color: accentColor, letterSpacing: '0.08em',
           marginBottom: 6,
@@ -578,7 +578,7 @@ export default function BerlinArbitrageExhibit({ width: widthProp, height = 700 
           borderBottom: '1px solid rgba(148,163,184,0.1)',
         }}>
           <div>
-            <div style={{ fontSize: 9, fontFamily: "'JetBrains Mono', monospace", color: '#64748b', letterSpacing: '0.08em', marginBottom: 3 }}>
+            <div style={{ fontSize: 12, fontFamily: "'JetBrains Mono', monospace", color: '#64748b', letterSpacing: '0.08em', marginBottom: 3 }}>
               AVG BATTERY
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -589,7 +589,7 @@ export default function BerlinArbitrageExhibit({ width: widthProp, height = 700 
             </div>
           </div>
           <div>
-            <div style={{ fontSize: 9, fontFamily: "'JetBrains Mono', monospace", color: '#64748b', letterSpacing: '0.08em', marginBottom: 3 }}>
+            <div style={{ fontSize: 12, fontFamily: "'JetBrains Mono', monospace", color: '#64748b', letterSpacing: '0.08em', marginBottom: 3 }}>
               SPOT PRICE
             </div>
             <div style={{
@@ -598,11 +598,11 @@ export default function BerlinArbitrageExhibit({ width: widthProp, height = 700 
               color: currentStep.priceHighlight < 0 ? '#10b981' : currentStep.priceHighlight > 100 ? '#f59e0b' : '#22d3ee',
             }}>
               {currentStep.priceHighlight > 0 ? '+' : ''}{currentStep.priceHighlight}
-              <span style={{ fontSize: 10, color: '#64748b', marginLeft: 2 }}>EUR/MWh</span>
+              <span style={{ fontSize: 12, color: '#64748b', marginLeft: 2 }}>EUR/MWh</span>
             </div>
           </div>
           <div>
-            <div style={{ fontSize: 9, fontFamily: "'JetBrains Mono', monospace", color: '#64748b', letterSpacing: '0.08em', marginBottom: 3 }}>
+            <div style={{ fontSize: 12, fontFamily: "'JetBrains Mono', monospace", color: '#64748b', letterSpacing: '0.08em', marginBottom: 3 }}>
               FREQUENCY
             </div>
             <div style={{
@@ -611,7 +611,7 @@ export default function BerlinArbitrageExhibit({ width: widthProp, height = 700 
               color: '#10b981',
             }}>
               50.00
-              <span style={{ fontSize: 10, color: '#64748b', marginLeft: 2 }}>Hz</span>
+              <span style={{ fontSize: 12, color: '#64748b', marginLeft: 2 }}>Hz</span>
             </div>
           </div>
         </div>
@@ -621,7 +621,7 @@ export default function BerlinArbitrageExhibit({ width: widthProp, height = 700 
 
         {/* Home count footer */}
         <div style={{
-          marginTop: 6, fontSize: 10,
+          marginTop: 6, fontSize: 12,
           fontFamily: "'JetBrains Mono', monospace",
           color: '#64748b',
         }}>
@@ -640,7 +640,7 @@ export default function BerlinArbitrageExhibit({ width: widthProp, height = 700 
         }}>
           <Corners color="rgba(245,158,11,0.3)" size={10} />
           <div style={{
-            fontSize: 9, fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 12, fontFamily: "'JetBrains Mono', monospace",
             color: '#64748b', letterSpacing: '0.1em', marginBottom: 4,
           }}>
             DAY-AHEAD SPOT PRICE
@@ -675,7 +675,7 @@ export default function BerlinArbitrageExhibit({ width: widthProp, height = 700 
             500 HOMES -- EUR 2.40/HOME/DAY
           </div>
           <div style={{
-            fontSize: 11, color: '#94a3b8', marginTop: 4,
+            fontSize: 12, color: '#94a3b8', marginTop: 4,
             fontFamily: "'JetBrains Mono', monospace",
           }}>
             DAILY ARBITRAGE REVENUE: EUR 1,200
@@ -709,7 +709,7 @@ export default function BerlinArbitrageExhibit({ width: widthProp, height = 700 
             >
               <div style={{
                 fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 9, color: i === stepIndex ? accentColor : '#64748b',
+                fontSize: 12, color: i === stepIndex ? accentColor : '#64748b',
                 fontWeight: i === stepIndex ? 700 : 400,
               }}>
                 {s.time}
@@ -735,7 +735,7 @@ export default function BerlinArbitrageExhibit({ width: widthProp, height = 700 
               borderRadius: 4,
               padding: '4px 16px',
               fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 10, fontWeight: 700,
+              fontSize: 12, fontWeight: 700,
               color: '#f59e0b',
               cursor: 'pointer',
               letterSpacing: '0.08em',

@@ -100,7 +100,7 @@ export default function CurtailmentChart({ height = 460 }: Props) {
     ctx.fillText('CUMULATIVE RENEWABLE ENERGY WASTED -- GERMANY', padLeft, 22);
 
     // Subtitle
-    ctx.font = '11px JetBrains Mono';
+    ctx.font = '12px JetBrains Mono';
     ctx.fillStyle = colors.textDim;
     ctx.fillText('Bundesnetzagentur / SMARD -- Einspeisemanagement + Redispatch 2.0', padLeft, 36);
 
@@ -118,7 +118,7 @@ export default function CurtailmentChart({ height = 460 }: Props) {
 
       if (gv % 20 === 0) {
         ctx.fillStyle = colors.textDim + 'aa';
-        ctx.font = '9px JetBrains Mono';
+        ctx.font = '12px JetBrains Mono';
         ctx.textAlign = 'right';
         ctx.fillText(`${gv}`, padLeft - 6, y + 3);
       }
@@ -129,7 +129,7 @@ export default function CurtailmentChart({ height = 460 }: Props) {
     ctx.save();
     ctx.translate(12, padTop + chartH / 2);
     ctx.rotate(-Math.PI / 2);
-    ctx.font = '9px JetBrains Mono';
+    ctx.font = '12px JetBrains Mono';
     ctx.fillStyle = colors.accent;
     ctx.textAlign = 'center';
     ctx.fillText('Cumulative TWh', 0, 0);
@@ -178,7 +178,7 @@ export default function CurtailmentChart({ height = 460 }: Props) {
 
       // EUR compensation (small text below year)
       if (barFrac > 0.5) {
-        ctx.font = '11px JetBrains Mono';
+        ctx.font = '12px JetBrains Mono';
         ctx.fillStyle = '#f87171';
         ctx.fillText(`${(d.eurM / 1000).toFixed(1)}B`, x + barW / 2, padTop + chartH + 28);
       }
@@ -216,13 +216,13 @@ export default function CurtailmentChart({ height = 460 }: Props) {
       const cumH = (d.twh / maxTwh) * chartH * barFrac;
       const barY = padTop + chartH - cumH;
 
-      ctx.font = 'bold 10px JetBrains Mono';
+      ctx.font = 'bold 12px JetBrains Mono';
       ctx.fillStyle = colors.accent;
       ctx.textAlign = 'center';
       ctx.fillText(`+${d.annTwh.toFixed(1)}`, x + barW / 2, barY - 4);
 
       if (cumH > 30) {
-        ctx.font = 'bold 11px JetBrains Mono';
+        ctx.font = 'bold 12px JetBrains Mono';
         ctx.fillStyle = '#000000';
         ctx.fillText(`${d.twh.toFixed(0)} TWh`, x + barW / 2, barY + 14);
       }
@@ -282,7 +282,7 @@ export default function CurtailmentChart({ height = 460 }: Props) {
         const lastD = CUM[DATA.length - 1];
         const lx = padLeft + (DATA.length - 1) * barGroupW + barGap / 2 + barW / 2;
         const ly = padTop + chartH - (lastD.co2Mt / maxCo2) * chartH;
-        ctx.font = 'bold 11px JetBrains Mono';
+        ctx.font = 'bold 12px JetBrains Mono';
         ctx.fillStyle = colors.textMuted;
         ctx.textAlign = 'left';
         ctx.globalAlpha = Math.min(1, lineProgress - (DATA.length - 2));
@@ -292,7 +292,7 @@ export default function CurtailmentChart({ height = 460 }: Props) {
     }
 
     // Right axis labels (CO2)
-    ctx.font = '9px JetBrains Mono';
+    ctx.font = '12px JetBrains Mono';
     ctx.fillStyle = colors.textDim + 'aa';
     ctx.textAlign = 'left';
     for (let gv = 0; gv <= maxCo2; gv += 10) {
@@ -304,7 +304,7 @@ export default function CurtailmentChart({ height = 460 }: Props) {
     ctx.save();
     ctx.translate(width - 4, padTop + chartH / 2);
     ctx.rotate(-Math.PI / 2);
-    ctx.font = '9px JetBrains Mono';
+    ctx.font = '12px JetBrains Mono';
     ctx.fillStyle = colors.textMuted;
     ctx.textAlign = 'center';
     ctx.fillText('Cumulative CO2', 0, 0);
@@ -313,7 +313,7 @@ export default function CurtailmentChart({ height = 460 }: Props) {
     // Legend
     const legY = 22;
     const legX = width - padRight - 200;
-    ctx.font = '10px JetBrains Mono';
+    ctx.font = '12px JetBrains Mono';
     ctx.fillStyle = colors.accent + 'cc';
     ctx.fillRect(legX, legY - 4, 10, 8);
     ctx.fillStyle = colors.textMuted;

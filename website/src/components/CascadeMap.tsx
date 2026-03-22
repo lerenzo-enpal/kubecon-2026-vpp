@@ -613,8 +613,8 @@ export default function CascadeMap({
       {/* ── Standalone controls (fullscreen) ── */}
       {!compact && (
         <div style={{ position: 'absolute', bottom: 8, right: 8, zIndex: 30, display: 'flex', gap: 6 }}>
-          <button onClick={reset} style={{ background: 'rgba(5,8,16,0.8)', border: '1px solid rgba(34,211,238,0.3)', color: '#94a3b8', borderRadius: 4, padding: '4px 10px', cursor: 'pointer', fontFamily: '"JetBrains Mono", monospace', fontSize: 11 }}>Reset</button>
-          <button onClick={stepForward} disabled={stepIndex >= cascade.length - 1} style={{ background: 'rgba(5,8,16,0.8)', border: '1px solid rgba(34,211,238,0.3)', color: stepIndex >= cascade.length - 1 ? '#64748b' : '#22d3ee', borderRadius: 4, padding: '4px 10px', cursor: stepIndex >= cascade.length - 1 ? 'default' : 'pointer', fontFamily: '"JetBrains Mono", monospace', fontSize: 11 }}>Next Step {'\u2192'}</button>
+          <button onClick={reset} style={{ background: 'rgba(5,8,16,0.8)', border: '1px solid rgba(34,211,238,0.3)', color: '#94a3b8', borderRadius: 4, padding: '4px 10px', cursor: 'pointer', fontFamily: '"JetBrains Mono", monospace', fontSize: 12 }}>Reset</button>
+          <button onClick={stepForward} disabled={stepIndex >= cascade.length - 1} style={{ background: 'rgba(5,8,16,0.8)', border: '1px solid rgba(34,211,238,0.3)', color: stepIndex >= cascade.length - 1 ? '#64748b' : '#22d3ee', borderRadius: 4, padding: '4px 10px', cursor: stepIndex >= cascade.length - 1 ? 'default' : 'pointer', fontFamily: '"JetBrains Mono", monospace', fontSize: 12 }}>Next Step {'\u2192'}</button>
         </div>
       )}
 
@@ -628,7 +628,7 @@ export default function CascadeMap({
             <div style={{ padding: '10px 16px', borderBottom: `1px solid ${borderClr}`, display: 'flex', alignItems: 'center', gap: 10, opacity: headerDraw, clipPath: headerDraw < 1 ? `inset(0 0 ${(1 - headerDraw) * 100}% 0)` : 'none' }}>
               <div style={{ width: 8, height: 8, borderRadius: '50%', background: running ? '#ef4444' : '#22d3ee', boxShadow: `0 0 10px ${running ? '#ef4444' : '#22d3ee'}` }} />
               <span style={{ fontSize: 13, fontWeight: 700, fontFamily: '"JetBrains Mono"', color: '#94a3b8', letterSpacing: '0.12em' }}>{monitorName}</span>
-              <span style={{ marginLeft: 'auto', fontSize: 11, fontFamily: '"JetBrains Mono"', color: '#64748bcc' }}>{dateText}</span>
+              <span style={{ marginLeft: 'auto', fontSize: 12, fontFamily: '"JetBrains Mono"', color: '#64748bcc' }}>{dateText}</span>
             </div>
             {/* Buttons */}
             <div style={{ padding: '8px 16px', display: 'flex', gap: 8, borderBottom: `1px solid ${borderClr}`, opacity: buttonsDraw, clipPath: buttonsDraw < 1 ? `inset(0 0 ${(1 - buttonsDraw) * 100}% 0)` : 'none' }}>
@@ -644,10 +644,10 @@ export default function CascadeMap({
                 return (
                   <div key={i} style={{ marginBottom: 7, opacity: isActive ? 1 : 0, transition: 'opacity 0.4s, transform 0.4s', borderLeft: isCurrent ? '2px solid #ef4444' : '2px solid transparent', paddingLeft: isCurrent ? 10 : 12, transform: `translateX(${isActive ? 0 : -15}px)` }}>
                     <div style={{ fontSize: 14, fontFamily: '"Inter"', color: isActive ? (isCurrent ? '#f1f5f9' : '#f1f5f9bb') : '#64748b20', fontWeight: isCurrent ? 600 : 400, display: 'flex', alignItems: 'baseline', gap: 8 }}>
-                      <span style={{ fontSize: 11, fontFamily: '"JetBrains Mono"', fontWeight: 700, color: isActive ? (isCurrent ? '#ef4444' : '#ef4444aa') : '#64748b30', flexShrink: 0 }}>{step.ts}</span>
+                      <span style={{ fontSize: 12, fontFamily: '"JetBrains Mono"', fontWeight: 700, color: isActive ? (isCurrent ? '#ef4444' : '#ef4444aa') : '#64748b30', flexShrink: 0 }}>{step.ts}</span>
                       {step.label}
                     </div>
-                    <div style={{ fontSize: 11, fontFamily: '"JetBrains Mono"', marginTop: 2, color: isActive ? '#94a3b870' : '#64748b15' }}>{step.detail}</div>
+                    <div style={{ fontSize: 12, fontFamily: '"JetBrains Mono"', marginTop: 2, color: isActive ? '#94a3b870' : '#64748b15' }}>{step.detail}</div>
                   </div>
                 );
               })}
@@ -655,7 +655,7 @@ export default function CascadeMap({
             </div>
             {/* Terminal */}
             <div style={{ borderTop: `1px solid ${borderClr}`, padding: '8px 14px', minHeight: 90, maxHeight: 120, overflow: 'hidden', background: 'rgba(0,0,0,0.3)', opacity: terminalDraw, clipPath: terminalDraw < 1 ? `inset(0 0 ${(1 - terminalDraw) * 100}% 0)` : 'none' }}>
-              <div style={{ fontSize: 9, fontFamily: '"JetBrains Mono"', color: '#64748b80', letterSpacing: '0.1em', marginBottom: 4 }}>SYSTEM LOG</div>
+              <div style={{ fontSize: 12, fontFamily: '"JetBrains Mono"', color: '#64748b80', letterSpacing: '0.1em', marginBottom: 4 }}>SYSTEM LOG</div>
               {visibleLogs.length === 0 && (
                 <div style={{ fontSize: 12, fontFamily: '"JetBrains Mono"' }}>
                   {boot > 2.2 && <div style={{ color: '#22d3eecc', marginBottom: 2 }}>{'>'} {bootInitText}</div>}
@@ -669,7 +669,7 @@ export default function CascadeMap({
                 const isLatest = i === visibleLogs.length - 1;
                 const msgColor = msg.level === 'crit' ? '#ef4444' : '#f59e0b';
                 return (
-                  <div key={msg.time} style={{ fontSize: 11, fontFamily: '"JetBrains Mono"', color: msgColor, opacity: isLatest ? 1 : 0.5, marginBottom: 2, lineHeight: 1.4 }}>
+                  <div key={msg.time} style={{ fontSize: 12, fontFamily: '"JetBrains Mono"', color: msgColor, opacity: isLatest ? 1 : 0.5, marginBottom: 2, lineHeight: 1.4 }}>
                     {'>'} {msg.text.substring(0, chars)}
                     {isLatest && chars < msg.text.length && <span className="hud-blink">{'\u2588'}</span>}
                   </div>
@@ -681,7 +681,7 @@ export default function CascadeMap({
           {/* ── Right: Frequency readout ── */}
           <div style={{ ...panelBase, position: 'absolute', top: 10, right: 10, zIndex: 10, padding: '14px 20px', minWidth: 190, background: 'rgba(5, 8, 16, 0.92)', opacity: rpExpand > 0 ? 1 : 0, transformOrigin: 'top right', transform: `scale(${rpExpand}, ${rpExpand})` }}>
             <Corners color={glowColor} />
-            <div style={{ fontSize: 10, fontFamily: '"JetBrains Mono"', color: '#64748bcc', letterSpacing: '0.1em', marginBottom: 6, opacity: rpContent }}>{freqDisplayLabel}</div>
+            <div style={{ fontSize: 12, fontFamily: '"JetBrains Mono"', color: '#64748bcc', letterSpacing: '0.1em', marginBottom: 6, opacity: rpContent }}>{freqDisplayLabel}</div>
             <div style={{ fontSize: 36, fontWeight: 800, fontFamily: '"JetBrains Mono"', color: freqColor, textShadow: `0 0 22px ${freqColor}40`, opacity: rpContent }}>
               {freqDisplayFormat ? freqDisplayFormat(freq) : (freq === 0 ? '0.000' : freq.toFixed(3))}
               <span style={{ fontSize: 18, marginLeft: 4 }}>{freqDisplayUnit}</span>
@@ -692,7 +692,7 @@ export default function CascadeMap({
             {running && (
               <>
                 <div style={{ marginTop: 10, paddingTop: 10, borderTop: `1px solid ${borderClr}` }}>
-                  <div style={{ fontSize: 10, fontFamily: '"JetBrains Mono"', color: '#64748b60', letterSpacing: '0.1em', marginBottom: 4 }}>{offlineLabel}</div>
+                  <div style={{ fontSize: 12, fontFamily: '"JetBrains Mono"', color: '#64748b60', letterSpacing: '0.1em', marginBottom: 4 }}>{offlineLabel}</div>
                   <div style={{ fontSize: 22, fontFamily: '"JetBrains Mono"', color: '#ef4444', fontWeight: 700 }}>
                     {typeof offlineValue === 'number' && offlineValue > 999 ? offlineValue.toLocaleString() : offlineValue}
                     <span style={{ fontSize: 12, color: '#ef4444aa', marginLeft: 4 }}>{offlineUnit}</span>
@@ -746,10 +746,10 @@ export default function CascadeMap({
             <Corners color="#ef4444" />
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
               <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#ef4444', boxShadow: '0 0 8px #ef4444' }} />
-              <span style={{ fontSize: 11, fontWeight: 700, fontFamily: '"JetBrains Mono"', color: '#94a3b8', letterSpacing: '0.12em' }}>{monitorName}</span>
-              <span style={{ fontSize: 10, fontFamily: '"JetBrains Mono"', color: '#64748b60', marginLeft: 4 }}>{dateText}</span>
+              <span style={{ fontSize: 12, fontWeight: 700, fontFamily: '"JetBrains Mono"', color: '#94a3b8', letterSpacing: '0.12em' }}>{monitorName}</span>
+              <span style={{ fontSize: 12, fontFamily: '"JetBrains Mono"', color: '#64748b60', marginLeft: 4 }}>{dateText}</span>
             </div>
-            <div style={{ fontSize: 10, fontFamily: '"JetBrains Mono"', color: '#ef4444', fontWeight: 600, letterSpacing: '0.08em' }}>
+            <div style={{ fontSize: 12, fontFamily: '"JetBrains Mono"', color: '#ef4444', fontWeight: 600, letterSpacing: '0.08em' }}>
               {compactSummary}
             </div>
           </div>

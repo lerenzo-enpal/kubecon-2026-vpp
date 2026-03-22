@@ -309,7 +309,7 @@ function Reticle({ x, y, w, h, c, active, delay = 0, label }: {
       ))}
 
       {label && (
-        <text x={cx} y={cy} fill={c} fontSize="8" fontFamily="JetBrains Mono"
+        <text x={cx} y={cy} fill={c} fontSize="12" fontFamily="JetBrains Mono"
           letterSpacing="0.12em" textAnchor="middle" dominantBaseline="middle"
           style={active ? { opacity: 0, animation: `labelFlash 1s ease ${delay}s forwards` } : { opacity: 0 }}>{label}</text>
       )}

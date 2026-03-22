@@ -76,7 +76,7 @@ export default function RenewableGrowthChart({ height = 360 }: Props) {
       ctx.stroke();
 
       ctx.fillStyle = colors.textDim + '60';
-      ctx.font = '10px JetBrains Mono';
+      ctx.font = '12px JetBrains Mono';
       ctx.textAlign = 'right';
       ctx.fillText(`${pct}%`, padLeft - 8, y + 3);
     }
@@ -122,14 +122,14 @@ export default function RenewableGrowthChart({ height = 360 }: Props) {
 
       // Year label
       ctx.fillStyle = colors.textMuted;
-      ctx.font = '11px JetBrains Mono';
+      ctx.font = '12px JetBrains Mono';
       ctx.textAlign = 'center';
       ctx.fillText(d.year.toString(), x + barW / 2, height - padBottom + 18);
     });
 
     // Legend
     const legendY = height - 14;
-    ctx.font = '10px Inter';
+    ctx.font = '12px Inter';
     ctx.textAlign = 'left';
     [
       { color: colors.solar, label: 'Solar' },

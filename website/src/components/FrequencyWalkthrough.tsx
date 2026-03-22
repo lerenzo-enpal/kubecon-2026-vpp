@@ -113,7 +113,7 @@ function FreqLine({ step, width = 480, height = 45 }: { step: number; width?: nu
   return (
     <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid meet" style={{ display: 'block' }}>
       <line x1={pad.l} y1={y50} x2={width - pad.r} y2={y50} stroke={colors.textDim} strokeWidth={1} strokeDasharray="4 3" opacity={0.3} />
-      <text x={width - pad.r - 2} y={y50 - 4} textAnchor="end" fill={colors.textDim} fontSize={9} fontFamily="'JetBrains Mono', monospace" opacity={0.4}>50 Hz</text>
+      <text x={width - pad.r - 2} y={y50 - 4} textAnchor="end" fill={colors.textDim} fontSize={12} fontFamily="'JetBrains Mono', monospace" opacity={0.4}>50 Hz</text>
       <path d={d} fill="none" stroke={lc} strokeWidth={5} opacity={0.1} />
       <path d={d} fill="none" stroke={lc} strokeWidth={2} opacity={0.9} />
       <circle cx={pts[pts.length - 1].x} cy={pts[pts.length - 1].y} r={4} fill={lc} opacity={0.9}>
@@ -248,10 +248,10 @@ function PlantUnit({ x, y, w, h, type, label, status, statusColor, utilization,
       <rect x={barX} y={barY} rx={2} height={4}
         width={barW * utilization} fill={statusColor}
         style={{ transition: 'width 0.8s ease, fill 0.6s', ...flk(draw, drawDelay + 0.3) }} />
-      <text x={centerX} y={labelY} textAnchor="middle" fill={strokeColor} fontSize="9"
+      <text x={centerX} y={labelY} textAnchor="middle" fill={strokeColor} fontSize="12"
         fontFamily="'JetBrains Mono'" fontWeight="600" letterSpacing="0.05em"
         style={{ ...flk(draw, drawDelay + 0.35), transition: 'fill 0.8s' }}>{label}</text>
-      <text x={centerX} y={statusY} textAnchor="middle" fill={statusColor} fontSize="8"
+      <text x={centerX} y={statusY} textAnchor="middle" fill={statusColor} fontSize="12"
         fontFamily="'JetBrains Mono'" fontWeight="700" letterSpacing="0.06em"
         style={{ ...flk(draw, drawDelay + 0.35), transition: 'fill 0.8s' }}>{status}</text>
     </g>
@@ -497,7 +497,7 @@ function GridDiagram({ state, draw }: { state: string; draw: boolean }) {
               </g>
             ))}
             <text x={sx + sw / 2} y={sy + sh + 14} textAnchor="middle"
-              fill={isCollapse ? colors.danger + '40' : c + '28'} fontSize="8"
+              fill={isCollapse ? colors.danger + '40' : c + '28'} fontSize="12"
               fontFamily="'JetBrains Mono'" letterSpacing="0.1em"
               style={{ ...flk(draw, 0.65), transition: 'fill 0.5s' }}>SUBSTATION</text>
           </g>
@@ -656,7 +656,7 @@ export default function FrequencyWalkthrough({ height = 480 }: Props) {
         transition: 'all 0.5s cubic-bezier(0.4,0,0.2,1)',
       }}>
         <div style={{
-          fontFamily: '"JetBrains Mono", monospace', fontSize: 11, fontWeight: 600,
+          fontFamily: '"JetBrains Mono", monospace', fontSize: 12, fontWeight: 600,
           letterSpacing: '0.2em', textTransform: 'uppercase' as const, marginBottom: 12,
           color: colors.textDim,
         }}>GRID FREQUENCY</div>
@@ -670,7 +670,7 @@ export default function FrequencyWalkthrough({ height = 480 }: Props) {
           color: c + 'aa', marginTop: 4,
         }}>Hz</div>
         <div style={{
-          fontFamily: '"JetBrains Mono", monospace', fontSize: 10, letterSpacing: '0.2em',
+          fontFamily: '"JetBrains Mono", monospace', fontSize: 12, letterSpacing: '0.2em',
           textTransform: 'uppercase' as const, marginTop: 12,
           color: colors.success,
         }}>FREQUENCY LOCKED</div>
@@ -701,7 +701,7 @@ export default function FrequencyWalkthrough({ height = 480 }: Props) {
             alignItems: 'center', justifyContent: 'center', minWidth: 130,
             transition: 'border-color 0.6s, box-shadow 0.6s',
           }}>
-            <div style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 10, fontWeight: 600,
+            <div style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 12, fontWeight: 600,
               letterSpacing: '0.15em', textTransform: 'uppercase' as const, marginBottom: 2,
               color: colors.textDim }}>Grid Frequency</div>
             <div style={{
@@ -709,7 +709,7 @@ export default function FrequencyWalkthrough({ height = 480 }: Props) {
               color: s.freqColor, textShadow: `0 0 20px ${s.freqColor}30`,
               transition: 'color 0.6s', lineHeight: 1,
             }}>{s.freq?.toFixed(3)}</div>
-            <div style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 11, color: colors.textDim }}>Hz</div>
+            <div style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 12, color: colors.textDim }}>Hz</div>
           </div>
 
           {/* Info panel */}
@@ -719,7 +719,7 @@ export default function FrequencyWalkthrough({ height = 480 }: Props) {
             justifyContent: 'space-between', minWidth: 0,
           }}>
             <div>
-              <div style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 10, fontWeight: 600,
+              <div style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 12, fontWeight: 600,
                 letterSpacing: '0.15em', textTransform: 'uppercase' as const, marginBottom: 4,
                 color: colors.textDim }}>Frequency Trace</div>
               <FreqLine step={step} />
@@ -788,7 +788,7 @@ export default function FrequencyWalkthrough({ height = 480 }: Props) {
               animation: 'fwCoilPulse 1.5s ease-in-out infinite',
             }}>SYSTEM FAILURE</div>
             <div style={{
-              fontFamily: '"JetBrains Mono", monospace', fontSize: 11, marginTop: 4,
+              fontFamily: '"JetBrains Mono", monospace', fontSize: 12, marginTop: 4,
               color: colors.danger + 'aa',
             }}>All generators disconnected -- total grid collapse</div>
             <div style={{ marginTop: 6 }}>
@@ -816,7 +816,7 @@ export default function FrequencyWalkthrough({ height = 480 }: Props) {
         >Previous</button>
         <StepDots step={step} total={STEPS.length} />
         <div style={{
-          fontFamily: '"JetBrains Mono", monospace', fontSize: 10, color: colors.textDim,
+          fontFamily: '"JetBrains Mono", monospace', fontSize: 12, color: colors.textDim,
           minWidth: 70, textAlign: 'center',
         }}>{zoneLabels[step]}</div>
         {step < STEPS.length - 1 ? (

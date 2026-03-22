@@ -618,7 +618,7 @@ export default function FrequencyDemo({ height = 440 }: Props) {
         }
 
         // Matrix rain
-        ctx.font = '11px JetBrains Mono';
+        ctx.font = '12px JetBrains Mono';
         for (let col = 0; col < 30; col++) {
           const x = col * (canvasWidth / 30);
           const charIdx = Math.floor(t * 8 + col * 7) % 30;
@@ -635,7 +635,7 @@ export default function FrequencyDemo({ height = 440 }: Props) {
 
         const hintFlash = Math.sin(t * 2) > 0;
         if (hintFlash) {
-          ctx.font = '11px JetBrains Mono';
+          ctx.font = '12px JetBrains Mono';
           ctx.fillStyle = colors.textDim + '60';
           ctx.textAlign = 'center';
           ctx.fillText('[ click RESET to restore grid ]', canvasWidth / 2, height - 50);
@@ -704,7 +704,7 @@ export default function FrequencyDemo({ height = 440 }: Props) {
 
       // Threshold lines
       ctx.lineWidth = 1;
-      ctx.font = '10px JetBrains Mono';
+      ctx.font = '12px JetBrains Mono';
       ctx.textAlign = 'left';
 
       const tStatesNow = thresholdStateRef.current;
@@ -801,7 +801,7 @@ export default function FrequencyDemo({ height = 440 }: Props) {
           ctx.font = 'bold 14px JetBrains Mono';
           ctx.fillStyle = colors.textMuted + 'cc';
           ctx.fillText(`T+${mm}:${ss}`, 10, 22);
-          ctx.font = '10px JetBrains Mono';
+          ctx.font = '12px JetBrains Mono';
           ctx.fillStyle = colors.textDim + '90';
           ctx.fillText(`${timeScaleVal}x speed`, 10, 38);
         }
@@ -834,7 +834,7 @@ export default function FrequencyDemo({ height = 440 }: Props) {
 
       // Left axis
       ctx.fillStyle = colors.textDim + '60';
-      ctx.font = '9px JetBrains Mono';
+      ctx.font = '12px JetBrains Mono';
       ctx.textAlign = 'right';
       for (let f = 47.5; f <= 51.5; f += 0.5) {
         const y = freqToY(f);
@@ -1118,7 +1118,7 @@ export default function FrequencyDemo({ height = 440 }: Props) {
           <div style={{
             width: panelWidth, height, position: 'relative',
             background: 'rgba(5,8,16,0.92)', fontFamily: '"JetBrains Mono", monospace',
-            border: '1px solid rgba(34,211,238,0.12)',
+            border: '12px solid rgba(34,211,238,0.12)',
             display: 'flex', flexDirection: 'column', overflow: 'hidden',
             borderRadius: 4,
           }}>
@@ -1139,7 +1139,7 @@ export default function FrequencyDemo({ height = 440 }: Props) {
             }} />
 
             {/* Readouts */}
-            <div style={{ padding: '14px 16px 10px', borderBottom: '1px solid rgba(34,211,238,0.12)', position: 'relative', zIndex: 2 }}>
+            <div style={{ padding: '14px 16px 10px', borderBottom: '12px solid rgba(34,211,238,0.12)', position: 'relative', zIndex: 2 }}>
               <div style={{
                 fontSize: 28, fontWeight: 700, letterSpacing: '-0.02em',
                 color: panelData.lineColor || colors.primary,
@@ -1157,7 +1157,7 @@ export default function FrequencyDemo({ height = 440 }: Props) {
                 &nbsp;&nbsp;{panelData.gridTime > 0 ? formatGT(Math.floor(panelData.gridTime)) : 'T+00:00'} {'\u00b7'} {panelData.timeScale}x speed
               </div>
               <div style={{
-                fontSize: 11, marginTop: 6, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6,
+                fontSize: 12, marginTop: 6, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6,
                 color: panelData.statusColor || colors.primary,
                 opacity: panelData.statusSeverity >= 3 ? undefined : 0.85,
                 animation: panelData.statusSeverity >= 3 ? 'freqPulse 0.5s ease-in-out infinite alternate' : 'none',
@@ -1173,8 +1173,8 @@ export default function FrequencyDemo({ height = 440 }: Props) {
 
             {/* Event log */}
             <div style={{
-              fontSize: 9, letterSpacing: '0.12em', color: colors.textDim + '80',
-              padding: '8px 16px 4px', textTransform: 'uppercase', position: 'relative', zIndex: 2,
+              fontSize: 12, letterSpacing: '0.12em', color: colors.textDim + '80',
+              padding: '12px 16px 4px', textTransform: 'uppercase', position: 'relative', zIndex: 2,
             }}>
               EVENT LOG
             </div>
@@ -1184,7 +1184,7 @@ export default function FrequencyDemo({ height = 440 }: Props) {
               scrollbarWidth: 'thin', scrollbarColor: `${colors.primary}30 transparent`,
             }}>
               {visibleEvents.length === 0 && (
-                <div style={{ fontSize: 11, color: colors.textDim + '50', padding: '12px 0', fontStyle: 'italic' }}>
+                <div style={{ fontSize: 12, color: colors.textDim + '50', padding: '12px 0', fontStyle: 'italic' }}>
                   Awaiting grid events...
                 </div>
               )}
@@ -1192,8 +1192,8 @@ export default function FrequencyDemo({ height = 440 }: Props) {
                 if (evt.isDivider) {
                   return (
                     <div key={evt.key} style={{
-                      padding: '6px 0 4px', color: colors.textDim + '60',
-                      fontSize: 10, textAlign: 'center', letterSpacing: '0.1em',
+                      padding: '12px 0 4px', color: colors.textDim + '60',
+                      fontSize: 12, textAlign: 'center', letterSpacing: '0.1em',
                     }}>
                       {evt.text}
                     </div>
@@ -1203,13 +1203,13 @@ export default function FrequencyDemo({ height = 440 }: Props) {
                 return (
                   <div key={evt.key || `${evt.gt}-${i}`} style={{
                     borderLeft: `2px solid ${s.border}60`,
-                    padding: '5px 0 5px 10px', marginBottom: 2,
+                    padding: '12px 0 5px 10px', marginBottom: 2,
                     animation: 'eventSlideIn 0.3s ease-out',
                   }}>
-                    <div style={{ fontSize: 10, color: s.color, fontWeight: 600 }}>
+                    <div style={{ fontSize: 12, color: s.color, fontWeight: 600 }}>
                       {s.icon} {formatGT(evt.gt)}
                     </div>
-                    <div style={{ fontSize: 11, color: s.color + 'cc', marginTop: 1, lineHeight: 1.3 }}>
+                    <div style={{ fontSize: 12, color: s.color + 'cc', marginTop: 1, lineHeight: 1.3 }}>
                       {evt.text}
                     </div>
                   </div>
@@ -1236,10 +1236,10 @@ export default function FrequencyDemo({ height = 440 }: Props) {
                 background: isActive ? `${btnColor}25` : 'var(--color-surface, #1a2236)',
                 border: `1px solid ${isActive ? btnColor : 'var(--color-surface-light, #243049)'}`,
                 color: isActive ? btnColor : 'var(--color-text-muted, #94a3b8)',
-                padding: '5px 14px',
+                padding: '12px 14px',
                 borderRadius: 6,
                 cursor: 'pointer',
-                fontSize: 11,
+                fontSize: 12,
                 fontFamily: '"JetBrains Mono", monospace',
                 fontWeight: isActive ? 600 : 400,
                 transition: 'all 0.2s',
@@ -1255,10 +1255,10 @@ export default function FrequencyDemo({ height = 440 }: Props) {
             background: scenario === -1 ? `${colors.primary}25` : 'var(--color-surface, #1a2236)',
             border: `1px solid ${scenario === -1 ? colors.primary : 'var(--color-surface-light, #243049)'}`,
             color: scenario === -1 ? colors.primary : 'var(--color-text-muted, #94a3b8)',
-            padding: '5px 14px',
+            padding: '12px 14px',
             borderRadius: 6,
             cursor: 'pointer',
-            fontSize: 11,
+            fontSize: 12,
             fontFamily: '"JetBrains Mono", monospace',
             fontWeight: scenario === -1 ? 600 : 400,
             transition: 'all 0.2s',
@@ -1290,7 +1290,7 @@ export default function FrequencyDemo({ height = 440 }: Props) {
               background: `${colors.primary}25`,
               border: `1px solid ${colors.primary}`,
               color: colors.primary,
-              padding: '8px 24px',
+              padding: '12px 24px',
               borderRadius: 8,
               cursor: 'pointer',
               fontSize: 14,
