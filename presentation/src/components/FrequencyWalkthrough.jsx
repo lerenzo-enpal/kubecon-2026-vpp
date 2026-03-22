@@ -846,7 +846,7 @@ export default function FrequencyWalkthrough({ step = 0, mode = 'intro' }) {
   const showPunchline = mode === 'intro' && step >= 4;
   const showHud = mode === 'scenarios' && step >= 0;
   const isCollapse = mode === 'scenarios' && s.gridState === 'collapse';
-  const showGrid = mode === 'scenarios' || (mode === 'intro' && step >= 1);
+  const showGrid = mode === 'scenarios';
 
   const [gridReady, setGridReady] = useState(false);
   useEffect(() => {
