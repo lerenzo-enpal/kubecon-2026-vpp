@@ -1135,9 +1135,39 @@ export default function Presentation() {
             <div className="text-[22px] text-hud-text font-sans mb-2">
               <span className="font-semibold" style={{ color: colors.primary }}>Enpal</span> — Building Europe's Largest Virtual Power Plant
             </div>
-            <div className="text-[18px] text-hud-text-muted font-sans mb-10">
+            <div className="text-lg text-hud-text-muted font-sans mb-8">
               Cloud-Native Infrastructure for the Energy Grid
             </div>
+            <a
+              href="https://whatisavpp.com"
+              target="_blank"
+              rel="noopener"
+              className="inline-flex items-center gap-3 px-6 py-3 rounded-lg font-mono text-lg font-semibold tracking-wide transition-all"
+              style={{
+                background: `${colors.primary}15`,
+                border: `1px solid ${colors.primary}40`,
+                color: colors.primary,
+                textDecoration: 'none',
+                boxShadow: `0 0 20px ${colors.primary}15`,
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = `${colors.primary}25`;
+                e.currentTarget.style.borderColor = `${colors.primary}70`;
+                e.currentTarget.style.boxShadow = `0 0 30px ${colors.primary}30`;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = `${colors.primary}15`;
+                e.currentTarget.style.borderColor = `${colors.primary}40`;
+                e.currentTarget.style.boxShadow = `0 0 20px ${colors.primary}15`;
+              }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="2" y1="12" x2="22" y2="12" />
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+              </svg>
+              whatisavpp.com
+            </a>
             <div className="absolute bottom-10 flex items-center gap-2" style={{ color: colors.textDim, fontSize: 14, fontFamily: '"JetBrains Mono", monospace' }}>
               <span>Special thanks to</span>
               <span style={{ color: colors.success }}>@engineeringwithRosie</span>
