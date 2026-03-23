@@ -635,11 +635,6 @@ export default function ResponseTimeline({ width = 840, height = 180, delay = 0,
         const cx = cellX + cellW / 2;
         const isOnline = simMs >= src.ms;
 
-        // Glow-on transition (no scan line — just fade from dim to active)
-        if (isOnline && scanProgress[i] < 1) {
-          scanProgress[i] = Math.min(1, scanProgress[i] + dt * 3); // ~0.33s glow-up
-        }
-        const glowT = scanProgress[i];
         const dimColor = colors.textDim;
         const activeColor = src.color;
 
@@ -648,19 +643,18 @@ export default function ResponseTimeline({ width = 840, height = 180, delay = 0,
         ctx.beginPath();
         ctx.rect(cellX, 0, cellW, height);
         ctx.clip();
-        const drawActive = glowT > 0.1;
-        const drawColor = drawActive ? activeColor : dimColor;
-        DRAW_FNS[i](ctx, cx, iconCY, iconW, iconH, drawColor, drawActive, now);
+        DRAW_FNS[i](ctx, cx, iconCY, iconW, iconH,
+          isOnline ? activeColor : dimColor, isOnline, now);
         ctx.restore();
 
         // Label
         ctx.font = 'bold 12px JetBrains Mono';
         ctx.textAlign = 'center';
-        ctx.fillStyle = glowT >= 1 ? activeColor : dimColor;
+        ctx.fillStyle = isOnline ? activeColor : dimColor;
         ctx.fillText(src.label, cx, labelY);
 
         // ONLINE badge
-        if (glowT >= 1) {
+        if (isOnline) {
           const bw = 48;
           ctx.fillStyle = activeColor + '18';
           ctx.beginPath();
@@ -680,7 +674,7 @@ export default function ResponseTimeline({ width = 840, height = 180, delay = 0,
         const displayMs = isOnline ? src.ms : simMs;
         const timerText = formatTimer(Math.min(displayMs, src.ms));
         ctx.font = 'bold 14px JetBrains Mono';
-        ctx.fillStyle = glowT >= 1 ? activeColor : (realT > 0 ? colors.text + '90' : dimColor);
+        ctx.fillStyle = isOnline ? activeColor : (realT > 0 ? colors.text + '90' : dimColor);
         ctx.textAlign = 'center';
         ctx.fillText(timerText, cx, timerY + timerH);
       });
