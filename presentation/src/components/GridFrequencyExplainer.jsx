@@ -57,22 +57,11 @@ function drawTurbine(ctx, cx, cy, r, angle, color, label, dimmed) {
   ctx.fillStyle = color;
   ctx.fill();
 
-  ctx.font = 'bold 13px "JetBrains Mono"';
-  ctx.fillStyle = color;
+  ctx.font = 'bold 14px "JetBrains Mono"';
+  ctx.fillStyle = dimmed ? colors.danger : color;
+  ctx.globalAlpha = dimmed ? 0.9 : 1;
   ctx.textAlign = 'center';
   ctx.fillText(label, cx, cy + r + 20);
-
-  if (dimmed) {
-    const s = r * 0.4;
-    ctx.globalAlpha = 0.8;
-    ctx.strokeStyle = colors.danger;
-    ctx.lineWidth = 4;
-    ctx.lineCap = 'round';
-    ctx.beginPath();
-    ctx.moveTo(cx - s, cy - s); ctx.lineTo(cx + s, cy + s); ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(cx + s, cy - s); ctx.lineTo(cx - s, cy + s); ctx.stroke();
-  }
 
   ctx.restore();
 }
@@ -202,24 +191,6 @@ export default function GridFrequencyExplainer({ width = 1200, height = 440, ste
         }
       }
 
-      // Arrow lines from top waveforms down to center box
-      const arrowTopY = topRowY + turbineR + 44;
-      const arrowBotY = centerBoxY - 16;
-      ctx.setLineDash([3, 4]);
-      ctx.strokeStyle = colorA + '30';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(width * 0.3, arrowTopY);
-      ctx.lineTo(width * 0.4, arrowBotY);
-      ctx.stroke();
-      if (showB && !disconnected) {
-        ctx.strokeStyle = colorB + '30';
-        ctx.beginPath();
-        ctx.moveTo(width * 0.7, arrowTopY);
-        ctx.lineTo(width * 0.6, arrowBotY);
-        ctx.stroke();
-      }
-      ctx.setLineDash([]);
 
       // === Center box: horizontal combined grid frequency ===
       const boxPadX = width * 0.08;
