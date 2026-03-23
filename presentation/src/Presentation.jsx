@@ -973,18 +973,12 @@ export default function Presentation() {
                     ))}
                   </div>
                   <div className="flex-1 flex items-end justify-center pb-2">
-                    <div className="w-[90%] rounded-lg px-4 py-3" style={{
-                      background: colors.surfaceLight + '06',
-                      border: `1px solid ${colors.surfaceLight}15`,
+                    <div style={{
                       opacity: sv >= 2 ? 1 : 0,
                       transform: sv >= 2 ? 'translateY(0)' : 'translateY(12px)',
                       transition: 'all 0.5s ease',
                     }}>
-                      <div className="flex items-center gap-4 mb-1">
-                        <div className="text-xl font-bold font-mono" style={{ color: colors.success }}>And Fast:</div>
-                        <div className="text-xs font-mono" style={{ color: colors.textDim }}>Response Time Comparison</div>
-                      </div>
-                      {sv >= 2 && <LazyContent key="rt-persistent"><ResponseTimeline width={940} height={180} delay={0} racing={sv >= 3} /></LazyContent>}
+                      {sv >= 2 && <LazyContent key="rt-persistent"><ResponseTimeline width={1020} height={180} delay={0} racing={sv >= 3} /></LazyContent>}
                     </div>
                   </div>
                 </div>

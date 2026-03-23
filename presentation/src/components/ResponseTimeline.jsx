@@ -473,7 +473,9 @@ export default function ResponseTimeline({ width = 840, height = 180, delay = 0,
     canvas.height = height * 2;
     ctx.scale(2, 2);
 
-    const cellW = width / SOURCES.length;
+    // Layout: 5 cells — stopwatch + 4 sources
+    const totalCells = SOURCES.length + 1;
+    const cellW = width / totalCells;
     const iconCY = 55;
     const iconW = cellW * 0.8;
     const iconH = 70;
@@ -481,7 +483,6 @@ export default function ResponseTimeline({ width = 840, height = 180, delay = 0,
     const timerY = labelY + 18;
 
     let lastTime = performance.now();
-    // Track scan-line progress per source (0 = not started, 1 = complete)
     const scanProgress = SOURCES.map(() => 0);
 
     const draw = () => {
@@ -500,47 +501,137 @@ export default function ResponseTimeline({ width = 840, height = 180, delay = 0,
       }
 
       const realT = tRef.current;
-      const simMs = simTime(realT) * 1000; // simulated milliseconds
+      const simMs = simTime(realT) * 1000;
 
       ctx.clearRect(0, 0, width, height);
 
-      // Subtle cell dividers
-      for (let i = 1; i < SOURCES.length; i++) {
-        const x = i * cellW;
-        ctx.strokeStyle = colors.surfaceLight + '0a';
-        ctx.lineWidth = 1;
+      // ── Cell 0: Stopwatch + "And Fast" ──
+      const swCellX = 0;
+      const swCx = cellW / 2;
+      const isRacing = racingRef.current && realT > 0;
+      const swColor = isRacing ? colors.success : colors.textDim + '60';
+
+      // "And Fast:" label at top
+      ctx.font = 'bold 16px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.fillStyle = colors.success;
+      ctx.fillText('And Fast:', swCx, 16);
+
+      // Stopwatch body
+      const swR = 26;
+      const swY = iconCY + 4;
+
+      // Crown/button at top
+      ctx.fillStyle = swColor;
+      ctx.fillRect(swCx - 3, swY - swR - 8, 6, 8);
+      // Small wings on crown
+      ctx.fillRect(swCx - 6, swY - swR - 5, 3, 4);
+      ctx.fillRect(swCx + 3, swY - swR - 5, 3, 4);
+
+      // Outer ring
+      ctx.beginPath();
+      ctx.arc(swCx, swY, swR, 0, Math.PI * 2);
+      ctx.strokeStyle = swColor;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Inner ring
+      ctx.beginPath();
+      ctx.arc(swCx, swY, swR - 3, 0, Math.PI * 2);
+      ctx.strokeStyle = swColor + '40';
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+
+      // Tick marks around the dial (12 major)
+      for (let t = 0; t < 12; t++) {
+        const angle = (t / 12) * Math.PI * 2 - Math.PI / 2;
+        const inner = swR - 6;
+        const outer = swR - 3;
         ctx.beginPath();
-        ctx.moveTo(x, 8);
-        ctx.lineTo(x, height - 8);
+        ctx.moveTo(swCx + Math.cos(angle) * inner, swY + Math.sin(angle) * inner);
+        ctx.lineTo(swCx + Math.cos(angle) * outer, swY + Math.sin(angle) * outer);
+        ctx.strokeStyle = swColor + '80';
+        ctx.lineWidth = t % 3 === 0 ? 1.5 : 0.8;
         ctx.stroke();
       }
 
+      // Sweeping hand — maps simulated seconds to rotations
+      // One full rotation = 60 simulated seconds
+      const simSec = simMs / 1000;
+      const handAngle = (simSec / 60) * Math.PI * 2 - Math.PI / 2;
+      const handLen = swR - 8;
+
+      ctx.beginPath();
+      ctx.moveTo(swCx, swY);
+      ctx.lineTo(
+        swCx + Math.cos(handAngle) * handLen,
+        swY + Math.sin(handAngle) * handLen,
+      );
+      ctx.strokeStyle = isRacing ? colors.success : swColor;
+      ctx.lineWidth = 1.5;
+      if (isRacing) {
+        ctx.shadowBlur = 6;
+        ctx.shadowColor = colors.success + '60';
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // Center dot
+      ctx.beginPath();
+      ctx.arc(swCx, swY, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = isRacing ? colors.success : swColor;
+      ctx.fill();
+
+      // Digital readout below stopwatch
+      const swTimerText = formatTimer(simMs);
+      ctx.font = 'bold 12px JetBrains Mono';
+      ctx.fillStyle = isRacing ? colors.success + 'dd' : colors.textDim + '50';
+      ctx.textAlign = 'center';
+      ctx.fillText(swTimerText, swCx, swY + swR + 16);
+
+      // Glow when racing
+      if (isRacing) {
+        ctx.beginPath();
+        ctx.arc(swCx, swY, swR, 0, Math.PI * 2);
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = colors.success + '30';
+        ctx.strokeStyle = colors.success + '40';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+      }
+
+      // ── Cell dividers ──
+      for (let i = 0; i < totalCells; i++) {
+        const x = i * cellW;
+        if (i > 0) {
+          ctx.strokeStyle = colors.surfaceLight + '0a';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(x, 8);
+          ctx.lineTo(x, height - 8);
+          ctx.stroke();
+        }
+      }
+
+      // ── Source cells (offset by 1 for stopwatch) ──
       SOURCES.forEach((src, i) => {
-        const cellX = i * cellW;
+        const cellX = (i + 1) * cellW;
         const cx = cellX + cellW / 2;
         const isOnline = simMs >= src.ms;
-        const wasOffline = !isOnline;
 
-        // Scan-line transition progress
+        // Scan-line transition
         if (isOnline && scanProgress[i] < 1) {
-          scanProgress[i] = Math.min(1, scanProgress[i] + dt * 4); // ~0.25s transition
+          scanProgress[i] = Math.min(1, scanProgress[i] + dt * 4);
         }
         const scanT = scanProgress[i];
         const dimColor = colors.textDim + '50';
         const activeColor = src.color;
 
-        // Current display color — interpolate during scan
-        const iconColor = scanT <= 0 ? dimColor :
-          scanT >= 1 ? activeColor : activeColor;
-
         // Draw icon
         ctx.save();
         if (scanT > 0 && scanT < 1) {
-          // Scan-line wipe: clip to revealed region (top-down)
-          // First draw dim version (full), then clip and draw active version
           DRAW_FNS[i](ctx, cx, iconCY, iconW, iconH, dimColor, false, now);
-
-          // Clip for active portion (revealed from top)
           ctx.save();
           ctx.beginPath();
           ctx.rect(cellX, 0, cellW, iconCY + iconH / 2 + 20 * scanT * 2);
@@ -548,7 +639,7 @@ export default function ResponseTimeline({ width = 840, height = 180, delay = 0,
           DRAW_FNS[i](ctx, cx, iconCY, iconW, iconH, activeColor, true, now);
           ctx.restore();
 
-          // Scan line itself
+          // Scan line
           const scanY = 10 + scanT * (timerY + 15);
           ctx.strokeStyle = activeColor;
           ctx.lineWidth = 1.5;
@@ -572,9 +663,8 @@ export default function ResponseTimeline({ width = 840, height = 180, delay = 0,
         ctx.fillStyle = scanT >= 1 ? activeColor : dimColor;
         ctx.fillText(src.label, cx, labelY);
 
-        // Status badge
+        // ONLINE badge
         if (scanT >= 1) {
-          const badgeText = 'ONLINE';
           const badgeW = 48;
           ctx.fillStyle = activeColor + '18';
           ctx.beginPath();
@@ -587,13 +677,13 @@ export default function ResponseTimeline({ width = 840, height = 180, delay = 0,
           ctx.stroke();
           ctx.font = 'bold 8px JetBrains Mono';
           ctx.fillStyle = activeColor;
-          ctx.fillText(badgeText, cx, labelY + 13);
+          ctx.fillText('ONLINE', cx, labelY + 13);
         }
 
         // Timer
         const displayMs = isOnline ? src.ms : simMs;
         const timerText = formatTimer(Math.min(displayMs, src.ms));
-        ctx.font = 'bold 16px JetBrains Mono';
+        ctx.font = 'bold 14px JetBrains Mono';
         ctx.fillStyle = scanT >= 1 ? activeColor : (realT > 0 ? colors.text + '90' : dimColor);
         ctx.textAlign = 'center';
         ctx.fillText(timerText, cx, timerY + 20);
