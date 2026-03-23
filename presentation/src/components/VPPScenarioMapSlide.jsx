@@ -559,30 +559,66 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
       {/* ── Bottom: Duck Curve HUD panel ── */}
       {(() => {
         const isExpanded = stepIndex === steps.length - 1;
-        const duckW = isExpanded ? 760 : 366;
-        const duckH = isExpanded ? 260 : 120;
+        const smallW = 366;
+        const smallH = 120;
+        const bigW = 760;
+        const bigH = 260;
         return (
-          <div style={{
-            ...panelBase,
-            position: 'absolute', bottom: 24, left: 10,
-            zIndex: 10, padding: isExpanded ? '10px 14px' : '6px 14px',
-            opacity: bootFade(1.0, 0.5),
-            transform: `translateY(${(1 - bootFade(1.0, 0.5)) * 15}px)`,
-            transition: 'width 0.8s cubic-bezier(0.4, 0, 0.2, 1), height 0.8s cubic-bezier(0.4, 0, 0.2, 1), padding 0.8s ease',
-            width: isExpanded ? duckW + 30 : 396,
-            height: duckH + (isExpanded ? 20 : 12),
-            overflow: 'hidden',
-          }}>
-            <Corners color={accentColor + '40'} size={10} />
-            <DuckCurveHUD
-              highlightHour={currentStep.duckHighlightHour}
-              blend={currentStep.duckBlend}
-              scenario={scenario}
-              width={duckW}
-              height={duckH}
-              expanded={isExpanded}
-            />
-          </div>
+          <>
+            {/* Small HUD — shrinks horizontally to nothing on last step */}
+            <div style={{
+              ...panelBase,
+              position: 'absolute', bottom: 24, left: 10,
+              zIndex: 10, padding: '6px 14px',
+              opacity: isExpanded ? 0 : bootFade(1.0, 0.5),
+              transform: isExpanded
+                ? 'scaleX(0) translateY(0)'
+                : `translateY(${(1 - bootFade(1.0, 0.5)) * 15}px)`,
+              transformOrigin: 'left center',
+              transition: 'opacity 0.4s ease, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+              width: 396,
+              height: smallH + 12,
+              overflow: 'hidden',
+              pointerEvents: isExpanded ? 'none' : 'auto',
+            }}>
+              <Corners color={accentColor + '40'} size={10} />
+              <DuckCurveHUD
+                highlightHour={currentStep.duckHighlightHour}
+                blend={currentStep.duckBlend}
+                scenario={scenario}
+                width={smallW}
+                height={smallH}
+                expanded={false}
+              />
+            </div>
+
+            {/* Large HUD — slides in from right to center on last step */}
+            <div style={{
+              ...panelBase,
+              position: 'absolute', bottom: 24,
+              left: '50%',
+              zIndex: 10, padding: '10px 14px',
+              opacity: isExpanded ? 1 : 0,
+              transform: isExpanded
+                ? 'translateX(-50%) translateX(0)'
+                : 'translateX(-50%) translateX(200px)',
+              transition: 'opacity 0.5s ease 0.25s, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.25s',
+              width: bigW + 30,
+              height: bigH + 20,
+              overflow: 'hidden',
+              pointerEvents: isExpanded ? 'auto' : 'none',
+            }}>
+              <Corners color={accentColor + '40'} size={10} />
+              <DuckCurveHUD
+                highlightHour={currentStep.duckHighlightHour}
+                blend={currentStep.duckBlend}
+                scenario={scenario}
+                width={bigW}
+                height={bigH}
+                expanded={true}
+              />
+            </div>
+          </>
         );
       })()}
 
