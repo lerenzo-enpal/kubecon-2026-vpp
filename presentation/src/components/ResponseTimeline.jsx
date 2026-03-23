@@ -38,104 +38,246 @@ function formatTimer(ms) {
 // ── Icon drawing functions ──
 
 function drawBattery(ctx, cx, cy, w, h, color, active, now) {
-  const bw = w * 0.5;
-  const bh = h * 0.7;
-  const bx = cx - bw / 2;
-  const by = cy - bh / 2 + 4;
-  const termW = bw * 0.3;
-  const termH = 4;
+  // Multiple homes connected to a central VPP hub
+  const hubR = 8;
+  const homeSize = 9;
+  const spread = Math.min(w * 0.38, 38);
+  const hubY = cy + 2;
 
-  // Terminal
-  ctx.fillStyle = color;
-  ctx.fillRect(cx - termW / 2, by - termH, termW, termH);
+  // 6 mini homes around the hub
+  const homes = [
+    { x: cx - spread,     y: hubY - spread * 0.6 },
+    { x: cx,              y: hubY - spread * 0.75 },
+    { x: cx + spread,     y: hubY - spread * 0.6 },
+    { x: cx - spread * 0.8, y: hubY + spread * 0.5 },
+    { x: cx,              y: hubY + spread * 0.65 },
+    { x: cx + spread * 0.8, y: hubY + spread * 0.5 },
+  ];
 
-  // Casing outline
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.roundRect(bx, by, bw, bh, 3);
-  ctx.stroke();
-
-  if (active) {
-    // Charge fill — animated pulse
-    const level = 0.6 + 0.15 * Math.sin(now * 2.5);
-    const fillH = bh * level * 0.9;
-    ctx.fillStyle = color + 'aa';
+  // Connection lines to hub
+  homes.forEach((hm) => {
+    ctx.strokeStyle = color + (active ? '35' : '18');
+    ctx.lineWidth = 0.8;
     ctx.beginPath();
-    ctx.roundRect(bx + 2, by + bh - fillH - 2, bw - 4, fillH, 2);
+    ctx.moveTo(hm.x, hm.y);
+    ctx.lineTo(cx, hubY);
+    ctx.stroke();
+  });
+
+  // Flow dashes when active
+  if (active) {
+    homes.forEach((hm, i) => {
+      const dashPhase = (now * 2 + i * 0.5) % 1;
+      const fx = hm.x + (cx - hm.x) * dashPhase;
+      const fy = hm.y + (hubY - hm.y) * dashPhase;
+      ctx.globalAlpha = 1 - dashPhase;
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(fx, fy, 1.2, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+  }
+
+  // Hub circle
+  ctx.beginPath();
+  ctx.arc(cx, hubY, hubR, 0, Math.PI * 2);
+  ctx.strokeStyle = color + (active ? 'cc' : '60');
+  ctx.lineWidth = 1.5;
+  ctx.fillStyle = color + (active ? '20' : '08');
+  ctx.fill();
+  if (active) {
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = color + '60';
+  }
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  // VPP label in hub
+  ctx.font = 'bold 7px JetBrains Mono';
+  ctx.fillStyle = color + (active ? 'ee' : '60');
+  ctx.textAlign = 'center';
+  ctx.fillText('VPP', cx, hubY + 2.5);
+
+  // Mini house icons
+  homes.forEach((hm) => {
+    const s = homeSize;
+    const bw = s;
+    const bh = s * 0.5;
+    const rh = s * 0.4;
+    const bodyTop = hm.y + rh * 0.1;
+
+    // Roof
+    ctx.beginPath();
+    ctx.moveTo(hm.x, bodyTop - rh);
+    ctx.lineTo(hm.x - bw / 2 - 0.5, bodyTop);
+    ctx.lineTo(hm.x + bw / 2 + 0.5, bodyTop);
+    ctx.closePath();
+    ctx.fillStyle = color + (active ? '90' : '30');
     ctx.fill();
 
-    // Glow
-    ctx.shadowBlur = 10;
-    ctx.shadowColor = color + '50';
+    // Body
     ctx.beginPath();
-    ctx.roundRect(bx, by, bw, bh, 3);
-    ctx.stroke();
-    ctx.shadowBlur = 0;
-  }
+    ctx.rect(hm.x - bw / 2, bodyTop, bw, bh);
+    ctx.fillStyle = color + (active ? '90' : '30');
+    ctx.fill();
+  });
 }
 
 function drawHydro(ctx, cx, cy, w, h, color, active, now) {
-  // Dam wall (trapezoid)
-  const dw = w * 0.45;
-  const dh = h * 0.65;
-  const dx = cx - dw / 2;
-  const dy = cy - dh / 2 + 4;
-  const taper = dw * 0.15;
+  // Dam with reservoir on left, turbine house + generator on right
+  const damW = w * 0.12;
+  const damH = h * 0.6;
+  const damX = cx - 8;
+  const damY = cy - damH / 2 + 6;
+  const taper = damW * 0.2;
 
+  // Dam wall (thick trapezoid)
   ctx.strokeStyle = color;
   ctx.lineWidth = 1.5;
   ctx.beginPath();
-  ctx.moveTo(dx + taper, dy);
-  ctx.lineTo(dx + dw - taper, dy);
-  ctx.lineTo(dx + dw, dy + dh);
-  ctx.lineTo(dx, dy + dh);
+  ctx.moveTo(damX + taper, damY);
+  ctx.lineTo(damX + damW - taper, damY);
+  ctx.lineTo(damX + damW + 2, damY + damH);
+  ctx.lineTo(damX - 2, damY + damH);
   ctx.closePath();
   ctx.stroke();
 
-  // Water level behind dam (left side)
+  // Reservoir water (left of dam)
+  const resW = w * 0.3;
+  ctx.fillStyle = color + (active ? '25' : '0c');
+  ctx.beginPath();
+  ctx.moveTo(damX - resW, damY + 4);
+  // Wavy top surface
+  for (let wx = 0; wx <= resW; wx += 4) {
+    const wy = active ? Math.sin(now * 2 + wx * 0.3) * 1.5 : 0;
+    ctx.lineTo(damX - resW + wx, damY + 4 + wy);
+  }
+  ctx.lineTo(damX, damY + damH);
+  ctx.lineTo(damX - resW, damY + damH);
+  ctx.closePath();
+  ctx.fill();
+
+  // Reservoir outline
+  ctx.strokeStyle = color + '40';
+  ctx.lineWidth = 0.8;
+  ctx.beginPath();
+  ctx.moveTo(damX - resW, damY + 4);
+  for (let wx = 0; wx <= resW; wx += 4) {
+    const wy = active ? Math.sin(now * 2 + wx * 0.3) * 1.5 : 0;
+    ctx.lineTo(damX - resW + wx, damY + 4 + wy);
+  }
+  ctx.stroke();
+
+  // Penstock (pipe from dam to turbine)
+  const turbX = damX + damW + 12;
+  const turbY = damY + damH - 12;
+  ctx.strokeStyle = color + (active ? '80' : '30');
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(damX + damW, damY + damH * 0.6);
+  ctx.lineTo(turbX, turbY);
+  ctx.stroke();
+
+  // Water flow through penstock when active
   if (active) {
-    ctx.fillStyle = color + '30';
-    ctx.beginPath();
-    ctx.moveTo(dx + taper - 8, dy + 6);
-    ctx.lineTo(dx + taper, dy + 6);
-    ctx.lineTo(dx, dy + dh);
-    ctx.lineTo(dx - 8, dy + dh);
-    ctx.closePath();
-    ctx.fill();
-
-    // Water arc spilling over
-    const arcPhase = now * 3;
-    ctx.strokeStyle = color + 'cc';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(dx + dw - taper + 2, dy + 4);
-    ctx.quadraticCurveTo(
-      dx + dw + 12, dy + dh * 0.2,
-      dx + dw + 6, dy + dh + 2,
-    );
-    ctx.stroke();
-
-    // Animated droplets
     for (let d = 0; d < 3; d++) {
-      const t = ((now * 1.5 + d * 0.33) % 1);
-      const dropX = dx + dw + 4 + Math.sin(d * 2.1) * 4;
-      const dropY = dy + dh * 0.3 + t * dh * 0.8;
-      const alpha = 1 - t;
-      ctx.globalAlpha = alpha;
+      const t = ((now * 2.5 + d * 0.33) % 1);
+      const fx = (damX + damW) + (turbX - damX - damW) * t;
+      const fy = (damY + damH * 0.6) + (turbY - damY - damH * 0.6) * t;
+      ctx.globalAlpha = 0.8 - t * 0.6;
       ctx.fillStyle = color;
       ctx.beginPath();
-      ctx.arc(dropX, dropY, 1.5, 0, Math.PI * 2);
+      ctx.arc(fx, fy, 1.5, 0, Math.PI * 2);
       ctx.fill();
     }
     ctx.globalAlpha = 1;
+  }
 
-    // Glow
-    ctx.shadowBlur = 10;
-    ctx.shadowColor = color + '50';
+  // Turbine house (small building)
+  const thW = 16;
+  const thH = 14;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.rect(turbX - 2, turbY - thH + 4, thW, thH);
+  ctx.stroke();
+  if (active) {
+    ctx.fillStyle = color + '25';
+    ctx.fill();
+  }
+
+  // Turbine symbol (circle inside building)
+  const tCx = turbX + thW / 2 - 2;
+  const tCy = turbY - thH / 2 + 4;
+  ctx.beginPath();
+  ctx.arc(tCx, tCy, 4, 0, Math.PI * 2);
+  ctx.strokeStyle = color + (active ? 'aa' : '40');
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  if (active) {
+    // Spinning blades
+    for (let b = 0; b < 3; b++) {
+      const angle = now * 4 + b * (Math.PI * 2 / 3);
+      ctx.beginPath();
+      ctx.moveTo(tCx, tCy);
+      ctx.lineTo(tCx + Math.cos(angle) * 3.5, tCy + Math.sin(angle) * 3.5);
+      ctx.strokeStyle = color + 'cc';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+  }
+
+  // Generator building (connected via line to turbine)
+  const genX = turbX + thW + 8;
+  const genY = turbY - thH + 4;
+  const genW = 14;
+  const genH = thH;
+
+  // Connection shaft
+  ctx.strokeStyle = color + (active ? '60' : '25');
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(turbX + thW - 2, tCy);
+  ctx.lineTo(genX, tCy);
+  ctx.stroke();
+
+  // Generator box
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.rect(genX, genY, genW, genH);
+  ctx.stroke();
+  if (active) {
+    ctx.fillStyle = color + '20';
+    ctx.fill();
+    // G label
+    ctx.font = 'bold 7px JetBrains Mono';
+    ctx.fillStyle = color + 'cc';
+    ctx.textAlign = 'center';
+    ctx.fillText('G', genX + genW / 2, genY + genH / 2 + 2.5);
+  }
+
+  // Transmission lines out (right of generator)
+  if (active) {
+    ctx.strokeStyle = color + '50';
+    ctx.lineWidth = 0.8;
+    for (let l = 0; l < 2; l++) {
+      const ly = genY + genH * 0.3 + l * genH * 0.4;
+      ctx.beginPath();
+      ctx.moveTo(genX + genW, ly);
+      ctx.lineTo(genX + genW + 10, ly + (l === 0 ? -3 : 3));
+      ctx.stroke();
+    }
+
+    // Dam glow
+    ctx.shadowBlur = 8;
+    ctx.shadowColor = color + '40';
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.moveTo(dx + taper, dy);
-    ctx.lineTo(dx + dw - taper, dy);
+    ctx.moveTo(damX + taper, damY);
+    ctx.lineTo(damX + damW - taper, damY);
     ctx.stroke();
     ctx.shadowBlur = 0;
   }
