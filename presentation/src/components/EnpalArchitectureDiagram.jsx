@@ -32,7 +32,7 @@ const NODES = [
   // Column 3 — smart home gateway & controlled devices
   { id: 'iot_hems',    label: 'IoT HEMS',        sub: 'Edge Gateway',      x: 0.38, y: 0.30, color: colors.success,    w: 96,  h: 42 },
   { id: 'hp',          label: 'Heat Pump',       sub: '',                   x: 0.28, y: 0.62, color: colors.success,    w: 84,  h: 34 },
-  { id: 'wallbox',     label: 'Wallbox',         sub: 'EV Charger',        x: 0.38, y: 0.62, color: colors.success,    w: 84,  h: 34 },
+  { id: 'wallbox',     label: 'EV Charger',      sub: '',                  x: 0.38, y: 0.62, color: colors.success,    w: 84,  h: 34 },
 
   // === CLOUD / DATA PIPELINE / VPP (staircase layout using vertical space) ===
   // Top row — telemetry ingress
