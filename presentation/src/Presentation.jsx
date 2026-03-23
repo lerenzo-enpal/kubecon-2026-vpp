@@ -132,7 +132,7 @@ export default function Presentation() {
               Cloud-Native Infrastructure for the Energy Grid
             </div>
             <div className="flex gap-6 justify-center items-center">
-              <img src={asset("/enpal-logo.svg")} alt="Enpal" className="h-24"/>
+              <img src={asset("/enpal-logo.svg")} alt="Enpal" className="h-30"/>
             </div>
           </div>
         </div>
@@ -266,7 +266,6 @@ export default function Presentation() {
         <div className="flex flex-col justify-center items-center h-full text-center">
           <div className="text-[20px] font-semibold text-hud-danger font-mono tracking-[0.15em] uppercase mb-4">Part I</div>
           <H size="50px" center color={colors.danger}>The Grid</H>
-          <P size="20px" center>The world's largest machine.</P>
         </div>
         <Notes>
           [LERENZO] "The world's largest machine" — this isn't hyperbole, we're going to prove it.
@@ -444,8 +443,8 @@ export default function Presentation() {
               const cards = [
                 { t: 'Peaker Plants', d: 'Idle 95% of the year, waiting for a spike.', stat: 'EUR 6.5B/yr', c: '#fb923c' },
                 { t: 'Spinning Reserves', d: '15% of all fuel to produce nothing.', stat: '15% wasted capacity', c: colors.accent },
-                { t: 'Grid Bottlenecks', d: 'Congeestion blocks renewables, gas used instead.', stat: 'EUR 4.2B/yr', c: colors.danger },
                 { t: 'Curtailment', d: 'Too much sun or wind? Turn it off.', stat: '10 TWh/yr wasted (DE)', c: colors.secondary },
+                { t: 'Grid Bottlenecks', d: 'Congestion blocks renewables, gas used instead.', stat: 'EUR 4.2B/yr', c: colors.danger },
               ];
               return (
                 <div className="flex flex-col flex-1">
