@@ -222,9 +222,9 @@ export default function GridFrequencyExplainer({ width = 1200, height = 440, ste
       ctx.setLineDash([]);
 
       // === Center box: horizontal combined grid frequency ===
-      const boxPadX = width * 0.12;
+      const boxPadX = width * 0.08;
       const boxW = width - boxPadX * 2;
-      const boxH = 80;
+      const boxH = 90;
 
       // Box background
       ctx.fillStyle = colors.surface + '90';
@@ -237,20 +237,19 @@ export default function GridFrequencyExplainer({ width = 1200, height = 440, ste
 
       // "GRID  50.0 Hz" on one line, left side
       const gridFreq = disconnected ? freq1 : (showB ? (freq1 + freq2) / 2 : freq1);
-      ctx.font = 'bold 36px "JetBrains Mono"';
+      ctx.font = 'bold 42px "JetBrains Mono"';
       ctx.fillStyle = centerColor;
       ctx.textAlign = 'left';
-      ctx.shadowBlur = 12;
+      ctx.shadowBlur = 14;
       ctx.shadowColor = centerColor + '30';
-      const gridLabel = 'GRID  ';
-      const gridLabelW = ctx.measureText(gridLabel).width;
-      ctx.fillText(gridLabel, boxPadX + 16, centerBoxY + boxH / 2 + 12);
-      ctx.fillText(`${gridFreq.toFixed(1)} Hz`, boxPadX + 16 + gridLabelW, centerBoxY + boxH / 2 + 12);
+      const gridText = `GRID  ${gridFreq.toFixed(1)} Hz`;
+      ctx.fillText(gridText, boxPadX + 20, centerBoxY + boxH / 2 + 15);
+      const gridTextW = ctx.measureText(gridText).width;
       ctx.shadowBlur = 0;
 
-      // Combined waveform (horizontal, filling most of the box)
-      const cwX = boxPadX + 180;
-      const cwW = boxW - 200;
+      // Combined waveform (starts after the text, fills rest of box)
+      const cwX = boxPadX + 20 + gridTextW + 30;
+      const cwW = boxW - gridTextW - 70;
       const cwMidY = centerBoxY + boxH / 2;
       const cwAmp = boxH * 0.32;
 
@@ -306,14 +305,14 @@ export default function GridFrequencyExplainer({ width = 1200, height = 440, ste
         subText = 'Remaining generators carry all load — if they slow too, cascade begins';
       }
 
-      ctx.font = 'bold 22px "Inter"';
+      ctx.font = 'bold 26px "Inter"';
       ctx.fillStyle = statusColor;
       ctx.textAlign = 'center';
       ctx.fillText(statusText, width / 2, statusY);
 
-      ctx.font = '16px "Inter"';
+      ctx.font = '18px "Inter"';
       ctx.fillStyle = colors.textMuted;
-      ctx.fillText(subText, width / 2, statusY + 26);
+      ctx.fillText(subText, width / 2, statusY + 30);
 
       if (isActive) animRef.current = requestAnimationFrame(draw);
     }
