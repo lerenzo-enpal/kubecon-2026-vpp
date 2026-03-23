@@ -301,7 +301,7 @@ export default function BufferComparison() {
         ctx.fill();
 
         // Title
-        ctx.font = 'bold 13px "JetBrains Mono", monospace';
+        ctx.font = 'bold 15px "JetBrains Mono", monospace';
         ctx.fillStyle = colors.text;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
@@ -320,7 +320,7 @@ export default function BufferComparison() {
         ctx.roundRect(tagX, tagY, tagW, 22, 4);
         ctx.fill();
 
-        ctx.font = '12px "JetBrains Mono", monospace';
+        ctx.font = '14px "JetBrains Mono", monospace';
         ctx.fillStyle = sys.tagColor;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';

@@ -1,5 +1,5 @@
 ---
-import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import ContentLayout from '../../../layouts/ContentLayout.astro';
 import IncidentHero from '../../../components/IncidentHero.astro';
 import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
@@ -11,7 +11,7 @@ import MobileVizFallback from '../../../components/MobileVizFallback';
 import { url } from '../../../utils/url';
 ---
 
-<IncidentLayout title="Iberian Peninsula Blackout" description="April 2025: The first major blackout in history caused by overvoltage. High solar penetration without adequate storage led to a 6-second collapse affecting 60 million people.">
+<ContentLayout title="Iberian Peninsula Blackout" description="April 2025: The first major blackout in history caused by overvoltage. High solar penetration without adequate storage led to a 6-second collapse affecting 60 million people.">
 
 <IncidentHero
   title="Iberian Peninsula Blackout"
@@ -36,7 +36,7 @@ import { url } from '../../../utils/url';
 <h2>What Happened</h2>
 
 <p>
-  On a sunny spring afternoon, Spain and Portugal's grids were running on roughly 59% solar power. It was a milestone for renewable energy -- and the conditions for a new kind of disaster. Unlike any previous major blackout, this one was caused by <strong>overvoltage</strong>, not undervoltage. <a href="#iberian-timeline" class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
+  On a sunny spring afternoon, Spain and Portugal's grids were running on roughly 59% solar power. It was a milestone for renewable energy -- and the conditions for a new kind of disaster. Unlike any previous major blackout, this one was caused by <strong>overvoltage</strong>, not undervoltage. <a href="#iberian-timeline" class="font-mono text-sm" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
 </p>
 
 <div id="iberian-map" class="my-8 rounded-lg overflow-hidden p-4 scroll-mt-20" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
@@ -145,19 +145,19 @@ import { url } from '../../../utils/url';
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-3 my-6">
   <a href={url("/research/incidents/2016-south-australia-blackout")} class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-    <div class="font-mono text-xs mb-1" style="color: var(--color-danger);">Blackout</div>
+    <div class="font-mono text-sm mb-1" style="color: var(--color-danger);">Blackout</div>
     <div class="font-semibold text-sm" style="color: var(--color-text);">2016 South Australia Blackout</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">Similar: renewable protection cascade</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">Similar: renewable protection cascade</div>
   </a>
   <a href={url("/research/incidents/2017-hornsdale-battery-response")} class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-    <div class="font-mono text-xs mb-1" style="color: var(--color-success);">Success Story</div>
+    <div class="font-mono text-sm mb-1" style="color: var(--color-success);">Success Story</div>
     <div class="font-semibold text-sm" style="color: var(--color-text);">2017 Hornsdale Battery</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">Proof that batteries prevent cascades</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">Proof that batteries prevent cascades</div>
   </a>
   <a href={url("/research/incidents/2003-italy-blackout")} class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-    <div class="font-mono text-xs mb-1" style="color: var(--color-danger);">Blackout</div>
+    <div class="font-mono text-sm mb-1" style="color: var(--color-danger);">Blackout</div>
     <div class="font-semibold text-sm" style="color: var(--color-text);">2003 Italy Blackout</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">Import-dependent grid, 27-min collapse</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">Import-dependent grid, 27-min collapse</div>
   </a>
 </div>
 
@@ -168,4 +168,4 @@ import { url } from '../../../utils/url';
   '<a href="https://en.wikipedia.org/wiki/2025_Iberian_blackout" target="_blank" rel="noopener">Wikipedia — 2025 Iberian blackout</a>',
 ]} />
 
-</IncidentLayout>
+</ContentLayout>

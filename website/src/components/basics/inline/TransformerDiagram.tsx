@@ -120,7 +120,7 @@ export default function TransformerDiagram() {
       ctx.globalAlpha = 1;
 
       // Voltage labels
-      ctx.font = '13px "JetBrains Mono", monospace';
+      ctx.font = '15px "JetBrains Mono", monospace';
       ctx.textAlign = 'center';
       ctx.fillStyle = c.primary;
       ctx.fillText('230 V', primaryX - 20, midY + coreH / 2 + 25);
@@ -134,7 +134,7 @@ export default function TransformerDiagram() {
       ctx.fillText('Step-Up', midX, midY + coreH / 2 + 25);
 
       // Caption below transformer
-      ctx.font = '12px "JetBrains Mono", monospace';
+      ctx.font = '14px "JetBrains Mono", monospace';
       ctx.fillStyle = c.textMuted;
       ctx.fillText('Transformers only work with AC -- that\'s why AC won', midX, midY + coreH / 2 + 50);
 
@@ -177,7 +177,7 @@ export default function TransformerDiagram() {
       ctx.globalAlpha = 1;
 
       // Power loss annotation
-      ctx.font = '12px "JetBrains Mono", monospace';
+      ctx.font = '14px "JetBrains Mono", monospace';
       ctx.fillStyle = c.danger;
       ctx.textAlign = 'center';
       ctx.fillText('P = I\u00B2R  (lower current = less loss)', midX, lineY + 18);

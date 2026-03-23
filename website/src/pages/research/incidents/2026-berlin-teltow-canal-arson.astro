@@ -1,5 +1,5 @@
 ---
-import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import ContentLayout from '../../../layouts/ContentLayout.astro';
 import IncidentHero from '../../../components/IncidentHero.astro';
 import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
@@ -10,7 +10,7 @@ import MobileVizFallback from '../../../components/MobileVizFallback';
 import { url } from '../../../utils/url';
 ---
 
-<IncidentLayout title="2026 Berlin Teltow Canal Arson" description="Arsonists destroyed a cable bridge over the Teltow Canal, causing Berlin's longest power outage since 1945.">
+<ContentLayout title="2026 Berlin Teltow Canal Arson" description="Arsonists destroyed a cable bridge over the Teltow Canal, causing Berlin's longest power outage since 1945.">
 
 <IncidentHero
   title="Berlin Teltow Canal Arson"
@@ -37,7 +37,7 @@ import { url } from '../../../utils/url';
   <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">What Happened</h2>
 
   <p class="text-base leading-relaxed mb-4" style="color: var(--color-text-muted);">
-    At around 6:00 AM on a freezing January morning, attackers set fire to a cable bridge spanning the Teltow Canal in southwest Berlin. The bridge carried five 110 kV high-voltage cables and ten 10 kV medium-voltage cables to the Lichterfelde combined heat and power plant. The fire destroyed all fifteen cables, collapsing power across multiple districts. <a href="#teltow-map" class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
+    At around 6:00 AM on a freezing January morning, attackers set fire to a cable bridge spanning the Teltow Canal in southwest Berlin. The bridge carried five 110 kV high-voltage cables and ten 10 kV medium-voltage cables to the Lichterfelde combined heat and power plant. The fire destroyed all fifteen cables, collapsing power across multiple districts. <a href="#teltow-map" class="font-mono text-sm" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
   </p>
 
   <div id="teltow-map" class="my-8 rounded-lg overflow-hidden p-4 scroll-mt-20" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
@@ -153,4 +153,4 @@ import { url } from '../../../utils/url';
   "Berliner Morgenpost / Tagesspiegel: Coverage of Teltow Canal arson and district impact",
 ]} />
 
-</IncidentLayout>
+</ContentLayout>

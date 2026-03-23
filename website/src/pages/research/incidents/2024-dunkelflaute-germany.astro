@@ -1,5 +1,5 @@
 ---
-import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import ContentLayout from '../../../layouts/ContentLayout.astro';
 import IncidentHero from '../../../components/IncidentHero.astro';
 import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
@@ -10,7 +10,7 @@ import MobileVizFallback from '../../../components/MobileVizFallback';
 import { url } from '../../../utils/url';
 ---
 
-<IncidentLayout title="2024 Dunkelflaute" description="Two weeks of no wind and no sun exposed the limits of Germany's renewable grid -- and sent prices to 18-year highs.">
+<ContentLayout title="2024 Dunkelflaute" description="Two weeks of no wind and no sun exposed the limits of Germany's renewable grid -- and sent prices to 18-year highs.">
 
 <IncidentHero
   title="2024 Dunkelflaute <br />(Dark Doldrums)"
@@ -157,4 +157,4 @@ import { url } from '../../../utils/url';
   '<a href="https://en.wikipedia.org/wiki/Dunkelflaute" target="_blank" rel="noopener">Wikipedia — Dunkelflaute</a>',
 ]} />
 
-</IncidentLayout>
+</ContentLayout>

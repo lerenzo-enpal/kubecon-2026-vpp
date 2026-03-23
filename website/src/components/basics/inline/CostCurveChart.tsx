@@ -145,7 +145,7 @@ export default function CostCurveChart() {
         ctx.lineTo(padLeft + chartW, y);
         ctx.stroke();
 
-        ctx.font = '12px "JetBrains Mono", monospace';
+        ctx.font = '14px "JetBrains Mono", monospace';
         ctx.fillStyle = c.textDim;
         ctx.textAlign = 'right';
         ctx.fillText(`$${p}`, padLeft - 6, y + 3);
@@ -156,7 +156,7 @@ export default function CostCurveChart() {
       for (let yr = 2010; yr <= 2030; yr += 5) {
         const x = xPos(yr);
         ctx.fillStyle = c.textDim;
-        ctx.font = '12px "JetBrains Mono", monospace';
+        ctx.font = '14px "JetBrains Mono", monospace';
         ctx.fillText(String(yr), x, padTop + chartH + 18);
       }
 
@@ -174,7 +174,7 @@ export default function CostCurveChart() {
         ctx.setLineDash([]);
         ctx.globalAlpha = 1;
 
-        ctx.font = '12px "JetBrains Mono", monospace';
+        ctx.font = '14px "JetBrains Mono", monospace';
         ctx.fillStyle = ms.color;
         ctx.globalAlpha = 0.7;
         ctx.textAlign = 'left';
@@ -228,7 +228,7 @@ export default function CostCurveChart() {
         ctx.globalAlpha = 1;
 
         // $50-80 label at end
-        ctx.font = '12px "JetBrains Mono", monospace';
+        ctx.font = '14px "JetBrains Mono", monospace';
         ctx.fillStyle = c.primary;
         ctx.globalAlpha = 0.7 * projAlpha;
         ctx.textAlign = 'center';
@@ -274,7 +274,7 @@ export default function CostCurveChart() {
 
       // Start and end labels
       if (visiblePoints >= 1) {
-        ctx.font = 'bold 12px "JetBrains Mono", monospace';
+        ctx.font = 'bold 14px "JetBrains Mono", monospace';
         ctx.fillStyle = c.text;
         ctx.textAlign = 'center';
         ctx.fillText('$1,100', xPos(2010), yPos(1100) - 10);
@@ -289,7 +289,7 @@ export default function CostCurveChart() {
         if (annIdx >= 0 && visiblePoints > annIdx) {
           const annProgress = Math.min(1, (visiblePoints - annIdx) / 3);
           ctx.globalAlpha = annProgress * 0.6;
-          ctx.font = '12px "JetBrains Mono", monospace';
+          ctx.font = '14px "JetBrains Mono", monospace';
           ctx.fillStyle = c.textMuted;
           ctx.textAlign = 'center';
           const ax = xPos(ann.year);
@@ -310,7 +310,7 @@ export default function CostCurveChart() {
       ctx.save();
       ctx.translate(12, padTop + chartH / 2);
       ctx.rotate(-Math.PI / 2);
-      ctx.font = '12px "JetBrains Mono", monospace';
+      ctx.font = '14px "JetBrains Mono", monospace';
       ctx.fillStyle = c.textDim;
       ctx.textAlign = 'center';
       ctx.fillText('$/kWh', 0, 0);

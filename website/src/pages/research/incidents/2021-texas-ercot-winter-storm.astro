@@ -1,5 +1,5 @@
 ---
-import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import ContentLayout from '../../../layouts/ContentLayout.astro';
 import IncidentHero from '../../../components/IncidentHero.astro';
 import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
@@ -12,7 +12,7 @@ import MobileVizFallback from '../../../components/MobileVizFallback';
 import { url } from '../../../utils/url';
 ---
 
-<IncidentLayout title="Texas ERCOT Winter Storm Uri" description="February 2021: A polar vortex exposed the fragility of Texas's isolated grid, triggering a gas-electric death spiral that left 4.5 million homes without power.">
+<ContentLayout title="Texas ERCOT Winter Storm Uri" description="February 2021: A polar vortex exposed the fragility of Texas's isolated grid, triggering a gas-electric death spiral that left 4.5 million homes without power.">
 
 <IncidentHero
   title="Texas Winter Storm Uri"
@@ -37,7 +37,7 @@ import { url } from '../../../utils/url';
 <h2>What Happened</h2>
 
 <p>
-  In February 2021, a polar vortex plunged Texas into record-breaking cold. Temperatures crashed well below freezing across the entire state, and electricity demand hit an all-time winter peak. The grid was not ready. <a href="#texas-timeline" class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
+  In February 2021, a polar vortex plunged Texas into record-breaking cold. Temperatures crashed well below freezing across the entire state, and electricity demand hit an all-time winter peak. The grid was not ready. <a href="#texas-timeline" class="font-mono text-sm" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
 </p>
 
 <div id="texas-map" class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
@@ -147,19 +147,19 @@ import { url } from '../../../utils/url';
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-3 my-6">
   <a href={url("/research/incidents/2025-iberian-peninsula-blackout")} class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-    <div class="font-mono text-xs mb-1" style="color: var(--color-danger);">Blackout</div>
+    <div class="font-mono text-sm mb-1" style="color: var(--color-danger);">Blackout</div>
     <div class="font-semibold text-sm" style="color: var(--color-text);">2025 Iberian Blackout</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">60M affected in 6 seconds</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">60M affected in 6 seconds</div>
   </a>
   <a href={url("/research/incidents/2016-south-australia-blackout")} class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-    <div class="font-mono text-xs mb-1" style="color: var(--color-danger);">Blackout</div>
+    <div class="font-mono text-sm mb-1" style="color: var(--color-danger);">Blackout</div>
     <div class="font-semibold text-sm" style="color: var(--color-text);">2016 South Australia Blackout</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">87 seconds to system black</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">87 seconds to system black</div>
   </a>
   <a href={url("/research/incidents/2017-hornsdale-battery-response")} class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-    <div class="font-mono text-xs mb-1" style="color: var(--color-success);">Success Story</div>
+    <div class="font-mono text-sm mb-1" style="color: var(--color-success);">Success Story</div>
     <div class="font-semibold text-sm" style="color: var(--color-text);">2017 Hornsdale Battery</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">140ms response prevented cascade</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">140ms response prevented cascade</div>
   </a>
 </div>
 
@@ -173,4 +173,4 @@ import { url } from '../../../utils/url';
   '<a href="https://en.wikipedia.org/wiki/2021_Texas_power_crisis" target="_blank" rel="noopener">Wikipedia — 2021 Texas power crisis</a>',
 ]} />
 
-</IncidentLayout>
+</ContentLayout>

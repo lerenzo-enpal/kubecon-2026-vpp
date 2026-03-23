@@ -25,75 +25,126 @@ export default function BatteryTimeline() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // On mount, scroll to show the middle of the timeline
     const el = scrollRef.current;
     if (el) {
       el.scrollLeft = (el.scrollWidth - el.clientWidth) * 0.4;
     }
   }, []);
 
+  const stemH = 32;
+  const lineY = 160;
+
   return (
     <div
       ref={scrollRef}
-      className="w-full overflow-x-auto py-4"
+      className="w-full overflow-x-auto py-2"
       role="figure"
       aria-label="Battery technology timeline from 1800 to 2019"
     >
-      <div className="relative flex items-center" style={{ minWidth: 960, height: 200, padding: '0 32px' }}>
-        {/* Horizontal line */}
+      <div className="relative" style={{ minWidth: 1080, height: 320, padding: '0 40px' }}>
+        {/* Central timeline rail */}
         <div
-          className="absolute left-8 right-8"
+          className="absolute left-10 right-10"
           style={{
-            top: 90,
+            top: lineY,
             height: 2,
-            background: 'var(--color-surface-light)',
+            background: 'linear-gradient(90deg, transparent, var(--color-surface-light) 5%, var(--color-surface-light) 95%, transparent)',
+          }}
+        />
+
+        {/* Glow accent on the rail */}
+        <div
+          className="absolute left-10 right-10"
+          style={{
+            top: lineY - 1,
+            height: 4,
+            background: 'linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.08) 20%, rgba(34, 211, 238, 0.08) 80%, transparent)',
+            filter: 'blur(2px)',
           }}
         />
 
         {/* Milestones */}
-        <div className="flex items-center justify-between w-full relative" style={{ zIndex: 1 }}>
+        <div className="flex items-start justify-between w-full relative h-full" style={{ zIndex: 1 }}>
           {MILESTONES.map((m, i) => {
+            const isTop = i % 2 === 0;
             const dotColor = m.highlight ? 'var(--color-primary)' : 'var(--color-text-dim)';
-            const textColor = m.highlight ? 'var(--color-text)' : 'var(--color-text-dim)';
+            const textColor = m.highlight ? 'var(--color-text)' : 'var(--color-text-muted)';
             const yearColor = m.highlight ? 'var(--color-primary)' : 'var(--color-text-dim)';
-            const dotSize = m.highlight ? 12 : 8;
+            const dotSize = m.highlight ? 10 : 7;
 
             return (
               <div
                 key={m.year}
-                className="flex flex-col items-center"
-                style={{ width: `${100 / MILESTONES.length}%` }}
+                className="relative flex flex-col items-center"
+                style={{
+                  width: `${100 / MILESTONES.length}%`,
+                  height: '100%',
+                }}
               >
-                {/* Year above */}
-                <span
-                  className="font-mono text-xs font-semibold mb-2 whitespace-nowrap"
-                  style={{ color: yearColor }}
-                >
-                  {m.year}
-                </span>
-
-                {/* Dot */}
+                {/* Dot on the line */}
                 <div
-                  className="rounded-full flex-shrink-0"
+                  className="absolute rounded-full"
                   style={{
+                    top: lineY - dotSize / 2,
                     width: dotSize,
                     height: dotSize,
                     background: dotColor,
-                    boxShadow: m.highlight ? `0 0 8px ${dotColor}` : 'none',
+                    boxShadow: m.highlight
+                      ? `0 0 10px var(--color-primary), 0 0 4px var(--color-primary)`
+                      : 'none',
+                    zIndex: 2,
                   }}
                 />
 
-                {/* Label below */}
-                <span
-                  className="text-xs text-center mt-2 leading-tight"
+                {/* Stem line from dot to label */}
+                <div
+                  className="absolute left-1/2"
                   style={{
-                    color: textColor,
-                    maxWidth: 80,
-                    opacity: m.highlight ? 1 : 0.7,
+                    top: isTop ? lineY - stemH - 1 : lineY + dotSize / 2 + 1,
+                    width: 1,
+                    height: stemH,
+                    background: m.highlight
+                      ? 'var(--color-primary)'
+                      : 'var(--color-surface-light)',
+                    opacity: m.highlight ? 0.5 : 0.4,
+                    transform: 'translateX(-0.5px)',
+                  }}
+                />
+
+                {/* Label card */}
+                <div
+                  className="absolute left-1/2 flex flex-col items-center"
+                  style={{
+                    top: isTop ? undefined : lineY + stemH + dotSize / 2 + 6,
+                    bottom: isTop ? 320 - lineY + stemH + 6 : undefined,
+                    transform: 'translateX(-50%)',
+                    width: 100,
                   }}
                 >
-                  {m.label}
-                </span>
+                  {/* Year */}
+                  <span
+                    className="font-mono text-sm font-bold whitespace-nowrap tracking-wide"
+                    style={{
+                      color: yearColor,
+                      order: isTop ? 1 : 0,
+                      textShadow: m.highlight ? '0 0 12px rgba(34, 211, 238, 0.4)' : 'none',
+                    }}
+                  >
+                    {m.year}
+                  </span>
+
+                  {/* Description */}
+                  <span
+                    className="text-sm text-center leading-snug mt-1"
+                    style={{
+                      color: textColor,
+                      order: isTop ? 0 : 1,
+                      opacity: m.highlight ? 1 : 0.7,
+                    }}
+                  >
+                    {m.label}
+                  </span>
+                </div>
               </div>
             );
           })}

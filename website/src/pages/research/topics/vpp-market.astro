@@ -1,9 +1,9 @@
 ---
-import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import ContentLayout from '../../../layouts/ContentLayout.astro';
 import { url } from '../../../utils/url';
 ---
 
-<IncidentLayout title="VPP Market" description="The global virtual power plant market is projected to reach $16.65 billion by 2030, with residential battery enrollments growing 153% year-over-year.">
+<ContentLayout title="VPP Market" description="The global virtual power plant market is projected to reach $16.65 billion by 2030, with residential battery enrollments growing 153% year-over-year.">
 
 <div style="border-left: 4px solid var(--color-primary); padding-left: 20px; margin-bottom: 48px;">
   <h1 style="color: var(--color-primary);">VPP Market</h1>
@@ -16,19 +16,19 @@ import { url } from '../../../utils/url';
 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 my-8">
   <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-primary);">
     <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">$6.1B</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">global market (2025)</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">global market (2025)</div>
   </div>
   <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-primary);">
     <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">38 GW</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">US enrolled capacity</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">US enrolled capacity</div>
   </div>
   <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-primary);">
     <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">153%</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">residential battery growth (YoY)</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">residential battery growth (YoY)</div>
   </div>
   <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-primary);">
     <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">22.3%</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">CAGR through 2030</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">CAGR through 2030</div>
   </div>
 </div>
 
@@ -195,7 +195,7 @@ import { url } from '../../../utils/url';
 <h2 id="tesla-sa" style="color: var(--color-primary);">Tesla VPP in South Australia</h2>
 
 <div class="p-5 rounded-lg my-8" style="background: var(--color-surface); border: 1px solid var(--color-primary);">
-  <div class="font-mono text-xs mb-2" style="color: var(--color-primary);">BENCHMARK</div>
+  <div class="font-mono text-sm mb-2" style="color: var(--color-primary);">BENCHMARK</div>
   <p class="mb-2" style="max-width: none;">
     The Hornsdale Power Reserve (150 MW / 193.5 MWh) reduced FCAS costs in South Australia
     by approximately 90% in its first year. average FCAS prices dropped from A$14/MWh to ~A$1.5/MWh.
@@ -214,16 +214,16 @@ import { url } from '../../../utils/url';
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
   <a href={url("/research/topics/enpal-flexa")} class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
     <div class="font-mono text-sm font-bold" style="color: var(--color-success);">Enpal and Flexa</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">Europe's largest VPP</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">Europe's largest VPP</div>
   </a>
   <a href={url("/research/topics/demand-response")} class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
     <div class="font-mono text-sm font-bold" style="color: var(--color-success);">Demand Response</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">Reshaping demand at scale</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">Reshaping demand at scale</div>
   </a>
   <a href={url("/research/topics/grid-flexibility-costs")} class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
     <div class="font-mono text-sm font-bold" style="color: var(--color-accent);">Grid Flexibility Costs</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">The old playbook's price tag</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">The old playbook's price tag</div>
   </a>
 </div>
 
-</IncidentLayout>
+</ContentLayout>

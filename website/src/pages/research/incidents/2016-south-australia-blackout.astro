@@ -1,5 +1,5 @@
 ---
-import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import ContentLayout from '../../../layouts/ContentLayout.astro';
 import IncidentHero from '../../../components/IncidentHero.astro';
 import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
@@ -11,7 +11,7 @@ import MobileVizFallback from '../../../components/MobileVizFallback';
 import { url } from '../../../utils/url';
 ---
 
-<IncidentLayout title="South Australia Statewide Blackout" description="September 2016: Twin tornadoes and a hidden wind farm vulnerability combined to black out an entire state in 87 seconds.">
+<ContentLayout title="South Australia Statewide Blackout" description="September 2016: Twin tornadoes and a hidden wind farm vulnerability combined to black out an entire state in 87 seconds.">
 
 <IncidentHero
   title="South Australia Statewide Blackout"
@@ -40,7 +40,7 @@ import { url } from '../../../utils/url';
 </div>
 
 <p>
-  A once-in-50-year storm swept across South Australia with twin tornadoes packing winds up to 260 km/h. The tornadoes ripped through transmission corridors, destroying 22 high-voltage towers and severing the lines connecting the state's northern wind farms to Adelaide. <a href="#sa-timeline" class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
+  A once-in-50-year storm swept across South Australia with twin tornadoes packing winds up to 260 km/h. The tornadoes ripped through transmission corridors, destroying 22 high-voltage towers and severing the lines connecting the state's northern wind farms to Adelaide. <a href="#sa-timeline" class="font-mono text-sm" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
 </p>
 
 <div id="sa-map" class="my-8 rounded-lg overflow-hidden p-4 scroll-mt-20" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
@@ -141,19 +141,19 @@ import { url } from '../../../utils/url';
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-3 my-6">
   <a href={url("/research/incidents/2017-hornsdale-battery-response")} class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-    <div class="font-mono text-xs mb-1" style="color: var(--color-success);">Success Story</div>
+    <div class="font-mono text-sm mb-1" style="color: var(--color-success);">Success Story</div>
     <div class="font-semibold text-sm" style="color: var(--color-text);">2017 Hornsdale Battery</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">The direct response to this blackout</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">The direct response to this blackout</div>
   </a>
   <a href={url("/research/incidents/2021-texas-ercot-winter-storm")} class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-    <div class="font-mono text-xs mb-1" style="color: var(--color-danger);">Blackout</div>
+    <div class="font-mono text-sm mb-1" style="color: var(--color-danger);">Blackout</div>
     <div class="font-semibold text-sm" style="color: var(--color-text);">2021 Texas Winter Storm</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">246 lives lost, 70+ hours</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">246 lives lost, 70+ hours</div>
   </a>
   <a href={url("/research/incidents/2017-south-australia-heatwave")} class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-    <div class="font-mono text-xs mb-1" style="color: var(--color-danger);">Blackout</div>
+    <div class="font-mono text-sm mb-1" style="color: var(--color-danger);">Blackout</div>
     <div class="font-semibold text-sm" style="color: var(--color-text);">2017 SA Heatwave</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">5 months later, same grid fails again</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">5 months later, same grid fails again</div>
   </a>
 </div>
 
@@ -166,4 +166,4 @@ import { url } from '../../../utils/url';
   '<a href="https://en.wikipedia.org/wiki/2016_South_Australian_blackout" target="_blank" rel="noopener">Wikipedia — 2016 South Australian blackout</a>',
 ]} />
 
-</IncidentLayout>
+</ContentLayout>

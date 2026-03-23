@@ -130,7 +130,7 @@ export default function OhmsLawPlayground() {
       ctx.stroke();
 
       // Labels
-      ctx.font = '12px "JetBrains Mono", monospace';
+      ctx.font = '14px "JetBrains Mono", monospace';
       ctx.textAlign = 'center';
       ctx.fillStyle = c.accent;
       ctx.fillText(`${valuesRef.current.voltage}V`, padX + 20, padY + loopH / 2 + 4);

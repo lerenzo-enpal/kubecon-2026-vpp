@@ -93,7 +93,7 @@ export default function GridFlowDemo({ height = 520 }: Props) {
   }, []);
 
   return (
-    <div ref={containerRef} style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 12 }}>
+    <div ref={containerRef} style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 8 }}>
       <style>{`
         @keyframes drawStroke {
           to { stroke-dashoffset: 0; }
@@ -143,7 +143,7 @@ export default function GridFlowDemo({ height = 520 }: Props) {
       `}</style>
 
       <div style={{ width: '100%', minHeight: 0, willChange: 'transform', transform: 'translateZ(0)' }}>
-        <svg viewBox="0 0 1200 480" style={{ width: '100%', height: height - 60 }} preserveAspectRatio="xMidYMid meet">
+        <svg viewBox="0 0 1200 460" style={{ width: '100%', height: height - 56 }} preserveAspectRatio="xMidYMid meet">
           <defs>
             <filter id="gf"><feGaussianBlur stdDeviation="1.5" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
             <filter id="wg"><feGaussianBlur stdDeviation="2" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
@@ -160,11 +160,11 @@ export default function GridFlowDemo({ height = 520 }: Props) {
               <stop offset="100%" stopColor="white" stopOpacity="0.05" />
             </radialGradient>
             <mask id="gridFade">
-              <rect width="1200" height="480" fill="url(#gridMask)" />
+              <rect width="1200" height="460" fill="url(#gridMask)" />
             </mask>
           </defs>
 
-          <rect width="1200" height="480" fill="url(#gridLarge)" mask="url(#gridFade)" />
+          <rect width="1200" height="460" fill="url(#gridLarge)" mask="url(#gridFade)" />
 
           {/* POWER PLANTS */}
           <g>
@@ -245,22 +245,24 @@ export default function GridFlowDemo({ height = 520 }: Props) {
       </div>
 
       {/* Bottom phase boxes */}
-      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8 }}>
+      <div style={{ display: 'flex', alignItems: 'stretch', gap: 8 }}>
         {PHASES.map((p, i) => (
           <React.Fragment key={i}>
             <div style={{
-              flex: 1, textAlign: 'center', padding: '8px 10px',
+              flex: 1, textAlign: 'center', padding: '10px 10px',
               borderRadius: 10, fontFamily: '"Inter", sans-serif',
               background: `${p.color}10`,
               border: `1px solid ${p.color}40`,
+              display: 'flex', flexDirection: 'column', justifyContent: 'center',
             }}>
               <div style={{ fontSize: 16, fontWeight: 600, color: p.color, textShadow: `0 0 10px ${p.color}60` }}>{p.label}</div>
-              <div style={{ fontSize: 12, color: colors.textMuted, marginTop: 3 }}>{p.sub}</div>
+              <div style={{ fontSize: 13, color: colors.textMuted, marginTop: 3 }}>{p.sub}</div>
             </div>
             {i < 3 && (
               <div style={{
                 fontSize: 16, color: c + 'aa',
-                fontFamily: '"JetBrains Mono"', paddingBottom: 12,
+                fontFamily: '"JetBrains Mono"',
+                display: 'flex', alignItems: 'center',
                 textShadow: `0 0 8px ${c}40`,
               }}>{'\u2192'}</div>
             )}

@@ -28,7 +28,7 @@ import { url } from '../../utils/url';
 </p>
 
 <div class="p-4 rounded-lg mb-8" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
-  <div class="font-mono text-xs mb-1" style="color: var(--color-primary); letter-spacing: 0.08em; text-transform: uppercase;">
+  <div class="font-mono text-sm mb-1" style="color: var(--color-primary); letter-spacing: 0.08em; text-transform: uppercase;">
     New to electricity?
   </div>
   <div class="text-sm" style="color: var(--color-text-muted);">
@@ -45,15 +45,15 @@ import { url } from '../../utils/url';
 
 <h2 id="the-grid-is-huge">The Grid is Huge</h2>
 
-<div id="grid-flow-demo" class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
-  <div class="flex items-center justify-between mb-3">
-    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">ONE-WAY GRID ARCHITECTURE</div>
-  </div>
-  <MobileVizFallback client:visible fallbackSrc="/images/viz/grid-flow-demo.png" alt="One-way grid architecture diagram showing power flow from generation to consumers">
-    <FullscreenWrapper client:visible label="Explore">
+<div id="grid-flow-demo" class="my-8 rounded-lg overflow-hidden relative" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
+  <FullscreenWrapper client:visible label="Explore">
+    <div class="flex items-center justify-between mb-3">
+      <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">ONE-WAY GRID ARCHITECTURE</div>
+    </div>
+    <MobileVizFallback client:visible fallbackSrc="/images/viz/grid-flow-demo.png" alt="One-way grid architecture diagram showing power flow from generation to consumers">
       <GridFlowDemo client:visible height={520} />
-    </FullscreenWrapper>
-  </MobileVizFallback>
+    </MobileVizFallback>
+  </FullscreenWrapper>
 </div>
 
 <div class="flex items-center justify-center gap-4 my-8 opacity-80 flex-wrap">
@@ -158,7 +158,7 @@ import { url } from '../../utils/url';
       <FrequencyWalkthrough client:visible height={480} />
     </FullscreenWrapper>
   </MobileVizFallback>
-  <div class="text-xs mt-3" style="color: var(--color-text-dim);">
+  <div class="text-sm mt-3" style="color: var(--color-text-dim);">
     Step through the frequency zones from 50 Hz to total collapse. Watch how the grid responds at each threshold.
   </div>
 </div>
@@ -238,7 +238,7 @@ import { url } from '../../utils/url';
   <div class="flex items-center justify-between mb-3">
     <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">Grid Frequency Simulator</div>
     <span
-      class="font-mono text-xs px-2 py-0.5 rounded"
+      class="font-mono text-sm px-2 py-0.5 rounded"
       style="background: rgba(34, 211, 238, 0.1); color: var(--color-primary); border: 1px solid rgba(34, 211, 238, 0.2);"
     >
       Interactive
@@ -249,7 +249,7 @@ import { url } from '../../utils/url';
       <FrequencyDemo client:visible />
     </FullscreenWrapper>
   </MobileVizFallback>
-  <div class="text-xs mt-3" style="color: var(--color-text-dim);">
+  <div class="text-sm mt-3" style="color: var(--color-text-dim);">
     Click a scenario to simulate a grid event. Watch how frequency responds in real time.
     The Cyber Attack scenario demonstrates what happens when automated defenses are compromised.
   </div>

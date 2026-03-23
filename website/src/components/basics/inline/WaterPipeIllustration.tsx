@@ -57,7 +57,7 @@ export default function WaterPipeIllustration() {
       const wireH = 20;
 
       // --- Water pipe section ---
-      ctx.font = '13px "JetBrains Mono", monospace';
+      ctx.font = '15px "JetBrains Mono", monospace';
       ctx.fillStyle = c.textMuted;
       ctx.textAlign = 'center';
       ctx.fillText('WATER ANALOGY', w / 2, 24);
@@ -119,7 +119,7 @@ export default function WaterPipeIllustration() {
       ctx.globalAlpha = 1;
 
       // Labels for pipe
-      ctx.font = '12px "JetBrains Mono", monospace';
+      ctx.font = '14px "JetBrains Mono", monospace';
       ctx.textAlign = 'center';
 
       // Pressure label (left side)
@@ -141,7 +141,7 @@ export default function WaterPipeIllustration() {
       ctx.fillText('(Resistance)', (narrowStart + narrowEnd) / 2, pipeY - 0);
 
       // --- Wire section ---
-      ctx.font = '13px "JetBrains Mono", monospace';
+      ctx.font = '15px "JetBrains Mono", monospace';
       ctx.fillStyle = c.textMuted;
       ctx.textAlign = 'center';
       ctx.fillText('ELECTRICAL EQUIVALENT', w / 2, wireY - 30);
@@ -196,7 +196,7 @@ export default function WaterPipeIllustration() {
       ctx.globalAlpha = 1;
 
       // Wire labels
-      ctx.font = '12px "JetBrains Mono", monospace';
+      ctx.font = '14px "JetBrains Mono", monospace';
       ctx.fillStyle = c.primary;
       ctx.fillText('Voltage', padX + 50, wireY + wireH + 18);
       ctx.fillStyle = c.primary;

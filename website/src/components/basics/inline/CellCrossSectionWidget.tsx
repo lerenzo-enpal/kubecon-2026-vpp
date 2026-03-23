@@ -122,7 +122,7 @@ export default function CellCrossSectionWidget() {
       ctx.globalAlpha = 1;
 
       // Labels
-      ctx.font = '12px "JetBrains Mono", monospace';
+      ctx.font = '14px "JetBrains Mono", monospace';
       ctx.textAlign = 'center';
 
       ctx.fillStyle = c.textMuted;
@@ -151,7 +151,7 @@ export default function CellCrossSectionWidget() {
       ctx.stroke();
 
       // Circuit label
-      ctx.font = '12px "JetBrains Mono", monospace';
+      ctx.font = '14px "JetBrains Mono", monospace';
       ctx.fillStyle = c.textDim;
       ctx.fillText('EXTERNAL CIRCUIT', w / 2, cellTop - 36);
 
@@ -163,7 +163,7 @@ export default function CellCrossSectionWidget() {
         ctx.strokeStyle = c.success;
         ctx.lineWidth = 1.5;
         ctx.strokeRect(bulbX - 12, bulbY - 8, 24, 16);
-        ctx.font = 'bold 12px "JetBrains Mono", monospace';
+        ctx.font = 'bold 14px "JetBrains Mono", monospace';
         ctx.fillStyle = c.success;
         ctx.fillText('PWR', bulbX, bulbY + 4);
       } else {
@@ -206,7 +206,7 @@ export default function CellCrossSectionWidget() {
       ctx.stroke();
       ctx.globalAlpha = 1;
 
-      ctx.font = '12px "JetBrains Mono", monospace';
+      ctx.font = '14px "JetBrains Mono", monospace';
       ctx.fillStyle = c.primary;
       ctx.globalAlpha = 0.5;
       ctx.fillText('Li+', electrolyteX + electrolyteW / 2, arrowY - 8);
@@ -278,7 +278,7 @@ export default function CellCrossSectionWidget() {
       }
 
       // Mode label
-      ctx.font = 'bold 12px "JetBrains Mono", monospace';
+      ctx.font = 'bold 14px "JetBrains Mono", monospace';
       ctx.textAlign = 'left';
       ctx.fillStyle = isCharging ? c.success : c.accent;
       ctx.fillText(isCharging ? 'CHARGING' : 'DISCHARGING', 12, 20);

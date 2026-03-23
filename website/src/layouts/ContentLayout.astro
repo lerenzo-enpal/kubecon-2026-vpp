@@ -179,7 +179,7 @@ const topics = [
         <div class="sticky top-8">
           <!-- Basics section -->
           <details class="group" open={isBasics}>
-            <summary class="font-mono text-xs mb-2 cursor-pointer select-none list-none flex items-center gap-1 hover:opacity-70 transition-opacity" style="color: var(--color-text-dim); letter-spacing: 0.1em; text-transform: uppercase;">
+            <summary class="font-mono text-sm mb-2 cursor-pointer select-none list-none flex items-center gap-1 hover:opacity-70 transition-opacity" style="color: var(--color-text-dim); letter-spacing: 0.1em; text-transform: uppercase;">
               <span class="text-xs transition-transform group-open:rotate-90" style="color: var(--color-text-dim);">&#9656;</span>
               <a href={url("/basics")} style="text-decoration: none; color: inherit;">Basics</a>
             </summary>
@@ -219,7 +219,7 @@ const topics = [
                             <span>{s.title}</span>
                             {s.interactive && (
                               <span
-                                class="font-mono text-xs px-1.5 py-0.5 rounded flex-shrink-0"
+                                class="font-mono text-sm px-1.5 py-0.5 rounded flex-shrink-0"
                                 style="background: rgba(34, 211, 238, 0.08); color: var(--color-primary); border: 1px solid rgba(34, 211, 238, 0.15);"
                               >
                                 Interactive
@@ -237,7 +237,7 @@ const topics = [
 
           <!-- Learn VPP section -->
           <details class="group mt-2" open={!isBasics && !isResearch}>
-            <summary class="font-mono text-xs mb-2 cursor-pointer select-none list-none flex items-center gap-1 hover:opacity-70 transition-opacity" style="color: var(--color-text-dim); letter-spacing: 0.1em; text-transform: uppercase;">
+            <summary class="font-mono text-sm mb-2 cursor-pointer select-none list-none flex items-center gap-1 hover:opacity-70 transition-opacity" style="color: var(--color-text-dim); letter-spacing: 0.1em; text-transform: uppercase;">
               <span class="text-xs transition-transform group-open:rotate-90" style="color: var(--color-text-dim);">&#9656;</span>
               <a href={url("/learn")} style="text-decoration: none; color: inherit;">Learn VPP</a>
             </summary>
@@ -277,7 +277,7 @@ const topics = [
                             <span>{s.title}</span>
                             {s.interactive && (
                               <span
-                                class="font-mono text-xs px-1.5 py-0.5 rounded flex-shrink-0"
+                                class="font-mono text-sm px-1.5 py-0.5 rounded flex-shrink-0"
                                 style="background: rgba(34, 211, 238, 0.08); color: var(--color-primary); border: 1px solid rgba(34, 211, 238, 0.15);"
                               >
                                 Interactive
@@ -295,7 +295,7 @@ const topics = [
 
           <!-- Research Library -->
           <div class="mt-6 pt-4 border-t" style="border-color: var(--color-surface-light);">
-            <div class="font-mono text-xs mb-3" style="color: var(--color-text-dim); letter-spacing: 0.1em; text-transform: uppercase;">
+            <div class="font-mono text-sm mb-3" style="color: var(--color-text-dim); letter-spacing: 0.1em; text-transform: uppercase;">
               Research
             </div>
             <div class="flex flex-col gap-0.5">
@@ -367,22 +367,22 @@ const topics = [
               class="block p-3 rounded-lg transition-colors"
               style="background: rgba(34, 211, 238, 0.06); border: 1px solid rgba(34, 211, 238, 0.15);"
             >
-              <div class="font-mono text-xs mb-1" style="color: var(--color-primary); letter-spacing: 0.1em; text-transform: uppercase;">
+              <div class="font-mono text-sm mb-1" style="color: var(--color-primary); letter-spacing: 0.1em; text-transform: uppercase;">
                 KubeCon 2026
               </div>
               <div class="text-sm font-medium" style="color: var(--color-text);">
                 View the Presentation
               </div>
-              <div class="text-xs mt-1" style="color: var(--color-text-dim);">
+              <div class="text-sm mt-1" style="color: var(--color-text-dim);">
                 The talk that started this project
               </div>
             </a>
             <div class="flex flex-col gap-1.5 mt-3">
-              <a href="https://www.enpal.de/solar" target="_blank" rel="noopener" class="flex items-center justify-between px-3 py-2 rounded text-xs transition-colors hover:bg-surface" style="color: var(--color-text-dim); background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+              <a href="https://www.enpal.de/solar" target="_blank" rel="noopener" class="flex items-center justify-between px-3 py-2 rounded text-sm transition-colors hover:bg-surface" style="color: var(--color-text-dim); background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
                 <span>Get Solar</span>
                 <span class="interactive-tag-text font-mono text-xs">&rarr;</span>
               </a>
-              <a href="https://www.enpal.de/karriere" target="_blank" rel="noopener" class="flex items-center justify-between px-3 py-2 rounded text-xs transition-colors hover:bg-surface" style="color: var(--color-text-dim); background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+              <a href="https://www.enpal.de/karriere" target="_blank" rel="noopener" class="flex items-center justify-between px-3 py-2 rounded text-sm transition-colors hover:bg-surface" style="color: var(--color-text-dim); background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
                 <span>Work in Green Tech</span>
                 <span class="interactive-tag-text font-mono text-xs">&rarr;</span>
               </a>

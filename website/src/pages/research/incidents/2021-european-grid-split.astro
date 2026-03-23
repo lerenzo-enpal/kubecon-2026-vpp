@@ -1,5 +1,5 @@
 ---
-import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import ContentLayout from '../../../layouts/ContentLayout.astro';
 import IncidentHero from '../../../components/IncidentHero.astro';
 import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
@@ -10,7 +10,7 @@ import MobileVizFallback from '../../../components/MobileVizFallback';
 import { url } from '../../../utils/url';
 ---
 
-<IncidentLayout title="2021 European Grid Split" description="A single relay at a Croatian substation split Continental Europe's grid in two -- in just 42 seconds.">
+<ContentLayout title="2021 European Grid Split" description="A single relay at a Croatian substation split Continental Europe's grid in two -- in just 42 seconds.">
 
 <IncidentHero
   title="2021 European Grid Split"
@@ -157,4 +157,4 @@ import { url } from '../../../utils/url';
   '<a href="https://en.wikipedia.org/wiki/2021_European_synchronous_grid_split" target="_blank" rel="noopener">Wikipedia — 2021 European synchronous grid split</a>',
 ]} />
 
-</IncidentLayout>
+</ContentLayout>

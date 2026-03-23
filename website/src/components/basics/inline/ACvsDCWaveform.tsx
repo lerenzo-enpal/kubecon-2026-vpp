@@ -76,7 +76,7 @@ export default function ACvsDCWaveform() {
       ctx.stroke();
 
       // Y labels
-      ctx.font = '12px "JetBrains Mono", monospace';
+      ctx.font = '14px "JetBrains Mono", monospace';
       ctx.fillStyle = c.textDim;
       ctx.textAlign = 'right';
       ctx.fillText('+V', padL - 6, padT + 10);
@@ -112,7 +112,7 @@ export default function ACvsDCWaveform() {
       ctx.shadowBlur = 0;
 
       // Label
-      ctx.font = '12px "JetBrains Mono", monospace';
+      ctx.font = '14px "JetBrains Mono", monospace';
       ctx.fillStyle = isAC ? c.primary : c.accent;
       ctx.textAlign = 'center';
       if (isAC) {

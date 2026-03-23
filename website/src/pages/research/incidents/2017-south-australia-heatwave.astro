@@ -1,5 +1,5 @@
 ---
-import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import ContentLayout from '../../../layouts/ContentLayout.astro';
 import IncidentHero from '../../../components/IncidentHero.astro';
 import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
@@ -10,7 +10,7 @@ import MobileVizFallback from '../../../components/MobileVizFallback';
 import { url } from '../../../utils/url';
 ---
 
-<IncidentLayout title="2017 South Australia Heatwave" description="Extreme heat overwhelmed South Australia's grid, and a software error tripled the planned load shedding.">
+<ContentLayout title="2017 South Australia Heatwave" description="Extreme heat overwhelmed South Australia's grid, and a software error tripled the planned load shedding.">
 
 <IncidentHero
   title="2017 South Australia Heatwave"
@@ -37,7 +37,7 @@ import { url } from '../../../utils/url';
   <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">What Happened</h2>
 
   <p class="text-base leading-relaxed mb-4" style="color: var(--color-text-muted);">
-    On one of the hottest days in 80 years, air conditioners across South Australia pushed electricity demand to extreme levels -- far beyond what forecasters predicted. Wind generation collapsed to just 96 MW (a fraction of what was expected), and the state's largest gas plant was sitting idle because its owner found it more profitable to sell gas on the open market. <a href="#heatwave-timeline" class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
+    On one of the hottest days in 80 years, air conditioners across South Australia pushed electricity demand to extreme levels -- far beyond what forecasters predicted. Wind generation collapsed to just 96 MW (a fraction of what was expected), and the state's largest gas plant was sitting idle because its owner found it more profitable to sell gas on the open market. <a href="#heatwave-timeline" class="font-mono text-sm" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
   </p>
 
   <div id="heatwave-map" class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
@@ -153,4 +153,4 @@ import { url } from '../../../utils/url';
   "Bureau of Meteorology: Special Climate Statement 61 -- heatwave in southeast Australia, February 2017",
 ]} />
 
-</IncidentLayout>
+</ContentLayout>

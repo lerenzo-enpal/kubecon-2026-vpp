@@ -104,23 +104,30 @@ export default function UpcomingBatteryTech() {
                   {tech.desc}
                 </p>
               </div>
-              <span className="font-mono text-xs flex-shrink-0 mt-1" style={{ color: 'var(--color-text-dim)' }}>
-                {isOpen ? '[-]' : '[+]'}
+              <span
+                className="font-mono text-sm flex-shrink-0 mt-0.5 px-2 py-0.5 rounded transition-colors"
+                style={{
+                  color: isOpen ? 'var(--color-primary)' : 'var(--color-text-muted)',
+                  background: isOpen ? 'rgba(34, 211, 238, 0.08)' : 'var(--color-bg-alt)',
+                  border: `1px solid ${isOpen ? 'rgba(34, 211, 238, 0.2)' : 'var(--color-surface-light)'}`,
+                }}
+              >
+                {isOpen ? '- less' : '+ more'}
               </span>
             </div>
 
-            {/* Bottom row: maturity bar + key facts side by side */}
-            <div className="flex flex-col md:flex-row gap-4">
+            {/* Bottom row: maturity bar + key facts side by side, 50/50 */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Maturity bar */}
-              <div className="md:w-56 flex-shrink-0">
-                <div className="font-mono text-xs mb-1" style={{ color: 'var(--color-text-dim)' }}>
+              <div>
+                <div className="font-mono text-sm mb-1.5" style={{ color: 'var(--color-text-dim)' }}>
                   Maturity
                 </div>
                 <div className="flex gap-1">
                   {maturityLabels.map((label, i) => (
                     <div
                       key={label}
-                      className="flex-1 text-center py-1 rounded text-xs font-mono"
+                      className="flex-1 text-center py-1 rounded text-sm font-mono"
                       style={{
                         background: i <= tech.maturity ? 'rgba(34, 211, 238, 0.15)' : 'var(--color-bg-alt)',
                         color: i <= tech.maturity ? 'var(--color-primary)' : 'var(--color-text-dim)',
@@ -134,7 +141,7 @@ export default function UpcomingBatteryTech() {
               </div>
 
               {/* Key facts */}
-              <div className="flex-1 flex flex-col gap-1 text-xs" style={{ color: 'var(--color-text-muted)' }}>
+              <div className="flex flex-col gap-1.5 text-sm" style={{ color: 'var(--color-text-muted)' }}>
                 <div>
                   <span className="font-mono" style={{ color: 'var(--color-success)' }}>+</span>{' '}
                   {tech.advantage}

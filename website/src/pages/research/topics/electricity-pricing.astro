@@ -1,9 +1,9 @@
 ---
-import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import ContentLayout from '../../../layouts/ContentLayout.astro';
 import { url } from '../../../utils/url';
 ---
 
-<IncidentLayout title="Electricity Pricing" description="How solar is reshaping the electricity price curve — negative prices, the duck curve, and the arbitrage opportunity.">
+<ContentLayout title="Electricity Pricing" description="How solar is reshaping the electricity price curve — negative prices, the duck curve, and the arbitrage opportunity.">
 
 <div style="border-left: 4px solid var(--color-primary); padding-left: 20px; margin-bottom: 48px;">
   <h1 style="color: var(--color-primary);">Electricity Pricing</h1>
@@ -16,19 +16,19 @@ import { url } from '../../../utils/url';
 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 my-8">
   <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-primary);">
     <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">575</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">negative price hours (2025)</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">negative price hours (2025)</div>
   </div>
   <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-primary);">
     <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">10x</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">spread growth in 10 years</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">spread growth in 10 years</div>
   </div>
   <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-primary);">
     <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">106 GW</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">German solar capacity (2025)</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">German solar capacity (2025)</div>
   </div>
   <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-primary);">
     <div class="font-mono font-extrabold text-2xl" style="color: var(--color-primary);">EUR 936</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">peak price (Dec 2024)</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">peak price (Dec 2024)</div>
   </div>
 </div>
 
@@ -173,7 +173,7 @@ import { url } from '../../../utils/url';
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
   <div class="p-5 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-danger);">
-    <div class="font-mono text-xs mb-2" style="color: var(--color-danger);">PRICE SPIKE — DUNKELFLAUTE</div>
+    <div class="font-mono text-sm mb-2" style="color: var(--color-danger);">PRICE SPIKE — DUNKELFLAUTE</div>
     <p class="mb-2 text-sm" style="max-width: none;">
       Dec 12, 2024: EUR 936.28/MWh during the <a href={url("/research/incidents/2024-dunkelflaute-germany")}>Dunkelflaute</a> — the dreaded dark doldrums when both
       wind and solar collapse simultaneously under high-pressure winter weather.
@@ -183,7 +183,7 @@ import { url } from '../../../utils/url';
     </p>
   </div>
   <div class="p-5 rounded-lg" style="background: var(--color-surface); border: 1px solid var(--color-success);">
-    <div class="font-mono text-xs mb-2" style="color: var(--color-success);">NEGATIVE EXTREME</div>
+    <div class="font-mono text-sm mb-2" style="color: var(--color-success);">NEGATIVE EXTREME</div>
     <p class="mb-2 text-sm" style="max-width: none;">
       May 11, 2025: -250.32 EUR/MWh at midday. The grid was paying generators EUR 250 per MWh to
       stop producing electricity. A battery charging at that moment was being paid to store energy.
@@ -215,16 +215,16 @@ import { url } from '../../../utils/url';
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
   <a href={url("/research/topics/german-grid-curtailment")} class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
     <div class="font-mono text-sm font-bold" style="color: var(--color-accent);">German Grid Curtailment</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">The north-south bottleneck driving waste</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">The north-south bottleneck driving waste</div>
   </a>
   <a href={url("/research/topics/enpal-flexa")} class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
     <div class="font-mono text-sm font-bold" style="color: var(--color-success);">Enpal and Flexa</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">Capturing the spread at scale</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">Capturing the spread at scale</div>
   </a>
   <a href={url("/research/topics/grid-flexibility-costs")} class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
     <div class="font-mono text-sm font-bold" style="color: var(--color-accent);">Grid Flexibility Costs</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">The economics of old vs. new flexibility</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">The economics of old vs. new flexibility</div>
   </a>
 </div>
 
-</IncidentLayout>
+</ContentLayout>

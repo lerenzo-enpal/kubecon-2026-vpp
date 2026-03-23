@@ -163,9 +163,10 @@ export default function ArchitectureExplorer({ step = 0 }) {
         </div>
       )}
 
-      {/* Info panel (flies in from left or right, below title area) */}
+      {/* Info panel (flies in from left or right) */}
       {focus.panel !== null && focus.panelSide && (
-        <div className="absolute z-20 flex items-end" style={{ top: 110, bottom: 36,
+        <div className="absolute z-20 rounded-lg overflow-hidden" style={{
+          top: 160, bottom: 40,
           [focus.panelSide === 'right' ? 'right' : 'left']: 16,
           width: 420,
           opacity: isOverview ? 0 : 1,
@@ -174,14 +175,14 @@ export default function ArchitectureExplorer({ step = 0 }) {
             : 'translateX(0)',
           transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s',
           pointerEvents: isOverview ? 'none' : 'auto',
+          background: 'rgba(5, 8, 16, 0.94)',
+          border: `1px solid ${focus.panelColor}35`,
+          boxShadow: `0 0 30px ${focus.panelColor}15, inset 0 0 20px ${focus.panelColor}05`,
+          backdropFilter: 'blur(12px)',
+          padding: '16px 20px',
+          display: 'flex', flexDirection: 'column', justifyContent: 'center',
         }}>
-          <div className="rounded-lg w-full max-h-full overflow-y-auto" style={{
-            background: 'rgba(5, 8, 16, 0.94)',
-            border: `1px solid ${focus.panelColor}35`,
-            boxShadow: `0 0 30px ${focus.panelColor}15, inset 0 0 20px ${focus.panelColor}05`,
-            backdropFilter: 'blur(12px)',
-            padding: '16px 20px',
-          }}>
+          <div>
             <Corners color={focus.panelColor + '50'} size={10} />
 
             {/* Title */}

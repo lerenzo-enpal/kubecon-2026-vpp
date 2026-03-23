@@ -1,12 +1,12 @@
 ---
-import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import ContentLayout from '../../../layouts/ContentLayout.astro';
 import CurtailmentChart from '../../../components/CurtailmentChart.tsx';
 import ChartEnlarger from '../../../components/ChartEnlarger.tsx';
 import FullscreenWrapper from '../../../components/FullscreenWrapper.tsx';
 import { url } from '../../../utils/url';
 ---
 
-<IncidentLayout title="German Grid Curtailment" description="Germany's north-south bottleneck wastes billions in clean energy and costs consumers EUR 2.8 billion per year.">
+<ContentLayout title="German Grid Curtailment" description="Germany's north-south bottleneck wastes billions in clean energy and costs consumers EUR 2.8 billion per year.">
 
 <div style="border-left: 4px solid var(--color-accent); padding-left: 20px; margin-bottom: 48px;">
   <h1 style="color: var(--color-accent);">German Grid Curtailment</h1>
@@ -19,19 +19,19 @@ import { url } from '../../../utils/url';
 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 my-8">
   <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-accent);">
     <div class="font-mono font-extrabold text-2xl" style="color: var(--color-accent);">9.3 TWh</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">curtailed in 2024</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">curtailed in 2024</div>
   </div>
   <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-accent);">
     <div class="font-mono font-extrabold text-2xl" style="color: var(--color-accent);">EUR 2.8B</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">congestion costs (2024)</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">congestion costs (2024)</div>
   </div>
   <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-accent);">
     <div class="font-mono font-extrabold text-2xl" style="color: var(--color-accent);">860+</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">distribution grid operators</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">distribution grid operators</div>
   </div>
   <div class="p-4 rounded-lg text-center" style="background: var(--color-bg-alt); border: 1px solid var(--color-accent);">
     <div class="font-mono font-extrabold text-2xl" style="color: var(--color-accent);">2028</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">HVDC corridors expected</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">HVDC corridors expected</div>
   </div>
 </div>
 
@@ -207,7 +207,7 @@ import { url } from '../../../utils/url';
 </p>
 
 <div class="p-5 rounded-lg my-8" style="background: var(--color-surface); border: 1px solid var(--color-accent);">
-  <div class="font-mono text-xs mb-2" style="color: var(--color-accent);">REDISPATCH COSTS OVER TIME</div>
+  <div class="font-mono text-sm mb-2" style="color: var(--color-accent);">REDISPATCH COSTS OVER TIME</div>
   <p class="mb-0" style="max-width: none;">
     Redispatch costs more than doubled since 2019, averaging EUR 6.8/MWh of net electricity
     consumption in 2023 (source: <a href="https://www.bundesnetzagentur.de" target="_blank" rel="noopener">BNetzA</a>). Germany's remedial action volume hit 6.7% of national demand. These costs
@@ -236,16 +236,16 @@ import { url } from '../../../utils/url';
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
   <a href={url("/research/topics/grid-flexibility-costs")} class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
     <div class="font-mono text-sm font-bold" style="color: var(--color-accent);">Grid Flexibility Costs</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">Peakers, spinning reserves, congestion</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">Peakers, spinning reserves, congestion</div>
   </a>
   <a href={url("/research/topics/electricity-pricing")} class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
     <div class="font-mono text-sm font-bold" style="color: var(--color-primary);">Electricity Pricing</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">Negative prices and the duck curve</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">Negative prices and the duck curve</div>
   </a>
   <a href={url("/research/topics/enpal-flexa")} class="p-4 rounded-lg no-underline block" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
     <div class="font-mono text-sm font-bold" style="color: var(--color-success);">Enpal and Flexa</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">Europe's largest VPP in the making</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">Europe's largest VPP in the making</div>
   </a>
 </div>
 
-</IncidentLayout>
+</ContentLayout>

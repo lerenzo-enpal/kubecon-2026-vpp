@@ -1,5 +1,5 @@
 ---
-import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import ContentLayout from '../../../layouts/ContentLayout.astro';
 import IncidentHero from '../../../components/IncidentHero.astro';
 import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
@@ -11,7 +11,7 @@ import MobileVizFallback from '../../../components/MobileVizFallback';
 import { url } from '../../../utils/url';
 ---
 
-<IncidentLayout title="Italy Nationwide Blackout" description="September 2003: A tree flashover in Switzerland triggered a cascade that isolated Italy from the European grid, blacking out 56 million people in under 27 minutes.">
+<ContentLayout title="Italy Nationwide Blackout" description="September 2003: A tree flashover in Switzerland triggered a cascade that isolated Italy from the European grid, blacking out 56 million people in under 27 minutes.">
 
 <IncidentHero
   title="Italy Nationwide Blackout"
@@ -40,7 +40,7 @@ import { url } from '../../../utils/url';
 </div>
 
 <p>
-  At 3 AM on a Sunday, a tree too close to a high-voltage line in Switzerland caused an electrical flashover on the 380 kV Lukmanier line. This single line carried Alpine hydropower into Italy, which was importing 25% of its electricity from neighboring countries. <a href="#italy-map" class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
+  At 3 AM on a Sunday, a tree too close to a high-voltage line in Switzerland caused an electrical flashover on the 380 kV Lukmanier line. This single line carried Alpine hydropower into Italy, which was importing 25% of its electricity from neighboring countries. <a href="#italy-map" class="font-mono text-sm" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
 </p>
 
 <div id="italy-map" class="my-8 rounded-lg overflow-hidden p-4 scroll-mt-20" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
@@ -141,19 +141,19 @@ import { url } from '../../../utils/url';
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-3 my-6">
   <a href={url("/research/incidents/2003-northeast-us-blackout")} class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-    <div class="font-mono text-xs mb-1" style="color: var(--color-danger);">Blackout</div>
+    <div class="font-mono text-sm mb-1" style="color: var(--color-danger);">Blackout</div>
     <div class="font-semibold text-sm" style="color: var(--color-text);">2003 Northeast US Blackout</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">Same year, same root cause: trees</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">Same year, same root cause: trees</div>
   </a>
   <a href={url("/research/incidents/2025-iberian-peninsula-blackout")} class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-    <div class="font-mono text-xs mb-1" style="color: var(--color-danger);">Blackout</div>
+    <div class="font-mono text-sm mb-1" style="color: var(--color-danger);">Blackout</div>
     <div class="font-semibold text-sm" style="color: var(--color-text);">2025 Iberian Blackout</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">Import-dependent grid, 6-second collapse</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">Import-dependent grid, 6-second collapse</div>
   </a>
   <a href={url("/research/incidents/2016-south-australia-blackout")} class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-    <div class="font-mono text-xs mb-1" style="color: var(--color-danger);">Blackout</div>
+    <div class="font-mono text-sm mb-1" style="color: var(--color-danger);">Blackout</div>
     <div class="font-semibold text-sm" style="color: var(--color-text);">2016 South Australia Blackout</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">87 seconds to system black</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">87 seconds to system black</div>
   </a>
 </div>
 
@@ -165,4 +165,4 @@ import { url } from '../../../utils/url';
   '<a href="https://en.wikipedia.org/wiki/2003_Italy_blackout" target="_blank" rel="noopener">Wikipedia — 2003 Italy blackout</a>',
 ]} />
 
-</IncidentLayout>
+</ContentLayout>

@@ -31,7 +31,7 @@ const s = severityColors[severity] || severityColors['blackout'];
     <!-- Badge row -->
     <div class="flex items-center justify-between mb-4">
       <span
-        class="inline-block font-mono text-xs font-semibold px-3 py-1 rounded-full"
+        class="inline-block font-mono text-sm font-semibold px-3 py-1 rounded-full"
         style={`background: ${s.badge}; color: ${s.border}; border: 1px solid ${s.border}30;`}
       >
         {s.label}
@@ -39,7 +39,7 @@ const s = severityColors[severity] || severityColors['blackout'];
       {interactive && (
         <a
           href={`#${mapId}`}
-          class="interactive-tag font-mono text-xs font-semibold"
+          class="interactive-tag font-mono text-sm font-semibold"
           style="text-decoration: none;"
           title="Scroll to interactive map"
         >
@@ -65,7 +65,7 @@ const s = severityColors[severity] || severityColors['blackout'];
       >
         {keyStat}
       </div>
-      <div class="font-mono text-xs mt-2" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">
+      <div class="font-mono text-sm mt-2" style="color: var(--color-text-dim); letter-spacing: 0.08em; text-transform: uppercase;">
         {keyStatLabel}
       </div>
     </div>

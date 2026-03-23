@@ -370,6 +370,30 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
 
   const bootFade = (delay, dur = 0.3) => ease((boot - delay) / dur);
 
+  // ── HUD transition animation (Hollywood scan-line reveal/dismiss) ──
+  const [hudT, setHudT] = useState(0); // 0 = small visible, 1 = large visible
+  const hudTRef = useRef(null);
+  const prevExpanded = useRef(false);
+  const isExpanded = stepIndex === steps.length - 1;
+
+  useEffect(() => {
+    if (isExpanded === prevExpanded.current) return;
+    prevExpanded.current = isExpanded;
+    cancelAnimationFrame(hudTRef.current);
+    const start = performance.now();
+    const duration = 1200; // ms
+    const tick = () => {
+      const elapsed = performance.now() - start;
+      const raw = Math.min(elapsed / duration, 1);
+      // ease-in-out cubic
+      const t = raw < 0.5 ? 4 * raw * raw * raw : 1 - Math.pow(-2 * raw + 2, 3) / 2;
+      setHudT(isExpanded ? t : 1 - t);
+      if (raw < 1) hudTRef.current = requestAnimationFrame(tick);
+    };
+    hudTRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(hudTRef.current);
+  }, [isExpanded]);
+
   // Frequency jitter: update at 2 Hz instead of every render
   const [freqJitter, setFreqJitter] = useState(0);
   useEffect(() => {
@@ -556,32 +580,69 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
         </div>
       )}
 
-      {/* ── Bottom: Duck Curve HUD panel ── */}
+      {/* ── Bottom: Duck Curve HUD panel (Hollywood transition) ── */}
       {(() => {
-        const isExpanded = stepIndex === steps.length - 1;
         const smallW = 366;
         const smallH = 120;
         const bigW = 760;
         const bigH = 260;
+
+        // ── Small HUD exit phases (hudT: 0→1) ──
+        // 0.0–0.15: glitch flicker (opacity jitters)
+        // 0.1–0.5:  scan-line wipe downward (clipPath closes)
+        // 0.4–0.6:  collapse width to zero
+        const smallFlicker = hudT < 0.15
+          ? (Math.sin(hudT * 200) * 0.5 + 0.5) * 0.4 + 0.6
+          : 1;
+        const smallClipT = Math.max(0, Math.min(1, (hudT - 0.1) / 0.4));
+        const smallClip = 1 - smallClipT; // 1→0 (reveals 100%→0%)
+        const smallCollapseT = Math.max(0, Math.min(1, (hudT - 0.4) / 0.2));
+        const smallScaleX = 1 - smallCollapseT;
+        const smallOpacity = hudT > 0.5 ? 0 : smallFlicker * (1 - smallClipT * 0.5);
+        // Scan-line glow position for small HUD exit
+        const smallScanY = smallClipT * 100;
+
+        // ── Large HUD enter phases (hudT: 0→1) ──
+        // 0.35–0.5: border/wireframe outline materializes
+        // 0.45–0.7: scan-line wipe upward reveals content
+        // 0.6–0.85: content fully opaque
+        // 0.8–1.0:  final glow pulse settles
+        const bigBorderT = Math.max(0, Math.min(1, (hudT - 0.35) / 0.15));
+        const bigScanT = Math.max(0, Math.min(1, (hudT - 0.45) / 0.25));
+        const bigContentT = Math.max(0, Math.min(1, (hudT - 0.6) / 0.25));
+        const bigGlowT = Math.max(0, Math.min(1, (hudT - 0.8) / 0.2));
+        // Subtle entrance slide from below
+        const bigSlideY = (1 - bigScanT) * 12;
+        // Scan-line glow for large HUD entrance (sweeps upward)
+        const bigScanY = (1 - bigScanT) * 100;
+
         return (
           <>
-            {/* Small HUD — shrinks horizontally to nothing on last step */}
+            {/* Small HUD — cinematic dismiss */}
             <div style={{
               ...panelBase,
               position: 'absolute', bottom: 24, left: 10,
               zIndex: 10, padding: '6px 14px',
-              opacity: isExpanded ? 0 : bootFade(1.0, 0.5),
-              transform: isExpanded
-                ? 'scaleX(0) translateY(0)'
-                : `translateY(${(1 - bootFade(1.0, 0.5)) * 15}px)`,
+              opacity: Math.min(smallOpacity, bootFade(1.0, 0.5)),
+              transform: `scaleX(${smallScaleX}) translateY(${(1 - bootFade(1.0, 0.5)) * 15}px)`,
               transformOrigin: 'left center',
-              transition: 'opacity 0.4s ease, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
               width: 396,
               height: smallH + 12,
               overflow: 'hidden',
-              pointerEvents: isExpanded ? 'none' : 'auto',
+              clipPath: `inset(0 0 ${(1 - smallClip) * 100}% 0)`,
+              pointerEvents: hudT > 0.3 ? 'none' : 'auto',
             }}>
               <Corners color={accentColor + '40'} size={10} />
+              {/* Scan-line wipe glow */}
+              {hudT > 0.05 && hudT < 0.55 && (
+                <div style={{
+                  position: 'absolute', left: 0, right: 0,
+                  top: `${smallScanY}%`, height: 2,
+                  background: `linear-gradient(90deg, transparent 5%, ${accentColor}90 20%, ${accentColor} 50%, ${accentColor}90 80%, transparent 95%)`,
+                  boxShadow: `0 0 12px 4px ${accentColor}60`,
+                  zIndex: 20, pointerEvents: 'none',
+                }} />
+              )}
               <DuckCurveHUD
                 highlightHour={currentStep.duckHighlightHour}
                 blend={currentStep.duckBlend}
@@ -592,31 +653,50 @@ export default function VPPScenarioMapSlide({ scenario = 'summer' }) {
               />
             </div>
 
-            {/* Large HUD — slides in from right to center on last step */}
+            {/* Large HUD — cinematic reveal */}
             <div style={{
               ...panelBase,
               position: 'absolute', bottom: 24,
               left: '50%',
               zIndex: 10, padding: '10px 14px',
-              opacity: isExpanded ? 1 : 0,
-              transform: isExpanded
-                ? 'translateX(-50%) translateX(0)'
-                : 'translateX(-50%) translateX(200px)',
-              transition: 'opacity 0.5s ease 0.25s, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.25s',
+              // Border materializes first, then content fills
+              opacity: bigBorderT,
+              background: bigContentT > 0.1
+                ? panelBase.background
+                : `rgba(5, 8, 16, ${0.2 + bigContentT * 0.72})`,
+              border: `1px solid ${accentColor}${Math.round(bigBorderT * 0x35).toString(16).padStart(2, '0')}`,
+              boxShadow: bigGlowT > 0
+                ? `0 0 ${20 + (1 - bigGlowT) * 30}px ${accentColor}${Math.round((0.09 + (1 - bigGlowT) * 0.15) * 255).toString(16).padStart(2, '0')}, inset 0 0 15px ${accentColor}06`
+                : panelBase.boxShadow,
+              transform: `translateX(-50%) translateY(${bigSlideY}px)`,
               width: bigW + 30,
               height: bigH + 20,
               overflow: 'hidden',
-              pointerEvents: isExpanded ? 'auto' : 'none',
+              clipPath: `inset(${(1 - bigScanT) * 100}% 0 0 0)`,
+              pointerEvents: hudT > 0.7 ? 'auto' : 'none',
             }}>
-              <Corners color={accentColor + '40'} size={10} />
-              <DuckCurveHUD
-                highlightHour={currentStep.duckHighlightHour}
-                blend={currentStep.duckBlend}
-                scenario={scenario}
-                width={bigW}
-                height={bigH}
-                expanded={true}
-              />
+              <Corners color={`${accentColor}${Math.round(bigBorderT * 0x60).toString(16).padStart(2, '0')}`} size={10} />
+              {/* Scan-line wipe glow */}
+              {hudT > 0.4 && hudT < 0.75 && (
+                <div style={{
+                  position: 'absolute', left: 0, right: 0,
+                  top: `${bigScanY}%`, height: 2,
+                  background: `linear-gradient(90deg, transparent 5%, ${accentColor}90 20%, ${accentColor} 50%, ${accentColor}90 80%, transparent 95%)`,
+                  boxShadow: `0 0 16px 6px ${accentColor}50`,
+                  zIndex: 20, pointerEvents: 'none',
+                }} />
+              )}
+              {/* Content opacity separate from container */}
+              <div style={{ opacity: bigContentT }}>
+                <DuckCurveHUD
+                  highlightHour={currentStep.duckHighlightHour}
+                  blend={currentStep.duckBlend}
+                  scenario={scenario}
+                  width={bigW}
+                  height={bigH}
+                  expanded={true}
+                />
+              </div>
             </div>
           </>
         );

@@ -1,5 +1,5 @@
 ---
-import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import ContentLayout from '../../../layouts/ContentLayout.astro';
 import IncidentHero from '../../../components/IncidentHero.astro';
 import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
@@ -11,7 +11,7 @@ import MobileVizFallback from '../../../components/MobileVizFallback';
 import { url } from '../../../utils/url';
 ---
 
-<IncidentLayout title="Hornsdale Battery Response" description="December 2017: A 100 MW battery responded 43x faster than conventional generators, preventing a cascade and proving grid-scale batteries work.">
+<ContentLayout title="Hornsdale Battery Response" description="December 2017: A 100 MW battery responded 43x faster than conventional generators, preventing a cascade and proving grid-scale batteries work.">
 
 <IncidentHero
   title="Hornsdale Battery Response"
@@ -36,7 +36,7 @@ import { url } from '../../../utils/url';
 <h2>What Happened</h2>
 
 <p>
-  Just after 2 AM on December 14, 2017, Loy Yang A Unit 3 -- a massive coal plant in Victoria -- tripped without warning, yanking 560 MW of baseload generation off the National Electricity Market. This is exactly the kind of sudden loss that triggers cascading failures. <a href="#hornsdale-timeline" class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
+  Just after 2 AM on December 14, 2017, Loy Yang A Unit 3 -- a massive coal plant in Victoria -- tripped without warning, yanking 560 MW of baseload generation off the National Electricity Market. This is exactly the kind of sudden loss that triggers cascading failures. <a href="#hornsdale-timeline" class="font-mono text-sm" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
 </p>
 
 <div id="hornsdale-map" class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
@@ -114,19 +114,19 @@ import { url } from '../../../utils/url';
   <div class="grid grid-cols-2 gap-4 mt-4">
     <div>
       <div class="font-mono font-extrabold text-xl" style="color: var(--color-success);">75%</div>
-      <div class="text-xs mt-1" style="color: var(--color-text-dim);">Regulation FCAS price reduction in SA</div>
+      <div class="text-sm mt-1" style="color: var(--color-text-dim);">Regulation FCAS price reduction in SA</div>
     </div>
     <div>
       <div class="font-mono font-extrabold text-xl" style="color: var(--color-success);">91%</div>
-      <div class="text-xs mt-1" style="color: var(--color-text-dim);">Contingency FCAS cost reduction</div>
+      <div class="text-sm mt-1" style="color: var(--color-text-dim);">Contingency FCAS cost reduction</div>
     </div>
     <div>
       <div class="font-mono font-extrabold text-xl" style="color: var(--color-primary);">&lt;2 yrs</div>
-      <div class="text-xs mt-1" style="color: var(--color-text-dim);">Time to pay for itself (A$90M cost)</div>
+      <div class="text-sm mt-1" style="color: var(--color-text-dim);">Time to pay for itself (A$90M cost)</div>
     </div>
     <div>
       <div class="font-mono font-extrabold text-xl" style="color: var(--color-primary);">60 days</div>
-      <div class="text-xs mt-1" style="color: var(--color-text-dim);">Construction time (100-day bet)</div>
+      <div class="text-sm mt-1" style="color: var(--color-text-dim);">Construction time (100-day bet)</div>
     </div>
   </div>
 </div>
@@ -155,19 +155,19 @@ import { url } from '../../../utils/url';
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-3 my-6">
   <a href={url("/research/incidents/2016-south-australia-blackout")} class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-    <div class="font-mono text-xs mb-1" style="color: var(--color-danger);">Blackout</div>
+    <div class="font-mono text-sm mb-1" style="color: var(--color-danger);">Blackout</div>
     <div class="font-semibold text-sm" style="color: var(--color-text);">2016 South Australia Blackout</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">The crisis that created this battery</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">The crisis that created this battery</div>
   </a>
   <a href={url("/research/incidents/2021-texas-ercot-winter-storm")} class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-    <div class="font-mono text-xs mb-1" style="color: var(--color-danger);">Blackout</div>
+    <div class="font-mono text-sm mb-1" style="color: var(--color-danger);">Blackout</div>
     <div class="font-semibold text-sm" style="color: var(--color-text);">2021 Texas Winter Storm</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">What happens without fast response</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">What happens without fast response</div>
   </a>
   <a href={url("/research/incidents/2017-south-australia-heatwave")} class="p-4 rounded-lg no-underline hover:opacity-80 transition-opacity" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-    <div class="font-mono text-xs mb-1" style="color: var(--color-danger);">Blackout</div>
+    <div class="font-mono text-sm mb-1" style="color: var(--color-danger);">Blackout</div>
     <div class="font-semibold text-sm" style="color: var(--color-text);">2017 SA Heatwave</div>
-    <div class="text-xs mt-1" style="color: var(--color-text-dim);">The crisis that accelerated commissioning</div>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">The crisis that accelerated commissioning</div>
   </a>
 </div>
 
@@ -180,4 +180,4 @@ import { url } from '../../../utils/url';
   '<a href="https://en.wikipedia.org/wiki/Hornsdale_Power_Reserve" target="_blank" rel="noopener">Wikipedia — Hornsdale Power Reserve</a>',
 ]} />
 
-</IncidentLayout>
+</ContentLayout>

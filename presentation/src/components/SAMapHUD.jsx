@@ -837,14 +837,13 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
           }} />
           <span style={{
             fontSize: 13, fontWeight: 700, fontFamily: '"JetBrains Mono"',
-            color: '#94a3b8', letterSpacing: '0.12em',
-          }}>
+            letterSpacing: '0.12em',
+          }} className="text-gray-400">
             {isBlackout ? 'AEMO — SA GRID' : 'FREQUENCY RESTORATION'}
           </span>
           <span style={{
-            marginLeft: 'auto', fontSize: 11, fontFamily: '"JetBrains Mono"',
-            color: '#64748b60',
-          }}>
+            marginLeft: 'auto', fontSize: 11, fontFamily: '"JetBrains Mono"'
+          }} className="text-gray-500">
             {isBlackout ? 'SEPT 28 2016' : 'OCT 9 2019'}
           </span>
         </div>
@@ -856,7 +855,9 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
             opacity: bootFade(0.5, 0.5),
           }}>
             <div style={{ fontSize: 15, fontFamily: '"Inter"', color: '#f1f5f9', fontWeight: 600, lineHeight: 1.5, marginBottom: 4 }}>
-              South Australia VPP — ~1,100 homes with Tesla Powerwalls
+              Autonnomously stabalizing the grid.
+              <br />
+              <span className="text-gray-400">South Austrilia VPP</span>
             </div>
             <div style={{ fontSize: 13, fontFamily: '"Inter"', color: '#94a3b8cc', lineHeight: 1.5 }}>
               One of the world's first proofs that distributed home batteries can autonomously stabilize a grid — no central dispatch needed.

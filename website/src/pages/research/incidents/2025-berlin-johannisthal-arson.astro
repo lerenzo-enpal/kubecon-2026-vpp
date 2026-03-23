@@ -1,5 +1,5 @@
 ---
-import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import ContentLayout from '../../../layouts/ContentLayout.astro';
 import IncidentHero from '../../../components/IncidentHero.astro';
 import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
@@ -10,7 +10,7 @@ import MobileVizFallback from '../../../components/MobileVizFallback';
 import { url } from '../../../utils/url';
 ---
 
-<IncidentLayout title="2025 Berlin Johannisthal Arson" description="Arsonists targeted two transmission pylons in southeast Berlin, cutting power to 50,000 households for up to 60 hours.">
+<ContentLayout title="2025 Berlin Johannisthal Arson" description="Arsonists targeted two transmission pylons in southeast Berlin, cutting power to 50,000 households for up to 60 hours.">
 
 <IncidentHero
   title="Berlin Johannisthal Arson"
@@ -37,7 +37,7 @@ import { url } from '../../../utils/url';
   <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">What Happened</h2>
 
   <p class="text-base leading-relaxed mb-4" style="color: var(--color-text-muted);">
-    At around 3:30 AM, unknown attackers set fire to two 110 kV transmission pylons in the Johannisthal area of southeast Berlin. The pylons stood at the transition point where overhead power lines connect to underground cables -- a critical junction in the grid topology. The fires destroyed multiple high-voltage cables, severing power to several distribution substations at once. <a href="#berlin-map" class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
+    At around 3:30 AM, unknown attackers set fire to two 110 kV transmission pylons in the Johannisthal area of southeast Berlin. The pylons stood at the transition point where overhead power lines connect to underground cables -- a critical junction in the grid topology. The fires destroyed multiple high-voltage cables, severing power to several distribution substations at once. <a href="#berlin-map" class="font-mono text-sm" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
   </p>
 
   <div id="berlin-map" class="my-8 rounded-lg overflow-hidden p-4 scroll-mt-20" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
@@ -150,4 +150,4 @@ import { url } from '../../../utils/url';
   "Indymedia: Anonymous claim of responsibility (archived)",
 ]} />
 
-</IncidentLayout>
+</ContentLayout>

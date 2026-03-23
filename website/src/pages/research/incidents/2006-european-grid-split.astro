@@ -1,5 +1,5 @@
 ---
-import IncidentLayout from '../../../layouts/IncidentLayout.astro';
+import ContentLayout from '../../../layouts/ContentLayout.astro';
 import IncidentHero from '../../../components/IncidentHero.astro';
 import QuickFacts from '../../../components/QuickFacts.astro';
 import TimelineEvent from '../../../components/TimelineEvent.astro';
@@ -10,7 +10,7 @@ import MobileVizFallback from '../../../components/MobileVizFallback';
 import { url } from '../../../utils/url';
 ---
 
-<IncidentLayout title="2006 European Grid Split" description="How a cruise ship passage split Europe's power grid into three islands, leaving 15 million households in the dark.">
+<ContentLayout title="2006 European Grid Split" description="How a cruise ship passage split Europe's power grid into three islands, leaving 15 million households in the dark.">
 
 <IncidentHero
   title="2006 European Grid Split"
@@ -37,7 +37,7 @@ import { url } from '../../../utils/url';
   <h2 class="text-2xl font-bold mb-4" style="color: var(--color-text);">What Happened</h2>
 
   <p class="text-base leading-relaxed mb-4" style="color: var(--color-text-muted);">
-    A cruise ship called the <em>Norwegian Pearl</em> needed to pass under a high-voltage power line crossing the Ems River in northern Germany. To make room, the operator switched off the line -- a routine procedure they had done before. But this time, the rest of the grid was already under stress from heavy wind power flowing south. <a href="#europe-map" class="font-mono text-xs" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
+    A cruise ship called the <em>Norwegian Pearl</em> needed to pass under a high-voltage power line crossing the Ems River in northern Germany. To make room, the operator switched off the line -- a routine procedure they had done before. But this time, the rest of the grid was already under stress from heavy wind power flowing south. <a href="#europe-map" class="font-mono text-sm" style="color: var(--color-primary); opacity: 0.7;">(continue below)</a>
   </p>
 
   <div id="europe-map" class="my-8 rounded-lg overflow-hidden p-4 scroll-mt-20" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
@@ -166,4 +166,4 @@ import { url } from '../../../utils/url';
   '<a href="https://en.wikipedia.org/wiki/2006_European_blackout" target="_blank" rel="noopener">Wikipedia — 2006 European blackout</a>',
 ]} />
 
-</IncidentLayout>
+</ContentLayout>
