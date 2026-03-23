@@ -8,14 +8,11 @@ import { colors } from '../theme';
  * Energy Market → Trader (Entrix) → Flexa → Enpal Cloud → IoT Homes
  */
 
-// Drawer info for each highlighted node (steps 1-3)
+// Drawer info for each highlighted node (steps 1-2)
 const DRAWER_INFO = [
   { nodeId: 'market', title: 'Energy Market', sub: 'Day-Ahead + Intraday', color: colors.accent,
     desc: 'Think of it as a stock market for electricity. Producers and consumers trade power in 15-minute blocks, a day ahead and in real time. VPPs participate by selling stored energy when prices are high and buying when they are low.',
     detail: 'Traded in 15-minute increments' },
-  { nodeId: 'trader', title: 'Trading Gateway', sub: 'Entrix', color: colors.accent,
-    desc: 'Algorithmic trading platform that bids aggregated battery capacity into wholesale energy markets. Entrix optimizes across day-ahead, intraday, and balancing markets.',
-    detail: 'Optimizes across multiple market types' },
   { nodeId: 'controller', title: 'VPP Controller', sub: 'Flexa (Enpal + Entrix JV)', color: colors.primary,
     desc: 'The orchestration brain. Flexa receives market commitments and decides which distributed assets respond, when, and how — dispatching commands to thousands of homes in real time.',
     detail: 'Market signal to device in <2 seconds' },

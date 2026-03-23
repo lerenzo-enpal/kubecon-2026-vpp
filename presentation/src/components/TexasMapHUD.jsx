@@ -164,12 +164,39 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
 
   useEffect(() => {
     if (slideActive) {
-      // Always reset when slide becomes active (entering from any direction)
-      setFailed(new Set()); setIncident(new Map()); setMode('idle'); setElapsed(0); setActiveStep(-1);
-      setStepIndex(-1); setViewState(VIEWS[variant] || VIEWS.hud);
-      setBoot(0); clearIncidentTimers(); lastAutoStep.current = -1;
-      prevSpectacleStep.current = spectacleStep; // sync to current step to suppress stale triggers
+      clearIncidentTimers();
       wasActiveRef.current = true;
+
+      if (spectacleStep < 2) {
+        // Entering at intro or HUD-reveal step — clean slate
+        setFailed(new Set()); setIncident(new Map()); setMode('idle'); setElapsed(0);
+        setActiveStep(-1); setStepIndex(-1); setBoot(0);
+        lastAutoStep.current = -1;
+        setViewState(VIEWS[variant] || VIEWS.hud);
+      } else {
+        // Entering mid-cascade (e.g. navigated back from the next slide)
+        // Rebuild failed set up to the current spectacle step
+        const targetIdx = Math.min(spectacleStep - 2, CASCADE.length - 1);
+        const nf = new Set();
+        for (let i = 0; i <= targetIdx; i++) CASCADE[i].ids.forEach(id => nf.add(id));
+        nf.delete('comanche');
+        setFailed(nf);
+        setMode('stepping');
+        setStepIndex(targetIdx);
+        setActiveStep(targetIdx);
+        setElapsed(CASCADE[targetIdx].time + 1);
+        lastAutoStep.current = targetIdx;
+        setBoot(4.1); // skip boot animation — go straight to fully visible HUD
+        triggerIncident(CASCADE[targetIdx].ids);
+        const target = getStepView(targetIdx, VIEWS[variant] || VIEWS.hud);
+        setViewState({
+          ...target,
+          transitionDuration: 500,
+          transitionInterpolator: FLY_TO,
+          transitionEasing: t => 1 - Math.pow(1 - t, 3),
+        });
+      }
+      prevSpectacleStep.current = spectacleStep;
     } else {
       wasActiveRef.current = false;
     }
@@ -211,15 +238,39 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
     if (spectacleStep === prevSpectacleStep.current) return; // no change
 
     if (spectacleStep < prevSpectacleStep.current) {
-      // Going back — reset to idle
-      setFailed(new Set()); setIncident(new Map()); setMode('idle'); setElapsed(0);
-      setActiveStep(-1); setStepIndex(-1); clearIncidentTimers(); lastAutoStep.current = -1;
-      setViewState({
-        ...defaultView,
-        transitionDuration: 500,
-        transitionInterpolator: FLY_TO,
-        transitionEasing: t => 1 - Math.pow(1 - t, 3),
-      });
+      // Going back — rebuild state to match the target step
+      clearIncidentTimers();
+      if (spectacleStep < 2) {
+        // Back to before cascade — reset to idle (step 0 = intro, step 1 = HUD reveal)
+        setFailed(new Set()); setIncident(new Map()); setMode(spectacleStep >= 1 ? 'idle' : 'idle'); setElapsed(0);
+        setActiveStep(-1); setStepIndex(-1); lastAutoStep.current = -1;
+        setViewState({
+          ...defaultView,
+          transitionDuration: 500,
+          transitionInterpolator: FLY_TO,
+          transitionEasing: t => 1 - Math.pow(1 - t, 3),
+        });
+      } else {
+        // Back to a previous cascade step — rebuild failed set up to that step
+        const targetIdx = spectacleStep - 2;
+        setMode('stepping');
+        setStepIndex(targetIdx);
+        const nf = new Set();
+        for (let i = 0; i <= targetIdx; i++) CASCADE[i].ids.forEach(id => nf.add(id));
+        nf.delete('comanche');
+        setFailed(nf);
+        setActiveStep(targetIdx);
+        setElapsed(CASCADE[targetIdx].time + 1);
+        lastAutoStep.current = targetIdx;
+        triggerIncident(CASCADE[targetIdx].ids);
+        const target = getStepView(targetIdx, defaultView);
+        setViewState({
+          ...target,
+          transitionDuration: 800,
+          transitionInterpolator: FLY_TO,
+          transitionEasing: t => 1 - Math.pow(1 - t, 3),
+        });
+      }
     } else if (spectacleStep >= 2) {
       // Cascade steps start at spectacleStep 2 (offset by 1 for HUD reveal step)
       const targetIdx = spectacleStep - 2;

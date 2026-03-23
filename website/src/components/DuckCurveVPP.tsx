@@ -38,8 +38,8 @@ const netDemand = baseDemand.map((d, i) => d - solarGen[i]);
 
 // With VPP: batteries charge midday (absorb overgeneration), discharge evening (shave peak)
 const batteryAction = [
-  0, 0, 0, 0, 0, 0, 0, -3, -10, -16, -20, -22,
-  -22, -20, -16, -10, 4, 14, 18, 16, 10, 5, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 3, 10, 16, 20, 22,
+  22, 20, 16, 10, -4, -14, -18, -16, -10, -5, 0, 0,
 ];
 
 const vppNetDemand = netDemand.map((d, i) => d + batteryAction[i]);
@@ -193,7 +193,7 @@ export default function DuckCurveVPP({ height = 400 }: Props) {
       ctx.beginPath();
       let started = false;
       HOURS.forEach((h) => {
-        if (batteryAction[h] < -1) {
+        if (batteryAction[h] > 1) {
           const x = padLeft + h * xScale;
           const yNet = padTop + (Y_MAX - netDemand[h]) * yScale;
           if (!started) { ctx.moveTo(x, yNet); started = true; }
@@ -206,7 +206,7 @@ export default function DuckCurveVPP({ height = 400 }: Props) {
         }
       });
       for (let h = 18; h >= 0; h--) {
-        if (batteryAction[h] < -1) {
+        if (batteryAction[h] > 1) {
           const x = padLeft + h * xScale;
           const yVpp = padTop + (Y_MAX - lerp(netDemand[h], vppNetDemand[h], blend)) * yScale;
           ctx.lineTo(x, yVpp);
@@ -220,7 +220,7 @@ export default function DuckCurveVPP({ height = 400 }: Props) {
       ctx.beginPath();
       started = false;
       HOURS.forEach((h) => {
-        if (batteryAction[h] > 1) {
+        if (batteryAction[h] < -1) {
           const x = padLeft + h * xScale;
           const yNet = padTop + (Y_MAX - netDemand[h]) * yScale;
           if (!started) { ctx.moveTo(x, yNet); started = true; }
@@ -228,7 +228,7 @@ export default function DuckCurveVPP({ height = 400 }: Props) {
         }
       });
       for (let h = 23; h >= 0; h--) {
-        if (batteryAction[h] > 1) {
+        if (batteryAction[h] < -1) {
           const x = padLeft + h * xScale;
           const yVpp = padTop + (Y_MAX - lerp(netDemand[h], vppNetDemand[h], blend)) * yScale;
           ctx.lineTo(x, yVpp);
