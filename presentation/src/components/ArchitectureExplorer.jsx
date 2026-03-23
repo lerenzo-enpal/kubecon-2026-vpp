@@ -151,7 +151,7 @@ export default function ArchitectureExplorer({ step = 0 }) {
 
       {/* Focus label badge */}
       {focus.label && (
-        <div className="absolute left-4 z-20" style={{ top: 118,
+        <div className="absolute left-8 z-20" style={{ top: 118,
           opacity: isOverview ? 0 : 1,
           transform: isOverview ? 'translateY(-10px)' : 'translateY(0)',
           transition: 'all 0.6s ease 0.4s',
