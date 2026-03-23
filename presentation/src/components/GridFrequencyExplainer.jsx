@@ -280,7 +280,7 @@ export default function GridFrequencyExplainer({ width = 1200, height = 440, ste
       ctx.stroke();
 
       // === Bottom status ===
-      const statusY = height - 30;
+      const statusY = height - 50;
       let statusText, statusColor, subText;
 
       if (s === 0) {
@@ -310,9 +310,9 @@ export default function GridFrequencyExplainer({ width = 1200, height = 440, ste
       ctx.textAlign = 'center';
       ctx.fillText(statusText, width / 2, statusY);
 
-      ctx.font = '18px "Inter"';
+      ctx.font = '20px "Inter"';
       ctx.fillStyle = colors.textMuted;
-      ctx.fillText(subText, width / 2, statusY + 30);
+      ctx.fillText(subText, width / 2, statusY + 32);
 
       if (isActive) animRef.current = requestAnimationFrame(draw);
     }
