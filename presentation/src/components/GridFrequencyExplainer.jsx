@@ -70,8 +70,8 @@ export default function GridFrequencyExplainer({ width = 1200, height = 520 }) {
       const turbineY = height * 0.42;
       const turbineR = 90;
 
-      // Rotor speed proportional to frequency
-      const speed = isActive ? (freq / 50) * Math.PI * 2 : Math.PI * 2;
+      // Rotor speed proportional to frequency (slowed 8x so blades are visible)
+      const speed = isActive ? (freq / 50) * Math.PI * 0.25 : Math.PI * 0.25;
       const angle = elapsed * speed;
 
       // Outer ring
@@ -260,21 +260,6 @@ export default function GridFrequencyExplainer({ width = 1200, height = 520 }) {
         });
       });
 
-      // === BOTTOM: "Why does this matter?" callout ===
-      const calloutY = height * 0.85;
-      ctx.font = 'bold 18px "Inter"';
-      ctx.fillStyle = colors.primary;
-      ctx.textAlign = 'center';
-      ctx.fillText(
-        '2.5 Hz separates a stable grid from total collapse.',
-        width / 2, calloutY,
-      );
-      ctx.font = '15px "Inter"';
-      ctx.fillStyle = colors.textMuted;
-      ctx.fillText(
-        'That margin is smaller than the difference between two piano notes.',
-        width / 2, calloutY + 24,
-      );
 
       if (isActive) animRef.current = requestAnimationFrame(draw);
     }
