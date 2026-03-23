@@ -70,7 +70,7 @@ export default function AggregationPyramid({ width = 1100, height = 500 }) {
     // Home timers — staggered so they don't all fire at once
     const homeTimers = lanes.map((_, hi) => ({
       nextFire: startTime + hi * 0.06 + Math.random() * 0.2,
-      period: 0.24 + Math.random() * 0.12,
+      period: 0.19 + Math.random() * 0.1,
     }));
 
     // Fill state: fills[homeIdx][stageIdx] = { count, flashTime }
@@ -401,6 +401,12 @@ export default function AggregationPyramid({ width = 1100, height = 500 }) {
       ctx.fillText('High frequency, high volume', padLeft, height - 8);
       ctx.textAlign = 'right';
       ctx.fillText('Low frequency, high value', width - padRight, height - 8);
+
+      // Timescale indicator — bottom right, above the annotation line
+      ctx.font = 'bold 10px JetBrains Mono';
+      ctx.fillStyle = colors.textDim + 'aa';
+      ctx.textAlign = 'right';
+      ctx.fillText('\u25B6 ~80\u00D7 REALTIME', width - padRight, height - 22);
 
       // Direction arrow
       ctx.beginPath();
