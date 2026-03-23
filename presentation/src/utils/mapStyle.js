@@ -15,19 +15,20 @@ const cache = {};
 
 // Kicked off immediately on first import — resolves true if local tiles are present
 const readyPromise = (async () => {
+  const base = import.meta.env.BASE_URL;
   try {
-    const check = await fetch('/tiles/styles/dark-matter.json', { method: 'HEAD' });
+    const check = await fetch(`${base}tiles/styles/dark-matter.json`, { method: 'HEAD' });
     if (!check.ok) return false;
 
     const [labeled, nolabels] = await Promise.all([
-      fetch('/tiles/styles/dark-matter.json').then(r => r.json()),
-      fetch('/tiles/styles/dark-matter-nolabels.json').then(r => r.json()),
+      fetch(`${base}tiles/styles/dark-matter.json`).then(r => r.json()),
+      fetch(`${base}tiles/styles/dark-matter-nolabels.json`).then(r => r.json()),
     ]);
 
     for (const [region, file] of Object.entries(REGION_FILES)) {
-      const tilesUrl = `pmtiles://${window.location.origin}/tiles/${file}`;
-      cache[`${region}:labeled`]   = buildStyle(labeled,   tilesUrl);
-      cache[`${region}:nolabels`]  = buildStyle(nolabels,  tilesUrl);
+      const tilesUrl = `pmtiles://${window.location.origin}${base}tiles/${file}`;
+      cache[`${region}:labeled`]   = buildStyle(labeled,   tilesUrl, base);
+      cache[`${region}:nolabels`]  = buildStyle(nolabels,  tilesUrl, base);
     }
     return true;
   } catch {
@@ -35,7 +36,7 @@ const readyPromise = (async () => {
   }
 })();
 
-function buildStyle(styleJson, tilesUrl) {
+function buildStyle(styleJson, tilesUrl, base) {
   const style = JSON.parse(JSON.stringify(styleJson));
   for (const source of Object.values(style.sources)) {
     if (source.type === 'vector') {
@@ -45,7 +46,7 @@ function buildStyle(styleJson, tilesUrl) {
       delete source.maxzoom;
     }
   }
-  style.sprite = `${window.location.origin}/tiles/sprites/sprite`;
+  style.sprite = `${window.location.origin}${base}tiles/sprites/sprite`;
   return style;
 }
 

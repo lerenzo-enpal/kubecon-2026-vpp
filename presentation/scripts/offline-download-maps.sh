@@ -169,7 +169,7 @@ download_if_missing \
   "$OUT/styles/dark-matter-nolabels.json"
 
 # ── Sprites ────────────────────────────────────────────────────────────────────
-SPRITE_BASE="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/sprites"
+SPRITE_BASE="https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style"
 for ext in png json; do
   download_if_missing "$SPRITE_BASE/sprite.${ext}"    "$OUT/sprites/sprite.${ext}"
   download_if_missing "$SPRITE_BASE/sprite@2x.${ext}" "$OUT/sprites/sprite@2x.${ext}"
@@ -177,18 +177,21 @@ done
 
 # ── Font glyphs ────────────────────────────────────────────────────────────────
 # MapLibre fetches glyphs as {fontstack}/{start}-{end}.pbf (256-char ranges).
-# CARTO dark-matter uses Noto Sans variants from fonts.openmaptiles.org.
+# CARTO serves fonts from tiles.basemaps.cartocdn.com/fonts (same CDN as tiles).
 # We download the Latin + Latin-Extended ranges (0–3839) which cover all
 # text labels in Europe, US, and Australia. The no-labels style doesn't need
 # fonts — this only matters for dark-matter (labeled) style components.
 echo ""
 bold "── Font glyphs (Latin ranges) ────────────────────────────────────────────"
 
-FONT_BASE="https://fonts.openmaptiles.org"
+FONT_BASE="https://tiles.basemaps.cartocdn.com/fonts"
 FONTS=(
   "Noto Sans Regular"
-  "Noto Sans Bold"
-  "Noto Sans Italic"
+  "Open Sans Regular"
+  "Open Sans Bold"
+  "Open Sans Italic"
+  "Montserrat Regular"
+  "Montserrat Medium"
 )
 
 for font in "${FONTS[@]}"; do
