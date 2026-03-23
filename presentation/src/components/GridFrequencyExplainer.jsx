@@ -4,14 +4,14 @@ import { colors } from '../theme';
 
 /**
  * GridFrequencyExplainer — Left/right turbines with waveforms flowing
- * toward the center where they combine into the grid-wide frequency.
+ * toward a horizontal center box showing the combined grid frequency.
  *
  * Steps:
  *   0: Generator A alone, clean wave flows to center
- *   1: Generator B appears on right, both in sync, strong center wave
- *   2: Generator B slows slightly — subtle drift visible in center
- *   3: Generator B much slower — destructive interference, center distorted
- *   4: Generator B disconnects — center returns to clean but weaker
+ *   1: Generator B appears, both in sync, strong center wave
+ *   2: Generator B drifts slightly — center shows subtle interference
+ *   3: Generator B far out of sync — destructive interference
+ *   4: Generator B disconnects — center returns to clean but single source
  */
 
 function drawTurbine(ctx, cx, cy, r, angle, color, label, dimmed) {
@@ -63,7 +63,6 @@ function drawTurbine(ctx, cx, cy, r, angle, color, label, dimmed) {
   ctx.fillText(label, cx, cy + r + 20);
 
   if (dimmed) {
-    // Red X
     const s = r * 0.4;
     ctx.globalAlpha = 0.8;
     ctx.strokeStyle = colors.danger;
@@ -112,25 +111,16 @@ export default function GridFrequencyExplainer({ width = 1200, height = 440, ste
         ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(width, gy); ctx.stroke();
       }
 
-      // Layout zones
-      const turbineR = 60;
+      // Layout
+      const turbineR = 55;
       const leftTurbineX = 80;
       const rightTurbineX = width - 80;
-      const turbineY = height * 0.45;
-
-      // Waveform zones
-      const leftWaveX = leftTurbineX + turbineR + 20;
-      const rightWaveEnd = rightTurbineX - turbineR - 20;
-      const centerX = width / 2;
-      const leftWaveW = centerX - leftWaveX - 30;
-      const rightWaveX = centerX + 30;
-      const rightWaveW = rightWaveEnd - rightWaveX;
-      const waveY = height * 0.12;
-      const waveH = height * 0.55;
+      const topRowY = height * 0.22;   // turbines + individual waveforms
+      const centerBoxY = height * 0.55; // horizontal center box
 
       // Frequencies per step
       const freq1 = 50;
-      const freqFactors = [1, 1, 0.94, 0.82, 0]; // B's speed relative to A
+      const freqFactors = [1, 1, 0.94, 0.82, 0];
       const factor = freqFactors[Math.min(s, freqFactors.length - 1)];
       const freq2 = freq1 * factor;
       const showB = s >= 1;
@@ -140,7 +130,7 @@ export default function GridFrequencyExplainer({ width = 1200, height = 440, ste
       const angle1 = elapsed * baseSpeed;
       const angle2 = elapsed * baseSpeed * factor;
 
-      // Status colors
+      // Colors
       const colorA = colors.success;
       const colorB = disconnected ? colors.danger
         : s >= 3 ? '#f59e0b'
@@ -152,123 +142,161 @@ export default function GridFrequencyExplainer({ width = 1200, height = 440, ste
         : s >= 3 ? colors.danger
         : colors.accent;
 
-      // === Draw turbines ===
-      drawTurbine(ctx, leftTurbineX, turbineY, turbineR, angle1, colorA, 'Generator A', false);
-      if (showB) {
-        drawTurbine(ctx, rightTurbineX, turbineY, turbineR, angle2, colorB,
-          disconnected ? 'DISCONNECTED' : `Generator B`, disconnected);
-      }
+      // === Top row: turbines + individual waveforms ===
 
-      // Frequency labels under turbines
+      // Left turbine
+      drawTurbine(ctx, leftTurbineX, topRowY, turbineR, angle1, colorA, 'Generator A', false);
+
+      // Left frequency label
       ctx.font = '12px "JetBrains Mono"';
       ctx.textAlign = 'center';
       ctx.fillStyle = colorA + 'aa';
-      ctx.fillText(`${freq1.toFixed(1)} Hz`, leftTurbineX, turbineY + turbineR + 36);
-      if (showB && !disconnected) {
-        ctx.fillStyle = colorB + 'aa';
-        ctx.fillText(`${freq2.toFixed(1)} Hz`, rightTurbineX, turbineY + turbineR + 36);
+      ctx.fillText(`${freq1.toFixed(1)} Hz`, leftTurbineX, topRowY + turbineR + 34);
+
+      // Left waveform (from turbine toward center)
+      const leftWaveX = leftTurbineX + turbineR + 18;
+      const leftWaveEnd = width / 2 - 30;
+      const leftWaveW = leftWaveEnd - leftWaveX;
+      const waveAmplitude = 30;
+
+      if (leftWaveW > 40) {
+        ctx.beginPath();
+        for (let i = 0; i <= 120; i++) {
+          const t = i / 120;
+          const px = leftWaveX + t * leftWaveW;
+          const fade = Math.min(1, t * 4) * Math.min(1, (1 - t) * 4);
+          const py = topRowY - Math.sin(t * 12 + elapsed * 2.5) * waveAmplitude * fade;
+          if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        ctx.strokeStyle = colorA + '80';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.font = '12px "JetBrains Mono"';
+        ctx.fillStyle = colorA + '90';
+        ctx.textAlign = 'left';
+        ctx.fillText('50.0 Hz', leftWaveX + 4, topRowY - waveAmplitude - 8);
       }
 
-      // === Draw waveforms ===
-      const samples = 150;
+      // Right turbine
+      if (showB) {
+        drawTurbine(ctx, rightTurbineX, topRowY, turbineR, angle2, colorB,
+          disconnected ? 'DISCONNECTED' : 'Generator B', disconnected);
 
-      // Center baseline
-      ctx.setLineDash([3, 5]);
-      ctx.strokeStyle = colors.surfaceLight + '40';
+        if (!disconnected) {
+          ctx.font = '12px "JetBrains Mono"';
+          ctx.textAlign = 'center';
+          ctx.fillStyle = colorB + 'aa';
+          ctx.fillText(`${freq2.toFixed(1)} Hz`, rightTurbineX, topRowY + turbineR + 34);
+        }
+
+        // Right waveform (from turbine toward center)
+        const rightWaveEnd2 = rightTurbineX - turbineR - 18;
+        const rightWaveX = width / 2 + 30;
+        const rightWaveW = rightWaveEnd2 - rightWaveX;
+
+        if (rightWaveW > 40 && !disconnected) {
+          ctx.beginPath();
+          for (let i = 0; i <= 120; i++) {
+            const t = i / 120;
+            const px = rightWaveEnd2 - t * rightWaveW; // flows left
+            const fade = Math.min(1, t * 4) * Math.min(1, (1 - t) * 4);
+            const py = topRowY - Math.sin(t * 12 * factor + elapsed * 2.5 * factor) * waveAmplitude * fade;
+            if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+          }
+          ctx.strokeStyle = colorB + '80';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          ctx.font = '12px "JetBrains Mono"';
+          ctx.fillStyle = colorB + '90';
+          ctx.textAlign = 'right';
+          ctx.fillText(`${freq2.toFixed(1)} Hz`, rightWaveEnd2 - 4, topRowY - waveAmplitude - 8);
+        }
+      }
+
+      // Arrow lines from top waveforms down to center box
+      const arrowTopY = topRowY + turbineR + 44;
+      const arrowBotY = centerBoxY - 16;
+      ctx.setLineDash([3, 4]);
+      ctx.strokeStyle = colorA + '30';
       ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.moveTo(leftWaveX, waveY + waveH / 2);
-      ctx.lineTo(rightWaveEnd, waveY + waveH / 2);
+      ctx.moveTo(width * 0.3, arrowTopY);
+      ctx.lineTo(width * 0.4, arrowBotY);
+      ctx.stroke();
+      if (showB && !disconnected) {
+        ctx.strokeStyle = colorB + '30';
+        ctx.beginPath();
+        ctx.moveTo(width * 0.7, arrowTopY);
+        ctx.lineTo(width * 0.6, arrowBotY);
+        ctx.stroke();
+      }
+      ctx.setLineDash([]);
+
+      // === Center box: horizontal combined grid frequency ===
+      const boxPadX = width * 0.12;
+      const boxW = width - boxPadX * 2;
+      const boxH = 80;
+
+      // Box background
+      ctx.fillStyle = colors.surface + '90';
+      ctx.beginPath();
+      ctx.roundRect(boxPadX, centerBoxY, boxW, boxH, 10);
+      ctx.fill();
+      ctx.strokeStyle = centerColor + '30';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // "GRID FREQUENCY" label (left inside box)
+      ctx.font = 'bold 13px "JetBrains Mono"';
+      ctx.fillStyle = centerColor;
+      ctx.textAlign = 'left';
+      ctx.fillText('GRID FREQUENCY', boxPadX + 16, centerBoxY + 20);
+
+      // Frequency readout (left side)
+      const gridFreq = disconnected ? freq1 : (showB ? (freq1 + freq2) / 2 : freq1);
+      ctx.font = 'bold 28px "JetBrains Mono"';
+      ctx.fillStyle = centerColor;
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = centerColor + '30';
+      ctx.fillText(`${gridFreq.toFixed(1)} Hz`, boxPadX + 16, centerBoxY + 56);
+      ctx.shadowBlur = 0;
+
+      // Combined waveform (horizontal, filling most of the box)
+      const cwX = boxPadX + 180;
+      const cwW = boxW - 200;
+      const cwMidY = centerBoxY + boxH / 2;
+      const cwAmp = boxH * 0.32;
+
+      // Waveform baseline
+      ctx.setLineDash([2, 4]);
+      ctx.strokeStyle = colors.surfaceLight + '30';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(cwX, cwMidY);
+      ctx.lineTo(cwX + cwW, cwMidY);
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // Left waveform (A → center)
+      // Combined wave
       ctx.beginPath();
-      for (let i = 0; i <= samples; i++) {
-        const t = i / samples;
-        const px = leftWaveX + t * leftWaveW;
-        const fade = Math.min(1, t * 3) * Math.min(1, (1 - t) * 3);
-        const py = waveY + waveH / 2 - Math.sin(t * 12 + elapsed * 2.5) * waveH * 0.35 * fade;
-        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-      }
-      ctx.strokeStyle = colorA;
-      ctx.lineWidth = 2.5;
-      ctx.stroke();
-
-      // Left wave label
-      ctx.font = '13px "JetBrains Mono"';
-      ctx.fillStyle = colorA;
-      ctx.textAlign = 'left';
-      ctx.fillText('A: 50.0 Hz', leftWaveX, waveY - 6);
-
-      // Right waveform (B → center) — only if B is visible and not disconnected
-      if (showB && !disconnected) {
-        ctx.beginPath();
-        for (let i = 0; i <= samples; i++) {
-          const t = i / samples;
-          const px = rightWaveX + (1 - t) * rightWaveW; // flows left
-          const fade = Math.min(1, t * 3) * Math.min(1, (1 - t) * 3);
-          const py = waveY + waveH / 2 - Math.sin(t * 12 * factor + elapsed * 2.5 * factor) * waveH * 0.35 * fade;
-          if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-        }
-        ctx.strokeStyle = colorB;
-        ctx.lineWidth = 2.5;
-        ctx.stroke();
-
-        ctx.font = '13px "JetBrains Mono"';
-        ctx.fillStyle = colorB;
-        ctx.textAlign = 'right';
-        ctx.fillText(`B: ${freq2.toFixed(1)} Hz`, rightWaveEnd, waveY - 6);
-      }
-
-      // === Center: combined grid frequency ===
-      const centerWaveW = 50;
-      const centerWaveH = waveH * 0.7;
-      const centerWaveY = waveY + (waveH - centerWaveH) / 2;
-
-      // Center box background
-      ctx.fillStyle = colors.surface + '80';
-      ctx.beginPath();
-      ctx.roundRect(centerX - centerWaveW / 2 - 8, centerWaveY - 20, centerWaveW + 16, centerWaveH + 60, 8);
-      ctx.fill();
-      ctx.strokeStyle = centerColor + '30';
-      ctx.lineWidth = 1;
-      ctx.stroke();
-
-      // "GRID" label
-      ctx.font = 'bold 12px "JetBrains Mono"';
-      ctx.fillStyle = centerColor;
-      ctx.textAlign = 'center';
-      ctx.fillText('GRID', centerX, centerWaveY - 6);
-
-      // Center combined waveform (vertical, flowing down)
-      ctx.beginPath();
-      for (let i = 0; i <= 80; i++) {
-        const t = i / 80;
-        const py = centerWaveY + t * centerWaveH;
-        const wave1 = Math.sin(t * 10 + elapsed * 2.5);
-        const wave2 = (showB && !disconnected) ? Math.sin(t * 10 * factor + elapsed * 2.5 * factor) : 0;
+      for (let i = 0; i <= 180; i++) {
+        const t = i / 180;
+        const px = cwX + t * cwW;
+        const wave1 = Math.sin(t * 14 + elapsed * 2.5);
+        const wave2 = (showB && !disconnected) ? Math.sin(t * 14 * factor + elapsed * 2.5 * factor) : 0;
         const combined = wave1 + wave2;
-        const amplitude = showB && !disconnected ? 8 : 12;
-        const px = centerX + combined * amplitude;
+        const maxAmp = (showB && !disconnected) ? cwAmp * 0.5 : cwAmp;
+        const py = cwMidY - combined * maxAmp;
         if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
       }
       ctx.strokeStyle = centerColor;
       ctx.lineWidth = 2.5;
       ctx.stroke();
 
-      // Center frequency readout
-      const gridFreq = disconnected ? freq1 : (showB ? (freq1 + freq2) / 2 : freq1);
-      ctx.font = 'bold 18px "JetBrains Mono"';
-      ctx.fillStyle = centerColor;
-      ctx.textAlign = 'center';
-      ctx.fillText(`${gridFreq.toFixed(1)}`, centerX, centerWaveY + centerWaveH + 30);
-      ctx.font = '12px "JetBrains Mono"';
-      ctx.fillStyle = centerColor + 'aa';
-      ctx.fillText('Hz', centerX, centerWaveY + centerWaveH + 46);
-
-      // === Bottom status bar ===
-      const statusY = height - 40;
+      // === Bottom status ===
+      const statusY = height - 30;
       let statusText, statusColor, subText;
 
       if (s === 0) {
@@ -278,19 +306,19 @@ export default function GridFrequencyExplainer({ width = 1200, height = 440, ste
       } else if (s === 1) {
         statusText = 'Two generators in phase — waves reinforce';
         statusColor = colors.success;
-        subText = 'Synchronized generators add power to the grid';
+        subText = 'Synchronized frequencies combine into a stronger signal';
       } else if (s === 2) {
-        statusText = 'Generator B slowing — slight frequency drift';
+        statusText = 'Generator B drifting — frequencies diverging';
         statusColor = colors.accent;
-        subText = 'Demand exceeds supply — turbines feel more resistance';
+        subText = 'Even a small frequency mismatch creates interference on the grid';
       } else if (s === 3) {
-        statusText = 'Waves clashing — destructive interference';
+        statusText = 'Frequencies clashing — destructive interference';
         statusColor = '#f59e0b';
         subText = 'Out-of-sync generators damage equipment and destabilize the grid';
       } else {
         statusText = 'Generator B disconnected to prevent destruction';
         statusColor = colors.danger;
-        subText = 'Remaining generators carry all load — cascade risk';
+        subText = 'Remaining generators carry all load — if they slow too, cascade begins';
       }
 
       ctx.font = 'bold 18px "Inter"';

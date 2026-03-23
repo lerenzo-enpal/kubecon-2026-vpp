@@ -288,11 +288,11 @@ export default function Presentation() {
         </div>
         <Notes>
           [LERENZO] One generator, spinning, producing a clean 50 Hz AC waveform. This is what frequency IS.
-          [ARROW] Add a second generator. Both in sync — waves reinforce each other. More power, stable grid.
-          [ARROW] Now demand surges. Generator B feels more resistance, slows slightly. Watch the waves start to drift.
-          [ARROW] Further out of sync. The waves are fighting each other — destructive interference. Equipment at risk.
+          [ARROW] Add a second generator. Both at 50 Hz — waves reinforce. Stronger signal, stable grid.
+          [ARROW] Generator B's frequency drifts. Even a small mismatch creates interference.
+          [ARROW] Now they're far apart. The waves fight each other — destructive interference. Equipment at risk.
           [ARROW] Protection relays disconnect Generator B to prevent physical destruction.
-          But now the remaining generators carry all the load. They slow down too. That's the cascade.
+          But now the remaining generators carry all the load. If they drift too — cascade.
         </Notes>
       </Slide>
 
