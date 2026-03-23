@@ -3,23 +3,24 @@ import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
 
 /**
- * AggregationPyramid — Horizontal funnel showing progressive aggregation
- * Wide left (20s raw) → narrow right (24hr)
- * 20s ×3→ 1min ×5→ 5min ×3→ 15min ×4→ 1hr ×24→ 24hr
+ * AggregationPyramid — Parallel streams showing per-home aggregation
+ * Each home has its own independent pipeline:
+ * Home (20s) →3:1→ 1min →5:1→ 5min →3:1→ 15min →4:1→ 1hr →24:1→ 24hr
  *
- * Homes (col 0) are always full and emit dots on staggered timers.
- * Downstream circles start empty, fill as dots arrive (fill gauge),
- * then fire onward when full and reset to empty.
+ * Circles start empty, fill as dots arrive (gauge from bottom),
+ * fire onward when full, then reset to empty.
  */
 
-const LEVELS = [
-  { label: '20s',   count: 24, ratio: null, color: '#E25A1C', r: 5 },
-  { label: '1 min', count: 8,  ratio: 3,    color: '#FF3621', r: 9 },
-  { label: '5 min', count: 5,  ratio: 5,    color: '#FF3621', r: 14 },
-  { label: '15 min',count: 3,  ratio: 3,    color: colors.accent, r: 19 },
-  { label: '1 hr',  count: 2,  ratio: 4,    color: colors.primary, r: 25 },
-  { label: '24 hr', count: 1,  ratio: 24,   color: colors.success, r: 34 },
+const STAGES = [
+  { label: '1 min', ratio: 3,  color: '#FF3621', r: 6 },
+  { label: '5 min', ratio: 5,  color: '#FF3621', r: 9 },
+  { label: '15 min',ratio: 3,  color: colors.accent, r: 12 },
+  { label: '1 hr',  ratio: 4,  color: colors.primary, r: 15 },
+  { label: '24 hr', ratio: 24, color: colors.success, r: 20 },
 ];
+
+const HOME_COUNT = 8;
+const HOME_COLOR = '#E25A1C';
 
 export default function AggregationPyramid({ width = 1100, height = 500 }) {
   const canvasRef = useRef(null);
@@ -35,114 +36,110 @@ export default function AggregationPyramid({ width = 1100, height = 500 }) {
     canvas.height = height * 2;
     ctx.scale(2, 2);
 
-    const padX = 50;
-    const padY = 55;
-    const colCount = LEVELS.length;
-    const colW = (width - padX * 2) / colCount;
-    const centerY = height / 2;
+    const padLeft = 55;
+    const padRight = 30;
+    const padTop = 42;
+    const padBottom = 25;
+    const stageCount = STAGES.length;
 
-    // Compute column positions and vertical spread (pyramid shape)
-    const maxSpread = height - padY * 2;
-    const columns = LEVELS.map((level, i) => {
-      const spreadFrac = 1 - (i / (colCount - 1)) * 0.85;
-      const spread = maxSpread * spreadFrac;
-      const x = padX + i * colW + colW / 2;
-      const items = [];
-      for (let j = 0; j < level.count; j++) {
-        const t = level.count === 1 ? 0.5 : j / (level.count - 1);
-        items.push({
-          x,
-          y: centerY - spread / 2 + t * spread,
-          r: level.r,
-        });
-      }
-      return { ...level, x, spread, items };
+    // Lane layout — 8 horizontal streams
+    const laneH = (height - padTop - padBottom) / HOME_COUNT;
+    const homeX = padLeft;
+    const stageSpacing = (width - padLeft - padRight) / (stageCount + 0.3);
+
+    // Compute positions per lane
+    const lanes = Array.from({ length: HOME_COUNT }, (_, hi) => {
+      const cy = padTop + laneH * hi + laneH / 2;
+      return {
+        homeX,
+        homeY: cy,
+        stages: STAGES.map((stage, si) => ({
+          x: padLeft + stageSpacing * (si + 1),
+          y: cy,
+          r: Math.min(stage.r, laneH * 0.38),
+        })),
+      };
     });
 
     const merges = mergesRef.current;
     const flows = flowRef.current;
     merges.length = 0;
     flows.length = 0;
-
     const startTime = performance.now() / 1000;
 
-    // ── Bubble fill state ──
-    // Homes (col 0): always full, fire on independent staggered timers
-    const homeTimers = columns[0].items.map((_, ii) => ({
-      nextFire: startTime + ii * 0.035 + Math.random() * 0.3,
-      period: 0.45 + Math.random() * 0.35,
+    // Home timers — staggered so they don't all fire at once
+    const homeTimers = lanes.map((_, hi) => ({
+      nextFire: startTime + hi * 0.06 + Math.random() * 0.2,
+      period: 0.24 + Math.random() * 0.12,
     }));
 
-    // Downstream columns: track fill count per bubble
-    const fills = new Array(colCount);
-    for (let ci = 1; ci < colCount; ci++) {
-      fills[ci] = columns[ci].items.map(() => ({
-        count: 0,
-        flashTime: -1,
-      }));
-    }
+    // Fill state: fills[homeIdx][stageIdx] = { count, flashTime }
+    const fills = lanes.map(() =>
+      STAGES.map(() => ({ count: 0, flashTime: -1 }))
+    );
 
-    // Helper: find target bubble index when source (ci, ii) fires to ci+1
-    function getTargetIdx(ci, ii) {
-      const toCol = columns[ci + 1];
-      return Math.min(
-        Math.floor(ii / toCol.ratio),
-        toCol.items.length - 1,
-      );
-    }
+    // Pre-seed: random partial fills so pipeline is active on open
+    fills.forEach(homeFills => {
+      homeFills.forEach((f, si) => {
+        const ratio = STAGES[si].ratio;
+        if (si <= 2) {
+          f.count = Math.floor(Math.random() * ratio);
+        } else if (si === 3) {
+          // 1hr: seed 40-80% full
+          f.count = Math.floor(ratio * 0.4 + Math.random() * ratio * 0.4);
+        } else {
+          // 24hr: seed 70-95% full so it might fire during the talk
+          f.count = Math.floor(ratio * 0.7 + Math.random() * ratio * 0.25);
+        }
+      });
+    });
 
-    // Helper: spawn a flow dot from (fromCol, fromItem) → target in toCol
-    function spawnFlow(fromColIdx, fromItemIdx, toColIdx) {
-      const fromCol = columns[fromColIdx];
-      const toCol = columns[toColIdx];
-      const source = fromCol.items[fromItemIdx];
-      const ti = getTargetIdx(fromColIdx, fromItemIdx);
-      const target = toCol.items[ti];
-      if (!source || !target) return;
+    // Spawn a flow dot within a home's stream
+    // fromStageIdx = -1 means home → stage 0
+    function spawnFlow(hi, fromStageIdx) {
+      const toStageIdx = fromStageIdx + 1;
+      if (toStageIdx >= stageCount) return;
 
-      const lvl = fromColIdx;
+      const lane = lanes[hi];
+      const fromX = fromStageIdx < 0 ? lane.homeX : lane.stages[fromStageIdx].x;
+      const fromR = fromStageIdx < 0 ? 5 : lane.stages[fromStageIdx].r;
+      const target = lane.stages[toStageIdx];
+
       flows.push({
-        sx: source.x + source.r + 2, sy: source.y,
-        tx: target.x - target.r - 2, ty: target.y,
-        mx: (source.x + target.x) / 2, my: (source.y + target.y) / 2,
+        sx: fromX + fromR + 2,
+        sy: lane.homeY,
+        tx: target.x - target.r - 2,
+        ty: target.y,
         progress: 0,
-        speed: 0.012 + lvl * 0.002 + Math.random() * 0.006,
-        color: toCol.color,
-        size: 2 + lvl * 0.4 + Math.random() * 1.5,
-        targetCol: toColIdx,
-        targetIdx: ti,
+        speed: 0.012 + toStageIdx * 0.001 + Math.random() * 0.005,
+        color: fromStageIdx < 0 ? HOME_COLOR : STAGES[fromStageIdx].color,
+        size: 1.5 + (fromStageIdx + 1) * 1.2 + Math.random() * 1.2,
+        homeIdx: hi,
+        stageIdx: toStageIdx,
       });
     }
 
-    // Pre-seed: give downstream bubbles random partial fills so the
-    // pipeline looks active from the moment the slide opens
-    for (let ci = 1; ci < colCount; ci++) {
-      fills[ci].forEach(b => {
-        b.count = Math.floor(Math.random() * columns[ci].ratio);
+    // Pre-seed dots in flight across various streams
+    for (let k = 0; k < 14; k++) {
+      const hi = Math.floor(Math.random() * HOME_COUNT);
+      const si = Math.floor(Math.random() * stageCount);
+      const lane = lanes[hi];
+      const fromX = si === 0 ? lane.homeX : lane.stages[si - 1].x;
+      const fromR = si === 0 ? 5 : lane.stages[si - 1].r;
+      const target = lane.stages[si];
+
+      flows.push({
+        sx: fromX + fromR + 2,
+        sy: lane.homeY,
+        tx: target.x - target.r - 2,
+        ty: target.y,
+        progress: Math.random() * 0.7,
+        speed: 0.012 + si * 0.001 + Math.random() * 0.005,
+        color: si === 0 ? HOME_COLOR : STAGES[si - 1].color,
+        size: 1.5 + si * 1.2 + Math.random() * 1.2,
+        homeIdx: hi,
+        stageIdx: si,
       });
-    }
-    // Pre-seed some dots already in flight
-    for (let k = 0; k < 10; k++) {
-      const lvl = Math.floor(Math.random() * (colCount - 1));
-      const fromCol = columns[lvl];
-      const toCol = columns[lvl + 1];
-      const si = Math.floor(Math.random() * fromCol.items.length);
-      const ti = Math.min(Math.floor(si / toCol.ratio), toCol.items.length - 1);
-      const source = fromCol.items[si];
-      const target = toCol.items[ti];
-      if (source && target) {
-        flows.push({
-          sx: source.x + source.r + 2, sy: source.y,
-          tx: target.x - target.r - 2, ty: target.y,
-          mx: (source.x + target.x) / 2, my: (source.y + target.y) / 2,
-          progress: Math.random() * 0.7,
-          speed: 0.012 + lvl * 0.002 + Math.random() * 0.006,
-          color: toCol.color,
-          size: 2 + lvl * 0.4 + Math.random() * 1.5,
-          targetCol: lvl + 1,
-          targetIdx: ti,
-        });
-      }
     }
 
     function draw() {
@@ -150,7 +147,7 @@ export default function AggregationPyramid({ width = 1100, height = 500 }) {
       const isActive = slideContext?.isSlideActive;
       ctx.clearRect(0, 0, width, height);
 
-      // Background grid
+      // ── Background grid ──
       ctx.strokeStyle = colors.surfaceLight + '06';
       ctx.lineWidth = 1;
       for (let gx = 0; gx < width; gx += 40) {
@@ -160,55 +157,46 @@ export default function AggregationPyramid({ width = 1100, height = 500 }) {
         ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(width, gy); ctx.stroke();
       }
 
-      // Draw pyramid outline (funnel shape)
-      ctx.beginPath();
-      ctx.moveTo(columns[0].x - colW * 0.35, centerY - maxSpread / 2 - 5);
-      columns.forEach((col) => {
-        ctx.lineTo(col.x + colW * 0.3, centerY - col.spread / 2 - 5);
+      // ── Lane dividers ──
+      for (let hi = 1; hi < HOME_COUNT; hi++) {
+        const y = padTop + laneH * hi;
+        ctx.beginPath();
+        ctx.moveTo(padLeft - 15, y);
+        ctx.lineTo(width - padRight + 5, y);
+        ctx.strokeStyle = colors.surfaceLight + '0a';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+
+      // ── Connection lines per stream ──
+      lanes.forEach((lane) => {
+        // Home → first stage
+        ctx.beginPath();
+        ctx.moveTo(lane.homeX + 7, lane.homeY);
+        ctx.lineTo(lane.stages[0].x - lane.stages[0].r - 2, lane.stages[0].y);
+        ctx.strokeStyle = STAGES[0].color + '0c';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Between stages
+        for (let si = 0; si < stageCount - 1; si++) {
+          const from = lane.stages[si];
+          const to = lane.stages[si + 1];
+          ctx.beginPath();
+          ctx.moveTo(from.x + from.r + 2, from.y);
+          ctx.lineTo(to.x - to.r - 2, to.y);
+          ctx.strokeStyle = STAGES[si + 1].color + '0c';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
       });
-      ctx.lineTo(columns[colCount - 1].x + colW * 0.3, centerY + columns[colCount - 1].spread / 2 + 5);
-      for (let i = colCount - 1; i >= 0; i--) {
-        ctx.lineTo(columns[i].x - (i === 0 ? colW * 0.35 : -colW * 0.3), centerY + columns[i].spread / 2 + 5);
-      }
-      ctx.closePath();
-      ctx.fillStyle = colors.surfaceLight + '04';
-      ctx.fill();
-      ctx.strokeStyle = colors.surfaceLight + '12';
-      ctx.lineWidth = 1;
-      ctx.stroke();
 
-      // Draw merge connection lines between adjacent columns
-      for (let i = 0; i < colCount - 1; i++) {
-        const fromCol = columns[i];
-        const toCol = columns[i + 1];
-        const ratio = toCol.ratio;
-
-        toCol.items.forEach((target, ti) => {
-          const startIdx = Math.min(ti * ratio, fromCol.items.length - ratio);
-          for (let si = startIdx; si < Math.min(startIdx + ratio, fromCol.items.length); si++) {
-            const source = fromCol.items[si];
-            if (!source) continue;
-            ctx.beginPath();
-            ctx.moveTo(source.x + source.r + 2, source.y);
-            ctx.quadraticCurveTo(
-              (source.x + target.x) / 2,
-              (source.y + target.y) / 2,
-              target.x - target.r - 2,
-              target.y
-            );
-            ctx.strokeStyle = toCol.color + '12';
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          }
-        });
-      }
-
-      // ── Update: Home timers → spawn dots ──
+      // ── Home timers → spawn dots ──
       if (isActive) {
         homeTimers.forEach((home, hi) => {
           if (now >= home.nextFire) {
             home.nextFire = now + home.period;
-            spawnFlow(0, hi, 1);
+            spawnFlow(hi, -1);
           }
         });
       }
@@ -218,218 +206,215 @@ export default function AggregationPyramid({ width = 1100, height = 500 }) {
         const f = flows[i];
         if (isActive) f.progress += f.speed;
         if (f.progress > 1) {
-          // Dot arrived — increment target fill
-          const tci = f.targetCol;
-          const tii = f.targetIdx;
-          if (tci >= 1 && fills[tci] && fills[tci][tii]) {
-            fills[tci][tii].count++;
-
-            // Check if full → fire to next level and reset
-            if (fills[tci][tii].count >= columns[tci].ratio) {
-              fills[tci][tii].count = 0;
-              fills[tci][tii].flashTime = now;
-              if (tci < colCount - 1) {
-                spawnFlow(tci, tii, tci + 1);
+          // Arrived — increment target fill
+          const hi = f.homeIdx;
+          const si = f.stageIdx;
+          if (fills[hi] && fills[hi][si]) {
+            fills[hi][si].count++;
+            if (fills[hi][si].count >= STAGES[si].ratio) {
+              fills[hi][si].count = 0;
+              fills[hi][si].flashTime = now;
+              if (si < stageCount - 1) {
+                spawnFlow(hi, si);
               }
             }
           }
-
-          merges.push({ x: f.tx, y: f.ty, t: now, color: f.color, r: 8 });
+          merges.push({ x: f.tx, y: f.ty, t: now, color: f.color, r: 5 });
           flows.splice(i, 1);
           continue;
         }
 
+        // Linear interpolation (same Y — straight horizontal path)
         const t = f.progress;
-        const px = (1-t)*(1-t)*f.sx + 2*(1-t)*t*f.mx + t*t*f.tx;
-        const py = (1-t)*(1-t)*f.sy + 2*(1-t)*t*f.my + t*t*f.ty;
+        const px = (1 - t) * f.sx + t * f.tx;
+        const py = f.sy;
 
         ctx.beginPath();
         ctx.arc(px, py, f.size, 0, Math.PI * 2);
         ctx.fillStyle = f.color;
-        ctx.shadowBlur = 6;
+        ctx.shadowBlur = 5;
         ctx.shadowColor = f.color;
         ctx.fill();
         ctx.shadowBlur = 0;
       }
 
-      // Draw merge flash effects
+      // ── Merge flash effects ──
       for (let i = merges.length - 1; i >= 0; i--) {
         const e = merges[i];
         const age = now - e.t;
-        if (age > 0.4) { merges.splice(i, 1); continue; }
-        const p = age / 0.4;
+        if (age > 0.3) { merges.splice(i, 1); continue; }
+        const p = age / 0.3;
         ctx.beginPath();
-        ctx.arc(e.x, e.y, e.r + p * 12, 0, Math.PI * 2);
+        ctx.arc(e.x, e.y, e.r + p * 8, 0, Math.PI * 2);
         ctx.strokeStyle = e.color + Math.round((1 - p) * 80).toString(16).padStart(2, '0');
         ctx.lineWidth = 1.5 * (1 - p);
         ctx.stroke();
       }
 
-      // ── Draw bubbles at each level ──
-      columns.forEach((col, ci) => {
-        const pulse = 0.5 + 0.5 * Math.sin(now * 1.5 + ci * 1.2);
+      // ── Draw homes and stage bubbles ──
+      const pulse = 0.5 + 0.5 * Math.sin(now * 1.5);
 
-        col.items.forEach((item, ii) => {
-          if (ci === 0) {
-            // ── Homes: always fully filled ──
-            const s = item.r * 1.6;
-            const bw = s;
-            const bh = s * 0.55;
-            const rh = s * 0.45;
-            const cx = item.x;
-            const by = item.y + rh * 0.3;
+      lanes.forEach((lane, hi) => {
+        // ── Home icon (always full) ──
+        const hx = lane.homeX;
+        const hy = lane.homeY;
+        const hw = 10;
+        const bodyH = hw * 0.5;
+        const roofH = hw * 0.45;
+        const bodyTop = hy + roofH * 0.15;
 
-            // Outer glow
-            ctx.beginPath();
-            ctx.rect(cx - bw/2 - 2, by - rh - 2, bw + 4, bh + rh + 4);
-            ctx.fillStyle = col.color + '08';
-            ctx.fill();
+        // Roof
+        ctx.beginPath();
+        ctx.moveTo(hx, bodyTop - roofH);
+        ctx.lineTo(hx - hw / 2 - 1, bodyTop);
+        ctx.lineTo(hx + hw / 2 + 1, bodyTop);
+        ctx.closePath();
+        ctx.fillStyle = HOME_COLOR + 'cc';
+        ctx.shadowBlur = 5 * pulse;
+        ctx.shadowColor = HOME_COLOR + '40';
+        ctx.fill();
+        ctx.shadowBlur = 0;
 
-            // Roof (triangle)
-            ctx.beginPath();
-            ctx.moveTo(cx, by - rh);
-            ctx.lineTo(cx - bw/2 - 1, by);
-            ctx.lineTo(cx + bw/2 + 1, by);
-            ctx.closePath();
-            ctx.fillStyle = col.color + 'cc';
-            ctx.shadowBlur = 10 * pulse;
-            ctx.shadowColor = col.color + '40';
-            ctx.fill();
-            ctx.shadowBlur = 0;
+        // Body
+        ctx.beginPath();
+        ctx.rect(hx - hw / 2, bodyTop, hw, bodyH);
+        ctx.fillStyle = HOME_COLOR + 'cc';
+        ctx.fill();
 
-            // Body (rectangle)
-            ctx.beginPath();
-            ctx.rect(cx - bw/2, by, bw, bh);
-            ctx.fillStyle = col.color + 'cc';
-            ctx.fill();
+        // Border
+        ctx.strokeStyle = HOME_COLOR;
+        ctx.lineWidth = 0.8;
+        ctx.beginPath();
+        ctx.moveTo(hx, bodyTop - roofH);
+        ctx.lineTo(hx - hw / 2 - 1, bodyTop);
+        ctx.lineTo(hx - hw / 2, bodyTop);
+        ctx.lineTo(hx - hw / 2, bodyTop + bodyH);
+        ctx.lineTo(hx + hw / 2, bodyTop + bodyH);
+        ctx.lineTo(hx + hw / 2, bodyTop);
+        ctx.lineTo(hx + hw / 2 + 1, bodyTop);
+        ctx.closePath();
+        ctx.stroke();
 
-            // Border
-            ctx.strokeStyle = col.color;
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(cx, by - rh);
-            ctx.lineTo(cx - bw/2 - 1, by);
-            ctx.lineTo(cx - bw/2, by);
-            ctx.lineTo(cx - bw/2, by + bh);
-            ctx.lineTo(cx + bw/2, by + bh);
-            ctx.lineTo(cx + bw/2, by);
-            ctx.lineTo(cx + bw/2 + 1, by);
-            ctx.closePath();
-            ctx.stroke();
-          } else {
-            // ── Downstream circles: empty outline + fill gauge ──
-            const fillData = fills[ci][ii];
-            const ratio = col.ratio;
-            const fillFrac = fillData.count / ratio;
-            const isFlashing = now - fillData.flashTime < 0.25;
+        // ── Stage bubbles (fill gauge) ──
+        lane.stages.forEach((pos, si) => {
+          const stage = STAGES[si];
+          const fillData = fills[hi][si];
+          const fillFrac = fillData.count / stage.ratio;
+          const isFlashing = now - fillData.flashTime < 0.2;
 
-            // Outer glow — brighter when nearly full
-            ctx.beginPath();
-            ctx.arc(item.x, item.y, item.r + 3, 0, Math.PI * 2);
-            ctx.fillStyle = col.color + (fillFrac > 0.6 ? '18' : '08');
-            ctx.fill();
-
-            // Empty outline (always visible)
-            ctx.beginPath();
-            ctx.arc(item.x, item.y, item.r, 0, Math.PI * 2);
-            ctx.strokeStyle = col.color + '50';
-            ctx.lineWidth = 1;
-            ctx.stroke();
-
-            // Fill gauge from bottom
-            if (fillFrac > 0) {
-              const fillH = fillFrac * item.r * 2;
-              ctx.save();
-              ctx.beginPath();
-              ctx.rect(
-                item.x - item.r - 1,
-                item.y + item.r - fillH,
-                item.r * 2 + 2,
-                fillH + 1,
-              );
-              ctx.clip();
-              ctx.beginPath();
-              ctx.arc(item.x, item.y, item.r, 0, Math.PI * 2);
-              ctx.fillStyle = col.color + 'cc';
-              ctx.shadowBlur = 8 * pulse;
-              ctx.shadowColor = col.color + '40';
-              ctx.fill();
-              ctx.shadowBlur = 0;
-              ctx.restore();
-            }
-
-            // Flash ring when a bubble just fired
-            if (isFlashing) {
-              const flashP = (now - fillData.flashTime) / 0.25;
-              ctx.beginPath();
-              ctx.arc(item.x, item.y, item.r + flashP * 10, 0, Math.PI * 2);
-              ctx.strokeStyle = col.color + Math.round((1 - flashP) * 120).toString(16).padStart(2, '0');
-              ctx.lineWidth = 2 * (1 - flashP);
-              ctx.stroke();
-            }
-          }
-
-          // Inner label for larger bubbles
-          if (item.r >= 14) {
-            ctx.font = `bold ${Math.max(8, item.r * 0.55)}px JetBrains Mono`;
-            ctx.fillStyle = '#f1f5f9dd';
-            ctx.textAlign = 'center';
-            ctx.fillText(col.label, item.x, item.y + item.r * 0.2);
-          }
-        });
-
-        // Column label
-        ctx.font = 'bold 14px JetBrains Mono';
-        ctx.fillStyle = col.color;
-        ctx.textAlign = 'center';
-        ctx.fillText(col.label, col.x, padY - 28);
-
-        // Ratio label between columns
-        if (col.ratio) {
-          const prevCol = columns[ci - 1];
-          const mx = (prevCol.x + col.x) / 2;
-          ctx.font = '11px JetBrains Mono';
-          ctx.fillStyle = col.color + '80';
-          ctx.fillText(`${col.ratio}:1`, mx, padY - 14);
-
-          // Small arrow
+          // Outer glow — brighter when nearly full
           ctx.beginPath();
-          ctx.moveTo(mx - 12, padY - 10);
-          ctx.lineTo(mx + 12, padY - 10);
-          ctx.strokeStyle = col.color + '30';
+          ctx.arc(pos.x, pos.y, pos.r + 2, 0, Math.PI * 2);
+          ctx.fillStyle = stage.color + (fillFrac > 0.6 ? '15' : '06');
+          ctx.fill();
+
+          // Empty outline (always visible)
+          ctx.beginPath();
+          ctx.arc(pos.x, pos.y, pos.r, 0, Math.PI * 2);
+          ctx.strokeStyle = stage.color + '45';
           ctx.lineWidth = 1;
           ctx.stroke();
-          ctx.beginPath();
-          ctx.moveTo(mx + 12, padY - 10);
-          ctx.lineTo(mx + 8, padY - 13);
-          ctx.lineTo(mx + 8, padY - 7);
-          ctx.closePath();
-          ctx.fillStyle = col.color + '40';
-          ctx.fill();
-        }
+
+          // Fill gauge from bottom
+          if (fillFrac > 0) {
+            const fillH = fillFrac * pos.r * 2;
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(
+              pos.x - pos.r - 1,
+              pos.y + pos.r - fillH,
+              pos.r * 2 + 2,
+              fillH + 1,
+            );
+            ctx.clip();
+            ctx.beginPath();
+            ctx.arc(pos.x, pos.y, pos.r, 0, Math.PI * 2);
+            ctx.fillStyle = stage.color + 'bb';
+            ctx.shadowBlur = 6 * pulse;
+            ctx.shadowColor = stage.color + '30';
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            ctx.restore();
+          }
+
+          // Flash ring when bubble just fired
+          if (isFlashing) {
+            const fp = (now - fillData.flashTime) / 0.2;
+            ctx.beginPath();
+            ctx.arc(pos.x, pos.y, pos.r + fp * 8, 0, Math.PI * 2);
+            ctx.strokeStyle = stage.color + Math.round((1 - fp) * 100).toString(16).padStart(2, '0');
+            ctx.lineWidth = 1.5 * (1 - fp);
+            ctx.stroke();
+          }
+
+          // Label inside larger bubbles
+          if (pos.r >= 12) {
+            ctx.font = `bold ${Math.max(7, pos.r * 0.48)}px JetBrains Mono`;
+            ctx.fillStyle = '#f1f5f9cc';
+            ctx.textAlign = 'center';
+            ctx.fillText(stage.label, pos.x, pos.y + pos.r * 0.2);
+          }
+        });
       });
 
-      // Bottom annotation
+      // ── Column headers ──
+      ctx.font = 'bold 14px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.fillStyle = HOME_COLOR;
+      ctx.fillText('20s', homeX, padTop - 18);
+
+      STAGES.forEach((stage, si) => {
+        const x = padLeft + stageSpacing * (si + 1);
+        ctx.fillStyle = stage.color;
+        ctx.fillText(stage.label, x, padTop - 18);
+      });
+
+      // Ratio labels between columns
+      ctx.font = '10px JetBrains Mono';
+      STAGES.forEach((stage, si) => {
+        const fromX = si === 0 ? homeX : padLeft + stageSpacing * si;
+        const toX = padLeft + stageSpacing * (si + 1);
+        const mx = (fromX + toX) / 2;
+        ctx.fillStyle = stage.color + '70';
+        ctx.textAlign = 'center';
+        ctx.fillText(`${stage.ratio}:1`, mx, padTop - 6);
+
+        ctx.beginPath();
+        ctx.moveTo(mx - 10, padTop - 2);
+        ctx.lineTo(mx + 10, padTop - 2);
+        ctx.strokeStyle = stage.color + '25';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(mx + 10, padTop - 2);
+        ctx.lineTo(mx + 7, padTop - 5);
+        ctx.lineTo(mx + 7, padTop + 1);
+        ctx.closePath();
+        ctx.fillStyle = stage.color + '35';
+        ctx.fill();
+      });
+
+      // ── Bottom annotation ──
       ctx.font = '11px Inter';
       ctx.fillStyle = colors.textDim + '80';
       ctx.textAlign = 'left';
-      ctx.fillText('High frequency, high volume', padX, height - 12);
+      ctx.fillText('High frequency, high volume', padLeft, height - 8);
       ctx.textAlign = 'right';
-      ctx.fillText('Low frequency, high value', width - padX, height - 12);
+      ctx.fillText('Low frequency, high value', width - padRight, height - 8);
 
-      // Pyramid direction arrow at very bottom
+      // Direction arrow
       ctx.beginPath();
-      ctx.moveTo(padX + 180, height - 8);
-      ctx.lineTo(width - padX - 180, height - 8);
-      ctx.strokeStyle = colors.surfaceLight + '20';
+      ctx.moveTo(padLeft + 180, height - 4);
+      ctx.lineTo(width - padRight - 180, height - 4);
+      ctx.strokeStyle = colors.surfaceLight + '18';
       ctx.lineWidth = 1;
       ctx.stroke();
       ctx.beginPath();
-      ctx.moveTo(width - padX - 180, height - 8);
-      ctx.lineTo(width - padX - 186, height - 11);
-      ctx.lineTo(width - padX - 186, height - 5);
+      ctx.moveTo(width - padRight - 180, height - 4);
+      ctx.lineTo(width - padRight - 186, height - 7);
+      ctx.lineTo(width - padRight - 186, height - 1);
       ctx.closePath();
-      ctx.fillStyle = colors.surfaceLight + '30';
+      ctx.fillStyle = colors.surfaceLight + '28';
       ctx.fill();
 
       if (isActive) animRef.current = requestAnimationFrame(draw);
