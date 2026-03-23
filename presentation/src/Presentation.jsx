@@ -31,6 +31,7 @@ import ArchitectureExplorer from './components/ArchitectureExplorer';
 import ChoreographyLoop from './components/ChoreographyLoop';
 import StreamingAggregation from './components/StreamingAggregation';
 import AggregationPyramid from './components/AggregationPyramid';
+import GridFrequencyExplainer from './components/GridFrequencyExplainer';
 
 
 const theme = {
@@ -42,34 +43,34 @@ const bg = colors.bg;
 const pad = '36px 56px';
 
 // Section ranges (slide numbers are 1-indexed)
-// Slide count: 35 main + appendix. Architecture has 4 sub-slides (25-28).
+// Slide count: 35 main + appendix. New slide 5 = 50 Hz Heartbeat.
 const SECTIONS = [
   { from: 1, to: 3, name: '' },
-  { from: 4, to: 16, name: 'The Grid' },
-  { from: 17, to: 20, name: 'The Renewable Revolution' },
-  { from: 21, to: 34, name: 'The Virtual Power Plant' },
+  { from: 4, to: 17, name: 'The Grid' },
+  { from: 18, to: 21, name: 'The Renewable Revolution' },
+  { from: 22, to: 35, name: 'The Virtual Power Plant' },
 ];
 
-// Speaker assignments per slide (34 main slides)
-// 1-3: Opening, 4-16: The Grid, 17-20: Renewables,
-// 21-32: VPP, 33-34: Closing
+// Speaker assignments per slide (35 main slides)
+// 1-3: Opening, 4-17: The Grid (new slide 5 = 50 Hz Heartbeat), 18-21: Renewables,
+// 22-33: VPP, 34-35: Closing
 const SPEAKERS = {
   1: 'SHARED', 2: 'SHARED', 3: 'SHARED',
-  4: 'LERENZO', 5: 'LERENZO', 6: 'LERENZO',
-  7: 'MARIO', 8: 'LERENZO', 9: 'MARIO', 10: 'MARIO',
-  11: 'MARIO', 12: 'MARIO', 13: 'LERENZO', 14: 'MARIO', 15: 'LERENZO', 16: 'LERENZO',
-  17: 'LERENZO', 18: 'MARIO', 19: 'MARIO', 20: 'MARIO',
-  21: 'MARIO', 22: 'MARIO', 23: 'LERENZO', 24: 'LERENZO',
-  25: 'LERENZO', 26: 'LERENZO', 27: 'LERENZO', 28: 'LERENZO',
-  29: 'LERENZO', 30: 'LERENZO', 31: 'LERENZO', 32: 'MARIO',
-  33: 'LERENZO', 34: 'LERENZO',
+  4: 'LERENZO', 5: 'LERENZO', 6: 'LERENZO', 7: 'LERENZO',
+  8: 'MARIO', 9: 'LERENZO', 10: 'MARIO', 11: 'MARIO',
+  12: 'MARIO', 13: 'MARIO', 14: 'LERENZO', 15: 'MARIO', 16: 'LERENZO', 17: 'LERENZO',
+  18: 'LERENZO', 19: 'MARIO', 20: 'MARIO', 21: 'MARIO',
+  22: 'MARIO', 23: 'MARIO', 24: 'LERENZO', 25: 'LERENZO',
+  26: 'LERENZO', 27: 'LERENZO', 28: 'LERENZO', 29: 'LERENZO',
+  30: 'LERENZO', 31: 'LERENZO', 32: 'LERENZO', 33: 'MARIO',
+  34: 'LERENZO', 35: 'LERENZO',
 };
 
 const DISABLED_VALUES = new Set(['', 'null', 'no', 'disable', 'disabled', 'nein', 'false', '0', 'off']);
 const speakerParam = new URLSearchParams(window.location.search).get('speaker');
 const showSpeaker = speakerParam !== null && !DISABLED_VALUES.has(speakerParam.trim().toLowerCase());
 
-const MAIN_SLIDE_COUNT = 34;
+const MAIN_SLIDE_COUNT = 35;
 
 const slideTemplate = ({ slideNumber, numberOfSlides }) => {
   const isAppendix = slideNumber > MAIN_SLIDE_COUNT;
@@ -273,7 +274,27 @@ export default function Presentation() {
       </Slide>
 
 
-      {/* 5: Texas Cascade — deck.gl HUD */}
+      {/* 5: The 50 Hz Heartbeat — Grid Frequency Explainer */}
+      <Slide backgroundColor={bg} padding="0">
+        <div className="relative w-full h-full flex flex-col" style={{ padding: '28px 40px 16px' }}>
+          <H>The 50 Hz Heartbeat</H>
+          <P size="18px">Every generator on the grid is a spinning turbine, locked in sync at 3,000 RPM. That speed is the frequency.</P>
+          <div className="flex-1 flex justify-center items-center">
+            <LazyContent><GridFrequencyExplainer width={1200} height={480} /></LazyContent>
+          </div>
+        </div>
+        <Notes>
+          [LERENZO] Before we talk about what goes wrong, you need to understand this one number: 50 Hz.
+          Every generator on the European grid is a spinning turbine — coal, gas, hydro, nuclear — all synchronized at exactly 3,000 RPM.
+          That spin rate IS the frequency. 50 rotations per second = 50 Hz.
+          When demand exceeds supply, there's more resistance on the turbines — they slow down — frequency drops.
+          Below 49 Hz, automatic systems start cutting power to neighborhoods.
+          Below 47.5 Hz, generators physically disconnect to avoid destruction — and that triggers a cascade.
+          The entire margin is 2.5 Hz. Smaller than the gap between two piano notes.
+        </Notes>
+      </Slide>
+
+      {/* 6: Texas Cascade — deck.gl HUD */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           <TexasMapHUD width="100%" height="100%" variant="hud" />
