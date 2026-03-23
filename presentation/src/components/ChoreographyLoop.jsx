@@ -260,11 +260,14 @@ export default function ChoreographyLoop({ width = 900, height = 380 }) {
         ctx.strokeRect(-9, -4, 18, 8);
         ctx.restore();
 
-        // Label
-        ctx.font = 'bold 12px JetBrains Mono';
+        // Letter inside home
+        const letter = String.fromCharCode(65 + i); // A, B, C, D
+        ctx.font = 'bold 14px JetBrains Mono';
         ctx.fillStyle = lc + 'cc';
         ctx.textAlign = 'center';
-        ctx.fillText(label, cx, hy + bodyH / 2 + 14);
+        ctx.textBaseline = 'middle';
+        ctx.fillText(letter, cx, hy + 2);
+        ctx.textBaseline = 'alphabetic';
       });
 
       // Draw actor boxes (right, per-lane color)
@@ -283,7 +286,7 @@ export default function ChoreographyLoop({ width = 900, height = 380 }) {
         ctx.beginPath();
         ctx.roundRect(actorX, ny, actorW, 2.5, [8, 8, 0, 0]);
         ctx.fill();
-        ctx.font = 'bold 12px JetBrains Mono';
+        ctx.font = 'bold 14px JetBrains Mono';
         ctx.fillStyle = lc;
         ctx.textAlign = 'center';
         ctx.fillText(label, actorX + actorW / 2, ay + 5);
