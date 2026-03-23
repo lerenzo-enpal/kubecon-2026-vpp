@@ -772,7 +772,7 @@ export default function VPPArchitecture({ highlightStep = 0 }) {
               </div>
             </div>
             <div style={{ width: 1, height: 60, background: `${activeDrawer.color}25`, flexShrink: 0 }} />
-            <div style={{ fontSize: 18, fontFamily: '"Inter", sans-serif', color: colors.text + 'ee', lineHeight: 1.6, flex: 1 }}>
+            <div style={{ fontSize: 22, fontFamily: '"Inter", sans-serif', color: colors.text + 'ee', lineHeight: 1.5, flex: 1 }}>
               {activeDrawer.desc}
             </div>
           </>
