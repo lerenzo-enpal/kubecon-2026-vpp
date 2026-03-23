@@ -492,7 +492,11 @@ export default function ResponseTimeline({ width = 840, height = 180, delay = 0,
       lastTime = nowPerf;
       const now = nowPerf / 1000;
 
-      if (isActive && racingRef.current) {
+      // Stop when last source (coal) comes online
+      const lastMs = SOURCES[SOURCES.length - 1].ms;
+      const allOnline = simTime(tRef.current) * 1000 >= lastMs;
+
+      if (isActive && racingRef.current && !allOnline) {
         if (delayRef.current < delay) {
           delayRef.current += dt;
         } else {
@@ -501,7 +505,7 @@ export default function ResponseTimeline({ width = 840, height = 180, delay = 0,
       }
 
       const realT = tRef.current;
-      const simMs = simTime(realT) * 1000;
+      const simMs = Math.min(simTime(realT) * 1000, lastMs);
 
       ctx.clearRect(0, 0, width, height);
 
@@ -519,7 +523,7 @@ export default function ResponseTimeline({ width = 840, height = 180, delay = 0,
 
       // Stopwatch body
       const swR = 26;
-      const swY = iconCY + 4;
+      const swY = iconCY + 12;
 
       // Crown/button at top
       ctx.fillStyle = swColor;
