@@ -6,6 +6,7 @@ import TimelineEvent from '../../../components/TimelineEvent.astro';
 import SourceList from '../../../components/SourceList.astro';
 import BerlinTeltowCascadeMap from '../../../components/BerlinTeltowCascadeMap';
 import FullscreenWrapper from '../../../components/FullscreenWrapper';
+import MobileVizFallback from '../../../components/MobileVizFallback';
 import { url } from '../../../utils/url';
 ---
 
@@ -43,9 +44,11 @@ import { url } from '../../../utils/url';
     <div class="flex items-center justify-between mb-3">
       <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">Berlin Grid -- January 3, 2026</div>
     </div>
-    <FullscreenWrapper client:visible label="Launch">
-      <BerlinTeltowCascadeMap client:visible height={400} />
-    </FullscreenWrapper>
+    <MobileVizFallback client:visible fallbackSrc="/images/viz/2026-berlin-teltow-cascade.png" alt="Cascade failure map">
+      <FullscreenWrapper client:visible label="Launch">
+        <BerlinTeltowCascadeMap client:visible height={400} />
+      </FullscreenWrapper>
+    </MobileVizFallback>
   </div>
   <p class="text-base leading-relaxed mb-4" style="color: var(--color-text-muted);">
     Around 45,000 households and 2,200 businesses lost electricity. Because the attack also severed the connection to the Lichterfelde CHP plant, thousands also lost heating in sub-zero temperatures. Hospitals and nursing homes were affected. An emergency shelter was set up at a sports center. Restoration took 4-5 days -- the longest power outage in Berlin since 1945.

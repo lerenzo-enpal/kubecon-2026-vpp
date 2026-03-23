@@ -5,6 +5,7 @@ import RenewableGrowthChart from '../../components/RenewableGrowthChart.tsx';
 import CurtailmentChart from '../../components/CurtailmentChart.tsx';
 import FullscreenWrapper from '../../components/FullscreenWrapper.tsx';
 import ChartEnlarger from '../../components/ChartEnlarger';
+import MobileVizFallback from '../../components/MobileVizFallback';
 import SolarHome from '../../components/illustrations/SolarHome';
 import GlowLine from '../../components/GlowLine';
 import { url } from '../../utils/url';
@@ -79,9 +80,11 @@ import { url } from '../../utils/url';
   <div class="flex items-center justify-between mb-3">
     <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">RENEWABLE SHARE OF ELECTRICITY GENERATION</div>
   </div>
-  <ChartEnlarger client:visible>
-    <RenewableGrowthChart client:visible height={400} />
-  </ChartEnlarger>
+  <MobileVizFallback client:visible fallbackSrc="/images/viz/learn-the-renewable-revolution.png" alt="Chart showing renewable share of electricity generation growth over time">
+    <ChartEnlarger client:visible>
+      <RenewableGrowthChart client:visible height={400} />
+    </ChartEnlarger>
+  </MobileVizFallback>
 </div>
 
 <div class="grid grid-cols-2 md:grid-cols-3 gap-4 my-8 fade-in stagger">
@@ -115,9 +118,11 @@ import { url } from '../../utils/url';
 </p>
 
 <div class="my-8">
-  <ChartEnlarger client:visible>
-    <DuckCurveExplorer client:visible />
-  </ChartEnlarger>
+  <MobileVizFallback client:visible fallbackSrc="/images/viz/learn-the-renewable-revolution.png" alt="Duck curve explorer showing net demand through a typical day with high solar penetration">
+    <ChartEnlarger client:visible>
+      <DuckCurveExplorer client:visible />
+    </ChartEnlarger>
+  </MobileVizFallback>
 </div>
 
 <p>
@@ -147,9 +152,11 @@ import { url } from '../../utils/url';
   <div class="flex items-center justify-between mb-3">
     <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">CUMULATIVE CURTAILMENT 2015-2024</div>
   </div>
-  <ChartEnlarger client:visible>
-    <CurtailmentChart client:visible height={460} />
-  </ChartEnlarger>
+  <MobileVizFallback client:visible fallbackSrc="/images/viz/learn-the-renewable-revolution.png" alt="Cumulative curtailment chart 2015 to 2024 showing wasted renewable energy">
+    <ChartEnlarger client:visible>
+      <CurtailmentChart client:visible height={460} />
+    </ChartEnlarger>
+  </MobileVizFallback>
 </div>
 
 <p>

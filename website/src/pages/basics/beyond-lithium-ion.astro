@@ -4,6 +4,7 @@ import DurationSpectrumChart from '../../components/basics/inline/DurationSpectr
 import StorageTechCards from '../../components/basics/inline/StorageTechCards';
 import StorageScenarioBuilder from '../../components/basics/labs/StorageScenarioBuilder';
 import StorageComparisonTool from '../../components/basics/labs/StorageComparisonTool';
+import MobileVizFallback from '../../components/MobileVizFallback';
 import { url } from '../../utils/url';
 
 const sections = [
@@ -51,7 +52,9 @@ const sections = [
   bigger tank, and duration goes up without adding more of the expensive parts.
 </p>
 
-<DurationSpectrumChart client:visible />
+<MobileVizFallback client:visible fallbackSrc="/images/viz/basics-beyond-lithium-ion.png" alt="Storage technology duration spectrum chart">
+  <DurationSpectrumChart client:visible />
+</MobileVizFallback>
 
 <p>
   No single technology covers the full spectrum. The future grid needs a portfolio --
@@ -76,7 +79,9 @@ const sections = [
   cover the duration spectrum.
 </p>
 
-<StorageScenarioBuilder client:visible />
+<MobileVizFallback client:visible fallbackSrc="/images/viz/basics-beyond-lithium-ion.png" alt="Storage scenario builder">
+  <StorageScenarioBuilder client:visible />
+</MobileVizFallback>
 
 <h2 id="comparison-tool">Compare Technologies</h2>
 
@@ -84,7 +89,9 @@ const sections = [
   Select technologies to compare their key characteristics side by side.
 </p>
 
-<StorageComparisonTool client:visible />
+<MobileVizFallback client:visible fallbackSrc="/images/viz/basics-beyond-lithium-ion.png" alt="Storage technology comparison tool">
+  <StorageComparisonTool client:visible />
+</MobileVizFallback>
 
 <div class="my-8 flex flex-col gap-4">
   <div class="p-6 rounded-lg" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">

@@ -6,6 +6,7 @@ import TimelineEvent from '../../../components/TimelineEvent.astro';
 import SourceList from '../../../components/SourceList.astro';
 import EuropeCascadeMap from '../../../components/EuropeCascadeMap';
 import FullscreenWrapper from '../../../components/FullscreenWrapper';
+import MobileVizFallback from '../../../components/MobileVizFallback';
 import { url } from '../../../utils/url';
 ---
 
@@ -43,9 +44,11 @@ import { url } from '../../../utils/url';
     <div class="flex items-center justify-between mb-3">
       <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">UCTE Grid -- November 4, 2006</div>
     </div>
-    <FullscreenWrapper client:visible label="Launch">
-      <EuropeCascadeMap client:visible height={400} />
-    </FullscreenWrapper>
+    <MobileVizFallback client:visible fallbackSrc="/images/viz/2006-european-grid-split-cascade.png" alt="Cascade failure map">
+      <FullscreenWrapper client:visible label="Launch">
+        <EuropeCascadeMap client:visible height={400} />
+      </FullscreenWrapper>
+    </MobileVizFallback>
   </div>
 
   <p class="text-base leading-relaxed mb-4" style="color: var(--color-text-muted);">

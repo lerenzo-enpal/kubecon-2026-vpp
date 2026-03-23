@@ -6,6 +6,7 @@ import TimelineEvent from '../../../components/TimelineEvent.astro';
 import SourceList from '../../../components/SourceList.astro';
 import EuropeGridSplit2021CascadeMap from '../../../components/EuropeGridSplit2021CascadeMap';
 import FullscreenWrapper from '../../../components/FullscreenWrapper';
+import MobileVizFallback from '../../../components/MobileVizFallback';
 import { url } from '../../../utils/url';
 ---
 
@@ -33,9 +34,11 @@ import { url } from '../../../utils/url';
 
 <!-- Interactive Map -->
 <section class="my-10" id="europe-2021-map">
-  <FullscreenWrapper client:visible label="Launch">
-    <EuropeGridSplit2021CascadeMap client:visible height={400} />
-  </FullscreenWrapper>
+  <MobileVizFallback client:visible fallbackSrc="/images/viz/2021-european-grid-split-cascade.png" alt="Cascade failure map">
+    <FullscreenWrapper client:visible label="Launch">
+      <EuropeGridSplit2021CascadeMap client:visible height={400} />
+    </FullscreenWrapper>
+  </MobileVizFallback>
 </section>
 
 <!-- What Happened -->

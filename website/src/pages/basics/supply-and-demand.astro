@@ -4,14 +4,17 @@ import GlowLine from '../../components/GlowLine';
 import BufferComparison from '../../components/basics/inline/BufferComparison';
 import RotorFrequency from '../../components/basics/inline/RotorFrequency';
 import FrequencyGauge from '../../components/basics/inline/FrequencyGauge';
+import GridOperatorGame from '../../components/basics/labs/GridOperatorGame';
+import StorageScaleVisualizer from '../../components/basics/labs/StorageScaleVisualizer';
+import MobileVizFallback from '../../components/MobileVizFallback';
 import { url } from '../../utils/url';
 
 const sections = [
   { id: 'no-buffer', title: 'No Buffer' },
   { id: 'spinning-mass', title: 'The Spinning Mass' },
   { id: 'thresholds', title: '2.5 Hz to Blackout' },
-  { id: 'grid-operator', title: 'Be the Grid Operator' },
-  { id: 'storage-scale', title: 'Why Not Store It?' },
+  { id: 'grid-operator', title: 'Be the Grid Operator', interactive: true },
+  { id: 'storage-scale', title: 'Why Not Store It?', interactive: true },
 ];
 ---
 
@@ -52,7 +55,9 @@ const sections = [
   zero tolerance for error.
 </p>
 
-<BufferComparison client:visible />
+<MobileVizFallback client:visible fallbackSrc="/images/viz/basics-supply-and-demand.png" alt="Buffer comparison visualization">
+  <BufferComparison client:visible />
+</MobileVizFallback>
 
 <p>
   At every instant, generation must exactly equal consumption. Not approximately. Not on average.
@@ -84,7 +89,9 @@ const sections = [
   time to respond. But inertia is not storage. It is borrowed time.
 </p>
 
-<RotorFrequency client:visible />
+<MobileVizFallback client:visible fallbackSrc="/images/viz/basics-supply-and-demand.png" alt="Rotor frequency animation">
+  <RotorFrequency client:visible />
+</MobileVizFallback>
 
 <p>
   A turbine in Lisbon and a turbine in Istanbul feel the same frequency dip within seconds. The
@@ -108,7 +115,9 @@ const sections = [
   irreversible.
 </p>
 
-<FrequencyGauge client:visible />
+<MobileVizFallback client:visible fallbackSrc="/images/viz/basics-supply-and-demand.png" alt="Frequency gauge showing grid stability thresholds">
+  <FrequencyGauge client:visible />
+</MobileVizFallback>
 
 <p>
   2.5 Hz is the entire margin. The last threshold -- 47.5 Hz -- is irreversible. Generators
@@ -126,11 +135,9 @@ const sections = [
   seat.
 </p>
 
-<div class="my-8 p-6 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-  <div class="font-mono text-sm text-center py-8" style="color: var(--color-text-dim);">
-    Grid Operator Game -- coming soon
-  </div>
-</div>
+<MobileVizFallback client:visible fallbackSrc="/images/viz/basics-supply-and-demand.png" alt="Grid operator simulation game">
+  <GridOperatorGame client:visible />
+</MobileVizFallback>
 
 <!-- SECTION 5: Why Can't We Just Store It? -->
 
@@ -142,11 +149,9 @@ const sections = [
   and today's storage technologies can only hold a tiny fraction of it.
 </p>
 
-<div class="my-8 p-6 rounded-lg" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-  <div class="font-mono text-sm text-center py-8" style="color: var(--color-text-dim);">
-    Storage Scale Visualizer -- coming soon
-  </div>
-</div>
+<MobileVizFallback client:visible fallbackSrc="/images/viz/basics-supply-and-demand.png" alt="Storage scale visualizer">
+  <StorageScaleVisualizer client:visible />
+</MobileVizFallback>
 
 <!-- FOOTER -->
 
@@ -157,8 +162,8 @@ const sections = [
 <div class="flex flex-col gap-4 my-8">
   <div class="p-5 rounded-lg no-arrow" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
     <div class="font-mono text-sm mb-1" style="color: var(--color-primary); letter-spacing: 0.08em;">CONTINUE</div>
-    <a href={url("/learn/the-old-way")} class="text-lg font-semibold" style="color: var(--color-text);">
-      How Batteries Work
+    <a href={url("/basics/how-batteries-work")} class="text-lg font-semibold" style="color: var(--color-text);">
+      How Batteries Work &rarr;
     </a>
     <div class="text-sm mt-1" style="color: var(--color-text-dim);">
       From lithium cells to grid-scale storage.

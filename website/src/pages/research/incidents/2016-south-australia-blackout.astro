@@ -7,6 +7,7 @@ import SourceList from '../../../components/SourceList.astro';
 import TransmissionTower from '../../../components/illustrations/TransmissionTower';
 import SACascadeMap from '../../../components/SACascadeMap';
 import FullscreenWrapper from '../../../components/FullscreenWrapper';
+import MobileVizFallback from '../../../components/MobileVizFallback';
 import { url } from '../../../utils/url';
 ---
 
@@ -46,9 +47,11 @@ import { url } from '../../../utils/url';
   <div class="flex items-center justify-between mb-3">
     <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">SA Grid — September 28, 2016</div>
   </div>
-  <FullscreenWrapper client:visible label="Launch">
-    <SACascadeMap client:visible height={400} />
-  </FullscreenWrapper>
+  <MobileVizFallback client:visible fallbackSrc="/images/viz/2016-south-australia-cascade.png" alt="Cascade failure map">
+    <FullscreenWrapper client:visible label="Launch">
+      <SACascadeMap client:visible height={400} />
+    </FullscreenWrapper>
+  </MobileVizFallback>
 </div>
 
 <p>

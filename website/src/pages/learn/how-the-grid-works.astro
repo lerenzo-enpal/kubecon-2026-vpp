@@ -11,6 +11,7 @@ import House from '../../components/illustrations/House';
 import GlowLine from '../../components/GlowLine';
 import FrequencyWalkthrough from '../../components/FrequencyWalkthrough';
 import GridFlowDemo from '../../components/GridFlowDemo.tsx';
+import MobileVizFallback from '../../components/MobileVizFallback';
 import { url } from '../../utils/url';
 ---
 
@@ -48,9 +49,11 @@ import { url } from '../../utils/url';
   <div class="flex items-center justify-between mb-3">
     <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">ONE-WAY GRID ARCHITECTURE</div>
   </div>
-  <FullscreenWrapper client:visible label="Explore">
-    <GridFlowDemo client:visible height={520} />
-  </FullscreenWrapper>
+  <MobileVizFallback client:visible fallbackSrc="/images/viz/grid-flow-demo.png" alt="One-way grid architecture diagram showing power flow from generation to consumers">
+    <FullscreenWrapper client:visible label="Explore">
+      <GridFlowDemo client:visible height={520} />
+    </FullscreenWrapper>
+  </MobileVizFallback>
 </div>
 
 <div class="flex items-center justify-center gap-4 my-8 opacity-80 flex-wrap">
@@ -150,9 +153,11 @@ import { url } from '../../utils/url';
   <div class="flex items-center justify-between mb-3">
     <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">FREQUENCY THRESHOLD WALKTHROUGH</div>
   </div>
-  <FullscreenWrapper client:visible label="Explore">
-    <FrequencyWalkthrough client:visible height={480} />
-  </FullscreenWrapper>
+  <MobileVizFallback client:visible fallbackSrc="/images/viz/frequency-walkthrough.png" alt="Frequency threshold walkthrough showing grid response from 50 Hz to total collapse">
+    <FullscreenWrapper client:visible label="Explore">
+      <FrequencyWalkthrough client:visible height={480} />
+    </FullscreenWrapper>
+  </MobileVizFallback>
   <div class="text-xs mt-3" style="color: var(--color-text-dim);">
     Step through the frequency zones from 50 Hz to total collapse. Watch how the grid responds at each threshold.
   </div>
@@ -239,9 +244,11 @@ import { url } from '../../utils/url';
       Interactive
     </span>
   </div>
-  <FullscreenWrapper client:visible label="Explore">
-    <FrequencyDemo client:visible />
-  </FullscreenWrapper>
+  <MobileVizFallback client:visible fallbackSrc="/images/viz/frequency-demo.png" alt="Grid frequency simulator showing real-time frequency response to grid events">
+    <FullscreenWrapper client:visible label="Explore">
+      <FrequencyDemo client:visible />
+    </FullscreenWrapper>
+  </MobileVizFallback>
   <div class="text-xs mt-3" style="color: var(--color-text-dim);">
     Click a scenario to simulate a grid event. Watch how frequency responds in real time.
     The Cyber Attack scenario demonstrates what happens when automated defenses are compromised.

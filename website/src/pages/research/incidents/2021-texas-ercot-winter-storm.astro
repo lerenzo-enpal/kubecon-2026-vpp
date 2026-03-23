@@ -8,6 +8,7 @@ import GasPlant from '../../../components/illustrations/GasPlant';
 import FrequencyPulse from '../../../components/FrequencyPulse';
 import TexasCascadeMap from '../../../components/TexasCascadeMap';
 import FullscreenWrapper from '../../../components/FullscreenWrapper';
+import MobileVizFallback from '../../../components/MobileVizFallback';
 import { url } from '../../../utils/url';
 ---
 
@@ -43,9 +44,11 @@ import { url } from '../../../utils/url';
   <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
     <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">ERCOT Grid — February 2021</div>
   </div>
-  <FullscreenWrapper client:visible label="Launch">
-    <TexasCascadeMap client:visible height={400} />
-  </FullscreenWrapper>
+  <MobileVizFallback client:visible fallbackSrc="/images/viz/2021-texas-ercot-cascade.png" alt="Cascade failure map">
+    <FullscreenWrapper client:visible label="Launch">
+      <TexasCascadeMap client:visible height={400} />
+    </FullscreenWrapper>
+  </MobileVizFallback>
 </div>
 
 <p>

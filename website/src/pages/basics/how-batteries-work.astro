@@ -6,6 +6,7 @@ import CostCurveChart from '../../components/basics/inline/CostCurveChart';
 import BatteryChemistryWorkbench from '../../components/basics/labs/BatteryChemistryWorkbench';
 import BatteryLifecycleSimulator from '../../components/basics/labs/BatteryLifecycleSimulator';
 import UpcomingBatteryTech from '../../components/basics/labs/UpcomingBatteryTech';
+import MobileVizFallback from '../../components/MobileVizFallback';
 import { url } from '../../utils/url';
 
 const sections = [
@@ -91,7 +92,9 @@ const sections = [
 </p>
 
 <div class="my-8 rounded-lg overflow-hidden p-4" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-  <CellCrossSectionWidget client:visible />
+  <MobileVizFallback client:visible fallbackSrc="/images/viz/basics-how-batteries-work.png" alt="Cell cross-section interactive diagram">
+    <CellCrossSectionWidget client:visible />
+  </MobileVizFallback>
 </div>
 
 <p>
@@ -129,7 +132,9 @@ const sections = [
 
 <div class="my-8 rounded-lg overflow-hidden p-4" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
   <div class="font-mono text-sm font-semibold tracking-wide uppercase mb-3" style="color: var(--color-text);">LITHIUM-ION BATTERY PACK COSTS</div>
-  <CostCurveChart client:visible />
+  <MobileVizFallback client:visible fallbackSrc="/images/viz/basics-how-batteries-work.png" alt="Lithium-ion battery pack cost curve chart">
+    <CostCurveChart client:visible />
+  </MobileVizFallback>
 </div>
 
 <p>
@@ -143,7 +148,9 @@ const sections = [
 <h2 id="chemistry-workbench">Chemistry Workbench</h2>
 
 <div class="my-8">
-  <BatteryChemistryWorkbench client:visible />
+  <MobileVizFallback client:visible fallbackSrc="/images/viz/basics-how-batteries-work.png" alt="Battery chemistry workbench">
+    <BatteryChemistryWorkbench client:visible />
+  </MobileVizFallback>
 </div>
 
 <!-- LIFECYCLE SIMULATOR -->
@@ -151,7 +158,9 @@ const sections = [
 <h2 id="lifecycle">Lifecycle Simulator</h2>
 
 <div class="my-8">
-  <BatteryLifecycleSimulator client:visible />
+  <MobileVizFallback client:visible fallbackSrc="/images/viz/basics-how-batteries-work.png" alt="Battery lifecycle simulator">
+    <BatteryLifecycleSimulator client:visible />
+  </MobileVizFallback>
 </div>
 
 <!-- WHAT'S COMING NEXT -->

@@ -6,6 +6,7 @@ import TransformerDiagram from '../../components/basics/inline/TransformerDiagra
 import GenerationMethods from '../../components/basics/inline/GenerationMethods';
 import OhmsLawPlayground from '../../components/basics/inline/OhmsLawPlayground';
 import PowerEnergyCalculator from '../../components/basics/inline/PowerEnergyCalculator';
+import MobileVizFallback from '../../components/MobileVizFallback';
 import { url } from '../../utils/url';
 ---
 
@@ -92,7 +93,9 @@ import { url } from '../../utils/url';
 </p>
 
 <div class="md:float-right md:ml-6 md:mb-4" style="width: min(100%, 320px);">
-  <ACvsDCWaveform client:visible />
+  <MobileVizFallback client:visible fallbackSrc="/images/viz/basics-how-electricity-works.png" alt="AC vs DC waveform diagram">
+    <ACvsDCWaveform client:visible />
+  </MobileVizFallback>
 </div>
 
 <p>
@@ -137,7 +140,9 @@ import { url } from '../../utils/url';
   The underlying principle is identical: convert motion into electricity through spinning.
 </p>
 
-<GenerationMethods client:visible />
+<MobileVizFallback client:visible fallbackSrc="/images/viz/basics-how-electricity-works.png" alt="Power generation methods diagram">
+  <GenerationMethods client:visible />
+</MobileVizFallback>
 
 <p>
   Solar photovoltaic (PV) panels are the striking exception. They convert sunlight directly into electricity using the <strong>photovoltaic effect</strong>: photons knock electrons loose from silicon atoms, creating a flow of current. No turbine. No spinning. No moving parts at all.
@@ -155,7 +160,9 @@ import { url } from '../../utils/url';
   Drag the sliders to change voltage and resistance. Watch how the current changes, and see the electrons speed up or slow down in the circuit.
 </p>
 
-<OhmsLawPlayground client:visible />
+<MobileVizFallback client:visible fallbackSrc="/images/viz/basics-how-electricity-works.png" alt="Ohm's Law interactive playground">
+  <OhmsLawPlayground client:visible />
+</MobileVizFallback>
 
 <!-- ═══ SECTION 5: Power vs Energy ═══ -->
 
@@ -173,19 +180,22 @@ import { url } from '../../utils/url';
   Your electricity bill charges for energy (kWh), not power (kW).
 </p>
 
-<PowerEnergyCalculator client:visible />
+<MobileVizFallback client:visible fallbackSrc="/images/viz/basics-how-electricity-works.png" alt="Power vs energy interactive calculator">
+  <PowerEnergyCalculator client:visible />
+</MobileVizFallback>
 
 <!-- ═══ Continue Link ═══ -->
 
-<div class="mt-12 pt-6 border-t flex justify-between items-center" style="border-color: var(--color-surface-light);">
-  <div></div>
-  <a
-    href={url("/learn/how-the-grid-works")}
-    class="flex items-center gap-2 px-4 py-2 rounded-lg font-mono text-sm transition-colors"
-    style="background: var(--color-surface); color: var(--color-primary); border: 1px solid var(--color-surface-light);"
-  >
-    Next: How the Grid Works &rarr;
-  </a>
+<div class="flex flex-col gap-4 my-8">
+  <div class="p-5 rounded-lg no-arrow" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
+    <div class="font-mono text-sm mb-1" style="color: var(--color-primary); letter-spacing: 0.08em;">CONTINUE</div>
+    <a href={url("/basics/supply-and-demand")} class="text-lg font-semibold" style="color: var(--color-text);">
+      Supply &amp; Demand &rarr;
+    </a>
+    <div class="text-sm mt-1" style="color: var(--color-text-dim);">
+      Why the grid must balance supply and demand every second -- and what happens when it can't.
+    </div>
+  </div>
 </div>
 
 </ContentLayout>

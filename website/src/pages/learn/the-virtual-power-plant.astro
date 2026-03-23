@@ -9,6 +9,7 @@ import GlowLine from '../../components/GlowLine';
 import DuckCurveVPP from '../../components/DuckCurveVPP';
 import FullscreenWrapper from '../../components/FullscreenWrapper';
 import ChartEnlarger from '../../components/ChartEnlarger';
+import MobileVizFallback from '../../components/MobileVizFallback';
 import VPPExhibitTabs from '../../components/VPPExhibitTabs';
 import { url } from '../../utils/url';
 ---
@@ -154,9 +155,11 @@ import { url } from '../../utils/url';
   <div class="flex items-center justify-between mb-3">
     <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">VPP DATA FLOW</div>
   </div>
-  <ChartEnlarger client:visible>
-    <VPPArchitecture client:visible height={420} />
-  </ChartEnlarger>
+  <MobileVizFallback client:visible fallbackSrc="/images/viz/learn-the-virtual-power-plant.png" alt="VPP data flow architecture diagram showing the layers from IoT devices to grid response">
+    <ChartEnlarger client:visible>
+      <VPPArchitecture client:visible height={420} />
+    </ChartEnlarger>
+  </MobileVizFallback>
 </div>
 
 <p>
@@ -226,9 +229,11 @@ import { url } from '../../utils/url';
   <div class="flex items-center justify-between mb-3">
     <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">DUCK CURVE WITH VPP LOAD SHIFTING</div>
   </div>
-  <FullscreenWrapper client:visible label="Explore">
-    <DuckCurveVPP client:visible height={400} />
-  </FullscreenWrapper>
+  <MobileVizFallback client:visible fallbackSrc="/images/viz/learn-the-virtual-power-plant.png" alt="Duck curve with VPP load shifting showing how batteries flatten the evening demand ramp">
+    <FullscreenWrapper client:visible label="Explore">
+      <DuckCurveVPP client:visible height={400} />
+    </FullscreenWrapper>
+  </MobileVizFallback>
 </div>
 
 <h2 id="vpp-in-action">VPP in Action</h2>
@@ -249,9 +254,11 @@ import { url } from '../../utils/url';
 </p>
 
 <div id="vpp-exhibits" class="my-8 rounded-lg overflow-hidden scroll-mt-20" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-  <FullscreenWrapper client:visible label="Launch">
-    <VPPExhibitTabs client:visible height={500} />
-  </FullscreenWrapper>
+  <MobileVizFallback client:visible fallbackSrc="/images/viz/learn-the-virtual-power-plant.png" alt="VPP exhibit tabs showing frequency emergency response, energy arbitrage, and the 2016 South Australia blackout">
+    <FullscreenWrapper client:visible label="Launch">
+      <VPPExhibitTabs client:visible height={500} />
+    </FullscreenWrapper>
+  </MobileVizFallback>
 </div>
 
 <div class="my-8 p-5 rounded-lg" style="background: rgba(239, 68, 68, 0.04); border: 1px solid rgba(239, 68, 68, 0.15);">

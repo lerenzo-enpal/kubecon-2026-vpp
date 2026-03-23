@@ -7,6 +7,7 @@ import SourceList from '../../../components/SourceList.astro';
 import ConnectedHomes from '../../../components/illustrations/ConnectedHomes';
 import HornsdaleCascadeMap from '../../../components/HornsdaleCascadeMap';
 import FullscreenWrapper from '../../../components/FullscreenWrapper';
+import MobileVizFallback from '../../../components/MobileVizFallback';
 import { url } from '../../../utils/url';
 ---
 
@@ -42,9 +43,11 @@ import { url } from '../../../utils/url';
   <div class="flex items-center justify-between mb-3">
     <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">NEM Grid -- December 14, 2017</div>
   </div>
-  <FullscreenWrapper client:visible label="Launch">
-    <HornsdaleCascadeMap client:visible height={400} />
-  </FullscreenWrapper>
+  <MobileVizFallback client:visible fallbackSrc="/images/viz/2017-hornsdale-cascade.png" alt="Cascade failure map">
+    <FullscreenWrapper client:visible label="Launch">
+      <HornsdaleCascadeMap client:visible height={400} />
+    </FullscreenWrapper>
+  </MobileVizFallback>
 </div>
 
 <p>
