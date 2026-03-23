@@ -940,7 +940,7 @@ export default function Presentation() {
         <div className="flex flex-col h-full">
           <H>How a VPP Responds to Grid Events</H>
           <P size="20px">Different event types require different response strategies and timescales.</P>
-          <Stepper values={[1, 2]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col">
+          <Stepper values={[1, 2, 3]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col">
             {(stepVal) => {
               const sv = stepVal ?? 0;
               const events = [
@@ -980,7 +980,11 @@ export default function Presentation() {
                       transform: sv >= 2 ? 'translateY(0)' : 'translateY(12px)',
                       transition: 'all 0.5s ease',
                     }}>
-                      {sv >= 2 && <LazyContent key={`rt-${sv}`}><ResponseTimeline width={940} height={180} delay={0} /></LazyContent>}
+                      <div className="flex items-center gap-4 mb-1">
+                        <div className="text-xl font-bold font-mono" style={{ color: colors.success }}>And Fast:</div>
+                        <div className="text-xs font-mono" style={{ color: colors.textDim }}>Response Time Comparison</div>
+                      </div>
+                      {sv >= 2 && <LazyContent key="rt-persistent"><ResponseTimeline width={940} height={180} delay={0} racing={sv >= 3} /></LazyContent>}
                     </div>
                   </div>
                 </div>

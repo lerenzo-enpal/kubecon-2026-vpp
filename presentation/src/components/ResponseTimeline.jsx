@@ -451,12 +451,20 @@ function drawCoalPlant(ctx, cx, cy, w, h, color, active, now) {
 
 const DRAW_FNS = [drawBattery, drawHydro, drawGasTurbine, drawCoalPlant];
 
-export default function ResponseTimeline({ width = 840, height = 180, delay = 0 }) {
+export default function ResponseTimeline({ width = 840, height = 180, delay = 0, racing = false }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const tRef = useRef(0);       // real elapsed seconds
   const delayRef = useRef(0);
+  const racingRef = useRef(false);
   const slideContext = useContext(SlideContext);
+
+  // Track when racing starts
+  if (racing && !racingRef.current) {
+    racingRef.current = true;
+    tRef.current = 0;
+    delayRef.current = 0;
+  }
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -483,7 +491,7 @@ export default function ResponseTimeline({ width = 840, height = 180, delay = 0 
       lastTime = nowPerf;
       const now = nowPerf / 1000;
 
-      if (isActive) {
+      if (isActive && racingRef.current) {
         if (delayRef.current < delay) {
           delayRef.current += dt;
         } else {
@@ -603,6 +611,7 @@ export default function ResponseTimeline({ width = 840, height = 180, delay = 0 
     if (slideContext?.isSlideActive) {
       tRef.current = 0;
       delayRef.current = 0;
+      racingRef.current = false;
     }
   }, [slideContext?.isSlideActive]);
 
