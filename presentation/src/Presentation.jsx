@@ -47,22 +47,22 @@ const SECTIONS = [
   { from: 1, to: 3, name: '' },
   { from: 4, to: 16, name: 'The Grid' },
   { from: 17, to: 20, name: 'The Renewable Revolution' },
-  { from: 21, to: 35, name: 'The Virtual Power Plant' },
+  { from: 21, to: 34, name: 'The Virtual Power Plant' },
 ];
 
-// Speaker assignments per slide (35 main slides)
-// 1-2: Opening, 3: Agenda, 4-16: The Grid, 17-20: Renewables,
-// 21-33: VPP, 34-35: Resilience
+// Speaker assignments per slide (34 main slides)
+// 1-3: Opening, 4-16: The Grid, 17-20: Renewables,
+// 21-32: VPP, 33-34: Closing
 const SPEAKERS = {
-  1: 'SHARED', 2: 'SHARED',
-  3: 'SHARED', 4: 'LERENZO', 5: 'LERENZO', 6: 'LERENZO',
+  1: 'SHARED', 2: 'SHARED', 3: 'SHARED',
+  4: 'LERENZO', 5: 'LERENZO', 6: 'LERENZO',
   7: 'MARIO', 8: 'LERENZO', 9: 'MARIO', 10: 'MARIO',
   11: 'MARIO', 12: 'MARIO', 13: 'LERENZO', 14: 'MARIO', 15: 'LERENZO', 16: 'LERENZO',
-  17: 'LERENZO', 18: 'MARIO', 19: 'MARIO', 20: 'MARIO', 21: 'MARIO',
-  22: 'MARIO', 23: 'MARIO', 24: 'LERENZO', 25: 'LERENZO',
-  26: 'LERENZO', 27: 'LERENZO', 28: 'LERENZO', 29: 'LERENZO',
-  30: 'LERENZO', 31: 'LERENZO', 32: 'LERENZO', 33: 'MARIO',
-  34: 'LERENZO', 35: 'LERENZO',
+  17: 'LERENZO', 18: 'MARIO', 19: 'MARIO', 20: 'MARIO',
+  21: 'MARIO', 22: 'MARIO', 23: 'LERENZO', 24: 'LERENZO',
+  25: 'LERENZO', 26: 'LERENZO', 27: 'LERENZO', 28: 'LERENZO',
+  29: 'LERENZO', 30: 'LERENZO', 31: 'LERENZO', 32: 'MARIO',
+  33: 'LERENZO', 34: 'LERENZO',
 };
 
 const DISABLED_VALUES = new Set(['', 'null', 'no', 'disable', 'disabled', 'nein', 'false', '0', 'off']);
@@ -737,7 +737,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 25: Inside the Architecture — Explorer */}
+      {/* 25: Inside the Architecture — Explorer (4 steps) */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           {/* Full-screen architecture explorer */}
@@ -765,7 +765,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 27: Cloud Platform — MQTT, Choreography, K8s, ArgoCD */}
+      {/* 26: Cloud Platform — Choreography, Dapr Actors, ArgoCD */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <div className="flex items-end justify-between mb-4">
@@ -821,7 +821,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 28: Progressive Aggregation Pyramid */}
+      {/* 27: Progressive Aggregation Pyramid */}
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <div className="flex items-end justify-between mb-3">
@@ -856,7 +856,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 30: The Architecture Parallel */}
+      {/* 28: The Architecture Parallel */}
       <Slide backgroundColor={bg} padding={pad}>
         <style>{`
           @keyframes archLeftIn {
@@ -919,7 +919,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 30: How a VPP Responds to Grid Events */}
+      {/* 29: How a VPP Responds to Grid Events */}
       <Slide backgroundColor={bg} padding={pad}>
         <style>{`
           @keyframes vppEventIn {
@@ -999,7 +999,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 31: Energy Arbitrage + Peak Shaving */}
+      {/* 30: Energy Arbitrage + Peak Shaving */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           <VPPScenarioSlide scenario="summer" />
@@ -1014,7 +1014,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 32: SA Virtual Power Plant, 2019 */}
+      {/* 31: SA Virtual Power Plant */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           <SAMapHUD width="100%" height="100%" variant="vpp" />
@@ -1026,7 +1026,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 33: The Economic Impact of Flexibility */}
+      {/* 32: The Economic Impact of Flexibility */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col h-full">
           <H color={colors.success}>The Economic Impact of Flexibility</H>
@@ -1092,7 +1092,7 @@ export default function Presentation() {
 
       {/* ═══════ CLOSING ═══════ */}
 
-      {/* 34: Back to Texas */}
+      {/* 33: Back to Texas */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center h-full">
           <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-6">Back to Texas</div>
@@ -1117,7 +1117,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 35: Thank You */}
+      {/* 34: Thank You */}
       <Slide backgroundColor={bg} padding="0">
         <div className="relative w-full h-full">
           <LazyContent><ThankYouBackground width={1366} height={768} /></LazyContent>
