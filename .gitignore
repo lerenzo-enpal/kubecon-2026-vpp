@@ -8,3 +8,4 @@ presentation/public/tiles/
 _site/
 .playwright-mcp/
 .astro/
+.claude
