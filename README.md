@@ -56,25 +56,32 @@ presentation/src/
 
 ### Offline Map Tiles
 
-The presentation uses 6 MapLibre/DeckGL map components that fetch tiles from CARTO's CDN at runtime. To make them work offline (e.g., during a talk with an unreliable connection), download the tile archives once while online:
+The presentation uses MapLibre/DeckGL map components that load tiles from CARTO's CDN at runtime. The map style loader (`src/utils/mapStyle.js`) uses a **local-first** strategy:
+
+1. On load, it probes for local tiles (`presentation/public/tiles/`) — takes ~1ms on localhost
+2. If found, uses local PMTiles (no outbound tile requests at all)
+3. If not found, falls back to CARTO CDN transparently
+
+To download tiles for offline use (e.g. presenting with an unreliable connection):
 
 ```bash
 # Install the pmtiles CLI (one-time, macOS + Linux):
+cd presentation
 npm run offline:install-tools
 
-cd presentation
+# Download all tile regions (~6 GB total):
 npm run offline:download-maps
 ```
 
 This extracts regional [PMTiles](https://protomaps.com/docs/pmtiles) archives from the [Protomaps](https://protomaps.com) daily planet build using HTTP range requests — only the tiles for the regions and zoom levels actually used are downloaded. It also downloads the CARTO dark-matter style JSON, sprites, and font glyphs.
 
-| Region file | Covers | Max zoom | Est. size |
-|-------------|--------|----------|-----------|
-| `europe.pmtiles` | EUGridHUD, LargestMachineZoom flyout | z12 | ~80 MB |
-| `wolfsburg.pmtiles` | LargestMachineZoom start (zoom 14) | z14 | ~5 MB |
-| `berlin.pmtiles` | VPPScenarioMapSlide (zoom up to 17, Reinickendorf) | z17 | ~15 MB |
-| `adelaide.pmtiles` | SAMapHUD | z12 | ~10 MB |
-| `texas.pmtiles` | TexasMapHUD | z9 | ~20 MB |
+| Region file | Covers | Max zoom | Actual size |
+|-------------|--------|----------|-------------|
+| `europe.pmtiles` | EUGridHUD, LargestMachineZoom flyout | z12 | ~5.8 GB |
+| `wolfsburg.pmtiles` | LargestMachineZoom start (zoom 14) | z14 | ~8 MB |
+| `berlin.pmtiles` | VPPScenarioMapSlide (zoom up to 17, Reinickendorf) | z17 | ~45 MB |
+| `adelaide.pmtiles` | SAMapHUD | z12 | ~11 MB |
+| `texas.pmtiles` | TexasMapHUD | z9 | ~10 MB |
 
 Output goes to `presentation/public/tiles/` which is gitignored — **each presenter needs to run this script on their machine.** Re-run at any time to refresh tiles from the latest Protomaps build.
 
@@ -85,8 +92,6 @@ npm run offline:download-maps -- --force
 # Use a specific build date:
 PROTOMAPS_DATE=20260315 npm run offline:download-maps
 ```
-
-> **Note:** The tile files are downloaded but not yet wired into the map components. The integration step (adding the `@protomaps/maplibre-pmtiles` protocol handler and pointing components at local style files) is a separate task.
 
 ---
 
@@ -135,9 +140,33 @@ npm run preview
 
 ## Deployment
 
-Live: [https://kubekon-vpp-2026.netlify.app](https://kubekon-vpp-2026.netlify.app) (password-protected)
+### GitHub Pages (primary)
 
-Hosted on Netlify with basic auth.
+Live at **[whatisavpp.com](https://whatisavpp.com)** — the website at the root, the presentation at `/presentation/`.
+
+Triggered manually via the GitHub Actions "Run workflow" button on the `deploy-ghpages` workflow. The workflow builds both the website and presentation and assembles them into a single Pages artifact:
+
+```
+whatisavpp.com/            → website/dist/
+whatisavpp.com/presentation/ → presentation/dist/ (base: /presentation/)
+```
+
+The `CNAME` file in `website/public/` pins the custom domain so it survives re-deploys.
+
+**DNS records required** (apex domain — A records, not CNAME):
+```
+A  @  185.199.108.153
+A  @  185.199.109.153
+A  @  185.199.110.153
+A  @  185.199.111.153
+CNAME  www  lerenzo-enpal.github.io
+```
+
+**Base path:** The presentation is built with `--base /presentation/`. All asset paths (including map tile fetches and data file fetches) use `import.meta.env.BASE_URL` so they resolve correctly regardless of deploy path.
+
+### Netlify (staging)
+
+Live: [https://kubekon-vpp-2026.netlify.app](https://kubekon-vpp-2026.netlify.app) (password-protected)
 
 - Manual deploy only — trigger via GitHub Actions "Run workflow" button
 - Edge function handles HTTP Basic Auth (`SITE_PASSWORD` env var on Netlify)
