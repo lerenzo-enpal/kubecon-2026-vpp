@@ -5,6 +5,7 @@ import StorageTechCards from '../../components/basics/inline/StorageTechCards';
 import StorageScenarioBuilder from '../../components/basics/labs/StorageScenarioBuilder';
 import StorageComparisonTool from '../../components/basics/labs/StorageComparisonTool';
 import MobileVizFallback from '../../components/MobileVizFallback';
+import InfoPanel from '../../components/InfoPanel.astro';
 import { url } from '../../utils/url';
 
 const sections = [
@@ -29,27 +30,16 @@ const sections = [
 <h2 id="duration-problem">The Duration Problem</h2>
 
 <p>
-  Lithium-ion batteries are excellent at what they do: absorb and release energy over
-  minutes to a few hours. They respond in milliseconds, fit in a shipping container,
-  and their costs have dropped 90% since 2010. For short bursts of grid support -- frequency
-  regulation, peak shaving, solar time-shifting -- they are the clear winner.
+  Li-ion excels at short bursts -- frequency regulation, peak shaving, solar time-shifting.
+  But the grid also needs days and weeks of storage. A winter <em>Dunkelflaute</em> can
+  suppress wind and solar for two weeks. Li-ion cannot bridge that gap affordably.
 </p>
 
 <p>
-  But the grid does not only need short bursts. A winter <em>Dunkelflaute</em> (dark
-  doldrums) in Northern Europe can suppress solar and wind output for two weeks straight.
-  A summer heatwave can drive air-conditioning demand above normal for days. Seasonal
-  mismatches between when the sun shines and when people need heat can span months.
-  Lithium-ion cannot bridge these gaps. The batteries would be enormous, absurdly
-  expensive, and would degrade long before they paid for themselves.
-</p>
-
-<p>
-  The core issue is <strong>cost per duration</strong>. Lithium-ion stores energy in
-  the same cells that deliver power. To double the duration, you double the number of
-  cells -- and double the cost. Other technologies decouple power from energy: the
-  "engine" that delivers power is separate from the "tank" that holds energy. Add a
-  bigger tank, and duration goes up without adding more of the expensive parts.
+  The core issue is <strong>cost per duration</strong>. Li-ion stores energy in the same
+  cells that deliver power -- double the duration, double the cost. Other technologies
+  decouple the two: a separate "tank" holds energy while a smaller "engine" delivers power.
+  Bigger tank, longer duration, without multiplying the expensive parts.
 </p>
 
 <MobileVizFallback client:visible fallbackSrc="/images/viz/basics-beyond-lithium-ion.png" alt="Storage technology duration spectrum chart">
@@ -94,17 +84,12 @@ const sections = [
 </MobileVizFallback>
 
 <div class="my-8 flex flex-col gap-4">
-  <div class="p-6 rounded-lg" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
-    <div class="font-mono text-sm mb-2" style="color: var(--color-primary); letter-spacing: 0.08em;">GO DEEPER</div>
+  <InfoPanel label="GO DEEPER">
     <div class="flex flex-col gap-2">
-      <a href={url("/research/topics/grid-flexibility-costs")} class="text-base font-semibold" style="color: var(--color-text);">
-        Grid Flexibility Costs
-      </a>
-      <a href={url("/research/topics/demand-response")} class="text-base font-semibold" style="color: var(--color-text);">
-        Demand Response
-      </a>
+      <a href={url("/research/topics/grid-flexibility-costs")} class="text-base font-semibold" style="color: var(--color-text);">Grid Flexibility Costs</a>
+      <a href={url("/research/topics/demand-response")} class="text-base font-semibold" style="color: var(--color-text);">Demand Response</a>
     </div>
-  </div>
+  </InfoPanel>
 </div>
 
 </ContentLayout>

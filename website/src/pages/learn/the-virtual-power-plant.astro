@@ -11,6 +11,7 @@ import FullscreenWrapper from '../../components/FullscreenWrapper';
 import ChartEnlarger from '../../components/ChartEnlarger';
 import MobileVizFallback from '../../components/MobileVizFallback';
 import VPPExhibitTabs from '../../components/VPPExhibitTabs';
+import InfoPanel from '../../components/InfoPanel.astro';
 import { url } from '../../utils/url';
 ---
 
@@ -71,14 +72,9 @@ import { url } from '../../utils/url';
   </div>
 </div>
 
-<div class="p-4 rounded-lg mb-8" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
-  <div class="font-mono text-sm mb-1" style="color: var(--color-primary); letter-spacing: 0.08em; text-transform: uppercase;">
-    New to battery technology?
-  </div>
-  <div class="text-sm" style="color: var(--color-text-muted);">
-    <a href={url("/basics/how-batteries-work")} style="color: var(--color-primary);">Start here</a> for the foundations of how batteries work, their history, and emerging alternatives.
-  </div>
-</div>
+<InfoPanel label="New to battery technology?" class="mb-8">
+  <a href={url("/basics/how-batteries-work")} style="color: var(--color-primary);">Start here</a> for the foundations of how batteries work, their history, and emerging alternatives.
+</InfoPanel>
 
 <h2 id="homes-as-infrastructure">Homes as Infrastructure</h2>
 
@@ -151,15 +147,15 @@ import { url } from '../../utils/url';
   reduce load. The aggregate response is faster than any gas plant can achieve.
 </p>
 
-<div id="vpp-architecture" class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
-  <div class="flex items-center justify-between mb-3">
-    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">VPP DATA FLOW</div>
-  </div>
-  <MobileVizFallback client:visible fallbackSrc="/images/viz/learn-the-virtual-power-plant.png" alt="VPP data flow architecture diagram showing the layers from IoT devices to grid response">
-    <ChartEnlarger client:visible>
+<div id="vpp-architecture" class="my-8 rounded-lg overflow-hidden relative" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
+  <ChartEnlarger client:visible>
+    <div class="flex items-center justify-between mb-3">
+      <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">VPP DATA FLOW</div>
+    </div>
+    <MobileVizFallback client:visible fallbackSrc="/images/viz/learn-the-virtual-power-plant.png" alt="VPP data flow architecture diagram showing the layers from IoT devices to grid response">
       <VPPArchitecture client:visible height={420} />
-    </ChartEnlarger>
-  </MobileVizFallback>
+    </MobileVizFallback>
+  </ChartEnlarger>
 </div>
 
 <p>
@@ -225,15 +221,15 @@ import { url } from '../../utils/url';
   see the difference.
 </p>
 
-<div id="duck-curve-vpp" class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
-  <div class="flex items-center justify-between mb-3">
-    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">DUCK CURVE WITH VPP LOAD SHIFTING</div>
-  </div>
-  <MobileVizFallback client:visible fallbackSrc="/images/viz/learn-the-virtual-power-plant.png" alt="Duck curve with VPP load shifting showing how batteries flatten the evening demand ramp">
-    <FullscreenWrapper client:visible label="Explore">
+<div id="duck-curve-vpp" class="my-8 rounded-lg overflow-hidden relative" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
+  <FullscreenWrapper client:visible label="Explore">
+    <div class="flex items-center justify-between mb-3">
+      <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">DUCK CURVE WITH VPP LOAD SHIFTING</div>
+    </div>
+    <MobileVizFallback client:visible fallbackSrc="/images/viz/learn-the-virtual-power-plant.png" alt="Duck curve with VPP load shifting showing how batteries flatten the evening demand ramp">
       <DuckCurveVPP client:visible height={400} />
-    </FullscreenWrapper>
-  </MobileVizFallback>
+    </MobileVizFallback>
+  </FullscreenWrapper>
 </div>
 
 <h2 id="vpp-in-action">VPP in Action</h2>
@@ -253,35 +249,26 @@ import { url } from '../../utils/url';
   same grid, same homes, zero batteries. Toggle between tabs and compare.
 </p>
 
-<div id="vpp-exhibits" class="my-8 rounded-lg overflow-hidden scroll-mt-20" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-  <MobileVizFallback client:visible fallbackSrc="/images/viz/learn-the-virtual-power-plant.png" alt="VPP exhibit tabs showing frequency emergency response, energy arbitrage, and the 2016 South Australia blackout">
-    <FullscreenWrapper client:visible label="Launch">
+<div id="vpp-exhibits" class="my-8 rounded-lg overflow-hidden scroll-mt-20 relative" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+  <FullscreenWrapper client:visible label="Launch Full Experience">
+    <MobileVizFallback client:visible fallbackSrc="/images/viz/learn-the-virtual-power-plant.png" alt="VPP exhibit tabs showing frequency emergency response, energy arbitrage, and the 2016 South Australia blackout">
       <VPPExhibitTabs client:visible height={500} />
-    </FullscreenWrapper>
-  </MobileVizFallback>
+    </MobileVizFallback>
+  </FullscreenWrapper>
 </div>
 
-<div class="my-8 p-5 rounded-lg" style="background: rgba(239, 68, 68, 0.04); border: 1px solid rgba(239, 68, 68, 0.15);">
-  <div class="font-mono text-sm mb-2" style="color: #ef4444; letter-spacing: 0.08em;">THE PUNCHLINE</div>
-  <p class="text-base mb-0" style="color: var(--color-text-muted);">
-    Same grid. Same homes. Same infrastructure. The only difference: zero batteries.
-    One year later, the Hornsdale battery was installed. It has prevented every similar
-    cascade since.
-  </p>
-</div>
+<InfoPanel label="THE PUNCHLINE" color="danger" class="my-8">
+  Same grid. Same homes. Same infrastructure. The only difference: zero batteries.
+  One year later, the Hornsdale battery was installed. It has prevented every similar
+  cascade since.
+</InfoPanel>
 
 <div class="my-8">
   <GlowLine client:visible />
 </div>
 
-<div class="my-8 p-6 rounded-lg no-arrow" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
-  <div class="font-mono text-sm mb-2" style="color: var(--color-primary); letter-spacing: 0.08em;">NEXT</div>
-  <a href={url("/learn/the-future")} class="text-lg font-semibold" style="color: var(--color-text);">
-    The Future
-  </a>
-  <div class="text-sm mt-1" style="color: var(--color-text-dim);">
-    Where the grid is heading — and what it means for all of us.
-  </div>
-</div>
+<InfoPanel label="NEXT" href={url("/learn/the-future")} title="The Future" class="my-8">
+  Where the grid is heading — and what it means for all of us.
+</InfoPanel>
 
 </ContentLayout>

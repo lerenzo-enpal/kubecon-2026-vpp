@@ -25,7 +25,7 @@ export default function TransformerDiagram() {
       if (!parent) return;
       const dpr = window.devicePixelRatio || 1;
       const w = parent.clientWidth;
-      const h = 250;
+      const h = 270;
       canvas.width = w * dpr;
       canvas.height = h * dpr;
       canvas.style.width = `${w}px`;
@@ -120,23 +120,23 @@ export default function TransformerDiagram() {
       ctx.globalAlpha = 1;
 
       // Voltage labels
-      ctx.font = '15px "JetBrains Mono", monospace';
+      ctx.font = 'bold 17px "JetBrains Mono", monospace';
       ctx.textAlign = 'center';
       ctx.fillStyle = c.primary;
-      ctx.fillText('230 V', primaryX - 20, midY + coreH / 2 + 25);
+      ctx.fillText('230 V', primaryX - 20, midY + coreH / 2 + 28);
 
       ctx.fillStyle = c.accent;
-      ctx.fillText('400 kV', secondaryX + 20, midY + coreH / 2 + 25);
+      ctx.fillText('400 kV', secondaryX + 20, midY + coreH / 2 + 28);
 
       // Arrow between
-      ctx.fillStyle = c.textDim;
-      ctx.font = '16px "JetBrains Mono", monospace';
-      ctx.fillText('Step-Up', midX, midY + coreH / 2 + 25);
+      ctx.fillStyle = c.text;
+      ctx.font = 'bold 18px "JetBrains Mono", monospace';
+      ctx.fillText('Step-Up', midX, midY + coreH / 2 + 28);
 
       // Caption below transformer
-      ctx.font = '14px "JetBrains Mono", monospace';
+      ctx.font = '16px "JetBrains Mono", monospace';
       ctx.fillStyle = c.textMuted;
-      ctx.fillText('Transformers only work with AC -- that\'s why AC won', midX, midY + coreH / 2 + 50);
+      ctx.fillText('Transformers only work with AC -- that\'s why AC won', midX, midY + coreH / 2 + 54);
 
       // Transmission line sketch below
       const lineY = h - 40;
@@ -177,10 +177,10 @@ export default function TransformerDiagram() {
       ctx.globalAlpha = 1;
 
       // Power loss annotation
-      ctx.font = '14px "JetBrains Mono", monospace';
+      ctx.font = '16px "JetBrains Mono", monospace';
       ctx.fillStyle = c.danger;
       ctx.textAlign = 'center';
-      ctx.fillText('P = I\u00B2R  (lower current = less loss)', midX, lineY + 18);
+      ctx.fillText('P = I\u00B2R  (lower current = less loss)', midX, lineY + 20);
 
       rafRef.current = requestAnimationFrame(draw);
     }

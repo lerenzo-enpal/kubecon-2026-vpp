@@ -49,7 +49,7 @@ export default function DurationSpectrumChart() {
 
     const padLeft = 120;
     const padRight = 24;
-    const padTop = 30;
+    const padTop = 36;
     const padBottom = 40;
     const chartW = w - padLeft - padRight;
     const chartH = h - padTop - padBottom;
@@ -131,7 +131,7 @@ export default function DurationSpectrumChart() {
       if (!canvas || !container) return;
       const dpr = window.devicePixelRatio || 1;
       const w = container.clientWidth;
-      const h = 250;
+      const h = 290;
       canvas.width = w * dpr;
       canvas.height = h * dpr;
       canvas.style.width = `${w}px`;

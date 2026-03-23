@@ -222,7 +222,18 @@ interface Props {
   height?: number;
 }
 
-export default function FrequencyDemo({ height = 440 }: Props) {
+export default function FrequencyDemo({ height: propHeight = 440 }: Props) {
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const height = isFullscreen ? Math.max(propHeight, window.innerHeight - 120) : propHeight;
+
+  useEffect(() => {
+    function onFsChange() {
+      setIsFullscreen(!!document.fullscreenElement);
+    }
+    document.addEventListener('fullscreenchange', onFsChange);
+    return () => document.removeEventListener('fullscreenchange', onFsChange);
+  }, []);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const hackerCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -1239,7 +1250,7 @@ export default function FrequencyDemo({ height = 440 }: Props) {
                 padding: '12px 14px',
                 borderRadius: 6,
                 cursor: 'pointer',
-                fontSize: 12,
+                fontSize: 14,
                 fontFamily: '"JetBrains Mono", monospace',
                 fontWeight: isActive ? 600 : 400,
                 transition: 'all 0.2s',

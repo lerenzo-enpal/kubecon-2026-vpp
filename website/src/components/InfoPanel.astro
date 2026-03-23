@@ -1,0 +1,74 @@
+---
+/**
+ * Shared info/callout/CTA panel used across the site.
+ *
+ * Variants:
+ *   - Navigation (CONTINUE/NEXT): label + linked title + description
+ *   - Info (New to X? / Ready to go deeper?): label + body with inline links
+ *   - Highlight (THE PUNCHLINE): label + emphasis content
+ *   - Link list (GO DEEPER): label + multiple links via slot
+ *
+ * Props:
+ *   label     – uppercase mono label (e.g. "CONTINUE", "GO DEEPER")
+ *   href      – optional link target for a title link
+ *   title     – optional linked title text (rendered as a large link if href provided)
+ *   color     – 'primary' | 'accent' | 'danger' | 'surface' (default: 'primary')
+ */
+
+interface Props {
+  label: string;
+  href?: string;
+  title?: string;
+  color?: 'primary' | 'accent' | 'danger' | 'surface';
+  class?: string;
+}
+
+const { label, href, title, color = 'primary', class: className } = Astro.props;
+
+const colorMap = {
+  primary: {
+    bg: 'rgba(34, 211, 238, 0.04)',
+    border: 'rgba(34, 211, 238, 0.15)',
+    label: 'var(--color-primary)',
+  },
+  accent: {
+    bg: 'rgba(245, 158, 11, 0.04)',
+    border: 'rgba(245, 158, 11, 0.15)',
+    label: 'var(--color-accent)',
+  },
+  danger: {
+    bg: 'rgba(239, 68, 68, 0.04)',
+    border: 'rgba(239, 68, 68, 0.15)',
+    label: 'var(--color-danger)',
+  },
+  surface: {
+    bg: 'var(--color-surface)',
+    border: 'var(--color-surface-light)',
+    label: 'var(--color-text-dim)',
+  },
+};
+
+const c = colorMap[color];
+---
+
+<div
+  class:list={['p-5 rounded-lg no-arrow', className]}
+  style={`background: ${c.bg}; border: 1px solid ${c.border};`}
+>
+  <div
+    class="font-mono text-sm mb-2 uppercase tracking-wide"
+    style={`color: ${c.label}; letter-spacing: 0.08em;`}
+  >
+    {label}
+  </div>
+
+  {href && title && (
+    <a href={href} class="text-lg font-semibold block mb-1" style="color: var(--color-text);">
+      {title} &rarr;
+    </a>
+  )}
+
+  <div class="text-base" style="color: var(--color-text-muted);">
+    <slot />
+  </div>
+</div>

@@ -25,7 +25,7 @@ export default function GenerationMethods() {
       if (!parent) return;
       const dpr = window.devicePixelRatio || 1;
       const w = parent.clientWidth;
-      const h = 300;
+      const h = 260;
       canvas.width = w * dpr;
       canvas.height = h * dpr;
       canvas.style.width = `${w}px`;
@@ -243,34 +243,34 @@ export default function GenerationMethods() {
 
           // NO spinning indicator -- conspicuously still
           ctx.fillStyle = c.accent;
-          ctx.globalAlpha = 0.15;
-          ctx.font = '14px "JetBrains Mono", monospace';
+          ctx.globalAlpha = 0.2;
+          ctx.font = '15px "JetBrains Mono", monospace';
           ctx.textAlign = 'center';
           ctx.fillText('no moving parts', cx, iconY + 35);
           ctx.globalAlpha = 1;
         }
 
         // Labels
-        ctx.font = '14px "JetBrains Mono", monospace';
+        ctx.font = '16px "JetBrains Mono", monospace';
         ctx.fillStyle = c.text;
         ctx.textAlign = 'center';
         ctx.fillText(m.label, cx, iconY + 55);
 
         // Spinning indicator
         if (m.spins) {
-          ctx.font = '14px "JetBrains Mono", monospace';
+          ctx.font = '15px "JetBrains Mono", monospace';
           ctx.fillStyle = c.primary;
           ctx.globalAlpha = 0.5;
-          ctx.fillText('spins', cx, iconY + 68);
+          ctx.fillText('spins', cx, iconY + 72);
           ctx.globalAlpha = 1;
         }
       });
 
       // Caption
-      ctx.font = '16px "JetBrains Mono", monospace';
+      ctx.font = 'bold 16px "JetBrains Mono", monospace';
       ctx.fillStyle = c.textMuted;
       ctx.textAlign = 'center';
-      ctx.fillText('Almost everything spins -- except solar PV', w / 2, h - 20);
+      ctx.fillText('Almost everything spins -- except solar PV', w / 2, h - 16);
 
       rafRef.current = requestAnimationFrame(draw);
     }

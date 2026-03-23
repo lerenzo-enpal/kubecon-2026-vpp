@@ -12,6 +12,7 @@ import GlowLine from '../../components/GlowLine';
 import FrequencyWalkthrough from '../../components/FrequencyWalkthrough';
 import GridFlowDemo from '../../components/GridFlowDemo.tsx';
 import MobileVizFallback from '../../components/MobileVizFallback';
+import InfoPanel from '../../components/InfoPanel.astro';
 import { url } from '../../utils/url';
 ---
 
@@ -27,15 +28,10 @@ import { url } from '../../utils/url';
   serves billions, and must balance supply and demand <strong>every single second</strong>.
 </p>
 
-<div class="p-4 rounded-lg mb-8" style="background: var(--color-surface); border: 1px solid var(--color-surface-light);">
-  <div class="font-mono text-sm mb-1" style="color: var(--color-primary); letter-spacing: 0.08em; text-transform: uppercase;">
-    New to electricity?
-  </div>
-  <div class="text-sm" style="color: var(--color-text-muted);">
-    Start with <a href={url("/basics/how-electricity-works")} style="color: var(--color-primary);">How Electricity Works</a> and
-    <a href={url("/basics/supply-and-demand")} style="color: var(--color-primary);">Supply & Demand</a> for the foundations.
-  </div>
-</div>
+<InfoPanel label="New to electricity?" class="mb-8">
+  Start with <a href={url("/basics/how-electricity-works")} style="color: var(--color-primary);">How Electricity Works</a> and
+  <a href={url("/basics/supply-and-demand")} style="color: var(--color-primary);">Supply & Demand</a> for the foundations.
+</InfoPanel>
 
 <div class="my-8">
   <GlowLine client:visible />
@@ -234,25 +230,19 @@ import { url } from '../../utils/url';
 
 <h2 id="try-to-break-the-grid">Try to Break the Grid!</h2>
 
-<div id="frequency-simulator" class="my-10 rounded-lg overflow-hidden p-4 scroll-mt-20" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
-  <div class="flex items-center justify-between mb-3">
-    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">Grid Frequency Simulator</div>
-    <span
-      class="font-mono text-sm px-2 py-0.5 rounded"
-      style="background: rgba(34, 211, 238, 0.1); color: var(--color-primary); border: 1px solid rgba(34, 211, 238, 0.2);"
-    >
-      Interactive
-    </span>
-  </div>
-  <MobileVizFallback client:visible fallbackSrc="/images/viz/frequency-demo.png" alt="Grid frequency simulator showing real-time frequency response to grid events">
-    <FullscreenWrapper client:visible label="Explore">
+<div id="frequency-simulator" class="my-10 rounded-lg overflow-hidden p-4 scroll-mt-20 relative" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light);">
+  <FullscreenWrapper client:visible label="Explore">
+    <div class="flex items-center justify-between mb-3">
+      <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">Grid Frequency Simulator</div>
+    </div>
+    <MobileVizFallback client:visible fallbackSrc="/images/viz/frequency-demo.png" alt="Grid frequency simulator showing real-time frequency response to grid events">
       <FrequencyDemo client:visible />
-    </FullscreenWrapper>
-  </MobileVizFallback>
-  <div class="text-sm mt-3" style="color: var(--color-text-dim);">
-    Click a scenario to simulate a grid event. Watch how frequency responds in real time.
-    The Cyber Attack scenario demonstrates what happens when automated defenses are compromised.
-  </div>
+    </MobileVizFallback>
+    <div class="text-sm mt-3" style="color: var(--color-text-dim);">
+      Click a scenario to simulate a grid event. Watch how frequency responds in real time.
+      The Cyber Attack scenario demonstrates what happens when automated defenses are compromised.
+    </div>
+  </FullscreenWrapper>
 </div>
 
 <!-- FOOTER -->
@@ -261,14 +251,8 @@ import { url } from '../../utils/url';
   <GlowLine client:visible />
 </div>
 
-<div class="my-8 p-6 rounded-lg no-arrow" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
-  <div class="font-mono text-sm mb-2" style="color: var(--color-primary); letter-spacing: 0.08em;">NEXT</div>
-  <a href={url("/learn/the-old-way")} class="text-lg font-semibold" style="color: var(--color-text);">
-    The Old Way
-  </a>
-  <div class="text-sm mt-1" style="color: var(--color-text-dim);">
-    How we've kept the grid stable for 70 years — and what it costs.
-  </div>
-</div>
+<InfoPanel label="NEXT" href={url("/learn/the-old-way")} title="The Old Way" class="my-8">
+  How we've kept the grid stable for 70 years — and what it costs.
+</InfoPanel>
 
 </ContentLayout>

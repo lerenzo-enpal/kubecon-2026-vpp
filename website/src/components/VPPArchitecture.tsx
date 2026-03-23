@@ -88,13 +88,11 @@ export default function VPPArchitecture({ height = 420, enlarged = false }: Prop
 
     // In compact mode, skip the trader node and adjust positions
     const activeNodes = isEnlarged ? NODES : NODES.filter(n => n.id !== 'trader');
-    const activeEdges = isEnlarged ? EDGES : EDGES.filter(e => e.from !== 'trader' && e.to !== 'trader')
-      .map(e => {
-        // Reconnect: market→controller directly when trader is hidden
-        if (e.from === 'market' && e.to === 'trader') return { ...e, to: 'controller' };
-        if (e.from === 'trader' && e.to === 'market') return { ...e, from: 'controller' };
-        return e;
-      });
+    const activeEdges = isEnlarged ? EDGES : [
+      { from: 'market', to: 'controller', protocol: '', rateMul: 2 },
+      ...EDGES.filter(e => e.from !== 'trader' && e.to !== 'trader'),
+      { from: 'controller', to: 'market', protocol: '', rateMul: 2 },
+    ];
     // Adjust x positions when compact: spread 3 nodes + homes evenly
     const compactPositions: Record<string, number> = { market: 0.02, controller: 0.30, enpal: 0.55 };
     function getNodeX(node: NodeDef) {
@@ -188,7 +186,7 @@ export default function VPPArchitecture({ height = 420, enlarged = false }: Prop
 
       // Draw edges (once per bidirectional pair)
       const drawnLines = new Set<string>();
-      EDGES.forEach((edge) => {
+      activeEdges.forEach((edge) => {
         const lineKey = [edge.from, edge.to].sort().join('-');
         if (drawnLines.has(lineKey)) return;
         drawnLines.add(lineKey);
@@ -228,7 +226,8 @@ export default function VPPArchitecture({ height = 420, enlarged = false }: Prop
         p.progress += p.speed;
         if (p.progress > 1) { particles.splice(i, 1); continue; }
 
-        const edge = EDGES[p.edge];
+        const edge = activeEdges[p.edge];
+        if (!edge) { particles.splice(i, 1); continue; }
         const { fx, fy, tx, ty } = edgePoints(edge);
         p._px = fx + (tx - fx) * p.progress;
         p._py = fy + (ty - fy) * p.progress;

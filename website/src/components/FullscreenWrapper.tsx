@@ -34,10 +34,17 @@ export default function FullscreenWrapper({ children, label }: Props) {
         background: isFullscreen ? '#020408' : 'transparent',
         width: isFullscreen ? '100vw' : undefined,
         height: isFullscreen ? '100vh' : undefined,
-        overflow: 'hidden',
+        overflow: isFullscreen ? 'auto' : 'hidden',
+        display: isFullscreen ? 'flex' : undefined,
+        flexDirection: isFullscreen ? 'column' : undefined,
+        alignItems: isFullscreen ? 'center' : undefined,
+        justifyContent: isFullscreen ? 'center' : undefined,
+        padding: isFullscreen ? '24px' : undefined,
       }}
     >
-      {children}
+      <div style={isFullscreen ? { width: '100%', maxWidth: 1400, maxHeight: '100%' } : undefined}>
+        {children}
+      </div>
 
       {!isFullscreen && (
         <button
@@ -45,7 +52,7 @@ export default function FullscreenWrapper({ children, label }: Props) {
           className="fs-launch-btn"
           title={label || 'Launch'}
         >
-          <svg width="14" height="14" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <svg width="16" height="16" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
             <path d="M1 4V1h3M8 1h3v3M11 8v3H8M4 11H1V8" />
           </svg>
           {label && <span className="fs-launch-btn-text">{label}</span>}

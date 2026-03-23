@@ -8,6 +8,7 @@ import ChartEnlarger from '../../components/ChartEnlarger';
 import MobileVizFallback from '../../components/MobileVizFallback';
 import SolarHome from '../../components/illustrations/SolarHome';
 import GlowLine from '../../components/GlowLine';
+import InfoPanel from '../../components/InfoPanel.astro';
 import { url } from '../../utils/url';
 ---
 
@@ -117,12 +118,15 @@ import { url } from '../../utils/url';
   in 2013, and the duck has since waddled its way across every grid with significant solar penetration.
 </p>
 
-<div class="my-8">
-  <MobileVizFallback client:visible fallbackSrc="/images/viz/learn-the-renewable-revolution.png" alt="Duck curve explorer showing net demand through a typical day with high solar penetration">
-    <ChartEnlarger client:visible>
+<div class="my-8 rounded-lg overflow-hidden relative" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px;">
+  <FullscreenWrapper client:visible label="Explore">
+    <div class="flex items-center justify-between mb-3">
+      <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">DUCK CURVE EXPLORER</div>
+    </div>
+    <MobileVizFallback client:visible fallbackSrc="/images/viz/learn-the-renewable-revolution.png" alt="Duck curve explorer showing net demand through a typical day with high solar penetration">
       <DuckCurveExplorer client:visible />
-    </ChartEnlarger>
-  </MobileVizFallback>
+    </MobileVizFallback>
+  </FullscreenWrapper>
 </div>
 
 <p>
@@ -148,15 +152,15 @@ import { url } from '../../utils/url';
   generators — in 2024, that bill came to EUR 554 million.
 </p>
 
-<div id="curtailment-chart" class="my-8 rounded-lg overflow-hidden" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
-  <div class="flex items-center justify-between mb-3">
-    <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">CUMULATIVE CURTAILMENT 2015-2024</div>
-  </div>
-  <MobileVizFallback client:visible fallbackSrc="/images/viz/learn-the-renewable-revolution.png" alt="Cumulative curtailment chart 2015 to 2024 showing wasted renewable energy">
-    <ChartEnlarger client:visible>
+<div id="curtailment-chart" class="my-8 rounded-lg overflow-hidden relative" style="background: var(--color-bg-alt); border: 1px solid var(--color-surface-light); padding: 16px; scroll-margin-top: 80px;">
+  <FullscreenWrapper client:visible label="Explore">
+    <div class="flex items-center justify-between mb-3">
+      <div class="font-mono text-sm font-semibold tracking-wide uppercase" style="color: var(--color-text);">CUMULATIVE CURTAILMENT 2015-2024</div>
+    </div>
+    <MobileVizFallback client:visible fallbackSrc="/images/viz/learn-the-renewable-revolution.png" alt="Cumulative curtailment chart 2015 to 2024 showing wasted renewable energy">
       <CurtailmentChart client:visible height={460} />
-    </ChartEnlarger>
-  </MobileVizFallback>
+    </MobileVizFallback>
+  </FullscreenWrapper>
 </div>
 
 <p>
@@ -226,14 +230,8 @@ import { url } from '../../utils/url';
   <GlowLine client:visible />
 </div>
 
-<div class="my-8 p-6 rounded-lg no-arrow" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
-  <div class="font-mono text-sm mb-2" style="color: var(--color-primary); letter-spacing: 0.08em;">NEXT</div>
-  <a href={url("/learn/the-virtual-power-plant")} class="text-lg font-semibold" style="color: var(--color-text);">
-    The Virtual Power Plant
-  </a>
-  <div class="text-sm mt-1" style="color: var(--color-text-dim);">
-    Homes as infrastructure. Batteries, EVs, and heat pumps stabilizing the grid.
-  </div>
-</div>
+<InfoPanel label="NEXT" href={url("/learn/the-virtual-power-plant")} title="The Virtual Power Plant" class="my-8">
+  Homes as infrastructure. Batteries, EVs, and heat pumps stabilizing the grid.
+</InfoPanel>
 
 </ContentLayout>

@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import FullscreenWrapper from '../../FullscreenWrapper';
 import { getCanvasThemeColors, type CanvasThemeColors } from '../shared/canvasTheme';
 
 const TECH_NAMES = ['Li-ion', 'Flow', 'Pumped Hydro', 'CAES', 'Gravity', 'Thermal', 'Hydrogen', 'Flywheel'] as const;
@@ -109,7 +108,7 @@ function drawRadar(
     const labelR = maxR + 18;
     const lx = cx + Math.cos(angle) * labelR;
     const ly = cy + Math.sin(angle) * labelR;
-    ctx.font = `12px ${monoFont}`;
+    ctx.font = `14px ${monoFont}`;
     ctx.fillStyle = colors.textMuted;
     ctx.textAlign = Math.abs(Math.cos(angle)) < 0.1 ? 'center' : Math.cos(angle) > 0 ? 'left' : 'right';
     ctx.textBaseline = Math.abs(Math.sin(angle)) < 0.1 ? 'middle' : Math.sin(angle) > 0 ? 'top' : 'bottom';
@@ -167,7 +166,10 @@ export default function StorageComparisonTool() {
       if (prev.includes(tech)) {
         return prev.filter((t) => t !== tech);
       }
-      if (prev.length >= 3) return prev;
+      if (prev.length >= 3) {
+        // Drop the oldest selection, add the new one
+        return [...prev.slice(1), tech];
+      }
       return [...prev, tech];
     });
   }, []);
@@ -236,42 +238,34 @@ export default function StorageComparisonTool() {
   }, [selected, projected]);
 
   return (
-    <FullscreenWrapper label="Storage Comparison Tool">
-      <div className="rounded-lg p-4 md:p-6 h-full flex flex-col" style={{ background: 'var(--color-surface)', border: '1px solid var(--color-surface-light)' }}>
+      <div className="rounded-lg p-4 md:p-6 flex flex-col" style={{ background: 'var(--color-surface)', border: '1px solid var(--color-surface-light)' }}>
         {/* Technology toggles */}
         <div className="flex flex-wrap gap-2 mb-4">
           {TECH_NAMES.map((tech) => {
             const isSelected = selected.includes(tech);
             const color = TECH_COLORS[tech];
-            const atMax = selected.length >= 3 && !isSelected;
             return (
               <button
                 key={tech}
                 onClick={() => toggleTech(tech)}
-                disabled={atMax}
-                className="px-3 py-1.5 rounded text-xs font-mono cursor-pointer transition-colors"
+                className="px-3 py-1.5 rounded text-sm font-mono cursor-pointer transition-colors"
                 style={{
                   background: isSelected ? color.replace('0.8', '0.2') : 'var(--color-bg-alt)',
-                  color: isSelected ? color.replace('0.8', '1') : atMax ? 'var(--color-text-dim)' : 'var(--color-text-muted)',
+                  color: isSelected ? color.replace('0.8', '1') : 'var(--color-text-muted)',
                   border: `1px solid ${isSelected ? color : 'var(--color-surface-light)'}`,
-                  opacity: atMax ? 0.5 : 1,
-                  cursor: atMax ? 'not-allowed' : 'pointer',
                 }}
               >
                 {tech}
               </button>
             );
           })}
-          <span className="text-xs font-mono self-center ml-2" style={{ color: 'var(--color-text-dim)' }}>
-            (max 3)
-          </span>
         </div>
 
         {/* Today / 2030 toggle */}
         <div className="flex gap-2 mb-4">
           <button
             onClick={() => setProjected(false)}
-            className="px-3 py-1 rounded text-xs font-mono cursor-pointer transition-colors"
+            className="px-3 py-1.5 rounded text-sm font-mono cursor-pointer transition-colors"
             style={{
               background: !projected ? 'var(--color-primary)' : 'var(--color-bg-alt)',
               color: !projected ? 'var(--color-bg)' : 'var(--color-text-muted)',
@@ -282,7 +276,7 @@ export default function StorageComparisonTool() {
           </button>
           <button
             onClick={() => setProjected(true)}
-            className="px-3 py-1 rounded text-xs font-mono cursor-pointer transition-colors"
+            className="px-3 py-1.5 rounded text-sm font-mono cursor-pointer transition-colors"
             style={{
               background: projected ? 'var(--color-primary)' : 'var(--color-bg-alt)',
               color: projected ? 'var(--color-bg)' : 'var(--color-text-muted)',
@@ -313,7 +307,7 @@ export default function StorageComparisonTool() {
                   className="w-3 h-3 rounded-full"
                   style={{ background: TECH_COLORS[tech] }}
                 />
-                <span className="text-xs font-mono" style={{ color: 'var(--color-text-muted)' }}>
+                <span className="text-sm font-mono" style={{ color: 'var(--color-text-muted)' }}>
                   {tech}
                 </span>
               </div>
@@ -321,6 +315,5 @@ export default function StorageComparisonTool() {
           </div>
         )}
       </div>
-    </FullscreenWrapper>
   );
 }

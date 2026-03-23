@@ -28,7 +28,7 @@ export default function ACvsDCWaveform() {
       if (!parent) return;
       const dpr = window.devicePixelRatio || 1;
       const w = parent.clientWidth;
-      const h = 180;
+      const h = 195;
       canvas.width = w * dpr;
       canvas.height = h * dpr;
       canvas.style.width = `${w}px`;
@@ -56,7 +56,7 @@ export default function ACvsDCWaveform() {
       const padL = 40;
       const padR = 20;
       const padT = 20;
-      const padB = 40;
+      const padB = 48;
       const chartW = w - padL - padR;
       const chartH = h - padT - padB;
       const midY = padT + chartH / 2;

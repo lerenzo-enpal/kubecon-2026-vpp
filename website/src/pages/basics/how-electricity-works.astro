@@ -7,6 +7,7 @@ import GenerationMethods from '../../components/basics/inline/GenerationMethods'
 import OhmsLawPlayground from '../../components/basics/inline/OhmsLawPlayground';
 import PowerEnergyCalculator from '../../components/basics/inline/PowerEnergyCalculator';
 import MobileVizFallback from '../../components/MobileVizFallback';
+import InfoPanel from '../../components/InfoPanel.astro';
 import { url } from '../../utils/url';
 ---
 
@@ -186,16 +187,10 @@ import { url } from '../../utils/url';
 
 <!-- ═══ Continue Link ═══ -->
 
-<div class="flex flex-col gap-4 my-8">
-  <div class="p-5 rounded-lg no-arrow" style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.15);">
-    <div class="font-mono text-sm mb-1" style="color: var(--color-primary); letter-spacing: 0.08em;">CONTINUE</div>
-    <a href={url("/basics/supply-and-demand")} class="text-lg font-semibold" style="color: var(--color-text);">
-      Supply &amp; Demand &rarr;
-    </a>
-    <div class="text-sm mt-1" style="color: var(--color-text-dim);">
-      Why the grid must balance supply and demand every second -- and what happens when it can't.
-    </div>
-  </div>
+<div class="my-8">
+  <InfoPanel label="CONTINUE" href={url("/basics/supply-and-demand")} title="Supply & Demand">
+    Why the grid must balance supply and demand every second -- and what happens when it can't.
+  </InfoPanel>
 </div>
 
 </ContentLayout>
