@@ -3,116 +3,82 @@ import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
 
 /**
- * GridFrequencyExplainer — Step-driven visualization:
- *   Step 0: Single turbine + clean 50 Hz waveform
- *   Step 1: Two turbines in sync, combined strong waveform
- *   Step 2: Turbines clash — one slows, waveforms interfere, disconnect
+ * GridFrequencyExplainer — Left/right turbines with waveforms flowing
+ * toward the center where they combine into the grid-wide frequency.
+ *
+ * Steps:
+ *   0: Generator A alone, clean wave flows to center
+ *   1: Generator B appears on right, both in sync, strong center wave
+ *   2: Generator B slows slightly — subtle drift visible in center
+ *   3: Generator B much slower — destructive interference, center distorted
+ *   4: Generator B disconnects — center returns to clean but weaker
  */
 
 function drawTurbine(ctx, cx, cy, r, angle, color, label, dimmed) {
-  const alpha = dimmed ? 0.3 : 1;
+  ctx.save();
+  if (dimmed) ctx.globalAlpha = 0.25;
 
-  // Outer ring
-  ctx.globalAlpha = alpha;
   ctx.beginPath();
   ctx.arc(cx, cy, r, 0, Math.PI * 2);
   ctx.strokeStyle = color + '50';
   ctx.lineWidth = 3;
   ctx.stroke();
 
-  // Glow ring
   if (!dimmed) {
     ctx.beginPath();
-    ctx.arc(cx, cy, r + 5, 0, Math.PI * 2);
-    ctx.strokeStyle = color + '15';
-    ctx.lineWidth = 10;
+    ctx.arc(cx, cy, r + 4, 0, Math.PI * 2);
+    ctx.strokeStyle = color + '12';
+    ctx.lineWidth = 8;
     ctx.stroke();
   }
 
-  // Inner circle
   ctx.beginPath();
   ctx.arc(cx, cy, r * 0.88, 0, Math.PI * 2);
   ctx.fillStyle = colors.surface;
   ctx.fill();
-  ctx.strokeStyle = color + '30';
-  ctx.lineWidth = 1;
-  ctx.stroke();
 
-  // Rotor blades (6)
   for (let i = 0; i < 6; i++) {
     const a = angle + (i * Math.PI * 2) / 6;
     ctx.beginPath();
     ctx.moveTo(cx + Math.cos(a) * r * 0.15, cy + Math.sin(a) * r * 0.15);
     ctx.lineTo(cx + Math.cos(a) * r * 0.78, cy + Math.sin(a) * r * 0.78);
     ctx.strokeStyle = color;
-    ctx.lineWidth = 3.5;
+    ctx.lineWidth = 3;
     ctx.lineCap = 'round';
     ctx.stroke();
-
     ctx.beginPath();
-    ctx.arc(cx + Math.cos(a) * r * 0.78, cy + Math.sin(a) * r * 0.78, 3.5, 0, Math.PI * 2);
+    ctx.arc(cx + Math.cos(a) * r * 0.78, cy + Math.sin(a) * r * 0.78, 3, 0, Math.PI * 2);
     ctx.fillStyle = color;
     ctx.fill();
   }
 
-  // Center hub
   ctx.beginPath();
-  ctx.arc(cx, cy, r * 0.12, 0, Math.PI * 2);
+  ctx.arc(cx, cy, r * 0.11, 0, Math.PI * 2);
   ctx.fillStyle = color;
   ctx.fill();
 
-  // Label
-  ctx.font = 'bold 14px "JetBrains Mono"';
+  ctx.font = 'bold 13px "JetBrains Mono"';
   ctx.fillStyle = color;
   ctx.textAlign = 'center';
-  ctx.fillText(label, cx, cy + r + 22);
+  ctx.fillText(label, cx, cy + r + 20);
 
-  ctx.globalAlpha = 1;
-}
-
-function drawWaveform(ctx, x, y, w, h, freq, elapsed, color, alpha, label) {
-  ctx.globalAlpha = alpha;
-
-  // Waveform
-  ctx.beginPath();
-  const samples = 200;
-  for (let i = 0; i <= samples; i++) {
-    const t = i / samples;
-    const px = x + t * w;
-    const py = y + h / 2 - Math.sin(t * freq * 0.4 + elapsed * freq * 0.05) * h * 0.4;
-    if (i === 0) ctx.moveTo(px, py);
-    else ctx.lineTo(px, py);
-  }
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 2.5;
-  ctx.stroke();
-
-  // Label
-  if (label) {
-    ctx.font = '14px "JetBrains Mono"';
-    ctx.fillStyle = color;
-    ctx.textAlign = 'left';
-    ctx.fillText(label, x, y - 8);
+  if (dimmed) {
+    // Red X
+    const s = r * 0.4;
+    ctx.globalAlpha = 0.8;
+    ctx.strokeStyle = colors.danger;
+    ctx.lineWidth = 4;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(cx - s, cy - s); ctx.lineTo(cx + s, cy + s); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx + s, cy - s); ctx.lineTo(cx - s, cy + s); ctx.stroke();
   }
 
-  ctx.globalAlpha = 1;
+  ctx.restore();
 }
 
-function drawDisconnectX(ctx, cx, cy, size, color) {
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 4;
-  ctx.lineCap = 'round';
-  ctx.beginPath();
-  ctx.moveTo(cx - size, cy - size);
-  ctx.lineTo(cx + size, cy + size);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(cx + size, cy - size);
-  ctx.lineTo(cx - size, cy + size);
-  ctx.stroke();
-}
-
-export default function GridFrequencyExplainer({ width = 1200, height = 480, step = 0 }) {
+export default function GridFrequencyExplainer({ width = 1200, height = 440, step = 0 }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const slideContext = useContext(SlideContext);
@@ -137,7 +103,7 @@ export default function GridFrequencyExplainer({ width = 1200, height = 480, ste
       ctx.clearRect(0, 0, width, height);
 
       // Background grid
-      ctx.strokeStyle = colors.surfaceLight + '08';
+      ctx.strokeStyle = colors.surfaceLight + '06';
       ctx.lineWidth = 1;
       for (let gx = 0; gx < width; gx += 40) {
         ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, height); ctx.stroke();
@@ -146,228 +112,195 @@ export default function GridFrequencyExplainer({ width = 1200, height = 480, ste
         ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(width, gy); ctx.stroke();
       }
 
-      // Turbine rotation speeds (slowed for visibility)
+      // Layout zones
+      const turbineR = 60;
+      const leftTurbineX = 80;
+      const rightTurbineX = width - 80;
+      const turbineY = height * 0.45;
+
+      // Waveform zones
+      const leftWaveX = leftTurbineX + turbineR + 20;
+      const rightWaveEnd = rightTurbineX - turbineR - 20;
+      const centerX = width / 2;
+      const leftWaveW = centerX - leftWaveX - 30;
+      const rightWaveX = centerX + 30;
+      const rightWaveW = rightWaveEnd - rightWaveX;
+      const waveY = height * 0.12;
+      const waveH = height * 0.55;
+
+      // Frequencies per step
+      const freq1 = 50;
+      const freqFactors = [1, 1, 0.94, 0.82, 0]; // B's speed relative to A
+      const factor = freqFactors[Math.min(s, freqFactors.length - 1)];
+      const freq2 = freq1 * factor;
+      const showB = s >= 1;
+      const disconnected = s >= 4;
+
       const baseSpeed = Math.PI * 0.3;
       const angle1 = elapsed * baseSpeed;
+      const angle2 = elapsed * baseSpeed * factor;
 
-      // Step 2: second turbine slows down over time, oscillates
-      const slowFactor = s >= 2 ? 0.6 + 0.15 * Math.sin(elapsed * 0.5) : 1;
-      const angle2 = elapsed * baseSpeed * slowFactor;
+      // Status colors
+      const colorA = colors.success;
+      const colorB = disconnected ? colors.danger
+        : s >= 3 ? '#f59e0b'
+        : s >= 2 ? colors.accent
+        : colors.primary;
+      const centerColor = s === 0 ? colorA
+        : s === 1 ? colors.text
+        : s >= 4 ? colorA
+        : s >= 3 ? colors.danger
+        : colors.accent;
 
-      const freq1 = 50;
-      const freq2 = s >= 2 ? 50 * slowFactor : 50;
+      // === Draw turbines ===
+      drawTurbine(ctx, leftTurbineX, turbineY, turbineR, angle1, colorA, 'Generator A', false);
+      if (showB) {
+        drawTurbine(ctx, rightTurbineX, turbineY, turbineR, angle2, colorB,
+          disconnected ? 'DISCONNECTED' : `Generator B`, disconnected);
+      }
 
-      // Disconnect happens when slow turbine drops below threshold
-      const isDisconnected = s >= 2 && slowFactor < 0.7;
+      // Frequency labels under turbines
+      ctx.font = '12px "JetBrains Mono"';
+      ctx.textAlign = 'center';
+      ctx.fillStyle = colorA + 'aa';
+      ctx.fillText(`${freq1.toFixed(1)} Hz`, leftTurbineX, turbineY + turbineR + 36);
+      if (showB && !disconnected) {
+        ctx.fillStyle = colorB + 'aa';
+        ctx.fillText(`${freq2.toFixed(1)} Hz`, rightTurbineX, turbineY + turbineR + 36);
+      }
 
-      // === STEP 0: Single turbine + waveform ===
+      // === Draw waveforms ===
+      const samples = 150;
+
+      // Center baseline
+      ctx.setLineDash([3, 5]);
+      ctx.strokeStyle = colors.surfaceLight + '40';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(leftWaveX, waveY + waveH / 2);
+      ctx.lineTo(rightWaveEnd, waveY + waveH / 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Left waveform (A → center)
+      ctx.beginPath();
+      for (let i = 0; i <= samples; i++) {
+        const t = i / samples;
+        const px = leftWaveX + t * leftWaveW;
+        const fade = Math.min(1, t * 3) * Math.min(1, (1 - t) * 3);
+        const py = waveY + waveH / 2 - Math.sin(t * 12 + elapsed * 2.5) * waveH * 0.35 * fade;
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.strokeStyle = colorA;
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      // Left wave label
+      ctx.font = '13px "JetBrains Mono"';
+      ctx.fillStyle = colorA;
+      ctx.textAlign = 'left';
+      ctx.fillText('A: 50.0 Hz', leftWaveX, waveY - 6);
+
+      // Right waveform (B → center) — only if B is visible and not disconnected
+      if (showB && !disconnected) {
+        ctx.beginPath();
+        for (let i = 0; i <= samples; i++) {
+          const t = i / samples;
+          const px = rightWaveX + (1 - t) * rightWaveW; // flows left
+          const fade = Math.min(1, t * 3) * Math.min(1, (1 - t) * 3);
+          const py = waveY + waveH / 2 - Math.sin(t * 12 * factor + elapsed * 2.5 * factor) * waveH * 0.35 * fade;
+          if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        ctx.strokeStyle = colorB;
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+
+        ctx.font = '13px "JetBrains Mono"';
+        ctx.fillStyle = colorB;
+        ctx.textAlign = 'right';
+        ctx.fillText(`B: ${freq2.toFixed(1)} Hz`, rightWaveEnd, waveY - 6);
+      }
+
+      // === Center: combined grid frequency ===
+      const centerWaveW = 50;
+      const centerWaveH = waveH * 0.7;
+      const centerWaveY = waveY + (waveH - centerWaveH) / 2;
+
+      // Center box background
+      ctx.fillStyle = colors.surface + '80';
+      ctx.beginPath();
+      ctx.roundRect(centerX - centerWaveW / 2 - 8, centerWaveY - 20, centerWaveW + 16, centerWaveH + 60, 8);
+      ctx.fill();
+      ctx.strokeStyle = centerColor + '30';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // "GRID" label
+      ctx.font = 'bold 12px "JetBrains Mono"';
+      ctx.fillStyle = centerColor;
+      ctx.textAlign = 'center';
+      ctx.fillText('GRID', centerX, centerWaveY - 6);
+
+      // Center combined waveform (vertical, flowing down)
+      ctx.beginPath();
+      for (let i = 0; i <= 80; i++) {
+        const t = i / 80;
+        const py = centerWaveY + t * centerWaveH;
+        const wave1 = Math.sin(t * 10 + elapsed * 2.5);
+        const wave2 = (showB && !disconnected) ? Math.sin(t * 10 * factor + elapsed * 2.5 * factor) : 0;
+        const combined = wave1 + wave2;
+        const amplitude = showB && !disconnected ? 8 : 12;
+        const px = centerX + combined * amplitude;
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.strokeStyle = centerColor;
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      // Center frequency readout
+      const gridFreq = disconnected ? freq1 : (showB ? (freq1 + freq2) / 2 : freq1);
+      ctx.font = 'bold 18px "JetBrains Mono"';
+      ctx.fillStyle = centerColor;
+      ctx.textAlign = 'center';
+      ctx.fillText(`${gridFreq.toFixed(1)}`, centerX, centerWaveY + centerWaveH + 30);
+      ctx.font = '12px "JetBrains Mono"';
+      ctx.fillStyle = centerColor + 'aa';
+      ctx.fillText('Hz', centerX, centerWaveY + centerWaveH + 46);
+
+      // === Bottom status bar ===
+      const statusY = height - 40;
+      let statusText, statusColor, subText;
+
       if (s === 0) {
-        const tX = width * 0.2;
-        const tY = height * 0.45;
-        drawTurbine(ctx, tX, tY, 80, angle1, colors.success, 'Generator A', false);
-
-        // Waveform
-        const wX = width * 0.42;
-        const wY = height * 0.15;
-        const wW = width * 0.52;
-        const wH = height * 0.55;
-
-        // Baseline
-        ctx.setLineDash([4, 4]);
-        ctx.strokeStyle = colors.surfaceLight;
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(wX, wY + wH / 2);
-        ctx.lineTo(wX + wW, wY + wH / 2);
-        ctx.stroke();
-        ctx.setLineDash([]);
-
-        drawWaveform(ctx, wX, wY, wW, wH, freq1, elapsed, colors.success, 1, '50 Hz — clean AC output');
-
-        // Frequency readout
-        ctx.font = 'bold 48px "JetBrains Mono"';
-        ctx.fillStyle = colors.success;
-        ctx.textAlign = 'center';
-        ctx.shadowBlur = 16;
-        ctx.shadowColor = colors.success + '40';
-        ctx.fillText('50.00 Hz', width * 0.68, height * 0.88);
-        ctx.shadowBlur = 0;
-
-        ctx.font = '16px "Inter"';
-        ctx.fillStyle = colors.textMuted;
-        ctx.fillText('All generators synchronized to the same frequency', width * 0.68, height * 0.95);
+        statusText = 'Single generator — clean 50 Hz output';
+        statusColor = colorA;
+        subText = 'Every turbine on the grid produces AC at this frequency';
+      } else if (s === 1) {
+        statusText = 'Two generators in phase — waves reinforce';
+        statusColor = colors.success;
+        subText = 'Synchronized generators add power to the grid';
+      } else if (s === 2) {
+        statusText = 'Generator B slowing — slight frequency drift';
+        statusColor = colors.accent;
+        subText = 'Demand exceeds supply — turbines feel more resistance';
+      } else if (s === 3) {
+        statusText = 'Waves clashing — destructive interference';
+        statusColor = '#f59e0b';
+        subText = 'Out-of-sync generators damage equipment and destabilize the grid';
+      } else {
+        statusText = 'Generator B disconnected to prevent destruction';
+        statusColor = colors.danger;
+        subText = 'Remaining generators carry all load — cascade risk';
       }
 
-      // === STEP 1: Two turbines in sync ===
-      if (s === 1) {
-        const t1X = width * 0.12;
-        const t2X = width * 0.12;
-        const t1Y = height * 0.25;
-        const t2Y = height * 0.7;
+      ctx.font = 'bold 18px "Inter"';
+      ctx.fillStyle = statusColor;
+      ctx.textAlign = 'center';
+      ctx.fillText(statusText, width / 2, statusY);
 
-        drawTurbine(ctx, t1X, t1Y, 65, angle1, colors.success, 'Generator A', false);
-        drawTurbine(ctx, t2X, t2Y, 65, angle1, colors.primary, 'Generator B', false);
-
-        // Connection line between turbines
-        ctx.setLineDash([4, 4]);
-        ctx.strokeStyle = colors.surfaceLight;
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(t1X, t1Y + 65 + 30);
-        ctx.lineTo(t2X, t2Y - 65 - 10);
-        ctx.stroke();
-        ctx.setLineDash([]);
-
-        ctx.font = '12px "JetBrains Mono"';
-        ctx.fillStyle = colors.textDim;
-        ctx.textAlign = 'center';
-        ctx.fillText('SYNC', t1X, (t1Y + t2Y) / 2);
-
-        // Individual waveforms
-        const wX = width * 0.32;
-        const wW = width * 0.36;
-        const wH1 = height * 0.28;
-
-        drawWaveform(ctx, wX, height * 0.08, wW, wH1, freq1, elapsed, colors.success, 0.6, 'Generator A');
-        drawWaveform(ctx, wX, height * 0.42, wW, wH1, freq1, elapsed, colors.primary, 0.6, 'Generator B');
-
-        // Arrow to combined
-        const arrowX = wX + wW + 20;
-        ctx.strokeStyle = colors.textDim;
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.moveTo(arrowX, height * 0.22);
-        ctx.lineTo(arrowX + 30, height * 0.42);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(arrowX, height * 0.56);
-        ctx.lineTo(arrowX + 30, height * 0.42);
-        ctx.stroke();
-        // Arrowhead
-        ctx.beginPath();
-        ctx.moveTo(arrowX + 30, height * 0.42);
-        ctx.lineTo(arrowX + 22, height * 0.39);
-        ctx.lineTo(arrowX + 22, height * 0.45);
-        ctx.closePath();
-        ctx.fillStyle = colors.textDim;
-        ctx.fill();
-
-        // Combined strong waveform
-        const combX = width * 0.74;
-        const combW = width * 0.22;
-        const combH = height * 0.5;
-
-        ctx.beginPath();
-        const samples = 200;
-        for (let i = 0; i <= samples; i++) {
-          const t = i / samples;
-          const px = combX + t * combW;
-          const wave1 = Math.sin(t * freq1 * 0.4 + elapsed * freq1 * 0.05);
-          const wave2 = Math.sin(t * freq1 * 0.4 + elapsed * freq1 * 0.05);
-          const py = height * 0.22 + combH / 2 - (wave1 + wave2) * combH * 0.22;
-          if (i === 0) ctx.moveTo(px, py);
-          else ctx.lineTo(px, py);
-        }
-        ctx.strokeStyle = colors.text;
-        ctx.lineWidth = 3;
-        ctx.stroke();
-
-        ctx.font = 'bold 14px "JetBrains Mono"';
-        ctx.fillStyle = colors.text;
-        ctx.textAlign = 'left';
-        ctx.fillText('Combined: 2x power', combX, height * 0.13);
-
-        ctx.font = 'bold 36px "JetBrains Mono"';
-        ctx.fillStyle = colors.success;
-        ctx.textAlign = 'center';
-        ctx.fillText('IN PHASE', width * 0.82, height * 0.88);
-
-        ctx.font = '15px "Inter"';
-        ctx.fillStyle = colors.textMuted;
-        ctx.fillText('Waves add up — more power, stable grid', width * 0.82, height * 0.94);
-      }
-
-      // === STEP 2: Clash — one slows, interference, disconnect ===
-      if (s >= 2) {
-        const t1X = width * 0.12;
-        const t2X = width * 0.12;
-        const t1Y = height * 0.25;
-        const t2Y = height * 0.7;
-
-        drawTurbine(ctx, t1X, t1Y, 65, angle1, colors.success, 'Generator A', false);
-        drawTurbine(ctx, t2X, t2Y, 65, isDisconnected ? colors.danger : '#f59e0b', angle2, isDisconnected ? 'DISCONNECTED' : 'Generator B (slowing)', isDisconnected);
-
-        if (isDisconnected) {
-          drawDisconnectX(ctx, t2X, t2Y, 30, colors.danger);
-        }
-
-        // Broken sync line
-        ctx.setLineDash([2, 6]);
-        ctx.strokeStyle = colors.danger + '40';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(t1X, t1Y + 65 + 30);
-        ctx.lineTo(t2X, t2Y - 65 - 10);
-        ctx.stroke();
-        ctx.setLineDash([]);
-
-        ctx.font = '12px "JetBrains Mono"';
-        ctx.fillStyle = colors.danger;
-        ctx.textAlign = 'center';
-        ctx.fillText('DESYNC', t1X, (t1Y + t2Y) / 2);
-
-        // Individual waveforms showing different frequencies
-        const wX = width * 0.32;
-        const wW = width * 0.36;
-        const wH1 = height * 0.28;
-
-        drawWaveform(ctx, wX, height * 0.08, wW, wH1, freq1, elapsed, colors.success, 0.7, `Generator A: ${freq1.toFixed(1)} Hz`);
-        drawWaveform(ctx, wX, height * 0.42, wW, wH1, freq2, elapsed * slowFactor, isDisconnected ? colors.danger : '#f59e0b', isDisconnected ? 0.3 : 0.7,
-          isDisconnected ? 'Generator B: DISCONNECTED' : `Generator B: ${freq2.toFixed(1)} Hz`);
-
-        // Combined waveform showing interference
-        const combX = width * 0.74;
-        const combW = width * 0.22;
-        const combH = height * 0.5;
-
-        ctx.beginPath();
-        const samples = 200;
-        for (let i = 0; i <= samples; i++) {
-          const t = i / samples;
-          const px = combX + t * combW;
-          const wave1 = Math.sin(t * freq1 * 0.4 + elapsed * freq1 * 0.05);
-          const wave2 = isDisconnected ? 0 : Math.sin(t * freq2 * 0.4 + elapsed * freq2 * 0.05);
-          const py = height * 0.22 + combH / 2 - (wave1 + wave2) * combH * 0.22;
-          if (i === 0) ctx.moveTo(px, py);
-          else ctx.lineTo(px, py);
-        }
-        ctx.strokeStyle = isDisconnected ? colors.danger : '#f59e0b';
-        ctx.lineWidth = 3;
-        ctx.stroke();
-
-        ctx.font = 'bold 14px "JetBrains Mono"';
-        ctx.fillStyle = isDisconnected ? colors.danger : '#f59e0b';
-        ctx.textAlign = 'left';
-        ctx.fillText(isDisconnected ? 'Combined: power lost' : 'Combined: destructive interference', combX, height * 0.13);
-
-        // Status
-        ctx.font = 'bold 36px "JetBrains Mono"';
-        ctx.fillStyle = isDisconnected ? colors.danger : '#f59e0b';
-        ctx.textAlign = 'center';
-        ctx.shadowBlur = 12;
-        ctx.shadowColor = (isDisconnected ? colors.danger : '#f59e0b') + '40';
-        ctx.fillText(isDisconnected ? 'CASCADE RISK' : 'OUT OF PHASE', width * 0.82, height * 0.88);
-        ctx.shadowBlur = 0;
-
-        ctx.font = '15px "Inter"';
-        ctx.fillStyle = colors.textMuted;
-        ctx.fillText(
-          isDisconnected
-            ? 'Generator disconnects to survive — remaining ones overloaded'
-            : 'Waves cancel out — grid destabilizes, equipment at risk',
-          width * 0.82, height * 0.94,
-        );
-      }
+      ctx.font = '14px "Inter"';
+      ctx.fillStyle = colors.textMuted;
+      ctx.fillText(subText, width / 2, statusY + 22);
 
       if (isActive) animRef.current = requestAnimationFrame(draw);
     }

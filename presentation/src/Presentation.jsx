@@ -278,7 +278,7 @@ export default function Presentation() {
       <Slide backgroundColor={bg} padding="0">
         <div className="relative w-full h-full flex flex-col" style={{ padding: '28px 40px 16px' }}>
           <H>The 50 Hz Heartbeat</H>
-          <Stepper values={[1, 2]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1">
+          <Stepper values={[1, 2, 3, 4]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1">
             {(stepVal) => (
               <div className="w-full h-full flex justify-center items-center">
                 <LazyContent><GridFrequencyExplainer width={1200} height={440} step={stepVal ?? 0} /></LazyContent>
@@ -287,13 +287,12 @@ export default function Presentation() {
           </Stepper>
         </div>
         <Notes>
-          [LERENZO] Every generator on the grid is a spinning turbine — coal, gas, hydro, nuclear.
-          They all produce AC electricity at exactly 50 cycles per second. That's the frequency.
-          [ARROW] Now add a second generator. When they're in sync — in phase — their waves add up. More power, stable grid.
-          [ARROW] But if one slows down — say demand surges — their waves go out of phase. Destructive interference.
-          The slow generator's protection relays disconnect it to prevent physical damage.
-          Now the remaining generators carry more load — they slow down too — cascade.
-          This is why frequency matters. It's not just a number. It's the heartbeat of the grid.
+          [LERENZO] One generator, spinning, producing a clean 50 Hz AC waveform. This is what frequency IS.
+          [ARROW] Add a second generator. Both in sync — waves reinforce each other. More power, stable grid.
+          [ARROW] Now demand surges. Generator B feels more resistance, slows slightly. Watch the waves start to drift.
+          [ARROW] Further out of sync. The waves are fighting each other — destructive interference. Equipment at risk.
+          [ARROW] Protection relays disconnect Generator B to prevent physical destruction.
+          But now the remaining generators carry all the load. They slow down too. That's the cascade.
         </Notes>
       </Slide>
 
