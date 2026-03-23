@@ -10,9 +10,9 @@ import { colors } from '../theme';
 
 // Drawer info for each highlighted node (steps 1-3)
 const DRAWER_INFO = [
-  { nodeId: 'market', title: 'Energy Market', sub: 'FCR / aFRR', color: colors.accent,
-    desc: 'Grid operators like ENTSO-E auction reserve capacity to keep frequency stable. TSOs procure FCR (30s response) and aFRR (5 min) from qualified providers — including VPPs.',
-    detail: 'Response: 30s (FCR) to 5min (aFRR)' },
+  { nodeId: 'market', title: 'Energy Market', sub: 'Day-Ahead + Intraday', color: colors.accent,
+    desc: 'Think of it as a stock market for electricity. Producers and consumers trade power in 15-minute blocks, a day ahead and in real time. VPPs participate by selling stored energy when prices are high and buying when they are low.',
+    detail: 'Traded in 15-minute increments' },
   { nodeId: 'trader', title: 'Trading Gateway', sub: 'Entrix', color: colors.accent,
     desc: 'Algorithmic trading platform that bids aggregated battery capacity into wholesale energy markets. Entrix optimizes across day-ahead, intraday, and balancing markets.',
     detail: 'Optimizes across multiple market types' },
@@ -22,7 +22,7 @@ const DRAWER_INFO = [
 ];
 
 const NODES = [
-  { id: 'market',     label: 'Energy Market',   sub: 'FCR / aFRR',        x: 0.03,  y: 0.42,  color: colors.accent },
+  { id: 'market',     label: 'Energy Market',   sub: 'Day-Ahead',         x: 0.03,  y: 0.42,  color: colors.accent },
   { id: 'trader',     label: 'Trading Gateway',  sub: 'Entrix',            x: 0.22,  y: 0.42,  color: colors.accent },
   { id: 'controller', label: 'VPP Controller',   sub: 'Flexa',             x: 0.42,  y: 0.42,  color: colors.primary },
   { id: 'enpal',      label: 'Enpal Cloud',     sub: 'Fleet Mgmt',       x: 0.62,  y: 0.42,  color: colors.success },
