@@ -757,7 +757,7 @@ export default function Presentation() {
           </div>
           {/* Heading overlay */}
           <div className="relative z-10 px-8 pt-5 pointer-events-none" style={{ background: 'linear-gradient(to bottom, #020408 0%, #020408cc 60%, transparent 100%)' }}>
-            <div className="text-[10px] font-mono font-semibold tracking-[0.2em] uppercase mb-2" style={{ color: colors.textDim }}>INSIDE THE ARCHITECTURE</div>
+            <div className="text-xs font-mono font-semibold tracking-widest uppercase mb-2" style={{ color: colors.textDim }}>INSIDE THE ARCHITECTURE</div>
             <H>Inside the Architecture</H>
             <P size="18px" style={{ opacity: 0.7 }}>Click through to explore each layer.</P>
           </div>

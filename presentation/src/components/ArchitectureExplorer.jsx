@@ -158,14 +158,14 @@ export default function ArchitectureExplorer({ step = 0 }) {
             background: 'rgba(5,8,16,0.9)',
             border: `1px solid ${focus.panelColor}40`,
           }}>
-            <div className="text-[10px] font-mono font-semibold tracking-[0.2em]" style={{ color: focus.panelColor }}>{focus.label}</div>
+            <div className="text-xs font-mono font-semibold tracking-widest" style={{ color: focus.panelColor }}>{focus.label}</div>
           </div>
         </div>
       )}
 
       {/* Info panel (flies in from left or right, below title area) */}
       {focus.panel !== null && focus.panelSide && (
-        <div className="absolute bottom-0 z-20 flex items-end" style={{ top: 110,
+        <div className="absolute z-20 flex items-end" style={{ top: 110, bottom: 36,
           [focus.panelSide === 'right' ? 'right' : 'left']: 16,
           width: 420,
           opacity: isOverview ? 0 : 1,
@@ -175,49 +175,49 @@ export default function ArchitectureExplorer({ step = 0 }) {
           transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s',
           pointerEvents: isOverview ? 'none' : 'auto',
         }}>
-          <div className="rounded-lg w-full" style={{
+          <div className="rounded-lg w-full max-h-full overflow-y-auto" style={{
             background: 'rgba(5, 8, 16, 0.94)',
             border: `1px solid ${focus.panelColor}35`,
             boxShadow: `0 0 30px ${focus.panelColor}15, inset 0 0 20px ${focus.panelColor}05`,
             backdropFilter: 'blur(12px)',
-            padding: '20px 24px',
+            padding: '16px 20px',
           }}>
             <Corners color={focus.panelColor + '50'} size={10} />
 
             {/* Title */}
-            <div className="text-[13px] font-mono font-semibold tracking-[0.15em] uppercase mb-1" style={{ color: focus.panelColor }}>{focus.subtitle}</div>
-            <div className="text-[26px] font-extrabold font-sans leading-tight mb-4" style={{ color: colors.text }}>{focus.title}</div>
+            <div className="text-sm font-mono font-semibold tracking-widest uppercase mb-1" style={{ color: focus.panelColor }}>{focus.subtitle}</div>
+            <div className="text-2xl font-extrabold font-sans leading-tight mb-3" style={{ color: colors.text }}>{focus.title}</div>
 
             {/* Stats row */}
             {focus.stats && (
-              <div className="flex gap-4 mb-4">
+              <div className="flex gap-4 mb-3">
                 {focus.stats.map((s, i) => (
                   <div key={i} className="rounded px-3 py-1.5" style={{ background: s.color + '0a', border: `1px solid ${s.color}20` }}>
-                    <div className="text-[10px] font-mono tracking-[0.1em] uppercase" style={{ color: colors.textDim }}>{s.label}</div>
-                    <div className="text-[18px] font-bold font-mono" style={{ color: s.color }}>{s.value}</div>
+                    <div className="text-xs font-mono tracking-wider uppercase" style={{ color: colors.textDim }}>{s.label}</div>
+                    <div className="text-lg font-bold font-mono" style={{ color: s.color }}>{s.value}</div>
                   </div>
                 ))}
               </div>
             )}
 
             {/* Bullets */}
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
               {focus.bullets.map((b, i) => (
                 <div key={i} className="flex gap-3 items-start">
                   <div className="mt-2 w-2 h-2 rounded-full shrink-0" style={{ background: focus.panelColor + '80' }} />
-                  <div className="text-[17px] text-hud-text-muted font-sans leading-relaxed">{b}</div>
+                  <div className="text-base text-hud-text-muted font-sans leading-relaxed">{b}</div>
                 </div>
               ))}
             </div>
 
             {/* Extra content (consistency comparison for MQTT) */}
             {focus.extra && (
-              <div className="mt-4 pt-4" style={{ borderTop: `1px solid ${colors.surfaceLight}` }}>
-                <div className="text-[12px] font-mono font-semibold tracking-[0.1em] uppercase mb-2" style={{ color: colors.textDim }}>{focus.extra.title}</div>
+              <div className="mt-3 pt-3" style={{ borderTop: `1px solid ${colors.surfaceLight}` }}>
+                <div className="text-xs font-mono font-semibold tracking-wider uppercase mb-2" style={{ color: colors.textDim }}>{focus.extra.title}</div>
                 {focus.extra.rows.map((r, i) => (
                   <div key={i} className="flex items-center gap-3 py-1">
-                    <div className="text-[14px] font-mono font-semibold w-[100px]" style={{ color: r.active ? colors.success : colors.textDim }}>{r.model}</div>
-                    <div className="text-[13px] font-sans" style={{ color: r.active ? colors.textMuted : colors.textDim }}>{r.note}</div>
+                    <div className="text-sm font-mono font-semibold w-24" style={{ color: r.active ? colors.success : colors.textDim }}>{r.model}</div>
+                    <div className="text-sm font-sans" style={{ color: r.active ? colors.textMuted : colors.textDim }}>{r.note}</div>
                   </div>
                 ))}
               </div>
