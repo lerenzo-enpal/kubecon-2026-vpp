@@ -7,7 +7,8 @@ const STEPS = [
   { freq: 50.000, freqColor: c, gridState: 'boot', status: null, band: null, scenario: null, gridTimeSec: 0 },
   { freq: 49.800, freqColor: colors.success, gridState: 'normal', status: 'NOMINAL', band: '49.8 — 50.2 Hz', scenario: 'Normal operating band. Spinning reserves on standby.', gridTimeSec: 0 },
   { freq: 49.500, freqColor: colors.accent, gridState: 'reserves', status: 'WARNING', band: '49.8 — 49.0 Hz', scenario: 'Reserves activate. Gas CCGT ramps to max output.', gridTimeSec: 30 },
-  { freq: 49.000, freqColor: colors.danger, gridState: 'shedding', status: 'EMERGENCY', band: 'Below 49.0 Hz', scenario: 'Reserves maxed. Peaker fires. Load shedding begins.', gridTimeSec: 300 },
+  { freq: 49.200, freqColor: '#f59e0b', gridState: 'peaker', status: 'CRITICAL', band: '49.0 — 49.5 Hz', scenario: 'Reserves maxed. Peaker plant fires up.', gridTimeSec: 180 },
+  { freq: 49.000, freqColor: colors.danger, gridState: 'shedding', status: 'EMERGENCY', band: 'Below 49.0 Hz', scenario: 'Load shedding begins. Deliberate blackouts to save the grid.', gridTimeSec: 300 },
   { freq: 47.500, freqColor: colors.danger, gridState: 'collapse', status: 'SYSTEM FAILURE', band: '47.5 Hz', scenario: 'Generators disconnect to self-protect. Total collapse.', gridTimeSec: 720 },
   { freq: null, freqColor: colors.accent, gridState: 'collapse', status: null, band: null, scenario: null, gridTimeSec: null },
 ];
@@ -436,30 +437,30 @@ const CONN_ALL = [
 function GridDiagram({ state, draw }) {
   const isCollapse = state === 'collapse';
   const isShedding = state === 'shedding' || isCollapse;
-  const isReserves = state === 'reserves' || isShedding;
+  const isPeaker = state === 'peaker' || isShedding;
+  const isReserves = state === 'reserves' || isPeaker;
 
   // Collapse: same colors as shedding, only differences are: energy stops,
   // utilization bars drop, labels say OFFLINE, X on all houses, bushing sparks
-  const lineC = (isCollapse || isShedding) ? colors.danger + '50' : isReserves ? colors.accent + '60' : c + '40';
+  const lineC = (isCollapse || isShedding) ? colors.danger + '50' : isPeaker ? '#f59e0b60' : isReserves ? colors.accent + '60' : c + '40';
   const reserveS = (isCollapse || isShedding) ? colors.accent + '80' : c + '55';
   const reserveF = (isCollapse || isShedding) ? colors.accent + '06' : c + '06';
-  const peakerS = (isCollapse || isShedding) ? colors.accent : isReserves ? colors.accent : c + '30';
-  const peakerF = (isCollapse || isShedding) ? colors.accent + '06' : isReserves ? colors.accent + '06' : c + '03';
+  const peakerS = (isCollapse || isShedding) ? colors.accent : isPeaker ? '#f59e0b' : isReserves ? colors.accent : c + '30';
+  const peakerF = (isCollapse || isShedding) ? colors.accent + '06' : isPeaker ? '#f59e0b10' : isReserves ? colors.accent + '06' : c + '03';
   const coalS = (isCollapse || isShedding) ? c + '50' : c + '50';
   const coalF = (isCollapse || isShedding) ? c + '05' : c + '05';
 
-  // Reserve ramps first, peaker only fires after reserve is maxed
-  // Partial load at 50% — typical CCGT spinning reserve, shows clear headroom
-  const reserveUtil = isCollapse ? 0 : isShedding ? 1.0 : isReserves ? 1.0 : 0.5;
-  const peakerUtil = isCollapse ? 0 : isShedding ? 0.95 : 0.05;
-  const coalUtil = isCollapse ? 0 : isShedding ? 0.90 : isReserves ? 0.88 : 0.85;
+  // Reserve ramps first, peaker fires when reserves maxed, then load shedding
+  const reserveUtil = isCollapse ? 0 : isShedding ? 1.0 : isPeaker ? 1.0 : isReserves ? 1.0 : 0.5;
+  const peakerUtil = isCollapse ? 0 : isShedding ? 0.95 : isPeaker ? 0.7 : 0.05;
+  const coalUtil = isCollapse ? 0 : isShedding ? 0.90 : isPeaker ? 0.90 : isReserves ? 0.88 : 0.85;
 
-  const reserveStatus = isCollapse ? 'OFFLINE' : isShedding ? 'MAX OUTPUT' : isReserves ? 'MAX OUTPUT' : 'PARTIAL LOAD';
-  const peakerStatus = isCollapse ? 'OFFLINE' : isShedding ? 'RAMPING' : 'IDLE';
-  const coalStatus = isCollapse ? 'OFFLINE' : isShedding ? 'RAMP +3%' : isReserves ? 'RAMP +3%' : 'BASELOAD';
+  const reserveStatus = isCollapse ? 'OFFLINE' : isShedding ? 'MAX OUTPUT' : isPeaker ? 'MAX OUTPUT' : isReserves ? 'MAX OUTPUT' : 'PARTIAL LOAD';
+  const peakerStatus = isCollapse ? 'OFFLINE' : isShedding ? 'MAX OUTPUT' : isPeaker ? 'RAMPING' : 'IDLE';
+  const coalStatus = isCollapse ? 'OFFLINE' : isShedding ? 'RAMP +3%' : isPeaker ? 'RAMP +3%' : isReserves ? 'RAMP +3%' : 'BASELOAD';
 
   const reserveStatusC = isCollapse ? colors.textDim + '40' : isReserves ? colors.accent : colors.success + '99';
-  const peakerStatusC = isCollapse ? colors.textDim + '40' : isShedding ? colors.accent : colors.textDim + '50';
+  const peakerStatusC = isCollapse ? colors.textDim + '40' : isPeaker ? '#f59e0b' : isShedding ? colors.accent : colors.textDim + '50';
   const coalStatusC = isCollapse ? colors.textDim + '40' : colors.success + '99';
 
   // Reserve CCGT flow: normal=slow(2s), reserves=fast(0.8s) as it ramps to max

@@ -43,17 +43,17 @@ const bg = colors.bg;
 const pad = '36px 56px';
 
 // Section ranges (slide numbers are 1-indexed)
-// Slide count: 35 main + appendix. New slide 5 = 50 Hz Heartbeat.
+// Slide count: 33 main + appendix. New slide 5 = 50 Hz Heartbeat.
 const SECTIONS = [
   { from: 1, to: 3, name: '' },
   { from: 4, to: 17, name: 'The Grid' },
   { from: 18, to: 21, name: 'The Renewable Revolution' },
-  { from: 22, to: 35, name: 'The Virtual Power Plant' },
+  { from: 22, to: 33, name: 'The Virtual Power Plant' },
 ];
 
-// Speaker assignments per slide (35 main slides)
+// Speaker assignments per slide (33 main slides)
 // 1-3: Opening, 4-17: The Grid (new slide 5 = 50 Hz Heartbeat), 18-21: Renewables,
-// 22-33: VPP, 34-35: Closing
+// 22-30: VPP, 31-32: Closing, 33: Appendix title
 const SPEAKERS = {
   1: 'SHARED', 2: 'SHARED', 3: 'SHARED',
   4: 'LERENZO', 5: 'LERENZO', 6: 'LERENZO', 7: 'LERENZO',
@@ -62,15 +62,15 @@ const SPEAKERS = {
   18: 'LERENZO', 19: 'MARIO', 20: 'MARIO', 21: 'MARIO',
   22: 'MARIO', 23: 'MARIO', 24: 'LERENZO', 25: 'LERENZO',
   26: 'LERENZO', 27: 'LERENZO', 28: 'LERENZO', 29: 'LERENZO',
-  30: 'LERENZO', 31: 'LERENZO', 32: 'LERENZO', 33: 'MARIO',
-  34: 'LERENZO', 35: 'LERENZO',
+  30: 'LERENZO', 31: 'MARIO',
+  32: 'LERENZO', 33: 'LERENZO',
 };
 
 const DISABLED_VALUES = new Set(['', 'null', 'no', 'disable', 'disabled', 'nein', 'false', '0', 'off']);
 const speakerParam = new URLSearchParams(window.location.search).get('speaker');
 const showSpeaker = speakerParam !== null && !DISABLED_VALUES.has(speakerParam.trim().toLowerCase());
 
-const MAIN_SLIDE_COUNT = 35;
+const MAIN_SLIDE_COUNT = 33;
 
 const slideTemplate = ({ slideNumber, numberOfSlides }) => {
   const isAppendix = slideNumber > MAIN_SLIDE_COUNT;
@@ -376,7 +376,7 @@ export default function Presentation() {
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H>The Grid: Balanced at 0.67c</H>
-          <P size="20px">This enormous machine maintains a constant 50 Hz frequency — imbalances propagate at two-thirds the speed of light. There is no buffer.</P>
+          <P size="20px">This enormous machine maintains a constant 50 Hz frequency — imbalances propagate at two-thirds the speed of light.</P>
           <Stepper values={[1, 2, 3, 4]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col" style={{ minHeight: 0 }}>
             {(stepVal) => <FrequencyWalkthrough step={stepVal ?? 0} mode="intro" />}
           </Stepper>
@@ -395,16 +395,16 @@ export default function Presentation() {
         <div className="flex flex-col h-full">
           <H>Tools for Balancing the Grid</H>
           <P size="20px">What happens when supply and demand diverge — and how the grid fights back.</P>
-          <Stepper values={[1, 2, 3]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col" style={{ minHeight: 0 }}>
+          <Stepper values={[1, 2, 3, 4]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col" style={{ minHeight: 0 }}>
             {(stepVal) => <FrequencyWalkthrough step={stepVal ?? 0} mode="scenarios" />}
           </Stepper>
         </div>
         <Notes>
           - [ARROW] 49.8-50.2 Hz: normal band. Spinning reserves on standby.
           - [ARROW] 49.5 Hz: reserves activate. Gas CCGT ramps to max.
-          - [ARROW] 49.0 Hz: reserves maxed. Peaker fires. Load shedding (deliberate blackouts).
+          - [ARROW] 49.2 Hz: reserves maxed. Peaker plant fires up.
+          - [ARROW] 49.0 Hz: load shedding begins. Deliberate blackouts to save the grid.
           - [ARROW] 47.5 Hz: generators disconnect to self-protect. Total collapse.
-          - Backup: The entire cascade from "fine" to "collapse" can happen in under 12 minutes
         </Notes>
       </Slide>
 
@@ -749,7 +749,7 @@ export default function Presentation() {
             <H>What Is a Virtual Power Plant?</H>
             <P size="20px">From market signal to battery response — the command flow through our VPP architecture.</P>
           </div>
-          <Stepper values={[1, 2, 3]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="w-full h-full">
+          <Stepper values={[1, 2]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="w-full h-full">
             {(stepVal) => <LazyContent><VPPArchitecture highlightStep={stepVal ?? 0} /></LazyContent>}
           </Stepper>
         </div>
@@ -757,7 +757,7 @@ export default function Presentation() {
           [LERENZO] Left: devices — solar panels, batteries, EV chargers, heat pumps.
           Center: cloud platform — Kubernetes + Dapr, event-driven control.
           Right: services — frequency regulation, peak shaving, energy arbitrage, demand response.
-          [ANIMATED] Energy market sends request → Trading gateway (Entrix) → VPP Controller on Kubernetes.
+          [ANIMATED] Energy market sends request → VPP Controller (Flexa) on Kubernetes.
           Controller publishes commands via Kafka → Enpal cloud → MQTT to individual homes.
           Watch the data flow — from market signal to battery charge in seconds.
           Software that aggregates and operates millions of devices as one coordinated power plant.
@@ -879,69 +879,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 28: The Architecture Parallel */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <style>{`
-          @keyframes archLeftIn {
-            0% { opacity: 0; transform: translateX(-30px); filter: blur(4px); }
-            100% { opacity: 1; transform: translateX(0); filter: blur(0); }
-          }
-          @keyframes archRightIn {
-            0% { opacity: 0; transform: translateX(30px); filter: blur(4px); }
-            100% { opacity: 1; transform: translateX(0); filter: blur(0); }
-          }
-          @keyframes archVsIn {
-            0% { opacity: 0; transform: scale(0.5); }
-            100% { opacity: 1; transform: scale(1); }
-          }
-        `}</style>
-        <div className="flex flex-col h-full w-full">
-          <H>The Architecture Parallel</H>
-          <P size="18px">The same distributed systems principles that run the internet can run the power grid.</P>
-          <div className="flex-1 flex flex-col justify-center w-full max-w-[880px] mx-auto gap-5">
-            {[
-              { grid: 'Few large generators', vpp: 'Distributed edge nodes', color: colors.danger },
-              { grid: 'Manual planning', vpp: 'Semi-autonomous autoscaling', color: colors.accent },
-              { grid: 'Isolated resilience', vpp: 'Integrated resilience', color: colors.primary },
-              { grid: 'Centralized observability (SCADA)', vpp: 'Full-stack observability', color: colors.success },
-            ].map((row, i) => {
-              const delay = 0.3 + i * 0.35;
-              return (
-                <div key={i} className="flex gap-4 items-start">
-                  <div className="flex-1 rounded-lg p-4" style={{
-                    background: `${row.color}06`,
-                    border: `1px solid ${row.color}15`,
-                    animation: `archLeftIn 0.6s ease-out ${delay}s both`,
-                  }}>
-                    <div className="text-[20px] font-semibold font-sans" style={{ color: row.color }}>
-                      {row.grid}
-                    </div>
-                  </div>
-                  <div className="text-[22px] text-hud-text-dim font-mono pt-3" style={{
-                    animation: `archVsIn 0.3s ease-out ${delay + 0.15}s both`,
-                  }}>vs</div>
-                  <div className="flex-1 rounded-lg p-4 bg-hud-surface border border-hud-surface-light" style={{
-                    animation: `archRightIn 0.6s ease-out ${delay + 0.1}s both`,
-                  }}>
-                    <div className="text-[20px] text-hud-text font-sans font-medium">
-                      {row.vpp}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <P size="20px" center style={{ fontFamily: '"JetBrains Mono"' }}>Frequency = SLO &bull; Cascade = failure propagation &bull; Batteries = autoscaling</P>
-        </div>
-        <Notes>
-          [LERENZO] Traditional grid = monolithic. VPP = microservices.
-          Draw the parallel for this audience:
-          Frequency = your SLO. Cascade = failure propagation. Batteries = autoscaling.
-          You already think in these terms every day.
-        </Notes>
-      </Slide>
-
-      {/* 29: How a VPP Responds to Grid Events */}
+      {/* 28: How a VPP Responds to Grid Events */}
       <Slide backgroundColor={bg} padding={pad}>
         <style>{`
           @keyframes vppEventIn {
@@ -1015,7 +953,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 30: Energy Arbitrage + Peak Shaving */}
+      {/* 29: Energy Arbitrage + Peak Shaving */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           <VPPScenarioSlide scenario="summer" />
@@ -1030,7 +968,7 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 31: SA Virtual Power Plant */}
+      {/* 30: SA Virtual Power Plant */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
           <SAMapHUD width="100%" height="100%" variant="vpp" />
@@ -1042,98 +980,37 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 32: The Economic Impact of Flexibility */}
-      <Slide backgroundColor={bg} padding={pad}>
-        <div className="flex flex-col h-full">
-          <H color={colors.success}>The Economic Impact of Flexibility</H>
-          <P size="20px">What changes when distributed batteries respond in milliseconds instead of hours.</P>
-          <Stepper values={[1, 2, 3, 4, 5]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col">
-            {(visibleCount) => {
-              const vc = visibleCount ?? 0;
-              const rows = [
-                { metric: 'Grid Emergency', without: 'Cascade failure, 4+ hours', withVpp: 'Stabilized in 200ms' },
-                { metric: 'Peak Demand', without: 'Gas peakers: EUR 150-300/MWh', withVpp: 'Battery discharge: EUR 60-100/MWh' },
-                { metric: 'Negative Prices', without: 'Curtail renewables, pay EUR 554M/yr', withVpp: 'Charge batteries, earn revenue' },
-                { metric: 'Grid Upgrades', without: 'EUR 35B+ new infrastructure', withVpp: 'VPP capacity 40-60% cheaper (Brattle)' },
-                { metric: 'CO2 Emissions', without: '~3.4 Mt avoidable CO2/yr (BNetzA + UBA, 2024)', withVpp: 'Near-zero curtailment emissions' },
-              ];
-              return (
-                <div className="flex-1 flex items-center justify-center">
-                  <div className="w-full max-w-[900px]">
-                    <div className="flex gap-5 mb-5">
-                      <div className="flex-1 text-center text-[18px] font-mono font-semibold py-2 rounded-t-lg" style={{ color: colors.danger, background: colors.danger + '0a', borderBottom: `2px solid ${colors.danger}40` }}>Without VPP</div>
-                      <div className="w-[160px]" />
-                      <div className="flex-1 text-center text-[18px] font-mono font-semibold py-2 rounded-t-lg" style={{ color: colors.success, background: colors.success + '0a', borderBottom: `2px solid ${colors.success}40` }}>With VPP</div>
-                    </div>
-                    {rows.map((r, i) => {
-                      const visible = i < vc;
-                      const isNew = i === vc - 1;
-                      return (
-                        <div key={r.metric} className="flex gap-5 mb-3 items-center" style={{
-                          opacity: visible ? 1 : 0,
-                          transform: visible ? 'translateY(0)' : 'translateY(12px)',
-                          transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-                        }}>
-                          <div className="flex-1 rounded-lg p-4 text-[18px] font-sans text-hud-text-muted" style={{ background: colors.danger + '06', border: `1px solid ${colors.danger}12` }}>
-                            {r.without}
-                          </div>
-                          <div className="w-[160px] text-center">
-                            <div className="text-[16px] font-semibold font-mono" style={{ color: colors.primary }}>{r.metric}</div>
-                          </div>
-                          <div className="flex-1 rounded-lg p-4 text-[18px] font-sans font-semibold" style={{
-                            color: colors.success,
-                            background: colors.success + '06',
-                            border: `1px solid ${colors.success}12`,
-                            boxShadow: isNew ? `0 0 12px ${colors.success}15` : 'none',
-                            transition: 'box-shadow 0.8s ease',
-                          }}>
-                            {r.withVpp}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            }}
-          </Stepper>
-        </div>
-        <Notes>
-          [MARIO] Side by side comparison — Without VPP vs. With VPP.
-          Without: cascade failures, gas peakers at EUR 150-300/MWh, EUR 554M/yr curtailment, EUR 35B+ in grid upgrades, ~3.4 Mt avoidable CO2 (BNetzA + UBA, 2024).
-          With: stabilized in 200ms, batteries at EUR 60-100/MWh, revenue from negative prices, VPP capacity 40-60% cheaper (Brattle), near-zero curtailment emissions.
-          The cheapest megawatt is the one you never have to generate.
-        </Notes>
-      </Slide>
-
       {/* ═══════ CLOSING ═══════ */}
 
-      {/* 33: Back to Texas */}
+      {/* 31: Back to Texas */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-center h-full">
           <div className="text-[20px] font-semibold text-hud-primary font-mono tracking-[0.15em] uppercase mb-6">Back to Texas</div>
           <div className="text-[26px] font-normal text-hud-text font-sans leading-[1.8]">
             <div className="mb-5">Remember those 4 minutes and 37 seconds?</div>
             <div className="mb-5 text-hud-text-muted">
-              With 10 GW of distributed batteries responding in 140 milliseconds, there is no cascade.
+              Distributed batteries respond in 140 milliseconds. That frequency breach at 1:51 AM never happens.
             </div>
             <div className="mb-5 text-hud-text-muted">
-              The frequency never drops. The gas plants never need to save you.
+              Batteries alone don't solve a 63-hour, 1,000 GWh energy crisis. But they buy the hours that prevent a cold-start collapse.
             </div>
             <div className="font-semibold" style={{ color: colors.success, textShadow: `0 0 30px ${colors.success}30` }}>
-              Because 1 million homes already did.
+              The grid doesn't need one silver bullet. It needs a million small ones, responding together.
             </div>
           </div>
         </div>
         <Notes>
           [LERENZO] Remember those 4 minutes and 37 seconds?
-          With 10 GW of distributed batteries responding in 140 milliseconds, there is no cascade.
-          The frequency never drops. The gas plants never need to save you.
-          Because 1 million homes already did.
+          At 1:51 AM, frequency hit 59.4 Hz -- 9 minutes from total collapse. It recovered with 4:37 to spare.
+          Distributed batteries respond in 140ms. That breach never happens.
+          But honesty matters: the full crisis was 63 hours, ~1,000 GWh shortfall. 10 GW of 4-hour batteries = 40 GWh = ~4% of the deficit.
+          Batteries alone don't solve a multi-day energy crisis. But they prevent the acute collapse that turns a bad week into a catastrophe.
+          The grid doesn't need one silver bullet. It needs a million small ones.
+          Backup: ERCOT CEO Bill Magness, Feb 24 2021 board meeting. FERC/NERC final report, Nov 2021: 61.8 GW lost across 1,045 units.
         </Notes>
       </Slide>
 
-      {/* 34: Thank You */}
+      {/* 32: Thank You */}
       <Slide backgroundColor={bg} padding="0">
         <div className="relative w-full h-full">
           <LazyContent><ThankYouBackground width={1366} height={768} /></LazyContent>
@@ -1179,7 +1056,21 @@ export default function Presentation() {
               </svg>
               whatisavpp.com
             </a>
-            <div className="absolute bottom-10 flex items-center gap-2" style={{ color: colors.textDim, fontSize: 14, fontFamily: '"JetBrains Mono", monospace' }}>
+            {/* Feedback QR */}
+            <div className="absolute bottom-8 right-12 flex flex-col items-center gap-2">
+              <div className="text-xs font-mono tracking-widest uppercase" style={{ color: colors.textDim }}>
+                Session Feedback
+              </div>
+              <div className="rounded-xl p-2" style={{ background: '#ffffff', boxShadow: `0 0 24px ${colors.primary}20` }}>
+                <img
+                  src="https://image-charts.com/chart?chs=300x300&cht=qr&choe=UTF-8&chl=https://sched.co/2CVyB"
+                  alt="Session feedback QR code"
+                  className="block"
+                  style={{ width: 120, height: 120 }}
+                />
+              </div>
+            </div>
+            <div className="absolute bottom-10 left-12 flex items-center gap-2" style={{ color: colors.textDim, fontSize: 14, fontFamily: '"JetBrains Mono", monospace' }}>
               <span>Special thanks to</span>
               <span style={{ color: colors.success }}>@engineeringwithRosie</span>
               <span style={{ opacity: 0.4 }}>,</span>
