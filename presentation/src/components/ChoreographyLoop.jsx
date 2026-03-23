@@ -29,7 +29,7 @@ export default function ChoreographyLoop({ width = 900, height = 380 }) {
     const padY = 20;
 
     // Layout
-    const homeX = padX + 30; // offset for EV on left
+    const homeX = padX;
     const homeW = 65;
     const mqttX = width / 2 - 50;
     const mqttW = 100;
@@ -259,48 +259,6 @@ export default function ChoreographyLoop({ width = 900, height = 380 }) {
         ctx.lineWidth = 0.8;
         ctx.strokeRect(-9, -4, 18, 8);
         ctx.restore();
-
-        // Battery inside house
-        const batX = cx - 4;
-        const batY = hy - 2;
-        const batW = 10;
-        const batH = 7;
-        ctx.fillStyle = colors.success + '60';
-        ctx.fillRect(batX - batW / 2, batY - batH / 2, batW, batH);
-        ctx.strokeStyle = colors.success + '90';
-        ctx.lineWidth = 0.8;
-        ctx.strokeRect(batX - batW / 2, batY - batH / 2, batW, batH);
-        // Battery terminal
-        ctx.fillStyle = colors.success + '90';
-        ctx.fillRect(batX + batW / 2, batY - 2, 2, 4);
-        // Fill level
-        ctx.fillStyle = colors.success + 'aa';
-        ctx.fillRect(batX - batW / 2 + 1, batY - batH / 2 + 1, (batW - 2) * 0.7, batH - 2);
-
-        // EV on the left of the home
-        const evX = cx - hw - 18;
-        const evY = hy + 2;
-        // Car body
-        ctx.fillStyle = lc + '30';
-        ctx.beginPath();
-        ctx.roundRect(evX - 10, evY - 4, 16, 8, 2);
-        ctx.fill();
-        ctx.strokeStyle = lc + '60';
-        ctx.lineWidth = 0.8;
-        ctx.stroke();
-        // Car roof
-        ctx.fillStyle = lc + '25';
-        ctx.beginPath();
-        ctx.roundRect(evX - 6, evY - 8, 10, 5, [2, 2, 0, 0]);
-        ctx.fill();
-        // Wheels
-        ctx.fillStyle = lc + '80';
-        ctx.beginPath();
-        ctx.arc(evX - 6, evY + 4, 2, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(evX + 4, evY + 4, 2, 0, Math.PI * 2);
-        ctx.fill();
 
         // Label
         ctx.font = 'bold 12px JetBrains Mono';
