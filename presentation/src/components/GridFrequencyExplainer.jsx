@@ -138,7 +138,7 @@ export default function GridFrequencyExplainer({ width = 1200, height = 520 }) {
       ctx.fillText('GENERATOR TURBINE', turbineX, turbineY + turbineR + 30);
       ctx.font = '14px "JetBrains Mono"';
       ctx.fillStyle = colors.textDim;
-      ctx.fillText('3,000 RPM = 50 Hz', turbineX, turbineY + turbineR + 50);
+      ctx.fillText('Synchronized to 50 Hz', turbineX, turbineY + turbineR + 50);
 
       // === CENTER: Frequency Display ===
       const freqX = width * 0.52;

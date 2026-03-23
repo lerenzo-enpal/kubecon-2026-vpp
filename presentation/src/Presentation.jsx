@@ -278,14 +278,14 @@ export default function Presentation() {
       <Slide backgroundColor={bg} padding="0">
         <div className="relative w-full h-full flex flex-col" style={{ padding: '28px 40px 16px' }}>
           <H>The 50 Hz Heartbeat</H>
-          <P size="18px">Every generator on the grid is a spinning turbine, locked in sync at 3,000 RPM. That speed is the frequency.</P>
+          <P size="18px">Every generator on the grid is a spinning turbine, all synchronized to produce exactly 50 cycles per second. That's the frequency.</P>
           <div className="flex-1 flex justify-center items-center">
             <LazyContent><GridFrequencyExplainer width={1200} height={480} /></LazyContent>
           </div>
         </div>
         <Notes>
           [LERENZO] Before we talk about what goes wrong, you need to understand this one number: 50 Hz.
-          Every generator on the European grid is a spinning turbine — coal, gas, hydro, nuclear — all synchronized at exactly 3,000 RPM.
+          Every generator on the European grid is a spinning turbine — coal, gas, hydro, nuclear — all synchronized to exactly 50 Hz.
           That spin rate IS the frequency. 50 rotations per second = 50 Hz.
           When demand exceeds supply, there's more resistance on the turbines — they slow down — frequency drops.
           Below 49 Hz, automatic systems start cutting power to neighborhoods.
