@@ -3,6 +3,10 @@ import { useState, useEffect } from 'react';
 const CDN_LABELED  = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 const CDN_NOLABELS = 'https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json';
 
+// Holds MapGL in a valid but empty state while the local tile probe is in flight.
+// No network requests are fired until we know which source to use.
+const BLANK_STYLE = { version: 8, sources: {}, layers: [], glyphs: '', sprite: '' };
+
 const REGION_FILES = {
   europe:   'europe.pmtiles',
   berlin:   'berlin.pmtiles',
@@ -10,10 +14,11 @@ const REGION_FILES = {
   texas:    'texas.pmtiles',
 };
 
-// Resolved style cache: 'region:variant' → style object (or CDN string if unavailable)
+// Resolved style cache: 'region:variant' → style object or CDN URL string
 const cache = {};
 
-// Kicked off immediately on first import — resolves true if local tiles are present
+// Probes for local tiles on first import. Resolves to true if found, false if not.
+// Local probe (~1ms on localhost) is tried first; CDN is the fallback.
 const readyPromise = (async () => {
   const base = import.meta.env.BASE_URL;
   try {
@@ -52,11 +57,15 @@ function buildStyle(styleJson, tilesUrl, base) {
 
 export function useMapStyle(region, variant = 'labeled') {
   const fallback = variant === 'nolabels' ? CDN_NOLABELS : CDN_LABELED;
-  const [style, setStyle] = useState(fallback);
+  // Start with a blank valid style — no CDN requests fired until we know
+  // whether local tiles are available. The probe resolves in ~1ms locally
+  // (HEAD to localhost) or on a fast 404 for deployed/CDN-only environments,
+  // so the blank state is imperceptible.
+  const [style, setStyle] = useState(BLANK_STYLE);
 
   useEffect(() => {
     readyPromise.then(available => {
-      if (available) setStyle(cache[`${region}:${variant}`] ?? fallback);
+      setStyle(available ? (cache[`${region}:${variant}`] ?? fallback) : fallback);
     });
   }, [region, variant, fallback]);
 
