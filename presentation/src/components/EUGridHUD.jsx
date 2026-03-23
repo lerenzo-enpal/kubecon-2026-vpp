@@ -159,7 +159,7 @@ const STEPS = [
   {
     view: { longitude: 12, latitude: 49, zoom: 3.4, pitch: 15, bearing: 0 },
     title: 'The Continental Synchronous Grid',
-    subtitle: '36 countries · 400 million people · one frequency: 50 Hz',
+    subtitle: '36 countries · one frequency: 50 Hz',
     voltage: '50.000 Hz',
     detail: 'From Lisbon to Helsinki. It has never been turned off.',
     visibleIds: null, // all
@@ -466,32 +466,6 @@ export default function EUGridHUD({ width = '100%', height = '100%' }) {
       </div>
 
 
-      {/* ── Stats bar — bottom right, appears on final steps ── */}
-      {stepIndex >= 3 && (
-        <div className="absolute bottom-4 right-4 z-10">
-          <div className="flex gap-4 rounded p-3" style={{
-            background: 'rgba(5,8,16,0.92)',
-            border: `1px solid ${borderClr}`,
-            boxShadow: `0 0 20px ${glow}18`,
-          }}>
-            {[
-              { value: '305K', unit: 'km', label: 'HV Lines' },
-              { value: '400M', unit: '', label: 'People' },
-              { value: '1,100', unit: 'GW', label: 'Capacity' },
-              { value: '36', unit: '', label: 'Countries' },
-            ].map((s, i) => (
-              <div key={i} className="text-center min-w-[70px]">
-                <div className="text-[20px] font-mono font-bold text-hud-primary">
-                  {s.value}<span className="text-[20px] text-hud-text-muted ml-0.5">{s.unit}</span>
-                </div>
-                <div className="text-[20px] font-mono text-hud-text-dim tracking-[0.05em]">
-                  {s.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* ── Legend — bottom left ── */}
       <div className="absolute bottom-4 left-4 z-10" style={{ opacity: bootFade(1.5) }}>
