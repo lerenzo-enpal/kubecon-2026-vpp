@@ -803,16 +803,16 @@ export default function Presentation() {
           {/* Bottom: key concepts */}
           <div className="flex gap-5 mt-2">
             <div className="flex-1 rounded-lg px-4 py-3" style={{ background: colors.surface, border: `1px solid ${colors.success}20` }}>
-              <span className="text-[15px] font-semibold font-mono" style={{ color: colors.success }}>Dapr Actors</span>
-              <span className="text-[15px] text-hud-text-muted font-sans ml-3">One actor per home — isolated state, turn-based concurrency</span>
+              <span className="text-lg font-semibold font-mono" style={{ color: colors.success }}>Dapr Actors</span>
+              <span className="text-base text-hud-text-muted font-sans ml-3">One actor per home — isolated state, turn-based concurrency</span>
             </div>
             <div className="flex-1 rounded-lg px-4 py-3" style={{ background: colors.surface, border: `1px solid ${colors.primary}20` }}>
-              <span className="text-[15px] font-semibold font-mono" style={{ color: colors.primary }}>Choreography</span>
-              <span className="text-[15px] text-hud-text-muted font-sans ml-3">No orchestrator — 100K independent pub/sub channels</span>
+              <span className="text-lg font-semibold font-mono" style={{ color: colors.primary }}>Choreography</span>
+              <span className="text-base text-hud-text-muted font-sans ml-3">No orchestrator — 100K independent pub/sub channels</span>
             </div>
             <div className="flex-1 rounded-lg px-4 py-3" style={{ background: colors.surface, border: `1px solid ${colors.accent}20` }}>
-              <span className="text-[15px] font-semibold font-mono" style={{ color: colors.accent }}>ArgoCD</span>
-              <span className="text-[15px] text-hud-text-muted font-sans ml-3">Fleet config as code — rolling updates from Git</span>
+              <span className="text-lg font-semibold font-mono" style={{ color: colors.accent }}>ArgoCD</span>
+              <span className="text-base text-hud-text-muted font-sans ml-3">Fleet config as code — rolling updates from Git</span>
             </div>
           </div>
         </div>

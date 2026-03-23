@@ -29,8 +29,8 @@ export default function ChoreographyLoop({ width = 900, height = 380 }) {
     const padY = 20;
 
     // Layout
-    const homeX = padX;
-    const homeW = 80;
+    const homeX = padX + 30; // offset for EV on left
+    const homeW = 65;
     const mqttX = width / 2 - 50;
     const mqttW = 100;
     const mqttH = 50;
@@ -212,7 +212,7 @@ export default function ChoreographyLoop({ width = 900, height = 380 }) {
       ctx.fillStyle = colors.primary;
       ctx.textAlign = 'center';
       ctx.fillText('EMQX', mqttX + mqttW / 2, mqttY + 2);
-      ctx.font = '10px JetBrains Mono';
+      ctx.font = '12px JetBrains Mono';
       ctx.fillStyle = colors.text + 'aa';
       ctx.fillText('MQTT Broker', mqttX + mqttW / 2, mqttY + 16);
 
@@ -260,11 +260,53 @@ export default function ChoreographyLoop({ width = 900, height = 380 }) {
         ctx.strokeRect(-9, -4, 18, 8);
         ctx.restore();
 
+        // Battery inside house
+        const batX = cx - 4;
+        const batY = hy - 2;
+        const batW = 10;
+        const batH = 7;
+        ctx.fillStyle = colors.success + '60';
+        ctx.fillRect(batX - batW / 2, batY - batH / 2, batW, batH);
+        ctx.strokeStyle = colors.success + '90';
+        ctx.lineWidth = 0.8;
+        ctx.strokeRect(batX - batW / 2, batY - batH / 2, batW, batH);
+        // Battery terminal
+        ctx.fillStyle = colors.success + '90';
+        ctx.fillRect(batX + batW / 2, batY - 2, 2, 4);
+        // Fill level
+        ctx.fillStyle = colors.success + 'aa';
+        ctx.fillRect(batX - batW / 2 + 1, batY - batH / 2 + 1, (batW - 2) * 0.7, batH - 2);
+
+        // EV on the left of the home
+        const evX = cx - hw - 18;
+        const evY = hy + 2;
+        // Car body
+        ctx.fillStyle = lc + '30';
+        ctx.beginPath();
+        ctx.roundRect(evX - 10, evY - 4, 16, 8, 2);
+        ctx.fill();
+        ctx.strokeStyle = lc + '60';
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+        // Car roof
+        ctx.fillStyle = lc + '25';
+        ctx.beginPath();
+        ctx.roundRect(evX - 6, evY - 8, 10, 5, [2, 2, 0, 0]);
+        ctx.fill();
+        // Wheels
+        ctx.fillStyle = lc + '80';
+        ctx.beginPath();
+        ctx.arc(evX - 6, evY + 4, 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(evX + 4, evY + 4, 2, 0, Math.PI * 2);
+        ctx.fill();
+
         // Label
-        ctx.font = 'bold 10px JetBrains Mono';
+        ctx.font = 'bold 12px JetBrains Mono';
         ctx.fillStyle = lc + 'cc';
         ctx.textAlign = 'center';
-        ctx.fillText(label, cx, hy + bodyH / 2 + 12);
+        ctx.fillText(label, cx, hy + bodyH / 2 + 14);
       });
 
       // Draw actor boxes (right, per-lane color)
@@ -290,7 +332,7 @@ export default function ChoreographyLoop({ width = 900, height = 380 }) {
       });
 
       // Column labels
-      ctx.font = 'bold 11px JetBrains Mono';
+      ctx.font = 'bold 12px JetBrains Mono';
       ctx.textAlign = 'center';
       ctx.fillStyle = colors.success + 'cc';
       ctx.fillText('IoT Devices', homeX + homeW / 2, padY - 6);
@@ -300,7 +342,7 @@ export default function ChoreographyLoop({ width = 900, height = 380 }) {
       ctx.fillText('Pub/Sub', mqttX + mqttW / 2, mqttY - mqttH / 2 - 10);
 
       // Flow labels
-      ctx.font = '10px Inter';
+      ctx.font = '12px Inter';
       ctx.fillStyle = colors.success + '80';
       ctx.textAlign = 'center';
       ctx.fillText('telemetry', (homeX + homeW + mqttX) / 2, padY + 14);
