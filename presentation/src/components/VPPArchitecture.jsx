@@ -303,7 +303,7 @@ export default function VPPArchitecture({ highlightStep = 0 }) {
           // Connecting line from node bottom to drawer area
           const lineStartX = nx + nodeW / 2;
           const lineStartY = ny + nodeH + 4;
-          const drawerTop = height - 120;
+          const drawerTop = height - 150;
           const lineEndX = lineStartX;
           const lineEndY = drawerTop;
 
@@ -743,35 +743,36 @@ export default function VPPArchitecture({ highlightStep = 0 }) {
         ref={canvasRef}
         style={{ width: '100%', height: '100%' }}
       />
-      {/* Bottom drawer for node descriptions — z-index 9999 to overlay slide template page number */}
+      {/* Bottom drawer for node descriptions */}
       <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 9999,
-        height: 120,
-        background: activeDrawer ? 'rgba(5, 8, 16, 0.92)' : 'transparent',
-        borderTop: activeDrawer ? `1px solid ${activeDrawer?.color || colors.primary}35` : 'none',
+        position: 'absolute', bottom: 36, left: 40, right: 40, zIndex: 9999,
+        height: 110,
+        borderRadius: 10,
+        background: activeDrawer ? 'rgba(5, 8, 16, 0.94)' : 'transparent',
+        border: activeDrawer ? `1px solid ${activeDrawer?.color || colors.primary}35` : 'none',
         boxShadow: activeDrawer ? `0 -4px 30px rgba(0,0,0,0.4), inset 0 1px 20px ${activeDrawer?.color || colors.primary}06` : 'none',
         backdropFilter: activeDrawer ? 'blur(12px)' : 'none',
         opacity: activeDrawer ? 1 : 0,
         transform: activeDrawer ? 'translateY(0)' : 'translateY(20px)',
         transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-        display: 'flex', alignItems: 'center', padding: '0 40px', gap: 24,
+        display: 'flex', alignItems: 'center', padding: '0 32px', gap: 24,
       }}>
         {activeDrawer && <Corners color={activeDrawer.color} />}
         {activeDrawer && (
           <>
-            <div style={{ flexShrink: 0, minWidth: 200 }}>
-              <div style={{ fontSize: 11, fontFamily: '"JetBrains Mono"', color: activeDrawer.color, letterSpacing: '0.12em', fontWeight: 700, marginBottom: 4, textTransform: 'uppercase' }}>
+            <div style={{ flexShrink: 0, minWidth: 210 }}>
+              <div style={{ fontSize: 13, fontFamily: '"JetBrains Mono"', color: activeDrawer.color, letterSpacing: '0.12em', fontWeight: 700, marginBottom: 4, textTransform: 'uppercase' }}>
                 {activeDrawer.sub}
               </div>
-              <div style={{ fontSize: 22, fontFamily: '"JetBrains Mono"', color: activeDrawer.color, fontWeight: 800 }}>
+              <div style={{ fontSize: 24, fontFamily: '"JetBrains Mono"', color: activeDrawer.color, fontWeight: 800 }}>
                 {activeDrawer.title}
               </div>
-              <div style={{ fontSize: 12, fontFamily: '"JetBrains Mono"', color: colors.textDim, marginTop: 6 }}>
+              <div style={{ fontSize: 14, fontFamily: '"JetBrains Mono"', color: colors.text + 'bb', marginTop: 6 }}>
                 {activeDrawer.detail}
               </div>
             </div>
             <div style={{ width: 1, height: 60, background: `${activeDrawer.color}25`, flexShrink: 0 }} />
-            <div style={{ fontSize: 16, fontFamily: '"Inter", sans-serif', color: colors.text + 'dd', lineHeight: 1.6, flex: 1 }}>
+            <div style={{ fontSize: 18, fontFamily: '"Inter", sans-serif', color: colors.text + 'ee', lineHeight: 1.6, flex: 1 }}>
               {activeDrawer.desc}
             </div>
           </>
