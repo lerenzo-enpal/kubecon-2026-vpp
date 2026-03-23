@@ -69,9 +69,15 @@ const DISABLED_VALUES = new Set(['', 'null', 'no', 'disable', 'disabled', 'nein'
 const speakerParam = new URLSearchParams(window.location.search).get('speaker');
 const showSpeaker = speakerParam !== null && !DISABLED_VALUES.has(speakerParam.trim().toLowerCase());
 
+const MAIN_SLIDE_COUNT = 34;
+
 const slideTemplate = ({ slideNumber, numberOfSlides }) => {
+  const isAppendix = slideNumber > MAIN_SLIDE_COUNT;
   const section = SECTIONS.find(s => slideNumber >= s.from && slideNumber <= s.to);
-  const label = section?.name;
+  const label = isAppendix ? 'Appendix' : section?.name;
+  const display = isAppendix
+    ? `A${slideNumber - MAIN_SLIDE_COUNT} / ${numberOfSlides - MAIN_SLIDE_COUNT}`
+    : `${slideNumber} / ${MAIN_SLIDE_COUNT}`;
   const speaker = showSpeaker ? SPEAKERS[slideNumber] : null;
   return (
     <>
@@ -82,7 +88,7 @@ const slideTemplate = ({ slideNumber, numberOfSlides }) => {
       )}
       <a href="?slideIndex=0" className="absolute bottom-3 right-5 text-xs font-mono flex gap-2 items-center cursor-pointer hover:opacity-70 transition-opacity" style={{ color: colors.textMuted, textDecoration: 'none' }}>
         {label && <span style={{ color: colors.textDim }}>{label}</span>}
-        <span>{slideNumber} / {numberOfSlides}</span>
+        <span>{display}</span>
       </a>
     </>
   );
