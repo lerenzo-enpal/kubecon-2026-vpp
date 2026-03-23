@@ -145,7 +145,7 @@ extract "adelaide"  "135.4,-36.1,139.6,-32.4"   12
 # TexasMapHUD: ERCOT region, zoom up to 7.5
 extract "texas"     "-107,25,-93,37"             9
 
-# ── CARTO dark-matter style JSONs ─────────────────────────────────────────────
+# ── CARTO dark-matter style JSONs (kept as offline probe marker) ──────────────
 echo ""
 bold "── Style assets ──────────────────────────────────────────────────────────"
 
@@ -160,6 +160,9 @@ download_if_missing() {
   green "✓ $(basename "$dest")"
 }
 
+# dark-matter.json is used as the offline probe marker (HEAD request) to detect
+# whether local tiles are present. The actual offline map style is generated at
+# runtime by @protomaps/basemaps using the Protomaps schema layer names.
 download_if_missing \
   "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json" \
   "$OUT/styles/dark-matter.json"
@@ -168,51 +171,40 @@ download_if_missing \
   "https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json" \
   "$OUT/styles/dark-matter-nolabels.json"
 
-# ── Sprites ────────────────────────────────────────────────────────────────────
-SPRITE_BASE="https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style"
+# ── Protomaps sprites (used by the offline @protomaps/basemaps dark style) ────
+# The CARTO sprites and Protomaps sprites are different icon sets.
+# Protomaps sprites go to sprites-pm/ to avoid collision with CARTO sprites.
+mkdir -p "$OUT/sprites-pm"
+PM_SPRITE_BASE="https://protomaps.github.io/basemaps-assets/sprites/v4"
 for ext in png json; do
-  download_if_missing "$SPRITE_BASE/sprite.${ext}"    "$OUT/sprites/sprite.${ext}"
-  download_if_missing "$SPRITE_BASE/sprite@2x.${ext}" "$OUT/sprites/sprite@2x.${ext}"
+  download_if_missing "$PM_SPRITE_BASE/dark.${ext}"    "$OUT/sprites-pm/dark.${ext}"
+  download_if_missing "$PM_SPRITE_BASE/dark@2x.${ext}" "$OUT/sprites-pm/dark@2x.${ext}"
 done
 
 # ── Font glyphs ────────────────────────────────────────────────────────────────
 # MapLibre fetches glyphs as {fontstack}/{start}-{end}.pbf (256-char ranges).
-# CARTO serves fonts from tiles.basemaps.cartocdn.com/fonts (same CDN as tiles).
-# We download the Latin + Latin-Extended ranges (0–3839) which cover all
-# text labels in Europe, US, and Australia. The no-labels style doesn't need
-# fonts — this only matters for dark-matter (labeled) style components.
+# All fonts go to the same tiles/fonts/ directory regardless of CDN source.
+# Protomaps dark style uses: Noto Sans Regular, Noto Sans Italic, Noto Sans Medium
+# CARTO dark-matter style uses: Open Sans, Montserrat, Noto Sans, and others
 echo ""
 bold "── Font glyphs (Latin ranges) ────────────────────────────────────────────"
 
-FONT_BASE="https://tiles.basemaps.cartocdn.com/fonts"
-FONTS=(
-  "Noto Sans Regular"
-  "Open Sans Regular"
-  "Open Sans Bold"
-  "Open Sans Italic"
-  "Montserrat Regular"
-  "Montserrat Medium"
-  "Montserrat Regular Italic"
-  "Montserrat Medium Italic"
-  "NanumBarunGothic Regular"
-  "HanWangHeiLight Regular"
-)
-
-for font in "${FONTS[@]}"; do
-  font_dir="$OUT/fonts/$font"
+download_font_range() {
+  local base_url="$1" font="$2"
+  local font_dir="$OUT/fonts/$font"
   mkdir -p "$font_dir"
-  # Latin ranges: 0-3839 (covers Basic Latin, Latin Extended, Latin Extended Additional)
-  any_downloaded=false
+  local any_downloaded=false
   for start in $(seq 0 256 3839); do
-    end=$((start + 255))
-    range="${start}-${end}"
-    out_pbf="$font_dir/${range}.pbf"
+    local end=$((start + 255))
+    local range="${start}-${end}"
+    local out_pbf="$font_dir/${range}.pbf"
     if [[ -f "$out_pbf" ]] && [[ "$FORCE" == false ]]; then
       continue
     fi
+    local encoded_font
     encoded_font=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$font'))")
     curl -sSf --max-time 15 \
-      "${FONT_BASE}/${encoded_font}/${range}.pbf" \
+      "${base_url}/${encoded_font}/${range}.pbf" \
       -o "$out_pbf" 2>/dev/null || true
     any_downloaded=true
   done
@@ -221,6 +213,22 @@ for font in "${FONTS[@]}"; do
   else
     amber "⊘ Font: $font (already exists)"
   fi
+}
+
+# Protomaps fonts (used by the offline @protomaps/basemaps dark style)
+PM_FONT_BASE="https://protomaps.github.io/basemaps-assets/fonts"
+for font in "Noto Sans Regular" "Noto Sans Italic" "Noto Sans Medium"; do
+  download_font_range "$PM_FONT_BASE" "$font"
+done
+
+# CARTO fonts (used by CARTO dark-matter style — kept for reference/fallback)
+CARTO_FONT_BASE="https://tiles.basemaps.cartocdn.com/fonts"
+for font in \
+  "Open Sans Regular" "Open Sans Bold" "Open Sans Italic" \
+  "Montserrat Regular" "Montserrat Medium" \
+  "Montserrat Regular Italic" "Montserrat Medium Italic" \
+  "NanumBarunGothic Regular" "HanWangHeiLight Regular"; do
+  download_font_range "$CARTO_FONT_BASE" "$font"
 done
 
 # ── Summary ────────────────────────────────────────────────────────────────────

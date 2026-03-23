@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { layers as pmLayers, namedFlavor } from '@protomaps/basemaps';
 
 const CDN_LABELED  = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 const CDN_NOLABELS = 'https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json';
@@ -25,15 +26,10 @@ const readyPromise = (async () => {
     const check = await fetch(`${base}tiles/styles/dark-matter.json`, { method: 'HEAD' });
     if (!check.ok) return false;
 
-    const [labeled, nolabels] = await Promise.all([
-      fetch(`${base}tiles/styles/dark-matter.json`).then(r => r.json()),
-      fetch(`${base}tiles/styles/dark-matter-nolabels.json`).then(r => r.json()),
-    ]);
-
     for (const [region, file] of Object.entries(REGION_FILES)) {
       const tilesUrl = `pmtiles://${window.location.origin}${base}tiles/${file}`;
-      cache[`${region}:labeled`]   = buildStyle(labeled,   tilesUrl, base);
-      cache[`${region}:nolabels`]  = buildStyle(nolabels,  tilesUrl, base);
+      cache[`${region}:labeled`]   = buildStyle(tilesUrl, base, true);
+      cache[`${region}:nolabels`]  = buildStyle(tilesUrl, base, false);
     }
     return true;
   } catch {
@@ -41,19 +37,24 @@ const readyPromise = (async () => {
   }
 })();
 
-function buildStyle(styleJson, tilesUrl, base) {
-  const style = JSON.parse(JSON.stringify(styleJson));
-  for (const source of Object.values(style.sources)) {
-    if (source.type === 'vector') {
-      source.url = tilesUrl;
-      delete source.tiles;
-      delete source.minzoom;
-      delete source.maxzoom;
-    }
-  }
-  style.sprite = `${window.location.origin}${base}tiles/sprites/sprite`;
-  style.glyphs = `${window.location.origin}${base}tiles/fonts/{fontstack}/{range}.pbf`;
-  return style;
+// Generates a Protomaps-native dark style pointing at a local pmtiles source.
+// The Protomaps @basemaps package uses the correct Protomaps schema layer names
+// (boundaries, roads, places, etc.) which match the Protomaps planet tile builds.
+// CARTO dark-matter style uses OpenMapTiles layer names (boundary, transportation,
+// place, etc.) which do NOT match Protomaps tiles — hence nothing rendered offline.
+function buildStyle(tilesUrl, base, labeled) {
+  const flavor = namedFlavor('dark');
+  const allLayers = pmLayers('protomaps', flavor, { lang: 'en' });
+  const origin = window.location.origin;
+  return {
+    version: 8,
+    sources: {
+      protomaps: { type: 'vector', url: tilesUrl },
+    },
+    layers: labeled ? allLayers : allLayers.filter(l => l.type !== 'symbol'),
+    glyphs:  `${origin}${base}tiles/fonts/{fontstack}/{range}.pbf`,
+    sprite:  `${origin}${base}tiles/sprites-pm/dark`,
+  };
 }
 
 export function useMapStyle(region, variant = 'labeled') {
