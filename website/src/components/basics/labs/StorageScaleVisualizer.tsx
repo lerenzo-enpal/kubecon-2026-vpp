@@ -294,7 +294,7 @@ export default function StorageScaleVisualizer() {
 
         {/* Callout */}
         <div className="px-4 pb-4">
-          <p className="text-xs font-mono" style={{ color: 'var(--color-text-dim)', lineHeight: 1.5 }}>
+          <p className="text-sm font-mono" style={{ color: 'var(--color-text-muted)', lineHeight: 1.5 }}>
             This is why VPPs matter -- instead of one giant battery, coordinate millions of small ones.{' '}
             <a href="#" className="underline" style={{ color: 'var(--color-primary)' }}>
               Learn about alternatives

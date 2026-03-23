@@ -300,21 +300,37 @@ export default function RotorFrequency() {
           <label htmlFor="demand-slider" className="font-mono text-xs flex-shrink-0" style={{ color: 'var(--color-text-muted)' }}>
             DEMAND
           </label>
-          <input
-            id="demand-slider"
-            type="range"
-            min={0}
-            max={100}
-            value={demand}
-            onChange={handleSlider}
-            className="flex-1 h-2 rounded-lg appearance-none cursor-pointer"
-            style={{ accentColor: 'var(--color-primary)' }}
-          />
+          <div className="flex-1 relative flex items-center">
+            {/* Track background with gradient */}
+            <div className="absolute inset-x-0 h-2 rounded-full overflow-hidden" style={{ background: 'var(--color-surface)' }}>
+              <div
+                className="h-full rounded-full transition-all"
+                style={{
+                  width: `${demand}%`,
+                  background: demand > 70
+                    ? 'linear-gradient(90deg, var(--color-primary), var(--color-accent))'
+                    : demand > 90
+                      ? 'linear-gradient(90deg, var(--color-accent), var(--color-danger))'
+                      : 'linear-gradient(90deg, var(--color-success), var(--color-primary))',
+                }}
+              />
+            </div>
+            <input
+              id="demand-slider"
+              type="range"
+              min={0}
+              max={100}
+              value={demand}
+              onChange={handleSlider}
+              className="relative w-full h-2 rounded-full appearance-none cursor-pointer bg-transparent"
+              style={{ accentColor: 'var(--color-primary)' }}
+            />
+          </div>
           <span className="font-mono text-xs w-12 text-right" style={{ color: 'var(--color-text-muted)' }}>
             {demand}%
           </span>
         </div>
-        <p className="font-mono text-xs mt-2 text-center" style={{ color: 'var(--color-text-dim)' }}>
+        <p className="font-mono text-sm mt-4 text-center" style={{ color: 'var(--color-text-muted)' }}>
           Demand is the brake. Supply is the engine. Frequency is the speedometer.
         </p>
       </div>

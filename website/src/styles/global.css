@@ -233,18 +233,18 @@ html.font-lg aside .text-\[10px\] { font-size: 14px !important; }
   z-index: 20;
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 4px 10px;
-  border: 1px solid rgba(34, 211, 238, 0.3);
-  border-radius: 4px;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid rgba(34, 211, 238, 0.35);
+  border-radius: 6px;
   cursor: pointer;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
-  color: rgba(34, 211, 238, 0.8);
-  background: rgba(5, 8, 16, 0.8);
-  box-shadow: 0 0 8px rgba(34, 211, 238, 0.1);
+  color: rgba(34, 211, 238, 0.85);
+  background: rgba(5, 8, 16, 0.85);
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.12);
   transition: all 0.2s;
 }
 .fs-launch-btn:hover {
@@ -322,6 +322,34 @@ html.font-lg aside .text-\[10px\] { font-size: 14px !important; }
   background: none;
   -webkit-text-fill-color: rgba(34, 211, 238, 1);
   color: rgba(34, 211, 238, 1);
+}
+
+/* Custom range slider thumb */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  border: 2px solid var(--color-bg);
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.4);
+  cursor: pointer;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  border: 2px solid var(--color-bg);
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.4);
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  background: transparent;
+}
+input[type="range"]::-moz-range-track {
+  background: transparent;
 }
 
 @media (prefers-reduced-motion: reduce) {
