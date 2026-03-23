@@ -192,6 +192,10 @@ FONTS=(
   "Open Sans Italic"
   "Montserrat Regular"
   "Montserrat Medium"
+  "Montserrat Regular Italic"
+  "Montserrat Medium Italic"
+  "NanumBarunGothic Regular"
+  "HanWangHeiLight Regular"
 )
 
 for font in "${FONTS[@]}"; do
