@@ -120,7 +120,7 @@ export default function GridFrequencyExplainer({ width = 1200, height = 440, ste
 
       // Frequencies per step
       const freq1 = 50;
-      const freqFactors = [1, 1, 0.94, 0.82, 0];
+      const freqFactors = [1, 1, 0.85, 0.60, 0];
       const factor = freqFactors[Math.min(s, freqFactors.length - 1)];
       const freq2 = freq1 * factor;
       const showB = s >= 1;
@@ -147,12 +147,6 @@ export default function GridFrequencyExplainer({ width = 1200, height = 440, ste
       // Left turbine
       drawTurbine(ctx, leftTurbineX, topRowY, turbineR, angle1, colorA, 'Generator A', false);
 
-      // Left frequency label
-      ctx.font = '12px "JetBrains Mono"';
-      ctx.textAlign = 'center';
-      ctx.fillStyle = colorA + 'aa';
-      ctx.fillText(`${freq1.toFixed(1)} Hz`, leftTurbineX, topRowY + turbineR + 34);
-
       // Left waveform (from turbine toward center)
       const leftWaveX = leftTurbineX + turbineR + 18;
       const leftWaveEnd = width / 2 - 30;
@@ -172,23 +166,16 @@ export default function GridFrequencyExplainer({ width = 1200, height = 440, ste
         ctx.lineWidth = 2;
         ctx.stroke();
 
-        ctx.font = '12px "JetBrains Mono"';
-        ctx.fillStyle = colorA + '90';
+        ctx.font = 'bold 18px "JetBrains Mono"';
+        ctx.fillStyle = colorA;
         ctx.textAlign = 'left';
-        ctx.fillText('50.0 Hz', leftWaveX + 4, topRowY - waveAmplitude - 8);
+        ctx.fillText('50.0 Hz', leftWaveX + 4, topRowY - waveAmplitude - 10);
       }
 
       // Right turbine
       if (showB) {
         drawTurbine(ctx, rightTurbineX, topRowY, turbineR, angle2, colorB,
           disconnected ? 'DISCONNECTED' : 'Generator B', disconnected);
-
-        if (!disconnected) {
-          ctx.font = '12px "JetBrains Mono"';
-          ctx.textAlign = 'center';
-          ctx.fillStyle = colorB + 'aa';
-          ctx.fillText(`${freq2.toFixed(1)} Hz`, rightTurbineX, topRowY + turbineR + 34);
-        }
 
         // Right waveform (from turbine toward center)
         const rightWaveEnd2 = rightTurbineX - turbineR - 18;
@@ -208,10 +195,10 @@ export default function GridFrequencyExplainer({ width = 1200, height = 440, ste
           ctx.lineWidth = 2;
           ctx.stroke();
 
-          ctx.font = '12px "JetBrains Mono"';
-          ctx.fillStyle = colorB + '90';
+          ctx.font = 'bold 18px "JetBrains Mono"';
+          ctx.fillStyle = colorB;
           ctx.textAlign = 'right';
-          ctx.fillText(`${freq2.toFixed(1)} Hz`, rightWaveEnd2 - 4, topRowY - waveAmplitude - 8);
+          ctx.fillText(`${freq2.toFixed(1)} Hz`, rightWaveEnd2 - 4, topRowY - waveAmplitude - 10);
         }
       }
 
@@ -248,19 +235,17 @@ export default function GridFrequencyExplainer({ width = 1200, height = 440, ste
       ctx.lineWidth = 1.5;
       ctx.stroke();
 
-      // "GRID FREQUENCY" label (left inside box)
-      ctx.font = 'bold 13px "JetBrains Mono"';
+      // "GRID  50.0 Hz" on one line, left side
+      const gridFreq = disconnected ? freq1 : (showB ? (freq1 + freq2) / 2 : freq1);
+      ctx.font = 'bold 36px "JetBrains Mono"';
       ctx.fillStyle = centerColor;
       ctx.textAlign = 'left';
-      ctx.fillText('GRID FREQUENCY', boxPadX + 16, centerBoxY + 20);
-
-      // Frequency readout (left side)
-      const gridFreq = disconnected ? freq1 : (showB ? (freq1 + freq2) / 2 : freq1);
-      ctx.font = 'bold 28px "JetBrains Mono"';
-      ctx.fillStyle = centerColor;
-      ctx.shadowBlur = 10;
+      ctx.shadowBlur = 12;
       ctx.shadowColor = centerColor + '30';
-      ctx.fillText(`${gridFreq.toFixed(1)} Hz`, boxPadX + 16, centerBoxY + 56);
+      const gridLabel = 'GRID  ';
+      const gridLabelW = ctx.measureText(gridLabel).width;
+      ctx.fillText(gridLabel, boxPadX + 16, centerBoxY + boxH / 2 + 12);
+      ctx.fillText(`${gridFreq.toFixed(1)} Hz`, boxPadX + 16 + gridLabelW, centerBoxY + boxH / 2 + 12);
       ctx.shadowBlur = 0;
 
       // Combined waveform (horizontal, filling most of the box)
@@ -321,14 +306,14 @@ export default function GridFrequencyExplainer({ width = 1200, height = 440, ste
         subText = 'Remaining generators carry all load — if they slow too, cascade begins';
       }
 
-      ctx.font = 'bold 18px "Inter"';
+      ctx.font = 'bold 22px "Inter"';
       ctx.fillStyle = statusColor;
       ctx.textAlign = 'center';
       ctx.fillText(statusText, width / 2, statusY);
 
-      ctx.font = '14px "Inter"';
+      ctx.font = '16px "Inter"';
       ctx.fillStyle = colors.textMuted;
-      ctx.fillText(subText, width / 2, statusY + 22);
+      ctx.fillText(subText, width / 2, statusY + 26);
 
       if (isActive) animRef.current = requestAnimationFrame(draw);
     }
