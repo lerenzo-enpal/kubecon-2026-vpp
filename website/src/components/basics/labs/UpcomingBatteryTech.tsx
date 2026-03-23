@@ -71,18 +71,16 @@ export default function UpcomingBatteryTech() {
   return (
     <div className="flex flex-col gap-3">
       {/* Shared maturity legend bar */}
-      <div className="flex gap-1 mb-1">
+      <div className="flex items-center gap-2 mb-1">
         {maturityLabels.map((label, i) => (
-          <div key={label} className="flex items-center gap-1.5 flex-1">
+          <div key={label} className="contents">
             {i > 0 && (
-              <div
-                className="flex-shrink-0"
-                style={{
-                  width: 12,
-                  height: 1,
-                  background: 'var(--color-surface-light)',
-                }}
-              />
+              <span
+                className="flex-shrink-0 font-mono text-sm"
+                style={{ color: 'var(--color-text-dim)', opacity: 0.5 }}
+              >
+                {'\u2192'}
+              </span>
             )}
             <div
               className="flex-1 text-center py-1.5 rounded font-mono text-sm"

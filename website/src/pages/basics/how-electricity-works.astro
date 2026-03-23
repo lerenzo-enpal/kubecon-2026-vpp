@@ -6,6 +6,7 @@ import TransformerDiagram from '../../components/basics/inline/TransformerDiagra
 import GenerationMethods from '../../components/basics/inline/GenerationMethods';
 import OhmsLawPlayground from '../../components/basics/inline/OhmsLawPlayground';
 import PowerEnergyCalculator from '../../components/basics/inline/PowerEnergyCalculator';
+import ThreePhaseWaveform from '../../components/basics/inline/ThreePhaseWaveform';
 import MobileVizFallback from '../../components/MobileVizFallback';
 import InfoPanel from '../../components/InfoPanel.astro';
 import { url } from '../../utils/url';
@@ -17,6 +18,7 @@ import { url } from '../../utils/url';
   sections={[
     { id: 'what-is-this-stuff', title: 'What Is This Stuff?' },
     { id: 'ac-vs-dc', title: 'AC vs DC' },
+    { id: 'three-phase', title: 'Three-Phase Power' },
     { id: 'spinning-into-power', title: 'Spinning Into Power' },
     { id: 'ohms-law-playground', title: "Ohm's Law Playground", interactive: true },
     { id: 'power-vs-energy', title: 'Power vs Energy', interactive: true },
@@ -118,6 +120,25 @@ import { url } from '../../utils/url';
 <p>
   This is why AC won the "War of Currents." Power plants step voltage up to 400,000 volts for long-distance transmission (reducing current and therefore losses), then step it back down to 230 volts at your neighborhood substation.
   Transformers only work with alternating current.
+</p>
+
+<h3 id="three-phase">Three-Phase Power</h3>
+
+<p>
+  The grid doesn't actually use a single AC wave. It uses <strong>three</strong>, each
+  offset by 120 degrees. This delivers smoother, more constant power. A single phase dips
+  to zero 100 times per second; three phases together never dip -- the combined power
+  output is perfectly constant.
+</p>
+
+<MobileVizFallback client:visible fallbackSrc="/images/viz/basics-how-electricity-works.png" alt="Three-phase AC waveform showing three sine waves offset by 120 degrees">
+  <ThreePhaseWaveform client:visible />
+</MobileVizFallback>
+
+<p>
+  Your home gets one of the three phases. Factories and large buildings get all three,
+  which is why their plugs look different. Three-phase power also creates rotating magnetic
+  fields -- the principle behind every electric motor, from industrial pumps to EV drivetrains.
 </p>
 
 <p>
