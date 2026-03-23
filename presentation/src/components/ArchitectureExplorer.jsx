@@ -129,25 +129,27 @@ export default function ArchitectureExplorer({ step = 0 }) {
   }, [focus, isOverview]);
 
   return (
-    <div className="relative w-full h-full overflow-hidden" style={{ paddingTop: 110 }}>
-      {/* Diagram with zoom transform */}
-      <div style={{
-        width: '100%',
-        height: '100%',
-        transform,
-        transformOrigin: 'center center',
-        transition: 'transform 1.2s cubic-bezier(0.4, 0, 0.2, 1)',
-      }}>
-        <EnpalArchitectureDiagram width={DIAGRAM_W} height={DIAGRAM_H} />
+    <div className="relative w-full h-full">
+      {/* Diagram area — overflow-hidden to clip zoomed diagram only */}
+      <div className="absolute inset-0 overflow-hidden" style={{ paddingTop: 110 }}>
+        <div style={{
+          width: '100%',
+          height: '100%',
+          transform,
+          transformOrigin: 'center center',
+          transition: 'transform 1.2s cubic-bezier(0.4, 0, 0.2, 1)',
+        }}>
+          <EnpalArchitectureDiagram width={DIAGRAM_W} height={DIAGRAM_H} />
+        </div>
+
+        {/* Dimming overlay when zoomed */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: isOverview ? 'transparent' : 'radial-gradient(ellipse 40% 50% at 50% 50%, transparent 0%, rgba(10,14,23,0.6) 100%)',
+          transition: 'background 0.8s ease',
+        }} />
       </div>
 
-      {/* Dimming overlay when zoomed (darkens non-focus areas) */}
-      <div className="absolute inset-0 pointer-events-none" style={{
-        background: isOverview ? 'transparent' : 'radial-gradient(ellipse 40% 50% at 50% 50%, transparent 0%, rgba(10,14,23,0.6) 100%)',
-        transition: 'background 0.8s ease',
-      }} />
-
-      {/* Focus label badge (below title area) */}
+      {/* Focus label badge */}
       {focus.label && (
         <div className="absolute left-4 z-20" style={{ top: 118,
           opacity: isOverview ? 0 : 1,
@@ -163,10 +165,10 @@ export default function ArchitectureExplorer({ step = 0 }) {
         </div>
       )}
 
-      {/* Info panel (flies in from left or right) */}
+      {/* Info panel — outside the overflow-hidden diagram area */}
       {focus.panel !== null && focus.panelSide && (
-        <div className="absolute z-20 rounded-lg overflow-hidden" style={{
-          top: 160, bottom: 40,
+        <div className="absolute z-20 rounded-lg" style={{
+          bottom: 32,
           [focus.panelSide === 'right' ? 'right' : 'left']: 16,
           width: 420,
           opacity: isOverview ? 0 : 1,
@@ -179,51 +181,48 @@ export default function ArchitectureExplorer({ step = 0 }) {
           border: `1px solid ${focus.panelColor}35`,
           boxShadow: `0 0 30px ${focus.panelColor}15, inset 0 0 20px ${focus.panelColor}05`,
           backdropFilter: 'blur(12px)',
-          padding: '16px 20px',
-          display: 'flex', flexDirection: 'column', justifyContent: 'center',
+          padding: '14px 20px',
         }}>
-          <div>
-            <Corners color={focus.panelColor + '50'} size={10} />
+          <Corners color={focus.panelColor + '50'} size={10} />
 
-            {/* Title */}
-            <div className="text-sm font-mono font-semibold tracking-widest uppercase mb-1" style={{ color: focus.panelColor }}>{focus.subtitle}</div>
-            <div className="text-2xl font-extrabold font-sans leading-tight mb-3" style={{ color: colors.text }}>{focus.title}</div>
+          {/* Title */}
+          <div className="text-sm font-mono font-semibold tracking-widest uppercase mb-1" style={{ color: focus.panelColor }}>{focus.subtitle}</div>
+          <div className="text-2xl font-extrabold font-sans leading-tight mb-2" style={{ color: colors.text }}>{focus.title}</div>
 
-            {/* Stats row */}
-            {focus.stats && (
-              <div className="flex gap-4 mb-3">
-                {focus.stats.map((s, i) => (
-                  <div key={i} className="rounded px-3 py-1.5" style={{ background: s.color + '0a', border: `1px solid ${s.color}20` }}>
-                    <div className="text-xs font-mono tracking-wider uppercase" style={{ color: colors.textDim }}>{s.label}</div>
-                    <div className="text-lg font-bold font-mono" style={{ color: s.color }}>{s.value}</div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Bullets */}
-            <div className="flex flex-col gap-2">
-              {focus.bullets.map((b, i) => (
-                <div key={i} className="flex gap-3 items-start">
-                  <div className="mt-2 w-2 h-2 rounded-full shrink-0" style={{ background: focus.panelColor + '80' }} />
-                  <div className="text-base text-hud-text-muted font-sans leading-relaxed">{b}</div>
+          {/* Stats row */}
+          {focus.stats && (
+            <div className="flex gap-4 mb-2">
+              {focus.stats.map((s, i) => (
+                <div key={i} className="rounded px-3 py-1.5" style={{ background: s.color + '0a', border: `1px solid ${s.color}20` }}>
+                  <div className="text-xs font-mono tracking-wider uppercase" style={{ color: colors.textDim }}>{s.label}</div>
+                  <div className="text-lg font-bold font-mono" style={{ color: s.color }}>{s.value}</div>
                 </div>
               ))}
             </div>
+          )}
 
-            {/* Extra content (consistency comparison for MQTT) */}
-            {focus.extra && (
-              <div className="mt-3 pt-3" style={{ borderTop: `1px solid ${colors.surfaceLight}` }}>
-                <div className="text-xs font-mono font-semibold tracking-wider uppercase mb-2" style={{ color: colors.textDim }}>{focus.extra.title}</div>
-                {focus.extra.rows.map((r, i) => (
-                  <div key={i} className="flex items-center gap-3 py-1">
-                    <div className="text-sm font-mono font-semibold w-24" style={{ color: r.active ? colors.success : colors.textDim }}>{r.model}</div>
-                    <div className="text-sm font-sans" style={{ color: r.active ? colors.textMuted : colors.textDim }}>{r.note}</div>
-                  </div>
-                ))}
+          {/* Bullets */}
+          <div className="flex flex-col gap-2">
+            {focus.bullets.map((b, i) => (
+              <div key={i} className="flex gap-3 items-start">
+                <div className="mt-2 w-2 h-2 rounded-full shrink-0" style={{ background: focus.panelColor + '80' }} />
+                <div className="text-base text-hud-text-muted font-sans leading-relaxed">{b}</div>
               </div>
-            )}
+            ))}
           </div>
+
+          {/* Extra content (consistency comparison for MQTT) */}
+          {focus.extra && (
+            <div className="mt-2 pt-2" style={{ borderTop: `1px solid ${colors.surfaceLight}` }}>
+              <div className="text-xs font-mono font-semibold tracking-wider uppercase mb-1" style={{ color: colors.textDim }}>{focus.extra.title}</div>
+              {focus.extra.rows.map((r, i) => (
+                <div key={i} className="flex items-center gap-2 py-0.5">
+                  <div className="text-xs font-mono font-semibold w-24" style={{ color: r.active ? colors.success : colors.textDim }}>{r.model}</div>
+                  <div className="text-xs font-sans" style={{ color: r.active ? colors.textMuted : colors.textDim }}>{r.note}</div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>
