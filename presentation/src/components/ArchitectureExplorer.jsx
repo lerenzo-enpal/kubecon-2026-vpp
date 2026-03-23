@@ -150,18 +150,19 @@ export default function ArchitectureExplorer({ step = 0 }) {
         }} />
       </div>
 
-      {/* Focus label badge */}
+      {/* Focus label badge — directly under the title */}
       {focus.label && (
-        <div className="absolute left-8 z-20" style={{ top: 118,
+        <div className="absolute left-8 z-20" style={{ top: 80,
           opacity: isOverview ? 0 : 1,
           transform: isOverview ? 'translateY(-10px)' : 'translateY(0)',
           transition: 'all 0.6s ease 0.4s',
         }}>
-          <div className="rounded px-3 py-1" style={{
+          <div className="rounded-lg px-5 flex items-center" style={{
             background: 'rgba(5,8,16,0.9)',
             border: `1px solid ${focus.panelColor}40`,
+            height: 40,
           }}>
-            <div className="text-xs font-mono font-semibold tracking-widest" style={{ color: focus.panelColor }}>{focus.label}</div>
+            <div className="text-lg font-mono font-bold tracking-widest" style={{ color: focus.panelColor }}>{focus.label}</div>
           </div>
         </div>
       )}
