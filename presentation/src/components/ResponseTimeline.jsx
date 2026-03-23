@@ -322,7 +322,7 @@ function drawGasTurbine(ctx, cx, cy, w, h, color, active, now) {
     for (let wx = 0; wx < 2; wx++) {
       const winX = bx + bw * 0.2 + wx * bw * 0.35;
       const winY = by + bh * 0.15 + wy * bh * 0.4;
-      ctx.fillStyle = active ? color + '40' : color + '15';
+      ctx.fillStyle = active ? color + '80' : color + '15';
       ctx.fillRect(winX, winY, winW, winH);
     }
   }
@@ -476,11 +476,22 @@ export default function ResponseTimeline({ width = 840, height = 180, delay = 0,
     // Layout: 5 cells — stopwatch + 4 sources
     const totalCells = SOURCES.length + 1;
     const cellW = width / totalCells;
-    const iconCY = 55;
-    const iconW = cellW * 0.8;
+    // Vertical layout: justify-around within height
+    // Elements: label(12px) → icon(70px) → badge(13px) → timer(14px)
+    // Total content height ~109px in 180px → gaps of ~18px each
+    const pad = 6;
+    const usableH = height - pad * 2;
+    const labelH = 12;
     const iconH = 70;
-    const labelY = iconCY + iconH / 2 + 18;
-    const timerY = labelY + 18;
+    const badgeH = 13;
+    const timerH = 14;
+    const contentH = labelH + iconH + badgeH + timerH;
+    const gap = (usableH - contentH) / 5; // 5 gaps for justify-around (before first, between each, after last)
+    const labelY = pad + gap + labelH;
+    const iconCY = labelY + gap + iconH / 2;
+    const iconW = cellW * 0.8;
+    const badgeY = iconCY + iconH / 2 + gap;
+    const timerY = badgeY + badgeH + gap;
 
     let lastTime = performance.now();
     const scanProgress = SOURCES.map(() => 0);
@@ -523,7 +534,7 @@ export default function ResponseTimeline({ width = 840, height = 180, delay = 0,
 
       // Stopwatch body
       const swR = 26;
-      const swY = iconCY + 12;
+      const swY = iconCY + 4;
 
       // Crown/button at top
       ctx.fillStyle = swColor;
@@ -632,23 +643,13 @@ export default function ResponseTimeline({ width = 840, height = 180, delay = 0,
         const dimColor = colors.textDim + '50';
         const activeColor = src.color;
 
-        // Draw icon — active once glow starts, color interpolates via glowT
-        const isActivating = glowT > 0;
+        // Draw icon — single pass, no overlay
+        // When transitioning, draw active version with the active color
+        // (the glow/shadowBlur inside the draw fn provides the "turning on" feel)
         ctx.save();
-        // During transition, draw active version (so animations start)
-        // but with reduced globalAlpha blending dim→active
-        if (glowT > 0 && glowT < 1) {
-          // Draw dim base
-          DRAW_FNS[i](ctx, cx, iconCY, iconW, iconH, dimColor, false, now);
-          // Overlay active version fading in
-          ctx.globalAlpha = glowT;
-          DRAW_FNS[i](ctx, cx, iconCY, iconW, iconH, activeColor, true, now);
-          ctx.globalAlpha = 1;
-        } else {
-          DRAW_FNS[i](ctx, cx, iconCY, iconW, iconH,
-            glowT >= 1 ? activeColor : dimColor,
-            glowT >= 1, now);
-        }
+        const drawActive = glowT > 0.1;
+        const drawColor = drawActive ? activeColor : dimColor;
+        DRAW_FNS[i](ctx, cx, iconCY, iconW, iconH, drawColor, drawActive, now);
         ctx.restore();
 
         // Label
@@ -659,19 +660,19 @@ export default function ResponseTimeline({ width = 840, height = 180, delay = 0,
 
         // ONLINE badge
         if (glowT >= 1) {
-          const badgeW = 48;
+          const bw = 48;
           ctx.fillStyle = activeColor + '18';
           ctx.beginPath();
-          ctx.roundRect(cx - badgeW / 2, labelY + 3, badgeW, 13, 2);
+          ctx.roundRect(cx - bw / 2, badgeY, bw, badgeH, 2);
           ctx.fill();
           ctx.strokeStyle = activeColor + '40';
           ctx.lineWidth = 0.5;
           ctx.beginPath();
-          ctx.roundRect(cx - badgeW / 2, labelY + 3, badgeW, 13, 2);
+          ctx.roundRect(cx - bw / 2, badgeY, bw, badgeH, 2);
           ctx.stroke();
           ctx.font = 'bold 8px JetBrains Mono';
           ctx.fillStyle = activeColor;
-          ctx.fillText('ONLINE', cx, labelY + 13);
+          ctx.fillText('ONLINE', cx, badgeY + 10);
         }
 
         // Timer
@@ -680,7 +681,7 @@ export default function ResponseTimeline({ width = 840, height = 180, delay = 0,
         ctx.font = 'bold 14px JetBrains Mono';
         ctx.fillStyle = glowT >= 1 ? activeColor : (realT > 0 ? colors.text + '90' : dimColor);
         ctx.textAlign = 'center';
-        ctx.fillText(timerText, cx, timerY + 20);
+        ctx.fillText(timerText, cx, timerY + timerH);
       });
 
       if (isActive) animRef.current = requestAnimationFrame(draw);
