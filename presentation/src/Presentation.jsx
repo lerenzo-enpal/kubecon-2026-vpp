@@ -274,23 +274,26 @@ export default function Presentation() {
       </Slide>
 
 
-      {/* 5: The 50 Hz Heartbeat — Grid Frequency Explainer */}
+      {/* 5: The 50 Hz Heartbeat — Grid Frequency Explainer (3 steps) */}
       <Slide backgroundColor={bg} padding="0">
         <div className="relative w-full h-full flex flex-col" style={{ padding: '28px 40px 16px' }}>
           <H>The 50 Hz Heartbeat</H>
-          <P size="18px">Every generator on the grid is a spinning turbine, all synchronized to produce exactly 50 cycles per second. That's the frequency.</P>
-          <div className="flex-1 flex justify-center items-center">
-            <LazyContent><GridFrequencyExplainer width={1200} height={480} /></LazyContent>
-          </div>
+          <Stepper values={[1, 2]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1">
+            {(stepVal) => (
+              <div className="w-full h-full flex justify-center items-center">
+                <LazyContent><GridFrequencyExplainer width={1200} height={440} step={stepVal ?? 0} /></LazyContent>
+              </div>
+            )}
+          </Stepper>
         </div>
         <Notes>
-          [LERENZO] Before we talk about what goes wrong, you need to understand this one number: 50 Hz.
-          Every generator on the European grid is a spinning turbine — coal, gas, hydro, nuclear — all synchronized to exactly 50 Hz.
-          That spin rate IS the frequency. 50 rotations per second = 50 Hz.
-          When demand exceeds supply, there's more resistance on the turbines — they slow down — frequency drops.
-          Below 49 Hz, automatic systems start cutting power to neighborhoods.
-          Below 47.5 Hz, generators physically disconnect to avoid destruction — and that triggers a cascade.
-          The entire margin is 2.5 Hz. Smaller than the gap between two piano notes.
+          [LERENZO] Every generator on the grid is a spinning turbine — coal, gas, hydro, nuclear.
+          They all produce AC electricity at exactly 50 cycles per second. That's the frequency.
+          [ARROW] Now add a second generator. When they're in sync — in phase — their waves add up. More power, stable grid.
+          [ARROW] But if one slows down — say demand surges — their waves go out of phase. Destructive interference.
+          The slow generator's protection relays disconnect it to prevent physical damage.
+          Now the remaining generators carry more load — they slow down too — cascade.
+          This is why frequency matters. It's not just a number. It's the heartbeat of the grid.
         </Notes>
       </Slide>
 
