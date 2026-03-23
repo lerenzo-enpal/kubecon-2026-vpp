@@ -434,4 +434,58 @@ const topics = [
       });
     })();
   </script>
+
+  <!-- Hover-to-expand: preview collapsed sidebar sections on hover -->
+  <script is:inline>
+    (function() {
+      const sidebarDetails = document.querySelectorAll('aside details.group');
+      sidebarDetails.forEach(details => {
+        const nav = details.querySelector('nav');
+        if (!nav) return;
+
+        const wasOpen = details.hasAttribute('open');
+
+        // Wrap nav content for smooth height animation
+        nav.style.overflow = 'hidden';
+        nav.style.transition = 'max-height 0.25s ease, opacity 0.25s ease';
+
+        if (wasOpen) {
+          nav.style.maxHeight = 'none';
+          nav.style.opacity = '1';
+        }
+
+        let hoverTimeout;
+
+        details.addEventListener('mouseenter', () => {
+          clearTimeout(hoverTimeout);
+          if (!details.open) {
+            details.open = true;
+            // Animate in
+            nav.style.maxHeight = '0px';
+            nav.style.opacity = '0';
+            requestAnimationFrame(() => {
+              nav.style.maxHeight = nav.scrollHeight + 'px';
+              nav.style.opacity = '1';
+            });
+          }
+        });
+
+        details.addEventListener('mouseleave', () => {
+          if (!wasOpen && details.open) {
+            // Animate out
+            nav.style.maxHeight = nav.scrollHeight + 'px';
+            requestAnimationFrame(() => {
+              nav.style.maxHeight = '0px';
+              nav.style.opacity = '0';
+            });
+            hoverTimeout = setTimeout(() => {
+              details.open = false;
+              nav.style.maxHeight = '';
+              nav.style.opacity = '';
+            }, 250);
+          }
+        });
+      });
+    })();
+  </script>
 </BaseLayout>
