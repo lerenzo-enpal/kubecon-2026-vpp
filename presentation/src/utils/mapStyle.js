@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { layers as pmLayers, namedFlavor } from '@protomaps/basemaps';
+import { layers as pmLayers } from '@protomaps/basemaps';
+import { cartoDarkFlavor } from './mapStyleFlavor';
 
 const CDN_LABELED  = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 const CDN_NOLABELS = 'https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json';
@@ -43,8 +44,7 @@ const readyPromise = (async () => {
 // CARTO dark-matter style uses OpenMapTiles layer names (boundary, transportation,
 // place, etc.) which do NOT match Protomaps tiles — hence nothing rendered offline.
 function buildStyle(tilesUrl, base, labeled) {
-  const flavor = namedFlavor('dark');
-  const allLayers = pmLayers('protomaps', flavor, { lang: 'en' });
+  const allLayers = pmLayers('protomaps', cartoDarkFlavor, { lang: 'en' });
   const origin = window.location.origin;
   return {
     version: 8,
