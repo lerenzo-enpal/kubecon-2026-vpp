@@ -379,10 +379,10 @@ function drawCoalPlant(ctx, cx, cy, w, h, color, active, now) {
   ctx.rect(bx, by, bw, bh);
   ctx.stroke();
 
-  // Windows
+  // Windows — lit when active
   for (let wi = 0; wi < 3; wi++) {
     const winX = bx + bw * 0.15 + wi * bw * 0.28;
-    ctx.fillStyle = active ? color + '35' : color + '10';
+    ctx.fillStyle = active ? color + '80' : color + '10';
     ctx.fillRect(winX, by + bh * 0.2, bw * 0.15, bh * 0.25);
   }
 
@@ -624,51 +624,41 @@ export default function ResponseTimeline({ width = 840, height = 180, delay = 0,
         const cx = cellX + cellW / 2;
         const isOnline = simMs >= src.ms;
 
-        // Scan-line transition
+        // Glow-on transition (no scan line — just fade from dim to active)
         if (isOnline && scanProgress[i] < 1) {
-          scanProgress[i] = Math.min(1, scanProgress[i] + dt * 4);
+          scanProgress[i] = Math.min(1, scanProgress[i] + dt * 3); // ~0.33s glow-up
         }
-        const scanT = scanProgress[i];
+        const glowT = scanProgress[i];
         const dimColor = colors.textDim + '50';
         const activeColor = src.color;
 
-        // Draw icon
+        // Draw icon — active once glow starts, color interpolates via glowT
+        const isActivating = glowT > 0;
         ctx.save();
-        if (scanT > 0 && scanT < 1) {
+        // During transition, draw active version (so animations start)
+        // but with reduced globalAlpha blending dim→active
+        if (glowT > 0 && glowT < 1) {
+          // Draw dim base
           DRAW_FNS[i](ctx, cx, iconCY, iconW, iconH, dimColor, false, now);
-          ctx.save();
-          ctx.beginPath();
-          ctx.rect(cellX, 0, cellW, iconCY + iconH / 2 + 20 * scanT * 2);
-          ctx.clip();
+          // Overlay active version fading in
+          ctx.globalAlpha = glowT;
           DRAW_FNS[i](ctx, cx, iconCY, iconW, iconH, activeColor, true, now);
-          ctx.restore();
-
-          // Scan line
-          const scanY = 10 + scanT * (timerY + 15);
-          ctx.strokeStyle = activeColor;
-          ctx.lineWidth = 1.5;
-          ctx.shadowBlur = 8;
-          ctx.shadowColor = activeColor + '80';
-          ctx.beginPath();
-          ctx.moveTo(cellX + 8, scanY);
-          ctx.lineTo(cellX + cellW - 8, scanY);
-          ctx.stroke();
-          ctx.shadowBlur = 0;
+          ctx.globalAlpha = 1;
         } else {
           DRAW_FNS[i](ctx, cx, iconCY, iconW, iconH,
-            scanT >= 1 ? activeColor : dimColor,
-            scanT >= 1, now);
+            glowT >= 1 ? activeColor : dimColor,
+            glowT >= 1, now);
         }
         ctx.restore();
 
         // Label
         ctx.font = 'bold 12px JetBrains Mono';
         ctx.textAlign = 'center';
-        ctx.fillStyle = scanT >= 1 ? activeColor : dimColor;
+        ctx.fillStyle = glowT >= 1 ? activeColor : dimColor;
         ctx.fillText(src.label, cx, labelY);
 
         // ONLINE badge
-        if (scanT >= 1) {
+        if (glowT >= 1) {
           const badgeW = 48;
           ctx.fillStyle = activeColor + '18';
           ctx.beginPath();
@@ -688,7 +678,7 @@ export default function ResponseTimeline({ width = 840, height = 180, delay = 0,
         const displayMs = isOnline ? src.ms : simMs;
         const timerText = formatTimer(Math.min(displayMs, src.ms));
         ctx.font = 'bold 14px JetBrains Mono';
-        ctx.fillStyle = scanT >= 1 ? activeColor : (realT > 0 ? colors.text + '90' : dimColor);
+        ctx.fillStyle = glowT >= 1 ? activeColor : (realT > 0 ? colors.text + '90' : dimColor);
         ctx.textAlign = 'center';
         ctx.fillText(timerText, cx, timerY + 20);
       });
