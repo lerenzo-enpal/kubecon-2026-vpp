@@ -79,7 +79,8 @@ const FOCUS_STEPS = [
     zoom: 2.2,
     cx: 0.78,
     cy: 0.35,
-    panelSide: 'left',
+    panelSide: 'right',
+    panelVertical: 'top',
     panelColor: '#FF3621',
     title: 'Streaming at Scale',
     subtitle: 'Spark + Databricks',
@@ -168,7 +169,7 @@ export default function ArchitectureExplorer({ step = 0 }) {
       {/* Info panel — outside the overflow-hidden diagram area */}
       {focus.panel !== null && focus.panelSide && (
         <div className="absolute z-20 rounded-lg" style={{
-          bottom: 32,
+          ...(focus.panelVertical === 'top' ? { top: 120 } : { bottom: 32 }),
           [focus.panelSide === 'right' ? 'right' : 'left']: 16,
           width: 420,
           opacity: isOverview ? 0 : 1,
