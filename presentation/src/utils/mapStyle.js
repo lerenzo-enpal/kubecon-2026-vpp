@@ -52,6 +52,7 @@ function buildStyle(styleJson, tilesUrl, base) {
     }
   }
   style.sprite = `${window.location.origin}${base}tiles/sprites/sprite`;
+  style.glyphs = `${window.location.origin}${base}tiles/fonts/{fontstack}/{range}.pbf`;
   return style;
 }
 
