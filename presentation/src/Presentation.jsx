@@ -308,21 +308,21 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 6: Texas Numbers */}
+      {/* 7: Texas Numbers */}
       <Slide backgroundColor={bg} padding={pad}>
         <div className="flex flex-col justify-between h-full">
           <div className="py-5 pl-6" style={{ borderLeft: `3px solid ${colors.danger}` }}>
             <div className="text-[28px] font-light text-hud-text font-sans leading-[1.6]">
-              "The Texas grid was <span className="font-bold" style={{ color: colors.danger }}>4 minutes and 37 seconds</span> from total collapse."
+              Wholesale electricity spiked from ~$50 to <span className="font-bold" style={{ color: colors.danger }}>$9,000/MWh</span> overnight — a <span className="font-bold" style={{ color: colors.danger }}>180x</span> increase.
             </div>
             <div className="text-[20px] text-hud-text-dim font-sans mt-2">
-              A cold restart would have taken weeks. Maybe months.
+              Families received $7,000 bills in a single week. Their provider — Griddy — went bankrupt.
             </div>
           </div>
           <div className="flex gap-5 my-4">
-            <AnimatedStat target="4:37" label="from total collapse" color={colors.danger} delay={0} duration={1200} />
+            <AnimatedStat target="$9,000" label="peak price per MWh" color={colors.danger} delay={0} duration={1200} />
             <AnimatedStat target="246" label="people dead" color={colors.danger} delay={300} duration={1000} />
-            <AnimatedStat target="$195B" label="in damage (Perryman est.)" color={colors.accent} delay={600} duration={1400} />
+            <AnimatedStat target="$195B" label="in damage" color={colors.accent} delay={600} duration={1400} />
             <AnimatedStat target="4.5M" label="homes dark" color={colors.textMuted} delay={900} duration={1100} />
           </div>
           <div className="text-[20px] text-hud-text font-sans leading-[1.8]">
@@ -336,10 +336,8 @@ export default function Presentation() {
           </div>
         </div>
         <Notes>
-          [LERENZO] The Texas grid was 4 minutes and 37 seconds from a total cold-start collapse.
-          A cold restart takes weeks, maybe months — you're rebuilding the grid from scratch.
-          246 people died. $195 billion in estimated damage (Perryman Group).
-          Wholesale prices went from ~$50 to $9,000/MWh overnight — 180x.
+          [LERENZO] Wholesale prices went from ~$50 to $9,000/MWh overnight — 180x.
+          246 people died. $195 billion in damage.
           Families got $7,000 bills in a week. Their provider went bankrupt.
         </Notes>
       </Slide>
