@@ -973,18 +973,14 @@ export default function Presentation() {
                     ))}
                   </div>
                   <div className="flex-1 flex items-end justify-center pb-2">
-                    <div className="w-[80%] flex items-center gap-4 rounded-lg px-5 py-3" style={{
-                      background: colors.success + '0a',
-                      border: `1px solid ${colors.success}25`,
+                    <div className="w-[90%] rounded-lg px-4 py-3" style={{
+                      background: colors.surfaceLight + '06',
+                      border: `1px solid ${colors.surfaceLight}15`,
                       opacity: sv >= 2 ? 1 : 0,
-                      transform: sv >= 2 ? 'translateX(0)' : 'translateX(-24px)',
+                      transform: sv >= 2 ? 'translateY(0)' : 'translateY(12px)',
                       transition: 'all 0.5s ease',
                     }}>
-                      <div className="shrink-0">
-                        <div className="text-[26px] font-bold font-mono" style={{ color: colors.success }}>And Fast:</div>
-                        <div className="text-[12px] font-mono mt-1" style={{ color: colors.textDim }}>Response Time</div>
-                      </div>
-                      <div className="flex-1">{sv >= 2 && <LazyContent key={`rt-${sv}`}><ResponseTimeline width={840} height={120} delay={0} /></LazyContent>}</div>
+                      {sv >= 2 && <LazyContent key={`rt-${sv}`}><ResponseTimeline width={940} height={180} delay={0} /></LazyContent>}
                     </div>
                   </div>
                 </div>
