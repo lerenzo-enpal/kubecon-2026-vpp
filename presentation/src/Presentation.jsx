@@ -853,8 +853,9 @@ export default function Presentation() {
             </div>
             <div className="flex gap-3 pb-1">
               {[
-                { label: 'RAW', value: '20s', color: '#E25A1C' },
-                { label: 'WINDOWS', value: '6 tiers', color: '#FF3621' },
+                { label: 'PLATFORM', value: 'Databricks', color: '#FF3621' },
+                { label: 'ENGINE', value: 'Spark', color: '#E25A1C' },
+                { label: 'RAW', value: '20s', color: colors.accent },
                 { label: 'REDUCTION', value: '4,320:1', color: colors.success },
               ].map((s, i) => (
                 <div key={i} className="rounded px-3 py-1.5" style={{ background: s.color + '0a', border: `1px solid ${s.color}25` }}>
