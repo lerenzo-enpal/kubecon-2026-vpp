@@ -12,7 +12,7 @@ const SOURCES = [
   { label: 'VPP Battery', ms: 140,     color: colors.success },
   { label: 'Hydro',       ms: 20000,   color: '#60a5fa' },
   { label: 'Gas Turbine',  ms: 600000,  color: '#fb923c' },
-  { label: 'Coal Plant',   ms: 7200000, color: colors.textDim },
+  { label: 'Coal Plant',   ms: 7200000, color: '#94a3b8' },
 ];
 
 // Acceleration: simTime = t + k * t^3 / 3
@@ -640,7 +640,7 @@ export default function ResponseTimeline({ width = 840, height = 180, delay = 0,
           scanProgress[i] = Math.min(1, scanProgress[i] + dt * 3); // ~0.33s glow-up
         }
         const glowT = scanProgress[i];
-        const dimColor = colors.textDim + '50';
+        const dimColor = colors.textDim;
         const activeColor = src.color;
 
         // Draw icon — clipped to cell so no bleed into neighbors
