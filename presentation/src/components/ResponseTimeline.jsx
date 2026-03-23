@@ -643,10 +643,11 @@ export default function ResponseTimeline({ width = 840, height = 180, delay = 0,
         const dimColor = colors.textDim + '50';
         const activeColor = src.color;
 
-        // Draw icon — single pass, no overlay
-        // When transitioning, draw active version with the active color
-        // (the glow/shadowBlur inside the draw fn provides the "turning on" feel)
+        // Draw icon — clipped to cell so no bleed into neighbors
         ctx.save();
+        ctx.beginPath();
+        ctx.rect(cellX, 0, cellW, height);
+        ctx.clip();
         const drawActive = glowT > 0.1;
         const drawColor = drawActive ? activeColor : dimColor;
         DRAW_FNS[i](ctx, cx, iconCY, iconW, iconH, drawColor, drawActive, now);
