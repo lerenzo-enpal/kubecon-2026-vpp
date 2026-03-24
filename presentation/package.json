@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "export:pdf": "node scripts/export-pdf.mjs",
     "offline:install-tools": "bash scripts/offline-install-tools.sh",
-    "offline:download-maps": "bash scripts/offline-download-maps.sh"
+    "offline:download-maps": "bash scripts/offline-download-maps.sh",
+    "offline:remove": "rm -rf public/tiles && echo 'Local tiles removed — maps will use CARTO CDN'"
   },
   "keywords": [],
   "author": "",

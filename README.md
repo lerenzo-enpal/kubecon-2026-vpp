@@ -71,6 +71,9 @@ npm run offline:install-tools
 
 # Download all tile regions (~6 GB total):
 npm run offline:download-maps
+
+# Remove local tiles and use CARTO CDN instead:
+npm run offline:remove
 ```
 
 This extracts regional [PMTiles](https://protomaps.com/docs/pmtiles) archives from the [Protomaps](https://protomaps.com) daily planet build using HTTP range requests — only the tiles for the regions and zoom levels actually used are downloaded. It also downloads the CARTO dark-matter style JSON, sprites, and font glyphs.

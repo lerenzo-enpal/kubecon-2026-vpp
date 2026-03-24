@@ -8,10 +8,11 @@ const CDN_NOLABELS = 'https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-s
 const BLANK_STYLE = { version: 8, sources: {}, layers: [], glyphs: '', sprite: '' };
 
 const REGION_FILES = {
-  europe:   'europe.pmtiles',
-  berlin:   'berlin.pmtiles',
-  adelaide: 'adelaide.pmtiles',
-  texas:    'texas.pmtiles',
+  europe:    'europe.pmtiles',
+  wolfsburg: 'wolfsburg.pmtiles',
+  berlin:    'berlin.pmtiles',
+  adelaide:  'adelaide.pmtiles',
+  texas:     'texas.pmtiles',
 };
 
 const cache = {};
@@ -85,6 +86,15 @@ function patchLayers(layers) {
       continue;
     }
 
+    // Filter city labels to only show cities with population > 50K
+    if (l.id === 'places_locality') {
+      patched.push({
+        ...l,
+        filter: ['all', ['==', 'kind', 'locality'], ['>=', ['get', 'population'], 50000]],
+      });
+      continue;
+    }
+
     patched.push(l);
   }
 
@@ -108,11 +118,15 @@ function buildStyle(tilesUrl, base, labeled) {
 
 export function useMapStyle(region, variant = 'labeled') {
   const fallback = variant === 'nolabels' ? CDN_NOLABELS : CDN_LABELED;
-  const [style, setStyle] = useState(BLANK_STYLE);
+  // Start with CDN immediately so maps render on first paint.
+  // If local tiles are available, switch to them once the probe resolves.
+  const [style, setStyle] = useState(fallback);
 
   useEffect(() => {
     readyPromise.then(available => {
-      setStyle(available ? (cache[`${region}:${variant}`] ?? fallback) : fallback);
+      if (available) {
+        setStyle(cache[`${region}:${variant}`] ?? fallback);
+      }
     });
   }, [region, variant, fallback]);
 

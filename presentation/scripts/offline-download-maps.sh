@@ -136,8 +136,8 @@ extract "europe"    "-12,34,40,72"              12
 extract "wolfsburg" "10.58,52.30,10.98,52.55"   14
 
 # VPPScenarioMapSlide: zooms to Riemerstraße 5, Reinickendorf (z17)
-# Also covers zoom-15 step at 13.38, 52.50
-extract "berlin"    "13.12,52.44,13.52,52.66"   17
+# Wider bbox to cover full Berlin metro area without cutoff
+extract "berlin"    "12.90,52.30,13.80,52.75"   17
 
 # SAMapHUD: Adelaide area, zoom up to 11.5
 extract "adelaide"  "135.4,-36.1,139.6,-32.4"   12
