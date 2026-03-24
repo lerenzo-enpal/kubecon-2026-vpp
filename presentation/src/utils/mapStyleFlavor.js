@@ -30,7 +30,15 @@ export const cartoDarkFlavor = {
   runway:      '#111111',
   zoo:         '#0e0e0e',
   military:    '#0e0e0e',
-  landcover:   '#0e0e0e',
+  landcover: {
+    grassland:  '#0e0e0e',
+    barren:     '#0e0e0e',
+    urban_area: '#0e0e0e',
+    farmland:   '#0e0e0e',
+    glacier:    '#0e0e0e',
+    scrub:      '#0e0e0e',
+    forest:     '#0e0e0e',
+  },
 
   // ── Water ────────────────────────────────────────────────────────────────────
   water:       '#2C353C',
@@ -98,5 +106,14 @@ export const cartoDarkFlavor = {
   country_label:           '#788d93',
   address_label:           'transparent',
   address_label_halo:      'transparent',
-  pois:                    '#515151',
+  pois: {
+    blue:      '#515151',
+    green:     '#515151',
+    lapis:     '#515151',
+    pink:      '#515151',
+    red:       '#515151',
+    slategray: '#515151',
+    tangerine: '#515151',
+    turquoise: '#515151',
+  },
 };
