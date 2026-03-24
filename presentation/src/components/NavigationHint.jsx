@@ -9,9 +9,13 @@ export default function NavigationHint() {
   useEffect(() => {
     if (!visible) return;
     const onKey = (e) => {
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') dismiss();
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        e.stopPropagation();
+        e.preventDefault();
+        dismiss();
+      }
     };
-    window.addEventListener('keydown', onKey);
+    window.addEventListener('keydown', onKey, true);
     return () => window.removeEventListener('keydown', onKey);
   }, [visible, dismiss]);
 
