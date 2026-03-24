@@ -57,11 +57,11 @@ function drawTurbine(ctx, cx, cy, r, angle, color, label, dimmed) {
   ctx.fillStyle = color;
   ctx.fill();
 
-  ctx.font = 'bold 14px "JetBrains Mono"';
+  ctx.font = 'bold 18px "JetBrains Mono"';
   ctx.fillStyle = dimmed ? colors.danger : color;
   ctx.globalAlpha = dimmed ? 0.9 : 1;
   ctx.textAlign = 'center';
-  ctx.fillText(label, cx, cy + r + 20);
+  ctx.fillText(label, cx, cy + r + 28);
 
   ctx.restore();
 }

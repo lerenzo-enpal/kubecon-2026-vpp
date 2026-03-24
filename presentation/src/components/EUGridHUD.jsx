@@ -190,7 +190,7 @@ const FLY_TO = new FlyToInterpolator();
 
 // ── Main component ──────────────────────────────────────────
 export default function EUGridHUD({ width = '100%', height = '100%' }) {
-  const mapStyle = useMapStyle('europe', 'nolabels');
+  const mapStyle = useMapStyle('europe', 'noborders');
   const [stepIndex, setStepIndex] = useState(0);
   const [boot, setBoot] = useState(0);
   const bootRef = useRef(null);

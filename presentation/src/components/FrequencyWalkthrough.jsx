@@ -55,10 +55,13 @@ function GridClock({ targetSec }) {
 // ─── Typewriter text ───
 function Typewriter({ text, delay = 0, speed = 30, className, style }) {
   const [shown, setShown] = useState(0);
+  const [ready, setReady] = useState(false);
   const timerRef = useRef(null);
   useEffect(() => {
     setShown(0);
+    setReady(false);
     const startTimeout = setTimeout(() => {
+      setReady(true);
       let i = 0;
       timerRef.current = setInterval(() => {
         i++;
@@ -72,7 +75,7 @@ function Typewriter({ text, delay = 0, speed = 30, className, style }) {
   return (
     <span className={className} style={style}>
       {text.slice(0, shown)}
-      {shown < text.length && <span style={{ opacity: shown > 0 ? 1 : 0, animation: 'fwCursor 0.6s step-end infinite' }}>_</span>}
+      {ready && shown < text.length && <span style={{ animation: 'fwCursor 0.6s step-end infinite' }}>_</span>}
     </span>
   );
 }
@@ -816,7 +819,7 @@ function SupplyDemandScene({ active, step = 1 }) {
       </div>
 
       {/* No buffer — on its own arrow press, larger font */}
-      <div className="text-center" style={{
+      <div className="text-center mt-6" style={{
         opacity: step >= 3 ? 1 : 0,
         transform: step >= 3 ? 'translateY(0)' : 'translateY(15px)',
         transition: 'all 0.6s ease',
