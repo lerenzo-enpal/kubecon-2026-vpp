@@ -213,7 +213,7 @@ export default function GridFlowDemo({ width = '100%' }) {
               <path key={`l${i}`} pathLength="1" d={p.d} stroke={c + '25'} strokeWidth="1.2" fill="none"
                 style={dS(drawConsumers, 0.15 + i * 0.08, 0.5)} />
             ))}
-            <ShoppingCenter x={810} y={30} w={195} h={52} c={c} lit={!!litMap.shopping} draw={drawConsumers} t0={0.25} />
+            <ShoppingCenter x={810} y={10} w={195} h={52} c={c} lit={!!litMap.shopping} draw={drawConsumers} t0={0.25} />
             <House x={810} y={82} w={78} h={64} c={c} lit={!!litMap.house1} draw={drawConsumers} t0={0.4} />
             <House x={920} y={100} w={66} h={54} c={c} lit={!!litMap.house2} draw={drawConsumers} t0={0.55} />
             <House x={1028} y={115} w={62} h={50} c={c} lit={!!litMap.house3} draw={drawConsumers} t0={0.7} />

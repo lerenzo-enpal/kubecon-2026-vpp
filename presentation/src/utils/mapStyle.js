@@ -31,8 +31,9 @@ const readyPromise = (async () => {
 
     for (const [region, file] of Object.entries(REGION_FILES)) {
       const tilesUrl = `pmtiles://${window.location.origin}${base}tiles/${file}`;
-      cache[`${region}:labeled`]   = buildStyle(tilesUrl, base, true);
-      cache[`${region}:nolabels`]  = buildStyle(tilesUrl, base, false);
+      cache[`${region}:labeled`]    = buildStyle(tilesUrl, base, true);
+      cache[`${region}:nolabels`]   = buildStyle(tilesUrl, base, false);
+      cache[`${region}:noborders`]  = buildStyle(tilesUrl, base, 'noborders');
     }
     return true;
   } catch {
@@ -110,7 +111,11 @@ function buildStyle(tilesUrl, base, labeled) {
     sources: {
       protomaps: { type: 'vector', url: tilesUrl },
     },
-    layers: labeled ? layers : layers.filter(l => l.type !== 'symbol'),
+    layers: labeled === 'noborders'
+      ? layers.filter(l => l.type !== 'symbol' && !l.id?.startsWith('boundaries'))
+      : labeled
+        ? layers
+        : layers.filter(l => l.type !== 'symbol'),
     glyphs:  `${origin}${base}tiles/fonts/{fontstack}/{range}.pbf`,
     sprite:  `${origin}${base}tiles/sprites-pm/dark`,
   };

@@ -1051,11 +1051,18 @@ export default function FrequencyWalkthrough({ step = 0, mode = 'intro' }) {
               color: colors.accent,
               animation: 'fwPunchIn 1s ease 0.3s both, fwGlow 2.5s ease-in-out 1.3s infinite',
             }}>2.5 Hz</div>
-            <Typewriter
-              text="LESS THAN YOU CAN HEAR"
-              delay={1800} speed={40}
-              className="text-[36px] font-mono tracking-[0.12em]"
-              style={{ color: colors.textMuted }} />
+            <div className="flex flex-col items-center gap-4">
+              <Typewriter
+                text="Less than you can hear"
+                delay={1800} speed={40}
+                className="text-4xl font-mono tracking-wide"
+                style={{ color: colors.text }} />
+              <Typewriter
+                text="The difference between two piano keys"
+                delay={2800} speed={30}
+                className="text-2xl font-sans"
+                style={{ color: colors.textDim }} />
+            </div>
           </div>
         </div>
       )}

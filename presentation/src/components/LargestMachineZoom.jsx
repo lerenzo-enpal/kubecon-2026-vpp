@@ -151,7 +151,7 @@ const STAT_BOXES = [
 ];
 
 export default function LargestMachineZoom({ width = 1024, height = 668 }) {
-  const DARK_MAP = useMapStyle('europe', 'nolabels');
+  const DARK_MAP = useMapStyle('europe', 'noborders');
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const mapRef = useRef(null);

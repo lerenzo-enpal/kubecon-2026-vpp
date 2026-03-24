@@ -14,6 +14,7 @@ import './index.css';
 import maplibregl from 'maplibre-gl';
 import { Protocol } from 'pmtiles';
 import Presentation from './Presentation';
+import NavigationHint from './components/NavigationHint';
 
 // Register PMTiles protocol — enables local tile files when downloaded via npm run download:assets
 const pmtilesProtocol = new Protocol();
@@ -22,5 +23,8 @@ import StyleGuideReview from './StyleGuideReview';
 
 const isStyleGuide = new URLSearchParams(window.location.search).has('styleguide');
 createRoot(document.getElementById('root')).render(
-  isStyleGuide ? <StyleGuideReview /> : <Presentation />
+  isStyleGuide ? <StyleGuideReview /> : <>
+    <NavigationHint />
+    <Presentation />
+  </>
 );
