@@ -182,7 +182,7 @@ const THRESHOLDS = [
 ];
 
 export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 0 }) {
-  const canvasWidth = panelWidth > 0 ? width - panelWidth - 40 : width; // 40px gap matches slide padding
+  const canvasWidth = panelWidth > 0 ? width - panelWidth : width;
   const canvasRef = useRef(null);
   const hackerCanvasRef = useRef(null);
   const hackerAnimRef = useRef(null);
@@ -1157,19 +1157,14 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
   };
 
   const formatGT = (gt) => {
-    const totalMin = Math.floor(gt / 60);
-    if (totalMin >= 160) {
-      const hh = String(Math.floor(totalMin / 60)).padStart(2, '0');
-      const mm = String(totalMin % 60).padStart(2, '0');
-      return `T+${hh}h${mm}m`;
-    }
-    const mm = String(totalMin).padStart(2, '0');
+    const hh = String(Math.floor(gt / 3600)).padStart(2, '0');
+    const mm = String(Math.floor((gt % 3600) / 60)).padStart(2, '0');
     const ss = String(gt % 60).padStart(2, '0');
-    return `T+${mm}:${ss}`;
+    return `T+${hh}:${mm}:${ss}`;
   };
 
   return (
-    <div style={{ position: 'relative', display: 'flex', gap: 40, width, alignItems: 'flex-start' }}>
+    <div className="relative flex overflow-hidden" style={{ width, height }}>
       {/* Canvas — left side */}
       <canvas
         ref={canvasRef}
@@ -1197,13 +1192,13 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
           }} />
 
           {/* Timer section — own section at top */}
-          <div style={{ padding: '12px 16px', borderBottom: `1px solid rgba(34,211,238,0.12)`, position: 'relative', zIndex: 2, textAlign: 'center' }}>
+          <div style={{ padding: '12px 16px', borderBottom: `1px solid rgba(34,211,238,0.12)`, position: 'relative', zIndex: 2 }}>
             <div style={{
               fontSize: 32, fontWeight: 700, letterSpacing: '0.04em',
               color: panelData.gridTime > 0 ? panelData.statusColor : colors.textDim,
               textShadow: panelData.gridTime > 0 ? `0 0 12px ${panelData.statusColor}40` : 'none',
             }}>
-              {panelData.gridTime > 0 ? formatGT(Math.floor(panelData.gridTime)) : 'T+00:00'}
+              {panelData.gridTime > 0 ? formatGT(Math.floor(panelData.gridTime)) : 'T+00:00:00'}
             </div>
             <div style={{ fontSize: 12, marginTop: 2, color: colors.textDim }}>
               {panelData.timeScale}x speed
@@ -1214,11 +1209,11 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
           <div style={{ padding: '12px 16px 10px', borderBottom: `1px solid rgba(34,211,238,0.12)`, position: 'relative', zIndex: 2 }}>
             {/* Frequency */}
             <div style={{
-              fontSize: 28, fontWeight: 700, letterSpacing: '-0.02em',
+              fontSize: 32, fontWeight: 700, letterSpacing: '0.02em',
               color: panelData.lineColor,
               textShadow: `0 0 16px ${panelData.lineColor}60`,
             }}>
-              {'\u25B8'} {panelData.freq.toFixed(3)} Hz
+              {panelData.freq.toFixed(3)} Hz
             </div>
             {/* Delta — large */}
             <div style={{
@@ -1278,10 +1273,10 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
                   padding: '5px 0 5px 10px', marginBottom: 2,
                   animation: 'eventSlideIn 0.3s ease-out',
                 }}>
-                  <div style={{ fontSize: 10, color: s.color, fontWeight: 600 }}>
+                  <div style={{ fontSize: 13, color: s.color, fontWeight: 600 }}>
                     {s.icon} {formatGT(evt.gt)}
                   </div>
-                  <div style={{ fontSize: 11, color: s.color + 'cc', marginTop: 1, lineHeight: 1.3 }}>
+                  <div style={{ fontSize: 14, color: s.color + 'cc', marginTop: 2, lineHeight: 1.4 }}>
                     {evt.text}
                   </div>
                 </div>
@@ -1338,7 +1333,7 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
           </button>
         </div>
       )}
-      <div style={{ position: 'absolute', bottom: 20, left: 16, display: 'flex', gap: 8, flexWrap: 'wrap', maxWidth: canvasWidth - 32 }}>
+      <div className="absolute bottom-10 left-4 flex gap-2 flex-wrap" style={{ maxWidth: canvasWidth - 32 }}>
         {SCENARIOS.map((s, i) => {
           const isActive = scenario === i;
           const btnColor = s.color === 'danger' ? colors.danger : colors.accent;

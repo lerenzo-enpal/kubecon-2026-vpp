@@ -16,7 +16,7 @@ export default function NavigationHint() {
       }
     };
     window.addEventListener('keydown', onKey, true);
-    return () => window.removeEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey, true);
   }, [visible, dismiss]);
 
   if (!visible) return null;
