@@ -413,7 +413,7 @@ export default function Presentation() {
           <div className="absolute inset-0">
             <LazyContent><FrequencyDemo width={1366} height={768} panelWidth={340} /></LazyContent>
           </div>
-          <div className="absolute top-0 inset-x-0 z-10 pointer-events-none px-10 pt-5" style={{ background: 'linear-gradient(to bottom, #020408 0%, #020408cc 60%, transparent 100%)' }}>
+          <div className="absolute top-0 inset-x-0 z-10 pointer-events-none px-10 pt-5">
             <H>Balancing the Grid - In Action</H>
           </div>
         </div>

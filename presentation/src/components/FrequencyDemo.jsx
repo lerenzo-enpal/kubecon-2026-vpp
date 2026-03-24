@@ -1196,8 +1196,22 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
             background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(34,211,238,0.015) 2px, rgba(34,211,238,0.015) 4px)',
           }} />
 
-          {/* Readouts section */}
-          <div style={{ padding: '14px 16px 10px', borderBottom: `1px solid rgba(34,211,238,0.12)`, position: 'relative', zIndex: 2 }}>
+          {/* Timer section — own section at top */}
+          <div style={{ padding: '12px 16px', borderBottom: `1px solid rgba(34,211,238,0.12)`, position: 'relative', zIndex: 2, textAlign: 'center' }}>
+            <div style={{
+              fontSize: 32, fontWeight: 700, letterSpacing: '0.04em',
+              color: panelData.gridTime > 0 ? panelData.statusColor : colors.textDim,
+              textShadow: panelData.gridTime > 0 ? `0 0 12px ${panelData.statusColor}40` : 'none',
+            }}>
+              {panelData.gridTime > 0 ? formatGT(Math.floor(panelData.gridTime)) : 'T+00:00'}
+            </div>
+            <div style={{ fontSize: 12, marginTop: 2, color: colors.textDim }}>
+              {panelData.timeScale}x speed
+            </div>
+          </div>
+
+          {/* Frequency readouts section */}
+          <div style={{ padding: '12px 16px 10px', borderBottom: `1px solid rgba(34,211,238,0.12)`, position: 'relative', zIndex: 2 }}>
             {/* Frequency */}
             <div style={{
               fontSize: 28, fontWeight: 700, letterSpacing: '-0.02em',
@@ -1206,16 +1220,12 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
             }}>
               {'\u25B8'} {panelData.freq.toFixed(3)} Hz
             </div>
-            {/* Delta */}
+            {/* Delta — large */}
             <div style={{
-              fontSize: 13, marginTop: 2,
+              fontSize: 22, fontWeight: 600, marginTop: 4,
               color: panelData.delta > 0.5 ? colors.danger : panelData.delta > 0.1 ? colors.accent : colors.textDim,
             }}>
-              &nbsp;&nbsp;{'\u0394'} {'\u00b1'}{panelData.delta.toFixed(3)} Hz
-            </div>
-            {/* Timer + scale */}
-            <div style={{ fontSize: 14, marginTop: 4, color: colors.textDim }}>
-              &nbsp;&nbsp;{panelData.gridTime > 0 ? formatGT(Math.floor(panelData.gridTime)) : 'T+00:00'} · {panelData.timeScale}× speed
+              {'\u0394'} {'\u00b1'}{panelData.delta.toFixed(3)} Hz
             </div>
             {/* Status */}
             <div style={{
@@ -1328,7 +1338,7 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
           </button>
         </div>
       )}
-      <div style={{ position: 'absolute', bottom: 12, left: 12, display: 'flex', gap: 6 }}>
+      <div style={{ position: 'absolute', bottom: 20, left: 16, display: 'flex', gap: 8, flexWrap: 'wrap', maxWidth: canvasWidth - 32 }}>
         {SCENARIOS.map((s, i) => {
           const isActive = scenario === i;
           const btnColor = s.color === 'danger' ? colors.danger : colors.accent;
@@ -1340,12 +1350,12 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
                 background: isActive ? `${btnColor}25` : colors.surface,
                 border: `1px solid ${isActive ? btnColor : colors.surfaceLight}`,
                 color: isActive ? btnColor : colors.textMuted,
-                padding: '5px 14px',
-                borderRadius: 6,
+                padding: '8px 18px',
+                borderRadius: 8,
                 cursor: 'pointer',
-                fontSize: 11,
+                fontSize: 14,
                 fontFamily: '"JetBrains Mono"',
-                fontWeight: isActive ? 600 : 400,
+                fontWeight: isActive ? 700 : 500,
                 transition: 'all 0.2s',
               }}
             >
@@ -1359,12 +1369,12 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
             background: scenario === -1 ? `${colors.primary}25` : colors.surface,
             border: `1px solid ${scenario === -1 ? colors.primary : colors.surfaceLight}`,
             color: scenario === -1 ? colors.primary : colors.textMuted,
-            padding: '5px 14px',
-            borderRadius: 6,
+            padding: '8px 18px',
+            borderRadius: 8,
             cursor: 'pointer',
-            fontSize: 11,
+            fontSize: 14,
             fontFamily: '"JetBrains Mono"',
-            fontWeight: scenario === -1 ? 600 : 400,
+            fontWeight: scenario === -1 ? 700 : 500,
             transition: 'all 0.2s',
           }}
         >
