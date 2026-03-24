@@ -644,10 +644,13 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
       // ═══ NORMAL / PHASE 1 (explosion overlay) ═══
       ctx.clearRect(0, 0, canvasWidth, height);
 
+      // Chart area: fixed 480px height, offset down to leave room for timer overlay
+      const chartOffsetY = height > 600 ? 100 : 0;
+      const chartH = Math.min(height - chartOffsetY - 60, 520);
       const freqToY = (f) => {
         const top = 52;
         const bottom = 47;
-        return height * 0.05 + (top - f) / (top - bottom) * (height * 0.85);
+        return chartOffsetY + 10 + (top - f) / (top - bottom) * chartH;
       };
 
       // Danger zone bg
@@ -818,14 +821,30 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
             timeStr = `T+${mm}:${ss}`;
           }
 
-          ctx.textAlign = 'left';
-          ctx.font = 'bold 22px JetBrains Mono';
-          ctx.fillStyle = colors.text;
-          ctx.fillText(timeStr, 10, 24);
+          if (chartOffsetY > 0) {
+            // Full-page mode: large timer in its own section above chart
+            ctx.textAlign = 'center';
+            ctx.font = 'bold 48px JetBrains Mono';
+            ctx.fillStyle = statusColor;
+            ctx.shadowBlur = 16;
+            ctx.shadowColor = statusColor + '40';
+            ctx.fillText(timeStr, canvasWidth / 2, 65);
+            ctx.shadowBlur = 0;
 
-          ctx.font = '12px JetBrains Mono';
-          ctx.fillStyle = colors.textDim;
-          ctx.fillText(`${timeScaleVal}x speed`, 10, 42);
+            ctx.font = '16px JetBrains Mono';
+            ctx.fillStyle = colors.textDim;
+            ctx.fillText(`${timeScaleVal}x speed`, canvasWidth / 2, 88);
+          } else {
+            // Compact mode: small timer top-left
+            ctx.textAlign = 'left';
+            ctx.font = 'bold 22px JetBrains Mono';
+            ctx.fillStyle = colors.text;
+            ctx.fillText(timeStr, 10, 24);
+
+            ctx.font = '12px JetBrains Mono';
+            ctx.fillStyle = colors.textDim;
+            ctx.fillText(`${timeScaleVal}x speed`, 10, 42);
+          }
         }
       }
 
