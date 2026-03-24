@@ -74,6 +74,26 @@ const FOCUS_STEPS = [
     },
   },
   {
+    id: 'flexa',
+    label: 'VPP CONTROLLER',
+    zoom: 1.25,
+    cx: 0.60,
+    cy: 0.55,
+    panelSide: 'left',
+    panelColor: colors.accent,
+    title: 'The Control Loop',
+    subtitle: 'Flexa — Enpal + Entrix',
+    bullets: [
+      'Flexa → Event Hub → Cloud HEMS → EMQX → device',
+      'Full loop in under 2 seconds',
+      'ArgoCD GitOps: fleet config as code',
+    ],
+    stats: [
+      { label: 'LOOP TIME', value: '<2s', color: colors.success },
+      { label: 'DEPLOY', value: 'ArgoCD', color: colors.accent },
+    ],
+  },
+  {
     id: 'pipeline',
     label: 'DATA PIPELINE',
     zoom: 2.2,
@@ -92,26 +112,6 @@ const FOCUS_STEPS = [
     stats: [
       { label: 'THROUGHPUT', value: '5M/min', color: '#FF3621' },
       { label: 'LATENCY', value: '<5s', color: '#E25A1C' },
-    ],
-  },
-  {
-    id: 'flexa',
-    label: 'VPP CONTROLLER',
-    zoom: 1.25,
-    cx: 0.60,
-    cy: 0.55,
-    panelSide: 'left',
-    panelColor: colors.accent,
-    title: 'The Control Loop',
-    subtitle: 'Flexa — Enpal + Entrix',
-    bullets: [
-      'Flexa → Event Hub → Cloud HEMS → EMQX → device',
-      'Full loop in under 2 seconds',
-      'ArgoCD GitOps: fleet config as code',
-    ],
-    stats: [
-      { label: 'LOOP TIME', value: '<2s', color: colors.success },
-      { label: 'DEPLOY', value: 'ArgoCD', color: colors.accent },
     ],
   },
 ];

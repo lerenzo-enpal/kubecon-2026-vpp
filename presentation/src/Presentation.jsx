@@ -669,7 +669,7 @@ export default function Presentation() {
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H color={colors.danger}>Clean Energy Has Outgrown the Grid</H>
-          <Stepper values={[2, 4]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col">
+          <Stepper values={[1, 2, 3, 4]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col">
             {(vc) => {
               const v = vc ?? 0;
               return (
@@ -784,8 +784,8 @@ export default function Presentation() {
           [LERENZO] Same architecture — now let's zoom in on the key decisions.
           [ARROW] Home system: Enpal.One edge gateway. Local energy management, WISH protocol for conflict resolution.
           [ARROW] MQTT + Choreography: No central coordinator. Pub/sub scales linearly. Why not stronger consistency? No shared mutable state.
-          [ARROW] Data pipeline: Databricks lakehouse, Spark streaming. 5M measurements/min. Progressive aggregation reduces storage 10x.
           [ARROW] Flexa control loop: Market signal to device in under 2 seconds. ArgoCD for GitOps deployment across 100K+ devices.
+          [ARROW] Data pipeline: Databricks lakehouse, Spark streaming. 5M measurements/min. Progressive aggregation reduces storage 10x.
         </Notes>
       </Slide>
 

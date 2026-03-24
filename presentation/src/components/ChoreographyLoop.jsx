@@ -262,8 +262,8 @@ export default function ChoreographyLoop({ width = 900, height = 380 }) {
 
         // Letter inside home
         const letter = String.fromCharCode(65 + i); // A, B, C, D
-        ctx.font = 'bold 14px JetBrains Mono';
-        ctx.fillStyle = lc + 'cc';
+        ctx.font = 'bold 18px JetBrains Mono';
+        ctx.fillStyle = lc;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(letter, cx, hy + 2);
@@ -293,12 +293,12 @@ export default function ChoreographyLoop({ width = 900, height = 380 }) {
       });
 
       // Column labels
-      ctx.font = 'bold 12px JetBrains Mono';
+      ctx.font = 'bold 14px JetBrains Mono';
       ctx.textAlign = 'center';
       ctx.fillStyle = colors.success + 'cc';
-      ctx.fillText('IoT Devices', homeX + homeW / 2, padY - 6);
+      ctx.fillText('IoT Devices', homeX + homeW / 2, 12);
       ctx.fillStyle = colors.primary + 'cc';
-      ctx.fillText('Dapr Actors', actorX + actorW / 2, padY - 6);
+      ctx.fillText('Dapr Actors', actorX + actorW / 2, 12);
       ctx.fillStyle = colors.textDim + 'cc';
       ctx.fillText('Pub/Sub', mqttX + mqttW / 2, mqttY - mqttH / 2 - 10);
 

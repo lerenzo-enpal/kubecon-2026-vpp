@@ -126,10 +126,10 @@ export default function DuckCurveChart({ width = 1100, height = 560 }) {
       if (!slideContext?.isSlideActive) return;
       if (e.key !== 'ArrowRight' && e.key !== 'ArrowDown') return;
 
-      // If we haven't shown all years yet, advance one step and block navigation
+      // If we haven't shown all years yet, advance two years and block navigation
       if (targetPhaseRef.current < YEARS.length - 1) {
         e.stopPropagation();
-        targetPhaseRef.current += 1;
+        targetPhaseRef.current = Math.min(targetPhaseRef.current + 2, YEARS.length - 1);
       }
       // Otherwise let the event through so Spectacle navigates to next slide
     };

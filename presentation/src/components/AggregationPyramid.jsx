@@ -347,18 +347,11 @@ export default function AggregationPyramid({ width = 1100, height = 500 }) {
             ctx.stroke();
           }
 
-          // Label inside larger bubbles
-          if (pos.r >= 12) {
-            ctx.font = `bold ${Math.max(7, pos.r * 0.48)}px JetBrains Mono`;
-            ctx.fillStyle = '#f1f5f9cc';
-            ctx.textAlign = 'center';
-            ctx.fillText(stage.label, pos.x, pos.y + pos.r * 0.2);
-          }
         });
       });
 
       // ── Column headers ──
-      ctx.font = 'bold 14px JetBrains Mono';
+      ctx.font = 'bold 18px JetBrains Mono';
       ctx.textAlign = 'center';
       ctx.fillStyle = HOME_COLOR;
       ctx.fillText('20s', homeX, padTop - 18);
@@ -370,12 +363,12 @@ export default function AggregationPyramid({ width = 1100, height = 500 }) {
       });
 
       // Ratio labels between columns
-      ctx.font = '10px JetBrains Mono';
+      ctx.font = 'bold 13px JetBrains Mono';
       STAGES.forEach((stage, si) => {
         const fromX = si === 0 ? homeX : padLeft + stageSpacing * si;
         const toX = padLeft + stageSpacing * (si + 1);
         const mx = (fromX + toX) / 2;
-        ctx.fillStyle = stage.color + '70';
+        ctx.fillStyle = stage.color + 'cc';
         ctx.textAlign = 'center';
         ctx.fillText(`${stage.ratio}:1`, mx, padTop - 6);
 
