@@ -135,7 +135,7 @@ const STEPS = [
     subtitle: 'Munich — 1.5 million people, dozens of substations',
     voltage: '110 kV',
     detail: 'Every neighborhood connected. Every factory, hospital, train — all drawing from the same grid.',
-    visibleIds: null, // none — just the map
+    visibleIds: ['munich'],
   },
   {
     view: { longitude: 10.8, latitude: 49.0, zoom: 6.5, pitch: 40, bearing: -5 },
