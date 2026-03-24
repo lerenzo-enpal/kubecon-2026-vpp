@@ -351,7 +351,7 @@ export default function AggregationPyramid({ width = 1100, height = 500 }) {
       });
 
       // ── Column headers ──
-      ctx.font = 'bold 18px JetBrains Mono';
+      ctx.font = 'bold 22px JetBrains Mono';
       ctx.textAlign = 'center';
       ctx.fillStyle = HOME_COLOR;
       ctx.fillText('20s', homeX, padTop - 18);
@@ -388,32 +388,32 @@ export default function AggregationPyramid({ width = 1100, height = 500 }) {
       });
 
       // ── Bottom annotation ──
-      ctx.font = '11px Inter';
-      ctx.fillStyle = colors.textDim + '80';
+      ctx.font = 'bold 16px JetBrains Mono';
+      ctx.fillStyle = colors.textMuted;
       ctx.textAlign = 'left';
-      ctx.fillText('High frequency, high volume', padLeft, height - 8);
+      ctx.fillText('High frequency, high volume', padLeft, height - 2);
       ctx.textAlign = 'right';
-      ctx.fillText('Low frequency, high value', width - padRight, height - 8);
+      ctx.fillText('Low frequency, high value', width - padRight, height - 2);
 
-      // Timescale indicator — bottom right, above the annotation line
-      ctx.font = 'bold 10px JetBrains Mono';
-      ctx.fillStyle = colors.textDim + 'aa';
-      ctx.textAlign = 'right';
-      ctx.fillText('\u25B6 ~80\u00D7 REALTIME', width - padRight, height - 22);
+      // Timescale indicator — centered between the two labels
+      ctx.font = 'bold 16px JetBrains Mono';
+      ctx.fillStyle = colors.textMuted;
+      ctx.textAlign = 'center';
+      ctx.fillText('\u25B6 ~80\u00D7 REALTIME', width / 2, height - 2);
 
       // Direction arrow
       ctx.beginPath();
-      ctx.moveTo(padLeft + 180, height - 4);
-      ctx.lineTo(width - padRight - 180, height - 4);
-      ctx.strokeStyle = colors.surfaceLight + '18';
+      ctx.moveTo(padLeft + 220, height - 10);
+      ctx.lineTo(width - padRight - 220, height - 10);
+      ctx.strokeStyle = colors.surfaceLight + '25';
       ctx.lineWidth = 1;
       ctx.stroke();
       ctx.beginPath();
-      ctx.moveTo(width - padRight - 180, height - 4);
-      ctx.lineTo(width - padRight - 186, height - 7);
-      ctx.lineTo(width - padRight - 186, height - 1);
+      ctx.moveTo(width - padRight - 220, height - 10);
+      ctx.lineTo(width - padRight - 226, height - 13);
+      ctx.lineTo(width - padRight - 226, height - 7);
       ctx.closePath();
-      ctx.fillStyle = colors.surfaceLight + '28';
+      ctx.fillStyle = colors.surfaceLight + '40';
       ctx.fill();
 
       if (isActive) animRef.current = requestAnimationFrame(draw);
