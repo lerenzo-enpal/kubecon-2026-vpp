@@ -1045,16 +1045,16 @@ export default function FrequencyWalkthrough({ step = 0, mode = 'intro' }) {
       {/* ═══ SCENE 3: Punchline ═══ */}
       {showPunchline && (
         <div className="absolute inset-0 flex items-center justify-center z-10" style={{ pointerEvents: 'none' }}>
-          <div className="flex flex-col items-center justify-between" style={{ height: '50%' }}>
+          <div className="flex flex-col items-center justify-center gap-6">
             <Typewriter
               text='The difference between "everything is fine" and "total collapse" is'
               delay={200} speed={25}
-              className="text-[36px] font-sans text-hud-text" />
-            <div className="text-[88px] font-extrabold font-mono leading-none" style={{
+              className="text-4xl font-sans text-hud-text" style={{ minHeight: '2.5em' }} />
+            <div className="text-8xl font-extrabold font-mono leading-none" style={{
               color: colors.accent,
               animation: 'fwPunchIn 1s ease 0.3s both, fwGlow 2.5s ease-in-out 1.3s infinite',
             }}>2.5 Hz</div>
-            <div className="flex flex-col items-center gap-4">
+            <div className="flex flex-col items-center gap-4" style={{ minHeight: '5em' }}>
               <Typewriter
                 text="Less than you can hear"
                 delay={1800} speed={40}
