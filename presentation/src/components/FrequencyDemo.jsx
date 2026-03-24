@@ -20,7 +20,7 @@ const SCENARIOS = [
   {
     label: 'Generator Trip (800 MW)',
     color: 'accent',
-    timeScale: 150, // 1 real second = 150 grid seconds → ~5s real for full scenario
+    timeScale: 290, // consistent time scale across all scenarios
     // 800 MW = well within FCR dimensioning (3 GW). Grid handles this routinely.
     // Ref: ENTSO-E reports ~50 events/yr exceeding 500 MW loss. Recovery typically <15min.
     getDelta: (gt) => {
@@ -45,7 +45,7 @@ const SCENARIOS = [
   {
     label: '3 GW Loss (Reference Incident)',
     color: 'danger',
-    timeScale: 240, // 1 real second = 240 grid seconds → ~5s real for full scenario
+    timeScale: 290, // consistent time scale across all scenarios
     // 3 GW = ENTSO-E "reference incident" — the dimensioning event for Continental Europe FCR.
     // FCR is sized exactly for this: 3,000 MW, full activation within 30s.
     // Nadir ~49.75-49.80 Hz (well above UFLS at 49.0). No load shedding needed.
@@ -72,7 +72,7 @@ const SCENARIOS = [
   {
     label: 'Demand Drop (5 GW)',
     color: 'accent',
-    timeScale: 120, // 1 real second = 120 grid seconds → ~5s real
+    timeScale: 290, // consistent time scale across all scenarios
     // Over-frequency is equally dangerous. At 51.5 Hz generators trip for self-protection.
     // Ref: 2021 CE grid split — NW area rose to 50.6 Hz from excess generation.
     getDelta: (gt) => {
@@ -97,7 +97,7 @@ const SCENARIOS = [
   {
     label: 'Cyber Attack',
     color: 'danger',
-    timeScale: 290, // 1 real second = 290 grid seconds → ~5s real
+    timeScale: 290, // consistent time scale across all scenarios
     // Hypothetical coordinated SCADA compromise — modeled on Ukraine 2015/2016 attacks
     // but at Continental European scale. No real precedent at this scale.
     // Ref: Ukraine Dec 2015 — 230,000 customers, 6 hours. Ukraine Dec 2016 — Kyiv 1/5 capacity, 1 hour.
@@ -808,14 +808,24 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
           const firstSc2 = SCENARIOS[instances[0].scenarioIdx];
           const timeScaleVal = firstSc2.timeScale || 100;
 
-          ctx.textAlign = 'left';
-          ctx.font = 'bold 14px JetBrains Mono';
-          ctx.fillStyle = colors.textMuted + 'cc';
-          ctx.fillText(`T+${mm}:${ss}`, 10, 22);
+          const totalMin = Math.floor(totalSec / 60);
+          let timeStr;
+          if (totalMin >= 160) {
+            const hh = String(Math.floor(totalMin / 60)).padStart(2, '0');
+            const mmFmt = String(totalMin % 60).padStart(2, '0');
+            timeStr = `T+${hh}h${mmFmt}m`;
+          } else {
+            timeStr = `T+${mm}:${ss}`;
+          }
 
-          ctx.font = '10px JetBrains Mono';
-          ctx.fillStyle = colors.textDim + '90';
-          ctx.fillText(`${timeScaleVal}× speed`, 10, 38);
+          ctx.textAlign = 'left';
+          ctx.font = 'bold 22px JetBrains Mono';
+          ctx.fillStyle = colors.text;
+          ctx.fillText(timeStr, 10, 24);
+
+          ctx.font = '12px JetBrains Mono';
+          ctx.fillStyle = colors.textDim;
+          ctx.fillText(`${timeScaleVal}x speed`, 10, 42);
         }
       }
 
@@ -1128,7 +1138,13 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
   };
 
   const formatGT = (gt) => {
-    const mm = String(Math.floor(gt / 60)).padStart(2, '0');
+    const totalMin = Math.floor(gt / 60);
+    if (totalMin >= 160) {
+      const hh = String(Math.floor(totalMin / 60)).padStart(2, '0');
+      const mm = String(totalMin % 60).padStart(2, '0');
+      return `T+${hh}h${mm}m`;
+    }
+    const mm = String(totalMin).padStart(2, '0');
     const ss = String(gt % 60).padStart(2, '0');
     return `T+${mm}:${ss}`;
   };
