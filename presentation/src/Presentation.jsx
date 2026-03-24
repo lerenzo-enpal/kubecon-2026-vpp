@@ -407,18 +407,14 @@ export default function Presentation() {
         </Notes>
       </Slide>
 
-      {/* 12: Frequency Demo — Interactive */}
-      <Slide backgroundColor={bg} padding="20px 40px">
-        <div className="flex flex-col h-full">
-          <H>Balancing the Grid - In Action</H>
-          <P size="20px">Click an event to simulate what happens when something goes wrong.</P>
-          <div className="flex-1 flex items-center" style={{ width: '100%' }}>
-            <LazyContent><FrequencyDemo width={1286} height={480} panelWidth={340} /></LazyContent>
+      {/* 12: Frequency Demo — Interactive, full-bleed canvas */}
+      <Slide backgroundColor={bg} padding="0">
+        <div className="relative w-full h-full">
+          <div className="absolute inset-0">
+            <LazyContent><FrequencyDemo width={1366} height={768} panelWidth={340} /></LazyContent>
           </div>
-          <div className="text-center py-3">
-            <span className="text-[28px] font-mono font-extrabold" style={{ color: colors.danger, textShadow: `0 0 20px ${colors.danger}30` }}>Collapse</span>
-            <span className="text-[28px] font-mono mx-3" style={{ color: colors.textDim }}>=</span>
-            <span className="text-[28px] font-mono font-extrabold" style={{ color: colors.accent, textShadow: `0 0 20px ${colors.accent}30` }}>{'\u0394'} 2.5 Hz</span>
+          <div className="absolute top-0 inset-x-0 z-10 pointer-events-none px-10 pt-5" style={{ background: 'linear-gradient(to bottom, #020408 0%, #020408cc 60%, transparent 100%)' }}>
+            <H>Balancing the Grid - In Action</H>
           </div>
         </div>
         <Notes>
@@ -669,12 +665,19 @@ export default function Presentation() {
       <Slide backgroundColor={bg} padding="20px 40px">
         <div className="flex flex-col h-full">
           <H color={colors.danger}>Clean Energy Has Outgrown the Grid</H>
-          <Stepper values={[1, 2, 3, 4]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col">
+          <Stepper values={[1, 2, 3, 4, 5]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col">
             {(vc) => {
               const v = vc ?? 0;
               return (
-                <div className="flex-1 flex flex-col justify-center">
-                  <LazyContent><CurtailmentChart width={940} height={340} statsVisible={v} /></LazyContent>
+                <div className="flex-1 flex flex-col justify-center relative">
+                  <LazyContent><CurtailmentChart width={940} height={340} statsVisible={Math.min(v, 4)} /></LazyContent>
+                  {v >= 5 && (
+                    <div className="absolute inset-0 flex items-center justify-center rounded-lg" style={{ background: 'rgba(10, 14, 23, 0.85)', animation: 'fadeIn 0.4s ease-out' }}>
+                      <div className="text-3xl font-bold font-sans text-center max-w-2xl leading-snug" style={{ color: colors.accent, textShadow: `0 0 30px ${colors.accent}40` }}>
+                        Where can we put this curtailed renewable energy?
+                      </div>
+                    </div>
+                  )}
                 </div>
               );
             }}

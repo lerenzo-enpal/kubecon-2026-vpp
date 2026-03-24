@@ -27,6 +27,11 @@
   50% { opacity: 0; }
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 /* MapLibre attribution — subtle, blends with dark theme. Override per-slide if needed. */
 .maplibregl-ctrl-attrib {
   background: transparent !important;

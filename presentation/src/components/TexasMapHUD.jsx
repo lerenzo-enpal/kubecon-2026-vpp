@@ -772,7 +772,7 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
                   )}
                   {boot > 3.0 && (
                     <div style={{ color: '#64748bcc' }}>
-                      {'>'} Awaiting events...<span className="hud-blink">{'\u2588'}</span>
+                      {'>'} Awaiting events...<span className="hud-blink" style={{ marginLeft: 1 }}>{'\u2588'}</span>
                     </div>
                   )}
                 </div>
@@ -790,7 +790,7 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
                   }}>
                     {'>'} {msg.text.substring(0, chars)}
                     {isLatest && chars < msg.text.length && (
-                      <span className="hud-blink">{'\u2588'}</span>
+                      <span className="hud-blink" style={{ marginLeft: 1 }}>{'\u2588'}</span>
                     )}
                   </div>
                 );

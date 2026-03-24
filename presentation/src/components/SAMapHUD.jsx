@@ -940,7 +940,7 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
               )}
               {boot > 2.6 && (
                 <div style={{ color: '#64748b35' }}>
-                  {'>'} Awaiting events...<span className="hud-blink">{'\u2588'}</span>
+                  {'>'} Awaiting events...<span className="hud-blink" style={{ marginLeft: 1 }}>{'\u2588'}</span>
                 </div>
               )}
             </div>
