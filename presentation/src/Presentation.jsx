@@ -32,6 +32,7 @@ import ChoreographyLoop from './components/ChoreographyLoop';
 import StreamingAggregation from './components/StreamingAggregation';
 import AggregationPyramid from './components/AggregationPyramid';
 import GridFrequencyExplainer from './components/GridFrequencyExplainer';
+import StepBridge from './components/StepBridge';
 
 
 const theme = {
@@ -298,7 +299,9 @@ export default function Presentation() {
       {/* 6: Texas Cascade — deck.gl HUD */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
-          <LazyContent><TexasMapHUD width="100%" height="100%" variant="hud" /></LazyContent>
+          <StepBridge count={11}>
+            {(step) => <LazyContent><TexasMapHUD width="100%" height="100%" variant="hud" step={step} /></LazyContent>}
+          </StepBridge>
         </div>
         <Notes>
           [LERENZO] February 2021 — a polar vortex hits Texas.
@@ -377,7 +380,7 @@ export default function Presentation() {
           <H>The Grid: Balanced at 0.67c</H>
           <P size="20px">This enormous machine maintains a constant 50 Hz frequency — imbalances propagate at two-thirds the speed of light.</P>
           <Stepper values={[1, 2, 3, 4]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col" style={{ minHeight: 0 }}>
-            {(stepVal) => <FrequencyWalkthrough step={stepVal ?? 0} mode="intro" />}
+            {(stepVal) => <LazyContent><FrequencyWalkthrough step={stepVal ?? 0} mode="intro" /></LazyContent>}
           </Stepper>
         </div>
         <Notes>
@@ -395,7 +398,7 @@ export default function Presentation() {
           <H>Tools for Balancing the Grid</H>
           <P size="20px">What happens when supply and demand diverge — and how the grid fights back.</P>
           <Stepper values={[1, 2, 3, 4]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="flex-1 flex flex-col" style={{ minHeight: 0 }}>
-            {(stepVal) => <FrequencyWalkthrough step={stepVal ?? 0} mode="scenarios" />}
+            {(stepVal) => <LazyContent><FrequencyWalkthrough step={stepVal ?? 0} mode="scenarios" /></LazyContent>}
           </Stepper>
         </div>
         <Notes>
@@ -774,7 +777,7 @@ export default function Presentation() {
             <Stepper values={[1, 2, 3, 4]} alwaysVisible activeStyle={{ opacity: '1' }} inactiveStyle={{ opacity: '1' }} className="w-full h-full">
               {(stepVal) => {
                 const archStep = stepVal ?? 0;
-                return <ArchitectureExplorer step={archStep} />;
+                return <LazyContent><ArchitectureExplorer step={archStep} /></LazyContent>;
               }}
             </Stepper>
           </div>
@@ -974,7 +977,9 @@ export default function Presentation() {
       {/* 30: SA Virtual Power Plant */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
-          <LazyContent><SAMapHUD width="100%" height="100%" variant="vpp" /></LazyContent>
+          <StepBridge count={1}>
+            {(step) => <LazyContent><SAMapHUD width="100%" height="100%" variant="vpp" step={step} /></LazyContent>}
+          </StepBridge>
         </div>
         <Notes>
           [LERENZO] South Australia proved this works.
@@ -1102,7 +1107,9 @@ export default function Presentation() {
       {/* SA Blackout, 2016 */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
-          <LazyContent><SAMapHUD width="100%" height="100%" variant="blackout" /></LazyContent>
+          <StepBridge count={1}>
+            {(step) => <LazyContent><SAMapHUD width="100%" height="100%" variant="blackout" step={step} /></LazyContent>}
+          </StepBridge>
         </div>
       </Slide>
 

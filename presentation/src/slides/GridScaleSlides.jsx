@@ -1,8 +1,9 @@
 import React from 'react';
 import { Slide, Notes } from 'spectacle';
 import { colors } from '../theme';
-import { GlowText } from '../components/ui';
+import { GlowText, LazyContent } from '../components/ui';
 import LargestMachineZoom from '../components/LargestMachineZoom';
+import StepBridge from '../components/StepBridge';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // VERSION D: "The Zoom Out"
@@ -14,7 +15,9 @@ export function gridScale() {
     <Slide key="grid-scale-d1" backgroundColor={colors.bg} padding="0">
       <div className="relative w-full h-full">
         {/* Canvas animation layer — full bleed */}
-        <LargestMachineZoom />
+        <StepBridge count={7}>
+          {(step) => <LazyContent><LargestMachineZoom step={step} /></LazyContent>}
+        </StepBridge>
 
         {/* Title overlay */}
         <div className="absolute inset-0 z-20 pointer-events-none" style={{ padding: '36px' }}>

@@ -91,7 +91,7 @@ function patchLayers(layers) {
     if (l.id === 'places_locality') {
       patched.push({
         ...l,
-        filter: ['all', ['==', 'kind', 'locality'], ['>=', ['get', 'population'], 50000]],
+        filter: ['all', ['==', 'kind', 'locality'], ['>=', 'population', 50000]],
       });
       continue;
     }

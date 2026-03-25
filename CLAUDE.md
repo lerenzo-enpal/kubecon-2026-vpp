@@ -31,6 +31,18 @@
 - Include backup points for anticipated audience questions.
 - Never write notes as full sentences meant to be read verbatim.
 
+## Performance
+- **Wrap heavy components in `<LazyContent>`** so they only mount when their slide is active. This prevents idle WebGL contexts, RAF loops, and tile loading on off-screen slides.
+- **Components using Spectacle's `useSteps`** cannot be wrapped directly in `<LazyContent>` (unmounting deregisters steps). Use `<StepBridge count={N}>` instead — it owns the `useSteps` registration and passes the step value via a render prop. The child component receives a `step` prop instead of calling `useSteps` internally.
+- **Gate RAF loops with `slideContext?.isSlideActive`** — import `SlideContext` from Spectacle and check `isSlideActive` before calling `requestAnimationFrame`. Add it to `useEffect` dependency arrays so loops restart when the slide becomes active.
+- **Avoid `setState` inside RAF loops** — use `useRef` for animation values that change every frame. Only call `setState` at meaningful thresholds or when the animation completes.
+
+## Testing
+- **Minimize browser round-trips** when using Playwright/Chrome DevTools MCP. Make the change, take ONE screenshot, assess. Don't navigate/screenshot/read repeatedly.
+- **Don't remove React-owned DOM nodes** via `evaluate_script` — it crashes React's reconciler. Dismiss overlays by triggering the React dismiss handler (e.g. pressing the expected key) instead.
+- **HMR is fast (<1s)** — the bottleneck is MCP tool call latency, not the dev server. Trust code changes for non-visual logic; only screenshot for layout/visual issues.
+
 ## Git Workflow
 - **Never push without explicit permission.** Commit freely when asked, but always wait for the user to say "push" before running `git push`.
+- **Never commit without explicit permission.** Always wait for the user to say "commit" before running `git commit`.
 - No `Co-Authored-By` lines in commits.

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useContext, useMemo, useState, useCallback } from 'react';
-import { SlideContext, useSteps } from 'spectacle';
+import { SlideContext } from 'spectacle';
 import DeckGL from '@deck.gl/react';
 import { WebMercatorViewport } from '@deck.gl/core';
 import { ScatterplotLayer, LineLayer } from '@deck.gl/layers';
@@ -150,14 +150,13 @@ const STAT_BOXES = [
   { v: '50', u: 'Hz', c: colors.primary, d: 'synchronized frequency' },
 ];
 
-export default function LargestMachineZoom({ width = 1024, height = 668 }) {
+export default function LargestMachineZoom({ width = 1024, height = 668, step = 0 }) {
   const DARK_MAP = useMapStyle('europe', 'noborders');
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const mapRef = useRef(null);
   const slideContext = useContext(SlideContext);
-  const { step: rawStep, placeholder } = useSteps(7);
-  const currentStepValue = rawStep + 1;
+  const currentStepValue = step + 1;
   const stepRef = useRef(0);
   const phaseTimeRef = useRef(0);
   const prevStepRef = useRef(-1);
@@ -860,7 +859,6 @@ export default function LargestMachineZoom({ width = 1024, height = 668 }) {
 
   return (
     <>
-      {placeholder}
       {/* deck.gl map — fades in for Phase 3+ */}
       <div style={{
         position: 'absolute', inset: 0, zIndex: 1,

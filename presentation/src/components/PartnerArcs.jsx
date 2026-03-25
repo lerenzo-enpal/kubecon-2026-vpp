@@ -262,7 +262,7 @@ export default function PartnerArcs({ children }) {
       if (slideContext?.isSlideActive) animRef.current = requestAnimationFrame(draw);
     };
 
-    animRef.current = requestAnimationFrame(draw);
+    if (slideContext?.isSlideActive) animRef.current = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(animRef.current);
   }, [ready, slideContext?.isSlideActive]);
 
