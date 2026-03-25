@@ -1164,26 +1164,23 @@ export default function FrequencyDemo({ width = 900, height = 480, panelWidth = 
   };
 
   return (
-    <div className="relative flex overflow-hidden" style={{ width, height }}>
-      {/* Canvas — left side */}
+    <div className="relative overflow-hidden" style={{ width, height }}>
+      {/* Canvas — fills the whole area */}
       <canvas
         ref={canvasRef}
         style={{ width: canvasWidth, height }}
       />
 
-      {/* HUD Event Feed Panel — right side */}
+      {/* HUD Event Feed Panel — same pattern as TexasMapHUD: absolute, 10px inset */}
       {panelWidth > 0 && (
-        <div style={{
-          width: panelWidth, height, position: 'relative',
-          background: 'rgba(5,8,16,0.92)', fontFamily: '"JetBrains Mono"',
-          border: `1px solid rgba(34,211,238,0.12)`,
-          display: 'flex', flexDirection: 'column', overflow: 'hidden',
+        <div className="absolute top-3 right-3 bottom-8 flex flex-col overflow-hidden rounded" style={{
+          width: panelWidth,
+          background: 'rgba(5,8,16,0.92)',
+          fontFamily: '"JetBrains Mono"',
+          border: `1px solid rgba(34,211,238,0.15)`,
+          boxShadow: `0 0 20px rgba(34,211,238,0.06), inset 0 0 15px rgba(34,211,238,0.03)`,
+          backdropFilter: 'blur(12px)',
         }}>
-          {/* Corner brackets */}
-          <div style={{ position: 'absolute', top: -1, left: -1, width: 12, height: 12, borderTop: `2px solid ${colors.primary}40`, borderLeft: `2px solid ${colors.primary}40` }} />
-          <div style={{ position: 'absolute', top: -1, right: -1, width: 12, height: 12, borderTop: `2px solid ${colors.primary}40`, borderRight: `2px solid ${colors.primary}40` }} />
-          <div style={{ position: 'absolute', bottom: -1, left: -1, width: 12, height: 12, borderBottom: `2px solid ${colors.primary}40`, borderLeft: `2px solid ${colors.primary}40` }} />
-          <div style={{ position: 'absolute', bottom: -1, right: -1, width: 12, height: 12, borderBottom: `2px solid ${colors.primary}40`, borderRight: `2px solid ${colors.primary}40` }} />
 
           {/* Scanline overlay */}
           <div style={{
