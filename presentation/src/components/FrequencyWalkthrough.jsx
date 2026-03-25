@@ -1,5 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
+import { useTypewriter } from '../hooks/useTypewriter';
 
 const c = colors.primary;
 
@@ -52,30 +54,13 @@ function GridClock({ targetSec }) {
   );
 }
 
-// ─── Typewriter text ───
+// ─── Typewriter text using shared hook ───
 function Typewriter({ text, delay = 0, speed = 30, className, style }) {
-  const [shown, setShown] = useState(0);
-  const [ready, setReady] = useState(false);
-  const timerRef = useRef(null);
-  useEffect(() => {
-    setShown(0);
-    setReady(false);
-    const startTimeout = setTimeout(() => {
-      setReady(true);
-      let i = 0;
-      timerRef.current = setInterval(() => {
-        i++;
-        setShown(i);
-        if (i >= text.length) clearInterval(timerRef.current);
-      }, speed);
-    }, delay);
-    return () => { clearTimeout(startTimeout); clearInterval(timerRef.current); };
-  }, [text, delay, speed]);
-
+  const { charCount, done, ready } = useTypewriter(text, { delay, speed });
   return (
     <span className={className} style={style}>
-      {text.slice(0, shown)}
-      {ready && shown < text.length && <span style={{ animation: 'fwCursor 0.6s step-end infinite' }}>_</span>}
+      {text.slice(0, charCount)}
+      {ready && !done && <span style={{ animation: 'fwCursor 0.6s step-end infinite' }}>_</span>}
     </span>
   );
 }
@@ -837,6 +822,9 @@ function SupplyDemandScene({ active, step = 1 }) {
 // mode="intro": boot → supply/demand → punchline (slide 10)
 // mode="scenarios": grid HUD with degradation steps (slide 11)
 export default function FrequencyWalkthrough({ step = 0, mode = 'intro' }) {
+  const slideContext = useContext(SlideContext);
+  const isActive = slideContext?.isSlideActive;
+
   // ── Intro mode: step 0=boot, 1=supply/demand, 2=punchline ──
   // ── Scenarios mode: step 0=nominal, 1=warning, 2=emergency, 3=collapse ──
   const scenarioStep = mode === 'scenarios' ? step + 1 : step; // map to STEPS index
@@ -921,7 +909,7 @@ export default function FrequencyWalkthrough({ step = 0, mode = 'intro' }) {
         filter: showBoot ? 'blur(0px)' : 'blur(12px)',
         transition: 'all 0.5s cubic-bezier(0.4,0,0.2,1)',
       }}>
-        <FreqCounter target={50.000} active={showBoot} />
+        <FreqCounter target={50.000} active={showBoot && isActive} />
       </div>
 
       {/* ═══ SCENE 1b: Supply/Demand Balance (intro mode only) ═══ */}
@@ -931,7 +919,7 @@ export default function FrequencyWalkthrough({ step = 0, mode = 'intro' }) {
           pointerEvents: showSupplyDemand ? 'auto' : 'none',
           transition: 'opacity 0.6s ease',
         }}>
-          <SupplyDemandScene active={showSupplyDemand} step={supplyDemandStep} />
+          <SupplyDemandScene active={showSupplyDemand && isActive} step={supplyDemandStep} />
         </div>
       )}
 

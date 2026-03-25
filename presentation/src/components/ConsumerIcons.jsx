@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
+import { useTypewriter } from '../hooks/useTypewriter';
 
 const c = colors.primary;
 
@@ -137,23 +138,9 @@ function ConnectedHomes({ draw, t }) {
 }
 
 function Typewriter({ text, active, delay = 0 }) {
-  const [count, setCount] = useState(0);
-  const [started, setStarted] = useState(false);
+  const { charCount, done, ready } = useTypewriter(text, { active, delay, speed: 30 });
 
-  useEffect(() => {
-    if (!active) { setCount(0); setStarted(false); return; }
-    const t = setTimeout(() => setStarted(true), delay);
-    return () => clearTimeout(t);
-  }, [active, delay]);
-
-  useEffect(() => {
-    if (!started || count >= text.length) return;
-    const speed = 30 + Math.random() * 25;
-    const t = setTimeout(() => setCount(n => n + 1), speed);
-    return () => clearTimeout(t);
-  }, [started, count, text]);
-
-  if (!started) return <div style={{ marginTop: 'auto', paddingBottom: 2, height: 36 }} />;
+  if (!ready) return <div style={{ marginTop: 'auto', paddingBottom: 2, height: 36 }} />;
 
   return (
     <div style={{
@@ -162,11 +149,11 @@ function Typewriter({ text, active, delay = 0 }) {
       color: c, textShadow: `0 0 20px ${c}40, 0 0 4px ${c}25`,
       textAlign: 'center', letterSpacing: '0.01em',
     }}>
-      <span style={{ whiteSpace: 'pre' }}>{text.slice(0, count)}</span>
+      <span style={{ whiteSpace: 'pre' }}>{text.slice(0, charCount)}</span>
       <span style={{
         display: 'inline-block', width: 13, height: '0.9em', marginLeft: 1,
-        background: c, verticalAlign: 'baseline', opacity: count < text.length ? 1 : undefined,
-        animation: count >= text.length ? 'ciCursor 0.6s step-end infinite' : 'none',
+        background: c, verticalAlign: 'baseline', opacity: !done ? 1 : undefined,
+        animation: done ? 'ciCursor 0.6s step-end infinite' : 'none',
       }} />
     </div>
   );

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { SlideContext, useSteps } from 'spectacle';
+import { useTypewriter } from '../hooks/useTypewriter';
+import { SlideContext } from 'spectacle';
 import { DeckGL } from '@deck.gl/react';
 import { FlyToInterpolator } from '@deck.gl/core';
 import { ScatterplotLayer, LineLayer, TextLayer } from '@deck.gl/layers';
@@ -51,6 +52,17 @@ const TX_LINES = [
   ['houston', 'cedarbayou'], ['houston', 'austin'], ['houston', 'stp'],
   ['sanantonio', 'corpus'], ['stp', 'corpus'], ['martin', 'forney'],
 ];
+
+// ── Typewriter line using shared hook ──
+function TypewriterLine({ text, color, active }) {
+  const { charCount, done } = useTypewriter(text, { active, showFull: !active });
+  return (
+    <span style={{ color }}>
+      {'>'} {text.substring(0, charCount)}
+      {!done && <span className="hud-blink" style={{ marginLeft: 1 }}>{'\u2588'}</span>}
+    </span>
+  );
+}
 
 // ── Cascade timeline ────────────────────────────────────────
 const CASCADE = [
@@ -104,7 +116,7 @@ function getStepView(stepIdx, fallback) {
 }
 
 // ── Main component ──────────────────────────────────────────
-export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud' }) {
+export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud', step = 0 }) {
   const mapStyle = useMapStyle('texas', 'labeled');
   const [failed, setFailed] = useState(new Set());
   const [incident, setIncident] = useState(new Map()); // id → startTime (amber-glow plants)
@@ -153,10 +165,8 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
 
   // Spectacle step integration — arrow keys advance cascade
   // Step 0 = intro (clean map, no HUD), Step 1 = HUDs appear, Steps 2+ = cascade
-  const { step: rawStep, placeholder } = useSteps(CASCADE.length + 1);
-  const spectacleStep = rawStep + 1; // 0 = intro, 1 = HUD reveal, 2..CASCADE.length+1 = cascade steps
   const prevSpectacleStep = useRef(0);
-  const hudVisible = spectacleStep >= 1;
+  const hudVisible = step >= 1;
 
   const slideContext = useContext(SlideContext);
   const slideActive = slideContext?.isSlideActive;
@@ -167,16 +177,16 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
       clearIncidentTimers();
       wasActiveRef.current = true;
 
-      if (spectacleStep < 2) {
+      if (step < 2) {
         // Entering at intro or HUD-reveal step — clean slate
         setFailed(new Set()); setIncident(new Map()); setMode('idle'); setElapsed(0);
         setActiveStep(-1); setStepIndex(-1); setBoot(0);
         lastAutoStep.current = -1;
         setViewState(VIEWS[variant] || VIEWS.hud);
-      } else {
+      } else if (step >= 2 && step - 2 < CASCADE.length) {
         // Entering mid-cascade (e.g. navigated back from the next slide)
         // Rebuild failed set up to the current spectacle step
-        const targetIdx = Math.min(spectacleStep - 2, CASCADE.length - 1);
+        const targetIdx = Math.min(step - 2, CASCADE.length - 1);
         const nf = new Set();
         for (let i = 0; i <= targetIdx; i++) CASCADE[i].ids.forEach(id => nf.add(id));
         nf.delete('comanche');
@@ -196,7 +206,7 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
           transitionEasing: t => 1 - Math.pow(1 - t, 3),
         });
       }
-      prevSpectacleStep.current = spectacleStep;
+      prevSpectacleStep.current = step;
     } else {
       wasActiveRef.current = false;
     }
@@ -235,14 +245,14 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
   // Skip if slide just became active (the reset effect handles that)
   useEffect(() => {
     if (!wasActiveRef.current) return; // not active yet, ignore
-    if (spectacleStep === prevSpectacleStep.current) return; // no change
+    if (step === prevSpectacleStep.current) return; // no change
 
-    if (spectacleStep < prevSpectacleStep.current) {
+    if (step < prevSpectacleStep.current) {
       // Going back — rebuild state to match the target step
       clearIncidentTimers();
-      if (spectacleStep < 2) {
+      if (step < 2) {
         // Back to before cascade — reset to idle (step 0 = intro, step 1 = HUD reveal)
-        setFailed(new Set()); setIncident(new Map()); setMode(spectacleStep >= 1 ? 'idle' : 'idle'); setElapsed(0);
+        setFailed(new Set()); setIncident(new Map()); setMode(step >= 1 ? 'idle' : 'idle'); setElapsed(0);
         setActiveStep(-1); setStepIndex(-1); lastAutoStep.current = -1;
         setViewState({
           ...defaultView,
@@ -250,9 +260,9 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
           transitionInterpolator: FLY_TO,
           transitionEasing: t => 1 - Math.pow(1 - t, 3),
         });
-      } else {
+      } else if (step >= 2) {
         // Back to a previous cascade step — rebuild failed set up to that step
-        const targetIdx = spectacleStep - 2;
+        const targetIdx = Math.max(0, Math.min(step - 2, CASCADE.length - 1));
         setMode('stepping');
         setStepIndex(targetIdx);
         const nf = new Set();
@@ -271,9 +281,9 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
           transitionEasing: t => 1 - Math.pow(1 - t, 3),
         });
       }
-    } else if (spectacleStep >= 2) {
-      // Cascade steps start at spectacleStep 2 (offset by 1 for HUD reveal step)
-      const targetIdx = spectacleStep - 2;
+    } else if (step >= 2) {
+      // Cascade steps start at step 2 (offset by 1 for HUD reveal step)
+      const targetIdx = step - 2;
       if (targetIdx < CASCADE.length) {
         setMode('stepping');
         setStepIndex(targetIdx);
@@ -296,8 +306,8 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
         });
       }
     }
-    prevSpectacleStep.current = spectacleStep;
-  }, [spectacleStep]);
+    prevSpectacleStep.current = step;
+  }, [step]);
 
   // Auto-play loop — only runs in 'playing' mode
   useEffect(() => {
@@ -550,7 +560,6 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
 
   return (
     <div style={{ position: 'relative', width, height, overflow: 'hidden', background: hudVisible ? '#020408' : '#0a1020', transition: 'background 0.8s ease' }}>
-      {placeholder}
       {/* ── Map ── */}
       <DeckGL
         viewState={viewState}
@@ -778,20 +787,15 @@ export default function TexasMapHUD({ width = 1024, height = 700, variant = 'hud
                 </div>
               )}
               {visibleLogs.map((msg, i) => {
-                const age = elapsed - msg.time;
-                const chars = Math.min(msg.text.length, Math.floor(age * 45));
                 const isLatest = i === visibleLogs.length - 1;
                 const msgColor = msg.level === 'crit' ? '#ef4444' : '#f59e0b';
                 return (
-                  <div key={msg.time} style={{
+                  <div key={msg.time + msg.text} style={{
                     fontSize: 11, fontFamily: '"JetBrains Mono"',
-                    color: msgColor, opacity: isLatest ? 1 : 0.5,
+                    opacity: isLatest ? 1 : 0.5,
                     marginBottom: 2, lineHeight: 1.4,
                   }}>
-                    {'>'} {msg.text.substring(0, chars)}
-                    {isLatest && chars < msg.text.length && (
-                      <span className="hud-blink" style={{ marginLeft: 1 }}>{'\u2588'}</span>
-                    )}
+                    <TypewriterLine text={msg.text} color={msgColor} active={isLatest} />
                   </div>
                 );
               })}
