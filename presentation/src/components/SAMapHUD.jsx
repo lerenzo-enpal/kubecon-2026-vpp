@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext, useRef, useMemo } from 'react';
-import { SlideContext, useSteps } from 'spectacle';
+import { useTypewriter } from '../hooks/useTypewriter';
+import { SlideContext } from 'spectacle';
 import { DeckGL } from '@deck.gl/react';
 import { FlyToInterpolator } from '@deck.gl/core';
 import { ScatterplotLayer, LineLayer, TextLayer } from '@deck.gl/layers';
@@ -313,8 +314,19 @@ function loadAllHomes() {
 
 // ── HUD corner bracket decoration ──────────────────────────
 
+// ── Typewriter line using shared hook ──
+function TypewriterLine({ text, color, active }) {
+  const { charCount, done } = useTypewriter(text, { active, showFull: !active });
+  return (
+    <span style={{ color }}>
+      {'>'} {text.substring(0, charCount)}
+      {!done && <span className="hud-blink" style={{ marginLeft: 1 }}>{'\u2588'}</span>}
+    </span>
+  );
+}
+
 // ── Main component ──────────────────────────────────────────
-export default function SAMapHUD({ width = 1024, height = 700, variant = 'blackout' }) {
+export default function SAMapHUD({ width = 1024, height = 700, variant = 'blackout', step = 0 }) {
   const mapStyle = useMapStyle('adelaide', 'labeled');
   const isBlackout = variant === 'blackout';
   const stepCount = isBlackout ? BLACKOUT_CASCADE.length : VPP_STEPS.length;
@@ -331,9 +343,6 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
   const running = stepIndex >= 0;
   const stepIndexRef = useRef(-1);
   stepIndexRef.current = stepIndex;
-
-  // Single Spectacle gate step — just blocks slide exit until we start
-  const { placeholder } = useSteps(1);
 
   const slideContext = useContext(SlideContext);
   const slideActive = slideContext?.isSlideActive;
@@ -757,8 +766,6 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
 
   return (
     <div style={{ position: 'relative', width, height, overflow: 'hidden', background: '#020408' }}>
-      {placeholder}
-
       {/* ── Map ── */}
       <DeckGL
         viewState={viewState}
@@ -951,11 +958,10 @@ export default function SAMapHUD({ width = 1024, height = 700, variant = 'blacko
             return (
               <div key={`${msg.step}-${msg.text}`} style={{
                 fontSize: 11, fontFamily: '"JetBrains Mono"',
-                color: msgColor, opacity: isLatest ? 1 : 0.5,
+                opacity: isLatest ? 1 : 0.5,
                 marginBottom: 2, lineHeight: 1.4,
               }}>
-                {'>'} {msg.text}
-                {isLatest && <span className="hud-blink" style={{ marginLeft: 2 }}>{'\u2588'}</span>}
+                <TypewriterLine text={msg.text} color={msgColor} active={isLatest} />
               </div>
             );
           })}
