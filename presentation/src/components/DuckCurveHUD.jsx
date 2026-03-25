@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
+import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
 
 // Compact duck curve for bottom HUD panel on VPP scenario slides
@@ -64,6 +65,7 @@ function easeOut(t) {
 export default function DuckCurveHUD({ highlightHour = null, blend = 0, scenario = 'summer', width = 400, height = 130, expanded = false }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
+  const slideContext = useContext(SlideContext);
   const expandT = useRef(expanded ? 1 : 0);
   const labelT = useRef(0);
   const expandStartTime = useRef(expanded ? -1 : null);
@@ -352,9 +354,12 @@ export default function DuckCurveHUD({ highlightHour = null, blend = 0, scenario
         ctx.globalAlpha = 1;
       }
 
-      // Keep animating while transitioning
-      const needsAnim = (expanded && (expandT.current < 0.999 || labelT.current < 0.999)) ||
-                         (!expanded && expandT.current > 0.001);
+      // Keep animating while transitioning, but only when the slide is active
+      const isActive = slideContext?.isSlideActive;
+      const needsAnim = isActive && (
+        (expanded && (expandT.current < 0.999 || labelT.current < 0.999)) ||
+        (!expanded && expandT.current > 0.001)
+      );
       if (needsAnim) {
         animRef.current = requestAnimationFrame(draw);
       }
@@ -362,7 +367,7 @@ export default function DuckCurveHUD({ highlightHour = null, blend = 0, scenario
 
     draw();
     return () => cancelAnimationFrame(animRef.current);
-  }, [width, height, highlightHour, blend, scenario, expanded]);
+  }, [width, height, highlightHour, blend, scenario, expanded, slideContext?.isSlideActive]);
 
   return (
     <canvas

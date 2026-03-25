@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
 
 // ── Inject keyframes once ──
@@ -29,6 +30,7 @@ function DeviceRow({ label, status, level, levelTarget, kw, flow, color, statusC
   const displayColor = statusColor || color;
   const isCharging = (status === 'charging' || status === 'pre-heat') && levelTarget !== undefined;
   const hasBar = level !== undefined;
+  const slideContext = useContext(SlideContext);
 
   // Animate level from current to full (1.0) at proportional charge rate.
   // Duration scales with how much capacity remains and the charge rate (kw / capacityKwh),
@@ -38,7 +40,7 @@ function DeviceRow({ label, status, level, levelTarget, kw, flow, color, statusC
   const rafRef = useRef(null);
   const startRef = useRef(null);
   useEffect(() => {
-    if (!isCharging) { setAnimLevel(level); return; }
+    if (!isCharging || !slideContext?.isSlideActive) { setAnimLevel(level); return; }
     const from = level;
     const to = 1.0;
     // Compute duration from real charge rate: hours-to-full × 2.5s per hour (visual pace)
@@ -55,7 +57,7 @@ function DeviceRow({ label, status, level, levelTarget, kw, flow, color, statusC
     };
     rafRef.current = requestAnimationFrame(tick);
     return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
-  }, [isCharging, level, levelTarget, capacityKwh, kw]);
+  }, [isCharging, level, levelTarget, capacityKwh, kw, slideContext?.isSlideActive]);
 
   const displayLevel = isCharging ? animLevel : level;
 
@@ -233,11 +235,12 @@ function HomeRevenueCounter({ priceCt, maxEnergyKwh, durationMs }) {
   const [earned, setEarned] = useState(0);
   const rafRef = useRef(null);
   const startRef = useRef(null);
+  const slideContext = useContext(SlideContext);
 
   const maxEarned = maxEnergyKwh > 0 ? maxEnergyKwh * Math.abs(priceCt) / 100 : 0;
 
   useEffect(() => {
-    if (priceCt >= 0 || maxEarned <= 0 || durationMs <= 0) { setEarned(0); return; }
+    if (priceCt >= 0 || maxEarned <= 0 || durationMs <= 0 || !slideContext?.isSlideActive) { setEarned(0); return; }
     startRef.current = performance.now();
     const tick = () => {
       const elapsed = performance.now() - startRef.current;
@@ -249,7 +252,7 @@ function HomeRevenueCounter({ priceCt, maxEnergyKwh, durationMs }) {
     };
     rafRef.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [priceCt, maxEarned, durationMs]);
+  }, [priceCt, maxEarned, durationMs, slideContext?.isSlideActive]);
 
   if (earned <= 0) return null;
 

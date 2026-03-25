@@ -298,7 +298,7 @@ export default function Presentation() {
       {/* 6: Texas Cascade — deck.gl HUD */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
-          <TexasMapHUD width="100%" height="100%" variant="hud" />
+          <LazyContent><TexasMapHUD width="100%" height="100%" variant="hud" /></LazyContent>
         </div>
         <Notes>
           [LERENZO] February 2021 — a polar vortex hits Texas.
@@ -361,7 +361,7 @@ export default function Presentation() {
       {/* 9: EU Grid HUD */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="w-full h-full">
-          <EUGridHUD width="100%" height="100%" />
+          <LazyContent><EUGridHUD width="100%" height="100%" /></LazyContent>
         </div>
         <Notes>
           - The Continental European synchronous grid — 36 countries, one frequency
@@ -959,7 +959,7 @@ export default function Presentation() {
       {/* 29: Energy Arbitrage + Peak Shaving */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
-          <VPPScenarioSlide scenario="summer" />
+          <LazyContent><VPPScenarioSlide scenario="summer" /></LazyContent>
         </div>
         <Notes>
           [LERENZO] [MAP HUD] Full-screen Berlin map — walk through each step.
@@ -974,7 +974,7 @@ export default function Presentation() {
       {/* 30: SA Virtual Power Plant */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
-          <SAMapHUD width="100%" height="100%" variant="vpp" />
+          <LazyContent><SAMapHUD width="100%" height="100%" variant="vpp" /></LazyContent>
         </div>
         <Notes>
           [LERENZO] South Australia proved this works.
@@ -1102,14 +1102,14 @@ export default function Presentation() {
       {/* SA Blackout, 2016 */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
-          <SAMapHUD width="100%" height="100%" variant="blackout" />
+          <LazyContent><SAMapHUD width="100%" height="100%" variant="blackout" /></LazyContent>
         </div>
       </Slide>
 
       {/* Winter Grid Emergency */}
       <Slide backgroundColor="#020408" padding="0">
         <div className="relative w-full h-full">
-          <VPPScenarioSlide scenario="winter" />
+          <LazyContent><VPPScenarioSlide scenario="winter" /></LazyContent>
         </div>
       </Slide>
 

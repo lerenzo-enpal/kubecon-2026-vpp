@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
+import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
 
 // ── Step data for each scenario ──────────────────────────────
@@ -502,6 +503,7 @@ export default function VPPScenarioHomes({ scenario = 'summer', step = 0, width 
   const prevStepRef = useRef(step);
   const transitionRef = useRef(1); // 0-1 blend between prev and current step
   stepRef.current = step;
+  const slideContext = useContext(SlideContext);
 
   const steps = scenario === 'summer' ? SUMMER_STEPS : WINTER_STEPS;
 
@@ -527,6 +529,10 @@ export default function VPPScenarioHomes({ scenario = 'summer', step = 0, width 
     const houseY = 10;
 
     function draw() {
+      if (!slideContext?.isSlideActive) {
+        animRef.current = requestAnimationFrame(draw);
+        return;
+      }
       const now = performance.now() / 1000;
       ctx.clearRect(0, 0, width, height);
 
@@ -589,7 +595,7 @@ export default function VPPScenarioHomes({ scenario = 'summer', step = 0, width 
 
     draw();
     return () => cancelAnimationFrame(animRef.current);
-  }, [width, height, scenario, step, steps]);
+  }, [width, height, scenario, step, steps, slideContext?.isSlideActive]);
 
   return (
     <canvas

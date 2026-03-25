@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useCallback, useState } from 'react';
+import React, { useEffect, useRef, useCallback, useState, useContext } from 'react';
+import { SlideContext } from 'spectacle';
 import { colors } from '../theme';
 
 /**
@@ -55,6 +56,7 @@ export default function PartnerArcs({ children }) {
   const animRef = useRef(null);
   const pylonRefs = useRef([]);
   const [ready, setReady] = useState(false);
+  const slideContext = useContext(SlideContext);
 
   const setPylonRef = useCallback((i) => (el) => {
     pylonRefs.current[i] = el;
@@ -257,12 +259,12 @@ export default function PartnerArcs({ children }) {
         }
       }
 
-      animRef.current = requestAnimationFrame(draw);
+      if (slideContext?.isSlideActive) animRef.current = requestAnimationFrame(draw);
     };
 
     animRef.current = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(animRef.current);
-  }, [ready]);
+  }, [ready, slideContext?.isSlideActive]);
 
   return (
     <div ref={containerRef} className="relative">
