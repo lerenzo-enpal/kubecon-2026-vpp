@@ -1,6 +1,16 @@
 [build]
-  command = "cd presentation && npm run build"
+  command = "cd presentation && npm run build && cd ../presentation-japan && npm install && npm run build"
   publish = "presentation/dist"
+
+[[redirects]]
+  from = "/japan-keynote/*"
+  to = "/japan-keynote/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/japan-main/*"
+  to = "/japan-main/main-talk.html"
+  status = 200
 
 [[edge_functions]]
   path = "/*"

@@ -1,0 +1,34 @@
+@import "tailwindcss/theme" layer(theme);
+@import "tailwindcss/utilities" layer(utilities);
+
+@theme {
+  --font-sans: var(--font-body, "Inter"), system-ui, sans-serif;
+  --font-mono: var(--font-mono, "JetBrains Mono"), monospace;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg, #060a1a);
+  color: var(--color-text, #f1f5f9);
+}
+
+.hud-blink {
+  animation: hudBlink 0.5s step-end infinite;
+}
+
+@keyframes hudBlink {
+  50% { opacity: 0; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}

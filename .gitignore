@@ -9,3 +9,5 @@ _site/
 .playwright-mcp/
 .astro/
 .claude
+/presentation-japan/dist/
+/presentation-japan/node_modules/
