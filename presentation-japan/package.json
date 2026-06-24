@@ -23,6 +23,7 @@
     "@protomaps/basemaps": "^5.7.2",
     "@tailwindcss/vite": "^4.2.1",
     "@vitejs/plugin-react": "^4.7.0",
+    "animejs": "^4.5.0",
     "deck.gl": "^9.2.11",
     "maplibre-gl": "^5.20.1",
     "pmtiles": "^4.4.0",

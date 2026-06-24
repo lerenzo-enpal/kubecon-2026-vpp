@@ -1,112 +1,135 @@
 import React, { useRef, useEffect } from 'react';
 import { SlideContext } from 'spectacle';
+import { animate, stagger } from 'animejs';
 
 const G7_DATA = [
-  { country: 'Canada',  value: 179, color: '#94a3b8' },
-  { country: 'USA',     value: 106, color: '#94a3b8' },
-  { country: 'UK',      value:  75, color: '#94a3b8' },
-  { country: 'Germany', value:  35, color: '#94a3b8' },
-  { country: 'France',  value:  55, color: '#94a3b8' },
-  { country: 'Italy',   value:  25, color: '#94a3b8' },
-  { country: 'Japan',   value:  15.3, color: '#ef4444', highlight: true },
-];
-// Sort descending
-const SORTED = [...G7_DATA].sort((a, b) => b.value - a.value);
-const MAX_VAL = 200;
+  { country: 'Canada',  value: 179, highlight: false },
+  { country: 'USA',     value: 106, highlight: false },
+  { country: 'UK',      value:  75, highlight: false },
+  { country: 'France',  value:  55, highlight: false },
+  { country: 'Germany', value:  35, highlight: false },
+  { country: 'Italy',   value:  25, highlight: false },
+  { country: 'Japan',   value:  15.3, highlight: true },
+].sort((a, b) => b.value - a.value);
 
-export function JapanSelfSufficiencyChart({ height = 340 }) {
-  const canvasRef = useRef(null);
-  const rafRef = useRef(null);
+const MAX_VAL = 200;
+const VBOX_W = 800;
+
+export function JapanSelfSufficiencyChart({ height = 420 }) {
+  const barsRef = useRef([]);
+  const labelsRef = useRef([]);
+  const annotationRef = useRef(null);
   const slideCtx = React.useContext(SlideContext);
   const isActive = slideCtx?.isSlideActive ?? true;
 
+  const PAD = { l: 110, r: 80, t: 50, b: 30 };
+  const cW = VBOX_W - PAD.l - PAD.r;
+  const cH = height - PAD.t - PAD.b;
+  const rowH = cH / G7_DATA.length;
+  const barH = Math.min(rowH * 0.52, 30);
+
   useEffect(() => {
-    if (!isActive) {
-      cancelAnimationFrame(rafRef.current);
-      return;
-    }
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const W = canvas.parentElement.clientWidth;
-    const H = height;
-    canvas.width = W * 2;
-    canvas.height = H * 2;
-    canvas.style.width = `${W}px`;
-    canvas.style.height = `${H}px`;
-    const ctx = canvas.getContext('2d');
-    ctx.scale(2, 2);
+    if (!isActive) return;
+    const bars = barsRef.current.filter(Boolean);
+    const labels = labelsRef.current.filter(Boolean);
+    const annotation = annotationRef.current;
+    if (!bars.length) return;
 
-    const padL = 100, padR = 80, padT = 55, padB = 50;
-    const chartW = W - padL - padR;
-    const rowH = (H - padT - padB) / SORTED.length;
-    const barH = Math.min(rowH * 0.55, 28);
-    const DURATION = 1200;
-    const STAGGER = 180;
-    const startTime = performance.now();
+    // Reset
+    bars.forEach((bar, i) => {
+      const fullW = (G7_DATA[i].value / MAX_VAL) * cW;
+      bar.setAttribute('width', 0);
+    });
+    labels.forEach(l => { l.style.opacity = '0'; });
+    if (annotation) annotation.style.opacity = '0';
 
-    function draw(now) {
-      ctx.clearRect(0, 0, W, H);
+    // Animate bars expanding
+    animate(bars, {
+      width: (el, i) => [(0), (G7_DATA[i].value / MAX_VAL) * cW],
+      duration: 900,
+      ease: 'outQuart',
+      delay: stagger(120),
+      onComplete: () => {
+        // Fade in value labels
+        animate(labels, { opacity: [0, 1], translateX: [4, 0], duration: 250, delay: stagger(80) });
+        if (annotation) animate(annotation, { opacity: [0, 1], duration: 350, delay: 100 });
+      },
+    });
 
-      ctx.fillStyle = '#64748b';
-      ctx.font = '12px JetBrains Mono, monospace';
-      ctx.textAlign = 'center';
-      ctx.fillText('Energy Self-Sufficiency Rate (%)', padL + chartW / 2, 30);
+    return () => {};
+  }, [isActive]);
 
-      let anyAnimating = false;
+  return (
+    <svg
+      viewBox={`0 0 ${VBOX_W} ${height}`}
+      width="100%"
+      height={height}
+      style={{ display: 'block' }}
+    >
+      {/* Title */}
+      <text
+        x={PAD.l + cW / 2} y={28}
+        textAnchor="middle"
+        fill="#64748b" fontSize="12" fontFamily="JetBrains Mono, monospace"
+      >Energy Self-Sufficiency Rate (%)</text>
 
-      SORTED.forEach((item, i) => {
-        const delay = i * STAGGER;
-        const elapsed = now - startTime - delay;
-        const t = elapsed < 0 ? 0 : Math.min(elapsed / DURATION, 1);
-        const eased = t < 1 ? 1 - Math.pow(1 - t, 3) : 1;
-        if (t < 1) anyAnimating = true;
+      {G7_DATA.map((item, i) => {
+        const barY = PAD.t + i * rowH + (rowH - barH) / 2;
+        const fullW = (item.value / MAX_VAL) * cW;
+        const isJapan = item.highlight;
 
-        const y = padT + i * rowH + (rowH - barH) / 2;
-        const barW = (item.value / MAX_VAL) * chartW * eased;
+        return (
+          <g key={item.country}>
+            {/* Country label */}
+            <text
+              x={PAD.l - 10} y={barY + barH / 2}
+              textAnchor="end" dominantBaseline="middle"
+              fill={isJapan ? '#f1f5f9' : '#94a3b8'}
+              fontSize={isJapan ? '13' : '13'}
+              fontWeight={isJapan ? '700' : '400'}
+              fontFamily="JetBrains Mono, monospace"
+            >{item.country}</text>
 
-        // Bar
-        if (item.highlight) {
-          ctx.shadowBlur = 10;
-          ctx.shadowColor = '#ef4444';
-        }
-        ctx.fillStyle = item.color;
-        ctx.beginPath();
-        ctx.roundRect(padL, y, barW, barH, 3);
-        ctx.fill();
-        ctx.shadowBlur = 0;
+            {/* Bar */}
+            <rect
+              ref={el => { barsRef.current[i] = el; }}
+              x={PAD.l} y={barY}
+              width={0} height={barH}
+              rx={3}
+              fill={isJapan ? '#ef4444' : '#94a3b8'}
+              opacity={isJapan ? 1 : 0.55}
+              style={isJapan ? { filter: 'drop-shadow(0 0 6px #ef4444)' } : {}}
+            />
 
-        // Country label
-        ctx.fillStyle = item.highlight ? '#f1f5f9' : '#94a3b8';
-        ctx.font = item.highlight ? 'bold 13px JetBrains Mono, monospace' : '13px JetBrains Mono, monospace';
-        ctx.textAlign = 'right';
-        ctx.fillText(item.country, padL - 10, y + barH / 2 + 4);
+            {/* Value label */}
+            <text
+              ref={el => { labelsRef.current[i] = el; }}
+              x={PAD.l + fullW + 8} y={barY + barH / 2}
+              dominantBaseline="middle"
+              fill={isJapan ? '#ef4444' : '#64748b'}
+              fontSize={isJapan ? '13' : '12'}
+              fontWeight={isJapan ? '700' : '400'}
+              fontFamily="JetBrains Mono, monospace"
+              style={{ opacity: 0 }}
+            >{item.value}%</text>
+          </g>
+        );
+      })}
 
-        // Value label — appears once bar is mostly drawn
-        if (eased > 0.7) {
-          const labelX = padL + barW + 8;
-          ctx.fillStyle = item.highlight ? '#ef4444' : '#64748b';
-          ctx.font = item.highlight ? 'bold 13px JetBrains Mono, monospace' : '12px JetBrains Mono, monospace';
-          ctx.textAlign = 'left';
-          ctx.fillText(`${item.value}%`, labelX, y + barH / 2 + 4);
-        }
-
-        // "Lowest in G7" annotation for Japan
-        if (item.highlight && eased > 0.9) {
-          ctx.fillStyle = '#ef4444';
-          ctx.font = '11px JetBrains Mono, monospace';
-          ctx.textAlign = 'left';
-          ctx.fillText('Lowest in G7', padL + barW + 8, y + barH + 14);
-        }
-      });
-
-      if (anyAnimating) {
-        rafRef.current = requestAnimationFrame(draw);
-      }
-    }
-
-    rafRef.current = requestAnimationFrame(draw);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [isActive, height]);
-
-  return <canvas ref={canvasRef} style={{ display: 'block', width: '100%' }} />;
+      {/* "Lowest in G7" annotation for Japan */}
+      {(() => {
+        const japanIdx = G7_DATA.findIndex(d => d.highlight);
+        const barY = PAD.t + japanIdx * rowH + (rowH - barH) / 2;
+        const fullW = (G7_DATA[japanIdx].value / MAX_VAL) * cW;
+        return (
+          <text
+            ref={annotationRef}
+            x={PAD.l + fullW + 8} y={barY + barH + 16}
+            fill="#ef4444" fontSize="11" fontFamily="JetBrains Mono, monospace"
+            style={{ opacity: 0 }}
+          >Lowest in G7</text>
+        );
+      })()}
+    </svg>
+  );
 }

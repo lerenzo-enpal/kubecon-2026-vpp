@@ -8,6 +8,7 @@ import { JEPXPriceChart } from './components/JEPXPriceChart.jsx';
 import { JapanSelfSufficiencyChart } from './components/JapanSelfSufficiencyChart.jsx';
 import { JapanDemandForecast } from './components/JapanDemandForecast.jsx';
 import { JapanVPPMap } from './components/JapanVPPMap.jsx';
+import { HormuzInfographic } from './components/HormuzInfographic.jsx';
 import VPPArchitecture from '../../presentation/src/components/VPPArchitecture.jsx';
 
 function LazyContent({ children }) {
@@ -16,23 +17,23 @@ function LazyContent({ children }) {
   return <>{children}</>;
 }
 
-const bg = '#060a1a';
+const bg = 'var(--color-bg)';
 const pad = '36px 56px';
 
-// ── Reusable primitives ─────────────────────────────────────
-const H = ({ children, color = '#3939D8', size = '52px' }) => (
-  <div style={{ fontSize: size, fontWeight: 800, lineHeight: 1.1, marginBottom: 8, color, fontFamily: 'Space Grotesk, sans-serif', textShadow: `0 0 40px ${color}30` }}>
+// ── Reusable primitives — use CSS vars so light/hybrid themes work ──
+const H = ({ children, color = 'var(--color-heading)', size = '52px' }) => (
+  <div style={{ fontSize: size, fontWeight: 800, lineHeight: 1.1, marginBottom: 8, color, fontFamily: 'Space Grotesk, sans-serif' }}>
     {children}
   </div>
 );
-const Sub = ({ children, color = '#94a3b8', size = '22px' }) => (
+const Sub = ({ children, color = 'var(--color-muted)', size = '22px' }) => (
   <div style={{ fontSize: size, color, fontFamily: 'Inter, sans-serif', lineHeight: 1.5, marginBottom: 12 }}>{children}</div>
 );
-const Mono = ({ children, color = '#22d3ee', size = '64px' }) => (
+const Mono = ({ children, color = 'var(--color-primary)', size = '64px' }) => (
   <div style={{ fontSize: size, fontWeight: 700, color, fontFamily: 'JetBrains Mono, monospace', textShadow: `0 0 32px ${color}40` }}>{children}</div>
 );
-const StatBlock = ({ stat, label, color = '#22d3ee' }) => (
-  <div style={{ background: '#0d1424', border: `1px solid ${color}25`, borderRadius: 10, padding: '20px 28px', textAlign: 'center' }}>
+const StatBlock = ({ stat, label, color = 'var(--color-primary)' }) => (
+  <div style={{ background: 'var(--color-surface)', border: `1px solid ${color}25`, borderRadius: 10, padding: '20px 28px', textAlign: 'center' }}>
     <Mono color={color} size="48px">{stat}</Mono>
     <Sub size="17px">{label}</Sub>
   </div>
@@ -50,9 +51,9 @@ function template({ slideNumber, numberOfSlides }) {
   const section = SECTIONS[slideNumber - 1] || '';
   return (
     <>
-      <div style={{ position: 'absolute', top: 12, left: 20, fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: '#64748b80', letterSpacing: '0.15em' }}>LERENZO</div>
-      <div style={{ position: 'absolute', bottom: 12, right: 20, fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: '#64748b', display: 'flex', gap: 12 }}>
-        {section && <span style={{ color: '#3939D820' }}>{section}</span>}
+      <div style={{ position: 'absolute', top: 12, left: 20, fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: 'var(--color-dim)', opacity: 0.5, letterSpacing: '0.15em' }}>LERENZO</div>
+      <div style={{ position: 'absolute', bottom: 12, right: 20, fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: 'var(--color-dim)', display: 'flex', gap: 12 }}>
+        {section && <span style={{ color: 'var(--color-heading)', opacity: 0.15 }}>{section}</span>}
         <span>{slideNumber} / 22</span>
       </div>
     </>
@@ -75,7 +76,7 @@ export default function Keynote() {
               KUBECON + CLOUDNATIVECON JAPAN 2026  ·  YOKOHAMA
             </div>
             <H size="60px">{t('keynote.title')}</H>
-            <Sub size="26px" color="#f1f5f9">Cloud-Native Infrastructure for the Energy Grid</Sub>
+            <Sub size="26px" color="var(--color-text)">Cloud-Native Infrastructure for the Energy Grid</Sub>
             <div style={{ marginTop: 32, fontFamily: 'Space Grotesk, sans-serif', fontSize: 20, color: '#64748b' }}>
               {t('keynote.presenter')}
             </div>
@@ -85,18 +86,25 @@ export default function Keynote() {
 
         {/* 2 — Hormuz hook — FORCED DARK regardless of theme */}
         <Slide backgroundColor="#030508" padding="0">
-          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%', gap: 20, textAlign: 'center', padding: '60px 80px' }}>
-            <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 13, color: '#FFA35F', letterSpacing: '0.2em', marginBottom: 8 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '32px 56px 24px' }}>
+            {/* Eyebrow */}
+            <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, color: '#FFA35F', letterSpacing: '0.22em', marginBottom: 12, flexShrink: 0 }}>
               {t('keynote.hormuz.eyebrow')}  ·  {t('keynote.hormuz.label').toUpperCase()}
             </div>
-            <div style={{ fontSize: '120px', fontWeight: 800, fontFamily: 'JetBrains Mono, monospace', color: '#f1f5f9', lineHeight: 1, textShadow: '0 0 80px #f1f5f920' }}>
-              {t('keynote.hormuz.stat')}
+            {/* Hero stat row */}
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, flexShrink: 0, marginBottom: 4 }}>
+              <div style={{ fontSize: '96px', fontWeight: 800, fontFamily: 'JetBrains Mono, monospace', color: '#f1f5f9', lineHeight: 1, textShadow: '0 0 60px #f1f5f915' }}>
+                {t('keynote.hormuz.stat')}
+              </div>
             </div>
-            <div style={{ fontSize: 28, fontFamily: 'Space Grotesk, sans-serif', color: '#94a3b8' }}>
+            <div style={{ fontSize: 22, fontFamily: 'Space Grotesk, sans-serif', color: '#64748b', marginBottom: 20, flexShrink: 0 }}>
               {t('keynote.hormuz.unit')}
             </div>
-            <div style={{ maxWidth: 600, fontSize: 20, fontFamily: 'Inter, sans-serif', color: '#64748b', marginTop: 16, lineHeight: 1.6 }}>
-              {t('keynote.hormuz.context')}
+            {/* Route infographic — fills remaining space */}
+            <div style={{ flex: 1, minHeight: 0 }}>
+              <LazyContent>
+                <HormuzInfographic height={370} />
+              </LazyContent>
             </div>
           </div>
           <Notes>The Strait of Hormuz closed for 6 weeks. Japan imports 97% of its LNG through it. The prices doubled almost overnight. Every person in this room saw it on their April electricity bill. This is not a hypothetical. This is NOW.</Notes>
@@ -106,8 +114,8 @@ export default function Keynote() {
         <Slide backgroundColor={bg} padding={pad}>
           <H>{t('keynote.fragility.title')}</H>
           <Sub color="#64748b">How exposed is Japan, really?</Sub>
-          <div style={{ marginTop: 16, height: 340 }}>
-            <LazyContent><JapanSelfSufficiencyChart height={340} /></LazyContent>
+          <div style={{ marginTop: 12, height: 500 }}>
+            <LazyContent><JapanSelfSufficiencyChart height={500} /></LazyContent>
           </div>
           <Notes>15.3% self-sufficiency. Every other G7 nation is above 25%. Germany is at 35%. Canada is at 179%. Japan is structurally exposed in a way no peer nation is.</Notes>
         </Slide>
@@ -119,8 +127,8 @@ export default function Keynote() {
             <StatBlock stat={t('keynote.fragility.selfsufficiency.stat')} label={t('keynote.fragility.selfsufficiency.label')} color="#ef4444" />
             <StatBlock stat={t('keynote.fragility.fossil.stat')} label={t('keynote.fragility.fossil.label')} color="#FFA35F" />
           </div>
-          <div style={{ marginTop: 24, background: '#0d1424', border: '1px solid #3939D825', borderRadius: 10, padding: '20px 24px' }}>
-            <div style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: 20, fontWeight: 700, color: '#f1f5f9', marginBottom: 8 }}>{t('keynote.fragility.grid.title')}</div>
+          <div style={{ marginTop: 24, background: 'var(--color-surface)', border: '1px solid #3939D825', borderRadius: 10, padding: '20px 24px' }}>
+            <div style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: 20, fontWeight: 700, color: 'var(--color-text)', marginBottom: 8 }}>{t('keynote.fragility.grid.title')}</div>
             <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 18, color: '#94a3b8', lineHeight: 1.6 }}>{t('keynote.fragility.grid.body')}</div>
           </div>
           <Notes>Ten regional utilities operating mostly in isolation. East runs at 50 Hz, west at 60 Hz. Only 1.2 gigawatts of conversion capacity between them. Compare to Europe's interconnected grid with hundreds of GW of cross-border capacity.</Notes>
@@ -130,8 +138,8 @@ export default function Keynote() {
         <Slide backgroundColor={bg} padding={pad}>
           <H color="#ef4444">{t('keynote.jepx.title')}</H>
           <Sub>{t('keynote.jepx.subtitle')}</Sub>
-          <div style={{ marginTop: 12, height: 320 }}>
-            <LazyContent><JEPXPriceChart height={320} /></LazyContent>
+          <div style={{ marginTop: 12, height: 460 }}>
+            <LazyContent><JEPXPriceChart height={460} /></LazyContent>
           </div>
           <Notes>January 2021. No earthquake. No typhoon. Just a cold snap, low wind, and LNG tanker delays. Spot electricity prices went from 10 yen per kilowatt-hour to 251 yen. 25 times the normal price. For 40 days.</Notes>
         </Slide>
@@ -139,7 +147,7 @@ export default function Keynote() {
         {/* 6 — JEPX framing + 2022 warning */}
         <Slide backgroundColor={bg} padding={pad}>
           <H color="#ef4444">{t('keynote.jepx.stat')}</H>
-          <Sub size="20px" color="#f1f5f9">{t('keynote.jepx.body')}</Sub>
+          <Sub size="20px" color="var(--color-text)">{t('keynote.jepx.body')}</Sub>
           <div style={{ marginTop: 20, display: 'flex', gap: 20 }}>
             <StatBlock stat="40" label={t('keynote.jepx.duration')} color="#FFA35F" />
             <StatBlock stat="0" label="Natural disasters" color="#94a3b8" />
@@ -154,7 +162,7 @@ export default function Keynote() {
               MARCH 2022  ·  FIRST-EVER JAPANESE POWER SUPPLY EMERGENCY WARNING
             </div>
             <H color="#ef4444" size="56px">{t('keynote.warning2022.stat')}</H>
-            <Sub size="24px" color="#f1f5f9">{t('keynote.warning2022.label')}</Sub>
+            <Sub size="24px" color="var(--color-text)">{t('keynote.warning2022.label')}</Sub>
             <Sub size="18px">The grid operator called on citizens to turn off their lights. In March. In a G7 nation.</Sub>
           </div>
           <Notes>March 2022. Not a blackout — but a government-issued emergency warning asking people to conserve. TEPCO's reserve margin dropped to 2.5%. The safe threshold is 3%. This had never happened before in Japan's post-war history.</Notes>
@@ -164,8 +172,8 @@ export default function Keynote() {
         <Slide backgroundColor={bg} padding={pad}>
           <H>{t('keynote.demand.title')}</H>
           <Sub>Now add the AI buildout on top of a fragile grid.</Sub>
-          <div style={{ marginTop: 16, height: 300 }}>
-            <LazyContent><JapanDemandForecast height={300} /></LazyContent>
+          <div style={{ marginTop: 12, height: 440 }}>
+            <LazyContent><JapanDemandForecast height={440} /></LazyContent>
           </div>
           <Notes>Data center demand is going from 19 terawatt-hours to 57 to 66 terawatt-hours by 2034. OCCTO — Japan's grid operator — forecasts a 14-times increase when you include semiconductor fabs. 40+ data center projects were delayed in 2024 because the grid couldn't support them.</Notes>
         </Slide>
@@ -174,7 +182,7 @@ export default function Keynote() {
         <Slide backgroundColor={bg} padding={pad}>
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%', gap: 24 }}>
             <StatBlock stat={t('keynote.demand.stat')} label={t('keynote.demand.label')} color="#3939D8" />
-            <div style={{ background: '#0d1424', border: '1px solid #FFC21725', borderRadius: 10, padding: '20px 24px' }}>
+            <div style={{ background: 'var(--color-surface)', border: '1px solid #FFC21725', borderRadius: 10, padding: '20px 24px' }}>
               <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 14, color: '#FFC217', marginBottom: 8, letterSpacing: '0.1em' }}>OCCTO FORECAST</div>
               <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 20, color: '#94a3b8', lineHeight: 1.6 }}>{t('keynote.demand.footnote')}</div>
             </div>
@@ -198,7 +206,7 @@ export default function Keynote() {
         {/* 11 — What is a VPP */}
         <Slide backgroundColor={bg} padding={pad}>
           <H>A Virtual Power Plant</H>
-          <Sub size="20px" color="#f1f5f9">Thousands of small devices — home batteries, EVs, heat pumps — coordinated by software to behave like a single dispatchable power plant.</Sub>
+          <Sub size="20px" color="var(--color-text)">Thousands of small devices — home batteries, EVs, heat pumps — coordinated by software to behave like a single dispatchable power plant.</Sub>
           <div style={{ marginTop: 28, display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16 }}>
             <StatBlock stat="100K" label="Homes = 1 power plant" color="#22d3ee" />
             <StatBlock stat="<1s" label="Response time" color="#10b981" />
@@ -213,7 +221,7 @@ export default function Keynote() {
           <Sub>{t('keynote.arch.subtitle')}</Sub>
           <div style={{ marginTop: 8, display: 'flex', flexWrap: 'wrap', gap: 10 }}>
             {['Dapr Actors', 'CQRS', 'Kafka / EventHub', 'MQTT / EMQX', 'ArgoCD', 'Apache Spark', 'OpenTelemetry'].map(tech => (
-              <div key={tech} style={{ background: '#0d1424', border: '1px solid #3939D825', borderRadius: 6, padding: '6px 14px', fontFamily: 'JetBrains Mono, monospace', fontSize: 15, color: '#22d3ee' }}>{tech}</div>
+              <div key={tech} style={{ background: 'var(--color-surface)', border: '1px solid #3939D825', borderRadius: 6, padding: '6px 14px', fontFamily: 'JetBrains Mono, monospace', fontSize: 15, color: '#22d3ee' }}>{tech}</div>
             ))}
           </div>
         </Slide>
@@ -231,7 +239,7 @@ export default function Keynote() {
         <Slide backgroundColor={bg} padding={pad}>
           <H>Dapr Actors for Device State</H>
           <Sub size="20px">One actor per home battery. Virtual. Stateful. Always-on. The runtime handles distribution, failover, and concurrency — you write business logic.</Sub>
-          <div style={{ marginTop: 24, background: '#0d1424', borderRadius: 10, padding: '20px 24px', fontFamily: 'JetBrains Mono, monospace', fontSize: 16, color: '#22d3ee', lineHeight: 2 }}>
+          <div style={{ marginTop: 24, background: 'var(--color-surface)', borderRadius: 10, padding: '20px 24px', fontFamily: 'JetBrains Mono, monospace', fontSize: 16, color: '#22d3ee', lineHeight: 2 }}>
             <div style={{ color: '#64748b' }}>// One actor per device — scales to 100,000+</div>
             <div>actor.<span style={{ color: '#10b981' }}>getState</span>(deviceId)</div>
             <div>actor.<span style={{ color: '#FFC217' }}>invoke</span>(deviceId, <span style={{ color: '#FFA35F' }}>'dispatch'</span>, {'{'} mw: 5 {'}'})</div>
@@ -242,7 +250,7 @@ export default function Keynote() {
         {/* 15 — MQTT + EMQX */}
         <Slide backgroundColor={bg} padding={pad}>
           <H>MQTT at Scale — EMQX</H>
-          <Sub size="20px" color="#f1f5f9">Dispatch commands must reach 100,000 home inverters in under 1 second. MQTT over TCP. EMQX handles the fan-out.</Sub>
+          <Sub size="20px" color="var(--color-text)">Dispatch commands must reach 100,000 home inverters in under 1 second. MQTT over TCP. EMQX handles the fan-out.</Sub>
           <div style={{ marginTop: 24, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
             <StatBlock stat="<500ms" label="P99 dispatch latency" color="#22d3ee" />
             <StatBlock stat="100K" label="Concurrent MQTT connections" color="#10b981" />
@@ -253,8 +261,8 @@ export default function Keynote() {
         {/* 16 — Kafka + event sourcing */}
         <Slide backgroundColor={bg} padding={pad}>
           <H>Event Sourcing with Kafka</H>
-          <Sub size="20px" color="#f1f5f9">Every dispatch command, every meter reading, every state change is an immutable event. Kafka is the backbone. CQRS separates reads from writes.</Sub>
-          <div style={{ marginTop: 20, background: '#0d1424', border: '1px solid #3939D825', borderRadius: 10, padding: '18px 24px' }}>
+          <Sub size="20px" color="var(--color-text)">Every dispatch command, every meter reading, every state change is an immutable event. Kafka is the backbone. CQRS separates reads from writes.</Sub>
+          <div style={{ marginTop: 20, background: 'var(--color-surface)', border: '1px solid #3939D825', borderRadius: 10, padding: '18px 24px' }}>
             <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 14, color: '#64748b', marginBottom: 6 }}>topics</div>
             {['vpp.device.telemetry', 'vpp.dispatch.commands', 'vpp.grid.frequency', 'vpp.market.signals'].map(t => (
               <div key={t} style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 16, color: '#22d3ee', lineHeight: 2 }}>{t}</div>
@@ -276,11 +284,11 @@ export default function Keynote() {
           <H>VPP in Japan Today</H>
           <Sub size="20px">This is not hypothetical. It is operating in Japan right now.</Sub>
           <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <div style={{ background: '#0d1424', border: '1px solid #22d3ee25', borderRadius: 10, padding: '18px 24px' }}>
+            <div style={{ background: 'var(--color-surface)', border: '1px solid #22d3ee25', borderRadius: 10, padding: '18px 24px' }}>
               <div style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: 20, fontWeight: 700, color: '#22d3ee', marginBottom: 6 }}>Shizen Connect</div>
               <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 17, color: '#94a3b8' }}>EV VPP aggregation across Kansai. Vehicle-to-grid charging coordinated by software to flatten the duck curve.</div>
             </div>
-            <div style={{ background: '#0d1424', border: '1px solid #10b98125', borderRadius: 10, padding: '18px 24px' }}>
+            <div style={{ background: 'var(--color-surface)', border: '1px solid #10b98125', borderRadius: 10, padding: '18px 24px' }}>
               <div style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: 20, fontWeight: 700, color: '#10b981', marginBottom: 6 }}>HEMS Programs</div>
               <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 17, color: '#94a3b8' }}>Home Energy Management Systems in Kyushu absorbing excess solar. 1.74 TWh of curtailment avoided in H1 2025.</div>
             </div>
@@ -291,10 +299,10 @@ export default function Keynote() {
         {/* 19 — ERAB framework */}
         <Slide backgroundColor={bg} padding={pad}>
           <H>The ERAB Framework</H>
-          <Sub size="20px" color="#f1f5f9">Energy Resource Aggregation Business — Japan's regulatory license for VPP aggregators since 2020.</Sub>
-          <div style={{ marginTop: 20, background: '#0d1424', border: '1px solid #3939D825', borderRadius: 10, padding: '20px 24px' }}>
+          <Sub size="20px" color="var(--color-text)">Energy Resource Aggregation Business — Japan's regulatory license for VPP aggregators since 2020.</Sub>
+          <div style={{ marginTop: 20, background: 'var(--color-surface)', border: '1px solid #3939D825', borderRadius: 10, padding: '20px 24px' }}>
             <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 19, color: '#94a3b8', lineHeight: 1.7 }}>
-              OCCTO requires all VPP aggregators to register as ERABs. The market structure exists. The dispatch signals exist. The missing layer is <span style={{ color: '#f1f5f9', fontWeight: 600 }}>software that can coordinate at scale</span>.
+              OCCTO requires all VPP aggregators to register as ERABs. The market structure exists. The dispatch signals exist. The missing layer is <span style={{ color: 'var(--color-text)', fontWeight: 600 }}>software that can coordinate at scale</span>.
             </div>
           </div>
           <Notes>Japan's grid regulator designed ERAB to enable exactly this. The policy is ahead of the technology. We have the regulatory framework but not the cloud-native platform to use it at the scale needed.</Notes>
@@ -303,7 +311,7 @@ export default function Keynote() {
         {/* 20 — ArgoCD + GitOps */}
         <Slide backgroundColor={bg} padding={pad}>
           <H>GitOps for Grid Software</H>
-          <Sub size="20px" color="#f1f5f9">100,000 home devices run firmware. Firmware changes need to be: atomic, reversible, auditable, and deployed without downtime during grid events.</Sub>
+          <Sub size="20px" color="var(--color-text)">100,000 home devices run firmware. Firmware changes need to be: atomic, reversible, auditable, and deployed without downtime during grid events.</Sub>
           <div style={{ marginTop: 20, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
             <StatBlock stat="ArgoCD" label="Declarative rollout to fleet" color="#3939D8" />
             <StatBlock stat="GitOps" label="Every config change in git" color="#FFC217" />
@@ -314,7 +322,7 @@ export default function Keynote() {
         {/* 21 — Observability */}
         <Slide backgroundColor={bg} padding={pad}>
           <H>Observability at Grid Scale</H>
-          <Sub size="20px" color="#f1f5f9">OpenTelemetry across the stack. Apache Spark for batch analytics. Every dispatch decision is traceable end-to-end.</Sub>
+          <Sub size="20px" color="var(--color-text)">OpenTelemetry across the stack. Apache Spark for batch analytics. Every dispatch decision is traceable end-to-end.</Sub>
           <div style={{ marginTop: 20, display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14 }}>
             <StatBlock stat="OTel" label="Traces + metrics + logs" color="#22d3ee" />
             <StatBlock stat="Spark" label="Terawatt-hour analytics" color="#FFC217" />

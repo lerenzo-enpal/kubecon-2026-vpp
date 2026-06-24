@@ -1,146 +1,197 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useId } from 'react';
 import { SlideContext } from 'spectacle';
+import { animate, createTimeline, svg } from 'animejs';
 
-// Data center electricity demand (TWh) 2023-2034
-const YEARS  = [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034];
-const BASE   = [19, 21, 24, 27, 32, 37, 43, 49, 53, 57, 60, 62];   // central estimate
-const LOW    = [19, 21, 23, 26, 30, 35, 40, 46, 50, 55, 57, 57];   // low bound
-const HIGH   = [19, 22, 26, 30, 36, 42, 49, 56, 61, 65, 67, 66];  // high bound (OCCTO peak)
+const YEARS = [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034];
+const BASE  = [19, 21, 24, 27, 32, 37, 43, 49, 53, 57, 60, 62];
+const LOW   = [19, 21, 23, 26, 30, 35, 40, 46, 50, 55, 57, 57];
+const HIGH  = [19, 22, 26, 30, 36, 42, 49, 56, 61, 65, 67, 66];
 const N = YEARS.length;
 const MAX_VAL = 80;
+const Y_TICKS = [0, 20, 40, 60, 80];
+const VBOX_W = 820;
 
-export function JapanDemandForecast({ height = 320 }) {
-  const canvasRef = useRef(null);
-  const rafRef = useRef(null);
+function smoothPath(pts, t = 0.4) {
+  if (pts.length < 2) return '';
+  let d = `M ${pts[0][0]},${pts[0][1]}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[Math.max(i - 1, 0)];
+    const p1 = pts[i];
+    const p2 = pts[i + 1];
+    const p3 = pts[Math.min(i + 2, pts.length - 1)];
+    const cp1x = p1[0] + (p2[0] - p0[0]) * t;
+    const cp1y = p1[1] + (p2[1] - p0[1]) * t;
+    const cp2x = p2[0] - (p3[0] - p1[0]) * t;
+    const cp2y = p2[1] - (p3[1] - p1[1]) * t;
+    d += ` C ${cp1x.toFixed(1)},${cp1y.toFixed(1)} ${cp2x.toFixed(1)},${cp2y.toFixed(1)} ${p2[0].toFixed(1)},${p2[1].toFixed(1)}`;
+  }
+  return d;
+}
+
+export function JapanDemandForecast({ height = 440 }) {
+  const lineRef = useRef(null);
+  const bandRef = useRef(null);
+  const clipRectRef = useRef(null);
+  const baselineLabelRef = useRef(null);
+  const endLabelRef = useRef(null);
+  const occtoRef = useRef(null);
   const slideCtx = React.useContext(SlideContext);
   const isActive = slideCtx?.isSlideActive ?? true;
+  const uid = useId().replace(/:/g, '');
+
+  const PAD = { l: 60, r: 100, t: 48, b: 56 };
+  const cW = VBOX_W - PAD.l - PAD.r;
+  const cH = height - PAD.t - PAD.b;
+
+  const xScale = (i) => PAD.l + (i / (N - 1)) * cW;
+  const yScale = (v) => PAD.t + cH - (v / MAX_VAL) * cH;
+
+  const basePts  = BASE.map((v, i) => [xScale(i), yScale(v)]);
+  const lowPts   = LOW.map((v, i)  => [xScale(i), yScale(v)]);
+  const highPts  = HIGH.map((v, i) => [xScale(i), yScale(v)]);
+
+  const basePath = smoothPath(basePts);
+
+  // Band path: forward along HIGH, back along LOW reversed
+  const bandPath = smoothPath(highPts) +
+    ' L ' + [...lowPts].reverse().map(p => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' L ') + ' Z';
+
+  const clipId = `demand-clip-${uid}`;
+  const lastX = xScale(N - 1);
+  const lastBaseY = yScale(BASE[N - 1]);
+  const baselineY = yScale(BASE[0]);
 
   useEffect(() => {
-    if (!isActive) { cancelAnimationFrame(rafRef.current); return; }
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const W = canvas.parentElement.clientWidth;
-    const H = height;
-    canvas.width = W * 2;
-    canvas.height = H * 2;
-    canvas.style.width = `${W}px`;
-    canvas.style.height = `${H}px`;
-    const ctx = canvas.getContext('2d');
-    ctx.scale(2, 2);
+    if (!isActive) return;
+    const lineEl = lineRef.current;
+    const clipRect = clipRectRef.current;
+    const baseLbl = baselineLabelRef.current;
+    const endLbl = endLabelRef.current;
+    const occto = occtoRef.current;
+    if (!lineEl) return;
 
-    const padL = 60, padR = 80, padT = 55, padB = 55;
-    const chartW = W - padL - padR;
-    const chartH = H - padT - padB;
-    const DURATION = 2200;
-    const startTime = performance.now();
+    const [drawable] = svg.createDrawable(lineEl);
 
-    function xOf(i) { return padL + (i / (N - 1)) * chartW; }
-    function yOf(v) { return padT + chartH - (v / MAX_VAL) * chartH; }
+    const tl = createTimeline({ defaults: { ease: 'inOutCubic' } });
+    tl
+      .add(drawable, { draw: ['0 0', '0 100'], duration: 2400 })
+      .add(clipRect, { width: [0, cW + 16],    duration: 2400, ease: 'inOutCubic' }, 0)
+      .add(baseLbl,  { opacity: [0, 1], translateX: [-6, 0], duration: 350 })
+      .add(endLbl,   { opacity: [0, 1], translateX: [6, 0],  duration: 350 }, '-=200')
+      .add(occto,    { opacity: [0, 1], translateY: [8, 0],  duration: 400 });
 
-    function draw(now) {
-      const t = Math.min((now - startTime) / DURATION, 1);
-      const eased = 1 - Math.pow(1 - t, 3);
-      const visibleCount = Math.max(2, Math.floor(eased * N));
-      ctx.clearRect(0, 0, W, H);
+    return () => tl.pause();
+  }, [isActive]);
 
-      // Grid lines
-      ctx.strokeStyle = 'rgba(57,57,216,0.1)';
-      ctx.lineWidth = 1;
-      [0, 20, 40, 60, 80].forEach(v => {
-        const y = yOf(v);
-        ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + chartW, y); ctx.stroke();
-        ctx.fillStyle = '#64748b';
-        ctx.font = '11px JetBrains Mono, monospace';
-        ctx.textAlign = 'right';
-        ctx.fillText(`${v}`, padL - 6, y + 4);
-      });
+  return (
+    <svg
+      viewBox={`0 0 ${VBOX_W} ${height}`}
+      width="100%"
+      height={height}
+      style={{ display: 'block', overflow: 'visible' }}
+    >
+      <defs>
+        <clipPath id={clipId}>
+          <rect ref={clipRectRef} x={PAD.l - 2} y={PAD.t - 20} width={0} height={cH + 40} />
+        </clipPath>
+      </defs>
 
-      // Y label
-      ctx.save();
-      ctx.translate(14, padT + chartH / 2);
-      ctx.rotate(-Math.PI / 2);
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#64748b';
-      ctx.font = '11px JetBrains Mono, monospace';
-      ctx.fillText('TWh / year', 0, 0);
-      ctx.restore();
+      {/* Grid lines */}
+      {Y_TICKS.map(v => (
+        <g key={v}>
+          <line x1={PAD.l} y1={yScale(v)} x2={PAD.l + cW} y2={yScale(v)}
+            stroke="#1e293b" strokeWidth={v === 0 ? '1.5' : '1'} />
+          <text x={PAD.l - 8} y={yScale(v)}
+            textAnchor="end" dominantBaseline="middle"
+            fill="#64748b" fontSize="11" fontFamily="JetBrains Mono, monospace"
+          >{v}</text>
+        </g>
+      ))}
 
-      // X labels
-      ctx.fillStyle = '#64748b';
-      ctx.font = '10px JetBrains Mono, monospace';
-      ctx.textAlign = 'center';
-      YEARS.forEach((y, i) => {
-        if (i % 2 === 0) ctx.fillText(y, xOf(i), H - padB + 18);
-      });
+      {/* Y-axis label */}
+      <text
+        x={18} y={PAD.t + cH / 2}
+        textAnchor="middle" fill="#64748b" fontSize="11" fontFamily="JetBrains Mono, monospace"
+        transform={`rotate(-90, 18, ${PAD.t + cH / 2})`}
+      >TWh / year</text>
 
-      // Forecast band (low-high)
-      if (visibleCount >= 2) {
-        ctx.beginPath();
-        ctx.moveTo(xOf(0), yOf(LOW[0]));
-        for (let i = 1; i < visibleCount; i++) ctx.lineTo(xOf(i), yOf(LOW[i]));
-        for (let i = visibleCount - 1; i >= 0; i--) ctx.lineTo(xOf(i), yOf(HIGH[i]));
-        ctx.closePath();
-        ctx.fillStyle = 'rgba(57,57,216,0.12)';
-        ctx.fill();
-      }
+      {/* X-axis year labels */}
+      {YEARS.map((yr, i) => i % 2 === 0 && (
+        <text key={yr} x={xScale(i)} y={PAD.t + cH + 20}
+          textAnchor="middle" fill="#64748b" fontSize="11" fontFamily="JetBrains Mono, monospace"
+        >{yr}</text>
+      ))}
 
-      // Base line with glow
-      if (visibleCount >= 2) {
-        ctx.shadowBlur = 14;
-        ctx.shadowColor = '#3939D8';
-        ctx.strokeStyle = '#3939D8';
-        ctx.lineWidth = 2.5;
-        ctx.lineJoin = 'round';
-        ctx.beginPath();
-        ctx.moveTo(xOf(0), yOf(BASE[0]));
-        for (let i = 1; i < visibleCount; i++) ctx.lineTo(xOf(i), yOf(BASE[i]));
-        ctx.stroke();
-        ctx.shadowBlur = 0;
-      }
+      {/* Confidence band — clipped */}
+      <path
+        ref={bandRef}
+        d={bandPath}
+        fill="#3939D8"
+        opacity="0.12"
+        clipPath={`url(#${clipId})`}
+      />
 
-      // Baseline label
-      if (eased > 0.1) {
-        ctx.fillStyle = '#22d3ee';
-        ctx.font = 'bold 14px JetBrains Mono, monospace';
-        ctx.textAlign = 'right';
-        ctx.fillText('19 TWh', xOf(0) - 6, yOf(19) - 8);
-        ctx.font = '11px JetBrains Mono, monospace';
-        ctx.fillStyle = '#64748b';
-        ctx.fillText('(2023)', xOf(0) - 6, yOf(19) + 4);
-      }
+      {/* LOW and HIGH boundary lines */}
+      <path
+        d={smoothPath(highPts)} fill="none"
+        stroke="#3939D8" strokeWidth="1" strokeDasharray="4 3" opacity="0.4"
+        clipPath={`url(#${clipId})`}
+      />
+      <path
+        d={smoothPath(lowPts)} fill="none"
+        stroke="#3939D8" strokeWidth="1" strokeDasharray="4 3" opacity="0.4"
+        clipPath={`url(#${clipId})`}
+      />
 
-      // 2034 endpoint labels
-      if (visibleCount === N) {
-        const ex = xOf(N - 1) + 8;
-        ctx.font = 'bold 13px JetBrains Mono, monospace';
-        ctx.textAlign = 'left';
-        ctx.fillStyle = '#FFC217';
-        ctx.fillText('57–66 TWh', ex, yOf(62));
-        ctx.font = '11px JetBrains Mono, monospace';
-        ctx.fillStyle = '#94a3b8';
-        ctx.fillText('by 2034', ex, yOf(62) + 14);
+      {/* Main BASE line */}
+      <path
+        ref={lineRef}
+        d={basePath}
+        fill="none"
+        stroke="#22d3ee"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        style={{ filter: 'drop-shadow(0 0 5px #22d3ee60)' }}
+      />
 
-        // OCCTO note
-        ctx.fillStyle = 'rgba(6,10,26,0.85)';
-        ctx.fillRect(padL, padT + 2, 260, 36);
-        ctx.strokeStyle = '#FFC217';
-        ctx.lineWidth = 1;
-        ctx.strokeRect(padL, padT + 2, 260, 36);
-        ctx.fillStyle = '#FFC217';
-        ctx.font = 'bold 11px JetBrains Mono, monospace';
-        ctx.textAlign = 'left';
-        ctx.fillText('OCCTO forecast: 14× growth', padL + 8, padT + 18);
-        ctx.fillStyle = '#94a3b8';
-        ctx.font = '10px JetBrains Mono, monospace';
-        ctx.fillText('DC + semiconductor fab demand combined', padL + 8, padT + 32);
-      }
+      {/* Baseline label — 19 TWh */}
+      <g ref={baselineLabelRef} style={{ opacity: 0 }}>
+        <circle cx={xScale(0)} cy={yScale(BASE[0])} r={4} fill="#22d3ee" />
+        <text x={xScale(0) + 4} y={yScale(BASE[0]) - 18}
+          textAnchor="start" fill="#22d3ee" fontSize="13" fontWeight="700"
+          fontFamily="JetBrains Mono, monospace"
+        >19 TWh</text>
+        <text x={xScale(0) + 4} y={yScale(BASE[0]) - 5}
+          textAnchor="start" fill="#64748b" fontSize="10"
+          fontFamily="JetBrains Mono, monospace"
+        >(2023)</text>
+      </g>
 
-      if (t < 1) rafRef.current = requestAnimationFrame(draw);
-    }
+      {/* End label — 57-66 TWh */}
+      <g ref={endLabelRef} style={{ opacity: 0 }}>
+        <circle cx={lastX} cy={lastBaseY} r={4} fill="#22d3ee" />
+        <text x={lastX + 10} y={lastBaseY - 6}
+          fill="#FFC217" fontSize="12" fontWeight="700" fontFamily="JetBrains Mono, monospace"
+        >57–66 TWh</text>
+        <text x={lastX + 10} y={lastBaseY + 8}
+          fill="#64748b" fontSize="10" fontFamily="JetBrains Mono, monospace"
+        >by 2034</text>
+      </g>
 
-    rafRef.current = requestAnimationFrame(draw);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [isActive, height]);
-
-  return <canvas ref={canvasRef} style={{ display: 'block', width: '100%' }} />;
+      {/* OCCTO callout box */}
+      <g ref={occtoRef} style={{ opacity: 0 }}>
+        <rect
+          x={PAD.l + 8} y={PAD.t + 8}
+          width={210} height={48} rx={5}
+          fill="#0d1424" stroke="#FFC21730" strokeWidth="1"
+        />
+        <text x={PAD.l + 18} y={PAD.t + 26}
+          fill="#FFC217" fontSize="12" fontWeight="700" fontFamily="JetBrains Mono, monospace"
+        >OCCTO forecast: 14× growth</text>
+        <text x={PAD.l + 18} y={PAD.t + 42}
+          fill="#64748b" fontSize="10" fontFamily="JetBrains Mono, monospace"
+        >DC + semiconductor fab demand combined</text>
+      </g>
+    </svg>
+  );
 }

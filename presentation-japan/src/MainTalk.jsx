@@ -194,7 +194,7 @@ export default function MainTalk() {
           <H color="#ef4444">{t('main.grid.selfsufficiency.title')}</H>
           <Sub>Japan's energy self-sufficiency vs G7 peers</Sub>
           <div style={{ marginTop: 12, height: 340 }}>
-            <LazyContent><JapanSelfSufficiencyChart height={340} /></LazyContent>
+            <LazyContent><JapanSelfSufficiencyChart height={420} /></LazyContent>
           </div>
           <Notes>15.3%. Every other G7 nation is above 25%. Canada is essentially self-sufficient. The UK is at 75%. Japan is 15.3% — meaning 84.7 cents of every energy dollar leaves Japan to pay for imports.</Notes>
         </Slide>
@@ -216,7 +216,7 @@ export default function MainTalk() {
           <H color="#ef4444">{t('main.jepx.title')}</H>
           <Sub>{t('main.jepx.subtitle')}</Sub>
           <div style={{ marginTop: 16, height: 320 }}>
-            <LazyContent><JEPXPriceChart height={320} /></LazyContent>
+            <LazyContent><JEPXPriceChart height={400} /></LazyContent>
           </div>
           <Notes>January 2021. The Japan Electric Power Exchange spot price went from 10 yen to 251 yen per kilowatt-hour. 25 times normal. For 40 consecutive days. No earthquake, no nuclear incident — just cold weather, low wind, and LNG tanker delays.</Notes>
         </Slide>
@@ -269,7 +269,7 @@ export default function MainTalk() {
           <H color="#FFC217">{t('main.renewables.curtailment.title')}</H>
           <Sub>{t('main.renewables.curtailment.stat')} wasted in Kyushu — H1 2025. Now spreading.</Sub>
           <div style={{ marginTop: 12, height: 320 }}>
-            <LazyContent><KyushuCurtailmentChart height={320} /></LazyContent>
+            <LazyContent><KyushuCurtailmentChart height={400} /></LazyContent>
           </div>
           <Notes>1.74 terawatt-hours. Thrown away. That's enough to power 400,000 Japanese homes for a year. And the blue line — Tokyo — starts appearing in 2026. The curtailment problem is no longer just Kyushu.</Notes>
         </Slide>
@@ -341,7 +341,7 @@ export default function MainTalk() {
           <H>The Scale Requirement</H>
           <Sub>19 → 57 TWh by 2034. The grid needs demand flexibility at data-center scale.</Sub>
           <div style={{ marginTop: 12, height: 290 }}>
-            <LazyContent><JapanDemandForecast height={290} /></LazyContent>
+            <LazyContent><JapanDemandForecast height={370} /></LazyContent>
           </div>
           <Notes>This is what VPP has to solve. As data center demand triples, the grid needs to dispatch demand-side resources with the same speed and reliability as generation. That requires cloud-native infrastructure at a scale that traditional energy management software was never designed to handle.</Notes>
         </Slide>
