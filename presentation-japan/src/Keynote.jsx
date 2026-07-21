@@ -1,6 +1,5 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Deck, Slide, Notes } from 'spectacle';
-import { SlideContext } from 'spectacle';
 import { useTheme } from './hooks/useTheme.js';
 import { useLocale } from './hooks/useLocale.js';
 import { PresentationChrome } from './components/PresentationChrome.jsx';
@@ -8,12 +7,6 @@ import StepBridge from './components/StepBridge.jsx';
 import JapanOpeningSequence from './components/JapanOpeningSequence.jsx';
 import PatternSequence from './components/PatternSequence.jsx';
 import SolutionSequence from './components/SolutionSequence.jsx';
-
-function LazyContent({ children }) {
-  const ctx = useContext(SlideContext);
-  if (!ctx?.isSlideActive) return null;
-  return <>{children}</>;
-}
 
 const bg = 'var(--color-bg)';
 
@@ -55,17 +48,13 @@ export default function Keynote() {
 
         {/* 1 — Act 1: Title + Japan grid structure (crisis) */}
         <Slide backgroundColor={bg} padding="0">
-          <LazyContent>
-            <JapanOpeningSequence height={550} presenter={t('keynote.presenter')} />
-          </LazyContent>
+          <JapanOpeningSequence height={550} presenter={t('keynote.presenter')} />
           <Notes>Welcome. Today we're going to talk about why Japan's electricity grid is becoming a cloud-native problem, and how we solve it with the same patterns you use in distributed systems. This is the Japanese grid. 10 regional utilities running almost completely in isolation. East half runs at 50 Hz, west half at 60 Hz. Only 1.2 GW conversion capacity between them. 15.3% self-sufficiency. 70% fossil fuels. And 97% of the LNG flows through the Strait of Hormuz. One six-week closure added ¥15,000 to every household's annual bill.</Notes>
         </Slide>
 
         {/* 2 — Act 2: The pattern (scaling demand, JEPX crisis, data center accelerant) */}
         <Slide backgroundColor={bg} padding="0">
-          <LazyContent>
-            <PatternSequence height={550} />
-          </LazyContent>
+          <PatternSequence height={550} />
           <Notes>In January 2021, a cold snap hit Japan. Heating demand spiked. Wind dropped. LNG supply got delayed. All at once. Spot electricity prices didn't climb — they exploded, going from 10 yen per kWh to 251 yen for 40 days. In March 2022, the grid operator issued Japan's first-ever power supply emergency warning — reserve margin hit 2.5% against a 3% safety threshold. Now add 40+ planned data center projects to a grid that's already fragile. Demand is going from 19 TWh today to 57 TWh by 2034 — a 3x increase — and most projects are delayed because the grid can't support them yet.</Notes>
         </Slide>
 
@@ -90,9 +79,7 @@ export default function Keynote() {
 
         {/* 4 — Act 4: Solution — VPP architecture, fault tolerance, GitOps, teaser */}
         <Slide backgroundColor={bg} padding="0">
-          <LazyContent>
-            <SolutionSequence height={550} />
-          </LazyContent>
+          <SolutionSequence height={550} />
           <Notes>No new power plants. No new transmission. No emissions. The assets already exist in Japanese homes. But 100,000 home batteries and EVs are unreliable edge devices — this only works with cloud-native fault tolerance: retries, graceful device loss, eventual consistency. Dapr handles per-device state and failover. OpenTelemetry gives regulators full dispatch auditability. ArgoCD and GitOps give us atomic, reversible, auditable rollouts to grid-critical firmware. Shizen Connect is already aggregating EV fleets in Kansai under Japan's ERAB license — the policy is ready, the technology needs to scale.</Notes>
         </Slide>
 
