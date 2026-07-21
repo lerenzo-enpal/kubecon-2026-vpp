@@ -8,6 +8,7 @@ const ExplanationBox = ({
   color = '#22d3ee',
   icon = null,
   animateIn = true,
+  forceVisible = false,
   delay = 0,
   direction = 'up', // 'up', 'left', 'right', 'down'
 }) => {
@@ -15,7 +16,7 @@ const ExplanationBox = ({
   const { createTimeline } = useAnimeTimeline();
 
   useEffect(() => {
-    if (!animateIn || !containerRef.current) return;
+    if (!animateIn || forceVisible || !containerRef.current) return;
 
     const timeline = createTimeline({ autoplay: true });
 
@@ -56,17 +57,19 @@ const ExplanationBox = ({
     }
 
     return () => timeline.pause();
-  }, [animateIn, delay, direction, createTimeline]);
+  }, [animateIn, forceVisible, delay, direction, createTimeline]);
 
   return (
     <div
       ref={containerRef}
       style={{
-        background: `linear-gradient(135deg, ${color}08, ${color}04)`,
-        border: `1px solid ${color}30`,
+        background: `linear-gradient(135deg, color-mix(in srgb, ${color} 10%, transparent), color-mix(in srgb, ${color} 4%, transparent))`,
+        border: `1px solid color-mix(in srgb, ${color} 24%, transparent)`,
         borderRadius: 12,
         padding: '20px 24px',
-        opacity: 0,
+        opacity: forceVisible ? 1 : 0,
+        animation: forceVisible ? 'fadeIn 0.55s ease-out both' : undefined,
+        animationDelay: forceVisible ? `${delay}ms` : undefined,
         backdrop: 'blur(8px)',
       }}
     >
@@ -78,7 +81,7 @@ const ExplanationBox = ({
               width: 32,
               height: 32,
               borderRadius: '50%',
-              background: `${color}20`,
+              background: `color-mix(in srgb, ${color} 13%, transparent)`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -127,7 +130,7 @@ const ExplanationBox = ({
             color,
             fontFamily: 'JetBrains Mono, monospace',
             marginBottom: 12,
-            textShadow: `0 0 16px ${color}25`,
+            textShadow: `0 0 16px color-mix(in srgb, ${color} 15%, transparent)`,
           }}
         >
           {stat}

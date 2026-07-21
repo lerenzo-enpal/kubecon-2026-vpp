@@ -37,7 +37,7 @@ const partialRoute = (progress) => {
   ];
 };
 
-export const getJapanMapLayers = ({ scene, routeProgress = 0 }) => {
+export const getJapanMapLayers = ({ scene, routeProgress = 0, gridPulse = 0 }) => {
   if (scene === 'hormuz') {
     const route = partialRoute(routeProgress);
     const pulse = mapData.getRoutePosition(mapData.LNG_ROUTE, routeProgress);
@@ -84,6 +84,18 @@ export const getJapanMapLayers = ({ scene, routeProgress = 0 }) => {
         getFillColor: COLORS.amber,
       }),
       new TextLayer({
+        id: 'japan-lng-terminal-icons',
+        data: TERMINALS,
+        getPosition: (item) => item.position,
+        getText: () => 'LNG',
+        getSize: 11,
+        getColor: [6, 10, 26, 255],
+        getTextAnchor: 'middle',
+        getAlignmentBaseline: 'center',
+        fontFamily: 'JetBrains Mono, monospace',
+        fontWeight: 800,
+      }),
+      new TextLayer({
         id: 'hormuz-label',
         data: [{ position: mapData.HORMUZ_COORDINATE, label: 'Strait of Hormuz' }],
         getPosition: (item) => item.position,
@@ -114,6 +126,15 @@ export const getJapanMapLayers = ({ scene, routeProgress = 0 }) => {
   const visibleUtilities = UTILITIES.filter((utility) => utility.frequency === '50 Hz' || currentStep >= 2);
   const layers = [
     new ScatterplotLayer({
+      id: 'japan-utility-pulse',
+      data: visibleUtilities,
+      getPosition: (item) => item.position,
+      getRadius: gridPulse ? 44000 : 30000,
+      radiusUnits: 'meters',
+      getFillColor: (item) => [...item.color.slice(0, 3), gridPulse ? 28 : 8],
+      transitions: { getRadius: 900, getFillColor: 900 },
+    }),
+    new ScatterplotLayer({
       id: 'japan-utilities',
       data: visibleUtilities,
       getPosition: (item) => item.position,
@@ -123,6 +144,19 @@ export const getJapanMapLayers = ({ scene, routeProgress = 0 }) => {
       getLineColor: (item) => item.color,
       lineWidthMinPixels: 2,
       stroked: true,
+      transitions: { getRadius: 700 },
+    }),
+    new TextLayer({
+      id: 'japan-utility-icons',
+      data: visibleUtilities,
+      getPosition: (item) => item.position,
+      getText: () => '✦',
+      getSize: 14,
+      getColor: [255, 255, 255, 255],
+      getTextAnchor: 'middle',
+      getAlignmentBaseline: 'center',
+      fontFamily: 'Space Grotesk, sans-serif',
+      fontWeight: 700,
     }),
     new TextLayer({
       id: 'japan-utility-labels',

@@ -36,8 +36,19 @@ const { chromium } = require('playwright');
 
     await advance(5);
     await page.getByTestId('hormuz-route').waitFor({ state: 'visible' });
-    await page.getByText('Strait of Hormuz', { exact: true }).waitFor({ state: 'visible' });
+    await page.getByText('Strait of Hormuz', { exact: true }).first().waitFor({ state: 'visible' });
     await page.getByText('Japan LNG terminals', { exact: true }).waitFor({ state: 'visible' });
+    await page.getByTestId('hormuz-context').waitFor({ state: 'visible' });
+    const contextCards = page.getByTestId('hormuz-context-card');
+    if (await contextCards.count() !== 3) {
+      throw new Error('Expected three visible Hormuz context cards.');
+    }
+    await page.waitForTimeout(1800);
+    const cardOpacities = await contextCards.evaluateAll((cards) => cards.map((card) => Number.parseFloat(getComputedStyle(card.firstElementChild).opacity)));
+    if (cardOpacities.some((opacity) => opacity < 0.9)) {
+      throw new Error(`Expected fully visible Hormuz context cards, received opacities: ${cardOpacities.join(', ')}.`);
+    }
+    await page.getByText('97% of Japan LNG transits this route', { exact: true }).waitFor({ state: 'visible' });
 
     await advance(2);
     if (!(await page.locator('body').innerText()).includes('This Is Not the First Warning')) {

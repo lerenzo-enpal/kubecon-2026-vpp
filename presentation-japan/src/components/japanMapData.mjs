@@ -1,5 +1,11 @@
 export const HORMUZ_COORDINATE = [56.3, 26.6];
 
+export const HORMUZ_CAMERA_SEQUENCE = {
+  toHormuz: 2800,
+  hold: 1800,
+  toJapan: 5200,
+};
+
 export const JAPAN_LNG_COORDINATES = [
   [139.78, 35.55],
   [135.35, 34.62],
