@@ -28,11 +28,16 @@ const { chromium } = require('playwright');
       throw new Error(`Expected a full-bleed map, received ${mapBounds.width}×${mapBounds.height}.`);
     }
 
+    await page.getByTestId('japan-geographic-layers').waitFor({ state: 'visible' });
+    const mapCanvasCount = await page.locator('[data-testid="japan-geographic-layers"] canvas').count();
+    if (mapCanvasCount !== 1) {
+      throw new Error('Expected one DeckGL geographic overlay canvas.');
+    }
+
     await advance(5);
     await page.getByTestId('hormuz-route').waitFor({ state: 'visible' });
-    if (!(await page.locator('body').innerText()).includes('Strait of Hormuz')) {
-      throw new Error('The Hormuz route scene did not expose its label.');
-    }
+    await page.getByText('Strait of Hormuz', { exact: true }).waitFor({ state: 'visible' });
+    await page.getByText('Japan LNG terminals', { exact: true }).waitFor({ state: 'visible' });
 
     await advance(2);
     if (!(await page.locator('body').innerText()).includes('This Is Not the First Warning')) {

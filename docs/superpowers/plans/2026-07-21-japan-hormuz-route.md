@@ -1,20 +1,20 @@
-# Japan Hormuz Route Opening Implementation Plan
+# Japan Keynote: Geographic Hormuz Map Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` (recommended) or `superpowers:executing-plans` to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Make the keynote's Japan grid map full-bleed and add a one-shot cinematic camera move from Japan to the Strait of Hormuz and back along the LNG route.
+**Goal:** Replace the opening map's screen-coordinate SVG geography with real MapLibre + Deck.gl layers that remain geographically correct during the Hormuz-to-Japan camera sequence.
 
-**Architecture:** `JapanOpeningSequence` continues to translate Spectacle steps into opening-map states, but stops shrinking the map for the step label and stat cards. `JapanGridMapAnimated` owns the full-bleed scene and triggers the Hormuz transit when its existing Hormuz step is entered. `JapanMapBackground` gains a narrowly-scoped imperative camera API so it can animate the existing MapLibre background without adding a provider or network dependency.
+**Architecture:** MapLibre remains the basemap and owns imperative camera transitions. `JapanGridMapAnimated` owns a transparent DeckGL overlay and builds its point, line, arc, and text layers from longitude/latitude data. The existing Spectacle `step` continues to select a scene; it never drives animation frame state.
 
-**Tech Stack:** React 18, Spectacle 10, MapLibre GL, Anime.js, Playwright/Chrome, Vite.
+**Tech Stack:** React 18, Spectacle 10, MapLibre GL 5, Deck.gl 9, Anime.js, Playwright, Vite.
 
 ## Global Constraints
 
-- Preserve the title-card layout and the existing opening-step narrative order.
-- The map canvas fills the 16:9 slide beneath presentation chrome; no rounded card, map padding, or lower card band during the route story.
-- Camera motion is step-triggered and plays once; never add idle camera drift or a looping route animation.
-- Use existing theme CSS variables or the existing Japan palette tokens; do not add external map/tile providers.
-- Components using `useSteps` must never be wrapped in `LazyContent`; `StepBridge` remains the sole step integration point.
+- Preserve the current full-bleed opening, title card, step order, and non-looping presenter-driven sequence.
+- Do not add Kepler.gl, its application shell, side panels, filters, or an external map provider.
+- All visible map marks use longitude/latitude coordinates: utilities, frequency seam, terminals, Hormuz marker, import route, pulse, and labels.
+- Keep `StepBridge` as the only `useSteps` integration point; do not wrap it in `LazyContent`.
+- Gate DeckGL rendering and transient animation updates to the active map scene; do not use React state on every animation frame.
 - Do not commit or push unless the user explicitly asks.
 
 ---
@@ -23,246 +23,206 @@
 
 | File | Responsibility |
 | --- | --- |
-| `presentation-japan/src/components/JapanOpeningSequence.jsx` | Full-slide map composition and mapping of presenter steps to map scene numbers. |
-| `presentation-japan/src/components/JapanGridMapAnimated.jsx` | Overlay SVG, MapLibre-route lifecycle, one-shot Japan → Hormuz → Japan transit, and full-bleed map container. |
-| `presentation-japan/src/components/JapanMapBackground.jsx` | Existing MapLibre initialization plus a ref callback that exposes only `easeTo` and `jumpTo` to its parent. |
-| `presentation-japan/tests/keynote-rendering.cjs` | Browser regression for map coverage, Hormuz route visibility, and the existing Pattern-slide transition. |
+| `presentation-japan/src/components/japanMapData.mjs` | Pure ES-module longitude/latitude feature data and route interpolation helpers, importable by Node tests and Vite. |
+| `presentation-japan/src/components/JapanMapLayers.jsx` | Deterministic Deck.gl layer factory using `japanMapData.mjs`. |
+| `presentation-japan/src/components/JapanGridMapAnimated.jsx` | Scene state, MapLibre camera lifecycle, DeckGL placement, and route-progress ref lifecycle. |
+| `presentation-japan/tests/keynote-rendering.cjs` | Browser checks for full-bleed, real DeckGL overlay, Hormuz labels/route, and following slide. |
 
-### Task 1: Establish the full-bleed and Hormuz browser regression
+### Task 1: Define a testable geographic layer contract
 
 **Files:**
 
-- Modify: `presentation-japan/tests/keynote-rendering.cjs`
-- Modify: `presentation-japan/src/components/JapanOpeningSequence.jsx` (only after the failing test is observed)
-- Modify: `presentation-japan/src/components/JapanGridMapAnimated.jsx` (only after the failing test is observed)
+- Create: `presentation-japan/src/components/japanMapData.mjs`
+- Create: `presentation-japan/src/components/JapanMapLayers.jsx`
+- Test: `presentation-japan/tests/japan-map-layers.cjs`
 
-**Consumes:** `StepBridge`'s zero-based step behavior; a running Vite server at `http://localhost:3100/`.
+**Consumes:** Existing Deck.gl 9 packages (`@deck.gl/layers`, `@deck.gl/geo-layers`).
 
-**Produces:** A reliable Playwright check for the title, a full-slide map scene, the visible Hormuz label/route, and the Pattern slide.
+**Produces:** `getJapanMapLayers({ scene, routeProgress })`, returning Deck.gl layers with stable IDs and data sourced from tested longitude/latitude features.
 
-- [ ] **Step 1: Extend the browser test with the failing map assertions.**
+- [ ] **Step 1: Write the failing layer-contract test.**
 
-  Replace the body-text-only test with a 1440×900 viewport and these helpers/assertions. The `data-testid` values are intentional API contracts for Tasks 2–3.
+  Create `presentation-japan/tests/japan-map-layers.cjs` with Node assertions that import the named factory and prove the Hormuz scene contains geographic origin and destination points:
 
   ```js
-  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
-  const advance = async (count) => {
-    for (let index = 0; index < count; index += 1) {
-      await page.keyboard.press('ArrowRight');
-      await page.waitForTimeout(280);
-    }
-  };
+  const assert = require('node:assert/strict');
+  const { HORMUZ_COORDINATE, JAPAN_LNG_COORDINATES, LNG_ROUTE, getRoutePosition } = await import('../src/components/japanMapData.mjs');
 
-  await page.goto('http://localhost:3100/', { waitUntil: 'networkidle' });
-  // Keep the existing title assertion.
-  await advance(3); // Spectacle enters the first map state after its initial two transitions
-
-  const mapBounds = await page.getByTestId('japan-opening-map').evaluate((element) => {
-    const { width, height } = element.getBoundingClientRect();
-    return { width, height };
-  });
-  if (mapBounds.width < 1400 || mapBounds.height < 760) {
-    throw new Error(`Expected a full-bleed map, received ${mapBounds.width}×${mapBounds.height}.`);
-  }
-
-  await advance(5); // LNG route → Hormuz scene
-  await page.getByTestId('hormuz-route').waitFor({ state: 'visible' });
-  if (!(await page.locator('body').innerText()).includes('Strait of Hormuz')) {
-    throw new Error('The Hormuz route scene did not expose its label.');
-  }
-
-  await advance(2); // finish opening and enter Pattern
-  // Keep the existing Pattern heading assertion.
+  assert.deepEqual(HORMUZ_COORDINATE, [56.3, 26.6]);
+  assert.ok(JAPAN_LNG_COORDINATES.every(([longitude, latitude]) => longitude > 120 && latitude > 25));
+  assert.deepEqual(getRoutePosition(LNG_ROUTE, 0), HORMUZ_COORDINATE);
+  assert.deepEqual(getRoutePosition(LNG_ROUTE, 1), [138.25, 36.2]);
   ```
 
-- [ ] **Step 2: Run the regression check and confirm the expected failure.**
+- [ ] **Step 2: Run the test to verify it fails because the module does not exist.**
 
-  Run: `node tests/keynote-rendering.cjs`
+  Run: `node tests/japan-map-layers.cjs`
 
-  Expected: failure because `japan-opening-map` is absent. This proves the test is checking the new behavior rather than the current half-height map.
+  Expected: a module-not-found failure for `japanMapData.mjs`.
 
-- [ ] **Step 3: Do not change production code in this task.**
+- [ ] **Step 3: Implement the minimal geographic layer module.**
 
-  The test is the contract for the following two implementation tasks. Leave it red until the map composition and route scene are complete.
+  Export these constants and interpolation helper from `japanMapData.mjs`:
 
-### Task 2: Convert the opening sequence to a full-slide composition
+  ```js
+  export const HORMUZ_COORDINATE = [56.3, 26.6];
+  export const JAPAN_LNG_COORDINATES = [[139.78, 35.55], [135.35, 34.62], [130.38, 33.59]];
+  export const LNG_ROUTE = [HORMUZ_COORDINATE, [64, 24], [78, 18], [96, 15], [117, 21], [138.25, 36.2]];
+  export const getRoutePosition = (route, progress) => {
+    // Clamp 0–1, interpolate within the matching route segment, and return [longitude, latitude].
+  };
+  ```
 
-**Files:**
-
-- Modify: `presentation-japan/src/components/JapanOpeningSequence.jsx`
-- Test: `presentation-japan/tests/keynote-rendering.cjs`
-
-**Consumes:** Task 1’s `japan-opening-map` contract and the existing `JapanGridMapAnimated({ height, step })` interface.
-
-**Produces:** A full-size map area for all opening-map states and overlay-only supporting information.
-
-- [ ] **Step 1: Keep the title card as the sole padded layout.**
-
-  Preserve the existing `step === 0` branch. For all other steps, use a single relative full-height container and render the map at the actual slide height:
+  Then create `JapanMapLayers.jsx` with:
 
   ```jsx
-  {step === 0 ? (
-    <TitleCard presenter={presenter} />
-  ) : (
-    <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
-      <JapanGridMapAnimated
-        height="100%"
-        step={step - 1}
-        testId="japan-opening-map"
-      />
-      <div style={{ position: 'absolute', bottom: 20, left: 0, right: 0, textAlign: 'center', pointerEvents: 'none' }}>
-        <StepLabel step={step} />
-      </div>
-      {step >= 7 && <OpeningStatsOverlay />}
-    </div>
-  )}
+  export const getJapanMapLayers = ({ scene, routeProgress = 0 }) => {
+    // Return ScatterplotLayer, PathLayer, ArcLayer, and TextLayer instances.
+    // Attach `id: 'hormuz-origin'`, `id: 'lng-route'`, and `id: 'japan-lng-terminals'`.
+    // Return only Japan grid layers before `scene === 'hormuz'`.
+  };
   ```
 
-  Create `StepLabel` and `OpeningStatsOverlay` as local components in the same file. `OpeningStatsOverlay` must be absolutely positioned over the bottom of the map, not consume layout height. It reuses the existing `ExplanationBox` presets and stagger configuration.
+  Use `ScatterplotLayer`, `PathLayer`, `ArcLayer`, and `TextLayer`; use the existing CSS theme variables or central theme palette for colors. Import the module as `import * as mapData from './japanMapData.mjs'`; each layer's `getPosition`/`getPath` reads longitude/latitude from `mapData`, never pixel coordinates.
 
-- [ ] **Step 2: Make the map receive a test id without creating a wrapper that changes its size.**
+- [ ] **Step 4: Run the layer-contract test to verify it passes.**
 
-  Update `JapanGridMapAnimated` to accept a `data-testid` prop through a named prop (for example `testId`) and set it on its outermost `<div>`. Pass `testId="japan-opening-map"` from `JapanOpeningSequence`; do not rely on React forwarding `data-testid` through a custom component.
+  Run: `node tests/japan-map-layers.cjs`
 
-- [ ] **Step 3: Run the browser regression to verify the first green milestone.**
+  Expected: exit 0.
 
-  Run: `node tests/keynote-rendering.cjs`
-
-  Expected: the map-size assertion passes; the Hormuz-route assertion remains red until Task 3 adds that contract.
-
-### Task 3: Add a one-shot Hormuz transit to the existing MapLibre background
+### Task 2: Mount the DeckGL overlay over the MapLibre instance
 
 **Files:**
 
-- Modify: `presentation-japan/src/components/JapanMapBackground.jsx`
 - Modify: `presentation-japan/src/components/JapanGridMapAnimated.jsx`
 - Test: `presentation-japan/tests/keynote-rendering.cjs`
 
-**Consumes:** Task 2’s full-size scene; existing MapLibre GL dependency; `useAnimeTimeline` cleanup behavior.
+**Consumes:** `getJapanMapLayers({ scene, routeProgress })` from Task 1 and `onMapReady` from `JapanMapBackground`.
 
-**Produces:** `JapanMapBackground` camera access and an animated `hormuz-route` scene that visibly links the two endpoints.
+**Produces:** A `DeckGL` overlay aligned with the MapLibre camera and exposed as `data-testid="japan-geographic-layers"`.
 
-- [ ] **Step 1: Add a minimal map-camera handoff API.**
+- [ ] **Step 1: Extend the browser regression with a failing geographic-overlay assertion.**
 
-  Change the background signature to accept `onMapReady` and retain existing defaults:
-
-  ```jsx
-  const JapanMapBackground = ({ opacity = 0.15, style = {}, onMapReady }) => {
-  ```
-
-  On MapLibre `load`, call `onMapReady?.(map.current)` after the existing transparent-background work. Add `onMapReady` to the effect dependency list. The callback recipient is allowed to call only MapLibre’s existing `easeTo` and `jumpTo`; no global map state or new provider is introduced.
-
-- [ ] **Step 2: Define the route and camera constants near the top of `JapanGridMapAnimated.jsx`.**
+  Immediately after the existing `japan-opening-map` bounds assertion, add:
 
   ```js
-  const JAPAN_CAMERA = { center: [138.25, 36.2], zoom: 4.5, bearing: 0, pitch: 0 };
-  const HORMUZ_CAMERA = { center: [56.3, 26.6], zoom: 4.1, bearing: 0, pitch: 0 };
-  const LNG_ROUTE = [
-    [56.3, 26.6], [64, 24], [78, 18], [96, 15], [117, 21], [138.25, 36.2],
-  ];
+  await page.getByTestId('japan-geographic-layers').waitFor({ state: 'visible' });
+  const mapCanvasCount = await page.locator('[data-testid="japan-geographic-layers"] canvas').count();
+  if (mapCanvasCount !== 1) throw new Error('Expected one DeckGL geographic overlay canvas.');
   ```
 
-  Retain `mapInstance` in state and `hasRunHormuzTransit`, `routePathRef`, and `shipRef` in refs. Create a second `useAnimeTimeline` instance for the route transit, separate from the existing overlay-reveal timeline. Reset `hasRunHormuzTransit.current` only when `step < 5`, so revisiting the Hormuz step can replay once while ordinary re-renders cannot.
+- [ ] **Step 2: Run the browser regression to verify it fails for the missing test id.**
 
-- [ ] **Step 3: Implement the sequential camera transit in a dedicated effect.**
+  Run: `node tests/keynote-rendering.cjs`
 
-  Import `followPath` from `../utils/animationPatterns.js`. Define `startTransit` with `useCallback`. When `step === 5`, a map instance exists, and the transit has not run, use the existing Anime timeline helper without per-frame React state:
+  Expected: timeout waiting for `japan-geographic-layers`.
 
-  ```js
-  const startTransit = useCallback(() => {
-    const transit = createTransitTimeline();
-    const pathLength = routePathRef.current.getTotalLength();
-    routePathRef.current.setAttribute('stroke-dasharray', pathLength);
-    routePathRef.current.setAttribute('stroke-dashoffset', pathLength);
-    transit.add(routePathRef.current, {
-      strokeDashoffset: [pathLength, 0],
-      duration: 1600,
-      ease: 'inOutQuad',
-    }, 0);
-    followPath(transit, shipRef.current, routePathRef.current, {
-      duration: 1600,
-      ease: 'inOutQuad',
-    });
-    playTransit();
-    mapInstance.easeTo({ ...JAPAN_CAMERA, duration: 1600, essential: true });
-  }, [createTransitTimeline, mapInstance, playTransit]);
+- [ ] **Step 3: Add the synchronized overlay.**
 
-  useEffect(() => {
-    if (step < 5) hasRunHormuzTransit.current = false;
-    if (step !== 5 || !mapInstance || hasRunHormuzTransit.current) return undefined;
-
-    hasRunHormuzTransit.current = true;
-    mapInstance.easeTo({ ...HORMUZ_CAMERA, duration: 1100, essential: true });
-    const routeTimer = window.setTimeout(startTransit, 1120);
-    return () => {
-      window.clearTimeout(routeTimer);
-      pauseTransit();
-    };
-  }, [step, mapInstance, pauseTransit, startTransit]);
-  ```
-
-  Include `createTransitTimeline`, `mapInstance`, and `playTransit` in `startTransit`'s dependency array. The route-path and ship refs are stable, so they are intentionally omitted. This keeps camera interpolation inside MapLibre and route motion inside Anime.
-
-- [ ] **Step 4: Replace the short initial Hormuz path with a full-scene route overlay.**
-
-  Keep SVG overlays, but give the route group `data-testid="hormuz-route"`. Its path must span the visible map story from the Hormuz marker to Japan and use the existing red crisis token. Use `d="M 90,260 C 165,226 240,275 315,225 S 465,145 590,170"` for the initial full-canvas composition. Add a small ship/pulse element controlled by `shipRef`. Its visible labels are exactly `Strait of Hormuz` and `Japan LNG terminals`.
+  Import `DeckGL` from `@deck.gl/react` and add this absolutely positioned sibling of `JapanMapBackground`:
 
   ```jsx
-  <g data-testid="hormuz-route" opacity={step >= 5 ? 1 : 0}>
-    <path className="hormuz-route" d="M 90,260 C 165,226 240,275 315,225 S 465,145 590,170" />
-    <circle ref={shipRef} className="lng-route-ship" r="7" />
-    <text className="hormuz-label">Strait of Hormuz</text>
-    <text className="japan-lng-label">Japan LNG terminals</text>
-  </g>
+  <div data-testid="japan-geographic-layers" style={{ position: 'absolute', inset: 0, zIndex: 5, pointerEvents: 'none' }}>
+    <DeckGL
+      layers={getJapanMapLayers({ scene: step === 5 ? 'hormuz' : 'japan', routeProgress: routeProgressRef.current })}
+      viewState={mapViewState}
+      controller={false}
+    />
+  </div>
   ```
 
-- [ ] **Step 5: Run the browser regression and the production build.**
+  Subscribe to MapLibre's `move` event after `onMapReady` to update `mapViewState` only at map-camera event cadence. Convert `map.getCenter()`, `map.getZoom()`, `map.getBearing()`, and `map.getPitch()` to DeckGL view state. Unsubscribe in the effect cleanup. Keep the SVG only for non-geographic stat panels; remove SVG geographic utilities, route, terminal, and label rendering.
 
-  Run: `node tests/keynote-rendering.cjs && npm run build`
+- [ ] **Step 4: Run the browser regression to verify the overlay is present without breaking the existing scene.**
 
-  Expected: both commands exit 0. The test sees a 1400px+ wide, 760px+ tall opening map and a visible Hormuz route before Pattern.
+  Run: `node tests/keynote-rendering.cjs`
 
-### Task 4: Visual QA and regression hardening
+  Expected: failure, if any, is solely the old Hormuz SVG test contract; the DeckGL overlay assertion passes.
+
+### Task 3: Animate the real LNG route and camera sequence
 
 **Files:**
 
-- Modify: `presentation-japan/tests/keynote-rendering.cjs` only if the browser timing needs a condition-based wait.
+- Modify: `presentation-japan/src/components/JapanGridMapAnimated.jsx`
+- Modify: `presentation-japan/src/components/JapanMapLayers.jsx`
 - Test: `presentation-japan/tests/keynote-rendering.cjs`
 
-**Consumes:** Completed Task 3 scene and a Vite dev server.
+**Consumes:** Task 2’s MapLibre-to-DeckGL view state and layer IDs.
 
-**Produces:** Repeatable visual evidence that camera motion, overlay hierarchy, and the next slide are intact.
+**Produces:** A single Japan → Hormuz → Japan geographic route playback, with a map-anchored ship/pulse and labels.
 
-- [ ] **Step 1: Capture the two decisive states in one browser session.**
+- [ ] **Step 1: Update the browser contract to target DeckGL-accessible route labels.**
 
-  Use the existing headless Chrome setup. Capture `/tmp/japan-keynote-hormuz-start.png` after the first map advance and `/tmp/japan-keynote-hormuz-route.png` after advancing to the Hormuz scene and waiting for `[data-testid="hormuz-route"]`.
+  Replace the existing SVG `hormuz-route` test-id wait with:
 
   ```js
-  await advance(1);
-  await page.screenshot({ path: '/tmp/japan-keynote-hormuz-start.png', fullPage: true });
-  await advance(5);
   await page.getByTestId('hormuz-route').waitFor({ state: 'visible' });
-  await page.screenshot({ path: '/tmp/japan-keynote-hormuz-route.png', fullPage: true });
+  await page.getByText('Strait of Hormuz', { exact: true }).waitFor({ state: 'visible' });
+  await page.getByText('Japan LNG terminals', { exact: true }).waitFor({ state: 'visible' });
   ```
 
-- [ ] **Step 2: Inspect both captures.**
+  Render a small accessible HTML annotation group with `data-testid="hormuz-route"` over the DeckGL canvas. It is the test/accessibility contract; visual labels themselves are Deck.gl `TextLayer` marks.
 
-  Confirm: the map is edge-to-edge; Hormuz, Japan, the full red route, and the moving pulse are visually distinct; no stat/card band crops the route; slide chrome is still legible.
+- [ ] **Step 2: Run the regression to verify the updated Hormuz contract fails.**
 
-- [ ] **Step 3: Run the final checks.**
+  Run: `node tests/keynote-rendering.cjs`
 
-  Run: `node tests/keynote-rendering.cjs && npm run build`
+  Expected: failure because the accessible annotation group and DeckGL labels have not been added.
 
-  Expected: exit 0 with no browser errors or Vite build errors.
+- [ ] **Step 3: Implement interpolation without per-frame React state.**
 
-- [ ] **Step 4: Review changes without committing.**
+  In `JapanMapLayers.jsx`, derive a partial line/path and pulse coordinate from `routeProgress` (0–1). In `JapanGridMapAnimated.jsx`, animate a ref with Anime.js on entry to `step === 5`, call the deck instance's `setProps({ layers: getJapanMapLayers(...) })` in the animation update, and reset/replay only after leaving the Hormuz step. This keeps frame updates outside React.
 
-  Run: `git diff -- presentation-japan/src/components/JapanOpeningSequence.jsx presentation-japan/src/components/JapanGridMapAnimated.jsx presentation-japan/src/components/JapanMapBackground.jsx presentation-japan/tests/keynote-rendering.cjs`
+  Start with `mapInstance.easeTo({ center: HORMUZ_COORDINATE, zoom: 4.1, duration: 1100, essential: true })`. Then animate the route for 1600ms while MapLibre eases to `{ center: [138.25, 36.2], zoom: 4.5, duration: 1600, essential: true }`. Cancel the timer and pause the Anime timeline in effect cleanup.
 
-  Expected: only full-bleed composition, camera/route behavior, and regression coverage changes are present. Do not create a commit or push unless the user explicitly asks.
+- [ ] **Step 4: Add real map text labels and the accessible contract.**
+
+  `TextLayer` renders exact strings `Strait of Hormuz` and `Japan LNG terminals` near their coordinates. During the Hormuz scene, render:
+
+  ```jsx
+  <div data-testid="hormuz-route" className="sr-only">
+    Strait of Hormuz. Japan LNG terminals.
+  </div>
+  ```
+
+  Keep Japanese grid labels hidden throughout this transit.
+
+- [ ] **Step 5: Run the complete browser regression.**
+
+  Run: `node tests/keynote-rendering.cjs`
+
+  Expected: exit 0, with full-bleed bounds, DeckGL overlay, both real-map labels, and the Pattern slide all confirmed.
+
+### Task 4: Visual and build verification
+
+**Files:**
+
+- Test: `presentation-japan/tests/japan-map-layers.cjs`
+- Test: `presentation-japan/tests/keynote-rendering.cjs`
+
+- [ ] **Step 1: Capture the final Hormuz state.**
+
+  Use the existing Chrome Playwright setup, advance to the Hormuz step, wait 2600ms for the route and camera animation, and save `/tmp/japan-keynote-hormuz-geographic.png`.
+
+- [ ] **Step 2: Inspect the capture.**
+
+  Confirm the route begins at the actual Strait of Hormuz, reaches Japan, retains clear label contrast, and has no Japan-only grid labels over the Middle East.
+
+- [ ] **Step 3: Run fresh final verification.**
+
+  Run: `node tests/japan-map-layers.cjs && node tests/keynote-rendering.cjs && npm run build`
+
+  Expected: all commands exit 0 with no browser or Vite errors.
+
+- [ ] **Step 4: Review only the scoped diff.**
+
+  Run: `git diff -- presentation-japan/src/components/JapanMapLayers.jsx presentation-japan/src/components/JapanGridMapAnimated.jsx presentation-japan/tests/japan-map-layers.cjs presentation-japan/tests/keynote-rendering.cjs docs/superpowers/specs/2026-07-21-japan-hormuz-route-design.md docs/superpowers/plans/2026-07-21-japan-hormuz-route.md`
+
+  Expected: only geographic map/layer behavior, tests, and supporting design documentation have changed. Do not commit or push.
 
 ## Plan Self-Review
 
-- **Spec coverage:** Task 2 implements full bleed; Task 3 implements Japan → Hormuz → Japan camera movement and route; Task 4 verifies the non-looping visual narrative and build. The title card, step order, palette, no-new-provider, and no-idle-motion constraints are explicit.
-- **Deferred-work scan:** The plan has no unresolved work markers or unspecified test commands.
-- **Type/interface consistency:** `onMapReady`, `testId`, `japan-opening-map`, and `hormuz-route` are defined before their consumers and used consistently across tasks.
+- **Spec coverage:** Task 1 establishes actual geographic coordinates; Task 2 aligns DeckGL to the existing MapLibre camera; Task 3 implements the non-looping, presenter-driven Hormuz transit; Task 4 captures and verifies the result.
+- **Placeholder scan:** All layer IDs, coordinates, test contracts, animation timings, and verification commands are explicit.
+- **Type consistency:** `getJapanMapLayers({ scene, routeProgress })`, `HORMUZ_COORDINATE`, and the `japan-geographic-layers`/`hormuz-route` test contracts are introduced before their consumers.
