@@ -1,15 +1,24 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useAnimeTimeline } from '../hooks/useAnimeJs.js';
-import { drawPath, colorWave, gearRotation, countUpNumber } from '../utils/animationPatterns.js';
+import { drawPath, countUpNumber, followPath } from '../utils/animationPatterns.js';
 import JapanMapBackground from './JapanMapBackground.jsx';
+
+const JAPAN_CAMERA = { center: [138.25, 36.2], zoom: 4.5, bearing: 0, pitch: 0 };
+const HORMUZ_CAMERA = { center: [56.3, 26.6], zoom: 4.1, bearing: 0, pitch: 0 };
 
 const JapanGridMapAnimated = ({
   height = 600,
   step = 0,
   autoPlaySteps = false,
+  testId,
 }) => {
   const svgRef = useRef(null);
+  const routePathRef = useRef(null);
+  const shipRef = useRef(null);
+  const hasRunHormuzTransit = useRef(false);
   const { createTimeline, play } = useAnimeTimeline();
+  const { createTimeline: createTransitTimeline, play: playTransit, pause: pauseTransit } = useAnimeTimeline();
+  const [mapInstance, setMapInstance] = useState(null);
   const [stats, setStats] = useState({
     sufficiency: 0,
     fossilFuel: 0,
@@ -179,36 +188,6 @@ const JapanGridMapAnimated = ({
       );
     }
 
-    // Step 5: Show Hormuz strait annotation
-    if (step >= 5) {
-      timeline.add(
-        '.hormuz-indicator',
-        {
-          opacity: [0, 1],
-          scale: [0.5, 1],
-          duration: 400,
-          ease: 'outElastic(1, .6)',
-        },
-        step === 5 ? 0 : '+=300'
-      );
-
-      timeline.add(
-        '.hormuz-label',
-        {
-          opacity: [0, 1],
-          duration: 300,
-          ease: 'outQuad',
-        },
-        '-=200'
-      );
-
-      // Animate connection from Hormuz to Japan
-      drawPath(timeline, '.hormuz-route', {
-        duration: 1000,
-        ease: 'inOutQuad',
-      });
-    }
-
     // Step 6: Show stats boxes with 15.3% and energy info
     if (step >= 6) {
       timeline.add(
@@ -261,18 +240,56 @@ const JapanGridMapAnimated = ({
     play();
   }, [step, createTimeline]);
 
+  useEffect(() => {
+    if (step < 5) {
+      hasRunHormuzTransit.current = false;
+    }
+
+    if (step !== 5 || !mapInstance || hasRunHormuzTransit.current) {
+      return undefined;
+    }
+
+    hasRunHormuzTransit.current = true;
+    mapInstance.easeTo({ ...HORMUZ_CAMERA, duration: 1100, essential: true });
+
+    const routeTimer = window.setTimeout(() => {
+      if (!routePathRef.current || !shipRef.current) return;
+
+      const transit = createTransitTimeline();
+      const pathLength = routePathRef.current.getTotalLength();
+      routePathRef.current.setAttribute('stroke-dasharray', pathLength);
+      routePathRef.current.setAttribute('stroke-dashoffset', pathLength);
+      transit.add(routePathRef.current, {
+        strokeDashoffset: [pathLength, 0],
+        duration: 1600,
+        ease: 'inOutQuad',
+      }, 0);
+      followPath(transit, shipRef.current, routePathRef.current, {
+        duration: 1600,
+        ease: 'inOutQuad',
+      });
+      playTransit();
+      mapInstance.easeTo({ ...JAPAN_CAMERA, duration: 1600, essential: true });
+    }, 1120);
+
+    return () => {
+      window.clearTimeout(routeTimer);
+      pauseTransit();
+    };
+  }, [step, mapInstance, createTransitTimeline, playTransit, pauseTransit]);
+
   return (
     <div
+      data-testid={testId}
       style={{
         height,
         width: '100%',
         position: 'relative',
         background: 'linear-gradient(135deg, rgba(6, 10, 26, 0.8), rgba(57, 57, 216, 0.1))',
-        borderRadius: 12,
         overflow: 'hidden',
       }}
     >
-      <JapanMapBackground opacity={0.25} />
+      <JapanMapBackground opacity={0.25} onMapReady={setMapInstance} />
       <svg
         ref={svgRef}
         width="100%"
@@ -281,6 +298,7 @@ const JapanGridMapAnimated = ({
         preserveAspectRatio="xMidYMid meet"
         style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}
       >
+        <g opacity={step === 5 ? 0 : 1}>
         {/* Japan island outline (simplified) */}
         <g className="japan-outline" opacity="0">
           <path
@@ -429,37 +447,29 @@ const JapanGridMapAnimated = ({
             opacity="0"
           />
         ))}
-
-        {/* Hormuz indicator */}
-        <g className="hormuz-indicator" opacity="0">
-          <circle cx="200" cy="50" r="10" fill="#ef4444" opacity="0.8" />
-          <circle cx="200" cy="50" r="16" fill="none" stroke="#ef4444" strokeWidth="2" opacity="0.4" />
         </g>
 
-        {/* Hormuz route */}
-        <path
-          className="hormuz-route"
-          d="M 200,60 Q 250,80 300,100 Q 350,130 390,160"
-          stroke="#ef4444"
-          strokeWidth="2"
-          fill="none"
-          opacity="0"
-          strokeDasharray="1000"
-        />
-
-        {/* Hormuz label */}
-        <text
-          className="hormuz-label"
-          x="180"
-          y="35"
-          fontSize="12"
-          fill="#ef4444"
-          fontWeight="700"
-          fontFamily="Space Grotesk, sans-serif"
-          opacity="0"
-        >
-          Strait of Hormuz
-        </text>
+        <g data-testid="hormuz-route" opacity={step >= 5 ? 1 : 0}>
+          <circle cx="90" cy="260" r="11" fill="#ef4444" opacity="0.9" />
+          <circle cx="90" cy="260" r="19" fill="none" stroke="#ef4444" strokeWidth="2" opacity="0.45" />
+          <path
+            ref={routePathRef}
+            className="hormuz-route"
+            d="M 90,260 C 165,226 240,275 315,225 S 465,145 590,170"
+            stroke="#ef4444"
+            strokeWidth="4"
+            fill="none"
+            strokeLinecap="round"
+            strokeDasharray="8 8"
+          />
+          <circle ref={shipRef} cx="90" cy="260" r="7" fill="#FFC217" stroke="#fef3c7" strokeWidth="2" />
+          <text x="48" y="300" fontSize="16" fill="#fecaca" fontWeight="700" fontFamily="Space Grotesk, sans-serif">
+            Strait of Hormuz
+          </text>
+          <text x="505" y="142" fontSize="15" fill="#a5f3fc" fontWeight="700" fontFamily="Space Grotesk, sans-serif">
+            Japan LNG terminals
+          </text>
+        </g>
 
         {/* Stats boxes */}
         <g className="stat-box" opacity="0">

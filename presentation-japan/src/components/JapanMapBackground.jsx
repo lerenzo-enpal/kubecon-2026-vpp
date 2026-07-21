@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-const JapanMapBackground = ({ opacity = 0.15, style = {} }) => {
+const JapanMapBackground = ({ opacity = 0.15, style = {}, onMapReady }) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
 
@@ -28,6 +28,7 @@ const JapanMapBackground = ({ opacity = 0.15, style = {} }) => {
       if (map.current.getLayer('background')) {
         map.current.setPaintProperty('background', 'background-color', 'rgba(0, 0, 0, 0)');
       }
+      onMapReady?.(map.current);
     });
 
     map.current.on('error', (e) => {
@@ -39,7 +40,7 @@ const JapanMapBackground = ({ opacity = 0.15, style = {} }) => {
         map.current.remove();
       }
     };
-  }, []);
+  }, [onMapReady]);
 
   return (
     <div

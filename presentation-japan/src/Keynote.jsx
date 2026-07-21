@@ -48,7 +48,7 @@ export default function Keynote() {
 
         {/* 1 — Act 1: Title + Japan grid structure (crisis) */}
         <Slide backgroundColor={bg} padding="0">
-          <JapanOpeningSequence height={550} presenter={t('keynote.presenter')} />
+            <JapanOpeningSequence presenter={t('keynote.presenter')} />
           <Notes>Welcome. Today we're going to talk about why Japan's electricity grid is becoming a cloud-native problem, and how we solve it with the same patterns you use in distributed systems. This is the Japanese grid. 10 regional utilities running almost completely in isolation. East half runs at 50 Hz, west half at 60 Hz. Only 1.2 GW conversion capacity between them. 15.3% self-sufficiency. 70% fossil fuels. And 97% of the LNG flows through the Strait of Hormuz. One six-week closure added ¥15,000 to every household's annual bill.</Notes>
         </Slide>
 

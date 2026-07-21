@@ -5,7 +5,13 @@ const { chromium } = require('playwright');
     headless: true,
     executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
   });
-  const page = await browser.newPage();
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  const advance = async (count) => {
+    for (let index = 0; index < count; index += 1) {
+      await page.keyboard.press('ArrowRight');
+      await page.waitForTimeout(280);
+    }
+  };
 
   try {
     await page.goto('http://localhost:3100/', { waitUntil: 'networkidle' });
@@ -13,10 +19,22 @@ const { chromium } = require('playwright');
       throw new Error('The keynote title is not visible on the first slide.');
     }
 
-    for (let step = 0; step < 10; step += 1) {
-      await page.keyboard.press('ArrowRight');
-      await page.waitForTimeout(250);
+    await advance(3);
+    const mapBounds = await page.getByTestId('japan-opening-map').evaluate((element) => {
+      const { width, height } = element.getBoundingClientRect();
+      return { width, height };
+    });
+    if (mapBounds.width < 1400 || mapBounds.height < 760) {
+      throw new Error(`Expected a full-bleed map, received ${mapBounds.width}×${mapBounds.height}.`);
     }
+
+    await advance(5);
+    await page.getByTestId('hormuz-route').waitFor({ state: 'visible' });
+    if (!(await page.locator('body').innerText()).includes('Strait of Hormuz')) {
+      throw new Error('The Hormuz route scene did not expose its label.');
+    }
+
+    await advance(2);
     if (!(await page.locator('body').innerText()).includes('This Is Not the First Warning')) {
       throw new Error('The pattern heading is not visible on the second slide.');
     }

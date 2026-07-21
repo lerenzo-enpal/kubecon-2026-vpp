@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import StepBridge from './StepBridge.jsx';
 import JapanGridMapAnimated from './JapanGridMapAnimated.jsx';
 import ExplanationBox, { EXPLANATION_PRESETS } from './ExplanationBox.jsx';
@@ -22,58 +22,38 @@ const TitleCard = ({ presenter }) => (
   </div>
 );
 
-const JapanOpeningSequence = ({ height = 600, presenter }) => {
+const STEP_LABELS = ['Title', 'Island', '50Hz East', '60Hz West', 'Seam', 'LNG Routes', 'Hormuz', 'Stats', 'Sidebar'];
+
+const StepLabel = ({ step }) => (
+  <div style={{ textAlign: 'center', fontSize: 12, color: 'var(--color-dim)', fontFamily: 'JetBrains Mono, monospace' }}>
+    {STEP_LABELS[step]}
+  </div>
+);
+
+const OpeningStatsOverlay = () => (
+  <div style={{ position: 'absolute', left: 28, right: 28, bottom: 48, display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16, pointerEvents: 'none' }}>
+    <ExplanationBox {...EXPLANATION_PRESETS.SELF_SUFFICIENCY} animateIn delay={0} direction="up" />
+    <ExplanationBox {...EXPLANATION_PRESETS.FOSSIL_FUEL} animateIn delay={100} direction="up" />
+    <ExplanationBox {...EXPLANATION_PRESETS.LNG_IMPORT} animateIn delay={200} direction="up" />
+  </div>
+);
+
+const JapanOpeningSequence = ({ height = '100%', presenter }) => {
   return (
     <StepBridge count={9}>
       {(step) => (
-        <div style={{ height, display: 'flex', flexDirection: 'column', gap: 20, padding: '20px' }}>
+        <div style={{ height, position: 'relative', overflow: 'hidden' }}>
           {step === 0 ? (
             <TitleCard presenter={presenter} />
           ) : (
-            <>
-              {/* Map takes up most of the space */}
-              <div style={{ flex: 1, minHeight: 0 }}>
-                <JapanGridMapAnimated height={height - 200} step={step - 1} />
+            <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+              <JapanGridMapAnimated height="100%" step={step - 1} testId="japan-opening-map" />
+              <div style={{ position: 'absolute', bottom: 20, left: 0, right: 0, pointerEvents: 'none' }}>
+                <StepLabel step={step} />
               </div>
-
-              {/* Explanation boxes appear once stats are reached */}
-              {step >= 7 && (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16 }}>
-                  <ExplanationBox
-                    {...EXPLANATION_PRESETS.SELF_SUFFICIENCY}
-                    animateIn
-                    delay={0}
-                    direction="up"
-                  />
-                  <ExplanationBox
-                    {...EXPLANATION_PRESETS.FOSSIL_FUEL}
-                    animateIn
-                    delay={100}
-                    direction="up"
-                  />
-                  <ExplanationBox
-                    {...EXPLANATION_PRESETS.LNG_IMPORT}
-                    animateIn
-                    delay={200}
-                    direction="up"
-                  />
-                </div>
-              )}
-            </>
+              {step >= 7 && <OpeningStatsOverlay />}
+            </div>
           )}
-
-          {/* Step indicator */}
-          <div
-            style={{
-              textAlign: 'center',
-              fontSize: 12,
-              color: 'var(--color-dim)',
-              fontFamily: 'JetBrains Mono, monospace',
-              marginTop: 8,
-            }}
-          >
-            {['Title', 'Island', '50Hz East', '60Hz West', 'Seam', 'LNG Routes', 'Hormuz', 'Stats', 'Sidebar'][step]}
-          </div>
         </div>
       )}
     </StepBridge>
