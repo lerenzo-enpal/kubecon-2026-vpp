@@ -2,9 +2,40 @@ export const HORMUZ_COORDINATE = [56.3, 26.6];
 
 export const HORMUZ_CAMERA_SEQUENCE = {
   toHormuz: 2800,
-  hold: 1800,
-  toJapan: 5200,
+  hold: 2200,
+  toJapan: 10800,
 };
+
+export const HORMUZ_STORY_KEYFRAMES = [
+  {
+    id: 'route-risk',
+    camera: { center: HORMUZ_COORDINATE, zoom: 4.5, bearing: 18, pitch: 50 },
+    callout: 'route-risk',
+    anchor: HORMUZ_COORDINATE,
+    hold: 2200,
+  },
+  {
+    id: 'household-impact',
+    camera: { center: [63.5, 24.5], zoom: 3.7, bearing: 24, pitch: 48 },
+    callout: 'household-impact',
+    anchor: [64, 24],
+    hold: 2200,
+  },
+  {
+    id: 'dependency',
+    camera: { center: [95, 17.5], zoom: 3.15, bearing: 28, pitch: 45 },
+    callout: 'dependency',
+    anchor: [96, 15],
+    hold: 2200,
+  },
+  {
+    id: 'japan-grid',
+    camera: { center: [138.25, 36.2], zoom: 4.5, bearing: 12, pitch: 42 },
+    callout: 'japan-grid',
+    anchor: [139.78, 35.55],
+    hold: 0,
+  },
+];
 
 export const JAPAN_LNG_COORDINATES = [
   [139.78, 35.55],
@@ -19,6 +50,24 @@ export const LNG_ROUTE = [
   [96, 15],
   [117, 21],
   [138.25, 36.2],
+];
+
+const tripPath = (offset, latitudeOffset = 0) => LNG_ROUTE.map(([longitude, latitude], index) => [
+  longitude,
+  latitude + latitudeOffset,
+  index * 2400 + offset,
+]);
+
+export const LNG_TRIP_PATHS = [
+  { id: 'lng-01', path: tripPath(0, 0) },
+  { id: 'lng-02', path: tripPath(700, 1.15) },
+  { id: 'lng-03', path: tripPath(1450, -0.95) },
+  { id: 'lng-04', path: tripPath(2200, 0.55) },
+];
+
+export const JAPAN_GRID_TRIP_PATHS = [
+  { id: 'grid-east', path: [[139.78, 35.55, 0], [140.87, 38.27, 1500], [141.35, 43.06, 2700]] },
+  { id: 'grid-west', path: [[130.38, 33.59, 0], [135.35, 34.62, 1500], [139.78, 35.55, 2700]] },
 ];
 
 export const getRoutePosition = (route, progress) => {

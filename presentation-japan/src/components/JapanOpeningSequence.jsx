@@ -3,26 +3,28 @@ import StepBridge from './StepBridge.jsx';
 import JapanGridMapAnimated from './JapanGridMapAnimated.jsx';
 import ExplanationBox, { EXPLANATION_PRESETS } from './ExplanationBox.jsx';
 
-const TitleCard = ({ presenter }) => (
+const TitleCard = ({ presenter, step }) => (
   <div style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 12, padding: '0 40px' }}>
-    <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 13, color: 'var(--color-primary)', letterSpacing: '0.2em', marginBottom: 16 }}>
+    <div data-testid="opening-title-event" style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 13, color: 'var(--color-primary)', letterSpacing: '0.2em', marginBottom: 16 }}>
       KUBECON + CLOUDNATIVECON JAPAN 2026 · YOKOHAMA
     </div>
     <div style={{ fontSize: 52, fontWeight: 800, lineHeight: 1.1, color: 'var(--color-heading)', fontFamily: 'Space Grotesk, sans-serif' }}>
       The Energy Grid Is Becoming a Cloud Native Distributed System
     </div>
-    <div style={{ fontSize: 22, color: 'var(--color-text)', fontFamily: 'Inter, sans-serif' }}>
-      How VPP solves Japan's structural energy fragility
-    </div>
-    {presenter && (
-      <div style={{ fontSize: 16, color: 'var(--color-muted)', fontFamily: 'JetBrains Mono, monospace', marginTop: 20 }}>
+    {step >= 1 && (
+      <div data-testid="opening-title-premise" style={{ fontSize: 22, color: 'var(--color-text)', fontFamily: 'Inter, sans-serif' }}>
+        How VPP solves Japan's structural energy fragility
+      </div>
+    )}
+    {step >= 2 && presenter && (
+      <div data-testid="opening-title-presenter" style={{ fontSize: 16, color: 'var(--color-muted)', fontFamily: 'JetBrains Mono, monospace', marginTop: 20 }}>
         {presenter}
       </div>
     )}
   </div>
 );
 
-const STEP_LABELS = ['Title', 'Island', '50Hz East', '60Hz West', 'Seam', 'LNG Routes', 'Hormuz', 'Stats', 'Sidebar'];
+const STEP_LABELS = ['Title', 'Premise', 'Presenter', 'Island', '50Hz East', '60Hz West', 'Seam', 'LNG Routes', 'Hormuz', 'Stats', 'Sidebar'];
 
 const StepLabel = ({ step }) => (
   <div style={{ textAlign: 'center', fontSize: 12, color: 'var(--color-dim)', fontFamily: 'JetBrains Mono, monospace' }}>
@@ -40,18 +42,18 @@ const OpeningStatsOverlay = () => (
 
 const JapanOpeningSequence = ({ height = '100%', presenter }) => {
   return (
-    <StepBridge count={9}>
+    <StepBridge count={11}>
       {(step) => (
         <div style={{ height, position: 'relative', overflow: 'hidden' }}>
-          {step === 0 ? (
-            <TitleCard presenter={presenter} />
+          {step < 3 ? (
+            <TitleCard presenter={presenter} step={step} />
           ) : (
             <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-              <JapanGridMapAnimated height="100%" step={step - 1} testId="japan-opening-map" />
+              <JapanGridMapAnimated height="100%" step={step - 3} testId="japan-opening-map" />
               <div style={{ position: 'absolute', bottom: 20, left: 0, right: 0, pointerEvents: 'none' }}>
                 <StepLabel step={step} />
               </div>
-              {step >= 7 && <OpeningStatsOverlay />}
+              {step >= 9 && <OpeningStatsOverlay />}
             </div>
           )}
         </div>

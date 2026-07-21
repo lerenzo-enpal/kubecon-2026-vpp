@@ -1,4 +1,7 @@
-import { ArcLayer, PathLayer, ScatterplotLayer, TextLayer } from '@deck.gl/layers';
+import { ArcLayer, PathLayer, ScatterplotLayer, TextLayer, GeoJsonLayer } from '@deck.gl/layers';
+import { TripsLayer } from '@deck.gl/geo-layers';
+import { ScreenGridLayer } from '@deck.gl/aggregation-layers';
+import { MaskExtension } from '@deck.gl/extensions';
 import * as mapData from './japanMapData.mjs';
 
 const COLORS = {
@@ -37,12 +40,51 @@ const partialRoute = (progress) => {
   ];
 };
 
-export const getJapanMapLayers = ({ scene, routeProgress = 0, gridPulse = 0 }) => {
+export const getJapanMapLayers = ({ scene, routeProgress = 0, gridPulse = 0, tripTime = 0, disruptionRatio = 1 }) => {
   if (scene === 'hormuz') {
     const route = partialRoute(routeProgress);
     const pulse = mapData.getRoutePosition(mapData.LNG_ROUTE, routeProgress);
+    const visibleTrips = mapData.LNG_TRIP_PATHS.slice(0, Math.max(1, Math.ceil(mapData.LNG_TRIP_PATHS.length * disruptionRatio)));
+    const closureZone = {
+      type: 'Feature',
+      properties: {},
+      geometry: { type: 'Polygon', coordinates: [[[54.8, 25.4], [58.2, 25.4], [58.2, 27.8], [54.8, 27.8], [54.8, 25.4]]] },
+    };
 
     return [
+      new GeoJsonLayer({
+        id: 'hormuz-mask',
+        data: closureZone,
+        operation: 'mask',
+        filled: true,
+        stroked: false,
+        getFillColor: [255, 255, 255, 255],
+      }),
+      new ScreenGridLayer({
+        id: 'lng-congestion-grid',
+        data: mapData.LNG_TRIP_PATHS.flatMap((trip) => trip.path.map(([longitude, latitude]) => ({ position: [longitude, latitude] }))),
+        getPosition: (item) => item.position,
+        cellSizePixels: 46,
+        colorRange: [[255, 163, 95, 0], [255, 163, 95, 52], [239, 68, 68, 120]],
+        opacity: 0.42,
+      }),
+      new TripsLayer({
+        id: 'lng-trips',
+        data: visibleTrips,
+        getPath: (trip) => trip.path.map(([longitude, latitude]) => [longitude, latitude]),
+        getTimestamps: (trip) => trip.path.map(([, , timestamp]) => timestamp),
+        getColor: [255, 194, 23, 220],
+        getWidth: 4,
+        widthUnits: 'pixels',
+        currentTime: tripTime,
+        trailLength: 3300,
+        fadeTrail: true,
+        capRounded: true,
+        jointRounded: true,
+        extensions: [new MaskExtension()],
+        maskId: 'hormuz-mask',
+        maskInverted: true,
+      }),
       new PathLayer({
         id: 'lng-route',
         data: [{ path: route }],
@@ -94,6 +136,18 @@ export const getJapanMapLayers = ({ scene, routeProgress = 0, gridPulse = 0 }) =
         getAlignmentBaseline: 'center',
         fontFamily: 'JetBrains Mono, monospace',
         fontWeight: 800,
+      }),
+      new TripsLayer({
+        id: 'japan-grid-flow',
+        data: routeProgress > 0.85 ? mapData.JAPAN_GRID_TRIP_PATHS : [],
+        getPath: (trip) => trip.path.map(([longitude, latitude]) => [longitude, latitude]),
+        getTimestamps: (trip) => trip.path.map(([, , timestamp]) => timestamp),
+        getColor: COLORS.cyan,
+        getWidth: 3,
+        widthUnits: 'pixels',
+        currentTime: tripTime % 2700,
+        trailLength: 1800,
+        fadeTrail: true,
       }),
       new TextLayer({
         id: 'hormuz-label',

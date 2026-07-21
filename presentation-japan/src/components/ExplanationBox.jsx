@@ -63,14 +63,14 @@ const ExplanationBox = ({
     <div
       ref={containerRef}
       style={{
-        background: `linear-gradient(135deg, color-mix(in srgb, ${color} 10%, transparent), color-mix(in srgb, ${color} 4%, transparent))`,
-        border: `1px solid color-mix(in srgb, ${color} 24%, transparent)`,
+        background: `linear-gradient(135deg, color-mix(in srgb, ${color} 30%, var(--color-background)), color-mix(in srgb, ${color} 18%, var(--color-background)))`,
+        border: `1px solid color-mix(in srgb, ${color} 58%, transparent)`,
         borderRadius: 12,
         padding: '20px 24px',
         opacity: forceVisible ? 1 : 0,
         animation: forceVisible ? 'fadeIn 0.55s ease-out both' : undefined,
         animationDelay: forceVisible ? `${delay}ms` : undefined,
-        backdrop: 'blur(8px)',
+        backdropFilter: 'blur(14px)',
       }}
     >
       {/* Title with icon */}

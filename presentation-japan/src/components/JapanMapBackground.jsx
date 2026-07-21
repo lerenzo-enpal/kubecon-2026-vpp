@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-const JapanMapBackground = ({ opacity = 0.15, style = {}, onMapReady }) => {
+const JapanMapBackground = ({ opacity = 0.15, style = {}, onMapReady, interactive = true }) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
 
@@ -15,9 +15,14 @@ const JapanMapBackground = ({ opacity = 0.15, style = {}, onMapReady }) => {
       style: 'https://demotiles.maplibre.org/style.json', // Simple OSM-based style
       center: [138.2529, 36.2048], // Center of Japan
       zoom: 4.5,
-      pitch: 0,
+      pitch: 34,
       bearing: 0,
-      interactive: false, // Disable interactions since this is a background
+      interactive,
+      scrollZoom: interactive,
+      dragPan: interactive,
+      dragRotate: interactive,
+      touchZoomRotate: interactive,
+      keyboard: false,
       attributionControl: false,
       logoControl: false,
     });
@@ -40,11 +45,14 @@ const JapanMapBackground = ({ opacity = 0.15, style = {}, onMapReady }) => {
         map.current.remove();
       }
     };
-  }, [onMapReady]);
+  }, [onMapReady, interactive]);
 
   return (
     <div
       ref={mapContainer}
+      data-testid="japan-map-canvas"
+      data-interactive={interactive ? 'true' : 'false'}
+      tabIndex={0}
       style={{
         position: 'absolute',
         top: 0,
