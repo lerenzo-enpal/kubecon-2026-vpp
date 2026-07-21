@@ -1,0 +1,28 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/lerenzomalcom/.pyenv/versions/3.14.6/bin/headroom init hook ensure --profile init-kubecon-2026-vpp-69ba8144 --marker headroom-init-codex",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/lerenzomalcom/.pyenv/versions/3.14.6/bin/headroom init hook ensure --profile init-kubecon-2026-vpp-69ba8144 --marker headroom-init-codex",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}

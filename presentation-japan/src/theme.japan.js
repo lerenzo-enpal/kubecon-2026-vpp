@@ -21,18 +21,18 @@ export const themes = {
     '--font-mono':      '"JetBrains Mono", monospace',
   },
   light: {
-    '--color-bg':       '#EEF2FF',
+    '--color-bg':       '#EEF2FF',    // PPTX light lavender
     '--color-surface':  '#FFFFFF',
-    '--color-heading':  '#1D1D6B',   // deep KubeCon navy
-    '--color-text':     '#0a0e17',
+    '--color-heading':  '#1D1D6B',    // PPTX dark indigo (deep text)
+    '--color-text':     '#0a0e17',    // nearly black for contrast
     '--color-muted':    '#4B5563',
     '--color-dim':      '#9CA3AF',
-    '--color-primary':  '#3939D8',   // KubeCon blue as primary on light
-    '--color-accent':   '#D97706',   // darker gold for light bg readability
-    '--color-warm':     '#EA580C',
+    '--color-primary':  '#3939D8',    // PPTX accent1 — indigo
+    '--color-accent':   '#FFC217',    // PPTX accent5 — gold/yellow
+    '--color-warm':     '#FFA35F',    // PPTX accent6 — warm orange
     '--color-danger':   '#DC2626',
     '--color-success':  '#059669',
-    '--color-secondary':'#7C3AED',
+    '--color-secondary':'#22d3ee',    // cyan for data viz (inherited from dark)
     '--font-heading':   '"Space Grotesk", system-ui, sans-serif',
     '--font-body':      '"Inter", system-ui, sans-serif',
     '--font-mono':      '"JetBrains Mono", monospace',

@@ -1,17 +1,3314 @@
 {
-  "version": "2.10",
+  "version": "2.14",
   "children": [
     {
       "type": "frame",
-      "id": "bi8Au",
+      "id": "zMR54",
       "x": 0,
       "y": 0,
-      "name": "Frame",
-      "clip": true,
-      "width": 800,
-      "height": 600,
-      "fill": "#FFFFFF",
-      "layout": "none"
+      "name": "Theme Planning Board",
+      "width": 1580,
+      "fill": "#060a1a",
+      "layout": "vertical",
+      "gap": 24,
+      "padding": [
+        32,
+        40,
+        40,
+        40
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "nvDYE",
+          "name": "hdrRow",
+          "width": "fill_container",
+          "gap": 14,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "UzQNw",
+              "name": "h1",
+              "fill": "#f1f5f9",
+              "content": "KubeCon Japan 2026",
+              "fontFamily": "Inter",
+              "fontSize": 26,
+              "fontWeight": "700"
+            },
+            {
+              "type": "rectangle",
+              "id": "cIsrQ",
+              "name": "hAccent",
+              "fill": "#3939D8",
+              "width": 3,
+              "height": 28
+            },
+            {
+              "type": "text",
+              "id": "quxOS",
+              "name": "h2",
+              "fill": "#94a3b8",
+              "content": "Theme Adaptation · Color System",
+              "fontFamily": "Inter",
+              "fontSize": 18,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "0Ej6N",
+          "name": "colsRow",
+          "width": "fill_container",
+          "gap": 20,
+          "children": [
+            {
+              "type": "frame",
+              "id": "o4Cj9",
+              "name": "Mission Control",
+              "width": "fill_container",
+              "fill": "#0d1424",
+              "cornerRadius": 8,
+              "layout": "vertical",
+              "gap": 8,
+              "padding": 20,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "mtntl",
+                  "name": "c1title",
+                  "fill": "#22d3ee",
+                  "content": "Mission Control",
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "qQd3r",
+                  "name": "c1desc",
+                  "fill": "#64748b",
+                  "content": "Current theme — dark cinematic",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "nx4Xk",
+                  "name": "a1",
+                  "width": "fill_container",
+                  "height": 44,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "t5aXI",
+                      "name": "a1r",
+                      "fill": "#0a0e17",
+                      "width": 52,
+                      "height": 44,
+                      "stroke": "#334155",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner"
+                    },
+                    {
+                      "type": "text",
+                      "id": "UeXan",
+                      "name": "a1t",
+                      "fill": "#94a3b8",
+                      "content": "Background  #0a0e17",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "HJCCk",
+                  "name": "b1",
+                  "width": "fill_container",
+                  "height": 44,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "oBYkd",
+                      "name": "b1r",
+                      "fill": "#22d3ee",
+                      "width": 52,
+                      "height": 44
+                    },
+                    {
+                      "type": "text",
+                      "id": "kNxIc",
+                      "name": "b1t",
+                      "fill": "#f1f5f9",
+                      "content": "Grid / Primary  #22d3ee",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "v5mAA",
+                  "name": "c1s",
+                  "width": "fill_container",
+                  "height": 44,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "F5hmD",
+                      "name": "c1sr",
+                      "fill": "#10b981",
+                      "width": 52,
+                      "height": 44
+                    },
+                    {
+                      "type": "text",
+                      "id": "IxWrI",
+                      "name": "c1st",
+                      "fill": "#f1f5f9",
+                      "content": "VPP / Recovery  #10b981",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Up8dt",
+                  "name": "d1",
+                  "width": "fill_container",
+                  "height": 44,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "dS84U",
+                      "name": "d1r",
+                      "fill": "#ef4444",
+                      "width": 52,
+                      "height": 44
+                    },
+                    {
+                      "type": "text",
+                      "id": "AvyK3",
+                      "name": "d1t",
+                      "fill": "#f1f5f9",
+                      "content": "Danger / Cascade  #ef4444",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "EtF0Y",
+                  "name": "e1",
+                  "width": "fill_container",
+                  "height": 44,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "7EHFh",
+                      "name": "e1r",
+                      "fill": "#f59e0b",
+                      "width": 52,
+                      "height": 44
+                    },
+                    {
+                      "type": "text",
+                      "id": "OPBhs",
+                      "name": "e1t",
+                      "fill": "#f1f5f9",
+                      "content": "Solar / Warning  #f59e0b",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "iWsY7",
+                  "name": "f1",
+                  "width": "fill_container",
+                  "height": 44,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "do5lT",
+                      "name": "f1r",
+                      "fill": "#f1f5f9",
+                      "width": 52,
+                      "height": 44
+                    },
+                    {
+                      "type": "text",
+                      "id": "o2oP4",
+                      "name": "f1t",
+                      "fill": "#f1f5f9",
+                      "content": "Text Primary  #f1f5f9",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "CHLOG",
+              "name": "KCJP Brand",
+              "width": "fill_container",
+              "fill": "#0d1424",
+              "cornerRadius": 8,
+              "layout": "vertical",
+              "gap": 8,
+              "padding": 20,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "ehEgT",
+                  "name": "c2title",
+                  "fill": "#3939D8",
+                  "content": "KubeCon Japan 2026 Brand",
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "h0f84",
+                  "name": "c2desc",
+                  "fill": "#64748b",
+                  "content": "Official CNCF brand — light/illustrated",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "aL09z",
+                  "name": "a2",
+                  "width": "fill_container",
+                  "height": 44,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "QCqcG",
+                      "name": "a2r",
+                      "fill": "#3939D8",
+                      "width": 52,
+                      "height": 44
+                    },
+                    {
+                      "type": "text",
+                      "id": "J0FwC",
+                      "name": "a2t",
+                      "fill": "#f1f5f9",
+                      "content": "Primary Blue  #3939D8",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "U1DJj",
+                  "name": "b2",
+                  "width": "fill_container",
+                  "height": 44,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "L8mOQ",
+                      "name": "b2r",
+                      "fill": "#262267",
+                      "width": 52,
+                      "height": 44
+                    },
+                    {
+                      "type": "text",
+                      "id": "qM0iX",
+                      "name": "b2t",
+                      "fill": "#f1f5f9",
+                      "content": "Deep Navy  #262267",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "2bWS4",
+                  "name": "c2s",
+                  "width": "fill_container",
+                  "height": 44,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "BL7iD",
+                      "name": "c2sr",
+                      "fill": "#305BA9",
+                      "width": 52,
+                      "height": 44
+                    },
+                    {
+                      "type": "text",
+                      "id": "yDwxT",
+                      "name": "c2st",
+                      "fill": "#f1f5f9",
+                      "content": "Medium Blue  #305BA9",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "qQBKV",
+                  "name": "d2",
+                  "width": "fill_container",
+                  "height": 44,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "DpnPf",
+                      "name": "d2r",
+                      "fill": "#B0DDFF",
+                      "width": 52,
+                      "height": 44
+                    },
+                    {
+                      "type": "text",
+                      "id": "Q0lST",
+                      "name": "d2t",
+                      "fill": "#94a3b8",
+                      "content": "Sky Blue  #B0DDFF",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "FYB0F",
+                  "name": "e2",
+                  "width": "fill_container",
+                  "height": 44,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "ILX9v",
+                      "name": "e2r",
+                      "fill": "#FFC217",
+                      "width": 52,
+                      "height": 44
+                    },
+                    {
+                      "type": "text",
+                      "id": "ORcpi",
+                      "name": "e2t",
+                      "fill": "#f1f5f9",
+                      "content": "Gold  #FFC217",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "hjMS4",
+                  "name": "f2",
+                  "width": "fill_container",
+                  "height": 44,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "uP2OO",
+                      "name": "f2r",
+                      "fill": "#FFA35F",
+                      "width": 52,
+                      "height": 44
+                    },
+                    {
+                      "type": "text",
+                      "id": "POPvB",
+                      "name": "f2t",
+                      "fill": "#f1f5f9",
+                      "content": "Orange  #FFA35F",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ys6mQ",
+              "name": "Japan Adapt",
+              "width": "fill_container",
+              "fill": "#0d1424",
+              "cornerRadius": 8,
+              "layout": "vertical",
+              "gap": 8,
+              "padding": 20,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "jvtOT",
+                  "name": "c3title",
+                  "fill": "#5a6ff0",
+                  "content": "Japan Adaptation (Proposed)",
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "aYcfb",
+                  "name": "c3desc",
+                  "fill": "#64748b",
+                  "content": "Dark base + KubeCon Japan palette",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "S6SHt",
+                  "name": "a3",
+                  "width": "fill_container",
+                  "height": 44,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "jgrhI",
+                      "name": "a3r",
+                      "fill": "#060a1a",
+                      "width": 52,
+                      "height": 44,
+                      "stroke": "#334155",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner"
+                    },
+                    {
+                      "type": "text",
+                      "id": "V0eGD",
+                      "name": "a3t",
+                      "fill": "#94a3b8",
+                      "content": "Background ↑ bluer  #060a1a",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "yOsGk",
+                  "name": "b3",
+                  "width": "fill_container",
+                  "height": 44,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "py93Q",
+                      "name": "b3r",
+                      "fill": "#3939D8",
+                      "width": 52,
+                      "height": 44
+                    },
+                    {
+                      "type": "text",
+                      "id": "lPG6D",
+                      "name": "b3t",
+                      "fill": "#f1f5f9",
+                      "content": "NEW  Headings/UI  #3939D8",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "AsTka",
+                  "name": "c3s",
+                  "width": "fill_container",
+                  "height": 44,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "I53XC",
+                      "name": "c3sr",
+                      "fill": "#22d3ee",
+                      "width": 52,
+                      "height": 44
+                    },
+                    {
+                      "type": "text",
+                      "id": "o2lpR",
+                      "name": "c3st",
+                      "fill": "#f1f5f9",
+                      "content": "KEEP  Data Viz  #22d3ee",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Jhr3g",
+                  "name": "d3",
+                  "width": "fill_container",
+                  "height": 44,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "aEaGL",
+                      "name": "d3r",
+                      "fill": "#FFC217",
+                      "width": 52,
+                      "height": 44
+                    },
+                    {
+                      "type": "text",
+                      "id": "jxxZH",
+                      "name": "d3t",
+                      "fill": "#f1f5f9",
+                      "content": "SWAP  Accent Gold  #FFC217",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "daLsU",
+                  "name": "e3",
+                  "width": "fill_container",
+                  "height": 44,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "5GTFl",
+                      "name": "e3r",
+                      "fill": "#FFA35F",
+                      "width": 52,
+                      "height": 44
+                    },
+                    {
+                      "type": "text",
+                      "id": "WEXFg",
+                      "name": "e3t",
+                      "fill": "#f1f5f9",
+                      "content": "NEW  Warm Accent  #FFA35F",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "zz6PY",
+                  "name": "f3",
+                  "width": "fill_container",
+                  "height": 44,
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "6lsyW",
+                      "name": "f3r",
+                      "fill": "#1a2446",
+                      "width": 52,
+                      "height": 44
+                    },
+                    {
+                      "type": "text",
+                      "id": "jAxyk",
+                      "name": "f3t",
+                      "fill": "#94a3b8",
+                      "content": "SHIFT  Surface  #1a2446",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "dXtdY",
+      "x": 0,
+      "y": 580,
+      "name": "Slide Mockups",
+      "width": 1580,
+      "fill": "#060a1a",
+      "layout": "vertical",
+      "gap": 20,
+      "padding": [
+        32,
+        40,
+        40,
+        40
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "1Ilgz",
+          "name": "ssHdr",
+          "width": "fill_container",
+          "gap": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "Q7CrK",
+              "name": "ssT1",
+              "fill": "#f1f5f9",
+              "content": "Slide Mockups",
+              "fontFamily": "Inter",
+              "fontSize": 20,
+              "fontWeight": "700"
+            },
+            {
+              "type": "rectangle",
+              "id": "yhi5C",
+              "name": "ssAcc",
+              "fill": "#3939D8",
+              "width": 3,
+              "height": 22
+            },
+            {
+              "type": "text",
+              "id": "RZjlq",
+              "name": "ssT2",
+              "fill": "#64748b",
+              "content": "Japan adaptation in practice",
+              "fontFamily": "Inter",
+              "fontSize": 15,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "UjXwL",
+          "name": "ssRow",
+          "width": "fill_container",
+          "gap": 20,
+          "children": [
+            {
+              "type": "frame",
+              "id": "IGA3w",
+              "name": "Title Slide",
+              "clip": true,
+              "width": 740,
+              "height": 433,
+              "fill": "#060a1a",
+              "cornerRadius": 6,
+              "layout": "none",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "HE22Z",
+                  "x": 0,
+                  "y": 0,
+                  "name": "s1bar",
+                  "fill": "#3939D8",
+                  "width": 740,
+                  "height": 3
+                },
+                {
+                  "type": "text",
+                  "id": "UyZKg",
+                  "x": 56,
+                  "y": 24,
+                  "name": "s1conf",
+                  "fill": "#3939D8",
+                  "content": "KubeCon + CloudNativeCon Japan 2026",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "W827j",
+                  "x": 56,
+                  "y": 72,
+                  "name": "s1title",
+                  "fill": "#f1f5f9",
+                  "textGrowth": "fixed-width",
+                  "width": 610,
+                  "content": "The Energy Grid Is Becoming a Cloud Native Distributed System",
+                  "lineHeight": 1.15,
+                  "fontFamily": "Inter",
+                  "fontSize": 34,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "FHptT",
+                  "x": 56,
+                  "y": 240,
+                  "name": "s1sub",
+                  "fill": "#94a3b8",
+                  "textGrowth": "fixed-width",
+                  "width": 580,
+                  "content": "Why the modern power grid behaves like a distributed system — and what cloud native can do about it",
+                  "lineHeight": 1.3,
+                  "fontFamily": "Inter",
+                  "fontSize": 17,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "1vdv1",
+                  "x": 56,
+                  "y": 340,
+                  "name": "s1speakers",
+                  "fill": "#64748b",
+                  "content": "LeRenzo Malcolm  ·  Priyanka",
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "LRIpv",
+                  "x": 672,
+                  "y": 408,
+                  "name": "s1num",
+                  "fill": "#3939D8",
+                  "content": "1 / 22",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "rectangle",
+                  "id": "j9560",
+                  "x": 0,
+                  "y": 430,
+                  "name": "s1bbar",
+                  "opacity": 50,
+                  "fill": "#3939D8",
+                  "width": 740,
+                  "height": 3
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "qLAu7",
+              "name": "Stat Slide",
+              "clip": true,
+              "width": 740,
+              "height": 433,
+              "fill": "#060a1a",
+              "cornerRadius": 6,
+              "layout": "none",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "ey4qq",
+                  "x": 0,
+                  "y": 0,
+                  "name": "s2bar",
+                  "fill": "#FFA35F",
+                  "width": 740,
+                  "height": 3
+                },
+                {
+                  "type": "text",
+                  "id": "fRkVk",
+                  "x": 56,
+                  "y": 28,
+                  "name": "s2date",
+                  "fill": "#FFA35F",
+                  "content": "MARCH 2026  ·  STRAIT OF HORMUZ",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "WfnTi",
+                  "x": 48,
+                  "y": 76,
+                  "name": "s2stat",
+                  "fill": "#f1f5f9",
+                  "content": "+¥15,000",
+                  "fontFamily": "Inter",
+                  "fontSize": 88,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "OhqE5",
+                  "x": 56,
+                  "y": 200,
+                  "name": "s2desc",
+                  "fill": "#94a3b8",
+                  "content": "average household electricity bill increase",
+                  "fontFamily": "Inter",
+                  "fontSize": 20,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "K6CsN",
+                  "x": 56,
+                  "y": 248,
+                  "name": "s2body",
+                  "fill": "#64748b",
+                  "textGrowth": "fixed-width",
+                  "width": 580,
+                  "content": "Not because Japan used more energy. Because 70% of electricity is fossil fuel. The grid has no flexibility.",
+                  "lineHeight": 1.4,
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "3Xhjf",
+                  "x": 56,
+                  "y": 370,
+                  "name": "s2tag",
+                  "fill": "#FFA35F",
+                  "content": "15.3% energy self-sufficiency — lowest in the G7",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "ZIoqd",
+                  "x": 672,
+                  "y": 408,
+                  "name": "s2num",
+                  "fill": "#64748b",
+                  "content": "2 / 22",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "VZ3ND",
+      "x": 0,
+      "y": 1160,
+      "name": "Feature Planning",
+      "width": 1580,
+      "fill": "#060a1a",
+      "layout": "vertical",
+      "gap": 20,
+      "padding": [
+        32,
+        40,
+        40,
+        40
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "hbg9J",
+          "name": "nHdr",
+          "width": "fill_container",
+          "gap": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "nbdF5",
+              "name": "nT1",
+              "fill": "#f1f5f9",
+              "content": "Feature Backlog",
+              "fontFamily": "Inter",
+              "fontSize": 20,
+              "fontWeight": "700"
+            },
+            {
+              "type": "rectangle",
+              "id": "OUuw3",
+              "name": "nAcc",
+              "fill": "#FFC217",
+              "width": 3,
+              "height": 22
+            },
+            {
+              "type": "text",
+              "id": "wZ0Qy",
+              "name": "nT2",
+              "fill": "#64748b",
+              "content": "Post-presentation — website enhancements",
+              "fontFamily": "Inter",
+              "fontSize": 15,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ijYoY",
+          "name": "nRow",
+          "width": "fill_container",
+          "gap": 20,
+          "children": [
+            {
+              "type": "frame",
+              "id": "Za4un",
+              "name": "card1",
+              "width": "fill_container",
+              "fill": "#0d1424",
+              "cornerRadius": 8,
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 24,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 2,
+                  "id": "2mm69",
+                  "fill": "#FFC217",
+                  "width": "fill_container",
+                  "height": 3
+                },
+                {
+                  "type": "text",
+                  "id": "Hr777",
+                  "fill": "#FFC217",
+                  "content": "🌐  Website Localization",
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "oaMGh",
+                  "fill": "#64748b",
+                  "content": "Priority: post-presentation",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "01xn3",
+                  "fill": "#94a3b8",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "· Add i18n framework to Astro website (e.g. astro-i18next)\n· Japanese (ja) + English (en) as initial locales\n· URL structure: /en/... and /ja/...\n· Translate: learn/, basics/, research/ pages\n· Keep incident/topic pages in EN with JP summaries\n· Add locale switcher to SiteHeader",
+                  "lineHeight": 1.6,
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "jLZdH",
+              "name": "card2",
+              "width": "fill_container",
+              "fill": "#0d1424",
+              "cornerRadius": 8,
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 24,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 2,
+                  "id": "oLml8",
+                  "fill": "#3939D8",
+                  "width": "fill_container",
+                  "height": 3
+                },
+                {
+                  "type": "text",
+                  "id": "y9NXC",
+                  "fill": "#3939D8",
+                  "content": "🎨  Color Palette Swapping",
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "DJ77V",
+                  "fill": "#64748b",
+                  "content": "Priority: post-presentation",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "6W2pl",
+                  "fill": "#94a3b8",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "· Add CSS custom properties for all theme colors\n· Define named palettes: mission-control, japan, high-contrast\n· Palette stored in localStorage + URL param (?theme=japan)\n· ThemeToggle component already exists — extend it\n· Presentation: theme.japan.js variant of theme.js\n· Shared components auto-adapt via color tokens",
+                  "lineHeight": 1.6,
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "bzwvA",
+              "name": "card3",
+              "width": "fill_container",
+              "fill": "#0d1424",
+              "cornerRadius": 8,
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 24,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 2,
+                  "id": "9VxBe",
+                  "fill": "#10b981",
+                  "width": "fill_container",
+                  "height": 3
+                },
+                {
+                  "type": "text",
+                  "id": "3hXpA",
+                  "fill": "#10b981",
+                  "content": "📦  New Presentation Structure",
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "dBSvo",
+                  "fill": "#10b981",
+                  "content": "Immediate — build now",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "meKLM",
+                  "fill": "#94a3b8",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "presentation-japan/\n  ├── Keynote.jsx          (solo, ~22 slides)\n  ├── MainTalk.jsx         (LeRenzo + Priyanka, ~33 slides)\n  ├── src/components/      (Japan-specific: JEPXChart,\n  │                         JapanGridMap, KyushuChart...)\n  ├── src/theme.japan.js   (adapted color tokens)\n  └── vite.config.js\n\nShared from presentation/src/components/\n  VPPArchitecture, ChoreographyLoop,\n  ResponseTimeline, StreamingAggregation",
+                  "lineHeight": 1.6,
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "jmhLU",
+      "x": 0,
+      "y": 1665,
+      "name": "Font Exploration",
+      "width": 1580,
+      "fill": "#060a1a",
+      "layout": "vertical",
+      "gap": 16,
+      "padding": [
+        32,
+        40,
+        40,
+        40
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "tHHei",
+          "name": "fHdr",
+          "width": "fill_container",
+          "gap": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "xy7pA",
+              "name": "fT1",
+              "fill": "#f1f5f9",
+              "content": "Font Exploration",
+              "fontFamily": "Inter",
+              "fontSize": 20,
+              "fontWeight": "700"
+            },
+            {
+              "type": "rectangle",
+              "id": "NxYUS",
+              "name": "fAcc",
+              "fill": "#FFC217",
+              "width": 3,
+              "height": 22
+            },
+            {
+              "type": "text",
+              "id": "UvLDL",
+              "name": "fT2",
+              "fill": "#64748b",
+              "content": "Heading + body + data pairing — same content, 4 typefaces",
+              "fontFamily": "Inter",
+              "fontSize": 15,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "3ivTi",
+          "name": "fDivider",
+          "fill": "#1a2446",
+          "width": "fill_container",
+          "height": 1
+        },
+        {
+          "type": "frame",
+          "id": "lXcSp",
+          "name": "font-inter",
+          "width": "fill_container",
+          "height": 110,
+          "fill": "#0d1424",
+          "cornerRadius": 6,
+          "padding": [
+            0,
+            24
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "UT5Ht",
+              "name": "lb1",
+              "width": 130,
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 4,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Vm5rx",
+                  "fill": "#64748b",
+                  "content": "CURRENT",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "WnjmU",
+                  "fill": "#22d3ee",
+                  "content": "Inter",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "WBKtK",
+              "name": "ct1",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 5,
+              "justifyContent": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "noRkP",
+                  "fill": "#f1f5f9",
+                  "content": "The Energy Grid Is Becoming a Cloud Native Distributed System",
+                  "fontFamily": "Inter",
+                  "fontSize": 24,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "sDgm6",
+                  "fill": "#94a3b8",
+                  "content": "Virtual Power Plants coordinate distributed energy resources as one software-defined asset.",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "AwDso",
+              "name": "da1",
+              "width": 190,
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 2,
+              "justifyContent": "center",
+              "alignItems": "end",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "8M1RT",
+                  "fill": "#FFC217",
+                  "content": "15.3%",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 28,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "rvpXP",
+                  "fill": "#64748b",
+                  "content": "self-sufficiency",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Jih8Z",
+          "name": "font-dmsans",
+          "width": "fill_container",
+          "height": 110,
+          "fill": "#0d1424",
+          "cornerRadius": 6,
+          "padding": [
+            0,
+            24
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "ZUTxd",
+              "name": "lb2",
+              "width": 130,
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 4,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "eMY51",
+                  "fill": "#64748b",
+                  "content": "OPTION A",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "H0L4q",
+                  "fill": "#3939D8",
+                  "content": "DM Sans",
+                  "fontFamily": "DM Sans",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "eTNoU",
+              "name": "ct2",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 5,
+              "justifyContent": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "HbuKi",
+                  "fill": "#f1f5f9",
+                  "content": "The Energy Grid Is Becoming a Cloud Native Distributed System",
+                  "fontFamily": "DM Sans",
+                  "fontSize": 24,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "5KSsf",
+                  "fill": "#94a3b8",
+                  "content": "Virtual Power Plants coordinate distributed energy resources as one software-defined asset.",
+                  "fontFamily": "DM Sans",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "z6nWG",
+              "name": "da2",
+              "width": 190,
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 2,
+              "justifyContent": "center",
+              "alignItems": "end",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Ceexy",
+                  "fill": "#FFC217",
+                  "content": "15.3%",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 28,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "4RZrW",
+                  "fill": "#64748b",
+                  "content": "self-sufficiency",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "OcHml",
+          "name": "font-spacegrotest",
+          "width": "fill_container",
+          "height": 110,
+          "fill": "#0d1424",
+          "cornerRadius": 6,
+          "padding": [
+            0,
+            24
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "EGIql",
+              "name": "lb3",
+              "width": 130,
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 4,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "s7N8j",
+                  "fill": "#64748b",
+                  "content": "OPTION B",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "uNUEu",
+                  "fill": "#FFC217",
+                  "content": "Space Grotesk",
+                  "fontFamily": "Space Grotesk",
+                  "fontSize": 15,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "kZjdW",
+              "name": "ct3",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 5,
+              "justifyContent": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "xOgk9",
+                  "fill": "#f1f5f9",
+                  "content": "The Energy Grid Is Becoming a Cloud Native Distributed System",
+                  "fontFamily": "Space Grotesk",
+                  "fontSize": 24,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "5xbOc",
+                  "fill": "#94a3b8",
+                  "content": "Virtual Power Plants coordinate distributed energy resources as one software-defined asset.",
+                  "fontFamily": "Space Grotesk",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "F9fnD",
+              "name": "da3",
+              "width": 190,
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 2,
+              "justifyContent": "center",
+              "alignItems": "end",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "J4TTi",
+                  "fill": "#FFC217",
+                  "content": "15.3%",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 28,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "xM6HH",
+                  "fill": "#64748b",
+                  "content": "self-sufficiency",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "0p3T0",
+          "name": "font-jakarta",
+          "width": "fill_container",
+          "height": 110,
+          "fill": "#0d1424",
+          "cornerRadius": 6,
+          "padding": [
+            0,
+            24
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "F3j33",
+              "name": "lb4",
+              "width": 130,
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 4,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "ZCw43",
+                  "fill": "#64748b",
+                  "content": "OPTION C",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "TSCaw",
+                  "fill": "#FFA35F",
+                  "content": "Plus Jakarta Sans",
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 14,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ncRuA",
+              "name": "ct4",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 5,
+              "justifyContent": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "B4So8",
+                  "fill": "#f1f5f9",
+                  "content": "The Energy Grid Is Becoming a Cloud Native Distributed System",
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 24,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "SOATP",
+                  "fill": "#94a3b8",
+                  "content": "Virtual Power Plants coordinate distributed energy resources as one software-defined asset.",
+                  "fontFamily": "Plus Jakarta Sans",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "sVgrL",
+              "name": "da4",
+              "width": 190,
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 2,
+              "justifyContent": "center",
+              "alignItems": "end",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "RFWdB",
+                  "fill": "#FFC217",
+                  "content": "15.3%",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 28,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "A12oz",
+                  "fill": "#64748b",
+                  "content": "self-sufficiency",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "notxH",
+      "x": 0,
+      "y": 2342,
+      "name": "Light Theme Exploration",
+      "width": 1580,
+      "fill": "#f8fafc",
+      "layout": "vertical",
+      "gap": 20,
+      "padding": [
+        32,
+        40,
+        40,
+        40
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "BniIr",
+          "name": "ltHdr",
+          "width": "fill_container",
+          "gap": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "45QX6",
+              "fill": "#0a0e17",
+              "content": "Light Theme Exploration",
+              "fontFamily": "Inter",
+              "fontSize": 20,
+              "fontWeight": "700"
+            },
+            {
+              "type": "rectangle",
+              "id": "at0C1",
+              "fill": "#3939D8",
+              "width": 3,
+              "height": 22
+            },
+            {
+              "type": "text",
+              "id": "qeiIL",
+              "fill": "#64748b",
+              "content": "Three light variants — title slide at 760×433",
+              "fontFamily": "Inter",
+              "fontSize": 15,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "SsIMv",
+          "name": "ltRow",
+          "width": "fill_container",
+          "gap": 16,
+          "children": [
+            {
+              "type": "frame",
+              "id": "gqNlf",
+              "name": "Light: Clean White",
+              "clip": true,
+              "width": "fill_container",
+              "height": 433,
+              "fill": "#FFFFFF",
+              "cornerRadius": 6,
+              "stroke": "#e2e8f0",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "layout": "none",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "xnoxQ",
+                  "x": 0,
+                  "y": 0,
+                  "fill": "#3939D8",
+                  "width": 800,
+                  "height": 3
+                },
+                {
+                  "type": "text",
+                  "id": "4GwNL",
+                  "x": 44,
+                  "y": 22,
+                  "fill": "#3939D8",
+                  "content": "KubeCon + CloudNativeCon Japan 2026",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "V9NCx",
+                  "x": 44,
+                  "y": 66,
+                  "fill": "#0a0e17",
+                  "textGrowth": "fixed-width",
+                  "width": 500,
+                  "content": "The Energy Grid Is Becoming a Cloud Native Distributed System",
+                  "lineHeight": 1.15,
+                  "fontFamily": "Space Grotesk",
+                  "fontSize": 30,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "kq53Y",
+                  "x": 44,
+                  "y": 218,
+                  "fill": "#475569",
+                  "textGrowth": "fixed-width",
+                  "width": 460,
+                  "content": "Why the modern power grid behaves like a distributed system — and what cloud native can do about it",
+                  "lineHeight": 1.4,
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "hZ8n8",
+                  "x": 44,
+                  "y": 340,
+                  "fill": "#94a3b8",
+                  "content": "LeRenzo Malcolm  ·  Priyanka",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "eql2V",
+                  "x": 420,
+                  "y": 408,
+                  "fill": "#3939D8",
+                  "content": "1 / 22",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "lTbuP",
+              "name": "Light: Soft Blue",
+              "clip": true,
+              "width": "fill_container",
+              "height": 433,
+              "fill": "#EEF2FF",
+              "cornerRadius": 6,
+              "layout": "none",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "bqKic",
+                  "x": 0,
+                  "y": 0,
+                  "fill": "#3939D8",
+                  "width": 800,
+                  "height": 3
+                },
+                {
+                  "type": "text",
+                  "id": "btHIU",
+                  "x": 44,
+                  "y": 22,
+                  "fill": "#3939D8",
+                  "content": "KubeCon + CloudNativeCon Japan 2026",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "WlUf0",
+                  "x": 44,
+                  "y": 66,
+                  "fill": "#1D1D6B",
+                  "textGrowth": "fixed-width",
+                  "width": 500,
+                  "content": "The Energy Grid Is Becoming a Cloud Native Distributed System",
+                  "lineHeight": 1.15,
+                  "fontFamily": "Space Grotesk",
+                  "fontSize": 30,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "aZOGW",
+                  "x": 44,
+                  "y": 218,
+                  "fill": "#3939D8",
+                  "textGrowth": "fixed-width",
+                  "width": 460,
+                  "content": "Why the modern power grid behaves like a distributed system — and what cloud native can do about it",
+                  "lineHeight": 1.4,
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "6Syzu",
+                  "x": 44,
+                  "y": 340,
+                  "fill": "#6B7280",
+                  "content": "LeRenzo Malcolm  ·  Priyanka",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "Y5Ssh",
+                  "x": 420,
+                  "y": 408,
+                  "fill": "#3939D8",
+                  "content": "1 / 22",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "AAp4t",
+              "name": "Light: KCJP Cobalt",
+              "clip": true,
+              "width": "fill_container",
+              "height": 433,
+              "fill": "#3939D8",
+              "cornerRadius": 6,
+              "layout": "none",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "TQK9f",
+                  "x": 0,
+                  "y": 0,
+                  "fill": "#FFC217",
+                  "width": 800,
+                  "height": 3
+                },
+                {
+                  "type": "text",
+                  "id": "oubub",
+                  "x": 44,
+                  "y": 22,
+                  "fill": "#B0DDFF",
+                  "content": "KubeCon + CloudNativeCon Japan 2026",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "lFxxW",
+                  "x": 44,
+                  "y": 66,
+                  "fill": "#FFFFFF",
+                  "textGrowth": "fixed-width",
+                  "width": 500,
+                  "content": "The Energy Grid Is Becoming a Cloud Native Distributed System",
+                  "lineHeight": 1.15,
+                  "fontFamily": "Space Grotesk",
+                  "fontSize": 30,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "wzdcp",
+                  "x": 44,
+                  "y": 218,
+                  "fill": "#B0DDFF",
+                  "textGrowth": "fixed-width",
+                  "width": 460,
+                  "content": "Why the modern power grid behaves like a distributed system — and what cloud native can do about it",
+                  "lineHeight": 1.4,
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "bBFnv",
+                  "x": 44,
+                  "y": 340,
+                  "fill": "#B0DDFF",
+                  "content": "LeRenzo Malcolm  ·  Priyanka",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "c4wFh",
+                  "x": 420,
+                  "y": 408,
+                  "fill": "#FFC217",
+                  "content": "1 / 22",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "jtLB5",
+          "name": "PPTX Light Theme Palette",
+          "width": 1200,
+          "layout": "vertical",
+          "gap": 32,
+          "padding": 24,
+          "children": [
+            {
+              "type": "frame",
+              "id": "IJDFV",
+              "name": "colorSwatches",
+              "width": "fill_container",
+              "height": 80,
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "8EeEY",
+                  "name": "Background",
+                  "width": "fill_container",
+                  "fill": "#EEF2FF",
+                  "cornerRadius": 8,
+                  "layout": "vertical",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "BgXJq",
+                      "name": "label1",
+                      "fill": "#1D1D6B",
+                      "content": "#EEF2FF",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "TI2L5",
+                  "name": "Warm Orange",
+                  "width": "fill_container",
+                  "fill": "#FFA35F",
+                  "cornerRadius": 8,
+                  "layout": "vertical",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Sgs8A",
+                      "name": "label5",
+                      "fill": "#1D1D6B",
+                      "content": "#FFA35F",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "7tYN0",
+                  "name": "Yellow",
+                  "width": "fill_container",
+                  "fill": "#FFC217",
+                  "cornerRadius": 8,
+                  "layout": "vertical",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "GU2zF",
+                      "name": "label6",
+                      "fill": "#1D1D6B",
+                      "content": "#FFC217",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "YXQio",
+              "name": "Light Theme Example",
+              "width": "fill_container",
+              "fill": "#EEF2FF",
+              "cornerRadius": 12,
+              "layout": "vertical",
+              "gap": 20,
+              "padding": 24,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "8cbYq",
+                  "name": "titleText",
+                  "fill": "#1D1D6B",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "The Energy Grid Is Becoming a Cloud Native Distributed System",
+                  "fontFamily": "Inter",
+                  "fontSize": 32,
+                  "fontWeight": "800"
+                },
+                {
+                  "type": "text",
+                  "id": "uk36O",
+                  "name": "subtitleText",
+                  "fill": "#3939D8",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "How VPP solves Japan's structural energy fragility",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "TePYA",
+                  "name": "buttonRow",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "CYnu5",
+                      "name": "btn1",
+                      "fill": "#3939D8",
+                      "cornerRadius": 6,
+                      "gap": 8,
+                      "padding": [
+                        12,
+                        24
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "OJBfv",
+                          "name": "btn1Text",
+                          "fill": "#EEF2FF",
+                          "content": "Primary Action",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "vdpCv",
+                      "name": "btn2",
+                      "fill": "#EEF2FF",
+                      "cornerRadius": 6,
+                      "gap": 8,
+                      "padding": [
+                        12,
+                        24
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Msv6R",
+                          "name": "btn2Text",
+                          "fill": "#3939D8",
+                          "content": "Secondary Action",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "EmOOZ",
+      "x": 0,
+      "y": 2951,
+      "name": "Hybrid Concept",
+      "width": 1580,
+      "fill": "#060a1a",
+      "layout": "vertical",
+      "gap": 24,
+      "padding": [
+        32,
+        40,
+        48,
+        40
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "71YmV",
+          "name": "hybHdr",
+          "width": "fill_container",
+          "gap": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "CeB9z",
+              "fill": "#f1f5f9",
+              "content": "Hybrid Mode Concept",
+              "fontFamily": "Inter",
+              "fontSize": 20,
+              "fontWeight": "700"
+            },
+            {
+              "type": "rectangle",
+              "id": "IKVU8",
+              "fill": "#FFA35F",
+              "width": 3,
+              "height": 22
+            },
+            {
+              "type": "text",
+              "id": "DeTU3",
+              "fill": "#64748b",
+              "content": "Light narrative slides + dark data viz — toggled per slide type",
+              "fontFamily": "Inter",
+              "fontSize": 15,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "HtH1T",
+          "name": "hybRow",
+          "width": "fill_container",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "jBYif",
+              "name": "hybL",
+              "width": "fill_container",
+              "height": 260,
+              "fill": "#FFFFFF",
+              "cornerRadius": [
+                6,
+                0,
+                0,
+                6
+              ],
+              "layout": "vertical",
+              "gap": 10,
+              "padding": [
+                24,
+                28
+              ],
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 1,
+                  "id": "BwF57",
+                  "fill": "#3939D8",
+                  "width": 60,
+                  "height": 2
+                },
+                {
+                  "type": "text",
+                  "id": "6pIZf",
+                  "fill": "#3939D8",
+                  "content": "NARRATIVE SLIDE",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 10,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "rWb55",
+                  "fill": "#0a0e17",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Japan's energy self-sufficiency rate is 15.3% — lowest in the G7.",
+                  "lineHeight": 1.2,
+                  "fontFamily": "Space Grotesk",
+                  "fontSize": 26,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "AHQc2",
+                  "fill": "#64748b",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Text-heavy slides: context, definitions, speaker transitions, quote moments.",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "y84jL",
+              "name": "hybMid",
+              "width": 88,
+              "height": 260,
+              "fill": "#0d1424",
+              "layout": "vertical",
+              "gap": 6,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "ztU2i",
+                  "fill": "#64748b",
+                  "textGrowth": "fixed-width",
+                  "width": 72,
+                  "content": "theme\nprop",
+                  "textAlign": "center",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "DBJnh",
+                  "fill": "#FFA35F",
+                  "textGrowth": "fixed-width",
+                  "width": 72,
+                  "content": "light\n⇄\ndark",
+                  "textAlign": "center",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 14,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "AFK55",
+              "name": "hybD",
+              "width": "fill_container",
+              "height": 260,
+              "fill": "#060a1a",
+              "cornerRadius": [
+                0,
+                6,
+                6,
+                0
+              ],
+              "layout": "vertical",
+              "gap": 10,
+              "padding": [
+                24,
+                28
+              ],
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 1,
+                  "id": "vCrCU",
+                  "fill": "#22d3ee",
+                  "width": 60,
+                  "height": 2
+                },
+                {
+                  "type": "text",
+                  "id": "m1WRW",
+                  "fill": "#22d3ee",
+                  "content": "DATA VIZ SLIDE",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 10,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "w0V1r",
+                  "fill": "#f1f5f9",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "JEPX Spot Price\n10 → 251 JPY/kWh",
+                  "lineHeight": 1.2,
+                  "fontFamily": "Space Grotesk",
+                  "fontSize": 26,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "06w1v",
+                  "fill": "#94a3b8",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Map HUDs, price charts, frequency demos — always dark, always.",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "y8Ywm",
+          "fill": "#64748b",
+          "textGrowth": "fixed-width",
+          "width": "fill_container",
+          "content": "Implementation: a slide-level `theme` prop. `theme='light'` on narrative/text slides, default dark on viz slides. The CSS custom-property approach (palette-swapping backlog) makes this a one-liner per slide.",
+          "lineHeight": 1.5,
+          "fontFamily": "Inter",
+          "fontSize": 14,
+          "fontWeight": "normal"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "n2xEl",
+      "x": 0,
+      "y": 3700,
+      "name": "Final Decisions",
+      "width": 1580,
+      "fill": "#060a1a",
+      "layout": "vertical",
+      "gap": 20,
+      "padding": [
+        32,
+        40,
+        40,
+        40
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "CJKsT",
+          "name": "decHdr",
+          "width": "fill_container",
+          "gap": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "vJvt8",
+              "fill": "#f1f5f9",
+              "content": "Final Design Decisions",
+              "fontFamily": "Inter",
+              "fontSize": 20,
+              "fontWeight": "700"
+            },
+            {
+              "type": "rectangle",
+              "id": "9uGSZ",
+              "fill": "#10b981",
+              "width": 3,
+              "height": 22
+            },
+            {
+              "type": "text",
+              "id": "9xP1Z",
+              "fill": "#10b981",
+              "content": "Agreed — ready to propose",
+              "fontFamily": "Inter",
+              "fontSize": 15,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "cE1C5",
+          "name": "decRow",
+          "width": "fill_container",
+          "gap": 16,
+          "children": [
+            {
+              "type": "frame",
+              "id": "gyA6D",
+              "name": "df",
+              "width": "fill_container",
+              "fill": "#0d1424",
+              "cornerRadius": 8,
+              "layout": "vertical",
+              "gap": 10,
+              "padding": 24,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 1,
+                  "id": "6bYD3",
+                  "fill": "#10b981",
+                  "width": "fill_container",
+                  "height": 2
+                },
+                {
+                  "type": "text",
+                  "id": "uxRiK",
+                  "fill": "#10b981",
+                  "content": "Typography",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "wuc0v",
+                  "fill": "#94a3b8",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Headings / titles:  Space Grotesk\nBody / narrative:   Inter\nData / HUD labels:  JetBrains Mono (unchanged)",
+                  "lineHeight": 1.7,
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "0BhOL",
+              "name": "dt",
+              "width": "fill_container",
+              "fill": "#0d1424",
+              "cornerRadius": 8,
+              "layout": "vertical",
+              "gap": 10,
+              "padding": 24,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 1,
+                  "id": "Hqzzo",
+                  "fill": "#10b981",
+                  "width": "fill_container",
+                  "height": 2
+                },
+                {
+                  "type": "text",
+                  "id": "KaupO",
+                  "fill": "#10b981",
+                  "content": "Theme System",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "xgkI6",
+                  "fill": "#94a3b8",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Default: dark (ship first)\nPhase 2: light (soft blue #EEF2FF)\nPhase 3: hybrid (light text + dark viz)\n\nToggle: URL param ?theme=dark|light|hybrid\n        + localStorage + UI button",
+                  "lineHeight": 1.7,
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "z0q1s",
+              "name": "di",
+              "width": "fill_container",
+              "fill": "#0d1424",
+              "cornerRadius": 8,
+              "layout": "vertical",
+              "gap": 10,
+              "padding": 24,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 1,
+                  "id": "3DiST",
+                  "fill": "#10b981",
+                  "width": "fill_container",
+                  "height": 2
+                },
+                {
+                  "type": "text",
+                  "id": "huBLa",
+                  "fill": "#10b981",
+                  "content": "i18n Architecture",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "jH57B",
+                  "fill": "#94a3b8",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Same pattern as theme toggle:\n?lang=en|ja + localStorage + UI button\n\nBuild the toggle UI once.\nPlug in EN strings now,\nJA strings as follow-up.\n\nURL params mean shareable\nlinks always preserve state.",
+                  "lineHeight": 1.7,
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Vt6u0",
+      "x": 0,
+      "y": 4500,
+      "name": "Japan Visual Restyle Storyboard",
+      "width": 1580,
+      "fill": "#060a1a",
+      "layout": "vertical",
+      "gap": 28,
+      "padding": [
+        32,
+        40,
+        40,
+        40
+      ],
+      "children": [
+        {
+          "type": "text",
+          "id": "wh89M",
+          "name": "hdr",
+          "fill": "#f1f5f9",
+          "content": "Japan Visual Restyle — Act Storyboard (rough sketch pass)",
+          "fontFamily": "Space Grotesk",
+          "fontSize": 28,
+          "fontWeight": "bold"
+        },
+        {
+          "type": "text",
+          "id": "5hzOU",
+          "name": "sub",
+          "fill": "#94a3b8",
+          "textGrowth": "fixed-width",
+          "width": "fill_container",
+          "content": "Low-fidelity layout + motif sketches per act. Not final color/typography — for direction approval before implementation.",
+          "fontFamily": "Inter",
+          "fontSize": 14,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "zpgc6",
+          "name": "Act1-Opening",
+          "width": "fill_container",
+          "fill": "#0d1424",
+          "cornerRadius": 10,
+          "layout": "vertical",
+          "gap": 12,
+          "padding": [
+            20,
+            24,
+            24,
+            24
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "xI3eB",
+              "name": "a1h",
+              "fill": "#f1f5f9",
+              "content": "ACT 1 — Opening / Crisis map",
+              "fontFamily": "Space Grotesk",
+              "fontSize": 18,
+              "fontWeight": "bold"
+            },
+            {
+              "type": "frame",
+              "id": "9o0CW",
+              "name": "row",
+              "width": "fill_container",
+              "gap": 20,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "QPwQw",
+                  "name": "ref",
+                  "width": 420,
+                  "fill": "#060a1a",
+                  "cornerRadius": 8,
+                  "layout": "vertical",
+                  "gap": 6,
+                  "padding": [
+                    14,
+                    16
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "q0ufa",
+                      "name": "a1refT",
+                      "fill": "#FFC217",
+                      "content": "Motif: NHK Earthquake Early Warning graphics — applied to the Strait of Hormuz chokepoint",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "bold"
+                    },
+                    {
+                      "type": "text",
+                      "id": "vN2Es",
+                      "name": "a1refB",
+                      "fill": "#cbd5e1",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Same locally-recognizable alert grammar (flat map, flashing intensity bands) — but the content is Japan's LNG supply chain: 97% of LNG flows through one narrow strait, half a world away.",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "YvLJq",
+                  "name": "sketch",
+                  "width": "fill_container",
+                  "height": 320,
+                  "fill": "#03060f",
+                  "cornerRadius": 8,
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "9Tc2l",
+                      "x": 420,
+                      "y": 60,
+                      "name": "a1japan",
+                      "rotation": 8,
+                      "fill": "#1F3A5F",
+                      "width": 220,
+                      "height": 200
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "Q7rwh",
+                      "x": 20,
+                      "y": 110,
+                      "name": "a1band1",
+                      "opacity": 70,
+                      "fill": "#FFC217",
+                      "width": 80,
+                      "height": 70
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "KDyjP",
+                      "x": 55,
+                      "y": 150,
+                      "name": "a1band2",
+                      "opacity": 75,
+                      "fill": "#FF7F15",
+                      "width": 60,
+                      "height": 50
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "3yiR3",
+                      "x": 460,
+                      "y": 190,
+                      "name": "a1band3",
+                      "opacity": 70,
+                      "fill": "#C13B2A",
+                      "width": 45,
+                      "height": 40
+                    },
+                    {
+                      "type": "text",
+                      "id": "8UVBP",
+                      "x": 24,
+                      "y": 24,
+                      "name": "a1title",
+                      "fill": "#3939D8",
+                      "content": "KUBECON JAPAN 2026",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "iwbM4",
+                      "x": 24,
+                      "y": 290,
+                      "name": "a1stat",
+                      "fill": "#f1f5f9",
+                      "content": "97% of Japan's LNG flows through the Strait of Hormuz",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "Lg7ai",
+                      "x": 60,
+                      "y": 155,
+                      "name": "hormuzDot",
+                      "fill": "#C13B2A",
+                      "width": 20,
+                      "height": 20
+                    },
+                    {
+                      "type": "text",
+                      "id": "3mP2a",
+                      "x": 20,
+                      "y": 185,
+                      "name": "hormuzLabel",
+                      "fill": "#f1f5f9",
+                      "content": "Strait of Hormuz",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "v3SMi",
+                      "x": 100,
+                      "y": 160,
+                      "name": "route",
+                      "fill": "#FFA35F",
+                      "width": 300,
+                      "height": 3
+                    },
+                    {
+                      "type": "text",
+                      "id": "O8Ruo",
+                      "x": 130,
+                      "y": 130,
+                      "name": "routeLabel",
+                      "fill": "#94a3b8",
+                      "content": "LNG tanker route →",
+                      "fontFamily": "Inter",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "wA7cV",
+                      "x": 480,
+                      "y": 260,
+                      "name": "japanLabel",
+                      "fill": "#cbd5e1",
+                      "content": "Japan",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "jSioG",
+          "name": "Act2-Pattern",
+          "width": "fill_container",
+          "fill": "#0d1424",
+          "cornerRadius": 10,
+          "layout": "vertical",
+          "gap": 12,
+          "padding": [
+            20,
+            24,
+            24,
+            24
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "5i2sY",
+              "name": "a2h",
+              "fill": "#f1f5f9",
+              "content": "ACT 2 — Pattern / Crisis (JEPX spike + data centers)",
+              "fontFamily": "Space Grotesk",
+              "fontSize": 18,
+              "fontWeight": "bold"
+            },
+            {
+              "type": "frame",
+              "id": "AQLev",
+              "name": "row",
+              "width": "fill_container",
+              "gap": 20,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "CiyeH",
+                  "name": "ref",
+                  "width": 420,
+                  "fill": "#060a1a",
+                  "cornerRadius": 8,
+                  "layout": "vertical",
+                  "gap": 6,
+                  "padding": [
+                    14,
+                    16
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "kzMgc",
+                      "name": "a2refT",
+                      "fill": "#FFC217",
+                      "content": "Motif: Ukiyo-e flat color blocking",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "bold"
+                    },
+                    {
+                      "type": "text",
+                      "id": "7MmKy",
+                      "name": "a2refB",
+                      "fill": "#cbd5e1",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Layered flat color bands (light→dark), strong diagonal composition, a single wave shape standing in for the price spike. Replaces glowing line-chart skeuomorphism with flat graphic blocks.",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "1Y5cS",
+                  "name": "sketch",
+                  "width": "fill_container",
+                  "height": 320,
+                  "fill": "#03060f",
+                  "cornerRadius": 8,
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "iBOmQ",
+                      "x": 0,
+                      "y": 240,
+                      "name": "a2b1",
+                      "fill": "#262267",
+                      "width": 700,
+                      "height": 80
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "zeNIa",
+                      "x": 0,
+                      "y": 180,
+                      "name": "a2b2",
+                      "fill": "#305BA9",
+                      "width": 700,
+                      "height": 60
+                    },
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 60,
+                      "id": "Wadpq",
+                      "x": 60,
+                      "y": 40,
+                      "name": "a2wave",
+                      "rotation": -18,
+                      "fill": "#C13B2A",
+                      "width": 420,
+                      "height": 140
+                    },
+                    {
+                      "type": "text",
+                      "id": "Rjvw8",
+                      "x": 24,
+                      "y": 20,
+                      "name": "a2label",
+                      "fill": "#f1f5f9",
+                      "content": "10 → 251 ¥/kWh · 25x in 40 days",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "wFj0c",
+                      "x": 500,
+                      "y": 190,
+                      "name": "a2dc",
+                      "fill": "#C9A227",
+                      "width": 40,
+                      "height": 40
+                    },
+                    {
+                      "type": "text",
+                      "id": "KemFG",
+                      "x": 550,
+                      "y": 200,
+                      "name": "a2dclabel",
+                      "fill": "#cbd5e1",
+                      "content": "+40 data centers",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "PdTo9",
+          "name": "Act3-Pivot",
+          "width": "fill_container",
+          "fill": "#0d1424",
+          "cornerRadius": 10,
+          "layout": "vertical",
+          "gap": 12,
+          "padding": [
+            20,
+            24,
+            24,
+            24
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "ofjCB",
+              "name": "a3h",
+              "fill": "#f1f5f9",
+              "content": "ACT 3 — Pivot (\"The grid is a distributed system\")",
+              "fontFamily": "Space Grotesk",
+              "fontSize": 18,
+              "fontWeight": "bold"
+            },
+            {
+              "type": "frame",
+              "id": "X1YnG",
+              "name": "row",
+              "width": "fill_container",
+              "gap": 20,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "jlYC8",
+                  "name": "ref",
+                  "width": 420,
+                  "fill": "#060a1a",
+                  "cornerRadius": 8,
+                  "layout": "vertical",
+                  "gap": 6,
+                  "padding": [
+                    14,
+                    16
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "p5dLy",
+                      "name": "a3refT",
+                      "fill": "#FFC217",
+                      "content": "Motif: Ma (間) — deliberate negative space",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "bold"
+                    },
+                    {
+                      "type": "text",
+                      "id": "x8wFy",
+                      "name": "a3refB",
+                      "fill": "#cbd5e1",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Kenya Hara / MUJI: emptiness as latent meaning, not decluttered minimalism. Use as a dramatic pause between crisis (Act 2) and resolution (Act 4) — almost nothing on screen but the line.",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "bPp7l",
+                  "name": "sketch",
+                  "width": "fill_container",
+                  "height": 320,
+                  "fill": "#010204",
+                  "cornerRadius": 8,
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "5fYkw",
+                      "x": 60,
+                      "y": 155,
+                      "name": "a3line",
+                      "fill": "#3939D8",
+                      "width": 80,
+                      "height": 3
+                    },
+                    {
+                      "type": "text",
+                      "id": "pRkfu",
+                      "x": 60,
+                      "y": 175,
+                      "name": "a3stmt",
+                      "fill": "#f1f5f9",
+                      "content": "The grid is a distributed system.",
+                      "fontFamily": "Space Grotesk",
+                      "fontSize": 22,
+                      "fontWeight": "bold"
+                    },
+                    {
+                      "type": "text",
+                      "id": "fWKHY",
+                      "x": 60,
+                      "y": 210,
+                      "name": "a3sub",
+                      "fill": "#3939D8",
+                      "content": "You already know how to solve this.",
+                      "fontFamily": "Space Grotesk",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "GPeJL",
+          "name": "Act4-VPP",
+          "width": "fill_container",
+          "fill": "#0d1424",
+          "cornerRadius": 10,
+          "layout": "vertical",
+          "gap": 12,
+          "padding": [
+            20,
+            24,
+            24,
+            24
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "CeMgf",
+              "name": "a4h",
+              "fill": "#f1f5f9",
+              "content": "ACT 4 — VPP Solution (aggregation + device grammar)",
+              "fontFamily": "Space Grotesk",
+              "fontSize": 18,
+              "fontWeight": "bold"
+            },
+            {
+              "type": "frame",
+              "id": "KvKX1",
+              "name": "row",
+              "width": "fill_container",
+              "gap": 20,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "qqC6T",
+                  "name": "ref",
+                  "width": 420,
+                  "fill": "#060a1a",
+                  "cornerRadius": 8,
+                  "layout": "vertical",
+                  "gap": 6,
+                  "padding": [
+                    14,
+                    16
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "MEhP8",
+                      "name": "a4refT",
+                      "fill": "#FFC217",
+                      "content": "Motif: Starling murmuration + Tokyo 2020 kinetic pictograms",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "bold"
+                    },
+                    {
+                      "type": "text",
+                      "id": "A1Bnl",
+                      "name": "a4refB",
+                      "fill": "#cbd5e1",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Scattered device dots (homes/EVs/batteries) snap into one coordinated shape under shared local rules — local→global emergence as the VPP metaphor. Icons share one animation grammar (snap/settle), not bespoke per-icon motion.",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "T8ya8",
+                  "name": "sketch",
+                  "width": "fill_container",
+                  "height": 320,
+                  "fill": "#03060f",
+                  "cornerRadius": 8,
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "ellipse",
+                      "id": "RFcwX",
+                      "x": 60,
+                      "y": 40,
+                      "name": "a4d1",
+                      "fill": "#B0DDFF",
+                      "width": 14,
+                      "height": 14
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "Yc4wR",
+                      "x": 120,
+                      "y": 90,
+                      "name": "a4d2",
+                      "fill": "#B0DDFF",
+                      "width": 14,
+                      "height": 14
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "YgV9u",
+                      "x": 90,
+                      "y": 160,
+                      "name": "a4d3",
+                      "fill": "#B0DDFF",
+                      "width": 14,
+                      "height": 14
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "2a889",
+                      "x": 180,
+                      "y": 50,
+                      "name": "a4d4",
+                      "fill": "#B0DDFF",
+                      "width": 14,
+                      "height": 14
+                    },
+                    {
+                      "type": "text",
+                      "id": "HabT4",
+                      "x": 240,
+                      "y": 140,
+                      "name": "a4arrow",
+                      "fill": "#64748b",
+                      "content": "→ snap →",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "nqYPU",
+                      "x": 420,
+                      "y": 80,
+                      "name": "a4plant",
+                      "fill": "#3939D8",
+                      "width": 140,
+                      "height": 140
+                    },
+                    {
+                      "type": "text",
+                      "id": "aQKN1",
+                      "x": 440,
+                      "y": 240,
+                      "name": "a4plantlabel",
+                      "fill": "#f1f5f9",
+                      "content": "100K homes = 1 dispatchable plant",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
-  ]
+  ],
+  "fileToken": "52023e42-e04f-4514-83d2-23f2c14ff02e"
 }
