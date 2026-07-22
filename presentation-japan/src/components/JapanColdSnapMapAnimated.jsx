@@ -65,7 +65,7 @@ export default function JapanColdSnapMapAnimated({ height = '100%', step = 0, te
 
   return (
     <div data-testid={testId} style={{ height, minHeight: '100%', width: '100%', position: 'relative', overflow: 'hidden', background: 'var(--color-background)' }}>
-      <JapanMapBackground variant="night" opacity={1} onMapReady={handleMapReady} interactive />
+      <JapanMapBackground variant="night" opacity={0.4} onMapReady={handleMapReady} interactive />
       <DeckGL ref={deckRef} layers={layers} viewState={viewState} controller={false} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 5 }} />
       <div style={{ position: 'absolute', left: 36, top: 34, zIndex: 10, pointerEvents: 'none', maxWidth: 500 }}>
         <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, letterSpacing: '0.16em', color: 'var(--color-primary)', marginBottom: 12 }}>ACT II / WINTER DEMAND</div>

@@ -2,12 +2,25 @@ import React, { useRef, useEffect } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-const NIGHT_STYLE = {
-  version: 8,
-  sources: {},
-  layers: [
-    { id: 'night-background', type: 'background', paint: { 'background-color': '#050814' } },
-  ],
+const MAP_STYLE_URL = 'https://demotiles.maplibre.org/style.json';
+
+const applyNightBasemapStyle = (map) => {
+  (map.getStyle().layers ?? []).forEach(({ id: layerId, type }) => {
+    if (!map.getLayer(layerId)) return;
+    try {
+      if (type === 'background') map.setPaintProperty(layerId, 'background-color', '#050814');
+      if (type === 'fill') map.setPaintProperty(layerId, 'fill-color', /water|ocean|lake|river/i.test(layerId) ? '#071426' : '#0a1020');
+      if (type === 'fill-extrusion') map.setPaintProperty(layerId, 'fill-extrusion-color', '#111b30');
+      if (type === 'line') map.setPaintProperty(layerId, 'line-color', '#24344d');
+      if (type === 'symbol') {
+        map.setPaintProperty(layerId, 'text-color', '#64748b');
+        map.setPaintProperty(layerId, 'text-halo-color', '#071426');
+        map.setPaintProperty(layerId, 'text-halo-width', 1);
+      }
+    } catch {
+      // Some external style layers do not expose every paint property.
+    }
+  });
 };
 
 const JapanMapBackground = ({ opacity = 0.15, style = {}, onMapReady, interactive = true, variant = 'default' }) => {
@@ -20,7 +33,7 @@ const JapanMapBackground = ({ opacity = 0.15, style = {}, onMapReady, interactiv
     // Initialize the map
     map.current = new maplibregl.Map({
       container: mapContainer.current,
-      style: variant === 'night' ? NIGHT_STYLE : 'https://demotiles.maplibre.org/style.json',
+      style: MAP_STYLE_URL,
       center: [138.2529, 36.2048], // Center of Japan
       zoom: 4.5,
       pitch: 34,
@@ -38,7 +51,9 @@ const JapanMapBackground = ({ opacity = 0.15, style = {}, onMapReady, interactiv
     // Ensure map renders with transparent background
     map.current.on('load', () => {
       // Set background layer to fully transparent
-      if (map.current.getLayer('background')) {
+      if (variant === 'night') {
+        applyNightBasemapStyle(map.current);
+      } else if (map.current.getLayer('background')) {
         map.current.setPaintProperty('background', 'background-color', 'rgba(0, 0, 0, 0)');
       }
       onMapReady?.(map.current);

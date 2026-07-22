@@ -75,7 +75,12 @@ const fs = require('node:fs/promises');
   assert.match(mapLayers, /coldSnapStage >= 2 \? 1800 : 12000/, 'Grid hub markers must shrink at city scale.');
   assert.match(mapLayers, /coldSnapStage >= 2 \? 1100 : 21000/, 'Household markers must not wash out the city view.');
   assert.match(coldSnapMap, /variant="night"/, 'Act 2 must opt into the art-directed night basemap.');
-  assert.match(mapBackground, /NIGHT_STYLE/, 'The map background must define an internal night style.');
+  assert.match(mapBackground, /MAP_STYLE_URL/, 'The map background must define the live style source.');
+  assert.match(mapBackground, /applyNightBasemapStyle/, 'The night variant needs a guarded live-basemap treatment.');
+  assert.match(mapBackground, /https:\/\/demotiles\.maplibre\.org\/style\.json/, 'The night variant must retain the existing live OSM source.');
+  assert.match(mapBackground, /map\.getLayer\(layerId\)/, 'Night style overrides must tolerate missing source layers.');
+  assert.match(mapBackground, /'#071426'/, 'Night water must use a deep navy paint token.');
+  assert.match(coldSnapMap, /variant="night" opacity=\{0\.4\}/, 'Act 2 needs a muted, not opaque, live map beneath the network.');
 })().catch((error) => {
   console.error(error);
   process.exit(1);
