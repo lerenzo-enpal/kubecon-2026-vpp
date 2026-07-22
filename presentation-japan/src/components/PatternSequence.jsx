@@ -18,7 +18,7 @@ const ContextCard = ({ label, text, color }) => (
   </div>
 );
 
-const PatternSequence = ({ height = 600 }) => {
+const PatternSequence = ({ height = '100%' }) => {
   return (
     <StepBridge count={5}>
       {(step) => <JapanColdSnapMapAnimated height={height} step={step} testId="act2-cold-snap-map" />}

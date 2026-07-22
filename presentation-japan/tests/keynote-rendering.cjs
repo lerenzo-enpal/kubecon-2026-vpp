@@ -70,6 +70,13 @@ const { chromium } = require('playwright');
       throw new Error('The pattern heading is not visible on the second slide.');
     }
     await page.getByTestId('act2-cold-snap-map').waitFor({ state: 'visible' });
+    const act2Bounds = await page.getByTestId('act2-cold-snap-map').evaluate((element) => {
+      const { width, height } = element.getBoundingClientRect();
+      return { width, height };
+    });
+    if (act2Bounds.width < 1400 || act2Bounds.height < 760) {
+      throw new Error(`Expected a full-bleed Act 2 map, received ${act2Bounds.width}×${act2Bounds.height}.`);
+    }
     await advance(1);
     await page.getByTestId('act2-jepx-sidecar').waitFor({ state: 'visible' });
     await page.getByText('25× spike', { exact: true }).waitFor({ state: 'visible' });

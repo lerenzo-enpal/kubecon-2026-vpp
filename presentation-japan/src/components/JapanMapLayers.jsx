@@ -40,47 +40,19 @@ const partialRoute = (progress) => {
   ];
 };
 
-const coldSnapZone = ({ id, position: [longitude, latitude], demand }) => {
-  const radius = 0.5 + demand * 0.36;
-  const coordinates = Array.from({ length: 25 }, (_, index) => {
-    const angle = (index / 24) * Math.PI * 2;
-    return [longitude + Math.cos(angle) * radius, latitude + Math.sin(angle) * radius * 0.74];
-  });
-  return {
-    type: 'Feature',
-    properties: { id, demand },
-    geometry: { type: 'Polygon', coordinates: [coordinates] },
-  };
-};
-
 export const getJapanMapLayers = ({ scene, routeProgress = 0, gridPulse = 0, tripTime = 0, disruptionRatio = 1, coldSnapStage = 0 }) => {
   if (scene === 'cold-snap') {
     const visibleClusters = mapData.COLD_SNAP_HOME_CLUSTERS.slice(0, Math.max(1, coldSnapStage - 1));
-    const demandMask = {
-      type: 'FeatureCollection',
-      features: visibleClusters.map(coldSnapZone),
-    };
-    const densityPoints = visibleClusters.flatMap(({ position, demand }) => (
-      Array.from({ length: Math.round(demand * 12) }, () => ({ position }))
-    ));
+    const { localTrips, regionalTrips } = mapData.getColdSnapTrips(coldSnapStage);
+    const gridHubs = [...regionalTrips.reduce((hubs, trip) => {
+      const [source] = trip.path;
+      const target = trip.path[trip.path.length - 1];
+      hubs.set(`${source[0]},${source[1]}`, { position: source });
+      hubs.set(`${target[0]},${target[1]}`, { position: target });
+      return hubs;
+    }, new Map()).values()];
 
     return [
-      new GeoJsonLayer({
-        id: 'cold-snap-demand-mask',
-        data: demandMask,
-        operation: 'mask',
-        filled: true,
-        stroked: false,
-        getFillColor: [255, 255, 255, 255],
-      }),
-      new ScreenGridLayer({
-        id: 'cold-snap-demand-density',
-        data: densityPoints,
-        getPosition: ({ position }) => position,
-        cellSizePixels: 54,
-        colorRange: [[239, 68, 68, 0], [239, 68, 68, 65], [239, 68, 68, 170]],
-        opacity: 0.58,
-      }),
       new ScatterplotLayer({
         id: 'cold-snap-homes',
         data: visibleClusters,
@@ -93,19 +65,43 @@ export const getJapanMapLayers = ({ scene, routeProgress = 0, gridPulse = 0, tri
         stroked: true,
       }),
       new TripsLayer({
-        id: 'cold-snap-grid-trips',
-        data: mapData.COLD_SNAP_GRID_TRIPS,
-        getPath: ({ path }) => path.map(([longitude, latitude]) => [longitude, latitude]),
-        getTimestamps: ({ path }) => path.map(([, , timestamp]) => timestamp),
-        getColor: COLORS.amber,
-        getWidth: 4,
+        id: 'cold-snap-local-distribution',
+        data: localTrips,
+        getPath: (trip) => trip.path,
+        getTimestamps: (trip) => trip.timestamps,
+        getColor: COLORS.red,
+        getWidth: 3,
         widthUnits: 'pixels',
         currentTime: tripTime,
-        trailLength: 1800,
+        trailLength: 900,
         fadeTrail: true,
-        extensions: [new MaskExtension()],
-        maskId: 'cold-snap-demand-mask',
-        maskInverted: false,
+        capRounded: true,
+        jointRounded: true,
+      }),
+      new TripsLayer({
+        id: 'cold-snap-regional-transmission',
+        data: regionalTrips,
+        getPath: (trip) => trip.path,
+        getTimestamps: (trip) => trip.timestamps,
+        getColor: COLORS.amber,
+        getWidth: 7,
+        widthUnits: 'pixels',
+        currentTime: tripTime,
+        trailLength: 2200,
+        fadeTrail: true,
+        capRounded: true,
+        jointRounded: true,
+      }),
+      new ScatterplotLayer({
+        id: 'cold-snap-grid-hubs',
+        data: gridHubs,
+        getPosition: ({ position }) => position,
+        getRadius: 28000,
+        radiusUnits: 'meters',
+        getFillColor: COLORS.amber,
+        getLineColor: [254, 243, 199, 255],
+        lineWidthMinPixels: 2,
+        stroked: true,
       }),
     ];
   }

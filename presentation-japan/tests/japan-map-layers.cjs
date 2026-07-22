@@ -10,8 +10,10 @@ const fs = require('node:fs/promises');
     LNG_TRIP_PATHS,
     LNG_ROUTE,
     COLD_SNAP_HOME_CLUSTERS,
-    COLD_SNAP_GRID_TRIPS,
+    COLD_SNAP_LOCAL_TRIPS,
+    COLD_SNAP_REGIONAL_TRIPS,
     COLD_SNAP_CAMERA_KEYFRAMES,
+    getColdSnapTrips,
     getRoutePosition,
   } = await import('../src/components/japanMapData.mjs');
 
@@ -27,7 +29,12 @@ const fs = require('node:fs/promises');
   assert.ok(LNG_TRIP_PATHS.every((trip) => trip.path.length >= 3), 'Each LNG trip needs an animatable path.');
   assert.equal(COLD_SNAP_HOME_CLUSTERS.length, 3, 'The cold snap needs three regional household clusters.');
   assert.ok(COLD_SNAP_HOME_CLUSTERS.every(({ position }) => position[0] > 130 && position[0] < 145 && position[1] > 30 && position[1] < 45), 'Cold-snap homes must be positioned in Japan.');
-  assert.equal(COLD_SNAP_GRID_TRIPS.length, 3, 'The cold snap needs three grid-flow routes.');
+  assert.ok(COLD_SNAP_LOCAL_TRIPS.length >= 12, 'The close city scene needs a dense local distribution mesh.');
+  assert.ok(COLD_SNAP_REGIONAL_TRIPS.length >= 6, 'The national scene needs a regional transmission spine.');
+  assert.ok([...COLD_SNAP_LOCAL_TRIPS, ...COLD_SNAP_REGIONAL_TRIPS].every((trip) => trip.path.length >= 3 && trip.path.length === trip.timestamps.length), 'Cascade routes must have aligned 3D positions and timestamps.');
+  assert.ok(COLD_SNAP_REGIONAL_TRIPS.every((trip) => Math.max(...trip.path.map(([, , altitude]) => altitude)) >= 10000), 'Regional transmission paths must rise above the map.');
+  assert.deepEqual(getColdSnapTrips(1).regionalTrips, [], 'Regional flow must wait for the cascade step.');
+  assert.ok(getColdSnapTrips(4).regionalTrips.length >= 6, 'The final keyframe must reveal the national cascade.');
   assert.equal(COLD_SNAP_CAMERA_KEYFRAMES.length, 5, 'The cold-snap narrative needs five presenter keyframes.');
 
   const mapLayers = await fs.readFile(require.resolve('../src/components/JapanMapLayers.jsx'), 'utf8');
@@ -37,8 +44,10 @@ const fs = require('node:fs/promises');
   assert.match(mapLayers, /id: 'lng-trips'/, 'The LNG trip layer needs a stable id.');
   assert.match(mapLayers, /scene === 'cold-snap'/, 'The cold-snap story needs a dedicated geographic layer scene.');
   assert.match(mapLayers, /id: 'cold-snap-homes'/, 'The cold-snap scene needs geolocated household markers.');
-  assert.match(mapLayers, /id: 'cold-snap-demand-mask'/, 'The cold-snap scene needs a geographic demand mask.');
-  assert.match(mapLayers, /id: 'cold-snap-grid-trips'/, 'The cold-snap scene needs animated grid flow.');
+  assert.match(mapLayers, /id: 'cold-snap-local-distribution'/, 'The city view needs local energy paths.');
+  assert.match(mapLayers, /id: 'cold-snap-regional-transmission'/, 'The national view needs transmission paths.');
+  assert.match(mapLayers, /id: 'cold-snap-grid-hubs'/, 'The transmission paths need geographic hubs.');
+  assert.doesNotMatch(mapLayers.match(/if \(scene === 'cold-snap'\)[\s\S]*?if \(scene === 'hormuz'\)/)?.[0] ?? '', /MaskExtension/, 'Act 2 must not mask grid flows.');
 })().catch((error) => {
   console.error(error);
   process.exit(1);

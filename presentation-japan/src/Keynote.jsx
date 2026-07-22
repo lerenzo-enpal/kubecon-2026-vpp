@@ -54,7 +54,7 @@ export default function Keynote() {
 
         {/* 2 — Act 2: The pattern (scaling demand, JEPX crisis, data center accelerant) */}
         <Slide backgroundColor={bg} padding="0">
-          <PatternSequence height={550} />
+          <PatternSequence />
           <Notes>In January 2021, a cold snap hit Japan. Heating demand spiked. Wind dropped. LNG supply got delayed. All at once. Spot electricity prices didn't climb — they exploded, going from 10 yen per kWh to 251 yen for 40 days. In March 2022, the grid operator issued Japan's first-ever power supply emergency warning — reserve margin hit 2.5% against a 3% safety threshold. Now add 40+ planned data center projects to a grid that's already fragile. Demand is going from 19 TWh today to 57 TWh by 2034 — a 3x increase — and most projects are delayed because the grid can't support them yet.</Notes>
         </Slide>
 

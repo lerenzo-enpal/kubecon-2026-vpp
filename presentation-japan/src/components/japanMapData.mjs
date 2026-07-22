@@ -82,6 +82,63 @@ export const COLD_SNAP_GRID_TRIPS = [
   { id: 'hokkaido-tohoku', path: [[141.35, 43.06, 0], [140.87, 38.27, 1600], [139.76, 35.68, 3000]] },
 ];
 
+const localTrip = (id, region, stage, source, hub, offset) => ({
+  id,
+  region,
+  stage,
+  path: [
+    [...source, 0],
+    [(source[0] + hub[0]) / 2, (source[1] + hub[1]) / 2, 280],
+    [...hub, 0],
+  ],
+  timestamps: [offset, offset + 420, offset + 840],
+});
+
+const regionalTrip = (id, region, stage, source, target, altitude, offset) => ({
+  id,
+  region,
+  stage,
+  path: [
+    [...source, 0],
+    [(source[0] + target[0]) / 2, (source[1] + target[1]) / 2, altitude],
+    [...target, 0],
+  ],
+  timestamps: [offset, offset + 1100, offset + 2200],
+});
+
+const TOKYO_GRID_HUB = [139.76, 35.68];
+const KANSAI_GRID_HUB = [135.5, 34.69];
+const TOHOKU_GRID_HUB = [140.87, 38.27];
+
+export const COLD_SNAP_LOCAL_TRIPS = [
+  localTrip('tokyo-east', 'tokyo', 1, [139.87, 35.67], TOKYO_GRID_HUB, 0),
+  localTrip('tokyo-west', 'tokyo', 1, [139.65, 35.69], TOKYO_GRID_HUB, 240),
+  localTrip('tokyo-north', 'tokyo', 1, [139.76, 35.78], TOKYO_GRID_HUB, 480),
+  localTrip('tokyo-south', 'tokyo', 1, [139.77, 35.58], TOKYO_GRID_HUB, 720),
+  localTrip('tokyo-bay', 'tokyo', 1, [139.87, 35.61], TOKYO_GRID_HUB, 960),
+  localTrip('tokyo-suginami', 'tokyo', 1, [139.63, 35.7], TOKYO_GRID_HUB, 1200),
+  localTrip('kansai-east', 'kansai', 3, [135.61, 34.69], KANSAI_GRID_HUB, 180),
+  localTrip('kansai-west', 'kansai', 3, [135.4, 34.69], KANSAI_GRID_HUB, 420),
+  localTrip('kansai-north', 'kansai', 3, [135.5, 34.78], KANSAI_GRID_HUB, 660),
+  localTrip('tohoku-east', 'tohoku', 4, [141.01, 38.27], TOHOKU_GRID_HUB, 360),
+  localTrip('tohoku-west', 'tohoku', 4, [140.73, 38.28], TOHOKU_GRID_HUB, 600),
+  localTrip('tohoku-north', 'tohoku', 4, [140.87, 38.38], TOHOKU_GRID_HUB, 840),
+];
+
+export const COLD_SNAP_REGIONAL_TRIPS = [
+  regionalTrip('tokyo-tohoku', 'tohoku', 2, TOKYO_GRID_HUB, TOHOKU_GRID_HUB, 22000, 0),
+  regionalTrip('tokyo-to-kansai', 'kansai', 2, TOKYO_GRID_HUB, KANSAI_GRID_HUB, 28000, 400),
+  regionalTrip('kansai-to-chugoku', 'chugoku', 3, KANSAI_GRID_HUB, [132.46, 34.39], 18000, 800),
+  regionalTrip('chugoku-to-kyushu', 'kyushu', 3, [132.46, 34.39], [130.38, 33.59], 16000, 1200),
+  regionalTrip('tohoku-to-hokkaido', 'hokkaido', 4, TOHOKU_GRID_HUB, [141.35, 43.06], 30000, 600),
+  regionalTrip('kansai-to-shikoku', 'shikoku', 4, KANSAI_GRID_HUB, [133.53, 33.56], 16000, 1000),
+];
+
+export const getColdSnapTrips = (stage) => ({
+  localTrips: COLD_SNAP_LOCAL_TRIPS.filter((trip) => trip.stage <= Math.max(1, stage)),
+  regionalTrips: COLD_SNAP_REGIONAL_TRIPS.filter((trip) => trip.stage <= Math.max(0, stage)),
+});
+
 export const COLD_SNAP_CAMERA_KEYFRAMES = [
   { id: 'historical', camera: { center: [138.25, 36.2], zoom: 4.25, bearing: 12, pitch: 40 }, anchor: [139.76, 35.68] },
   { id: 'jepx', camera: { center: [138.25, 36.2], zoom: 4.25, bearing: 12, pitch: 40 }, anchor: [139.76, 35.68] },
