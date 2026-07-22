@@ -40,7 +40,76 @@ const partialRoute = (progress) => {
   ];
 };
 
-export const getJapanMapLayers = ({ scene, routeProgress = 0, gridPulse = 0, tripTime = 0, disruptionRatio = 1 }) => {
+const coldSnapZone = ({ id, position: [longitude, latitude], demand }) => {
+  const radius = 0.5 + demand * 0.36;
+  const coordinates = Array.from({ length: 25 }, (_, index) => {
+    const angle = (index / 24) * Math.PI * 2;
+    return [longitude + Math.cos(angle) * radius, latitude + Math.sin(angle) * radius * 0.74];
+  });
+  return {
+    type: 'Feature',
+    properties: { id, demand },
+    geometry: { type: 'Polygon', coordinates: [coordinates] },
+  };
+};
+
+export const getJapanMapLayers = ({ scene, routeProgress = 0, gridPulse = 0, tripTime = 0, disruptionRatio = 1, coldSnapStage = 0 }) => {
+  if (scene === 'cold-snap') {
+    const visibleClusters = mapData.COLD_SNAP_HOME_CLUSTERS.slice(0, Math.max(1, coldSnapStage - 1));
+    const demandMask = {
+      type: 'FeatureCollection',
+      features: visibleClusters.map(coldSnapZone),
+    };
+    const densityPoints = visibleClusters.flatMap(({ position, demand }) => (
+      Array.from({ length: Math.round(demand * 12) }, () => ({ position }))
+    ));
+
+    return [
+      new GeoJsonLayer({
+        id: 'cold-snap-demand-mask',
+        data: demandMask,
+        operation: 'mask',
+        filled: true,
+        stroked: false,
+        getFillColor: [255, 255, 255, 255],
+      }),
+      new ScreenGridLayer({
+        id: 'cold-snap-demand-density',
+        data: densityPoints,
+        getPosition: ({ position }) => position,
+        cellSizePixels: 54,
+        colorRange: [[239, 68, 68, 0], [239, 68, 68, 65], [239, 68, 68, 170]],
+        opacity: 0.58,
+      }),
+      new ScatterplotLayer({
+        id: 'cold-snap-homes',
+        data: visibleClusters,
+        getPosition: ({ position }) => position,
+        getRadius: 21000,
+        radiusUnits: 'meters',
+        getFillColor: [241, 245, 249, 240],
+        getLineColor: COLORS.red,
+        lineWidthMinPixels: 2,
+        stroked: true,
+      }),
+      new TripsLayer({
+        id: 'cold-snap-grid-trips',
+        data: mapData.COLD_SNAP_GRID_TRIPS,
+        getPath: ({ path }) => path.map(([longitude, latitude]) => [longitude, latitude]),
+        getTimestamps: ({ path }) => path.map(([, , timestamp]) => timestamp),
+        getColor: COLORS.amber,
+        getWidth: 4,
+        widthUnits: 'pixels',
+        currentTime: tripTime,
+        trailLength: 1800,
+        fadeTrail: true,
+        extensions: [new MaskExtension()],
+        maskId: 'cold-snap-demand-mask',
+        maskInverted: false,
+      }),
+    ];
+  }
+
   if (scene === 'hormuz') {
     const route = partialRoute(routeProgress);
     const pulse = mapData.getRoutePosition(mapData.LNG_ROUTE, routeProgress);

@@ -70,6 +70,26 @@ export const JAPAN_GRID_TRIP_PATHS = [
   { id: 'grid-west', path: [[130.38, 33.59, 0], [135.35, 34.62, 1500], [139.78, 35.55, 2700]] },
 ];
 
+export const COLD_SNAP_HOME_CLUSTERS = [
+  { id: 'tokyo', name: 'Tokyo homes', position: [139.76, 35.68], demand: 1 },
+  { id: 'kansai', name: 'Kansai homes', position: [135.5, 34.69], demand: 0.72 },
+  { id: 'tohoku', name: 'Tohoku homes', position: [140.87, 38.27], demand: 0.58 },
+];
+
+export const COLD_SNAP_GRID_TRIPS = [
+  { id: 'tokyo-tohoku', path: [[135.5, 34.69, 0], [139.76, 35.68, 1200], [140.87, 38.27, 2400]] },
+  { id: 'kansai-to-tokyo', path: [[132.46, 34.39, 0], [135.5, 34.69, 1000], [139.76, 35.68, 2200]] },
+  { id: 'hokkaido-tohoku', path: [[141.35, 43.06, 0], [140.87, 38.27, 1600], [139.76, 35.68, 3000]] },
+];
+
+export const COLD_SNAP_CAMERA_KEYFRAMES = [
+  { id: 'historical', camera: { center: [138.25, 36.2], zoom: 4.25, bearing: 12, pitch: 40 }, anchor: [139.76, 35.68] },
+  { id: 'jepx', camera: { center: [138.25, 36.2], zoom: 4.25, bearing: 12, pitch: 40 }, anchor: [139.76, 35.68] },
+  { id: 'tokyo', camera: { center: [139.76, 35.68], zoom: 6.15, bearing: 24, pitch: 52 }, anchor: [139.76, 35.68] },
+  { id: 'kansai', camera: { center: [135.5, 34.69], zoom: 5.95, bearing: 20, pitch: 50 }, anchor: [135.5, 34.69] },
+  { id: 'tohoku', camera: { center: [140.87, 38.27], zoom: 5.7, bearing: 18, pitch: 48 }, anchor: [140.87, 38.27] },
+];
+
 export const getRoutePosition = (route, progress) => {
   const clampedProgress = Math.max(0, Math.min(1, progress));
   const segmentProgress = clampedProgress * (route.length - 1);

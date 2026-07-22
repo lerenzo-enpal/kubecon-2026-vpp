@@ -60,7 +60,7 @@ const JapanMapBackground = ({ opacity = 0.15, style = {}, onMapReady, interactiv
         width: '100%',
         height: '100%',
         opacity,
-        pointerEvents: 'none',
+        pointerEvents: interactive ? 'auto' : 'none',
         zIndex: 1,
         ...style,
       }}

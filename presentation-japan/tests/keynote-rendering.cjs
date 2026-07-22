@@ -15,6 +15,8 @@ const { chromium } = require('playwright');
 
   try {
     await page.goto('http://localhost:3100/', { waitUntil: 'networkidle' });
+    // Spectacle registers key navigation after the deck's initial transition settles.
+    await page.waitForTimeout(1800);
     if (!(await page.locator('body').innerText()).includes('The Energy Grid Is Becoming a Cloud Native Distributed System')) {
       throw new Error('The keynote title is not visible on the first slide.');
     }
@@ -56,17 +58,24 @@ const { chromium } = require('playwright');
       throw new Error(`Expected fully visible Hormuz context cards, received opacities: ${cardOpacities.join(', ')}.`);
     }
     await page.getByText('97% of Japan LNG transits this route', { exact: true }).waitFor({ state: 'visible' });
-    const mapCanvas = page.getByTestId('japan-map-canvas');
+    const mapCanvas = page.getByTestId('japan-opening-map').getByTestId('japan-map-canvas');
     await mapCanvas.hover();
     await page.mouse.wheel(0, -360);
     if (await mapCanvas.getAttribute('data-interactive') !== 'true') {
       throw new Error('Expected the keynote map to accept direct exploration.');
     }
 
-    await advance(2);
+    await advance(4);
     if (!(await page.locator('body').innerText()).includes('This Is Not the First Warning')) {
       throw new Error('The pattern heading is not visible on the second slide.');
     }
+    await page.getByTestId('act2-cold-snap-map').waitFor({ state: 'visible' });
+    await advance(1);
+    await page.getByTestId('act2-jepx-sidecar').waitFor({ state: 'visible' });
+    await page.getByText('25× spike', { exact: true }).waitFor({ state: 'visible' });
+    await advance(2);
+    await page.getByTestId('act2-demand-card').waitFor({ state: 'visible' });
+    await page.getByTestId('act2-cold-snap-route').waitFor({ state: 'visible' });
   } finally {
     await browser.close();
   }
