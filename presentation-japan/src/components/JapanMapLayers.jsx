@@ -1,4 +1,4 @@
-import { ArcLayer, PathLayer, ScatterplotLayer, TextLayer, GeoJsonLayer } from '@deck.gl/layers';
+import { ArcLayer, PathLayer, ScatterplotLayer, TextLayer, GeoJsonLayer, PolygonLayer } from '@deck.gl/layers';
 import { TripsLayer } from '@deck.gl/geo-layers';
 import { ScreenGridLayer } from '@deck.gl/aggregation-layers';
 import { MaskExtension } from '@deck.gl/extensions';
@@ -43,21 +43,29 @@ const partialRoute = (progress) => {
 export const getJapanMapLayers = ({ scene, routeProgress = 0, gridPulse = 0, tripTime = 0, disruptionRatio = 1, coldSnapStage = 0 }) => {
   if (scene === 'cold-snap') {
     const visibleClusters = mapData.COLD_SNAP_HOME_CLUSTERS.slice(0, Math.max(1, coldSnapStage - 1));
-    const { localTrips, regionalTrips } = mapData.getColdSnapTrips(coldSnapStage);
-    const gridHubs = [...regionalTrips.reduce((hubs, trip) => {
-      const [source] = trip.path;
-      const target = trip.path[trip.path.length - 1];
-      hubs.set(`${source[0]},${source[1]}`, { position: source });
-      hubs.set(`${target[0]},${target[1]}`, { position: target });
-      return hubs;
-    }, new Map()).values()];
+    const { buildings, localTrips, regionalTrips, hubs: gridHubs } = mapData.getColdSnapCityScene(coldSnapStage);
+    const isEscalating = coldSnapStage >= 3;
 
     return [
+      new PolygonLayer({
+        id: 'cold-snap-city-buildings',
+        data: buildings,
+        getPolygon: ({ polygon }) => polygon,
+        getElevation: ({ height }) => height,
+        getFillColor: [19, 28, 45, 230],
+        getLineColor: [45, 58, 80, 180],
+        getLineWidth: 1,
+        lineWidthUnits: 'pixels',
+        extruded: true,
+        wireframe: true,
+        material: { ambient: 0.45, diffuse: 0.65, shininess: 24, specularColor: [20, 40, 65] },
+        pickable: false,
+      }),
       new ScatterplotLayer({
         id: 'cold-snap-homes',
         data: visibleClusters,
         getPosition: ({ position }) => position,
-        getRadius: 21000,
+        getRadius: coldSnapStage >= 2 ? 1100 : 21000,
         radiusUnits: 'meters',
         getFillColor: [241, 245, 249, 240],
         getLineColor: COLORS.red,
@@ -69,11 +77,25 @@ export const getJapanMapLayers = ({ scene, routeProgress = 0, gridPulse = 0, tri
         data: localTrips,
         getPath: (trip) => trip.path,
         getTimestamps: (trip) => trip.timestamps,
-        getColor: COLORS.red,
-        getWidth: 3,
+        getColor: [34, 211, 238, 112],
+        getWidth: 2.5,
         widthUnits: 'pixels',
         currentTime: tripTime,
-        trailLength: 900,
+        trailLength: 1250,
+        fadeTrail: true,
+        capRounded: true,
+        jointRounded: true,
+      }),
+      new TripsLayer({
+        id: 'cold-snap-local-demand-pulse',
+        data: localTrips,
+        getPath: (trip) => trip.path,
+        getTimestamps: (trip) => trip.timestamps,
+        getColor: isEscalating ? COLORS.red : COLORS.amber,
+        getWidth: 1.8,
+        widthUnits: 'pixels',
+        currentTime: tripTime,
+        trailLength: 760,
         fadeTrail: true,
         capRounded: true,
         jointRounded: true,
@@ -83,8 +105,8 @@ export const getJapanMapLayers = ({ scene, routeProgress = 0, gridPulse = 0, tri
         data: regionalTrips,
         getPath: (trip) => trip.path,
         getTimestamps: (trip) => trip.timestamps,
-        getColor: COLORS.amber,
-        getWidth: 7,
+        getColor: isEscalating ? COLORS.amber : COLORS.cyan,
+        getWidth: 6,
         widthUnits: 'pixels',
         currentTime: tripTime,
         trailLength: 2200,
@@ -96,7 +118,7 @@ export const getJapanMapLayers = ({ scene, routeProgress = 0, gridPulse = 0, tri
         id: 'cold-snap-grid-hubs',
         data: gridHubs,
         getPosition: ({ position }) => position,
-        getRadius: 28000,
+        getRadius: coldSnapStage >= 2 ? 1800 : 12000,
         radiusUnits: 'meters',
         getFillColor: COLORS.amber,
         getLineColor: [254, 243, 199, 255],

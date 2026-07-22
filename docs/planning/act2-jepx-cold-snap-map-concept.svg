@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">KubeCon Japan keynote Act 2 concept</title>
+  <desc id="desc">A 3D Japan grid mockup with cold-snap household demand zones and a JEPX 2021 price crisis sidecar chart.</desc>
+  <defs>
+    <radialGradient id="ocean" cx="45%" cy="62%" r="75%"><stop offset="0" stop-color="#12354c"/><stop offset=".42" stop-color="#071321"/><stop offset="1" stop-color="#060a1a"/></radialGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="7" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1600" height="900" fill="#060a1a"/>
+  <rect x="40" y="40" width="1520" height="820" rx="10" fill="url(#ocean)" stroke="#1c3c55"/>
+  <text x="85" y="102" fill="#22d3ee" font-family="JetBrains Mono, monospace" font-size="20" letter-spacing="4">ACT II / WINTER DEMAND</text>
+  <text x="85" y="780" fill="#f1f5f9" font-family="Inter, sans-serif" font-size="38" font-weight="700">Cold snap · homes become the pressure point</text>
+  <text x="85" y="818" fill="#9aa9bb" font-family="Inter, sans-serif" font-size="20">Mask expands around regional homes · camera pauses at each grid zone</text>
+  <path d="M190 695 C320 605 410 570 530 485 S695 370 820 310 S1010 190 1235 116" fill="none" stroke="#22d3ee" stroke-width="4" opacity=".36" filter="url(#glow)"/>
+  <path d="M245 720 C395 636 522 548 650 455 S900 285 1190 130" fill="none" stroke="#22d3ee" stroke-width="3" stroke-dasharray="12 17" opacity=".52"/>
+  <g opacity=".9" fill="#9aebff" filter="url(#glow)"><circle cx="340" cy="635" r="6"/><circle cx="398" cy="594" r="6"/><circle cx="493" cy="534" r="6"/><circle cx="603" cy="452" r="6"/><circle cx="705" cy="392" r="6"/><circle cx="850" cy="290" r="6"/><circle cx="960" cy="230" r="6"/><circle cx="1100" cy="150" r="6"/></g>
+  <g><circle cx="365" cy="614" r="110" fill="#ef4444" opacity=".10"/><circle cx="365" cy="614" r="75" fill="#ef4444" opacity=".14"/><circle cx="365" cy="614" r="42" fill="#ef4444" opacity=".18"/><circle cx="365" cy="614" r="10" fill="#ef4444" filter="url(#glow)"/></g>
+  <g><circle cx="555" cy="495" r="82" fill="#f59e0b" opacity=".13"/><circle cx="555" cy="495" r="50" fill="#f59e0b" opacity=".16"/><circle cx="555" cy="495" r="8" fill="#f59e0b" filter="url(#glow)"/></g>
+  <g><circle cx="770" cy="352" r="90" fill="#22d3ee" opacity=".10"/><circle cx="770" cy="352" r="50" fill="#22d3ee" opacity=".13"/><circle cx="770" cy="352" r="8" fill="#22d3ee" filter="url(#glow)"/></g>
+  <g><circle cx="1060" cy="174" r="88" fill="#ef4444" opacity=".13"/><circle cx="1060" cy="174" r="55" fill="#ef4444" opacity=".17"/><circle cx="1060" cy="174" r="10" fill="#ef4444" filter="url(#glow)"/></g>
+  <rect x="1175" y="142" width="330" height="355" rx="6" fill="#060a1a" fill-opacity=".90" stroke="#ef4444" stroke-opacity=".78"/>
+  <text x="1205" y="184" fill="#f87171" font-family="JetBrains Mono, monospace" font-size="15" letter-spacing="2">JAN–FEB 2021 · JEPX</text>
+  <text x="1205" y="242" fill="#f1f5f9" font-family="Inter, sans-serif" font-size="52" font-weight="800">25×</text><text x="1333" y="239" fill="#aab7c7" font-family="Inter, sans-serif" font-size="22">in 40 days</text>
+  <path d="M1207 390 L1242 386 L1278 381 L1318 373 L1355 356 L1384 306 L1404 222 L1422 204 L1440 260 L1464 310 L1483 347" fill="none" stroke="#ef4444" stroke-width="5" filter="url(#glow)"/>
+  <path d="M1207 390 L1242 386 L1278 381 L1318 373 L1355 356 L1384 306 L1404 222 L1422 204 L1440 260 L1464 310 L1483 347 L1483 414 L1207 414Z" fill="#ef4444" opacity=".15"/>
+  <text x="1422" y="190" fill="#fca5a5" font-family="JetBrains Mono, monospace" font-size="14" text-anchor="middle">251 JPY/kWh</text>
+  <text x="1205" y="454" fill="#aab7c7" font-family="Inter, sans-serif" font-size="16">Historical price shock → present-day demand stress</text>
+  <rect x="1190" y="710" width="315" height="62" rx="4" fill="#060a1a" fill-opacity=".9" stroke="#ef4444" stroke-opacity=".42"/>
+  <rect x="1190" y="710" width="4" height="62" fill="#ef4444"/><text x="1214" y="748" fill="#f87171" font-family="JetBrains Mono, monospace" font-size="16">NOW</text><text x="1268" y="748" fill="#d7e2eb" font-family="JetBrains Mono, monospace" font-size="16">· demand mask active</text>
+</svg>

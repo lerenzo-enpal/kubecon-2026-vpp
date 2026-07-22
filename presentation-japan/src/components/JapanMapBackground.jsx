@@ -2,7 +2,15 @@ import React, { useRef, useEffect } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-const JapanMapBackground = ({ opacity = 0.15, style = {}, onMapReady, interactive = true }) => {
+const NIGHT_STYLE = {
+  version: 8,
+  sources: {},
+  layers: [
+    { id: 'night-background', type: 'background', paint: { 'background-color': '#050814' } },
+  ],
+};
+
+const JapanMapBackground = ({ opacity = 0.15, style = {}, onMapReady, interactive = true, variant = 'default' }) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
 
@@ -12,7 +20,7 @@ const JapanMapBackground = ({ opacity = 0.15, style = {}, onMapReady, interactiv
     // Initialize the map
     map.current = new maplibregl.Map({
       container: mapContainer.current,
-      style: 'https://demotiles.maplibre.org/style.json', // Simple OSM-based style
+      style: variant === 'night' ? NIGHT_STYLE : 'https://demotiles.maplibre.org/style.json',
       center: [138.2529, 36.2048], // Center of Japan
       zoom: 4.5,
       pitch: 34,
@@ -45,7 +53,7 @@ const JapanMapBackground = ({ opacity = 0.15, style = {}, onMapReady, interactiv
         map.current.remove();
       }
     };
-  }, [onMapReady, interactive]);
+  }, [onMapReady, interactive, variant]);
 
   return (
     <div

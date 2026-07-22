@@ -132,7 +132,102 @@ export const COLD_SNAP_REGIONAL_TRIPS = [
   regionalTrip('chugoku-to-kyushu', 'kyushu', 3, [132.46, 34.39], [130.38, 33.59], 16000, 1200),
   regionalTrip('tohoku-to-hokkaido', 'hokkaido', 4, TOHOKU_GRID_HUB, [141.35, 43.06], 30000, 600),
   regionalTrip('kansai-to-shikoku', 'shikoku', 4, KANSAI_GRID_HUB, [133.53, 33.56], 16000, 1000),
+  regionalTrip('tokyo-to-chubu', 'chubu', 3, TOKYO_GRID_HUB, [136.91, 35.18], 24000, 1400),
+  regionalTrip('chubu-to-kansai', 'kansai', 3, [136.91, 35.18], KANSAI_GRID_HUB, 21000, 1800),
+  regionalTrip('tohoku-to-niigata', 'tohoku', 4, TOHOKU_GRID_HUB, [139.02, 37.9], 18000, 1600),
+  regionalTrip('kyushu-to-shikoku', 'shikoku', 4, [130.38, 33.59], [133.53, 33.56], 19000, 2000),
 ];
+
+const createSeededRandom = (initialSeed) => {
+  let seed = initialSeed >>> 0;
+  return () => {
+    seed = (seed * 1664525 + 1013904223) >>> 0;
+    return seed / 0x100000000;
+  };
+};
+
+const CITY_CONFIGS = [
+  { region: 'tokyo', hub: TOKYO_GRID_HUB, stage: 2, seed: 2021, blocks: 132, spread: [0.34, 0.23], routes: 132 },
+  { region: 'kansai', hub: KANSAI_GRID_HUB, stage: 3, seed: 2022, blocks: 64, spread: [0.26, 0.18], routes: 64 },
+  { region: 'tohoku', hub: TOHOKU_GRID_HUB, stage: 4, seed: 2023, blocks: 42, spread: [0.22, 0.16], routes: 44 },
+];
+
+const squareFootprint = ([longitude, latitude], halfWidth, halfHeight) => [
+  [longitude - halfWidth, latitude - halfHeight],
+  [longitude + halfWidth, latitude - halfHeight],
+  [longitude + halfWidth, latitude + halfHeight],
+  [longitude - halfWidth, latitude + halfHeight],
+  [longitude - halfWidth, latitude - halfHeight],
+];
+
+const createCityBuildings = ({ region, hub, stage, seed, blocks, spread }) => {
+  const random = createSeededRandom(seed);
+  return Array.from({ length: blocks }, (_, index) => {
+    const radialBias = Math.sqrt(random());
+    const angle = random() * Math.PI * 2;
+    const longitude = hub[0] + Math.cos(angle) * spread[0] * radialBias;
+    const latitude = hub[1] + Math.sin(angle) * spread[1] * radialBias;
+    const centrality = 1 - radialBias;
+    const halfWidth = 0.0035 + random() * 0.006;
+    const halfHeight = 0.0028 + random() * 0.005;
+    return {
+      id: `${region}-building-${index}`,
+      region,
+      demandStage: stage,
+      polygon: squareFootprint([longitude, latitude], halfWidth, halfHeight),
+      height: Math.round(18 + random() * 45 + centrality * 150),
+    };
+  });
+};
+
+const createCityTrips = ({ region, hub, stage, seed, routes, spread }) => {
+  const random = createSeededRandom(seed + 99);
+  return Array.from({ length: routes }, (_, index) => {
+    const family = index % 3;
+    const angle = (index / routes) * Math.PI * 2 + (random() - 0.5) * 0.25;
+    const radial = 0.35 + random() * 0.65;
+    const source = [hub[0] + Math.cos(angle) * spread[0] * radial, hub[1] + Math.sin(angle) * spread[1] * radial];
+    const middle = family === 0
+      ? [source[0], hub[1] + (random() - 0.5) * spread[1] * 0.22]
+      : family === 1
+        ? [hub[0] + Math.cos(angle + 0.38) * spread[0] * radial * 0.52, hub[1] + Math.sin(angle + 0.38) * spread[1] * radial * 0.52]
+        : [(source[0] + hub[0]) / 2 + (random() - 0.5) * spread[0] * 0.16, (source[1] + hub[1]) / 2 + (random() - 0.5) * spread[1] * 0.16];
+    const offset = (index * 97) % 1800;
+    return {
+      id: `${region}-demand-${index}`,
+      region,
+      stage,
+      path: [[...source, 0], [...middle, 0], [...hub, 0]],
+      timestamps: [offset, offset + 420, offset + 840],
+    };
+  });
+};
+
+export const COLD_SNAP_CITY_BUILDINGS = CITY_CONFIGS.flatMap(createCityBuildings);
+export const COLD_SNAP_DENSE_LOCAL_TRIPS = CITY_CONFIGS.flatMap(createCityTrips);
+
+const getColdSnapHubs = (regionalTrips, localTrips) => {
+  const hubs = new Map();
+  regionalTrips.forEach((trip) => {
+    const source = trip.path[0];
+    const target = trip.path[trip.path.length - 1];
+    hubs.set(`${source[0]},${source[1]}`, { position: source.slice(0, 2) });
+    hubs.set(`${target[0]},${target[1]}`, { position: target.slice(0, 2) });
+  });
+  localTrips.forEach((trip) => {
+    const target = trip.path[trip.path.length - 1];
+    hubs.set(`${target[0]},${target[1]}`, { position: target.slice(0, 2) });
+  });
+  return [...hubs.values()];
+};
+
+export const getColdSnapCityScene = (stage) => {
+  const activeStage = Math.max(0, stage);
+  const buildings = COLD_SNAP_CITY_BUILDINGS.filter((building) => building.demandStage <= activeStage);
+  const localTrips = COLD_SNAP_DENSE_LOCAL_TRIPS.filter((trip) => trip.stage <= activeStage);
+  const regionalTrips = COLD_SNAP_REGIONAL_TRIPS.filter((trip) => trip.stage <= activeStage);
+  return { buildings, localTrips, regionalTrips, hubs: getColdSnapHubs(regionalTrips, localTrips) };
+};
 
 export const getColdSnapTrips = (stage) => ({
   localTrips: COLD_SNAP_LOCAL_TRIPS.filter((trip) => trip.stage <= Math.max(1, stage)),
@@ -142,9 +237,9 @@ export const getColdSnapTrips = (stage) => ({
 export const COLD_SNAP_CAMERA_KEYFRAMES = [
   { id: 'historical', camera: { center: [138.25, 36.2], zoom: 4.25, bearing: 12, pitch: 40 }, anchor: [139.76, 35.68] },
   { id: 'jepx', camera: { center: [138.25, 36.2], zoom: 4.25, bearing: 12, pitch: 40 }, anchor: [139.76, 35.68] },
-  { id: 'tokyo', camera: { center: [139.76, 35.68], zoom: 6.15, bearing: 24, pitch: 52 }, anchor: [139.76, 35.68] },
-  { id: 'kansai', camera: { center: [135.5, 34.69], zoom: 5.95, bearing: 20, pitch: 50 }, anchor: [135.5, 34.69] },
-  { id: 'tohoku', camera: { center: [140.87, 38.27], zoom: 5.7, bearing: 18, pitch: 48 }, anchor: [140.87, 38.27] },
+  { id: 'tokyo', camera: { center: [139.76, 35.68], zoom: 11.4, bearing: 24, pitch: 56 }, anchor: [139.76, 35.68] },
+  { id: 'kansai', camera: { center: [135.5, 34.69], zoom: 11, bearing: 20, pitch: 54 }, anchor: [135.5, 34.69] },
+  { id: 'tohoku', camera: { center: [140.87, 38.27], zoom: 10.7, bearing: 18, pitch: 52 }, anchor: [140.87, 38.27] },
 ];
 
 export const getRoutePosition = (route, progress) => {
