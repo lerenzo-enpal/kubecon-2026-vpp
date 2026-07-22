@@ -83,6 +83,47 @@ const { chromium } = require('playwright');
     await advance(2);
     await page.getByTestId('act2-demand-card').waitFor({ state: 'visible' });
     await page.getByTestId('act2-cold-snap-route').waitFor({ state: 'visible' });
+
+    await advance(2);
+    await page.getByTestId('vpp-transformation-sequence').waitFor({ state: 'visible' });
+    await page.getByTestId('vpp-stage-pause').waitFor({ state: 'visible' });
+    await page.getByText('The grid is a distributed system.', { exact: true }).waitFor({ state: 'visible' });
+
+    await advance(1);
+    await page.getByTestId('vpp-stage-graph').waitFor({ state: 'visible' });
+    await page.getByText('You already know how to solve this.', { exact: true }).waitFor({ state: 'visible' });
+
+    await advance(1);
+    await page.getByTestId('vpp-stage-city').waitFor({ state: 'visible' });
+    await page.getByTestId('vpp-hero-graph').waitFor({ state: 'visible' });
+    await page.getByTestId('vpp-hero-city').waitFor({ state: 'visible' });
+    await page.getByTestId('vpp-hero-load').waitFor({ state: 'visible' });
+
+    await advance(1);
+    const vppMap = page.getByTestId('vpp-japan-map');
+    await vppMap.waitFor({ state: 'visible' });
+    const vppBounds = await vppMap.evaluate((element) => {
+      const { width, height } = element.getBoundingClientRect();
+      return { width, height };
+    });
+    if (vppBounds.width < 1400 || vppBounds.height < 760) {
+      throw new Error(`Expected full-bleed VPP map, received ${vppBounds.width}×${vppBounds.height}.`);
+    }
+    const vppCanvas = vppMap.getByTestId('japan-map-canvas');
+    if (await vppCanvas.getAttribute('data-interactive') !== 'true') {
+      throw new Error('Expected an interactive Japan VPP map.');
+    }
+    await vppCanvas.hover();
+    await page.mouse.wheel(0, -320);
+
+    await advance(1);
+    await page.getByTestId('vpp-stage-vpp').waitFor({ state: 'visible' });
+    await page.getByTestId('vpp-superpower-respond').waitFor({ state: 'visible' });
+    await page.getByTestId('vpp-superpower-store').waitFor({ state: 'visible' });
+    await page.getByTestId('vpp-superpower-smarter').waitFor({ state: 'visible' });
+
+    await advance(1);
+    await page.getByText('100K homes', { exact: true }).waitFor({ state: 'visible' });
   } finally {
     await browser.close();
   }

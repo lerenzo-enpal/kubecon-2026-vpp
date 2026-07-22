@@ -19,6 +19,18 @@ const fs = require('node:fs/promises');
     getColdSnapTrips,
     getRoutePosition,
   } = await import('../src/components/japanMapData.mjs');
+  const {
+    VPP_TRANSFORMATION_STAGES,
+    VPP_GRAPH_NODES,
+    VPP_GRAPH_LINKS,
+    VPP_CITY_BUILDINGS,
+    VPP_LOCAL_TRIPS,
+    VPP_JAPAN_HOMES,
+    VPP_BATTERIES,
+    VPP_GENERATORS,
+    VPP_GRID_HUBS,
+    getVPPStageData,
+  } = await import('../src/components/vppTransformationData.mjs');
 
   assert.deepEqual(HORMUZ_COORDINATE, [56.3, 26.6]);
   assert.ok(JAPAN_LNG_COORDINATES.every(([longitude, latitude]) => longitude > 120 && latitude > 25));
@@ -52,9 +64,26 @@ const fs = require('node:fs/promises');
   assert.ok(stageTwo.hubs.length <= 4, 'City feeder origins must not be rendered as giant transmission hubs.');
   assert.deepEqual(getColdSnapCityScene(2), stageTwo, 'Scene selection must be deterministic.');
 
+  assert.deepEqual(
+    VPP_TRANSFORMATION_STAGES.map(({ id }) => id),
+    ['pause', 'graph', 'city', 'japan', 'vpp'],
+    'Acts 3–4 need exactly five presenter keyframes.',
+  );
+  assert.equal(VPP_GRAPH_NODES.length, 14, 'The abstract graph needs a deliberate, legible node count.');
+  assert.ok(VPP_GRAPH_LINKS.length >= 18, 'The abstract graph needs enough links to read as a connected topology.');
+  assert.ok(VPP_CITY_BUILDINGS.length >= VPP_GRAPH_NODES.length, 'Every graph anchor needs city massing.');
+  assert.ok(VPP_LOCAL_TRIPS.length >= 48, 'The city needs a dense local energy mesh.');
+  assert.ok(VPP_JAPAN_HOMES.every(({ position }) => position[0] > 129 && position[0] < 146 && position[1] > 30 && position[1] < 45), 'Japan homes must use geographic coordinates.');
+  assert.ok(VPP_BATTERIES.length >= 6 && VPP_GENERATORS.length >= 5 && VPP_GRID_HUBS.length >= 6, 'The VPP scene needs homes, storage, generation, and grid anchors.');
+  assert.equal(getVPPStageData(3).batteries.length, 0, 'Batteries are a VPP superpower, not a Japan-stage overlay.');
+  assert.ok(getVPPStageData(4).batteries.length >= 6, 'The VPP stage must illuminate distributed storage.');
+  assert.deepEqual(getVPPStageData(4), getVPPStageData(4), 'Stage selection must be deterministic.');
+
   const mapLayers = await fs.readFile(require.resolve('../src/components/JapanMapLayers.jsx'), 'utf8');
   const coldSnapMap = await fs.readFile(require.resolve('../src/components/JapanColdSnapMapAnimated.jsx'), 'utf8');
   const mapBackground = await fs.readFile(require.resolve('../src/components/JapanMapBackground.jsx'), 'utf8');
+  const vppLayers = await fs.readFile(require.resolve('../src/components/VPPTransformationLayers.jsx'), 'utf8');
+  const vppSequence = await fs.readFile(require.resolve('../src/components/VPPTransformationSequence.jsx'), 'utf8');
   assert.match(mapLayers, /TripsLayer/, 'The Hormuz journey needs an animated trip layer.');
   assert.match(mapLayers, /ScreenGridLayer/, 'The sea lane needs a density layer.');
   assert.match(mapLayers, /MaskExtension/, 'The closure zone needs a geographic mask.');
@@ -81,6 +110,29 @@ const fs = require('node:fs/promises');
   assert.match(mapBackground, /map\.getLayer\(layerId\)/, 'Night style overrides must tolerate missing source layers.');
   assert.match(mapBackground, /'#071426'/, 'Night water must use a deep navy paint token.');
   assert.match(coldSnapMap, /variant="night" opacity=\{0\.4\}/, 'Act 2 needs a muted, not opaque, live map beneath the network.');
+  assert.match(vppLayers, /export const getVPPTransformationLayers/);
+  assert.match(vppLayers, /id: 'vpp-city-buildings'/);
+  assert.match(vppLayers, /id: 'vpp-local-energy'/);
+  assert.match(vppLayers, /id: 'vpp-regional-energy'/);
+  assert.match(vppLayers, /id: 'vpp-homes'/);
+  assert.match(vppLayers, /id: 'vpp-batteries'/);
+  assert.match(vppLayers, /id: 'vpp-control-links'/);
+  assert.match(vppLayers, /id: 'vpp-transmission-context'/);
+  assert.match(vppLayers, /TripsLayer/);
+  assert.match(vppLayers, /PolygonLayer/);
+  assert.match(vppLayers, /stabilization/);
+  assert.match(vppSequence, /<StepBridge count=\{5\}>/);
+  assert.match(vppSequence, /SlideContext/);
+  assert.match(vppSequence, /isSlideActive/);
+  assert.match(vppSequence, /requestAnimationFrame/);
+  assert.match(vppSequence, /deckRef\.current\?\.deck\?\.setProps/);
+  assert.match(vppSequence, /data-testid="vpp-transformation-sequence"/);
+  assert.match(vppSequence, /vpp-stage-\$\{stage\.id\}/);
+  assert.match(vppSequence, /vpp-context-cue-\$\{stage\.cue\}/);
+  assert.match(vppSequence, /vpp-hero-graph/);
+  assert.match(vppSequence, /vpp-hero-city/);
+  assert.match(vppSequence, /vpp-hero-load/);
+  assert.doesNotMatch(vppSequence, /story rail/i);
 })().catch((error) => {
   console.error(error);
   process.exit(1);
