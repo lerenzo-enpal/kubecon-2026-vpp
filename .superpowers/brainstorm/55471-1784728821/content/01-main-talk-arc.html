@@ -1,0 +1,56 @@
+<section style="max-width:1180px;margin:auto;padding:32px 24px 56px">
+  <p class="eyebrow">KUBECON JAPAN · MAIN TALK · STORY OPTIONS</p>
+  <h1>One tension. One proof. One system.</h1>
+  <p class="lead">Current 33-slide deck has strong material, but Act I carries four separate crises before audience sees one concrete Japanese VPP. Recommended shape makes each act answer one question.</p>
+
+  <div class="comparison">
+    <article class="option">
+      <p class="tag">CURRENT</p>
+      <h2>Three good chapters</h2>
+      <ol>
+        <li><b>Grid</b><span>structure, import dependence, JEPX, 2022 warning</span></li>
+        <li><b>Renewables</b><span>duck curve, curtailment, examples, VPP</span></li>
+        <li><b>Technical</b><span>ERAB, scale, architecture, frequency, map</span></li>
+      </ol>
+      <p class="note">Risk: Japan is context first, then solution; Shizen reads as one card, not proof.</p>
+    </article>
+
+    <article class="option recommended">
+      <p class="tag">RECOMMENDED</p>
+      <h2>Japan needs flexibility</h2>
+      <ol>
+        <li><b>1 · Why now?</b><span>Hormuz route + island grid + 50/60 Hz seam</span></li>
+        <li><b>2 · What breaks?</b><span>one JEPX spike, then one solar-surplus day</span></li>
+        <li><b>3 · What works?</b><span>Shizen Connect as operating proof, ERAB as contract</span></li>
+        <li><b>4 · How does it scale?</b><span>city graph → VPP → cloud-native control plane</span></li>
+      </ol>
+      <p class="note">Each act ends with question next act answers.</p>
+    </article>
+
+    <article class="option">
+      <p class="tag">ALT</p>
+      <h2>Follow one day</h2>
+      <ol>
+        <li><b>Noon</b><span>Kyushu solar surplus</span></li>
+        <li><b>17:00</b><span>ramp and demand spike</span></li>
+        <li><b>Seconds later</b><span>EVs, batteries, heat pumps respond</span></li>
+        <li><b>At scale</b><span>ERAB + platform architecture</span></li>
+      </ol>
+      <p class="note">Most cinematic. Loses some geopolitical urgency unless Hormuz becomes prologue.</p>
+    </article>
+  </div>
+
+  <div class="flow">
+    <div><small>ACT 1</small><strong>Japan cannot borrow</strong><em>Map: Hormuz → Japan → 50/60 seam</em></div>
+    <div class="connector">→</div>
+    <div><small>ACT 2</small><strong>Japan wastes what it has</strong><em>One solar day: curtailment → evening ramp</em></div>
+    <div class="connector">→</div>
+    <div><small>ACT 3</small><strong>Homes become grid capacity</strong><em>Shizen proof → city graph → platform</em></div>
+  </div>
+
+  <div class="question"><b>Pick story spine:</b><br><button data-choice="recommended">Japan needs flexibility</button><button data-choice="day">Follow one day</button><button data-choice="current">Keep current chapters</button></div>
+</section>
+
+<style>
+  .eyebrow,.tag,small{font:600 12px/1.2 ui-monospace,monospace;letter-spacing:.13em;color:#7dd3fc}.lead{max-width:850px;font-size:20px;color:#cbd5e1}.comparison{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:30px 0}.option{padding:22px;border:1px solid #243049;background:#0d1424;border-radius:8px}.recommended{border-color:#22d3ee;box-shadow:0 0 32px #22d3ee18}.option h2{margin:8px 0 18px}.option ol{padding:0;list-style:none}.option li{display:grid;gap:4px;padding:11px 0;border-top:1px solid #243049}.option li b{color:#f8fafc}.option li span,.note,em{color:#94a3b8;font-style:normal}.note{font-size:14px}.flow{display:flex;align-items:stretch;gap:12px;margin:36px 0}.flow>div:not(.connector){flex:1;padding:18px;border-left:2px solid #22d3ee;background:#0d1424}.flow strong,.flow em{display:block;margin-top:6px}.connector{align-self:center;font-size:26px;color:#fbbf24}.question{padding:20px;background:#111a2c;border-radius:8px}button{margin:12px 8px 0 0;padding:10px 14px;background:#172554;border:1px solid #38bdf8;color:#e0f2fe;border-radius:5px;font-weight:700;cursor:pointer}@media(max-width:800px){.comparison{grid-template-columns:1fr}.flow{display:block}.connector{padding:6px;text-align:center}}
+</style>

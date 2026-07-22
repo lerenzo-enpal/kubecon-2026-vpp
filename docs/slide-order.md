@@ -52,3 +52,13 @@
 - **The Dunkelflaute** -- Dark doldrums: wind+solar collapse, Germany Nov 2024
 - **Demand Response in Action** -- Interactive demo [DemandResponseDemo] [WIP]
 - **References** -- Sources and citations
+
+### Japan Main Talk (26 core slides)
+1. **Japan needs flexibility** -- Promise
+2. **One question for this talk** -- Framing
+3–8. **Act I: Japan cannot borrow** -- Island grid, self-sufficiency, and thin reserves
+9. **One day: the flexibility problem** -- Morning → noon surplus → evening ramp
+10. **A real noon operating constraint** -- Kyushu T&D: 5.09 GW maximum renewable-output control, 4 May 2025, 12:00–12:30
+11. **One day: coordinated response** -- Illustrative EV, heat-pump, and battery response
+12. **From one day to one city** -- Bridge to graph/control-plane framing
+13–26. **Act III: Software makes capacity** -- ERAB, graph, VPP architecture, choreography, aggregation, simulation, close

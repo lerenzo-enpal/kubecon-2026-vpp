@@ -60,8 +60,8 @@ const CORRIDORS = [
 const STEPS = [
   {
     activeIds: [],
-    label: 'Kyushu solar curtailment — grid over-frequency',
-    detail: '340 MW excess solar — 62 Hz threat',
+    label: 'SIMULATED DISPATCH — solar surplus',
+    detail: 'Illustrative excess-solar event',
     freq: 50.2,
     mwDispatched: 0,
     batteriesOnline: 0,
@@ -69,8 +69,8 @@ const STEPS = [
   },
   {
     activeIds: ['fukuoka', 'kitakyushu'],
-    label: 'Kyushu HEMS fleet responding — absorbing excess',
-    detail: 'Batteries charging — curtailment avoided',
+    label: 'SIMULATED DISPATCH — flexible assets absorb excess',
+    detail: 'Illustrative charging response',
     freq: 50.1,
     mwDispatched: 103,
     batteriesOnline: 2850,
@@ -78,8 +78,8 @@ const STEPS = [
   },
   {
     activeIds: ['fukuoka', 'kitakyushu', 'saga', 'kumamoto', 'kagoshima'],
-    label: 'Full Kyushu VPP fleet online — 183 MW absorbed',
-    detail: 'No curtailment — clean energy used, not wasted',
+    label: 'SIMULATED DISPATCH — regional fleet online',
+    detail: 'Illustrative avoided-curtailment response',
     freq: 50.0,
     mwDispatched: 183,
     batteriesOnline: 7400,
@@ -87,8 +87,8 @@ const STEPS = [
   },
   {
     activeIds: ['fukuoka', 'kitakyushu', 'saga', 'kumamoto', 'kagoshima', 'osaka-n', 'osaka-s'],
-    label: 'Kansai Shizen Connect EV VPP activated — evening peak',
-    detail: 'Cross-region coordination via ERAB aggregator',
+    label: 'SIMULATED DISPATCH — evening peak response',
+    detail: 'Illustrative cross-region coordination',
     freq: 49.92,
     mwDispatched: 266,
     batteriesOnline: 11200,
@@ -96,8 +96,8 @@ const STEPS = [
   },
   {
     activeIds: NODES.filter(n => n.type !== 'sub').map(n => n.id),
-    label: 'GRID BALANCED — 334 MW dispatched, 0 curtailment',
-    detail: '14,600 homes coordinated by software',
+    label: 'SIMULATED DISPATCH — grid balanced',
+    detail: 'Illustrative portfolio coordination',
     freq: 50.0,
     mwDispatched: 334,
     batteriesOnline: 14600,

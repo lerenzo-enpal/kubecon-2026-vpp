@@ -1,0 +1,27 @@
+---
+import ContentLayout from '../../../layouts/ContentLayout.astro';
+---
+<ContentLayout title="Japan Energy Flexibility" description="Sources and technical notes behind the KubeCon Japan VPP talk.">
+  <h1>Japan needs flexibility</h1>
+  <p class="text-xl">Japan cannot borrow electricity across borders, must balance across a 50/60 Hz seam, and increasingly needs to make flexible demand and storage visible to the grid.</p>
+
+  <h2>Grid structure and energy security</h2>
+  <p>Japan’s FY2023 primary-energy self-sufficiency rate was 15.3%. This is an energy-security measure, not an electricity self-sufficiency measure.</p>
+  <p><a href="https://www.enecho.meti.go.jp/en/category/brochures/whitepaper/">Agency for Natural Resources and Energy — Energy White Paper</a></p>
+
+  <h2>JEPX 2021</h2>
+  <p>The Japan Electric Power Exchange publishes the underlying spot-market series used to discuss the January 2021 price disruption.</p>
+  <p><a href="https://www.jepx.jp/en/electricpower/market-data/spot/">JEPX — spot market data</a></p>
+
+  <h2>Curtailment and the single-day case</h2>
+  <p>The talk’s 12:00 → 17:00 sequence is an illustrative operating model: absorb a noon surplus, then respond to the evening ramp. It is not a claim about a named operator’s dispatch results.</p>
+  <p><a href="https://www.kyuden.co.jp/td_english/">Kyushu Electric Power Transmission and Distribution</a></p>
+
+  <h2>Shizen Connect and ERAB</h2>
+  <p>Shizen Connect is referenced as a Japanese VPP platform. The talk avoids programme MW, device-count, and asset-role claims unless a primary programme source states them.</p>
+  <p><a href="https://www.shizenenergy.net/en/business/shizen-connect/">Shizen Energy — Shizen Connect</a></p>
+  <p><a href="https://www.enecho.meti.go.jp/en/category/electricity_and_gas/electricity_measures/">Agency for Natural Resources and Energy — electricity measures</a></p>
+
+  <h2>Technical appendix</h2>
+  <p>The live talk keeps architecture, choreography, frequency response, and aggregation focused. The interactive deck retains the technical demonstrations for follow-up discussion.</p>
+</ContentLayout>
