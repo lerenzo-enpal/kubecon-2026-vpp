@@ -11,7 +11,7 @@ const PHASES = [
 const problemPath = 'M72 250 C155 210 220 190 300 240 S455 310 535 250 S675 120 782 160';
 const responsePath = 'M72 250 C155 220 220 205 300 238 S455 280 535 250 S675 160 782 180';
 
-export function DaylightFlexibilityScene({ mode, step = 0 }) {
+export function DaylightFlexibilityScene({ mode, step = 0, eyebrow }) {
   const phase = Math.min(Math.max(Number.isInteger(step) ? step : 0, 0), PHASES.length - 1);
   const scene = PHASES[phase];
   const response = mode === 'response';
@@ -21,12 +21,15 @@ export function DaylightFlexibilityScene({ mode, step = 0 }) {
 
   return (
     <section data-testid={`daylight-flexibility-${mode}`} style={{ position: 'relative', minHeight: 610, overflow: 'hidden', padding: '48px 64px', background: 'var(--color-washi-paper)', color: 'var(--color-washi-ink)' }}>
-      <div style={{ fontFamily: 'var(--font-mono)', color: response ? 'var(--color-success)' : 'var(--color-washi-solar)', fontSize: 17, letterSpacing: '0.16em' }}>ONE DAY · JAPAN · {response ? 'COORDINATED RESPONSE' : 'THE FLEXIBILITY PROBLEM'}</div>
+      <div data-testid={eyebrow ? 'proof-1-daylight-intro' : undefined} style={{ fontFamily: 'var(--font-mono)', color: response ? 'var(--color-success)' : 'var(--color-washi-solar)', fontSize: 17, letterSpacing: '0.16em' }}>{eyebrow || `ONE DAY · JAPAN · ${response ? 'COORDINATED RESPONSE' : 'THE FLEXIBILITY PROBLEM'}`}</div>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 20, marginTop: 20 }}>
         <div style={{ fontFamily: 'var(--font-mono)', fontSize: 58, fontWeight: 700, color: response ? 'var(--color-success)' : 'var(--color-washi-solar)' }}>{scene.time}</div>
         <h1 style={{ margin: 0, fontFamily: 'var(--font-heading)', fontSize: 38, lineHeight: 1.08 }}>{scene.title}</h1>
       </div>
       <p style={{ maxWidth: 690, margin: '15px 0 0', fontFamily: 'var(--font-body)', fontSize: 23, lineHeight: 1.35 }}>{scene.note}</p>
+      <div data-testid="daylight-time-axis" aria-label="08:00 to 17:00 timeline" style={{ display: 'flex', justifyContent: 'space-between', maxWidth: 760, marginTop: 18, color: 'var(--color-washi-ink)', fontFamily: 'var(--font-mono)', fontSize: 16, opacity: 0.72 }}>
+        {['08:00', '12:00', '17:00'].map(time => <span key={time} style={{ color: time === scene.time || (time === '08:00' && scene.time === '06:00') ? 'var(--color-washi-alert)' : undefined }}>{time}</span>)}
+      </div>
 
       <svg viewBox="0 0 860 330" role="img" aria-label={response ? 'Illustrative flexible-device response flattens the net-load curve' : 'Daylight reveals the noon surplus and evening ramp'} style={{ width: '100%', height: 300, marginTop: 8 }}>
         <path d="M0 275H860" stroke="var(--color-washi-ink)" strokeOpacity="0.18" />

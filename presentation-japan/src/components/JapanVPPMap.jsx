@@ -207,7 +207,7 @@ export function JapanVPPMap({ height = 480 }) {
   const freqColor = currentStep.freq > 50.1 ? '#FFA35F' : currentStep.freq < 49.95 ? '#ef4444' : '#10b981';
 
   return (
-    <div style={{ position: 'relative', width: '100%', height }}>
+    <div data-testid="japan-vpp-map" style={{ position: 'relative', width: '100%', height }}>
       <DeckGL
         viewState={viewState}
         onViewStateChange={({ viewState: vs }) => setViewState(vs)}

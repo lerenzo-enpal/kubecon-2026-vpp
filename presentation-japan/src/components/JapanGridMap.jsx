@@ -43,7 +43,7 @@ const DARK_MAP_STYLE = {
   layers: [{ id: 'base', type: 'raster', source: 'carto-dark', paint: { 'raster-opacity': 0.7 } }],
 };
 
-export function JapanGridMap({ showSeam = false, height = 480 }) {
+export function JapanGridMap({ showSeam = false, height = 480, variant = 'dark' }) {
   const [viewState, setViewState] = useState(showSeam ? VIEW_SEAM : VIEW_OVERVIEW);
   const slideCtx = useContext(SlideContext);
   const isActive = slideCtx?.isSlideActive ?? true;
@@ -142,7 +142,7 @@ export function JapanGridMap({ showSeam = false, height = 480 }) {
   }, []);
 
   return (
-    <div style={{ position: 'relative', width: '100%', height }}>
+    <div data-testid="main-talk-opening-map" data-variant={variant} style={{ position: 'relative', width: '100%', height, background: variant === 'washi' ? 'var(--color-washi-paper)' : undefined }}>
       <DeckGL
         viewState={viewState}
         onViewStateChange={({ viewState: vs }) => setViewState(vs)}
@@ -150,14 +150,14 @@ export function JapanGridMap({ showSeam = false, height = 480 }) {
         layers={layers}
         style={{ position: 'absolute', inset: 0 }}
       >
-        <MapGL mapStyle={DARK_MAP_STYLE} />
+        <MapGL mapStyle={DARK_MAP_STYLE} style={variant === 'washi' ? { filter: 'saturate(0.35) brightness(1.35) sepia(0.18)' } : undefined} />
       </DeckGL>
       {/* Seam legend overlay */}
       <div style={{
         position: 'absolute', bottom: 16, left: 16,
-        background: 'rgba(6,10,26,0.85)', border: '1px solid rgba(255,163,95,0.4)',
+        background: variant === 'washi' ? 'color-mix(in srgb, var(--color-washi-paper) 88%, transparent)' : 'rgba(6,10,26,0.85)', border: '1px solid rgba(255,163,95,0.4)',
         borderRadius: 6, padding: '8px 14px',
-        fontFamily: 'JetBrains Mono, monospace', fontSize: 12, color: '#94a3b8',
+        fontFamily: 'JetBrains Mono, monospace', fontSize: 12, color: variant === 'washi' ? 'var(--color-washi-ink)' : '#94a3b8',
       }}>
         <div style={{ color: '#FFA35F', fontWeight: 700, marginBottom: 4 }}>50 ⇄ 60 Hz Seam</div>
         <div>Only 1.2 GW conversion capacity</div>
