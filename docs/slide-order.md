@@ -53,40 +53,37 @@
 - **Demand Response in Action** -- Interactive demo [DemandResponseDemo] [WIP]
 - **References** -- Sources and citations
 
-### Japan Main Talk (26 core slides)
+### Japan Main Talk (23 core slides)
 
 #### Orientation (3)
-1. **Japan needs flexibility** -- Promise
-2. **One question for this talk** -- Framing
-3. **Japan cannot borrow** -- Island system, 50/60 Hz seam, FY2023 primary-energy self-sufficiency, and thin-flexibility premise
+1. **Japan cannot borrow** -- Island system premise
+2. **What happens at the 50 / 60 Hz seam?** -- Framing
+3. **15.3% primary-energy self-sufficiency** -- Exposure
 
-#### Proof 1: Make renewables usable (7)
-4. **Make renewables usable** -- Solar timing mismatch
-5. **One day: the flexibility problem** -- Morning → noon surplus → evening ramp
-6. **A real noon operating constraint** -- Kyushu T&D: 5.09 GW maximum renewable-output control, 4 May 2025, 12:00–12:30
-7. **Generation and demand miss each other** -- Clean supply and demand arrive at different times
-8. **One day: coordinated response** -- Illustrative EV, heat-pump, and battery response
-9. **Store it for later** -- Shift energy and demand into useful windows
-10. **A Japanese platform for that flexibility** -- Sourced Shizen Connect platform context; not a performance result
+#### Proof 1: Make renewables usable (4)
+4. **A real noon operating constraint** -- Kyushu T&D: 5.09 GW maximum renewable-output control, 4 May 2025, 12:00–12:30
+5. **Tokyo-area reported case** -- Interactive map and illustrative duck curve: curtailment → charging → dusk support
+6. **Store it for later** -- Shift energy and demand into useful windows
+7. **A Japanese platform for that flexibility** -- Sourced Shizen Connect platform context; not a performance result
 
 #### Proof 2: Respond at grid speed (6)
-11. **Respond at grid speed** -- Failure-response trigger
-12. **ERAB connects assets to a market context** -- Policy and market context
-13. **A city is a graph problem** -- Observable devices, homes, substations, markets, and constraints
-14. **The VPP is a cloud-native control plane** -- Architecture mechanism
-15. **Choreography keeps response close to the edge** -- Local autonomy plus coordinated intent
-16. **One response loop, end to end** -- Observable control path; FrequencyDemo moves to the technical appendix
+8. **Respond at grid speed** -- Failure-response trigger
+9. **ERAB connects assets to a market context** -- Policy and market context
+10. **A city is a graph problem** -- Observable devices, homes, substations, markets, and constraints
+11. **The VPP is a cloud-native control plane** -- Architecture mechanism
+12. **Choreography keeps response close to the edge** -- Local autonomy plus coordinated intent
+13. **One response loop, end to end** -- Observable control path; FrequencyDemo moves to the technical appendix
 
 #### Proof 3: Use demand smarter (6)
-17. **Use demand smarter** -- Daily demand flexibility
-18. **EVs can become controllable capacity** -- Shizen Connect January 2024 V2H demonstration
-19. **HEMS can coordinate the home** -- Kansai Electric/Shizen Connect technical-feasibility demonstration
-20. **Aggregation makes a fleet legible** -- Device-to-portfolio visibility
-21. **Simulated dispatch** -- Explicitly simulated Japan coordination mechanics
-22. **Illustrative portfolio response** -- Simulated fleet response, not a reported company outcome
+14. **Use demand smarter** -- Daily demand flexibility
+15. **EVs can become controllable capacity** -- Shizen Connect January 2024 V2H demonstration
+16. **HEMS can coordinate the home** -- Kansai Electric/Shizen Connect technical-feasibility demonstration
+17. **Aggregation makes a fleet legible** -- Device-to-portfolio visibility
+18. **Simulated dispatch** -- Explicitly simulated Japan coordination mechanics
+19. **Illustrative portfolio response** -- Simulated fleet response, not a reported company outcome
 
 #### Return (4)
-23. **What cloud-native teams can build** -- Implementation patterns
-24. **Homes become a power plant when software earns trust** -- Trusted capacity without a fixed household equivalence
-25. **Keep exploring** -- Research, case notes, and technical appendix
-26. **Japan needs flexibility** -- Return to the promise
+20. **What cloud-native teams can build** -- Implementation patterns
+21. **Homes become a power plant when software earns trust** -- Trusted capacity without a fixed household equivalence
+22. **Keep exploring** -- Research, case notes, and technical appendix
+23. **Japan needs flexibility** -- Return to the promise

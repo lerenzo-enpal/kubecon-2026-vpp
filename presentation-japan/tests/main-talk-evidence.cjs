@@ -10,6 +10,9 @@ const assert = require('node:assert/strict');
   assert.equal(MAIN_TALK_EVIDENCE.shizenV2H.value, '186 household EVs via V2H');
   assert.match(MAIN_TALK_EVIDENCE.shizenV2H.notes, /company-reported 90% control accuracy/i);
   assert.equal(MAIN_TALK_EVIDENCE.kansaiHems.value, 'HEMS-controlled residential batteries');
+  assert.equal(MAIN_TALK_EVIDENCE.tokyoDemandCreation.sourceUrl, 'https://www.se-digital.net/pressrelease_260317_tokyodenryokuep-output-curtailment/');
+  assert.match(MAIN_TALK_EVIDENCE.tokyoDemandCreation.reference, /Shizen Connect \/ TEPCO EP.*March 2026/i);
+  assert.match(MAIN_TALK_EVIDENCE.tokyoDemandCreation.notes, /reported case.*illustrative/i);
 
   for (const [name, evidence] of Object.entries(MAIN_TALK_EVIDENCE)) {
     for (const field of ['value', 'label', 'sourceLabel', 'sourceUrl', 'sourceYear', 'reference', 'notes', 'researchAnchor']) {

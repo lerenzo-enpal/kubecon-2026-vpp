@@ -39,6 +39,16 @@ export const MAIN_TALK_EVIDENCE = {
     notes: 'Describe only asset types and services stated on the linked primary source; this deck uses an illustrative day, not Shizen performance figures.',
     researchAnchor: '#shizen-connect-platform',
   },
+  tokyoDemandCreation: {
+    value: 'Tokyo-area reported case',
+    label: 'Reported demand-creation DR following Tokyo-area renewable-output control',
+    sourceLabel: 'Shizen Connect / TEPCO Energy Partner',
+    sourceUrl: 'https://www.se-digital.net/pressrelease_260317_tokyodenryokuep-output-curtailment/',
+    sourceYear: 'March 2026',
+    reference: 'Source [1] · Shizen Connect / TEPCO EP · March 2026',
+    notes: 'Reported case; fleet markers, dispatch, and curve response are illustrative, not measured performance.',
+    researchAnchor: '#tokyo-demand-creation-dr',
+  },
   shizenV2H: {
     value: '186 household EVs via V2H',
     label: 'January 2024 VPP demonstration under METI’s FY2023 DER programme',

@@ -4,17 +4,17 @@ import { useTheme } from './hooks/useTheme.js';
 import { useLocale } from './hooks/useLocale.js';
 import { PresentationChrome } from './components/PresentationChrome.jsx';
 import { MainTalkSourceFooter } from './components/MainTalkSourceFooter.jsx';
-import { DaylightFlexibilityScene } from './components/DaylightFlexibilityScene.jsx';
 import StepBridge from './components/StepBridge.jsx';
 import { MAIN_TALK_EVIDENCE as E } from './data/mainTalkEvidence.mjs';
 import { JapanGridMap } from './components/JapanGridMap.jsx';
 import { JapanVPPMap } from './components/JapanVPPMap.jsx';
+import { TokyoDuckCurveCaseStudy } from './components/TokyoDuckCurveCaseStudy.jsx';
 import VPPArchitecture from '../../presentation/src/components/VPPArchitecture.jsx';
 import ChoreographyLoop from '../../presentation/src/components/ChoreographyLoop.jsx';
 import ResponseTimeline from '../../presentation/src/components/ResponseTimeline.jsx';
 import AggregationPyramid from '../../presentation/src/components/AggregationPyramid.jsx';
 
-const coreSlides = 25;
+const coreSlides = 23;
 const page = { padding: '38px 58px', backgroundColor: 'var(--color-washi-paper)' };
 const darkPage = { padding: '38px 58px', backgroundColor: 'var(--color-bg)' };
 function Lazy({ children }) { const c = useContext(SlideContext); return c?.isSlideActive ? children : null; }
@@ -31,10 +31,8 @@ export default function MainTalk() {
     <Slide {...page}><div style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-washi-alert)', letterSpacing: '0.16em' }}>ONE QUESTION</div><Title>What happens at the 50 / 60 Hz seam?</Title><Body>When the grid is split in two, flexibility has to be coordinated where the imbalance appears.</Body><div style={{ marginTop: 48, height: 12, maxWidth: 820, background: 'linear-gradient(90deg, var(--color-primary) 0 48%, var(--color-washi-alert) 48% 52%, var(--color-washi-solar) 52%)' }} /></Slide>
     <Slide {...page}><div style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-washi-alert)', letterSpacing: '0.16em' }}>EXPOSURE</div><div style={{ marginTop: 78, fontFamily: 'var(--font-heading)', color: 'var(--color-washi-ink)', fontSize: 112, lineHeight: 0.9 }}>15.3%</div><Title>primary-energy self-sufficiency</Title><Body>That is why timing, control, and trusted local capacity matter.</Body><Source evidence={E.japanEnergy} /></Slide>
 
-    <Slide padding="0"><StepBridge count={3}>{step => <DaylightFlexibilityScene mode="problem" step={step} eyebrow="PROOF 1 · MAKE RENEWABLES USABLE" />}</StepBridge><Notes>Chapter promise: renewables need timing, not only generation. Follow one day: morning balance; noon surplus; evening ramp.</Notes></Slide>
     <Slide {...page}><Title tone="var(--color-washi-alert)">A real noon operating constraint</Title><div style={{ marginTop: 48, padding: '28px 32px', borderLeft: '8px solid var(--color-washi-alert)', background: 'color-mix(in srgb, var(--color-washi-alert) 7%, transparent)' }}><div style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-washi-alert)', fontSize: 20, letterSpacing: '0.12em' }}>4 MAY 2025 · 12:00–12:30</div><div style={{ marginTop: 18, fontFamily: 'var(--font-heading)', fontSize: 48, lineHeight: 1.08 }}>Kyushu T&amp;D recorded up to 5.09 GW of renewable-output control.</div></div><Body>This is a maximum power value, not an energy total: a single interval when local clean generation had to be constrained.</Body><Source evidence={E.kyushuControl} /></Slide>
-    <Slide {...page}><Title>Generation and demand miss each other</Title><Body>At noon, clean supply can exceed local demand. By evening, solar falls just as homes and cities need more power.</Body><Body>The resource is available. The timing is wrong.</Body></Slide>
-    <Slide padding="0"><StepBridge count={3}>{step => <DaylightFlexibilityScene mode="response" step={step} />}</StepBridge><Notes>Same day, different response: EVs, heat pumps, and batteries move load into the solar window. Illustrative, not a Shizen Connect result.</Notes></Slide>
+    <Slide padding="0"><StepBridge count={3}>{step => <TokyoDuckCurveCaseStudy step={step} />}</StepBridge><Notes>Tokyo-area reported case. Noon: curtailment context; then illustrative household charging; then illustrative dusk support. Do not claim fleet capacity or delivered grid impact.</Notes></Slide>
     <Slide {...page}><Title>Store it for later</Title><Body>Batteries store noon generation. EVs and heat pumps shift consumption into the solar window. The evening ramp becomes smaller and easier to serve.</Body></Slide>
     <Slide {...page}><Title>A Japanese platform for that flexibility</Title><Body>Shizen Connect’s public materials describe a VPP platform for coordinating distributed energy resources.</Body><Source evidence={E.shizenConnect} caseNote={{ title: 'Shizen Connect', scope: 'Platform context for distributed energy resources', qualifier: 'Company-reported platform scope · not a performance result' }} /></Slide>
 
