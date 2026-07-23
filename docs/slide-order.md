@@ -54,11 +54,39 @@
 - **References** -- Sources and citations
 
 ### Japan Main Talk (26 core slides)
+
+#### Orientation (3)
 1. **Japan needs flexibility** -- Promise
 2. **One question for this talk** -- Framing
-3–8. **Act I: Japan cannot borrow** -- Island grid, self-sufficiency, and thin reserves
-9. **One day: the flexibility problem** -- Morning → noon surplus → evening ramp
-10. **A real noon operating constraint** -- Kyushu T&D: 5.09 GW maximum renewable-output control, 4 May 2025, 12:00–12:30
-11. **One day: coordinated response** -- Illustrative EV, heat-pump, and battery response
-12. **From one day to one city** -- Bridge to graph/control-plane framing
-13–26. **Act III: Software makes capacity** -- ERAB, graph, VPP architecture, choreography, aggregation, simulation, close
+3. **Japan cannot borrow** -- Island system, 50/60 Hz seam, FY2023 primary-energy self-sufficiency, and thin-flexibility premise
+
+#### Proof 1: Make renewables usable (7)
+4. **Make renewables usable** -- Solar timing mismatch
+5. **One day: the flexibility problem** -- Morning → noon surplus → evening ramp
+6. **A real noon operating constraint** -- Kyushu T&D: 5.09 GW maximum renewable-output control, 4 May 2025, 12:00–12:30
+7. **Generation and demand miss each other** -- Clean supply and demand arrive at different times
+8. **One day: coordinated response** -- Illustrative EV, heat-pump, and battery response
+9. **Store it for later** -- Shift energy and demand into useful windows
+10. **A Japanese platform for that flexibility** -- Sourced Shizen Connect platform context; not a performance result
+
+#### Proof 2: Respond at grid speed (6)
+11. **Respond at grid speed** -- Failure-response trigger
+12. **ERAB connects assets to a market context** -- Policy and market context
+13. **A city is a graph problem** -- Observable devices, homes, substations, markets, and constraints
+14. **The VPP is a cloud-native control plane** -- Architecture mechanism
+15. **Choreography keeps response close to the edge** -- Local autonomy plus coordinated intent
+16. **One response loop, end to end** -- Observable control path; FrequencyDemo moves to the technical appendix
+
+#### Proof 3: Use demand smarter (6)
+17. **Use demand smarter** -- Daily demand flexibility
+18. **EVs can become controllable capacity** -- Shizen Connect January 2024 V2H demonstration
+19. **HEMS can coordinate the home** -- Kansai Electric/Shizen Connect technical-feasibility demonstration
+20. **Aggregation makes a fleet legible** -- Device-to-portfolio visibility
+21. **Simulated dispatch** -- Explicitly simulated Japan coordination mechanics
+22. **Illustrative portfolio response** -- Simulated fleet response, not a reported company outcome
+
+#### Return (4)
+23. **What cloud-native teams can build** -- Implementation patterns
+24. **Homes become a power plant when software earns trust** -- Trusted capacity without a fixed household equivalence
+25. **Keep exploring** -- Research, case notes, and technical appendix
+26. **Japan needs flexibility** -- Return to the promise
