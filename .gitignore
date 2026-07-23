@@ -11,3 +11,4 @@ _site/
 .claude
 /presentation-japan/dist/
 /presentation-japan/node_modules/
+/.superpowers/

@@ -76,8 +76,10 @@ Retrieved 23 July 2026. Only the claims below may feed `MAIN_TALK_EVIDENCE`. Com
 ## Tokyo supply-demand tightness — March 2022
 
 - Contemporaneous source: Reuters, [Japan urges more power saving, warns of possible blackouts in Tokyo](https://www.reuters.com/world/asia-pacific/japan-urges-more-power-saving-warns-possible-blackouts-tokyo-2022-03-22/), 22 March 2022.
+- Documented earthquake-related asset stops: [NHK, 17 March 2022](https://web.archive.org/web/20220316164116/https://www3.nhk.or.jp/news/html/20220317/k10013536001000.html) reported Haramachi Thermal and Shin-Sendai Thermal ceased operations for safety inspections; [Tokyo Shimbun, 18 March 2022](https://web.archive.org/web/20220318001350/https://www.tokyo-np.co.jp/article/166318) reported Hirono Thermal stopped through an earthquake safety mechanism.
 - Incident sequence approved for slides: **16 March earthquake → generation outages; 22 March cold snap → evening demand pressure; 16:00 supply-demand tightness warning; evening peak passed without rolling blackouts.**
 - Approved slide framing: **A documented Tokyo-area supply-adequacy and peak-demand event.**
+- Map-safe asset wording: **Hirono, Haramachi, and Shin-Sendai stopped after the 16 March earthquake.** Their locations and outage markers may be shown; connecting corridors are high-level grid context, not documented physical power flows.
 - Crucial boundary: **This is not a documented frequency event and does not evidence a VPP dispatch.** Any battery, EV, or flexible-demand response shown is labelled **illustrative flexibility** / **counterfactual capacity**.
-- Do not show: an incident MW value, exact reserve margin, a frequency trace, a VPP fleet count, response time, or a claim that Shizen Connect participated.
+- Do not show: an incident MW value, exact reserve margin, a frequency trace, a VPP fleet count, response time, plant recovery time, line-flow value, or a claim that Shizen Connect participated.
 - Reuse: suitable for the keynote as the historical energy-security example, with the same evidence boundary.
