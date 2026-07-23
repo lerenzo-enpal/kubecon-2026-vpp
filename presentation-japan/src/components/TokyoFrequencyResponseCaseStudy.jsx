@@ -7,6 +7,7 @@ import MapGL from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { MAIN_TALK_EVIDENCE } from '../data/mainTalkEvidence.mjs';
 import { MainTalkSourceFooter } from './MainTalkSourceFooter.jsx';
+import DuckCurveHUD from '../../../presentation/src/components/DuckCurveHUD.jsx';
 
 const FLY_TO = new FlyToInterpolator();
 const DARK_MAP_STYLE = {
@@ -32,11 +33,6 @@ const INCIDENT_STATES = [
 ];
 const GRID_LINKS = ['hirono', 'haramachi', 'shin-sendai'].map(from => ({ sourcePosition: NODE_MAP.get(from).position, targetPosition: NODE_MAP.get('tokyo').position }));
 const GRAPH_LINKS = [['home-a', 'tokyo'], ['home-b', 'tokyo'], ['home-c', 'tokyo'], ['hirono', 'tokyo'], ['haramachi', 'tokyo'], ['shin-sendai', 'tokyo']].map(([from, to]) => ({ sourcePosition: NODE_MAP.get(from).position, targetPosition: NODE_MAP.get(to).position }));
-
-function Trace({ step }) {
-  const paths = ['M0 76 H88 L126 40 H320', 'M0 76 H72 L130 24 H320', 'M0 76 H62 L130 14 H320', 'M0 76 H62 L130 14 C210 14 232 34 320 34'];
-  return <svg role="img" aria-label="Illustrative system pressure trace" viewBox="0 0 320 108" style={{ width: '100%', height: 110 }}><path d="M0 76 H320" fill="none" stroke="var(--color-dim)" strokeDasharray="5 6" /><path d={paths[step]} fill="none" stroke={step < 3 ? 'var(--color-washi-alert)' : 'var(--color-success)'} strokeWidth="5" strokeLinecap="round" /></svg>;
-}
 
 export function TokyoFrequencyResponseCaseStudy({ mode = 'incident', step = 0 }) {
   const slideContext = useContext(SlideContext);
@@ -79,7 +75,10 @@ function IncidentHud({ scene, step }) {
     <div style={{ marginTop: 10, color: 'var(--color-heading)', fontFamily: 'var(--font-heading)', fontSize: 34, lineHeight: 1.08 }}>{scene.label}</div>
     <div style={{ marginTop: 10, color: 'var(--color-dim)', fontFamily: 'var(--font-body)', fontSize: 19, lineHeight: 1.3 }}>{scene.detail}</div>
     {step === 0 && <div data-testid="tokyo-documented-outages" style={{ marginTop: 14, padding: '10px 14px', borderLeft: '3px solid var(--color-washi-alert)', background: 'color-mix(in srgb, var(--color-bg) 84%, transparent)', color: 'var(--color-muted)', fontFamily: 'var(--font-mono)', fontSize: 14, lineHeight: 1.55 }}><strong style={{ color: 'var(--color-washi-alert)' }}>DOCUMENTED 16 MAR OUTAGES</strong><br />Hirono Thermal<br />Haramachi Thermal<br />Shin-Sendai Thermal</div>}
-    <div style={{ marginTop: 18, padding: '10px 14px', border: '1px solid color-mix(in srgb, var(--color-secondary) 45%, transparent)', background: 'color-mix(in srgb, var(--color-bg) 84%, transparent)' }}><Trace step={step} /></div>
+    <div style={{ marginTop: 18, padding: '10px 14px 6px', border: '1px solid color-mix(in srgb, var(--color-secondary) 45%, transparent)', background: 'color-mix(in srgb, var(--color-bg) 84%, transparent)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--color-muted)', fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.1em' }}><span>ILLUSTRATIVE WINTER DEMAND PROFILE</span><span>16–20H PEAK</span></div>
+      <div role="img" aria-label="Illustrative winter demand profile with the event time highlighted"><DuckCurveHUD width={470} height={170} scenario="winter" highlightHour={[12, 18, 16, 19][step]} expanded /></div>
+    </div>
   </div>;
 }
 
