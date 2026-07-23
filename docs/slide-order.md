@@ -53,7 +53,7 @@
 - **Demand Response in Action** -- Interactive demo [DemandResponseDemo] [WIP]
 - **References** -- Sources and citations
 
-### Japan Main Talk (23 core slides)
+### Japan Main Talk (21 core slides)
 
 #### Orientation (3)
 1. **Japan cannot borrow** -- Island system premise
@@ -66,24 +66,22 @@
 6. **Store it for later** -- Shift energy and demand into useful windows
 7. **A Japanese platform for that flexibility** -- Sourced Shizen Connect platform context; not a performance result
 
-#### Proof 2: Respond at grid speed (6)
-8. **Respond at grid speed** -- Failure-response trigger
-9. **ERAB connects assets to a market context** -- Policy and market context
-10. **A city is a graph problem** -- Observable devices, homes, substations, markets, and constraints
-11. **The VPP is a cloud-native control plane** -- Architecture mechanism
-12. **Choreography keeps response close to the edge** -- Local autonomy plus coordinated intent
-13. **One response loop, end to end** -- Observable control path; FrequencyDemo moves to the technical appendix
+#### Proof 2: Respond when the system is tight (4)
+8. **Respond when the system is tight** -- March 2022 Tokyo supply-demand emergency trigger
+9. **Tokyo, March 2022** -- Interactive documented event playback; illustrative flexibility overlay
+10. **A city is a graph problem** -- Animated recovered-state Tokyo graph
+11. **The VPP is the control plane** -- Architecture, choreography, and end-to-end response loop
 
 #### Proof 3: Use demand smarter (6)
-14. **Use demand smarter** -- Daily demand flexibility
-15. **EVs can become controllable capacity** -- Shizen Connect January 2024 V2H demonstration
-16. **HEMS can coordinate the home** -- Kansai Electric/Shizen Connect technical-feasibility demonstration
-17. **Aggregation makes a fleet legible** -- Device-to-portfolio visibility
-18. **Simulated dispatch** -- Explicitly simulated Japan coordination mechanics
-19. **Illustrative portfolio response** -- Simulated fleet response, not a reported company outcome
+12. **Use demand smarter** -- Daily demand flexibility
+13. **EVs can become controllable capacity** -- Shizen Connect January 2024 V2H demonstration
+14. **HEMS can coordinate the home** -- Kansai Electric/Shizen Connect technical-feasibility demonstration
+15. **Aggregation makes a fleet legible** -- Device-to-portfolio visibility
+16. **Simulated dispatch** -- Explicitly simulated Japan coordination mechanics
+17. **Illustrative portfolio response** -- Simulated fleet response, not a reported company outcome
 
 #### Return (4)
-20. **What cloud-native teams can build** -- Implementation patterns
-21. **Homes become a power plant when software earns trust** -- Trusted capacity without a fixed household equivalence
-22. **Keep exploring** -- Research, case notes, and technical appendix
-23. **Japan needs flexibility** -- Return to the promise
+18. **What cloud-native teams can build** -- Implementation patterns
+19. **Homes become a power plant when software earns trust** -- Trusted capacity without a fixed household equivalence
+20. **Keep exploring** -- Research, case notes, and technical appendix
+21. **Japan needs flexibility** -- Return to the promise

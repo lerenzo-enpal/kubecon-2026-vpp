@@ -72,3 +72,12 @@ Retrieved 23 July 2026. Only the claims below may feed `MAIN_TALK_EVIDENCE`. Com
 - Repository research names METI’s `Cybersecurity Guidelines for Energy Resource Aggregation Business`, dated 22 May 2025, but the exact usable primary page / document URL is not recorded in this evidence set.
 - Approved use: none in `MAIN_TALK_EVIDENCE` yet.
 - Do not say: the guideline requires encryption, authentication, incident reporting, or any other technical control until the underlying text and exact URL are verified. Do not cite the title/date as proof of specific requirements.
+
+## Tokyo supply-demand tightness — March 2022
+
+- Contemporaneous source: Reuters, [Japan urges more power saving, warns of possible blackouts in Tokyo](https://www.reuters.com/world/asia-pacific/japan-urges-more-power-saving-warns-possible-blackouts-tokyo-2022-03-22/), 22 March 2022.
+- Incident sequence approved for slides: **16 March earthquake → generation outages; 22 March cold snap → evening demand pressure; 16:00 supply-demand tightness warning; evening peak passed without rolling blackouts.**
+- Approved slide framing: **A documented Tokyo-area supply-adequacy and peak-demand event.**
+- Crucial boundary: **This is not a documented frequency event and does not evidence a VPP dispatch.** Any battery, EV, or flexible-demand response shown is labelled **illustrative flexibility** / **counterfactual capacity**.
+- Do not show: an incident MW value, exact reserve margin, a frequency trace, a VPP fleet count, response time, or a claim that Shizen Connect participated.
+- Reuse: suitable for the keynote as the historical energy-security example, with the same evidence boundary.

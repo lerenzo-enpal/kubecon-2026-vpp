@@ -59,6 +59,16 @@ export const MAIN_TALK_EVIDENCE = {
     notes: 'Company-reported 90% control accuracy; do not generalise to other assets, regional fleet scale, or delivered grid impact.',
     researchAnchor: '#shizen-v2h-demonstration',
   },
+  tokyo2022Tightness: {
+    value: '22 March 2022',
+    label: 'Tokyo-area electricity supply-demand tightness warning during a cold snap after the 16 March earthquake',
+    sourceLabel: 'Reuters',
+    sourceUrl: 'https://www.reuters.com/world/asia-pacific/japan-urges-more-power-saving-warns-possible-blackouts-tokyo-2022-03-22/',
+    sourceYear: '2022',
+    reference: 'Reuters · 22 Mar 2022 · contemporaneous incident reporting',
+    notes: 'The incident concerns supply adequacy and peak demand, not a documented frequency event or VPP dispatch. Flexible-load and storage markers are illustrative counterfactual capacity only.',
+    researchAnchor: '#tokyo-2022-supply-demand-tightness',
+  },
   erab: {
     value: 'ERAB',
     label: 'Energy Resource Aggregation Business policy framework',

@@ -9,12 +9,13 @@ import { MAIN_TALK_EVIDENCE as E } from './data/mainTalkEvidence.mjs';
 import { JapanGridMap } from './components/JapanGridMap.jsx';
 import { JapanVPPMap } from './components/JapanVPPMap.jsx';
 import { TokyoDuckCurveCaseStudy } from './components/TokyoDuckCurveCaseStudy.jsx';
+import { TokyoFrequencyResponseCaseStudy } from './components/TokyoFrequencyResponseCaseStudy.jsx';
 import VPPArchitecture from '../../presentation/src/components/VPPArchitecture.jsx';
 import ChoreographyLoop from '../../presentation/src/components/ChoreographyLoop.jsx';
 import ResponseTimeline from '../../presentation/src/components/ResponseTimeline.jsx';
 import AggregationPyramid from '../../presentation/src/components/AggregationPyramid.jsx';
 
-const coreSlides = 23;
+const coreSlides = 21;
 const page = { padding: '38px 58px', backgroundColor: 'var(--color-washi-paper)' };
 const darkPage = { padding: '38px 58px', backgroundColor: 'var(--color-bg)' };
 function Lazy({ children }) { const c = useContext(SlideContext); return c?.isSlideActive ? children : null; }
@@ -36,12 +37,10 @@ export default function MainTalk() {
     <Slide {...page}><Title>Store it for later</Title><Body>Batteries store noon generation. EVs and heat pumps shift consumption into the solar window. The evening ramp becomes smaller and easier to serve.</Body></Slide>
     <Slide {...page}><Title>A Japanese platform for that flexibility</Title><Body>Shizen Connect’s public materials describe a VPP platform for coordinating distributed energy resources.</Body><Source evidence={E.shizenConnect} caseNote={{ title: 'Shizen Connect', scope: 'Platform context for distributed energy resources', qualifier: 'Company-reported platform scope · not a performance result' }} /></Slide>
 
-    <Slide {...page}><div style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-primary)', letterSpacing: '0.16em' }}>PROOF 2 · FAILURE RESPONSE</div><Title>Respond at grid speed</Title><Body>A grid event does not wait for a manual dispatch chain. Fast physical response needs rules, telemetry, and a trusted control path.</Body><Notes>Failure trigger: move from energy timing to operational response.</Notes></Slide>
-    <Slide {...page}><Title>ERAB connects assets to a market context</Title><Body>Japan’s aggregation policy framework establishes the setting in which flexible resources can become accountable grid capacity.</Body><Source evidence={E.erab} /></Slide>
-    <Slide {...page}><Title>A city is a graph problem</Title><Body>Devices, homes, substations, markets, and constraints form a graph. A VPP makes that graph observable and responsive.</Body></Slide>
-    <Slide {...page}><Title>The VPP is a cloud-native control plane</Title><div style={{ height: 430 }}><Lazy><VPPArchitecture /></Lazy></div></Slide>
-    <Slide {...page}><Title>Choreography keeps response close to the edge</Title><Body>Local autonomy handles fast physical response; the platform coordinates intent, constraints, and auditability.</Body><div style={{ height: 360 }}><Lazy><ChoreographyLoop /></Lazy></div></Slide>
-    <Slide {...darkPage}><div data-testid="main-talk-response-loop" style={{ minHeight: 610, padding: '28px', background: 'var(--color-bg)' }}><Title tone="var(--color-heading)">One response loop, end to end</Title><div style={{ height: 440 }}><Lazy><ResponseTimeline /></Lazy></div></div></Slide>
+    <Slide {...page}><div style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-primary)', letterSpacing: '0.16em' }}>PROOF 2 · FAILURE RESPONSE</div><Title>Respond when the system is tight</Title><Body>Tokyo’s March 2022 cold-snap emergency shows the operational problem: capacity, demand, and trusted flexibility must move together.</Body><Notes>Use the documented 2022 supply-demand event; do not call it a frequency incident.</Notes></Slide>
+    <Slide padding="0"><StepBridge count={3}>{step => <TokyoFrequencyResponseCaseStudy mode="incident" step={step} />}</StepBridge><Notes>Tokyo, March 2022: earthquake-related generation loss, a cold snap, then the 22 March supply-demand warning. The final flexibility overlay is illustrative, not a reported VPP dispatch.</Notes></Slide>
+    <Slide padding="0"><Lazy><TokyoFrequencyResponseCaseStudy mode="graph" /></Lazy><Notes>Recovery state becomes a graph: telemetry up, dispatch intent down, acknowledgement back.</Notes></Slide>
+    <Slide {...darkPage}><Title tone="var(--color-heading)">The VPP is the control plane</Title><div style={{ display: 'grid', gridTemplateColumns: '1.1fr .9fr', gridTemplateRows: '250px 190px', gap: 14, marginTop: 16 }}><div style={{ gridRow: 'span 2' }}><Lazy><VPPArchitecture /></Lazy></div><div><Lazy><ChoreographyLoop /></Lazy></div><div><Lazy><ResponseTimeline /></Lazy></div></div></Slide>
 
     <Slide {...page}><div style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-secondary)', letterSpacing: '0.16em' }}>PROOF 3 · DAILY OPERATION</div><Title>Use demand smarter</Title><Body>The same control plane can shift ordinary demand every day: charge when clean power is available, preserve comfort, and keep capacity observable.</Body></Slide>
     <Slide {...page}><Title>EVs can become controllable capacity</Title><Body>In January 2024, Shizen Connect reported a demonstration coordinating 186 household EVs through V2H systems.</Body><Source evidence={E.shizenV2H} caseNote={{ title: 'Shizen Connect · January 2024', scope: '186 household EVs controlled through V2H', qualifier: '90% control accuracy · company-reported' }} /></Slide>
