@@ -1,0 +1,195 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2020" height="1340" viewBox="0 0 2020 1340">
+  <rect width="2020" height="1340" fill="#0b0f1a"/>
+  <text x="60" y="70" fill="#7dd3fc" font-family="monospace" font-size="18" letter-spacing="4">KUBECON JAPAN · MAIN TALK · SLIDE STORYBOARD (27, ACT III SPLIT)</text>
+  <text x="60" y="130" fill="#f8fafc" font-family="Arial, sans-serif" font-size="42" font-weight="700">Japan needs flexibility.</text>
+  <text x="60" y="168" fill="#94a3b8" font-family="Arial, sans-serif" font-size="20">Arrival → Act I: cannot borrow → Act II: wastes what it has → Act III: failure response → Act IV: normalize load → Return</text>
+
+  <!-- ROW 1: Arrival + Act I begin -->
+  <g font-family="Arial, sans-serif">
+    <rect x="60" y="230" width="290" height="170" rx="6" fill="#0d1424"/><rect x="60" y="230" width="6" height="170" fill="#94a3b8"/>
+    <text x="82" y="260" fill="#94a3b8" font-family="monospace" font-size="13" letter-spacing="2">01 · ARRIVAL</text>
+    <text x="82" y="292" fill="#f1f5f9" font-size="19" font-weight="700">Japan needs</text>
+    <text x="82" y="314" fill="#f1f5f9" font-size="19" font-weight="700">flexibility</text>
+    <text x="82" y="350" fill="#94a3b8" font-size="13">Title + promise</text>
+
+    <rect x="374" y="230" width="290" height="170" rx="6" fill="#0d1424"/><rect x="374" y="230" width="6" height="170" fill="#94a3b8"/>
+    <text x="396" y="260" fill="#94a3b8" font-family="monospace" font-size="13" letter-spacing="2">02 · ARRIVAL</text>
+    <text x="396" y="292" fill="#f1f5f9" font-size="19" font-weight="700">One question</text>
+    <text x="396" y="350" fill="#94a3b8" font-size="13">Agenda · presenters</text>
+
+    <rect x="688" y="230" width="290" height="170" rx="6" fill="#E8E4D4"/><rect x="688" y="230" width="6" height="170" fill="#B91C1C"/>
+    <text x="710" y="260" fill="#991b1b" font-family="monospace" font-size="13" letter-spacing="2">03 · ACT I</text>
+    <text x="710" y="292" fill="#172554" font-size="19" font-weight="700">Act I card</text>
+    <text x="710" y="350" fill="#475569" font-size="13">Japan cannot borrow</text>
+
+    <rect x="1002" y="230" width="290" height="170" rx="6" fill="#E8E4D4"/><rect x="1002" y="230" width="6" height="170" fill="#B91C1C"/>
+    <text x="1024" y="260" fill="#991b1b" font-family="monospace" font-size="13" letter-spacing="2">04 · ACT I</text>
+    <text x="1024" y="292" fill="#172554" font-size="19" font-weight="700">One island,</text>
+    <text x="1024" y="314" fill="#172554" font-size="19" font-weight="700">two frequencies</text>
+    <text x="1024" y="350" fill="#475569" font-size="13">Grid map · 50/60Hz seam</text>
+
+    <rect x="1316" y="230" width="290" height="170" rx="6" fill="#E8E4D4"/><rect x="1316" y="230" width="6" height="170" fill="#B91C1C"/>
+    <text x="1338" y="260" fill="#991b1b" font-family="monospace" font-size="13" letter-spacing="2">05 · ACT I</text>
+    <text x="1338" y="292" fill="#172554" font-size="19" font-weight="700">Cannot borrow</text>
+    <text x="1338" y="314" fill="#172554" font-size="19" font-weight="700">in a crisis</text>
+    <text x="1338" y="350" fill="#475569" font-size="13">Hormuz → LNG map · oil/LNG caveat</text>
+
+    <rect x="1630" y="230" width="290" height="170" rx="6" fill="#E8E4D4"/><rect x="1630" y="230" width="6" height="170" fill="#B91C1C"/>
+    <text x="1652" y="260" fill="#991b1b" font-family="monospace" font-size="13" letter-spacing="2">06 · ACT I</text>
+    <text x="1652" y="292" fill="#172554" font-size="19" font-weight="700">15.3%</text>
+    <text x="1652" y="314" fill="#172554" font-size="19" font-weight="700">self-sufficient</text>
+    <text x="1652" y="350" fill="#475569" font-size="13">Self-sufficiency chart</text>
+  </g>
+
+  <!-- ROW 2: Act I end + Act II -->
+  <g font-family="Arial, sans-serif">
+    <rect x="60" y="430" width="290" height="170" rx="6" fill="#E8E4D4"/><rect x="60" y="430" width="6" height="170" fill="#B91C1C"/>
+    <text x="82" y="460" fill="#991b1b" font-family="monospace" font-size="13" letter-spacing="2">07 · ACT I</text>
+    <text x="82" y="492" fill="#172554" font-size="19" font-weight="700">Jan 2021 made</text>
+    <text x="82" y="514" fill="#172554" font-size="19" font-weight="700">it visible</text>
+    <text x="82" y="550" fill="#475569" font-size="13">JEPX 10 → 251 ¥/kWh</text>
+
+    <rect x="374" y="430" width="290" height="170" rx="6" fill="#E8E4D4"/><rect x="374" y="430" width="6" height="170" fill="#B91C1C"/>
+    <text x="396" y="460" fill="#991b1b" font-family="monospace" font-size="13" letter-spacing="2">08 · ACT I</text>
+    <text x="396" y="492" fill="#172554" font-size="19" font-weight="700">Thin reserves</text>
+    <text x="396" y="550" fill="#475569" font-size="13">No room for error</text>
+
+    <rect x="688" y="430" width="290" height="170" rx="6" fill="#F3EAD5"/><rect x="688" y="430" width="6" height="170" fill="#D97706"/>
+    <text x="710" y="460" fill="#92400e" font-family="monospace" font-size="13" letter-spacing="2">09 · ACT II</text>
+    <text x="710" y="492" fill="#172554" font-size="19" font-weight="700">One day,</text>
+    <text x="710" y="514" fill="#172554" font-size="19" font-weight="700">three beats</text>
+    <text x="710" y="550" fill="#7a5310" font-size="13">Noon → 17:00 → response · 3-step</text>
+    <circle cx="720" cy="565" r="4" fill="#D97706"/><circle cx="736" cy="565" r="4" fill="#D97706"/><circle cx="752" cy="565" r="4" fill="#D97706"/>
+
+    <rect x="1002" y="430" width="290" height="170" rx="6" fill="#F3EAD5"/><rect x="1002" y="430" width="6" height="170" fill="#D97706"/>
+    <text x="1024" y="460" fill="#92400e" font-family="monospace" font-size="13" letter-spacing="2">10 · ACT II</text>
+    <text x="1024" y="492" fill="#172554" font-size="19" font-weight="700">Real noon</text>
+    <text x="1024" y="514" fill="#172554" font-size="19" font-weight="700">constraint</text>
+    <text x="1024" y="550" fill="#7a5310" font-size="13">Kyushu curtailment, FY23 1.76 TWh</text>
+
+    <rect x="1316" y="430" width="290" height="170" rx="6" fill="#F3EAD5"/><rect x="1316" y="430" width="6" height="170" fill="#D97706"/>
+    <text x="1338" y="460" fill="#92400e" font-family="monospace" font-size="13" letter-spacing="2">11 · ACT II</text>
+    <text x="1338" y="492" fill="#172554" font-size="19" font-weight="700">Same day,</text>
+    <text x="1338" y="514" fill="#172554" font-size="19" font-weight="700">response</text>
+    <text x="1338" y="550" fill="#7a5310" font-size="13">EV / battery / heat pump · source card</text>
+    <circle cx="1348" cy="565" r="4" fill="#D97706"/><circle cx="1364" cy="565" r="4" fill="#D97706"/><circle cx="1380" cy="565" r="4" fill="#D97706"/>
+
+    <rect x="1630" y="430" width="290" height="170" rx="6" fill="#F3EAD5"/><rect x="1630" y="430" width="6" height="170" fill="#D97706"/>
+    <text x="1652" y="460" fill="#92400e" font-family="monospace" font-size="13" letter-spacing="2">12 · ACT II</text>
+    <text x="1652" y="492" fill="#172554" font-size="19" font-weight="700">One day to</text>
+    <text x="1652" y="514" fill="#172554" font-size="19" font-weight="700">one city</text>
+    <text x="1652" y="550" fill="#7a5310" font-size="13">Bridge to graph framing</text>
+  </g>
+
+  <!-- ROW 3: Act III — failure response (dark, cyan) -->
+  <g font-family="Arial, sans-serif">
+    <rect x="60" y="630" width="290" height="170" rx="6" fill="#0d1424"/><rect x="60" y="630" width="6" height="170" fill="#22d3ee"/>
+    <text x="82" y="660" fill="#7dd3fc" font-family="monospace" font-size="13" letter-spacing="2">13 · ACT III</text>
+    <text x="82" y="692" fill="#f1f5f9" font-size="19" font-weight="700">When the grid</text>
+    <text x="82" y="714" fill="#f1f5f9" font-size="19" font-weight="700">fails</text>
+    <text x="82" y="750" fill="#94a3b8" font-size="13">Act III card · failure response</text>
+
+    <rect x="374" y="630" width="290" height="170" rx="6" fill="#0d1424"/><rect x="374" y="630" width="6" height="170" fill="#22d3ee"/>
+    <text x="396" y="660" fill="#7dd3fc" font-family="monospace" font-size="13" letter-spacing="2">14 · ACT III</text>
+    <text x="396" y="692" fill="#f1f5f9" font-size="19" font-weight="700">ERAB Cat 2:</text>
+    <text x="396" y="714" fill="#f1f5f9" font-size="19" font-weight="700">grid balance</text>
+    <text x="396" y="750" fill="#94a3b8" font-size="13">TSO/DSO contract, not retailer</text>
+
+    <rect x="688" y="630" width="290" height="170" rx="6" fill="#0d1424"/><rect x="688" y="630" width="6" height="170" fill="#22d3ee"/>
+    <text x="710" y="660" fill="#7dd3fc" font-family="monospace" font-size="13" letter-spacing="2">15 · ACT III · NEW</text>
+    <text x="710" y="692" fill="#f1f5f9" font-size="19" font-weight="700">Aggregation is</text>
+    <text x="710" y="714" fill="#f1f5f9" font-size="19" font-weight="700">now security</text>
+    <text x="710" y="750" fill="#94a3b8" font-size="13">METI cybersecurity guidelines for ERAB</text>
+    <text x="710" y="770" fill="#475569" font-family="monospace" font-size="11">source: METI press release · 2025-05-22</text>
+
+    <rect x="1002" y="630" width="290" height="170" rx="6" fill="#0d1424"/><rect x="1002" y="630" width="6" height="170" fill="#22d3ee"/>
+    <text x="1024" y="660" fill="#7dd3fc" font-family="monospace" font-size="13" letter-spacing="2">16 · ACT III</text>
+    <text x="1024" y="692" fill="#f1f5f9" font-size="19" font-weight="700">A city is</text>
+    <text x="1024" y="714" fill="#f1f5f9" font-size="19" font-weight="700">a graph</text>
+    <text x="1024" y="750" fill="#94a3b8" font-size="13">"A graph is a city, under load"</text>
+
+    <rect x="1316" y="630" width="290" height="170" rx="6" fill="#0d1424"/><rect x="1316" y="630" width="6" height="170" fill="#22d3ee"/>
+    <text x="1338" y="660" fill="#7dd3fc" font-family="monospace" font-size="13" letter-spacing="2">17 · ACT III</text>
+    <text x="1338" y="692" fill="#f1f5f9" font-size="19" font-weight="700">Cloud-native</text>
+    <text x="1338" y="714" fill="#f1f5f9" font-size="19" font-weight="700">control plane</text>
+    <text x="1338" y="750" fill="#94a3b8" font-size="13">VPP architecture diagram</text>
+
+    <rect x="1630" y="630" width="290" height="170" rx="6" fill="#0d1424"/><rect x="1630" y="630" width="6" height="170" fill="#22d3ee"/>
+    <text x="1652" y="660" fill="#7dd3fc" font-family="monospace" font-size="13" letter-spacing="2">18 · ACT III</text>
+    <text x="1652" y="692" fill="#f1f5f9" font-size="19" font-weight="700">Choreography,</text>
+    <text x="1652" y="714" fill="#f1f5f9" font-size="19" font-weight="700">grid trigger</text>
+    <text x="1652" y="750" fill="#94a3b8" font-size="13">Dispatch on emergency, not ramp</text>
+  </g>
+
+  <!-- ROW 4: Act IV — normalize load (dark, violet) -->
+  <g font-family="Arial, sans-serif">
+    <rect x="60" y="830" width="290" height="170" rx="6" fill="#0d1424"/><rect x="60" y="830" width="6" height="170" fill="#a78bfa"/>
+    <text x="82" y="860" fill="#c4b5fd" font-family="monospace" font-size="13" letter-spacing="2">19 · ACT IV</text>
+    <text x="82" y="892" fill="#f1f5f9" font-size="19" font-weight="700">Every day,</text>
+    <text x="82" y="914" fill="#f1f5f9" font-size="19" font-weight="700">smoothing the curve</text>
+    <text x="82" y="950" fill="#94a3b8" font-size="13">Act IV card · normalize load</text>
+
+    <rect x="374" y="830" width="290" height="170" rx="6" fill="#0d1424"/><rect x="374" y="830" width="6" height="170" fill="#a78bfa"/>
+    <text x="396" y="860" fill="#c4b5fd" font-family="monospace" font-size="13" letter-spacing="2">20 · ACT IV</text>
+    <text x="396" y="892" fill="#f1f5f9" font-size="19" font-weight="700">EV / V2H</text>
+    <text x="396" y="914" fill="#f1f5f9" font-size="19" font-weight="700">daily response</text>
+    <text x="396" y="950" fill="#94a3b8" font-size="13">Shizen Connect · 186 EVs · 90% accuracy*</text>
+
+    <rect x="688" y="830" width="290" height="170" rx="6" fill="#0d1424"/><rect x="688" y="830" width="6" height="170" fill="#a78bfa"/>
+    <text x="710" y="860" fill="#c4b5fd" font-family="monospace" font-size="13" letter-spacing="2">21 · ACT IV · NEW</text>
+    <text x="710" y="892" fill="#f1f5f9" font-size="19" font-weight="700">Batteries join</text>
+    <text x="710" y="914" fill="#f1f5f9" font-size="19" font-weight="700">the market</text>
+    <text x="710" y="950" fill="#94a3b8" font-size="13">HEMS-controlled storage → capacity market</text>
+    <text x="710" y="970" fill="#475569" font-family="monospace" font-size="11">Shizen Connect × Kansai EP · 2024-05-30</text>
+
+    <rect x="1002" y="830" width="290" height="170" rx="6" fill="#0d1424"/><rect x="1002" y="830" width="6" height="170" fill="#a78bfa"/>
+    <text x="1024" y="860" fill="#c4b5fd" font-family="monospace" font-size="13" letter-spacing="2">22 · ACT IV</text>
+    <text x="1024" y="892" fill="#f1f5f9" font-size="19" font-weight="700">Fleet becomes</text>
+    <text x="1024" y="914" fill="#f1f5f9" font-size="19" font-weight="700">legible</text>
+    <text x="1024" y="950" fill="#94a3b8" font-size="13">Aggregation hierarchy pyramid</text>
+
+    <rect x="1316" y="830" width="290" height="170" rx="6" fill="#0d1424"/><rect x="1316" y="830" width="6" height="170" fill="#a78bfa"/>
+    <text x="1338" y="860" fill="#c4b5fd" font-family="monospace" font-size="13" letter-spacing="2">23 · ACT IV</text>
+    <text x="1338" y="892" fill="#f1f5f9" font-size="19" font-weight="700">Simulated</text>
+    <text x="1338" y="914" fill="#f1f5f9" font-size="19" font-weight="700">dispatch</text>
+    <text x="1338" y="950" fill="#94a3b8" font-size="13">Japan VPP map · 334 MW, illustrative</text>
+
+    <rect x="1630" y="830" width="290" height="170" rx="6" fill="#0d1424"/><rect x="1630" y="830" width="6" height="170" fill="#a78bfa"/>
+    <text x="1652" y="860" fill="#c4b5fd" font-family="monospace" font-size="13" letter-spacing="2">24 · ACT IV</text>
+    <text x="1652" y="892" fill="#f1f5f9" font-size="19" font-weight="700">What teams</text>
+    <text x="1652" y="914" fill="#f1f5f9" font-size="19" font-weight="700">can build</text>
+    <text x="1652" y="950" fill="#94a3b8" font-size="13">Streams / actors / GitOps / traces</text>
+  </g>
+
+  <!-- ROW 5: Return -->
+  <g font-family="Arial, sans-serif">
+    <rect x="60" y="1030" width="290" height="170" rx="6" fill="#E2EAD8"/><rect x="60" y="1030" width="6" height="170" fill="#059669"/>
+    <text x="82" y="1060" fill="#047857" font-family="monospace" font-size="13" letter-spacing="2">25 · RETURN</text>
+    <text x="82" y="1092" fill="#172554" font-size="19" font-weight="700">Homes earn</text>
+    <text x="82" y="1114" fill="#172554" font-size="19" font-weight="700">trust</text>
+    <text x="82" y="1150" fill="#3f6152" font-size="13">100k homes = 1 power plant</text>
+
+    <rect x="374" y="1030" width="290" height="170" rx="6" fill="#E2EAD8"/><rect x="374" y="1030" width="6" height="170" fill="#059669"/>
+    <text x="396" y="1060" fill="#047857" font-family="monospace" font-size="13" letter-spacing="2">26 · RETURN</text>
+    <text x="396" y="1092" fill="#172554" font-size="19" font-weight="700">Keep</text>
+    <text x="396" y="1114" fill="#172554" font-size="19" font-weight="700">exploring</text>
+    <text x="396" y="1150" fill="#3f6152" font-size="13">Research link · sources</text>
+
+    <rect x="688" y="1030" width="290" height="170" rx="6" fill="#E2EAD8"/><rect x="688" y="1030" width="6" height="170" fill="#059669"/>
+    <text x="710" y="1060" fill="#047857" font-family="monospace" font-size="13" letter-spacing="2">27 · RETURN</text>
+    <text x="710" y="1092" fill="#172554" font-size="19" font-weight="700">Japan needs</text>
+    <text x="710" y="1114" fill="#172554" font-size="19" font-weight="700">flexibility</text>
+    <text x="710" y="1150" fill="#3f6152" font-size="13">Closing statement</text>
+  </g>
+
+  <!-- Legend -->
+  <g font-family="monospace" font-size="14">
+    <rect x="1002" y="1090" width="18" height="18" fill="#94a3b8"/><text x="1028" y="1105" fill="#cbd5e1">Arrival</text>
+    <rect x="1120" y="1090" width="18" height="18" fill="#B91C1C"/><text x="1146" y="1105" fill="#cbd5e1">Act I · dependency (washi)</text>
+    <rect x="1410" y="1090" width="18" height="18" fill="#D97706"/><text x="1436" y="1105" fill="#cbd5e1">Act II · paradox (washi, amber)</text>
+    <rect x="1002" y="1125" width="18" height="18" fill="#22d3ee"/><text x="1028" y="1140" fill="#cbd5e1">Act III · failure response (dark)</text>
+    <rect x="1300" y="1125" width="18" height="18" fill="#a78bfa"/><text x="1326" y="1140" fill="#cbd5e1">Act IV · normalize load (dark)</text>
+    <rect x="1590" y="1125" width="18" height="18" fill="#059669"/><text x="1616" y="1140" fill="#cbd5e1">Return</text>
+    <text x="1002" y="1170" fill="#64748b" font-size="12">* company claim, unverified · labeled illustrative/simulated per non-goals</text>
+  </g>
+</svg>
