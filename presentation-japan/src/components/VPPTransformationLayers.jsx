@@ -18,11 +18,12 @@ const COLORS = {
 
 const colorBetween = (from, to, amount) => from.map((value, index) => Math.round(value + (to[index] - value) * amount));
 
-export const getVPPTransformationLayers = ({ stage, tripTime = 0, stabilization = 0 }) => {
+export const getVPPTransformationLayers = ({ stage, tripTime = 0, stabilization = 0, capabilityPhase = -1 }) => {
   if (stage < 3) return [];
   const { homes, batteries, generators, hubs, localTrips, regionalTrips } = getVPPStageData(stage);
   const settled = Math.max(0, Math.min(1, stabilization));
   const controlColor = colorBetween(COLORS.amber, COLORS.green, settled);
+  const capabilityColor = [[255, 194, 23], [34, 211, 238], [167, 139, 250]][capabilityPhase] ?? COLORS.amber;
 
   return [
     new PolygonLayer({
@@ -68,7 +69,7 @@ export const getVPPTransformationLayers = ({ stage, tripTime = 0, stabilization 
       data: regionalTrips,
       getPath: (trip) => trip.path,
       getTimestamps: (trip) => trip.timestamps,
-      getColor: stage === 4 ? controlColor : COLORS.amber,
+      getColor: stage === 4 ? capabilityColor : COLORS.amber,
       getWidth: 5.4,
       widthUnits: 'pixels',
       currentTime: tripTime,
@@ -105,7 +106,7 @@ export const getVPPTransformationLayers = ({ stage, tripTime = 0, stabilization 
       getPosition: ({ position }) => position,
       getRadius: 7800,
       radiusUnits: 'meters',
-      getFillColor: stage === 4 ? controlColor : COLORS.cyan,
+      getFillColor: stage === 4 ? capabilityColor : COLORS.cyan,
       getLineColor: [224, 242, 254, 255],
       lineWidthMinPixels: 2,
       stroked: true,
@@ -125,7 +126,7 @@ export const getVPPTransformationLayers = ({ stage, tripTime = 0, stabilization 
       id: 'vpp-control-links',
       data: stage === 4 && settled > 0.06 ? VPP_CONTROL_LINKS : [],
       getPath: ({ path }) => path,
-      getColor: controlColor,
+      getColor: capabilityColor,
       getWidth: 3,
       widthUnits: 'pixels',
       capRounded: true,

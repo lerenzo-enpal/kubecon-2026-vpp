@@ -40,24 +40,28 @@ const OpeningStatsOverlay = () => (
   </div>
 );
 
-const JapanOpeningSequence = ({ height = '100%', presenter }) => {
+const JapanOpeningSequence = ({ height = '100%', presenter, startAtMap = false }) => {
+  const stepOffset = startAtMap ? 3 : 0;
   return (
-    <StepBridge count={11}>
-      {(step) => (
-        <div style={{ height, position: 'relative', overflow: 'hidden' }}>
-          {step < 3 ? (
-            <TitleCard presenter={presenter} step={step} />
-          ) : (
-            <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-              <JapanGridMapAnimated height="100%" step={step - 3} testId="japan-opening-map" />
-              <div style={{ position: 'absolute', bottom: 20, left: 0, right: 0, pointerEvents: 'none' }}>
-                <StepLabel step={step} />
+    <StepBridge count={startAtMap ? 8 : 11}>
+      {(step) => {
+        const sequenceStep = step + stepOffset;
+        return (
+          <div style={{ height, position: 'relative', overflow: 'hidden' }}>
+            {sequenceStep < 3 ? (
+              <TitleCard presenter={presenter} step={sequenceStep} />
+            ) : (
+              <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                <JapanGridMapAnimated height="100%" step={sequenceStep - 3} testId="japan-opening-map" />
+                <div style={{ position: 'absolute', bottom: 20, left: 0, right: 0, pointerEvents: 'none' }}>
+                  <StepLabel step={sequenceStep} />
+                </div>
+                {sequenceStep >= 9 && <OpeningStatsOverlay />}
               </div>
-              {step >= 9 && <OpeningStatsOverlay />}
-            </div>
-          )}
-        </div>
-      )}
+            )}
+          </div>
+        );
+      }}
     </StepBridge>
   );
 };

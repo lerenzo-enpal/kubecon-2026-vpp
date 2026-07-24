@@ -89,11 +89,13 @@ function VPPTransformationStage({ height, stageIndex }) {
   const graphCanvasRef = useRef(null);
   const tripTimeRef = useRef(0);
   const stabilizationRef = useRef(0);
+  const capabilityPhaseRef = useRef(-1);
   const [mapReady, setMapReady] = useState(false);
   const [viewState, setViewState] = useState({ longitude: 138.25, latitude: 36.2, zoom: 4.35, bearing: 12, pitch: 42 });
   const [cueVisible, setCueVisible] = useState(true);
+  const [capabilityPhase, setCapabilityPhase] = useState(-1);
   const stage = VPP_TRANSFORMATION_STAGES[stageIndex] ?? VPP_TRANSFORMATION_STAGES[0];
-  const layers = useMemo(() => getVPPTransformationLayers({ stage: stageIndex }), [stageIndex]);
+  const layers = useMemo(() => getVPPTransformationLayers({ stage: stageIndex, capabilityPhase }), [stageIndex, capabilityPhase]);
 
   const handleMapReady = useCallback((map) => {
     mapRef.current = map;
@@ -103,6 +105,8 @@ function VPPTransformationStage({ height, stageIndex }) {
 
   useEffect(() => {
     stabilizationRef.current = 0;
+    capabilityPhaseRef.current = -1;
+    setCapabilityPhase(-1);
     setCueVisible(true);
     const timer = window.setTimeout(() => setCueVisible(false), 2800);
     return () => window.clearTimeout(timer);
@@ -128,9 +132,14 @@ function VPPTransformationStage({ height, stageIndex }) {
     const tick = (now) => {
       tripTimeRef.current = now % 3600;
       stabilizationRef.current = stageIndex === 4 ? Math.min(1, stabilizationRef.current + 0.012) : 0;
+      const nextCapabilityPhase = stageIndex === 4 ? Math.min(2, Math.floor(stabilizationRef.current * 3)) : -1;
+      if (nextCapabilityPhase !== capabilityPhaseRef.current) {
+        capabilityPhaseRef.current = nextCapabilityPhase;
+        setCapabilityPhase(nextCapabilityPhase);
+      }
       drawGraphScene(graphCanvasRef.current, stageIndex, now);
       deckRef.current?.deck?.setProps({
-        layers: getVPPTransformationLayers({ stage: stageIndex, tripTime: tripTimeRef.current, stabilization: stabilizationRef.current }),
+        layers: getVPPTransformationLayers({ stage: stageIndex, tripTime: tripTimeRef.current, stabilization: stabilizationRef.current, capabilityPhase: nextCapabilityPhase }),
       });
       frame = requestAnimationFrame(tick);
     };
@@ -153,7 +162,11 @@ function VPPTransformationStage({ height, stageIndex }) {
               {stageIndex === 1 && <div style={{ position: 'absolute', left: 54, bottom: 48, maxWidth: 600, fontFamily: 'Space Grotesk, sans-serif', fontSize: 44, lineHeight: 1.08, fontWeight: 800, color: '#f1f5f9' }}>You already know how to solve this.</div>}
               {stageIndex === 2 && <div style={{ position: 'absolute', left: 54, bottom: 48, display: 'flex', flexWrap: 'wrap', columnGap: 16, rowGap: 4, maxWidth: 820, fontFamily: 'Space Grotesk, sans-serif', fontSize: 52, lineHeight: 1, fontWeight: 800 }}><span data-testid="vpp-hero-graph" style={{ color: '#f1f5f9', opacity: 1, transform: 'translateY(0)', transition: 'opacity 600ms ease, transform 600ms ease' }}>A graph</span><span data-testid="vpp-hero-city" style={{ color: '#f1f5f9', transform: 'scale(1)', transition: 'transform 620ms cubic-bezier(.2,1.35,.4,1)' }}>is a city</span><span data-testid="vpp-hero-load" style={{ color: '#ffc217', opacity: 1, letterSpacing: '0', transition: 'opacity 540ms 820ms ease, letter-spacing 540ms 820ms ease' }}>under load.</span></div>}
               {stageIndex === 3 && <div style={{ position: 'absolute', left: 42, top: 44, maxWidth: 430 }}><div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, letterSpacing: '0.15em', color: '#67e8f9', marginBottom: 12 }}>ACT III / JAPAN</div><div style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: 47, lineHeight: 1.04, fontWeight: 800, color: '#f1f5f9' }}>The same graph has a geography.</div></div>}
-              {stageIndex === 4 && <div style={{ position: 'absolute', left: 42, top: 44, maxWidth: 460 }}><div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, letterSpacing: '0.15em', color: '#67e8f9', marginBottom: 12 }}>ACT IV / VIRTUAL POWER PLANT</div><div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', fontFamily: 'Space Grotesk, sans-serif', fontSize: 23, fontWeight: 800 }}><span data-testid="vpp-superpower-respond" style={{ color: '#67e8f9' }}>Respond fast</span><span data-testid="vpp-superpower-store" style={{ color: '#ffc217' }}>Store energy</span><span data-testid="vpp-superpower-smarter" style={{ color: '#6ee7b7' }}>Use it smarter</span></div></div>}
+              {stageIndex === 4 && <div style={{ position: 'absolute', left: 42, top: 44, width: 410 }}><div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, letterSpacing: '0.15em', color: '#67e8f9', marginBottom: 12 }}>ACT IV / VIRTUAL POWER PLANT</div><div style={{ display: 'grid', gap: 10 }}>{[
+                ['market', '◒', 'Bring new players into the market'],
+                ['response', '⌁', 'Respond when the system is tight'],
+                ['demand', '▣', 'Use demand smarter'],
+              ].map(([id, icon, copy], index) => <div key={id} data-testid={`vpp-capability-${id}`} style={{ display: 'grid', gridTemplateColumns: '28px 1fr', alignItems: 'center', gap: 10, padding: '12px 14px', border: '1px solid rgba(103, 232, 249, 0.28)', background: 'rgba(3, 5, 8, 0.82)', color: '#f1f5f9', fontFamily: 'Space Grotesk, sans-serif', fontSize: 20, fontWeight: 800, opacity: capabilityPhase >= index ? 1 : 0, transform: capabilityPhase >= index ? 'translateY(0)' : 'translateY(12px)', transition: 'opacity 420ms ease, transform 420ms ease' }}><span aria-hidden="true" style={{ color: '#67e8f9', fontFamily: 'JetBrains Mono, monospace' }}>{icon}</span><span>{copy}</span></div>)}</div></div>}
             </div>
     </div>
   );

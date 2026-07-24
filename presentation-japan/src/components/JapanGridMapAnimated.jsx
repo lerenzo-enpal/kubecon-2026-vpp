@@ -21,7 +21,7 @@ const mapViewState = (map) => {
 };
 
 const HORMUZ_CALLOUTS = [
-  { title: 'Strait of Hormuz', description: '97% of Japan LNG transits this route', stat: '97%', color: 'var(--color-accent)', icon: 'LNG' },
+  { title: 'Strait of Hormuz', description: 'One route leads through Hormuz.', stat: 'Route', color: 'var(--color-accent)', icon: 'LNG' },
   { title: 'A household impact', description: 'A six-week disruption added ¥15,000 to every household\'s annual energy bill.', stat: '¥15,000', color: 'var(--color-danger)', icon: '¥' },
   { title: 'Japan\'s dependency', description: '84.7% of the country\'s energy is imported — a physical route becomes a national risk.', stat: '84.7%', color: 'var(--color-primary)', icon: '→' },
   { title: 'Japan LNG terminals', description: 'The constrained import route becomes a grid problem at the coast.', stat: '3 hubs', color: 'var(--color-primary)', icon: '✦' },
