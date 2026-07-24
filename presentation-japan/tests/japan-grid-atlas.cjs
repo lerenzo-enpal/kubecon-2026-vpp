@@ -31,6 +31,8 @@ async function main() {
   assert.match(source, /PLANT_COLORS/);
   assert.match(source, /plantMarkerSize/);
   assert.match(source, /height = '100%'/);
+  assert.match(source, /mapVariant = 'dark'/);
+  assert.match(source, /data-map-variant={mapVariant}/);
   assert.match(styles, /body:has\(\[data-variant="washi"\]\)/);
 }
 

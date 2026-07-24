@@ -15,6 +15,7 @@ const ICONS = { mix: '◒', plants: '⚡', areas: '▧', transmission: '╱', de
 const LABELS = { mix: 'Energy mix', plants: 'Power plants', areas: 'Provider areas', transmission: 'Transmission', demand: 'Live demand / supply', jepx: 'Live JEPX price' };
 const PLANT_COLORS = { Nuclear: [167, 139, 250, 225], LNG: [34, 211, 238, 225], Coal: [148, 163, 184, 225], Oil: [251, 146, 60, 225], Hydro: [96, 165, 250, 225], Geothermal: [239, 68, 68, 225], Solar: [250, 204, 21, 225], Wind: [45, 212, 191, 225] };
 const MAP_STYLE = { version: 8, sources: { base: { type: 'raster', tiles: ['https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'], tileSize: 256 } }, layers: [{ id: 'base', type: 'raster', source: 'base', paint: { 'raster-opacity': 0.72 } }] };
+const WASHI_MAP_STYLE = { version: 8, sources: { base: { type: 'raster', tiles: ['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png'], tileSize: 256 } }, layers: [{ id: 'base', type: 'raster', source: 'base', paint: { 'raster-opacity': 0.46 } }] };
 
 const routeLayers = ({ points, progress = 0 }) => {
   const visible = points.slice(0, Math.floor(progress * (points.length - 1)) + 1);
@@ -26,7 +27,7 @@ const routeLayers = ({ points, progress = 0 }) => {
   ].filter(Boolean);
 };
 
-export function JapanGridAtlas({ height = '100%', step = 0, preset = () => ({}), liveData = {}, variant = 'dark', plantMarkerSize = 10, routeLayer, transmissionLayer, sceneLayer }) {
+export function JapanGridAtlas({ height = '100%', step = 0, preset = () => ({}), liveData = {}, variant = 'dark', mapVariant = 'dark', plantMarkerSize = 10, routeLayer, transmissionLayer, sceneLayer }) {
   const [viewState, setViewState] = useState(VIEW);
   const [overrides, setOverrides] = useState({});
   const [replayKey, setReplayKey] = useState(0);
@@ -54,7 +55,7 @@ export function JapanGridAtlas({ height = '100%', step = 0, preset = () => ({}),
     ...atlasLayers,
     ...(routeLayer ? routeLayers({ ...routeLayer, progress }) : []),
     ...(transmissionLayer?.getLayers ? transmissionLayer.getLayers(time) : transmissionLayer?.layers ?? []),
-    ...(sceneLayer?.getLayers ? sceneLayer.getLayers(time) : []),
+    ...(sceneLayer?.getLayers ? sceneLayer.getLayers(time) : sceneLayer?.layers ?? []),
   ], [atlasLayers, routeLayer, transmissionLayer, sceneLayer]);
   useEffect(() => {
     if (!isSlideActive || (!routeLayer && !transmissionLayer?.getLayers && !sceneLayer?.getLayers)) return undefined;
@@ -69,9 +70,9 @@ export function JapanGridAtlas({ height = '100%', step = 0, preset = () => ({}),
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
   }, [isSlideActive, layers, replayKey, routeLayer?.restartKey, transmissionLayer?.getLayers, sceneLayer?.getLayers]);
-  return <div data-testid="japan-grid-atlas" data-variant={variant} style={{ position: 'relative', width: '100%', height, background: variant === 'washi' ? 'var(--color-washi-paper)' : 'var(--color-bg)' }}>
+  return <div data-testid="japan-grid-atlas" data-variant={variant} data-map-variant={mapVariant} style={{ position: 'relative', width: '100%', height, background: variant === 'washi' ? 'var(--color-washi-paper)' : 'var(--color-bg)' }}>
     {isSlideActive && <DeckGL ref={deckRef} viewState={viewState} onViewStateChange={({ viewState: next }) => setViewState(next)} controller={true} layers={layers()} getTooltip={({ object }) => object && (object.name ? { text: `${object.name}\n${object.fuel} · ${object.capacity}` } : { text: object.label || object.name })} style={{ position: 'absolute', inset: 0 }}>
-      <MapGL mapStyle={MAP_STYLE} style={variant === 'washi' ? { filter: 'saturate(0.35) brightness(1.35) sepia(0.18)' } : undefined} />
+      <MapGL mapStyle={mapVariant === 'washi' ? WASHI_MAP_STYLE : MAP_STYLE} style={mapVariant === 'washi' ? { filter: 'saturate(0.35) brightness(1.35) sepia(0.18)' } : undefined} />
     </DeckGL>}
     {routeLayer && <button data-testid="hormuz-route-play" type="button" aria-label="Replay Hormuz route" onClick={() => setReplayKey((key) => key + 1)} className="absolute bottom-20 left-1/2 -translate-x-1/2 rounded border border-[var(--color-accent)] bg-[color-mix(in_srgb,var(--color-bg)_84%,transparent)] px-3 py-2 font-[var(--font-mono)] text-xs text-[var(--color-heading)]">Replay route</button>}
     {transmissionLayer && <span data-testid="atlas-transmission-layer" className="sr-only">Animated transmission layer</span>}

@@ -36,3 +36,11 @@ body:has([data-variant="washi"]) {
 .fade-in {
   animation: fadeIn 0.5s ease-out forwards;
 }
+
+@keyframes mapFadeOut {
+  to { opacity: 0; }
+}
+
+.map-fade-out {
+  animation: mapFadeOut 0.5s ease-out forwards;
+}

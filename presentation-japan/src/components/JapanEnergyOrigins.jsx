@@ -1,18 +1,13 @@
 import React from 'react';
-import { DeckGL } from '@deck.gl/react';
 import { PathLayer } from '@deck.gl/layers';
-import MapGL from 'react-map-gl/maplibre';
 import StepBridge from './StepBridge.jsx';
-import 'maplibre-gl/dist/maplibre-gl.css';
+import { JapanGridAtlas } from './JapanGridAtlas.jsx';
 
 const ORIGINS = [
-  { id: 'lng', label: 'LNG · Australia / Southeast Asia', path: [[115, -23], [130, 5], [139.8, 35.3]], color: [230, 171, 70, 235] },
-  { id: 'oil', label: 'Oil · Middle East', path: [[52, 26], [72, 17], [139.8, 35.3]], color: [196, 82, 66, 235] },
-  { id: 'coal', label: 'Coal · Australia', path: [[151, -32], [149, 8], [139.8, 35.3]], color: [95, 78, 65, 235] },
+  { id: 'lng', label: 'LNG · Australia / Southeast Asia', path: [[115, -23], [130, 5], [139.8, 35.3]], color: [230, 171, 70, 235], view: { center: [126, 4], zoom: 2.2, pitch: 0, bearing: 0 } },
+  { id: 'oil', label: 'Oil · Middle East', path: [[52, 26], [72, 17], [139.8, 35.3]], color: [196, 82, 66, 235], view: { center: [92, 21], zoom: 2.25, pitch: 0, bearing: 0 } },
+  { id: 'coal', label: 'Coal · Australia', path: [[151, -32], [149, 8], [139.8, 35.3]], color: [95, 78, 65, 235], view: { center: [147, 0], zoom: 2.25, pitch: 0, bearing: 0 } },
 ];
-
-const VIEW = { longitude: 136, latitude: 20, zoom: 2.35, pitch: 0, bearing: 0 };
-const MAP_STYLE = { version: 8, sources: { base: { type: 'raster', tiles: ['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png'], tileSize: 256 } }, layers: [{ id: 'base', type: 'raster', source: 'base', paint: { 'raster-opacity': 0.46 } }] };
 
 function EnergyOriginsScene({ height, step }) {
   const origins = ORIGINS.slice(0, step + 1);
@@ -27,10 +22,10 @@ function EnergyOriginsScene({ height, step }) {
     jointRounded: true,
   }));
 
+  const activeStep = Number.isFinite(step) ? step : 0;
+  const origin = ORIGINS[Math.max(0, Math.min(activeStep, ORIGINS.length - 1))];
   return <div data-testid="japan-energy-origins" style={{ height, position: 'relative', background: 'var(--color-washi-paper)' }}>
-    <DeckGL viewState={VIEW} controller={false} layers={layers} style={{ position: 'absolute', inset: 0 }}>
-      <MapGL mapStyle={MAP_STYLE} style={{ filter: 'saturate(0.3) brightness(1.1) sepia(0.28)' }} />
-    </DeckGL>
+    <JapanGridAtlas variant="washi" mapVariant="washi" step={step} preset={() => ({})} sceneLayer={{ view: origin.view, layers }} />
     <div style={{ position: 'absolute', zIndex: 2, top: 44, left: 48 }}>
       <div style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-washi-alert)', letterSpacing: '.16em' }}>JAPAN&apos;S ENERGY SYSTEM · FY2023</div>
       <h1 style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-washi-ink)' }}>Japan&apos;s energy comes from far away.</h1>
