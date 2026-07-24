@@ -16,6 +16,10 @@ body {
   color: var(--color-text, #f1f5f9);
 }
 
+body:has([data-variant="washi"]) {
+  background: var(--color-washi-paper);
+}
+
 .hud-blink {
   animation: hudBlink 0.5s step-end infinite;
 }

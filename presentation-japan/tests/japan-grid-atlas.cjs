@@ -16,7 +16,11 @@ async function main() {
     state.resolveAtlasLayers({ preset: { areas: true, plants: false }, overrides: { plants: true } }),
     { mix: false, plants: true, areas: true, transmission: false, demand: false, jepx: false },
   );
+  assert.equal(state.plantRadiusAtZoom(4.65, 10), 10);
+  assert.equal(state.plantRadiusAtZoom(6.65, 10), 6);
+  assert.equal(state.plantRadiusAtZoom(20, 10), 4);
   const source = await fs.readFile(path.join(__dirname, '../src/components/JapanGridAtlas.jsx'), 'utf8');
+  const styles = await fs.readFile(path.join(__dirname, '../src/index.css'), 'utf8');
   assert.match(source, /data-testid="japan-grid-atlas"/);
   assert.match(source, /data-testid="japan-grid-atlas-hud"/);
   assert.match(source, /aria-pressed/);
@@ -25,6 +29,9 @@ async function main() {
   assert.match(source, /FlyToInterpolator/);
   assert.match(source, /getTooltip/);
   assert.match(source, /PLANT_COLORS/);
+  assert.match(source, /plantMarkerSize/);
+  assert.match(source, /height = '100%'/);
+  assert.match(styles, /body:has\(\[data-variant="washi"\]\)/);
 }
 
 main().catch((error) => { console.error(error); process.exitCode = 1; });

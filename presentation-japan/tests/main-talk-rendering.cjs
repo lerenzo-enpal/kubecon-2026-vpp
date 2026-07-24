@@ -33,6 +33,7 @@ assert.match(source, /dispatch acknowledged/);
 assert.match(source, /const Body = \(\{ children, tone = 'var\(--color-washi-ink\)' \}\)/);
 assert.match(source, /<Body tone="var\(--color-heading\)">Software can coordinate/);
 assert.match(source, /JapanGridAtlas variant="washi"/);
+assert.doesNotMatch(source, /JapanGridAtlas variant="washi" height=\{580\}/);
 assert.match(atlas, /data-testid="japan-grid-atlas"/);
 assert.match(atlas, /variant = 'dark'/);
 assert.match(source, /TokyoDuckCurveCaseStudy/);
