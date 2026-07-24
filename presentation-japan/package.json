@@ -7,7 +7,9 @@
     "dev:keynote": "vite --config vite.config.js",
     "dev:main": "vite --config vite.config.js",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "export:pdf": "node scripts/export-pdf.cjs keynote",
+    "export:pdf:main": "node scripts/export-pdf.cjs main"
   },
   "keywords": [],
   "author": "",
