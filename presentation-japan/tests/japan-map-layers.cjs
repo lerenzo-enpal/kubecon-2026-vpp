@@ -125,7 +125,7 @@ const fs = require('node:fs/promises');
   assert.match(vppSequence, /SlideContext/);
   assert.match(vppSequence, /isSlideActive/);
   assert.match(vppSequence, /requestAnimationFrame/);
-  assert.match(vppSequence, /deckRef\.current\?\.deck\?\.setProps/);
+  assert.match(vppSequence, /<JapanGridAtlas transmissionLayer/, 'VPP transmission animation must use the shared Atlas RAF loop.');
   assert.match(vppSequence, /data-testid="vpp-transformation-sequence"/);
   assert.match(vppSequence, /vpp-stage-\$\{stage\.id\}/);
   assert.match(vppSequence, /vpp-context-cue-\$\{stage\.cue\}/);

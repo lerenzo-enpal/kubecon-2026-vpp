@@ -1,8 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { DeckGL } from '@deck.gl/react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { SlideContext } from 'spectacle';
 import StepBridge from './StepBridge.jsx';
-import JapanMapBackground from './JapanMapBackground.jsx';
+import { JapanGridAtlas } from './JapanGridAtlas.jsx';
 import { getVPPTransformationLayers } from './VPPTransformationLayers.jsx';
 import { VPP_CITY_BUILDINGS, VPP_GRAPH_LINKS, VPP_GRAPH_NODES, VPP_TRANSFORMATION_STAGES } from './vppTransformationData.mjs';
 
@@ -12,11 +11,6 @@ const CUES = {
   city: 'THE GRAPH BECOMES LIVED INFRASTRUCTURE',
   japan: 'JAPAN / THE SAME GRAPH HAS A GEOGRAPHY',
   superpowers: 'COORDINATION CREATES CAPACITY',
-};
-
-const toViewState = (map) => {
-  const center = map.getCenter();
-  return { longitude: center.lng, latitude: center.lat, zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch() };
 };
 
 const drawGraphScene = (canvas, stageIndex, now) => {
@@ -84,24 +78,13 @@ export default function VPPTransformationSequence({ height = '100%' }) {
 function VPPTransformationStage({ height, stageIndex }) {
   const slideContext = React.useContext(SlideContext);
   const isActive = slideContext?.isSlideActive ?? true;
-  const mapRef = useRef(null);
-  const deckRef = useRef(null);
   const graphCanvasRef = useRef(null);
-  const tripTimeRef = useRef(0);
   const stabilizationRef = useRef(0);
   const capabilityPhaseRef = useRef(-1);
-  const [mapReady, setMapReady] = useState(false);
-  const [viewState, setViewState] = useState({ longitude: 138.25, latitude: 36.2, zoom: 4.35, bearing: 12, pitch: 42 });
   const [cueVisible, setCueVisible] = useState(true);
   const [capabilityPhase, setCapabilityPhase] = useState(-1);
   const stage = VPP_TRANSFORMATION_STAGES[stageIndex] ?? VPP_TRANSFORMATION_STAGES[0];
-  const layers = useMemo(() => getVPPTransformationLayers({ stage: stageIndex, capabilityPhase }), [stageIndex, capabilityPhase]);
-
-  const handleMapReady = useCallback((map) => {
-    mapRef.current = map;
-    setViewState(toViewState(map));
-    setMapReady(true);
-  }, []);
+  const transmissionLayers = useCallback((tripTime) => getVPPTransformationLayers({ stage: stageIndex, tripTime, stabilization: stabilizationRef.current, capabilityPhase }), [stageIndex, capabilityPhase]);
 
   useEffect(() => {
     stabilizationRef.current = 0;
@@ -113,24 +96,9 @@ function VPPTransformationStage({ height, stageIndex }) {
   }, [stageIndex]);
 
   useEffect(() => {
-    const map = mapRef.current;
-    if (!mapReady || !map || stageIndex < 3 || !stage.camera) return;
-    map.easeTo({ ...stage.camera, duration: 5200, essential: true });
-  }, [mapReady, stageIndex, stage]);
-
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return undefined;
-    const sync = () => setViewState(toViewState(map));
-    map.on('move', sync);
-    return () => map.off('move', sync);
-  }, [mapReady]);
-
-  useEffect(() => {
     if (!isActive) return undefined;
     let frame;
     const tick = (now) => {
-      tripTimeRef.current = now % 3600;
       stabilizationRef.current = stageIndex === 4 ? Math.min(1, stabilizationRef.current + 0.012) : 0;
       const nextCapabilityPhase = stageIndex === 4 ? Math.min(2, Math.floor(stabilizationRef.current * 3)) : -1;
       if (nextCapabilityPhase !== capabilityPhaseRef.current) {
@@ -138,9 +106,6 @@ function VPPTransformationStage({ height, stageIndex }) {
         setCapabilityPhase(nextCapabilityPhase);
       }
       drawGraphScene(graphCanvasRef.current, stageIndex, now);
-      deckRef.current?.deck?.setProps({
-        layers: getVPPTransformationLayers({ stage: stageIndex, tripTime: tripTimeRef.current, stabilization: stabilizationRef.current, capabilityPhase: nextCapabilityPhase }),
-      });
       frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
@@ -152,8 +117,7 @@ function VPPTransformationStage({ height, stageIndex }) {
             <canvas ref={graphCanvasRef} aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: stageIndex >= 1 && stageIndex <= 2 ? 1 : 0, transition: 'opacity 700ms ease', zIndex: 1 }} />
             {stageIndex >= 3 && (
               <div data-testid="vpp-japan-map" style={{ position: 'absolute', inset: 0, zIndex: 2 }}>
-                <JapanMapBackground variant="night" opacity={0.32} onMapReady={handleMapReady} interactive={stageIndex >= 3} />
-                <DeckGL ref={deckRef} layers={layers} viewState={viewState} controller={false} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 5 }} />
+                <JapanGridAtlas transmissionLayer={{ getLayers: transmissionLayers }} />
               </div>
             )}
             <div data-testid={`vpp-stage-${stage.id}`} style={{ position: 'absolute', inset: 0, zIndex: 10, pointerEvents: 'none' }}>

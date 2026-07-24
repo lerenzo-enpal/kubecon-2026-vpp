@@ -239,7 +239,7 @@ export const COLD_SNAP_CAMERA_KEYFRAMES = [
   { id: 'jepx', camera: { center: [138.25, 36.2], zoom: 4.25, bearing: 12, pitch: 40 }, anchor: [139.76, 35.68] },
   { id: 'tokyo', camera: { center: [139.76, 35.68], zoom: 11.4, bearing: 24, pitch: 56 }, anchor: [139.76, 35.68] },
   { id: 'kansai', camera: { center: [135.5, 34.69], zoom: 11, bearing: 20, pitch: 54 }, anchor: [135.5, 34.69] },
-  { id: 'tohoku', camera: { center: [140.87, 38.27], zoom: 10.7, bearing: 18, pitch: 52 }, anchor: [140.87, 38.27] },
+  { id: 'national', camera: { center: [138.25, 36.2], zoom: 4.25, bearing: 12, pitch: 40 }, anchor: [139.76, 35.68] },
 ];
 
 export const getRoutePosition = (route, progress) => {

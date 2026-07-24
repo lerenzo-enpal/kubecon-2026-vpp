@@ -16,6 +16,13 @@ const keynoteUrl = process.env.KEYNOTE_URL || 'http://localhost:3100/';
       await page.waitForTimeout(280);
     }
   };
+  const advanceTo = async (locator, maxSteps = 6) => {
+    for (let index = 0; index < maxSteps; index += 1) {
+      if (await locator.isVisible()) return;
+      await advance(1);
+    }
+    await locator.waitFor({ state: 'visible' });
+  };
 
   try {
     const keynote = fs.readFileSync(path.join(__dirname, '../src/Keynote.jsx'), 'utf8');
@@ -26,7 +33,14 @@ const keynoteUrl = process.env.KEYNOTE_URL || 'http://localhost:3100/';
     assert(keynote.indexOf('<JapanGridAtlas') < keynote.indexOf('<JapanEnergyOrigins'));
     assert((keynote.match(/<JapanGridAtlas/g) || []).length >= 3);
     assert.match(keynote, /data-testid="hormuz-scene"/);
+    assert.match(gridAtlas, /hormuz-route-play/);
     assert.match(keynote, /data-testid="grid-pressure-scene"/);
+    assert.match(keynote, /getJapanMapLayers\(\{ scene: 'cold-snap', coldSnapStage: step, tripTime \}\)/);
+    assert.match(keynote, /COLD_SNAP_CAMERA_KEYFRAMES\[step\]\?\.camera/);
+    assert.match(keynote, /act2-jepx-chart/);
+    assert.match(gridAtlas, /atlas-transmission-layer/);
+    assert.match(gridAtlas, /sceneLayer/);
+    assert.match(gridAtlas, /sceneLayer\?\.getLayers/);
     assert.doesNotMatch(keynote, /JapanOpeningSequence/);
     assert.doesNotMatch(keynote, /PatternSequence/);
     assert.doesNotMatch(keynote, /function HormuzOverlay/);
@@ -54,46 +68,48 @@ const keynoteUrl = process.env.KEYNOTE_URL || 'http://localhost:3100/';
     await page.getByText('KUBECON + CLOUDNATIVECON JAPAN · YOKOHAMA', { exact: true }).waitFor({ state: 'visible' });
     await advance(1);
     await page.getByTestId('japan-grid-atlas').first().waitFor({ state: 'visible' });
-    await advance(4);
-    await page.getByTestId('japan-energy-origins').waitFor({ state: 'visible' });
+    await advanceTo(page.getByTestId('japan-energy-origins'));
     await page.getByText("Japan's energy comes from far away.", { exact: true }).waitFor({ state: 'visible' });
     await page.getByTestId('energy-origin-route-lng').waitFor({ state: 'visible' });
     await advance(3);
     await page.getByTestId('energy-origin-route-oil').waitFor({ state: 'visible' });
     await page.getByTestId('energy-origin-route-coal').waitFor({ state: 'visible' });
 
-    await advance(1);
-    await page.getByTestId('hormuz-route').waitFor({ state: 'visible' });
+    await advanceTo(page.getByTestId('hormuz-route'));
+    await page.getByTestId('hormuz-route-play').waitFor({ state: 'visible' });
     await page.getByText('Strait of Hormuz', { exact: true }).first().waitFor({ state: 'visible' });
-    await page.getByText('Japan LNG terminals', { exact: true }).waitFor({ state: 'visible' });
+    await page.getByText('Japan LNG terminals', { exact: false }).waitFor({ state: 'visible' });
     const hormuzScene = page.getByTestId('hormuz-scene');
     await hormuzScene.waitFor({ state: 'visible' });
     const hormuzTransmission = hormuzScene.getByRole('button', { name: 'Transmission' });
-    await hormuzTransmission.click();
     assert.equal(await hormuzTransmission.getAttribute('aria-pressed'), 'true');
+    await hormuzTransmission.click();
+    assert.equal(await hormuzTransmission.getAttribute('aria-pressed'), 'false');
     await page.getByTestId('hormuz-context').waitFor({ state: 'visible' });
     const contextCards = page.getByTestId('hormuz-context-card');
     if (await contextCards.count() !== 1) {
       throw new Error('Expected one sequential Hormuz context card.');
     }
     await page.getByTestId('hormuz-callout-leader').waitFor({ state: 'visible' });
-    await advance(4);
     const gridPressureScene = page.getByTestId('grid-pressure-scene');
-    await gridPressureScene.waitFor({ state: 'visible' });
+    await advanceTo(gridPressureScene);
     const pressureTransmission = gridPressureScene.getByRole('button', { name: 'Transmission' });
     await pressureTransmission.click();
     assert.equal(await pressureTransmission.getAttribute('aria-pressed'), 'true');
     await page.getByTestId('grid-pressure-atlas').waitFor({ state: 'visible' });
-    await page.getByText('Grid pressure', { exact: true }).waitFor({ state: 'visible' });
+    await page.getByRole('heading', { name: 'Grid pressure' }).waitFor({ state: 'visible' });
     await advance(1);
     await page.getByTestId('act2-jepx-sidecar').waitFor({ state: 'visible' });
-    await page.getByText('25× spike', { exact: true }).waitFor({ state: 'visible' });
+    await page.getByTestId('act2-jepx-chart').waitFor({ state: 'visible' });
+    await page.getByTestId('act2-jepx-sidecar').locator('div').filter({ hasText: /^25× spike$/ }).waitFor({ state: 'visible' });
     await advance(2);
     await page.getByTestId('act2-demand-card').waitFor({ state: 'visible' });
     await page.getByTestId('act2-cold-snap-route').waitFor({ state: 'visible' });
+    await page.getByTestId('act2-cold-snap-buildings').waitFor({ state: 'visible' });
+    await advance(1);
+    await page.getByTestId('act2-cold-snap-transmission').waitFor({ state: 'visible' });
 
-    await advance(3);
-    await page.getByTestId('vpp-transformation-sequence').waitFor({ state: 'visible' });
+    await advanceTo(page.getByTestId('vpp-transformation-sequence'));
     await page.getByTestId('vpp-stage-pause').waitFor({ state: 'visible' });
     await page.getByText('The grid is a distributed system.', { exact: true }).waitFor({ state: 'visible' });
 
@@ -117,11 +133,9 @@ const keynoteUrl = process.env.KEYNOTE_URL || 'http://localhost:3100/';
     if (vppBounds.width < 1400 || vppBounds.height < 760) {
       throw new Error(`Expected full-bleed VPP map, received ${vppBounds.width}×${vppBounds.height}.`);
     }
-    const vppCanvas = vppMap.getByTestId('japan-map-canvas');
-    if (await vppCanvas.getAttribute('data-interactive') !== 'true') {
-      throw new Error('Expected an interactive Japan VPP map.');
-    }
-    await vppCanvas.hover();
+    const vppAtlas = vppMap.getByTestId('japan-grid-atlas');
+    await vppAtlas.waitFor({ state: 'visible' });
+    await vppAtlas.hover();
     await page.mouse.wheel(0, -320);
 
     await advance(1);
