@@ -8,9 +8,13 @@ const ORIGINS = [
   { id: 'oil', label: 'Oil · Middle East', path: [[52, 26], [72, 17], [139.8, 35.3]], color: [196, 82, 66, 235], view: { center: [92, 21], zoom: 2.25, pitch: 0, bearing: 0 } },
   { id: 'coal', label: 'Coal · Australia', path: [[151, -32], [149, 8], [139.8, 35.3]], color: [95, 78, 65, 235], view: { center: [147, 0], zoom: 2.25, pitch: 0, bearing: 0 } },
 ];
+const HORMUZ_VIEW = { longitude: 98, latitude: 22, zoom: 2.6, pitch: 30, bearing: 0 };
+const ORIGIN_OVERVIEW_VIEW = { longitude: 121, latitude: 10, zoom: 2.2, pitch: 16, bearing: 0 };
+const HORMUZ_FOCUS_VIEW = { longitude: 56.3, latitude: 26.6, zoom: 4.5, pitch: 50, bearing: 18 };
 
 function EnergyOriginsScene({ height, step }) {
-  const origins = ORIGINS.slice(0, step + 1);
+  const activeStep = Number.isFinite(step) ? step : 0;
+  const origins = ORIGINS.slice(0, activeStep + 1);
   const layers = origins.map((origin) => new PathLayer({
     id: `energy-origin-route-${origin.id}`,
     data: [origin],
@@ -22,10 +26,9 @@ function EnergyOriginsScene({ height, step }) {
     jointRounded: true,
   }));
 
-  const activeStep = Number.isFinite(step) ? step : 0;
-  const origin = ORIGINS[Math.max(0, Math.min(activeStep, ORIGINS.length - 1))];
+  const view = activeStep < ORIGINS.length ? ORIGINS[activeStep].view : activeStep === 3 ? ORIGIN_OVERVIEW_VIEW : activeStep === 4 ? HORMUZ_FOCUS_VIEW : HORMUZ_VIEW;
   return <div data-testid="japan-energy-origins" style={{ height, position: 'relative', background: 'var(--color-washi-paper)' }}>
-    <JapanGridAtlas variant="washi" mapVariant="washi" step={step} preset={() => ({})} sceneLayer={{ view: origin.view, layers }} />
+    <JapanGridAtlas variant="washi" mapVariant="washi" step={step} preset={() => ({})} sceneLayer={{ view, layers }} />
     <div style={{ position: 'absolute', zIndex: 2, top: 44, left: 48 }}>
       <div style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-washi-alert)', letterSpacing: '.16em' }}>JAPAN&apos;S ENERGY SYSTEM · FY2023</div>
       <h1 style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-washi-ink)' }}>Japan&apos;s energy comes from far away.</h1>

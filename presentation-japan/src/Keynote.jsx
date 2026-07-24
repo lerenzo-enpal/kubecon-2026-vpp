@@ -1,5 +1,5 @@
 import React from 'react';
-import { Deck, Slide, Notes } from 'spectacle';
+import { Deck, Slide, Notes, defaultTransition, fadeTransition } from 'spectacle';
 import { useTheme } from './hooks/useTheme.js';
 import { useLocale } from './hooks/useLocale.js';
 import { PresentationChrome } from './components/PresentationChrome.jsx';
@@ -19,6 +19,8 @@ const keynoteAtlasPreset = (step) => ({ areas: true, transmission: step >= 1, pl
 const allAtlasLayers = () => ({ areas: true, transmission: true, plants: true, mix: true, demand: true, jepx: true });
 const HORMUZ_ROUTE = [[56.3, 26], [56.5, 23.5], [65, 17], [78, 8], [95, 5], [104, 1.5], [114, 10], [128, 22], [139.7, 35.7]];
 const HORMUZ_VIEW = { longitude: 98, latitude: 22, zoom: 2.6, pitch: 30, bearing: 0 };
+const HORMUZ_FOCUS_VIEW = { longitude: 56.3, latitude: 26.6, zoom: 4.5, pitch: 50, bearing: 18 };
+const JAPAN_VIEW = { longitude: 138.25, latitude: 36.2, zoom: 4.5, pitch: 42, bearing: 12 };
 
 function template({ slideNumber }) {
   const section = SECTIONS[slideNumber - 1] || '';
@@ -43,7 +45,7 @@ export default function Keynote() {
   return (
     <>
       <PresentationChrome theme={theme} cycleTheme={cycleTheme} locale={locale} setLocale={setLocale} />
-      <Deck theme={spectacleTheme} template={template}>
+      <Deck theme={spectacleTheme} template={template} transition={defaultTransition} backdropStyle={{ backgroundColor: 'var(--color-washi-paper)' }}>
         <Slide backgroundColor="var(--color-washi-paper)" padding="0">
           <div data-testid="keynote-washi-premise" className="flex h-full flex-col justify-center gap-6 px-14">
             <div className="font-[var(--font-mono)] text-sm tracking-[0.16em] text-[var(--color-washi-alert)]">KUBECON + CLOUDNATIVECON JAPAN · YOKOHAMA</div>
@@ -57,13 +59,14 @@ export default function Keynote() {
           <Notes>Atlas: start with service regions. Reveal transmission and the 50/60 Hz seam, then representative power stations, then the national generation mix.</Notes>
         </Slide>
 
-        <Slide backgroundColor="var(--color-washi-paper)" padding="0">
+        <Slide backgroundColor="var(--color-washi-paper)" padding="0" transition={fadeTransition}>
           <JapanEnergyOrigins />
           <Notes>- Generation mix: METI FY2023. - Reveal imported LNG, oil, then coal. - Distance creates structural exposure before the grid story begins.</Notes>
         </Slide>
 
-        <Slide backgroundColor={bg} padding="0">
-          <StepBridge count={4}>{step => <div data-testid="hormuz-scene" className="relative h-full"><JapanGridAtlas step={step} preset={allAtlasLayers} routeLayer={{ points: HORMUZ_ROUTE, restartKey: step, view: HORMUZ_VIEW }} /><div data-testid="hormuz-map-fade" className="pointer-events-none absolute inset-0 bg-[var(--color-bg)] map-fade-out" /><div className="pointer-events-none absolute inset-0" data-testid="hormuz-route"><div className="absolute left-8 top-8 max-w-sm border border-[var(--color-accent)]/50 bg-[color-mix(in_srgb,var(--color-bg)_86%,transparent)] p-5"><div className="font-[var(--font-mono)] text-xs tracking-[0.16em] text-[var(--color-accent)]">ENERGY CORRIDOR</div><h1 className="my-2 font-[var(--font-heading)] text-4xl font-extrabold text-[var(--color-heading)]">Strait of Hormuz</h1><p className="m-0 text-lg text-[var(--color-text)]">One route leads through Hormuz. A physical chokepoint becomes a grid risk.</p></div><div data-testid="hormuz-context" className="absolute right-8 top-8 w-80 border-l-4 border-[var(--color-danger)] bg-[color-mix(in_srgb,var(--color-bg)_86%,transparent)] p-5"><div data-testid="hormuz-context-card"><div className="font-[var(--font-mono)] text-sm tracking-[0.14em] text-[var(--color-danger)]">84.7% IMPORTED</div><div className="mt-2 text-base text-[var(--color-text)]">Japan LNG terminals turn the constrained import route into a grid problem at the coast.</div></div></div><svg data-testid="hormuz-callout-leader" className="absolute inset-0 h-full w-full" aria-hidden="true"><path d="M 390 190 L 520 280" fill="none" stroke="var(--color-accent)" strokeWidth="2" strokeDasharray="6 6" /></svg></div></div>}</StepBridge>
+        <Slide backgroundColor={bg} padding="0" transition={fadeTransition}>
+          <style>{`@keyframes hormuzMapHandoff { to { opacity: 0; } } .hormuz-map-handoff-fade { animation: hormuzMapHandoff 1000ms ease-in-out forwards; }`}</style>
+          <div data-testid="hormuz-scene" className="relative h-full"><JapanGridAtlas preset={allAtlasLayers} sceneLayer={{ view: HORMUZ_FOCUS_VIEW }} routeLayer={{ points: HORMUZ_ROUTE, view: HORMUZ_FOCUS_VIEW, targetView: JAPAN_VIEW, duration: 12000, delay: 1000, followShip: true, ship: { mesh: '/models/cargo-ship.obj' } }} /><div data-testid="hormuz-map-fade" className="pointer-events-none absolute inset-0 bg-[var(--color-bg)] map-fade-out" /><div className="pointer-events-none absolute inset-0" data-testid="hormuz-route"><div className="absolute left-8 top-8 max-w-sm border border-[var(--color-accent)]/50 bg-[color-mix(in_srgb,var(--color-bg)_86%,transparent)] p-5"><div className="font-[var(--font-mono)] text-xs tracking-[0.16em] text-[var(--color-accent)]">ENERGY CORRIDOR</div><h1 className="my-2 font-[var(--font-heading)] text-4xl font-extrabold text-[var(--color-heading)]">Strait of Hormuz</h1><p className="m-0 text-lg text-[var(--color-text)]">One route leads through Hormuz. A physical chokepoint becomes a grid risk.</p></div><div data-testid="hormuz-context" className="absolute right-8 top-8 w-80 border-l-4 border-[var(--color-danger)] bg-[color-mix(in_srgb,var(--color-bg)_86%,transparent)] p-5"><div data-testid="hormuz-context-card"><div className="font-[var(--font-mono)] text-sm tracking-[0.14em] text-[var(--color-danger)]">84.7% IMPORTED</div><div className="mt-2 text-base text-[var(--color-text)]">Japan LNG terminals turn the constrained import route into a grid problem at the coast.</div></div></div><svg data-testid="hormuz-callout-leader" className="absolute inset-0 h-full w-full" aria-hidden="true"><path d="M 390 190 L 520 280" fill="none" stroke="var(--color-accent)" strokeWidth="2" strokeDasharray="6 6" /></svg></div><div data-testid="hormuz-map-handoff-fade" className="pointer-events-none absolute inset-0 bg-[var(--color-bg)] hormuz-map-handoff-fade" /></div>
           <Notes>- Geographic and energy corridors are schematic. - Reveal the 50/60 Hz seam, LNG routes, then Hormuz. - Keep the consequence grounded in system exposure.</Notes>
         </Slide>
 

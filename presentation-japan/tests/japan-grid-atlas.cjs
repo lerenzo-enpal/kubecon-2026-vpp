@@ -28,6 +28,11 @@ async function main() {
   assert.match(source, /MapGL/);
   assert.match(source, /FlyToInterpolator/);
   assert.match(source, /getTooltip/);
+  assert.match(source, /const followShip = routeLayer\?\.followShip/);
+  assert.match(source, /const followView = \(progress\) =>/);
+  assert.match(source, /zoom: 4\.5 - progress \* 1\.9/);
+  assert.match(source, /if \(!isSlideActive \|\| followShip\) return;/);
+  assert.match(source, /if \(followShip\) props\.viewState = followView\(progress\);/);
   assert.match(source, /PLANT_COLORS/);
   assert.match(source, /plantMarkerSize/);
   assert.match(source, /height = '100%'/);

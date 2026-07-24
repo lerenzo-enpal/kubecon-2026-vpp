@@ -12,7 +12,7 @@
 
 body {
   margin: 0;
-  background: var(--color-bg, #060a1a);
+  background: var(--color-washi-paper, #E8E4D4);
   color: var(--color-text, #f1f5f9);
 }
 

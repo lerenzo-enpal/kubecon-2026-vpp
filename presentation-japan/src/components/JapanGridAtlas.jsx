@@ -3,6 +3,8 @@ import { SlideContext } from 'spectacle';
 import { DeckGL } from '@deck.gl/react';
 import { FlyToInterpolator } from '@deck.gl/core';
 import { PathLayer, PolygonLayer, ScatterplotLayer, TextLayer } from '@deck.gl/layers';
+import { SimpleMeshLayer } from '@deck.gl/mesh-layers';
+import { OBJLoader } from '@loaders.gl/obj';
 import MapGL from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { ATLAS_FEATURES, ATLAS_LAYER_IDS } from '../data/japanGridAtlasData.mjs';
@@ -17,32 +19,58 @@ const PLANT_COLORS = { Nuclear: [167, 139, 250, 225], LNG: [34, 211, 238, 225], 
 const MAP_STYLE = { version: 8, sources: { base: { type: 'raster', tiles: ['https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'], tileSize: 256 } }, layers: [{ id: 'base', type: 'raster', source: 'base', paint: { 'raster-opacity': 0.72 } }] };
 const WASHI_MAP_STYLE = { version: 8, sources: { base: { type: 'raster', tiles: ['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png'], tileSize: 256 } }, layers: [{ id: 'base', type: 'raster', source: 'base', paint: { 'raster-opacity': 0.46 } }] };
 
-const routeLayers = ({ points, progress = 0 }) => {
-  const visible = points.slice(0, Math.floor(progress * (points.length - 1)) + 1);
-  const current = visible[visible.length - 1] ?? points[0];
+const initialView = (sceneLayer, routeLayer) => {
+  const { center, ...sceneView } = sceneLayer?.view ?? {};
+  return sceneLayer?.view ? { ...VIEW, ...sceneView, ...(center && { longitude: center[0], latitude: center[1] }) } : routeLayer?.view ?? VIEW;
+};
+
+const routePosition = (points, progress) => {
+  const index = Math.min(Math.floor(progress * (points.length - 1)), points.length - 2);
+  const next = points[index + 1] ?? points[index];
+  const t = progress * (points.length - 1) - index;
+  const position = points[index].map((value, axis) => value + (next[axis] - value) * t);
+  return { position, heading: Math.atan2(next[1] - position[1], next[0] - position[0]) * 180 / Math.PI, index };
+};
+
+const routeLayers = ({ points, progress = 0, ship }) => {
+  const { position: current, heading, index } = routePosition(points, progress);
+  const visible = [...points.slice(0, index + 1), current];
   return [
     new PathLayer({ id: 'atlas-route-ghost', data: [{ path: points }], getPath: ({ path }) => path, getColor: [255, 163, 95, 28], getWidth: 6, widthUnits: 'pixels', capRounded: true, jointRounded: true }),
     visible.length > 1 && new PathLayer({ id: 'atlas-route', data: [{ path: visible }], getPath: ({ path }) => path, getColor: [255, 163, 95, 235], getWidth: 3, widthUnits: 'pixels', capRounded: true, jointRounded: true }),
     new ScatterplotLayer({ id: 'atlas-route-tip', data: [{ position: current }], getPosition: ({ position }) => position, getRadius: 65000, radiusUnits: 'meters', getFillColor: [255, 163, 95, 255] }),
+    ship && new SimpleMeshLayer({ id: 'atlas-route-ship', data: [{ position: current, heading }], mesh: ship.mesh, loaders: [OBJLoader], getPosition: ({ position }) => position, getOrientation: ({ heading: direction }) => [0, 0, direction], getColor: ship.color ?? [255, 194, 23], sizeScale: ship.sizeScale ?? 7000, material: { ambient: 0.45, diffuse: 0.75, shininess: 24 } }),
   ].filter(Boolean);
 };
 
 export function JapanGridAtlas({ height = '100%', step = 0, preset = () => ({}), liveData = {}, variant = 'dark', mapVariant = 'dark', plantMarkerSize = 10, routeLayer, transmissionLayer, sceneLayer }) {
-  const [viewState, setViewState] = useState(VIEW);
+  const [viewState, setViewState] = useState(() => initialView(sceneLayer, routeLayer));
   const [overrides, setOverrides] = useState({});
   const [replayKey, setReplayKey] = useState(0);
   const deckRef = useRef(null);
+  const progressRef = useRef(0);
   const slideContext = useContext(SlideContext);
   const isSlideActive = slideContext?.isSlideActive ?? true;
   const active = useMemo(() => resolveAtlasLayers({ preset: preset(step), overrides }), [preset, step, overrides]);
   const plantRadius = plantRadiusAtZoom(viewState.zoom, plantMarkerSize);
+  const routeDuration = routeLayer?.duration ?? 2200;
+  const routeDelay = routeLayer?.delay ?? 0;
+  const followShip = routeLayer?.followShip;
+  const followView = (progress) => {
+    const [longitude, latitude] = routePosition(routeLayer.points, progress).position;
+    return { ...viewState, longitude, latitude, zoom: 4.5 - progress * 1.9, pitch: 35, bearing: 0 };
+  };
+  const targetView = routeLayer?.targetView ?? sceneLayer?.view ?? routeLayer?.view ?? (active.transmission ? SEAM_VIEW : VIEW);
+  const targetViewKey = JSON.stringify(targetView);
   useEffect(() => { setOverrides({}); }, [step]);
   useEffect(() => {
-    if (!isSlideActive) return;
-    const { center, ...sceneView } = sceneLayer?.view ?? {};
-    const target = sceneLayer?.view ? { ...sceneView, ...(center && { longitude: center[0], latitude: center[1] }) } : routeLayer?.view ?? (active.transmission ? SEAM_VIEW : VIEW);
-    setViewState((current) => ({ ...current, ...target, transitionDuration: 1200, transitionInterpolator: FLY_TO }));
-  }, [active.transmission, isSlideActive, routeLayer?.view, sceneLayer?.view]);
+    if (!isSlideActive || followShip) return;
+    const { center, ...view } = targetView;
+    const move = () => setViewState((current) => ({ ...current, ...view, ...(center && { longitude: center[0], latitude: center[1] }), transitionDuration: routeDuration, transitionInterpolator: FLY_TO }));
+    if (!routeDelay) return move();
+    const timeout = window.setTimeout(move, routeDelay);
+    return () => window.clearTimeout(timeout);
+  }, [isSlideActive, routeDelay, routeDuration, targetViewKey, followShip]);
   const toggle = (id) => setOverrides((current) => ({ ...current, [id]: !active[id] }));
   const atlasLayers = useMemo(() => [
     active.areas && new PolygonLayer({ id: 'atlas-areas', data: ATLAS_FEATURES.areas, getPolygon: (d) => d.polygon, getFillColor: (d) => d.frequency === '50 Hz' ? [34, 211, 238, 24] : [255, 194, 23, 24], getLineColor: (d) => d.frequency === '50 Hz' ? [34, 211, 238, 155] : [255, 194, 23, 155], getLineWidth: 1, lineWidthUnits: 'pixels', pickable: true }),
@@ -61,17 +89,21 @@ export function JapanGridAtlas({ height = '100%', step = 0, preset = () => ({}),
     if (!isSlideActive || (!routeLayer && !transmissionLayer?.getLayers && !sceneLayer?.getLayers)) return undefined;
     let frame;
     let started;
+    progressRef.current = 0;
     const tick = (now) => {
       started ??= now;
-      const progress = routeLayer ? Math.min((now - started) / 2200, 1) : 0;
-      deckRef.current?.deck?.setProps({ layers: layers(progress, now % 3600) });
+      const progress = routeLayer ? Math.min(Math.max(now - started - routeDelay, 0) / routeDuration, 1) : 0;
+      progressRef.current = progress;
+      const props = { layers: layers(progress, now % 3600) };
+      if (followShip) props.viewState = followView(progress);
+      deckRef.current?.deck?.setProps(props);
       if (progress < 1 || transmissionLayer?.getLayers || sceneLayer?.getLayers) frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [isSlideActive, layers, replayKey, routeLayer?.restartKey, transmissionLayer?.getLayers, sceneLayer?.getLayers]);
+  }, [isSlideActive, layers, replayKey, followShip, transmissionLayer?.getLayers, sceneLayer?.getLayers]);
   return <div data-testid="japan-grid-atlas" data-variant={variant} data-map-variant={mapVariant} style={{ position: 'relative', width: '100%', height, background: variant === 'washi' ? 'var(--color-washi-paper)' : 'var(--color-bg)' }}>
-    {isSlideActive && <DeckGL ref={deckRef} viewState={viewState} onViewStateChange={({ viewState: next }) => setViewState(next)} controller={true} layers={layers()} getTooltip={({ object }) => object && (object.name ? { text: `${object.name}\n${object.fuel} · ${object.capacity}` } : { text: object.label || object.name })} style={{ position: 'absolute', inset: 0 }}>
+    {isSlideActive && <DeckGL ref={deckRef} viewState={viewState} onViewStateChange={({ viewState: next }) => setViewState(next)} controller={true} layers={layers(progressRef.current)} getTooltip={({ object }) => object && (object.name ? { text: `${object.name}\n${object.fuel} · ${object.capacity}` } : { text: object.label || object.name })} style={{ position: 'absolute', inset: 0 }}>
       <MapGL mapStyle={mapVariant === 'washi' ? WASHI_MAP_STYLE : MAP_STYLE} style={mapVariant === 'washi' ? { filter: 'saturate(0.35) brightness(1.35) sepia(0.18)' } : undefined} />
     </DeckGL>}
     {routeLayer && <button data-testid="hormuz-route-play" type="button" aria-label="Replay Hormuz route" onClick={() => setReplayKey((key) => key + 1)} className="absolute bottom-20 left-1/2 -translate-x-1/2 rounded border border-[var(--color-accent)] bg-[color-mix(in_srgb,var(--color-bg)_84%,transparent)] px-3 py-2 font-[var(--font-mono)] text-xs text-[var(--color-heading)]">Replay route</button>}
