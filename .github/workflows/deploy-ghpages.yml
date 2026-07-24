@@ -41,12 +41,23 @@ jobs:
         working-directory: presentation
         run: npm run build -- --base /slides/
 
+      - name: Install presentation-japan deps
+        working-directory: presentation-japan
+        run: npm ci
+
+      - name: Build presentation-japan
+        working-directory: presentation-japan
+        run: npm run build
+
       - name: Assemble deploy artifact
         run: |
           mkdir -p _site
           cp -r website/dist/* _site/
           mkdir -p _site/slides
           cp -r presentation/dist/* _site/slides/
+          mkdir -p _site/japan-keynote _site/japan-main
+          cp -r presentation-japan/dist/* _site/japan-keynote/
+          cp -r presentation-japan/dist/* _site/japan-main/
 
       - uses: actions/upload-pages-artifact@v3
         with:
