@@ -8,6 +8,10 @@ async function main() {
   assert.deepEqual(data.ATLAS_LAYER_IDS, ['mix', 'plants', 'areas', 'transmission', 'demand', 'jepx']);
   assert.ok(data.ATLAS_SOURCES.every(({ url, licence, retrievedAt, scope }) => url && licence && retrievedAt && scope));
   assert.ok(data.ATLAS_FEATURES.areas.every(({ polygon }) => polygon.length >= 4));
+  assert.ok(data.ATLAS_FEATURES.plants.length >= 30, 'atlas should show a useful cross-section of Japan\'s generation fleet');
+  assert.deepEqual([...new Set(data.ATLAS_FEATURES.plants.map(({ fuel }) => fuel))].sort(), ['Coal', 'Geothermal', 'Hydro', 'LNG', 'Nuclear', 'Oil', 'Solar', 'Wind']);
+  assert.ok(data.ATLAS_FEATURES.transmission.length >= 20, 'atlas should show national transmission corridors, not four illustrative paths');
+  assert.ok(data.ATLAS_FEATURES.transmission.every(({ source }) => source), 'each transmission feature needs an attributable source');
   assert.deepEqual(
     state.resolveAtlasLayers({ preset: { areas: true, plants: false }, overrides: { plants: true } }),
     { mix: false, plants: true, areas: true, transmission: false, demand: false, jepx: false },
@@ -19,6 +23,8 @@ async function main() {
   assert.match(source, /controller=\{true\}/);
   assert.match(source, /MapGL/);
   assert.match(source, /FlyToInterpolator/);
+  assert.match(source, /getTooltip/);
+  assert.match(source, /PLANT_COLORS/);
 }
 
 main().catch((error) => { console.error(error); process.exitCode = 1; });
