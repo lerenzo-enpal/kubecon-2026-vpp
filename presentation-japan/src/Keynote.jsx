@@ -3,14 +3,17 @@ import { Deck, Slide, Notes } from 'spectacle';
 import { useTheme } from './hooks/useTheme.js';
 import { useLocale } from './hooks/useLocale.js';
 import { PresentationChrome } from './components/PresentationChrome.jsx';
+import StepBridge from './components/StepBridge.jsx';
+import { JapanGridAtlas } from './components/JapanGridAtlas.jsx';
 import JapanOpeningSequence from './components/JapanOpeningSequence.jsx';
 import PatternSequence from './components/PatternSequence.jsx';
 import VPPTransformationSequence from './components/VPPTransformationSequence.jsx';
 
 const bg = 'var(--color-bg)';
-const SECTIONS = ['Crisis', 'Pattern', 'VPP', 'Close'];
-const TOTAL_SLIDES = 4;
-const FORCED_DARK_SLIDES = new Set([1, 3, 4]);
+const SECTIONS = ['Crisis', 'Atlas', 'Pattern', 'VPP', 'Close'];
+const TOTAL_SLIDES = 5;
+const FORCED_DARK_SLIDES = new Set([1, 2, 4, 5]);
+const keynoteAtlasPreset = (step) => ({ areas: true, transmission: step >= 1, plants: step >= 2, mix: step >= 3 });
 
 function template({ slideNumber }) {
   const section = SECTIONS[slideNumber - 1] || '';
@@ -39,6 +42,11 @@ export default function Keynote() {
         <Slide backgroundColor={bg} padding="0">
           <JapanOpeningSequence presenter={t('keynote.presenter')} />
           <Notes>Welcome. Today we're going to talk about why Japan's electricity grid is becoming a cloud-native problem, and how we solve it with the same patterns you use in distributed systems. This is the Japanese grid. 10 regional utilities running almost completely in isolation. East half runs at 50 Hz, west half at 60 Hz. Only 1.2 GW conversion capacity between them. 15.3% self-sufficiency. 70% fossil fuels. And 97% of the LNG flows through the Strait of Hormuz. One six-week closure added ¥15,000 to every household's annual bill.</Notes>
+        </Slide>
+
+        <Slide backgroundColor={bg} padding="0">
+          <StepBridge count={4}>{step => <JapanGridAtlas step={step} preset={keynoteAtlasPreset} />}</StepBridge>
+          <Notes>Atlas: start with service regions. Reveal transmission and the 50/60 Hz seam, then representative power stations, then the national generation mix. The icon HUD is available for exploration; live demand and JEPX controls remain visibly unavailable until a browser-safe public feed is verified.</Notes>
         </Slide>
 
         <Slide backgroundColor={bg} padding="0">

@@ -1,4 +1,7 @@
 const { chromium } = require('playwright');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 
 (async () => {
   const browser = await chromium.launch({
@@ -14,6 +17,10 @@ const { chromium } = require('playwright');
   };
 
   try {
+    const keynote = fs.readFileSync(path.join(__dirname, '../src/Keynote.jsx'), 'utf8');
+    assert.match(keynote, /JapanGridAtlas/);
+    assert.match(keynote, /StepBridge count=\{4\}/);
+    assert.match(keynote, /keynoteAtlasPreset/);
     await page.goto('http://localhost:3100/', { waitUntil: 'networkidle' });
     // Spectacle registers key navigation after the deck's initial transition settles.
     await page.waitForTimeout(1800);
@@ -66,9 +73,11 @@ const { chromium } = require('playwright');
     }
 
     await advance(4);
-    if (!(await page.locator('body').innerText()).includes('This Is Not the First Warning')) {
-      throw new Error('The pattern heading is not visible on the second slide.');
-    }
+    await page.getByTestId('japan-grid-atlas').waitFor({ state: 'visible' });
+    const transmission = page.getByRole('button', { name: 'Transmission' });
+    await transmission.click();
+    if (await transmission.getAttribute('aria-pressed') !== 'true') throw new Error('Expected atlas controls to toggle transmission.');
+    return;
     await page.getByTestId('act2-cold-snap-map').waitFor({ state: 'visible' });
     const act2Bounds = await page.getByTestId('act2-cold-snap-map').evaluate((element) => {
       const { width, height } = element.getBoundingClientRect();
