@@ -20,12 +20,27 @@ const keynoteUrl = process.env.KEYNOTE_URL || 'http://localhost:3100/';
   try {
     const keynote = fs.readFileSync(path.join(__dirname, '../src/Keynote.jsx'), 'utf8');
     const japanGridMap = fs.readFileSync(path.join(__dirname, '../src/components/JapanGridMapAnimated.jsx'), 'utf8');
-    assert.match(keynote, /JapanGridAtlas/);
+    const coldSnapMap = fs.readFileSync(path.join(__dirname, '../src/components/JapanColdSnapMapAnimated.jsx'), 'utf8');
+    const gridAtlas = fs.readFileSync(path.join(__dirname, '../src/components/JapanGridAtlas.jsx'), 'utf8');
+    assert.match(keynote, /<JapanGridAtlas[^>]*preset={keynoteAtlasPreset}/);
+    assert(keynote.indexOf('<JapanGridAtlas') < keynote.indexOf('<JapanEnergyOrigins'));
+    assert((keynote.match(/<JapanGridAtlas/g) || []).length >= 3);
+    assert.match(keynote, /data-testid="hormuz-scene"/);
+    assert.match(keynote, /data-testid="grid-pressure-scene"/);
+    assert.doesNotMatch(keynote, /JapanOpeningSequence/);
+    assert.doesNotMatch(keynote, /PatternSequence/);
+    assert.doesNotMatch(keynote, /function HormuzOverlay/);
+    assert.doesNotMatch(keynote, /function GridPressureOverlay/);
+    assert.match(gridAtlas, /const isSlideActive = slideContext\?\.isSlideActive \?\? true/);
+    assert.match(gridAtlas, /\{isSlideActive && <DeckGL/);
     assert.match(keynote, /JapanEnergyOrigins/);
     assert.match(keynote, /keynote-washi-premise/);
-    assert.match(keynote, /startAtMap/);
+    assert.doesNotMatch(keynote, /startAtMap/);
     assert.match(keynote, /StepBridge count=\{4\}/);
     assert.match(keynote, /keynoteAtlasPreset/);
+    assert.match(keynote, /new Set\(\[2, 4, 5, 6\]\)/);
+    assert.match(coldSnapMap, /Grid pressure/);
+    assert.match(keynote, /100K DEVICES/);
     assert.doesNotMatch(keynote, /97% of Japan LNG transits this route/);
     assert.doesNotMatch(japanGridMap, /97% of Japan LNG transits this route/);
     await page.goto(keynoteUrl, { waitUntil: 'networkidle' });
@@ -38,6 +53,8 @@ const keynoteUrl = process.env.KEYNOTE_URL || 'http://localhost:3100/';
     await page.getByTestId('keynote-washi-premise').waitFor({ state: 'visible' });
     await page.getByText('KUBECON + CLOUDNATIVECON JAPAN · YOKOHAMA', { exact: true }).waitFor({ state: 'visible' });
     await advance(1);
+    await page.getByTestId('japan-grid-atlas').first().waitFor({ state: 'visible' });
+    await advance(4);
     await page.getByTestId('japan-energy-origins').waitFor({ state: 'visible' });
     await page.getByText("Japan's energy comes from far away.", { exact: true }).waitFor({ state: 'visible' });
     await page.getByTestId('energy-origin-route-lng').waitFor({ state: 'visible' });
@@ -45,57 +62,29 @@ const keynoteUrl = process.env.KEYNOTE_URL || 'http://localhost:3100/';
     await page.getByTestId('energy-origin-route-oil').waitFor({ state: 'visible' });
     await page.getByTestId('energy-origin-route-coal').waitFor({ state: 'visible' });
 
-    await advance(2);
-    const mapBounds = await page.getByTestId('japan-opening-map').evaluate((element) => {
-      const { width, height } = element.getBoundingClientRect();
-      return { width, height };
-    });
-    if (mapBounds.width < 1400 || mapBounds.height < 760) {
-      throw new Error(`Expected a full-bleed map, received ${mapBounds.width}×${mapBounds.height}.`);
-    }
-
-    await page.getByTestId('japan-geographic-layers').waitFor({ state: 'visible' });
-    const mapCanvasCount = await page.locator('[data-testid="japan-geographic-layers"] canvas').count();
-    if (mapCanvasCount !== 1) {
-      throw new Error('Expected one DeckGL geographic overlay canvas.');
-    }
-
-    await advance(5);
+    await advance(1);
     await page.getByTestId('hormuz-route').waitFor({ state: 'visible' });
     await page.getByText('Strait of Hormuz', { exact: true }).first().waitFor({ state: 'visible' });
     await page.getByText('Japan LNG terminals', { exact: true }).waitFor({ state: 'visible' });
+    const hormuzScene = page.getByTestId('hormuz-scene');
+    await hormuzScene.waitFor({ state: 'visible' });
+    const hormuzTransmission = hormuzScene.getByRole('button', { name: 'Transmission' });
+    await hormuzTransmission.click();
+    assert.equal(await hormuzTransmission.getAttribute('aria-pressed'), 'true');
     await page.getByTestId('hormuz-context').waitFor({ state: 'visible' });
     const contextCards = page.getByTestId('hormuz-context-card');
     if (await contextCards.count() !== 1) {
       throw new Error('Expected one sequential Hormuz context card.');
     }
     await page.getByTestId('hormuz-callout-leader').waitFor({ state: 'visible' });
-    await page.waitForTimeout(900);
-    const cardOpacities = await contextCards.evaluateAll((cards) => cards.map((card) => Number.parseFloat(getComputedStyle(card.firstElementChild).opacity)));
-    if (cardOpacities.some((opacity) => opacity < 0.96)) {
-      throw new Error(`Expected fully visible Hormuz context cards, received opacities: ${cardOpacities.join(', ')}.`);
-    }
-    const mapCanvas = page.getByTestId('japan-opening-map').getByTestId('japan-map-canvas');
-    await mapCanvas.hover();
-    await page.mouse.wheel(0, -360);
-    if (await mapCanvas.getAttribute('data-interactive') !== 'true') {
-      throw new Error('Expected the keynote map to accept direct exploration.');
-    }
-
     await advance(4);
-    await page.getByTestId('japan-grid-atlas').waitFor({ state: 'visible' });
-    const transmission = page.getByRole('button', { name: 'Transmission' });
-    await transmission.click();
-    if (await transmission.getAttribute('aria-pressed') !== 'true') throw new Error('Expected atlas controls to toggle transmission.');
-    await advance(5);
-    await page.getByTestId('act2-cold-snap-map').waitFor({ state: 'visible' });
-    const act2Bounds = await page.getByTestId('act2-cold-snap-map').evaluate((element) => {
-      const { width, height } = element.getBoundingClientRect();
-      return { width, height };
-    });
-    if (act2Bounds.width < 1400 || act2Bounds.height < 760) {
-      throw new Error(`Expected a full-bleed Act 2 map, received ${act2Bounds.width}×${act2Bounds.height}.`);
-    }
+    const gridPressureScene = page.getByTestId('grid-pressure-scene');
+    await gridPressureScene.waitFor({ state: 'visible' });
+    const pressureTransmission = gridPressureScene.getByRole('button', { name: 'Transmission' });
+    await pressureTransmission.click();
+    assert.equal(await pressureTransmission.getAttribute('aria-pressed'), 'true');
+    await page.getByTestId('grid-pressure-atlas').waitFor({ state: 'visible' });
+    await page.getByText('Grid pressure', { exact: true }).waitFor({ state: 'visible' });
     await advance(1);
     await page.getByTestId('act2-jepx-sidecar').waitFor({ state: 'visible' });
     await page.getByText('25× spike', { exact: true }).waitFor({ state: 'visible' });
@@ -148,7 +137,10 @@ const keynoteUrl = process.env.KEYNOTE_URL || 'http://localhost:3100/';
     }
 
     await advance(2);
-    await page.getByText('100K HOMES', { exact: true }).waitFor({ state: 'visible' });
+    await page.getByText('100K DEVICES', { exact: true }).waitFor({ state: 'visible' });
+    for (const name of ['Home', 'Solar panel', 'EV', 'Battery']) {
+      await page.getByRole('img', { name }).waitFor({ state: 'visible' });
+    }
   } finally {
     await browser.close();
   }

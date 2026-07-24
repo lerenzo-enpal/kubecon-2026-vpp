@@ -7,7 +7,7 @@ import * as mapData from './japanMapData.mjs';
 import { JEPXPriceChart } from './JEPXPriceChart.jsx';
 
 const STORY = [
-  { title: 'This Is Not the First Warning', body: 'January 2021. A cold snap hit Japan. What happened next is the pattern that repeats.' },
+  { title: 'Grid pressure', body: 'January 2021. A cold snap hit Japan. What happened next is the pattern that repeats.' },
   { title: 'The Crisis: 25× in 40 Days', body: 'A price shock with no disaster trigger.' },
   { title: 'Tokyo: demand concentrates', body: 'Homes heat up together. The grid feels the peak all at once.' },
   { title: 'Kansai: the pressure spreads', body: 'Regional constraints turn a cold snap into a system event.' },

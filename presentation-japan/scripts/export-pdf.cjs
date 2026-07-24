@@ -36,17 +36,16 @@ const chrome = process.env.CHROME_PATH || '/Applications/Google Chrome.app/Conte
 
   try {
     await page.goto(`http://localhost:${port}${variant.path}`, { waitUntil: 'networkidle', timeout: 60_000 });
-    for (let slide = 1; !maxSlides || slide <= maxSlides; slide += 1) {
+    for (let pageNumber = 1; !maxSlides || pageNumber <= maxSlides; pageNumber += 1) {
       await page.waitForTimeout(pause);
       const screenshot = await page.screenshot({ type: 'png' });
       screenshots.push(screenshot);
-      process.stdout.write(`  slide ${slide} captured\n`);
+      process.stdout.write(`  page ${pageNumber} captured\n`);
       const current = await slideNumber();
-      if (current >= variant.slides) break;
-      do {
-        await page.keyboard.press('ArrowRight');
-        await page.waitForTimeout(100);
-      } while (await slideNumber() === current);
+      const state = await page.locator('body').innerHTML();
+      await page.keyboard.press('ArrowRight');
+      await page.waitForTimeout(100);
+      if (current >= variant.slides && state === await page.locator('body').innerHTML()) break;
     }
 
     const pdf = await PDFDocument.create();
