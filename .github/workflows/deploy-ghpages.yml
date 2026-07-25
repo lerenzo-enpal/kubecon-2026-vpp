@@ -55,10 +55,7 @@ jobs:
           cp -r website/dist/* _site/
           mkdir -p _site/slides
           cp -r presentation/dist/* _site/slides/
-          mkdir -p _site/japan-keynote _site/japan-main
-          cp -r presentation-japan/dist/* _site/japan-keynote/
-          cp -r presentation-japan/dist/* _site/japan-main/
-          rm -f _site/japan-main/index.html
+          make assemble-japan-dist DEST=_site
 
       - uses: actions/upload-pages-artifact@v3
         with:
