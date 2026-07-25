@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 
 export default defineConfig({
+  base: './',
   plugins: [tailwindcss(), react()],
   server: {
     port: 3100,
