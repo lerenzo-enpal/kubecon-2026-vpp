@@ -58,6 +58,7 @@ jobs:
           mkdir -p _site/japan-keynote _site/japan-main
           cp -r presentation-japan/dist/* _site/japan-keynote/
           cp -r presentation-japan/dist/* _site/japan-main/
+          rm -f _site/japan-main/index.html
 
       - uses: actions/upload-pages-artifact@v3
         with:
