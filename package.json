@@ -7,7 +7,17 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install:all": "npm install && npm install --prefix website && npm install --prefix presentation && npm install --prefix presentation-japan",
+    "dev:website": "npm run dev --prefix website",
+    "dev:slides": "npm run dev --prefix presentation",
+    "dev:japan": "npm run dev --prefix presentation-japan",
+    "build:website": "npm run build --prefix website",
+    "build:slides": "npm run build --prefix presentation",
+    "build:japan": "npm run build --prefix presentation-japan",
+    "pdf:slides": "npm run export:pdf --prefix presentation",
+    "pdf:japan:keynote": "npm run export:pdf --prefix presentation-japan",
+    "pdf:japan:main": "npm run export:pdf:main --prefix presentation-japan"
   },
   "keywords": [],
   "author": "",

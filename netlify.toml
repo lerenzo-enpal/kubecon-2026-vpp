@@ -1,5 +1,5 @@
 [build]
-  command = "cd presentation && npm run build && cd ../presentation-japan && npm install && npm run build && mkdir -p ../presentation/dist/japan-keynote ../presentation/dist/japan-main && cp -r dist/* ../presentation/dist/japan-keynote/ && cp -r dist/* ../presentation/dist/japan-main/ && rm -f ../presentation/dist/japan-main/index.html"
+  command = "make netlify-build"
   publish = "presentation/dist"
 
 [[redirects]]
