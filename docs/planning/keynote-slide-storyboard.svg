@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1900" height="620" viewBox="0 0 1900 620">
+  <rect width="1900" height="620" fill="#060a1a"/>
+  <text x="60" y="60" fill="#7dd3fc" font-family="monospace" font-size="18" letter-spacing="4">KUBECON JAPAN · KEYNOTE · SLIDE STORYBOARD (4 macro slides)</text>
+  <text x="60" y="105" fill="#f8fafc" font-family="Arial, sans-serif" font-size="34" font-weight="700">The energy grid is becoming a cloud native distributed system.</text>
+  <text x="60" y="135" fill="#94a3b8" font-family="Arial, sans-serif" font-size="17">Each slide is a StepBridge sequence — main beat shown; internal steps shown as small chips.</text>
+
+  <!-- Slide 1: Crisis / Opening -->
+  <g font-family="Arial, sans-serif">
+    <rect x="60" y="180" width="410" height="380" rx="8" fill="#0d1424"/><rect x="60" y="180" width="8" height="380" fill="#3939D8"/>
+    <text x="94" y="222" fill="#8b8bf0" font-family="monospace" font-size="15" letter-spacing="3">01 · CRISIS</text>
+    <text x="94" y="266" fill="#f1f5f9" font-size="28" font-weight="700">Grid Structure</text>
+    <text x="94" y="298" fill="#94a3b8" font-size="16">Island, 50/60Hz seam,</text>
+    <text x="94" y="320" fill="#94a3b8" font-size="16">LNG routes, Hormuz, stats</text>
+    <text x="94" y="360" fill="#64748b" font-family="monospace" font-size="12" letter-spacing="2">11-STEP SEQUENCE · MAIN BEATS:</text>
+    <g font-family="monospace" font-size="12">
+      <rect x="94" y="376" width="80" height="26" rx="4" fill="#3939D815" stroke="#3939D850"/><text x="104" y="393" fill="#a5b4fc">Title</text>
+      <rect x="182" y="376" width="80" height="26" rx="4" fill="#3939D815" stroke="#3939D850"/><text x="192" y="393" fill="#a5b4fc">Seam</text>
+      <rect x="270" y="376" width="90" height="26" rx="4" fill="#3939D815" stroke="#3939D850"/><text x="280" y="393" fill="#a5b4fc">Hormuz</text>
+      <rect x="368" y="376" width="80" height="26" rx="4" fill="#3939D815" stroke="#3939D850"/><text x="378" y="393" fill="#a5b4fc">Stats</text>
+    </g>
+    <text x="94" y="440" fill="#e2e8f0" font-family="monospace" font-size="14">15.3% self-sufficiency</text>
+    <text x="94" y="464" fill="#e2e8f0" font-family="monospace" font-size="14">97% LNG via Hormuz</text>
+    <text x="94" y="530" fill="#64748b" font-size="13">Forced dark theme · full-screen map</text>
+  </g>
+
+  <!-- Slide 2: Pattern -->
+  <g font-family="Arial, sans-serif">
+    <rect x="500" y="180" width="410" height="380" rx="8" fill="#0d1424"/><rect x="500" y="180" width="8" height="380" fill="#D97706"/>
+    <text x="534" y="222" fill="#fbbf24" font-family="monospace" font-size="15" letter-spacing="3">02 · PATTERN</text>
+    <text x="534" y="266" fill="#f1f5f9" font-size="28" font-weight="700">The Cold Snap</text>
+    <text x="534" y="298" fill="#94a3b8" font-size="16">2021 spike repeats:</text>
+    <text x="534" y="320" fill="#94a3b8" font-size="16">Tokyo, then Kansai</text>
+    <text x="534" y="360" fill="#64748b" font-family="monospace" font-size="12" letter-spacing="2">5-STEP SEQUENCE · MAIN BEATS:</text>
+    <g font-family="monospace" font-size="12">
+      <rect x="534" y="376" width="105" height="26" rx="4" fill="#D9770615" stroke="#D9770650"/><text x="544" y="393" fill="#fcd34d">2021 warning</text>
+      <rect x="646" y="376" width="70" height="26" rx="4" fill="#D9770615" stroke="#D9770650"/><text x="656" y="393" fill="#fcd34d">Tokyo</text>
+      <rect x="723" y="376" width="70" height="26" rx="4" fill="#D9770615" stroke="#D9770650"/><text x="733" y="393" fill="#fcd34d">Kansai</text>
+    </g>
+    <text x="534" y="440" fill="#e2e8f0" font-family="monospace" font-size="14">25× price in 40 days</text>
+    <text x="534" y="464" fill="#e2e8f0" font-family="monospace" font-size="14">10 → 251 ¥/kWh</text>
+    <text x="534" y="530" fill="#64748b" font-size="13">Pattern returns — the point of the act</text>
+  </g>
+
+  <!-- Slide 3: VPP Transformation -->
+  <g font-family="Arial, sans-serif">
+    <rect x="940" y="180" width="410" height="380" rx="8" fill="#030508"/><rect x="940" y="180" width="8" height="380" fill="#22d3ee"/>
+    <text x="974" y="222" fill="#7dd3fc" font-family="monospace" font-size="15" letter-spacing="3">03 · VPP TRANSFORMATION</text>
+    <text x="974" y="266" fill="#f1f5f9" font-size="26" font-weight="700">A graph is a city,</text>
+    <text x="974" y="296" fill="#fbbf24" font-size="26" font-weight="700">under load.</text>
+    <text x="974" y="326" fill="#94a3b8" font-size="15">Abstract graph → city → Japan → VPP</text>
+    <text x="974" y="368" fill="#64748b" font-family="monospace" font-size="12" letter-spacing="2">5-STAGE SEQUENCE · MAIN BEATS:</text>
+    <g font-family="monospace" font-size="12">
+      <rect x="974" y="384" width="70" height="26" rx="4" fill="#22d3ee15" stroke="#22d3ee50"/><text x="984" y="401" fill="#67e8f9">Pause</text>
+      <rect x="1051" y="384" width="70" height="26" rx="4" fill="#22d3ee15" stroke="#22d3ee50"/><text x="1061" y="401" fill="#67e8f9">Graph</text>
+      <rect x="1128" y="384" width="60" height="26" rx="4" fill="#22d3ee15" stroke="#22d3ee50"/><text x="1138" y="401" fill="#67e8f9">City</text>
+      <rect x="1195" y="384" width="70" height="26" rx="4" fill="#22d3ee15" stroke="#22d3ee50"/><text x="1205" y="401" fill="#67e8f9">Japan</text>
+      <rect x="1272" y="384" width="60" height="26" rx="4" fill="#22d3ee15" stroke="#22d3ee50"/><text x="1282" y="401" fill="#67e8f9">VPP</text>
+    </g>
+    <text x="974" y="444" fill="#e2e8f0" font-family="monospace" font-size="13">Respond fast</text>
+    <text x="974" y="466" fill="#e2e8f0" font-family="monospace" font-size="13">Store energy</text>
+    <text x="974" y="488" fill="#e2e8f0" font-family="monospace" font-size="13">Use it smarter</text>
+    <text x="974" y="530" fill="#64748b" font-size="13">Live MapLibre + Deck.gl · interactive on Japan/VPP stages</text>
+  </g>
+
+  <!-- Slide 4: Close -->
+  <g font-family="Arial, sans-serif">
+    <rect x="1380" y="180" width="440" height="380" rx="8" fill="#030508"/><rect x="1380" y="180" width="8" height="380" fill="#f1f5f9"/>
+    <text x="1414" y="222" fill="#cbd5e1" font-family="monospace" font-size="15" letter-spacing="3">04 · CLOSE</text>
+    <text x="1414" y="290" fill="#f1f5f9" font-family="monospace" font-size="46" font-weight="800">100K homes</text>
+    <text x="1414" y="322" fill="#94a3b8" font-size="18">coordinated by software</text>
+    <text x="1414" y="356" fill="#3939D8" font-size="20" font-weight="700">= 1 power plant, 0 emissions</text>
+    <text x="1414" y="420" fill="#64748b" font-family="monospace" font-size="13">github.com/enpal · whatisavpp.com</text>
+    <text x="1414" y="530" fill="#64748b" font-size="13">Single static frame, no steps — closing punctuation</text>
+  </g>
+</svg>

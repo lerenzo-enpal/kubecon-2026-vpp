@@ -52,3 +52,36 @@
 - **The Dunkelflaute** -- Dark doldrums: wind+solar collapse, Germany Nov 2024
 - **Demand Response in Action** -- Interactive demo [DemandResponseDemo] [WIP]
 - **References** -- Sources and citations
+
+### Japan Main Talk (21 core slides)
+
+#### Orientation (3)
+1. **Japan cannot borrow** -- Island system premise
+2. **What happens at the 50 / 60 Hz seam?** -- Framing
+3. **15.3% primary-energy self-sufficiency** -- Exposure
+
+#### Proof 1: Make renewables usable (4)
+4. **A real noon operating constraint** -- Kyushu T&D: 5.09 GW maximum renewable-output control, 4 May 2025, 12:00–12:30
+5. **Tokyo-area reported case** -- Interactive map and illustrative duck curve: curtailment → charging → dusk support
+6. **Store it for later** -- Shift energy and demand into useful windows
+7. **A Japanese platform for that flexibility** -- Sourced Shizen Connect platform context; not a performance result
+
+#### Proof 2: Respond when the system is tight (4)
+8. **Respond when the system is tight** -- March 2022 Tokyo supply-demand emergency trigger
+9. **Tokyo, March 2022** -- Interactive documented event playback; illustrative flexibility overlay
+10. **A city is a graph problem** -- Animated recovered-state Tokyo graph
+11. **The VPP is the control plane** -- Architecture, choreography, and end-to-end response loop
+
+#### Proof 3: Use demand smarter (6)
+12. **Use demand smarter** -- Daily demand flexibility
+13. **EVs can become controllable capacity** -- Shizen Connect January 2024 V2H demonstration
+14. **HEMS can coordinate the home** -- Kansai Electric/Shizen Connect technical-feasibility demonstration
+15. **Aggregation makes a fleet legible** -- Device-to-portfolio visibility
+16. **Simulated dispatch** -- Explicitly simulated Japan coordination mechanics
+17. **Illustrative portfolio response** -- Simulated fleet response, not a reported company outcome
+
+#### Return (4)
+18. **What cloud-native teams can build** -- Implementation patterns
+19. **Homes become a power plant when software earns trust** -- Trusted capacity without a fixed household equivalence
+20. **Keep exploring** -- Research, case notes, and technical appendix
+21. **Japan needs flexibility** -- Return to the promise

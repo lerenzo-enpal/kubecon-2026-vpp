@@ -108,6 +108,23 @@ See [docs/style-guide.md](docs/style-guide.md) for the presentation's visual ide
 
 ---
 
+## Context Compression
+
+When working on large multi-component tasks (30+ min sessions, 3+ files):
+
+- **At 50% context:** Start considering checkpointing
+- **At 60% context:** CHECKPOINT immediately
+  - Save work progress to memory at `~/.claude/projects/.../memory/`
+  - Create concise summary of: components built, next steps, file locations, key decisions
+  - Add to MEMORY.md index
+- **At 70% context:** Context will be compressed; transition to new session if needed
+- **Checkpoint format:** One `.md` file per logical unit of work
+  - Include file locations, design decisions, and outstanding tasks
+  - Link related memories with `[[name]]`
+  - See `animation_components_created.md` as template
+
+---
+
 ## Lessons Learned
 
 1. **`import Map from 'react-map-gl/maplibre'` shadows `new Map()`** — always import as `MapGL`
@@ -118,3 +135,19 @@ See [docs/style-guide.md](docs/style-guide.md) for the presentation's visual ide
 6. **`useEffect` deps for RAF** — must include `slideContext?.isSlideActive`
 7. **Self-host fonts via `@fontsource`** — Google Fonts CDN is render-blocking
 8. **Screenshots to `/tmp/`** — never save in the project directory
+9. **Context compression:** Checkpoint at 60% to avoid truncation, saves work to memory for continuity
+
+
+<!-- headroom:memory-instructions -->
+## Memory
+
+Use the `headroom_memory` MCP server for persistent cross-session knowledge.
+
+**Before** answering questions about prior decisions, conventions, project context,
+architecture, user preferences, org info, codenames, debugging history, or anything
+from past sessions — call `memory_search` first.
+
+**After** making durable decisions, discovering conventions, or learning important
+facts — call `memory_save` to persist them for future sessions.
+
+Memory is your first source of truth for anything not visible in the current conversation.

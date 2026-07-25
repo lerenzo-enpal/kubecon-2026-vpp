@@ -1,0 +1,58 @@
+<h2>Act II needs a causal chain, not a chart-first detour</h2>
+<p class="subtitle">Recommended: preserve the 26-slide structure, but turn Slides 9–12 into one day in the life of a constrained grid.</p>
+
+<style>
+  .storyboard { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin:28px 0; }
+  .beat { min-height:345px; border:1px solid #303753; border-radius:16px; overflow:hidden; background:#0c1122; cursor:pointer; }
+  .beat:hover { border-color:#83e5ff; transform:translateY(-2px); }
+  .beat-top { padding:13px 16px; font:600 12px/1.2 ui-monospace,monospace; letter-spacing:.1em; color:#9aa5c1; }
+  .screen { height:205px; position:relative; overflow:hidden; background:linear-gradient(155deg,#14213e,#0a1020 68%); }
+  .horizon { position:absolute; left:0; right:0; bottom:44px; border-top:1px solid #65708b; }
+  .sun { position:absolute; width:42px; height:42px; border-radius:50%; background:#ffc217; box-shadow:0 0 30px #ffc21780; top:25px; left:24px; }
+  .house { position:absolute; width:66px; height:48px; border:2px solid #c8d4ef; bottom:45px; left:43%; border-radius:4px; }
+  .house:before { content:''; position:absolute; width:42px; height:42px; border-left:2px solid #c8d4ef; border-top:2px solid #c8d4ef; transform:rotate(45deg); top:-24px; left:10px; }
+  .gridline { position:absolute; height:3px; background:#4de0ff; box-shadow:0 0 13px #4de0ff; transform-origin:left; }
+  .warn { position:absolute; right:14px; top:20px; color:#ffa35f; font:700 12px ui-monospace,monospace; }
+  .curve { position:absolute; left:13%; right:10%; bottom:28px; height:120px; border-bottom:3px solid #4de0ff; border-radius:0 0 80% 80%; transform:skewX(-9deg); }
+  .curve:after { content:''; position:absolute; right:-5px; bottom:-2px; width:65px; height:115px; border-right:3px solid #ffa35f; border-top:3px solid #ffa35f; border-radius:0 110% 0 0; }
+  .device { position:absolute; background:#0d1830; border:1px solid #4de0ff; border-radius:7px; padding:9px; font:600 10px ui-monospace,monospace; color:#d8eeff; }
+  .device.on { border-color:#45df9b; box-shadow:0 0 14px #45df9b66; }
+  .meter { position:absolute; left:9%; right:9%; bottom:22px; height:8px; background:#28334b; border-radius:8px; overflow:hidden; }
+  .meter b { display:block; height:100%; width:72%; background:linear-gradient(90deg,#4de0ff,#45df9b); }
+  .beat-body { padding:16px; }
+  .beat-body h3 { margin:0 0 8px; font-size:18px; }
+  .beat-body p { margin:0; color:#b7c2dc; font-size:14px; line-height:1.45; }
+  .connector { text-align:center; color:#4de0ff; font:700 20px ui-monospace,monospace; margin:0 -10px; align-self:center; z-index:1; }
+  .bottom { border-top:1px solid #303753; padding-top:22px; }
+  .bottom h3 { margin:0 0 8px; }
+  .bottom p { color:#b7c2dc; margin:0; line-height:1.5; }
+  @media(max-width:800px){.storyboard{grid-template-columns:1fr 1fr}.connector{display:none}}
+</style>
+
+<div class="storyboard" data-multiselect>
+  <div class="beat" data-choice="slide-9" onclick="toggleSelect(this)">
+    <div class="beat-top">SLIDE 9 · ACT OPEN / CAUSE</div>
+    <div class="screen"><div class="sun"></div><div class="house"></div><div class="horizon"></div><div class="gridline" style="left:14%;top:90px;width:122px;transform:rotate(20deg)"></div><div class="warn">12:00 · MORE POWER THAN LOAD</div></div>
+    <div class="beat-body"><h3>At noon, clean power has nowhere to go.</h3><p>Make the physical constraint visible before naming the curve.</p></div>
+  </div>
+  <div class="beat" data-choice="slide-10" onclick="toggleSelect(this)">
+    <div class="beat-top">SLIDE 10 · CONSEQUENCE</div>
+    <div class="screen"><div class="curve"></div><div class="warn">NOON SURPLUS → 17:00 RAMP</div><span style="position:absolute;left:13%;bottom:10px;color:#ffc217;font:11px ui-monospace,monospace">solar</span><span style="position:absolute;right:6%;top:48px;color:#ffa35f;font:11px ui-monospace,monospace">flexibility gap</span></div>
+    <div class="beat-body"><h3>The duck curve is the system trace.</h3><p>The chart now answers a question the prior slide has already posed.</p></div>
+  </div>
+  <div class="beat" data-choice="slide-11" onclick="toggleSelect(this)">
+    <div class="beat-top">SLIDE 11 · RESPONSE / SHIZEN</div>
+    <div class="screen"><div class="device" style="left:12%;top:44px">EV<br>CHARGE</div><div class="device" style="left:43%;top:92px">HP<br>PREHEAT</div><div class="device on" style="right:10%;top:45px">BATTERY<br>DISPATCH</div><div class="meter"><b></b></div><div class="warn" style="color:#45df9b">FLEET FOLLOWS THE SYSTEM</div></div>
+    <div class="beat-body"><h3>Follow one day—through actual device choices.</h3><p>Steps show assets changing state, not three text cards changing colour.</p></div>
+  </div>
+  <div class="beat" data-choice="slide-12" onclick="toggleSelect(this)">
+    <div class="beat-top">SLIDE 12 · PAYOFF</div>
+    <div class="screen"><div class="curve" style="opacity:.45"></div><div style="position:absolute;left:18%;right:18%;top:88px;border-top:4px solid #45df9b;box-shadow:0 0 16px #45df9b"></div><div class="warn" style="color:#45df9b">CURVE FLATTENS</div></div>
+    <div class="beat-body"><h3>Flexibility flattens the curve.</h3><p>Only now reveal the clean, technical before/after proof.</p></div>
+  </div>
+</div>
+
+<div class="bottom">
+  <h3>What changes in the story</h3>
+  <p><strong>Act I:</strong> Japan cannot borrow. &nbsp;→&nbsp; <strong>Act II:</strong> so surplus and scarcity must be reconciled locally, across time. &nbsp;→&nbsp; <strong>Act III:</strong> software coordinates that local flexibility at city scale.</p>
+</div>

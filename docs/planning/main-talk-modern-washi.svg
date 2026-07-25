@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs><pattern id="grain" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 1H14" stroke="#172554" opacity=".06"/></pattern></defs>
+  <rect width="1600" height="900" fill="#e8e4d4"/><rect width="1600" height="900" fill="url(#grain)"/>
+  <text x="90" y="100" fill="#172554" font-family="monospace" font-size="20" letter-spacing="4">KUBECON JAPAN · MAIN TALK · VISUAL LANGUAGE</text>
+  <text x="90" y="185" fill="#172554" font-family="Arial, sans-serif" font-size="70" font-weight="700">Modern Washi</text>
+  <text x="90" y="232" fill="#475569" font-family="Arial, sans-serif" font-size="25">Operational Japan. Cultural grammar carries data; never decoration.</text>
+  <path d="M120 400 C280 295 420 560 590 410 S910 310 1080 450 S1330 520 1480 340" fill="none" stroke="#172554" stroke-width="5"/>
+  <path d="M120 515 C280 410 420 675 590 525 S910 425 1080 565 S1330 635 1480 455" fill="none" stroke="#b91c1c" stroke-width="4" stroke-dasharray="12 12"/>
+  <g fill="#172554"><circle cx="260" cy="450" r="12"/><circle cx="530" cy="470" r="12"/><circle cx="850" cy="430" r="12"/><circle cx="1140" cy="500" r="12"/><circle cx="1380" cy="420" r="12"/></g>
+  <g fill="#059669"><circle cx="320" cy="505" r="10"/><circle cx="690" cy="475" r="10"/><circle cx="1000" cy="550" r="10"/><circle cx="1280" cy="490" r="10"/></g>
+  <rect x="105" y="650" width="420" height="130" fill="#172554"/><text x="135" y="700" fill="#e8e4d4" font-family="monospace" font-size="18" letter-spacing="2">NARRATIVE + CHARTS</text><text x="135" y="748" fill="#fbbf24" font-family="Arial, sans-serif" font-size="28">Ink, paper, alert stamp</text>
+  <rect x="570" y="650" width="420" height="130" fill="#0d1424"/><text x="600" y="700" fill="#7dd3fc" font-family="monospace" font-size="18" letter-spacing="2">LIVE DEMOS</text><text x="600" y="748" fill="#e0f2fe" font-family="Arial, sans-serif" font-size="28">Dark Mission Control</text>
+  <rect x="1035" y="650" width="420" height="130" fill="none" stroke="#b91c1c" stroke-width="3"/><text x="1065" y="700" fill="#991b1b" font-family="monospace" font-size="18" letter-spacing="2">ALERTS</text><text x="1065" y="748" fill="#172554" font-family="Arial, sans-serif" font-size="28">Vermilion, exact, rare</text>
+</svg>

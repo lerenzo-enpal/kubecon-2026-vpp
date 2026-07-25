@@ -1,0 +1,53 @@
+<h2>Two animated scenes; the sun is the clock</h2>
+<p class="subtitle">Keep a light geographic reference, but do not turn Act II into another map story. The energy curve remains the main character.</p>
+
+<style>
+  .scenes { display:grid; grid-template-columns:1fr 1fr; gap:22px; margin:28px 0; }
+  .scene { border:1px solid #35405e; border-radius:18px; overflow:hidden; background:#0a1020; cursor:pointer; }
+  .scene:hover { border-color:#83e5ff; transform:translateY(-2px); }
+  .scene-head { padding:16px 19px 11px; font:700 12px ui-monospace,monospace; letter-spacing:.12em; color:#91a1c6; }
+  .frame { height:320px; position:relative; overflow:hidden; background:linear-gradient(160deg,#203a61 0%,#101a32 56%,#070b17 100%); }
+  .japan { position:absolute; width:86px; height:230px; right:11%; top:39px; transform:rotate(20deg); opacity:.2; background:#adc6e8; clip-path:polygon(43% 0,59% 5%,55% 17%,70% 26%,57% 39%,78% 51%,59% 66%,70% 77%,47% 100%,35% 83%,42% 69%,23% 56%,37% 46%,20% 31%,36% 22%); }
+  .sun { position:absolute; width:56px; height:56px; border-radius:50%; left:10%; top:30px; background:#ffc217; box-shadow:0 0 46px #ffc21799; }
+  .sunset { position:absolute; width:46px; height:46px; border-radius:50%; left:68%; top:150px; background:#ffa35f; box-shadow:0 0 36px #ffa35f99; }
+  .ground { position:absolute; left:0;right:0;bottom:55px;border-top:1px solid #8ca1c0aa; }
+  .axis { position:absolute; left:9%; right:8%; bottom:40px; height:185px; border-left:1px solid #63718c; border-bottom:1px solid #63718c; }
+  .duck { position:absolute; left:11%; width:70%; bottom:62px; height:120px; border-bottom:4px solid #4de0ff; border-radius:0 0 120px 120px; transform:skewX(-10deg); box-shadow:0 7px 17px #4de0ff30; }
+  .ramp { position:absolute; width:70px; height:105px; right:10%; bottom:62px; border-top:4px solid #ffa35f; border-right:4px solid #ffa35f; border-radius:0 100% 0 0; }
+  .time { position:absolute; bottom:16px; color:#bcc8e1; font:11px ui-monospace,monospace; }
+  .note { position:absolute; color:#fff; font:700 11px ui-monospace,monospace; letter-spacing:.04em; }
+  .device { position:absolute; min-width:68px; border-radius:8px; border:1px solid #4de0ff; background:#0c1830e6; color:#dff5ff; padding:9px; font:700 10px ui-monospace,monospace; text-align:center; }
+  .device.active { border-color:#45df9b; box-shadow:0 0 20px #45df9b80; }
+  .signal { position:absolute; height:2px; background:#45df9b; transform-origin:left; box-shadow:0 0 12px #45df9b; }
+  .flat { position:absolute; left:12%;right:10%;top:192px;border-top:4px solid #45df9b;box-shadow:0 0 18px #45df9b; }
+  .body { padding:17px 19px 20px; }.body h3{margin:0 0 8px;font-size:20px}.body p{margin:0;color:#b9c5dd;line-height:1.45;font-size:14px}
+  .why { margin-top:18px; border-left:3px solid #ffc217; padding:12px 16px; background:#151d32; color:#c5d0e7; line-height:1.5; }
+  @media(max-width:800px){.scenes{grid-template-columns:1fr}}
+</style>
+
+<div class="scenes">
+  <div class="scene" data-choice="scene-one" onclick="toggleSelect(this)">
+    <div class="scene-head">SCENE 1 · THE PROBLEM EVOLVES OVER ONE DAY</div>
+    <div class="frame">
+      <div class="japan"></div><div class="sun"></div><div class="sunset"></div><div class="ground"></div>
+      <div class="axis"></div><div class="duck"></div><div class="ramp"></div>
+      <div class="note" style="left:13%;top:104px;color:#ffc217">NOON · SURPLUS</div><div class="note" style="right:8%;top:83px;color:#ffa35f">17:00 · RAMP</div>
+      <div class="time" style="left:10%">06:00</div><div class="time" style="left:42%">12:00</div><div class="time" style="right:8%">18:00</div>
+    </div>
+    <div class="body"><h3>Sunlight redraws the grid’s needs.</h3><p>One slide, three steps: the sun rises, solar pushes net load down, then the evening ramp appears. A faint Japan silhouette grounds it without competing with the curve.</p></div>
+  </div>
+
+  <div class="scene" data-choice="scene-two" onclick="toggleSelect(this)">
+    <div class="scene-head">SCENE 2 · THE FLEET CHANGES THE CURVE</div>
+    <div class="frame" style="background:linear-gradient(160deg,#263b57,#101a32 62%,#070b17)">
+      <div class="japan"></div><div class="sun" style="left:74%;top:180px;width:34px;height:34px;background:#ffa35f"></div>
+      <div class="axis"></div><div class="duck" style="opacity:.3"></div><div class="ramp" style="opacity:.35"></div><div class="flat"></div>
+      <div class="device" style="left:9%;top:46px">EV<br>CHARGES</div><div class="device" style="left:40%;top:76px">HEATPUMP<br>SHIFTS</div><div class="device active" style="right:7%;top:38px">BATTERY<br>RESPONDS</div>
+      <div class="signal" style="left:25%;top:90px;width:95px;transform:rotate(13deg)"></div><div class="signal" style="left:57%;top:105px;width:91px;transform:rotate(-23deg)"></div>
+      <div class="note" style="left:18%;top:235px;color:#45df9b">FLEXIBLE LOAD + STORAGE</div>
+    </div>
+    <div class="body"><h3>Shizen Connect makes the response legible.</h3><p>Same one-day clock, now with device-state animation and a visibly flatter curve. The Shizen reference is contextual—not a claim that its fleet produced these exact results.</p></div>
+  </div>
+</div>
+
+<div class="why"><strong>The two freed slide slots:</strong> use one for a Japan-specific curtailment proof point and one as the clean bridge—“a city is a graph problem”—into Act III. This fixes the missing context without increasing the deck.</div>
