@@ -198,9 +198,11 @@ export default function JapanColdSnapCascade({ step = 0 }) {
   const layers = useMemo(() => {
     const plants = ATLAS_FEATURES.plants;
 
-    // Cascade path — connect marks of visited steps
-    const cascadePath = cascadeIdx >= 1 ? [{
-      path: CASCADE.slice(0, cascadeIdx + 1).map((c) => c.mark),
+    // Cascade path — connect marks of visited steps. Skip the epicenter mark
+    // (index 0, offshore) so the line doesn't dangle from Onagawa into the sea
+    // once the earthquake fades out.
+    const cascadePath = cascadeIdx >= 2 ? [{
+      path: CASCADE.slice(1, cascadeIdx + 1).map((c) => c.mark),
     }] : [];
     const pathLayer = new PathLayer({
       id: 'cascade-path', data: cascadePath, getPath: (d) => d.path,

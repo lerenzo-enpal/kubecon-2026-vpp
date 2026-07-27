@@ -15,7 +15,7 @@ import JapanColdSnapCascade from './components/JapanColdSnapCascade.jsx';
 const bg = 'var(--color-bg)';
 const SECTIONS = ['Premise', 'Atlas', 'Energy', 'Hormuz', 'Grid pressure', 'VPP', 'Close'];
 const TOTAL_SLIDES = 7;
-const FORCED_DARK_SLIDES = new Set([2, 4, 5, 6]);
+const FORCED_DARK_SLIDES = new Set([4, 5, 6]);
 const allAtlasLayers = () => ({ areas: true, transmission: true, plants: true, mix: true, demand: true, jepx: true });
 const atlasSlidePreset = (step) => ({
   areas: true,
@@ -80,15 +80,22 @@ export default function Keynote() {
             const copy = ATLAS_STEP_COPY[step];
             return (
             <div data-testid="keynote-atlas-scene" className="relative h-full">
-              <JapanGridAtlas step={step} preset={atlasSlidePreset} sceneLayer={{ view: ATLAS_KEYFRAMES[step] }} />
+              <JapanGridAtlas
+                step={step}
+                preset={atlasSlidePreset}
+                sceneLayer={{ view: ATLAS_KEYFRAMES[step] }}
+                variant="washi"
+                mapVariant="washi"
+              />
               <div className="pointer-events-none absolute inset-0">
                 <SlideTitle
                   testId="keynote-atlas-title"
                   eyebrow={copy.eyebrow}
                   title={copy.title}
                   subtitle={copy.subtitle}
+                  variant="washi"
                 />
-                <AtlasLegend />
+                <AtlasLegend variant="washi" />
               </div>
             </div>
             );
@@ -126,7 +133,7 @@ export default function Keynote() {
         </Slide>
 
         <Slide backgroundColor="var(--color-washi-paper)" padding="0" transition={fadeTransition}>
-          <StepBridge count={11}>{step => {
+          <StepBridge count={10}>{step => {
             const cascadeActive = step >= 1;
             return (
               <div data-testid="grid-pressure-scene" className="relative h-full">

@@ -57,38 +57,128 @@ const JP_CITIES = [
   { name: 'Okayama',   position: [133.93, 34.66], size: 18, phase: 0.53 },
 ];
 
-// Millions-of-houses effect: for each city, scatter ~size*22 tiny points with
-// gaussian jitter around the centre. Each carries its own phase, frequency,
-// baseAlpha, and warmth so the swarm never twinkles in sync. Seeded so hot
-// reloads don't reshuffle the constellation.
-const HOUSE_LIGHTS = (() => {
+// Secondary anchor points — small towns / hamlets spread along Japan's inhabited
+// spines. Sizes are much smaller than JP_CITIES; each spawns a light sprinkle of
+// house lights so the country doesn't look empty between metros.
+const JP_HAMLETS = [
+  // Hokkaido interior
+  { position: [142.36, 43.77], size: 10 }, // Asahikawa
+  { position: [144.38, 42.98], size: 7 },  // Kushiro
+  { position: [143.20, 42.92], size: 7 },  // Obihiro
+  { position: [140.97, 42.32], size: 7 },  // Muroran
+  { position: [141.60, 42.63], size: 7 },  // Tomakomai
+  { position: [141.68, 45.42], size: 5 },  // Wakkanai
+  { position: [143.90, 43.80], size: 6 },  // Kitami
+  { position: [145.57, 43.33], size: 5 },  // Nemuro
+  { position: [140.11, 42.98], size: 5 },  // Oshamambe area
+  { position: [142.85, 44.35], size: 5 },  // Nayoro
+  // Tohoku
+  { position: [140.90, 37.05], size: 8 },  // Iwaki
+  { position: [140.36, 38.24], size: 8 },  // Yamagata
+  { position: [140.47, 37.75], size: 8 },  // Fukushima
+  { position: [140.39, 37.40], size: 7 },  // Koriyama
+  { position: [141.49, 40.51], size: 7 },  // Hachinohe
+  { position: [139.83, 38.72], size: 5 },  // Tsuruoka
+  { position: [141.30, 38.43], size: 6 },  // Ishinomaki
+  { position: [140.10, 39.30], size: 5 },  // Yokote / inland Akita
+  { position: [141.11, 38.90], size: 5 },  // Kesennuma
+  // Central Honshu / Chubu
+  { position: [137.21, 36.70], size: 7 },  // Toyama
+  { position: [136.22, 36.06], size: 6 },  // Fukui
+  { position: [138.19, 36.65], size: 7 },  // Nagano
+  { position: [139.88, 36.55], size: 8 },  // Utsunomiya
+  { position: [140.47, 36.34], size: 7 },  // Mito
+  { position: [136.72, 35.42], size: 7 },  // Gifu
+  { position: [138.38, 34.98], size: 8 },  // Shizuoka
+  { position: [137.73, 34.71], size: 8 },  // Hamamatsu
+  { position: [137.97, 36.24], size: 6 },  // Matsumoto
+  { position: [138.57, 35.66], size: 6 },  // Kofu
+  { position: [139.06, 37.35], size: 6 },  // Nagaoka
+  { position: [139.30, 36.39], size: 6 },  // Maebashi
+  // Kansai / Kinki fringe
+  { position: [135.80, 34.68], size: 6 },  // Nara
+  { position: [135.17, 34.23], size: 6 },  // Wakayama
+  { position: [135.87, 35.00], size: 5 },  // Otsu
+  { position: [136.51, 34.72], size: 5 },  // Tsu
+  { position: [136.63, 34.06], size: 4 },  // Kumano coast
+  // Chugoku / Shikoku
+  { position: [131.47, 34.19], size: 6 },  // Yamaguchi
+  { position: [134.55, 34.07], size: 6 },  // Tokushima
+  { position: [133.53, 33.56], size: 6 },  // Kochi
+  { position: [132.10, 34.28], size: 5 },  // Iwakuni
+  { position: [131.85, 34.66], size: 5 },  // Hamada / coast
+  // Kyushu
+  { position: [131.42, 31.91], size: 6 },  // Miyazaki
+  { position: [131.61, 33.24], size: 6 },  // Oita
+  { position: [130.30, 33.25], size: 6 },  // Saga
+  { position: [130.03, 33.11], size: 5 },  // Isahaya
+  { position: [130.90, 32.24], size: 5 },  // Hitoyoshi
+  // Okinawa arc
+  { position: [128.98, 26.68], size: 4 },  // Ie / Okinawa north
+  { position: [124.15, 24.34], size: 4 },  // Ishigaki
+];
+
+// Millions-of-houses effect: for each city + hamlet, scatter tiny points with
+// gaussian jitter. Each carries its own phase, frequency, baseAlpha, and warmth
+// so the swarm never twinkles in sync. Seeded so hot reloads don't reshuffle.
+// Cities are dense, hamlets are sparse — together they read as inhabited land
+// across Japan, not just glowing metros.
+const buildLights = (anchors, opts) => {
+  const {
+    seed = 0x51ff,
+    countPerSize = 22,
+    spreadBase = 0.006,
+    spreadFactor = 0.028,
+    freqRange = [0.6, 1.4],
+    alphaBase = 90,
+    alphaJitter = 140,
+    sizeBase = 0.55,
+    sizeJitter = 0.9,
+  } = opts;
+  const rand = mulberry32(seed);
   const out = [];
-  const rand = mulberry32(0x51ff);
-  const LAT_DEG_KM = 111;
-  for (const city of JP_CITIES) {
-    const count = Math.round(city.size * 22);
-    // Spread in degrees — bigger cities sprawl wider. Tokyo (size 60) ~ 0.22°.
-    const spread = 0.006 + Math.sqrt(city.size) * 0.028;
-    const lngScale = 1 / Math.cos((city.position[1] * Math.PI) / 180);
+  for (const anchor of anchors) {
+    const count = Math.round(anchor.size * countPerSize);
+    const spread = spreadBase + Math.sqrt(anchor.size) * spreadFactor;
+    const lngScale = 1 / Math.cos((anchor.position[1] * Math.PI) / 180);
     for (let i = 0; i < count; i++) {
-      // Squared radial falloff keeps most points near the centre with sparse
-      // outskirts — reads like density-weighted urban sprawl.
       const r = Math.abs(gauss(rand)) * spread;
       const theta = rand() * Math.PI * 2;
       const dLat = (r * Math.sin(theta));
       const dLng = (r * Math.cos(theta)) * lngScale;
       out.push({
-        position: [city.position[0] + dLng, city.position[1] + dLat],
+        position: [anchor.position[0] + dLng, anchor.position[1] + dLat],
         phase: rand(),
-        freq: 0.6 + rand() * 1.4,                 // varied twinkle speeds
-        baseAlpha: 90 + Math.round(rand() * 140), // steady vs bright houses
-        warmth: rand(),                           // gold ↔ cream lookup
-        size: 0.55 + rand() * 0.9,                // 0.5–1.5 px dots
+        freq: freqRange[0] + rand() * (freqRange[1] - freqRange[0]),
+        baseAlpha: alphaBase + Math.round(rand() * alphaJitter),
+        warmth: rand(),
+        size: sizeBase + rand() * sizeJitter,
       });
     }
   }
   return out;
-})();
+};
+
+const HOUSE_LIGHTS = buildLights(JP_CITIES, {
+  seed: 0x51ff,
+  countPerSize: 22,
+  spreadBase: 0.006,
+  spreadFactor: 0.028,
+});
+
+// Rural lights: hamlets get a lighter sprinkle, dimmer & smaller than city
+// house lights. Different seed so they don't overlap city constellations.
+const RURAL_LIGHTS = buildLights(JP_HAMLETS, {
+  seed: 0x9c3a,
+  countPerSize: 20,
+  spreadBase: 0.010,
+  spreadFactor: 0.038,
+  freqRange: [0.4, 1.1],
+  alphaBase: 55,
+  alphaJitter: 90,
+  sizeBase: 0.45,
+  sizeJitter: 0.7,
+});
 
 // Tokyo-area solar rollout — dots twinkle warm yellow to signal
 // distributed generation coming online.
@@ -145,6 +235,29 @@ export const buildOverlayLayers = (t, stageIndex) => {
       },
       stroked: false,
       updateTriggers: { getFillColor: [t] },
+    }),
+    // Rural lights: dimmer, smaller, slightly slower twinkle. Rendered under
+    // the city lights so metros still dominate but the rest of the country
+    // registers as inhabited.
+    new ScatterplotLayer({
+      id: 'rural-lights',
+      data: RURAL_LIGHTS,
+      getPosition: (d) => d.position,
+      getRadius: (d) => d.size,
+      radiusUnits: 'pixels',
+      radiusMinPixels: 0.4,
+      radiusMaxPixels: 1.6,
+      getFillColor: (d) => {
+        const s = Math.sin(t / 1100 * d.freq + d.phase * Math.PI * 2);
+        const bright = 0.5 + s * 0.5;
+        const a = Math.max(18, Math.round(d.baseAlpha * bright));
+        const r = 255;
+        const g = Math.round(210 + d.warmth * 30);
+        const b = Math.round(130 + d.warmth * 80);
+        return [r, g, b, a];
+      },
+      stroked: false,
+      updateTriggers: { getFillColor: [Math.round(t / 40)] }, // ~25 fps rebuild
     }),
     // Sea of houses: thousands of tiny points, each with its own phase, freq,
     // brightness, and warmth. This is what reads as "millions of little houses".

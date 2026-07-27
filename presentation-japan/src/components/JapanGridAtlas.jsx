@@ -18,6 +18,9 @@ const LABELS = { mix: 'Energy mix', plants: 'Power plants', areas: 'Provider are
 export const PLANT_COLORS = { Nuclear: [167, 139, 250, 225], LNG: [34, 211, 238, 225], Coal: [148, 163, 184, 225], Oil: [251, 146, 60, 225], Hydro: [96, 165, 250, 225], Geothermal: [239, 68, 68, 225], Solar: [250, 204, 21, 225], Wind: [45, 212, 191, 225] };
 export const FUEL_ICONS = { Nuclear: '☢', LNG: '🔥', Coal: '■', Oil: '◆', Hydro: '≋', Geothermal: '♨', Solar: '☀', Wind: '⚙' };
 export const FREQUENCY_COLORS = { '50 Hz': [34, 211, 238, 235], '60 Hz': [255, 194, 23, 235], seam: [255, 163, 95, 245] };
+// Darker frequency palette for washi (light) maps — same hue relationship, deeper
+// saturation for legibility against near-white tiles.
+export const FREQUENCY_COLORS_WASHI = { '50 Hz': [14, 116, 144, 245], '60 Hz': [161, 98, 7, 245], seam: [154, 52, 18, 250] };
 const FREQ_SEAM_LON = 137.4;
 const classifyTransmission = (d) => {
   const label = d.label || '';
@@ -63,7 +66,12 @@ const routeLayers = ({ points, progress = 0, ship }) => {
   ].filter(Boolean);
 };
 
-export function JapanGridAtlas({ height = '100%', step = 0, preset = () => ({}), liveData = {}, variant = 'dark', mapVariant = 'dark', plantMarkerSize = 10, routeLayer, transmissionLayer, sceneLayer }) {
+// Slow phase rate for the transmission pulse — matches AtlasLegend HZ_VISUAL_RATE.
+// getWidth / getColor sine wave uses (hz / HZ_PULSE_RATE) cycles per second, so 50
+// vs 60 Hz lines beat visibly against each other.
+const HZ_PULSE_RATE = 30;
+
+export function JapanGridAtlas({ height = '100%', step = 0, preset = () => ({}), liveData = {}, variant = 'dark', mapVariant = 'dark', plantMarkerSize = 10, routeLayer, transmissionLayer, sceneLayer, pulseTransmissionHz = false }) {
   const [viewState, setViewState] = useState(() => initialView(sceneLayer, routeLayer));
   const [overrides, setOverrides] = useState({});
   const [replayKey, setReplayKey] = useState(0);
@@ -92,22 +100,63 @@ export function JapanGridAtlas({ height = '100%', step = 0, preset = () => ({}),
     return () => window.clearTimeout(timeout);
   }, [isSlideActive, routeDelay, routeDuration, targetViewKey, followShip]);
   const toggle = (id) => setOverrides((current) => ({ ...current, [id]: !active[id] }));
+  const isWashi = variant === 'washi';
+  // Ink for text labels — on washi paper, near-black indigo; on dark, near-white.
+  const labelColor = isWashi ? [23, 37, 84, 245] : [226, 232, 240, 245];
+  const mixColor   = isWashi ? [23, 37, 84, 255] : [254, 243, 199, 255];
   const atlasLayers = useMemo(() => [
     active.areas && new PolygonLayer({ id: 'atlas-areas', data: ATLAS_FEATURES.areas, getPolygon: (d) => d.polygon, getFillColor: (d) => d.frequency === '50 Hz' ? [34, 211, 238, 24] : [255, 194, 23, 24], getLineColor: (d) => d.frequency === '50 Hz' ? [34, 211, 238, 155] : [255, 194, 23, 155], getLineWidth: 1, lineWidthUnits: 'pixels', pickable: true }),
-    active.areas && new TextLayer({ id: 'atlas-area-labels', data: ATLAS_FEATURES.areas, getPosition: (d) => d.position, getText: (d) => `${d.name}\n${d.frequency}`, getSize: 11, getColor: [226, 232, 240, 245], getTextAnchor: 'middle', getAlignmentBaseline: 'center', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700 }),
-    active.transmission && new PathLayer({ id: 'atlas-transmission', data: ATLAS_FEATURES.transmission, getPath: (d) => d.path, getColor: (d) => FREQUENCY_COLORS[classifyTransmission(d)], getWidth: (d) => classifyTransmission(d) === 'seam' ? 4 : 2, widthUnits: 'pixels', capRounded: true, jointRounded: true }),
+    active.areas && new TextLayer({ id: 'atlas-area-labels', data: ATLAS_FEATURES.areas, getPosition: (d) => d.position, getText: (d) => `${d.name}\n${d.frequency}`, getSize: 11, getColor: labelColor, getTextAnchor: 'middle', getAlignmentBaseline: 'center', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700 }),
+    // Static transmission — omitted when pulseTransmissionHz is set (a dynamic
+    // time-driven version is added inside `layers()` instead).
+    active.transmission && !pulseTransmissionHz && new PathLayer({ id: 'atlas-transmission', data: ATLAS_FEATURES.transmission, getPath: (d) => d.path, getColor: (d) => (isWashi ? FREQUENCY_COLORS_WASHI : FREQUENCY_COLORS)[classifyTransmission(d)], getWidth: (d) => classifyTransmission(d) === 'seam' ? 4 : 2, widthUnits: 'pixels', capRounded: true, jointRounded: true }),
     active.plants && new ScatterplotLayer({ id: 'atlas-plants', data: filterPlants(active.plants), getPosition: (d) => d.position, getRadius: (d) => plantRadiusForCapacity(d, plantRadius), radiusUnits: 'pixels', getFillColor: (d) => PLANT_COLORS[d.fuel], getLineColor: [237, 233, 254, 255], lineWidthMinPixels: 2, stroked: true, pickable: true, updateTriggers: { getRadius: [plantRadius] } }),
     active.plants && new TextLayer({ id: 'atlas-plant-icons', data: filterPlants(active.plants), getPosition: (d) => d.position, getText: (d) => FUEL_ICONS[d.fuel] ?? '', getSize: (d) => Math.max(10, plantRadiusForCapacity(d, plantRadius) * 1.1), sizeUnits: 'pixels', getColor: [11, 18, 32, 255], getTextAnchor: 'middle', getAlignmentBaseline: 'center', fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif', fontWeight: 700, characterSet: 'auto', billboard: true, updateTriggers: { getSize: [plantRadius] } }),
-    active.mix && new TextLayer({ id: 'atlas-mix', data: ATLAS_FEATURES.mix, getPosition: (d) => d.position, getText: (d) => `${d.label}\n${d.values}`, getSize: 12, getColor: [254, 243, 199, 255], getTextAnchor: 'middle', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700 }),
-  ].filter(Boolean), [active, plantRadius]);
-  const layers = useCallback((progress = 0, time = 0) => [
-    ...atlasLayers,
-    ...(routeLayer ? routeLayers({ ...routeLayer, progress }) : []),
-    ...(transmissionLayer?.getLayers ? transmissionLayer.getLayers(time) : transmissionLayer?.layers ?? []),
-    ...(sceneLayer?.getLayers ? sceneLayer.getLayers(time) : sceneLayer?.layers ?? []),
-  ], [atlasLayers, routeLayer, transmissionLayer, sceneLayer]);
+    active.mix && new TextLayer({ id: 'atlas-mix', data: ATLAS_FEATURES.mix, getPosition: (d) => d.position, getText: (d) => `${d.label}\n${d.values}`, getSize: 12, getColor: mixColor, getTextAnchor: 'middle', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700 }),
+  ].filter(Boolean), [active, plantRadius, isWashi, pulseTransmissionHz]);
+  const layers = useCallback((progress = 0, time = 0) => {
+    // Pulsed transmission — sine wave at (hz / HZ_PULSE_RATE) cycles per second,
+    // matching the AtlasLegend swatch cadence. Width and alpha modulate together
+    // so 50 Hz east and 60 Hz west visibly beat against each other.
+    const pulseLayer = (pulseTransmissionHz && active.transmission) ? [
+      new PathLayer({
+        id: 'atlas-transmission-pulse',
+        data: ATLAS_FEATURES.transmission,
+        getPath: (d) => d.path,
+        getColor: (d) => {
+          const kind = classifyTransmission(d);
+          const hz = kind === '60 Hz' ? 60 : kind === '50 Hz' ? 50 : 55;
+          const s = Math.sin((time / 1000) * (hz / HZ_PULSE_RATE) * Math.PI * 2);
+          const base = FREQUENCY_COLORS[kind];
+          const a = Math.round((base[3] ?? 235) * (0.72 + s * 0.28));
+          return [base[0], base[1], base[2], a];
+        },
+        getWidth: (d) => {
+          const kind = classifyTransmission(d);
+          const hz = kind === '60 Hz' ? 60 : kind === '50 Hz' ? 50 : 55;
+          const s = Math.sin((time / 1000) * (hz / HZ_PULSE_RATE) * Math.PI * 2);
+          const base = kind === 'seam' ? 4 : 2;
+          return base + s * 0.6;
+        },
+        widthUnits: 'pixels',
+        capRounded: true,
+        jointRounded: true,
+        updateTriggers: {
+          getColor: [Math.round(time / 33)],
+          getWidth: [Math.round(time / 33)],
+        },
+      }),
+    ] : [];
+    return [
+      ...atlasLayers,
+      ...pulseLayer,
+      ...(routeLayer ? routeLayers({ ...routeLayer, progress }) : []),
+      ...(transmissionLayer?.getLayers ? transmissionLayer.getLayers(time) : transmissionLayer?.layers ?? []),
+      ...(sceneLayer?.getLayers ? sceneLayer.getLayers(time) : sceneLayer?.layers ?? []),
+    ];
+  }, [atlasLayers, routeLayer, transmissionLayer, sceneLayer, pulseTransmissionHz, active.transmission]);
   useEffect(() => {
-    if (!isSlideActive || (!routeLayer && !transmissionLayer?.getLayers && !sceneLayer?.getLayers)) return undefined;
+    if (!isSlideActive || (!routeLayer && !transmissionLayer?.getLayers && !sceneLayer?.getLayers && !pulseTransmissionHz)) return undefined;
     let frame;
     let started;
     progressRef.current = 0;
@@ -115,14 +164,17 @@ export function JapanGridAtlas({ height = '100%', step = 0, preset = () => ({}),
       started ??= now;
       const progress = routeLayer ? Math.min(Math.max(now - started - routeDelay, 0) / routeDuration, 1) : 0;
       progressRef.current = progress;
-      const props = { layers: layers(progress, now % 3600) };
+      // For the transmission pulse, keep the elapsed clock going instead of
+      // wrapping every 3.6s so the sine wave stays continuous across long views.
+      const clock = pulseTransmissionHz ? (now - started) : (now % 3600);
+      const props = { layers: layers(progress, clock) };
       if (followShip) props.viewState = followView(progress);
       deckRef.current?.deck?.setProps(props);
-      if (progress < 1 || transmissionLayer?.getLayers || sceneLayer?.getLayers) frame = requestAnimationFrame(tick);
+      if (progress < 1 || transmissionLayer?.getLayers || sceneLayer?.getLayers || pulseTransmissionHz) frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [isSlideActive, layers, replayKey, followShip, transmissionLayer?.getLayers, sceneLayer?.getLayers]);
+  }, [isSlideActive, layers, replayKey, followShip, transmissionLayer?.getLayers, sceneLayer?.getLayers, pulseTransmissionHz]);
   return <div data-testid="japan-grid-atlas" data-variant={variant} data-map-variant={mapVariant} style={{ position: 'relative', width: '100%', height, background: variant === 'washi' ? 'var(--color-washi-paper)' : 'var(--color-bg)' }}>
     {isSlideActive && <DeckGL ref={deckRef} viewState={viewState} onViewStateChange={({ viewState: next }) => setViewState(next)} controller={true} layers={layers(progressRef.current)} getTooltip={({ object }) => object && (object.name ? { text: `${object.name}\n${object.fuel} · ${object.capacity}` } : { text: object.label || object.name })} style={{ position: 'absolute', inset: 0 }}>
       <MapGL mapStyle={mapVariant === 'washi' ? WASHI_MAP_STYLE : MAP_STYLE} style={mapVariant === 'washi' ? { filter: 'saturate(0.35) brightness(1.35) sepia(0.18)' } : undefined} />
