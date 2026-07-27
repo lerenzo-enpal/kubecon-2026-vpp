@@ -1,18 +1,7 @@
 import React from 'react';
-import { PLANT_COLORS, FREQUENCY_COLORS } from './JapanGridAtlas.jsx';
+import { PLANT_COLORS, FREQUENCY_COLORS, FUEL_ICONS } from './JapanGridAtlas.jsx';
 
 const rgba = (c) => `rgba(${c[0]}, ${c[1]}, ${c[2]}, ${(c[3] ?? 255) / 255})`;
-
-const FUEL_ICONS = {
-  Nuclear: '☢',
-  LNG: '🔥',
-  Coal: '■',
-  Oil: '◆',
-  Hydro: '≋',
-  Geothermal: '♨',
-  Solar: '☀',
-  Wind: '⚙',
-};
 
 export function AtlasLegend({ className = '', testId = 'atlas-legend' }) {
   return (
