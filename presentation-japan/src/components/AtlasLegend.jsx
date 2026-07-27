@@ -7,7 +7,7 @@ export function AtlasLegend({ className = '', testId = 'atlas-legend' }) {
   return (
     <aside
       data-testid={testId}
-      className={`absolute right-8 top-8 w-64 border border-[var(--color-primary)]/50 bg-[color-mix(in_srgb,var(--color-bg)_86%,transparent)] p-4 ${className}`}
+      className={`absolute right-8 top-8 w-64 bg-[color-mix(in_srgb,var(--color-bg)_86%,transparent)] p-4 ${className}`}
     >
       <div className="font-[var(--font-mono)] text-xs tracking-[0.16em] text-[var(--color-primary)]">LEGEND</div>
 

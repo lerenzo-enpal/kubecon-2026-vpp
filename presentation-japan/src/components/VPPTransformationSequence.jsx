@@ -67,6 +67,118 @@ const drawGraphScene = (canvas, stageIndex, now) => {
   context.shadowBlur = 0;
 };
 
+const CAPABILITIES = [
+  { id: 'market',   icon: '◒', copy: 'Bring new players into the market', metric: '+2.4 GW', sub: 'aggregated behind-the-meter', hue: '#67e8f9' },
+  { id: 'response', icon: '⌁', copy: 'Respond when the system is tight', metric: '<400 ms', sub: 'coordinated dispatch latency',  hue: '#ffc217' },
+  { id: 'demand',   icon: '▣', copy: 'Use demand smarter',                metric: '−18%',    sub: 'peak-hour consumption',       hue: '#a78bfa' },
+];
+
+function VPPCapabilityPanel({ capabilityPhase, stabilizationRef }) {
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    let raf;
+    const loop = () => { setTick((t) => t + 1); raf = requestAnimationFrame(loop); };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+  const pulse = 0.5 + Math.sin(tick / 18) * 0.5;
+  const stabilization = stabilizationRef?.current ?? 0;
+  const allOnline = capabilityPhase >= CAPABILITIES.length - 1;
+
+  return (
+    <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+      {/* Title block, top-left */}
+      <div style={{ position: 'absolute', left: 42, top: 44, width: 440 }}>
+        <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, letterSpacing: '0.18em', color: '#67e8f9', marginBottom: 12,
+          display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%',
+            background: '#67e8f9', boxShadow: `0 0 ${6 + pulse * 10}px #67e8f9`, opacity: 0.6 + pulse * 0.4 }} />
+          ACT IV / VIRTUAL POWER PLANT
+        </div>
+        <div style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: 40, lineHeight: 1.02, fontWeight: 800, color: '#f1f5f9', marginBottom: 18 }}>
+          Coordination unlocks capacity.
+        </div>
+        <div style={{ display: 'grid', gap: 12 }}>
+          {CAPABILITIES.map((cap, index) => {
+            const on = capabilityPhase >= index;
+            return (
+              <div key={cap.id} data-testid={`vpp-capability-${cap.id}`}
+                style={{ position: 'relative',
+                  display: 'grid', gridTemplateColumns: '36px 1fr auto', alignItems: 'center', gap: 14,
+                  padding: '14px 18px',
+                  border: `1px solid ${on ? cap.hue + '66' : 'rgba(103,232,249,0.18)'}`,
+                  background: on
+                    ? `linear-gradient(90deg, ${cap.hue}18 0%, rgba(3,5,8,0.85) 60%)`
+                    : 'rgba(3,5,8,0.7)',
+                  color: '#f1f5f9', fontFamily: 'Space Grotesk, sans-serif',
+                  opacity: on ? 1 : 0.35,
+                  transform: on ? 'translateX(0)' : 'translateX(-16px)',
+                  transition: 'opacity 520ms ease, transform 520ms ease, border-color 520ms ease, background 520ms ease',
+                  boxShadow: on ? `0 0 24px ${cap.hue}22, inset 0 0 20px ${cap.hue}0a` : 'none' }}>
+                {/* left status LED */}
+                <span aria-hidden="true" style={{ position: 'relative', width: 32, height: 32, display: 'grid', placeItems: 'center' }}>
+                  <span style={{ position: 'absolute', inset: 0, borderRadius: '50%',
+                    border: `1px solid ${on ? cap.hue + '88' : 'rgba(103,232,249,0.25)'}`,
+                    boxShadow: on ? `0 0 ${6 + pulse * 12}px ${cap.hue}80` : 'none',
+                    transition: 'box-shadow 420ms ease' }} />
+                  <span style={{ fontFamily: 'JetBrains Mono, monospace', color: on ? cap.hue : '#67e8f966', fontSize: 18, fontWeight: 800 }}>{cap.icon}</span>
+                </span>
+                <div>
+                  <div style={{ fontSize: 18, fontWeight: 800, lineHeight: 1.15 }}>{cap.copy}</div>
+                  <div style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace',
+                    color: on ? '#94a3b8' : '#64748b60', letterSpacing: '0.05em', marginTop: 3 }}>
+                    {cap.sub}
+                  </div>
+                </div>
+                <div style={{ textAlign: 'right', minWidth: 88 }}>
+                  <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 22, fontWeight: 800,
+                    color: on ? cap.hue : '#67e8f930',
+                    textShadow: on ? `0 0 12px ${cap.hue}60` : 'none', letterSpacing: '-0.02em' }}>
+                    {cap.metric}
+                  </div>
+                  <div style={{ fontSize: 9, fontFamily: 'JetBrains Mono, monospace',
+                    color: on ? cap.hue + 'cc' : '#67e8f930', letterSpacing: '0.14em', marginTop: 2 }}>
+                    {on ? 'ONLINE' : 'STANDBY'}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Bottom-right hero summary */}
+      <div style={{ position: 'absolute', right: 44, bottom: 44, width: 320,
+        border: `1px solid ${allOnline ? 'rgba(255,194,23,0.55)' : 'rgba(103,232,249,0.28)'}`,
+        background: 'rgba(3,5,8,0.86)', padding: '18px 22px',
+        boxShadow: allOnline ? `0 0 40px rgba(255,194,23,0.22), inset 0 0 30px rgba(255,194,23,0.06)` : '0 0 24px rgba(103,232,249,0.1)',
+        transition: 'border-color 620ms ease, box-shadow 620ms ease',
+        backdropFilter: 'blur(12px)' }}>
+        <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.18em',
+          color: allOnline ? '#ffc217' : '#67e8f9', marginBottom: 6 }}>
+          {allOnline ? 'FLEET COORDINATED' : 'BRINGING FLEET ONLINE'}
+        </div>
+        <div style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: 40, fontWeight: 800,
+          color: allOnline ? '#ffc217' : '#f1f5f9', lineHeight: 1,
+          textShadow: allOnline ? '0 0 24px rgba(255,194,23,0.4)' : 'none' }}>
+          {allOnline ? '2.4 GW' : `${(2.4 * Math.min(1, (capabilityPhase + 1) / 3)).toFixed(1)} GW`}
+        </div>
+        <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, color: '#94a3b8', marginTop: 6, lineHeight: 1.4 }}>
+          equivalent dispatchable capacity — from assets that already exist.
+        </div>
+        {/* Progress bar */}
+        <div style={{ marginTop: 14, height: 4, background: 'rgba(103,232,249,0.12)', borderRadius: 2, overflow: 'hidden' }}>
+          <div style={{ height: '100%',
+            width: `${Math.max(6, Math.min(100, ((capabilityPhase + 1) / 3) * 100 * Math.min(1, stabilization * 3)))}%`,
+            background: allOnline ? '#ffc217' : '#67e8f9',
+            boxShadow: `0 0 12px ${allOnline ? '#ffc217' : '#67e8f9'}80`,
+            transition: 'width 620ms ease, background 620ms ease' }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function VPPTransformationSequence({ height = '100%' }) {
   return (
     <StepBridge count={5}>
@@ -126,11 +238,7 @@ function VPPTransformationStage({ height, stageIndex }) {
               {stageIndex === 1 && <div style={{ position: 'absolute', left: 54, bottom: 48, maxWidth: 600, fontFamily: 'Space Grotesk, sans-serif', fontSize: 44, lineHeight: 1.08, fontWeight: 800, color: '#f1f5f9' }}>You already know how to solve this.</div>}
               {stageIndex === 2 && <div style={{ position: 'absolute', left: 54, bottom: 48, display: 'flex', flexWrap: 'wrap', columnGap: 16, rowGap: 4, maxWidth: 820, fontFamily: 'Space Grotesk, sans-serif', fontSize: 52, lineHeight: 1, fontWeight: 800 }}><span data-testid="vpp-hero-graph" style={{ color: '#f1f5f9', opacity: 1, transform: 'translateY(0)', transition: 'opacity 600ms ease, transform 600ms ease' }}>A graph</span><span data-testid="vpp-hero-city" style={{ color: '#f1f5f9', transform: 'scale(1)', transition: 'transform 620ms cubic-bezier(.2,1.35,.4,1)' }}>is a city</span><span data-testid="vpp-hero-load" style={{ color: '#ffc217', opacity: 1, letterSpacing: '0', transition: 'opacity 540ms 820ms ease, letter-spacing 540ms 820ms ease' }}>under load.</span></div>}
               {stageIndex === 3 && <div style={{ position: 'absolute', left: 42, top: 44, maxWidth: 430 }}><div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, letterSpacing: '0.15em', color: '#67e8f9', marginBottom: 12 }}>ACT III / JAPAN</div><div style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: 47, lineHeight: 1.04, fontWeight: 800, color: '#f1f5f9' }}>The same graph has a geography.</div></div>}
-              {stageIndex === 4 && <div style={{ position: 'absolute', left: 42, top: 44, width: 410 }}><div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, letterSpacing: '0.15em', color: '#67e8f9', marginBottom: 12 }}>ACT IV / VIRTUAL POWER PLANT</div><div style={{ display: 'grid', gap: 10 }}>{[
-                ['market', '◒', 'Bring new players into the market'],
-                ['response', '⌁', 'Respond when the system is tight'],
-                ['demand', '▣', 'Use demand smarter'],
-              ].map(([id, icon, copy], index) => <div key={id} data-testid={`vpp-capability-${id}`} style={{ display: 'grid', gridTemplateColumns: '28px 1fr', alignItems: 'center', gap: 10, padding: '12px 14px', border: '1px solid rgba(103, 232, 249, 0.28)', background: 'rgba(3, 5, 8, 0.82)', color: '#f1f5f9', fontFamily: 'Space Grotesk, sans-serif', fontSize: 20, fontWeight: 800, opacity: capabilityPhase >= index ? 1 : 0, transform: capabilityPhase >= index ? 'translateY(0)' : 'translateY(12px)', transition: 'opacity 420ms ease, transform 420ms ease' }}><span aria-hidden="true" style={{ color: '#67e8f9', fontFamily: 'JetBrains Mono, monospace' }}>{icon}</span><span>{copy}</span></div>)}</div></div>}
+              {stageIndex === 4 && <VPPCapabilityPanel capabilityPhase={capabilityPhase} stabilizationRef={stabilizationRef} />}
             </div>
     </div>
   );

@@ -20,19 +20,21 @@ const allAtlasLayers = () => ({ areas: true, transmission: true, plants: true, m
 const atlasSlidePreset = (step) => ({
   areas: true,
   transmission: true,
-  plants: step === 1 ? 'east' : step === 2 ? 'west' : step >= 3 ? true : false,
+  plants: step === 1 ? 'east' : step === 2 ? 'west' : step >= 4 ? true : step === 3 ? false : false,
   mix: false,
 });
 const ATLAS_KEYFRAMES = [
   { longitude: 136.7, latitude: 36.3, zoom: 4.65, pitch: 25, bearing: 5 },
   { longitude: 140.0, latitude: 37.6, zoom: 5.3, pitch: 30, bearing: 5 },
   { longitude: 133.4, latitude: 34.6, zoom: 5.3, pitch: 30, bearing: 5 },
+  { longitude: 137.45, latitude: 35.35, zoom: 6.7, pitch: 42, bearing: -4 },
   { longitude: 136.7, latitude: 36.3, zoom: 4.65, pitch: 25, bearing: 5 },
 ];
 const ATLAS_STEP_COPY = [
   { eyebrow: 'ACT I / JAPAN’S GRID', title: 'Two grids, one country', subtitle: '50 Hz east, 60 Hz west — split at the Shizuoka seam.' },
   { eyebrow: 'ACT I / EAST 50 Hz', title: 'Where Tokyo draws power', subtitle: 'Nuclear, LNG, coal along the Pacific coast — TEPCO, Tohoku EP, JERA.' },
   { eyebrow: 'ACT I / WEST 60 Hz', title: 'Kansai and Kyushu', subtitle: 'KEPCO, Kyuden, Chugoku EP — nuclear + LNG feeding the west.' },
+  { eyebrow: 'ACT I / SEAM · 137.4°E', title: 'One narrow bridge', subtitle: 'Sakuma & Higashi-Shimizu frequency converters — 2.1 GW cap between east and west.' },
   { eyebrow: 'ACT I / JAPAN’S GRID', title: 'Two grids, one country', subtitle: 'Every fuel, every operator — one atlas.' },
 ];
 const HORMUZ_ROUTE = [[56.3, 26], [56.5, 23.5], [65, 17], [78, 8], [95, 5], [104, 1.5], [114, 10], [128, 22], [139.7, 35.7]];
@@ -73,7 +75,7 @@ export default function Keynote() {
         </Slide>
 
         <Slide backgroundColor="var(--color-washi-paper)" padding="0">
-          <StepBridge count={3}>{rawStep => {
+          <StepBridge count={4}>{rawStep => {
             const step = Math.min(Math.max(0, rawStep | 0), ATLAS_STEP_COPY.length - 1);
             const copy = ATLAS_STEP_COPY[step];
             return (
@@ -124,7 +126,7 @@ export default function Keynote() {
         </Slide>
 
         <Slide backgroundColor="var(--color-washi-paper)" padding="0" transition={fadeTransition}>
-          <StepBridge count={10}>{step => {
+          <StepBridge count={11}>{step => {
             const cascadeActive = step >= 1;
             return (
               <div data-testid="grid-pressure-scene" className="relative h-full">
@@ -135,10 +137,13 @@ export default function Keynote() {
                   className="pointer-events-none absolute inset-0 z-10"
                   style={{ background: 'var(--color-washi-paper)', opacity: cascadeActive ? 0 : 1, transition: 'opacity 900ms ease-in-out' }}
                 >
-                  <div style={{ position: 'absolute', zIndex: 2, top: 44, left: 48, maxWidth: 640 }}>
-                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: 12, letterSpacing: '0.16em', color: 'var(--color-washi-solar)' }}>ACT II · MARCH 2022</div>
-                    <h1 style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-washi-ink)', margin: '8px 0 0 0' }}>Quake, then cold.</h1>
-                    <p style={{ margin: '10px 0 0 0', color: 'var(--color-washi-ink)', fontFamily: 'var(--font-body, inherit)', fontSize: 18, lineHeight: 1.4 }}>A 60-second sequence that nearly broke Tokyo's grid.</p>
+                  <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', textAlign: 'center', padding: '0 48px' }}>
+                    <div style={{ maxWidth: 900 }}>
+                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, letterSpacing: '0.2em', color: 'var(--color-washi-solar)' }}>ACT II · MARCH 2022</div>
+                      <div style={{ width: 96, height: 3, background: 'var(--color-washi-solar)', margin: '22px auto' }} />
+                      <h1 style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-washi-ink)', margin: 0, fontSize: 84, lineHeight: 1.02, fontWeight: 800, letterSpacing: '-0.01em' }}>Quake, then cold.</h1>
+                      <p style={{ margin: '28px auto 0', color: 'var(--color-washi-ink)', fontFamily: 'var(--font-body, inherit)', fontSize: 22, lineHeight: 1.4, maxWidth: 640, opacity: 0.82 }}>A 60-second sequence that nearly broke Tokyo's grid.</p>
+                    </div>
                   </div>
                 </div>
               </div>
