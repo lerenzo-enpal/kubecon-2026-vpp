@@ -10,14 +10,12 @@ import { JEPXPriceChart } from './components/JEPXPriceChart.jsx';
 import VPPTransformationSequence from './components/VPPTransformationSequence.jsx';
 import { SlideTitle } from './components/SlideTitle.jsx';
 import { AtlasLegend } from './components/AtlasLegend.jsx';
-import { getJapanMapLayers } from './components/JapanMapLayers.jsx';
-import { COLD_SNAP_CAMERA_KEYFRAMES } from './components/japanMapData.mjs';
+import JapanColdSnapCascade from './components/JapanColdSnapCascade.jsx';
 
 const bg = 'var(--color-bg)';
 const SECTIONS = ['Premise', 'Atlas', 'Energy', 'Hormuz', 'Grid pressure', 'VPP', 'Close'];
 const TOTAL_SLIDES = 7;
 const FORCED_DARK_SLIDES = new Set([2, 4, 5, 6]);
-const keynoteAtlasPreset = (step) => ({ areas: true, transmission: step >= 1, plants: step >= 2, mix: step >= 3 });
 const allAtlasLayers = () => ({ areas: true, transmission: true, plants: true, mix: true, demand: true, jepx: true });
 const atlasSlidePreset = (step) => ({
   areas: true,
@@ -108,8 +106,19 @@ export default function Keynote() {
         </Slide>
 
         <Slide backgroundColor={bg} padding="0">
-          <StepBridge count={4}>{step => <div data-testid="grid-pressure-scene" className="relative h-full"><JapanGridAtlas step={step} preset={keynoteAtlasPreset} sceneLayer={{ view: COLD_SNAP_CAMERA_KEYFRAMES[step]?.camera, getLayers: (tripTime) => getJapanMapLayers({ scene: 'cold-snap', coldSnapStage: step, tripTime }) }} /><div className="pointer-events-none absolute inset-0" data-testid="grid-pressure-atlas"><SlideTitle eyebrow="ACT II / WINTER DEMAND" title="Grid pressure" subtitle="January 2021: a cold snap made demand peak together." />{step >= 1 && <aside data-testid="act2-jepx-sidecar" className="absolute right-8 top-8 w-72 border border-[var(--color-danger)]/80 bg-[color-mix(in_srgb,var(--color-bg)_90%,transparent)] p-5"><div className="font-[var(--font-mono)] text-xs tracking-[0.14em] text-[var(--color-danger)]">JAN–FEB 2021 · JEPX</div><div className="mt-2 font-[var(--font-heading)] text-3xl font-bold text-[var(--color-heading)]">25× spike</div><div className="mt-1 text-base text-[var(--color-text)]">10 → 251 yen/kWh for 40 days</div><div data-testid="act2-jepx-chart" className="mt-3"><JEPXPriceChart height={150} /></div></aside>}{step >= 2 && <div data-testid="act2-demand-card" className="absolute bottom-8 left-8 w-80 border-l-4 border-[var(--color-danger)] bg-[color-mix(in_srgb,var(--color-bg)_90%,transparent)] p-5 text-base text-[var(--color-text)]"><div className="font-[var(--font-mono)] text-xs tracking-[0.14em] text-[var(--color-danger)]">DEMAND CASCADE ACTIVE</div><div className="mt-2">Regional constraints spread the pressure across the system.</div></div>}{step >= 2 && <div data-testid="act2-cold-snap-route" className="sr-only">Cold-snap grid flow</div>}{step >= 2 && <div data-testid="act2-cold-snap-buildings" className="sr-only">cold-snap-city-buildings</div>}{step >= 4 && <div data-testid="act2-cold-snap-transmission" className="sr-only">cold-snap-regional-transmission</div>}</div></div>}</StepBridge>
-          <Notes>In January 2021, a cold snap hit Japan. Heating demand spiked. Wind dropped. LNG supply got delayed. All at once. Spot electricity prices didn't climb — they exploded, going from 10 yen per kWh to 251 yen for 40 days. In March 2022, the grid operator issued Japan's first-ever power supply emergency warning — reserve margin hit 2.5% against a 3% safety threshold. Now add 40+ planned data center projects to a grid that's already fragile. Demand is going from 19 TWh today to 57 TWh by 2034 — a 3x increase — and most projects are delayed because the grid can't support them yet.</Notes>
+          <StepBridge count={10}>{step => (
+            <div data-testid="grid-pressure-scene" className="relative h-full">
+              <JapanColdSnapCascade step={step} />
+              <div className="pointer-events-none absolute inset-0 z-20">
+                <SlideTitle
+                  eyebrow="ACT II / MARCH 2022"
+                  title="Quake, then cold"
+                  subtitle="A 60-second sequence that nearly broke Tokyo's grid."
+                />
+              </div>
+            </div>
+          )}</StepBridge>
+          <Notes>Step 1: HUD boots — OCCTO grid monitor, dual 50/60 Hz readouts, reserve margin. Step 2 (MAR 16 23:36): M7.4 quake off Fukushima — Onagawa, Higashidori, Hitachinaka, Kashima trip. Step 3 (MAR 17): 6.5 GW east-coast thermal offline, restarts delayed. Step 4 (MAR 21): Arctic front sweeps in from Hokkaido, heating demand jumps 15%. Step 5 (MAR 22 morning): overcast + still air kills wind and solar. Step 6: 50/60 Hz frequency converter maxes out at 2.1 GW — the west can't rescue the east fast enough. Step 7 (MAR 22 11:00): METI issues Japan's first-ever power supply emergency warning — reserve margin 2.5% against a 3% threshold. Step 8: public conservation call goes out, JEPX spot spikes, memory of Jan 2021 (10→251 yen/kWh for 40 days) reopens. Step 9: blackout averted, but every winter now carries this shape — and 40+ planned data centers are lining up behind it.</Notes>
         </Slide>
 
         <Slide backgroundColor={bg} padding="0">
