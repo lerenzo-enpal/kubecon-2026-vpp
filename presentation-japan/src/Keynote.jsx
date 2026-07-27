@@ -7,7 +7,7 @@ import StepBridge from './components/StepBridge.jsx';
 import { JapanGridAtlas } from './components/JapanGridAtlas.jsx';
 import { JapanEnergyOrigins } from './components/JapanEnergyOrigins.jsx';
 import { JEPXPriceChart } from './components/JEPXPriceChart.jsx';
-import VPPTransformationSequence from './components/VPPTransformationSequence.jsx';
+import VPPTransformationSequence, { buildOverlayLayers as buildVPPOverlayLayers } from './components/VPPTransformationSequence.jsx';
 import { SlideTitle } from './components/SlideTitle.jsx';
 import { AtlasLegend } from './components/AtlasLegend.jsx';
 import JapanColdSnapCascade from './components/JapanColdSnapCascade.jsx';
@@ -110,13 +110,13 @@ export default function Keynote() {
             <div className="pointer-events-none absolute inset-0" data-testid="hormuz-route">
               <div style={{ position: 'absolute', zIndex: 2, top: 44, left: 48, maxWidth: 460 }}>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: 12, letterSpacing: '0.16em', color: 'var(--color-washi-solar)' }}>ENERGY CORRIDOR</div>
-                <h1 style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-washi-ink)', margin: '8px 0 0 0' }}>Strait of Hormuz</h1>
-                <p style={{ margin: '10px 0 0 0', color: 'var(--color-washi-ink)', fontFamily: 'var(--font-body, inherit)', fontSize: 18, lineHeight: 1.4 }}>One route leads through Hormuz. A physical chokepoint becomes a grid risk.</p>
+                <h1 style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-washi-ink)', margin: '8px 0 0 0', fontSize: 48, fontWeight: 800, letterSpacing: '-0.01em', lineHeight: 1.05 }}>Strait of Hormuz</h1>
+                <p style={{ margin: '10px 0 0 0', color: 'var(--color-washi-ink)', fontFamily: 'var(--font-heading)', fontSize: 18, lineHeight: 1.4, fontWeight: 500 }}>One route leads through Hormuz. A physical chokepoint becomes a grid risk.</p>
               </div>
               <div data-testid="hormuz-context" style={{ position: 'absolute', zIndex: 2, right: 32, top: 44, width: 320, borderLeft: '4px solid var(--color-washi-solar)', background: 'color-mix(in srgb, var(--color-washi-paper) 92%, transparent)', padding: 20, boxShadow: '0 6px 24px -12px rgba(23,37,84,0.35)' }}>
                 <div data-testid="hormuz-context-card">
                   <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, letterSpacing: '0.14em', color: 'var(--color-washi-solar)' }}>84.7% IMPORTED</div>
-                  <div style={{ marginTop: 8, fontFamily: 'var(--font-body, inherit)', fontSize: 15, lineHeight: 1.45, color: 'var(--color-washi-ink)' }}>Japan LNG terminals turn the constrained import route into a grid problem at the coast.</div>
+                  <div style={{ marginTop: 8, fontFamily: 'var(--font-heading)', fontSize: 15, lineHeight: 1.45, color: 'var(--color-washi-ink)', fontWeight: 500 }}>Japan LNG terminals turn the constrained import route into a grid problem at the coast.</div>
                 </div>
               </div>
               <svg data-testid="hormuz-callout-leader" className="absolute inset-0 h-full w-full" aria-hidden="true"><path d="M 390 190 L 520 280" fill="none" stroke="var(--color-washi-solar)" strokeWidth="2" strokeDasharray="6 6" /></svg>
@@ -157,39 +157,50 @@ export default function Keynote() {
           <Notes>Pause: the grid is a distributed system. Reveal the graph under uneven load; this is a familiar problem. As it becomes a city, name the lived consequence: a graph is a city, under load. Pull back to Japan: homes, generators, and hubs are the same graph with geography. Add the superpowers: connected devices respond fast, batteries store energy, and coordination uses it smarter. Let the network settle, then advance to the 100K homes closing statement.</Notes>
         </Slide>
 
-        <Slide backgroundColor="var(--color-washi-paper)" padding="0">
-          <style>{`@keyframes keynoteClosingFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } } @keyframes keynoteClosingPulse { 0%, 100% { opacity: .78; } 50% { opacity: 1; } } .keynote-closing-asset { animation: keynoteClosingFloat 3.4s ease-in-out infinite, keynoteClosingPulse 3.4s ease-in-out infinite; }`}</style>
-          <div data-testid="keynote-washi-close" className="flex h-full flex-col items-center justify-center gap-4 text-center">
-            <div className="font-[var(--font-mono)] text-7xl font-extrabold leading-none text-[var(--color-washi-ink)]">100K DEVICES</div>
-            <div className="flex items-end justify-center gap-8" aria-label="Distributed energy assets">
-              <div className="keynote-closing-asset flex flex-col items-center gap-1" style={{ animationDelay: '0ms' }}>
-                <svg role="img" aria-label="Home" viewBox="0 0 96 76" className="h-16 w-20 fill-none stroke-[var(--color-washi-ink)] stroke-[3]">
-                  <path d="M12 38 48 10l36 28v27H12Z" fill="var(--color-washi-ink)" opacity=".12" /><path d="M12 38 48 10l36 28M18 34v31h60V34M40 65V45h16v20" /><path d="M29 45h5M62 45h5" stroke="var(--color-washi-solar)" strokeWidth="5" />
-                </svg>
-                <span className="font-[var(--font-mono)] text-xs tracking-[0.14em] text-[var(--color-washi-ink)]">HOME</span>
-              </div>
-              <div className="keynote-closing-asset flex flex-col items-center gap-1" style={{ animationDelay: '220ms' }}>
-                <svg role="img" aria-label="Solar panel" viewBox="0 0 96 76" className="h-16 w-20 fill-none stroke-[var(--color-washi-ink)] stroke-[3]">
-                  <path d="M18 18h60l-8 36H26Z" fill="var(--color-washi-solar)" opacity=".38" /><path d="M18 18h60l-8 36H26ZM31 30h42M28 42h42M39 18l-5 36M58 18l-5 36M48 54v12M35 66h26" />
-                </svg>
-                <span className="font-[var(--font-mono)] text-xs tracking-[0.14em] text-[var(--color-washi-ink)]">SOLAR</span>
-              </div>
-              <div className="keynote-closing-asset flex flex-col items-center gap-1" style={{ animationDelay: '440ms' }}>
-                <svg role="img" aria-label="EV" viewBox="0 0 96 76" className="h-16 w-20 fill-none stroke-[var(--color-washi-ink)] stroke-[3]">
-                  <path d="M17 49h62v13H17Z" fill="var(--color-washi-alert)" opacity=".25" /><path d="m27 49 9-17h25l10 17M17 49h62v13H17ZM28 62a7 7 0 1 0 0-14 7 7 0 0 0 0 14Zm40 0a7 7 0 1 0 0-14 7 7 0 0 0 0 14ZM42 39h15" />
-                </svg>
-                <span className="font-[var(--font-mono)] text-xs tracking-[0.14em] text-[var(--color-washi-ink)]">EV</span>
-              </div>
-              <div className="keynote-closing-asset flex flex-col items-center gap-1" style={{ animationDelay: '660ms' }}>
-                <svg role="img" aria-label="Battery" viewBox="0 0 96 76" className="h-16 w-20 fill-none stroke-[var(--color-washi-ink)] stroke-[3]">
-                  <rect x="25" y="12" width="46" height="55" rx="5" fill="var(--color-washi-ink)" opacity=".12" /><path d="M35 12V7h26v5M25 12h46v55H25Z" /><path d="M48 23v29M36 37h24" stroke="var(--color-washi-solar)" strokeWidth="5" />
-                </svg>
-                <span className="font-[var(--font-mono)] text-xs tracking-[0.14em] text-[var(--color-washi-ink)]">BATTERY</span>
+        <Slide backgroundColor="#030508" padding="0" transition={fadeTransition}>
+          <style>{`@keyframes keynoteClosingFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } } @keyframes keynoteClosingPulse { 0%, 100% { opacity: .72; } 50% { opacity: 1; } } .keynote-closing-asset { animation: keynoteClosingFloat 3.4s ease-in-out infinite, keynoteClosingPulse 3.4s ease-in-out infinite; } @keyframes keynoteClosingFadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } } .keynote-closing-line { animation: keynoteClosingFadeIn 1000ms ease-out both; }`}</style>
+          <div data-testid="keynote-washi-close" style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden', background: '#030508' }}>
+            <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
+              <JapanGridAtlas
+                sceneLayer={{
+                  view: { longitude: 138.0, latitude: 37.6, zoom: 4.35, pitch: 28, bearing: 6 },
+                  getLayers: (t) => buildVPPOverlayLayers(t ?? performance.now(), 6),
+                }}
+              />
+            </div>
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(3,5,8,0.55) 0%, rgba(3,5,8,0.15) 40%, rgba(3,5,8,0.7) 100%)', pointerEvents: 'none', zIndex: 2 }} />
+            <div style={{ position: 'absolute', inset: 0, zIndex: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 22, textAlign: 'center', pointerEvents: 'none' }}>
+              <div className="keynote-closing-line" style={{ animationDelay: '80ms', fontFamily: 'JetBrains Mono, monospace', fontSize: 108, fontWeight: 800, letterSpacing: '-0.02em', lineHeight: 1, color: '#f1f5f9', textShadow: '0 0 40px rgba(255,194,23,0.35), 0 0 12px rgba(3,5,8,0.9)' }}>100K DEVICES</div>
+              <div className="keynote-closing-line" style={{ animationDelay: '520ms', fontFamily: 'Space Grotesk, sans-serif', fontSize: 32, color: '#f1f5f9', opacity: 0.92, marginTop: 4 }}>coordinated by software</div>
+              <div className="keynote-closing-line" style={{ animationDelay: '900ms', fontFamily: 'Space Grotesk, sans-serif', fontSize: 34, fontWeight: 700, color: '#ffc217', textShadow: '0 0 22px rgba(255,194,23,0.45)', marginTop: 18 }}>= 1 power plant, zero emissions</div>
+              <div className="keynote-closing-line flex items-end justify-center gap-10" style={{ animationDelay: '1200ms', marginTop: 40 }} aria-label="Distributed energy assets">
+                <div className="keynote-closing-asset flex flex-col items-center gap-1" style={{ animationDelay: '0ms' }}>
+                  <svg role="img" aria-label="Home" viewBox="0 0 96 76" className="h-14 w-16 fill-none" style={{ stroke: '#e2e8f0', strokeWidth: 3 }}>
+                    <path d="M12 38 48 10l36 28v27H12Z" fill="#67e8f9" opacity=".14" /><path d="M12 38 48 10l36 28M18 34v31h60V34M40 65V45h16v20" /><path d="M29 45h5M62 45h5" stroke="#ffc217" strokeWidth="5" />
+                  </svg>
+                  <span className="font-[var(--font-mono)] text-[11px] tracking-[0.14em]" style={{ color: '#94a3b8' }}>HOME</span>
+                </div>
+                <div className="keynote-closing-asset flex flex-col items-center gap-1" style={{ animationDelay: '220ms' }}>
+                  <svg role="img" aria-label="Solar panel" viewBox="0 0 96 76" className="h-14 w-16 fill-none" style={{ stroke: '#e2e8f0', strokeWidth: 3 }}>
+                    <path d="M18 18h60l-8 36H26Z" fill="#ffc217" opacity=".38" /><path d="M18 18h60l-8 36H26ZM31 30h42M28 42h42M39 18l-5 36M58 18l-5 36M48 54v12M35 66h26" />
+                  </svg>
+                  <span className="font-[var(--font-mono)] text-[11px] tracking-[0.14em]" style={{ color: '#94a3b8' }}>SOLAR</span>
+                </div>
+                <div className="keynote-closing-asset flex flex-col items-center gap-1" style={{ animationDelay: '440ms' }}>
+                  <svg role="img" aria-label="EV" viewBox="0 0 96 76" className="h-14 w-16 fill-none" style={{ stroke: '#e2e8f0', strokeWidth: 3 }}>
+                    <path d="M17 49h62v13H17Z" fill="#ef4444" opacity=".28" /><path d="m27 49 9-17h25l10 17M17 49h62v13H17ZM28 62a7 7 0 1 0 0-14 7 7 0 0 0 0 14Zm40 0a7 7 0 1 0 0-14 7 7 0 0 0 0 14ZM42 39h15" />
+                  </svg>
+                  <span className="font-[var(--font-mono)] text-[11px] tracking-[0.14em]" style={{ color: '#94a3b8' }}>EV</span>
+                </div>
+                <div className="keynote-closing-asset flex flex-col items-center gap-1" style={{ animationDelay: '660ms' }}>
+                  <svg role="img" aria-label="Battery" viewBox="0 0 96 76" className="h-14 w-16 fill-none" style={{ stroke: '#e2e8f0', strokeWidth: 3 }}>
+                    <rect x="25" y="12" width="46" height="55" rx="5" fill="#67e8f9" opacity=".14" /><path d="M35 12V7h26v5M25 12h46v55H25Z" /><path d="M48 23v29M36 37h24" stroke="#ffc217" strokeWidth="5" />
+                  </svg>
+                  <span className="font-[var(--font-mono)] text-[11px] tracking-[0.14em]" style={{ color: '#94a3b8' }}>BATTERY</span>
+                </div>
               </div>
             </div>
-            <div className="font-[var(--font-heading)] text-3xl text-[var(--color-washi-ink)]">coordinated by software</div>
-            <div className="mt-3 font-[var(--font-heading)] text-3xl font-bold text-[var(--color-washi-solar)]">= 1 power plant, zero emissions</div>
-            <div className="mt-10 font-[var(--font-mono)] text-sm tracking-widest text-[var(--color-washi-ink)]">github.com/enpal · whatisavpp.com</div>
+            <div style={{ position: 'absolute', right: 44, bottom: 36, fontFamily: 'JetBrains Mono, monospace', fontSize: 13, letterSpacing: '0.16em', color: '#94a3b8', zIndex: 3 }}>github.com/enpal · whatisavpp.com</div>
           </div>
           <Notes>No new power plants. No new transmission. No emissions. Just code, Kubernetes, and the distributed system you already know how to build. The grid is becoming cloud-native. Thank you.</Notes>
         </Slide>
