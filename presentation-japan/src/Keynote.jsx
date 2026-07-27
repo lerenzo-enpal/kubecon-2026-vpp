@@ -8,6 +8,8 @@ import { JapanGridAtlas } from './components/JapanGridAtlas.jsx';
 import { JapanEnergyOrigins } from './components/JapanEnergyOrigins.jsx';
 import { JEPXPriceChart } from './components/JEPXPriceChart.jsx';
 import VPPTransformationSequence from './components/VPPTransformationSequence.jsx';
+import { SlideTitle } from './components/SlideTitle.jsx';
+import { AtlasLegend } from './components/AtlasLegend.jsx';
 import { getJapanMapLayers } from './components/JapanMapLayers.jsx';
 import { COLD_SNAP_CAMERA_KEYFRAMES } from './components/japanMapData.mjs';
 
@@ -17,6 +19,24 @@ const TOTAL_SLIDES = 7;
 const FORCED_DARK_SLIDES = new Set([2, 4, 5, 6]);
 const keynoteAtlasPreset = (step) => ({ areas: true, transmission: step >= 1, plants: step >= 2, mix: step >= 3 });
 const allAtlasLayers = () => ({ areas: true, transmission: true, plants: true, mix: true, demand: true, jepx: true });
+const atlasSlidePreset = (step) => ({
+  areas: true,
+  transmission: true,
+  plants: step === 1 ? 'east' : step === 2 ? 'west' : step >= 3 ? true : false,
+  mix: false,
+});
+const ATLAS_KEYFRAMES = [
+  { longitude: 136.7, latitude: 36.3, zoom: 4.65, pitch: 25, bearing: 5 },
+  { longitude: 140.0, latitude: 37.6, zoom: 5.3, pitch: 30, bearing: 5 },
+  { longitude: 133.4, latitude: 34.6, zoom: 5.3, pitch: 30, bearing: 5 },
+  { longitude: 136.7, latitude: 36.3, zoom: 4.65, pitch: 25, bearing: 5 },
+];
+const ATLAS_STEP_COPY = [
+  { eyebrow: 'ACT I / JAPAN’S GRID', title: 'Two grids, one country', subtitle: '50 Hz east, 60 Hz west — split at the Shizuoka seam.' },
+  { eyebrow: 'ACT I / EAST 50 Hz', title: 'Where Tokyo draws power', subtitle: 'Nuclear, LNG, coal along the Pacific coast — TEPCO, Tohoku EP, JERA.' },
+  { eyebrow: 'ACT I / WEST 60 Hz', title: 'Kansai and Kyushu', subtitle: 'KEPCO, Kyuden, Chugoku EP — nuclear + LNG feeding the west.' },
+  { eyebrow: 'ACT I / JAPAN’S GRID', title: 'Two grids, one country', subtitle: 'Every fuel, every operator — one atlas.' },
+];
 const HORMUZ_ROUTE = [[56.3, 26], [56.5, 23.5], [65, 17], [78, 8], [95, 5], [104, 1.5], [114, 10], [128, 22], [139.7, 35.7]];
 const HORMUZ_VIEW = { longitude: 98, latitude: 22, zoom: 2.6, pitch: 30, bearing: 0 };
 const HORMUZ_FOCUS_VIEW = { longitude: 56.3, latitude: 26.6, zoom: 4.5, pitch: 50, bearing: 18 };
@@ -55,8 +75,25 @@ export default function Keynote() {
         </Slide>
 
         <Slide backgroundColor="var(--color-washi-paper)" padding="0">
-          <StepBridge count={4}>{step => <JapanGridAtlas step={step} preset={keynoteAtlasPreset} />}</StepBridge>
-          <Notes>Atlas: start with service regions. Reveal transmission and the 50/60 Hz seam, then representative power stations, then the national generation mix.</Notes>
+          <StepBridge count={3}>{rawStep => {
+            const step = Math.min(Math.max(0, rawStep | 0), ATLAS_STEP_COPY.length - 1);
+            const copy = ATLAS_STEP_COPY[step];
+            return (
+            <div data-testid="keynote-atlas-scene" className="relative h-full">
+              <JapanGridAtlas step={step} preset={atlasSlidePreset} sceneLayer={{ view: ATLAS_KEYFRAMES[step] }} />
+              <div className="pointer-events-none absolute inset-0">
+                <SlideTitle
+                  testId="keynote-atlas-title"
+                  eyebrow={copy.eyebrow}
+                  title={copy.title}
+                  subtitle={copy.subtitle}
+                />
+                <AtlasLegend />
+              </div>
+            </div>
+            );
+          }}</StepBridge>
+          <Notes>Step 1: whole country, service regions and transmission — reveal the 50/60 Hz split. Step 2: zoom east — nuclear + LNG + coal along the Pacific coast (TEPCO, Tohoku EP, JERA). Step 3: pan west — KEPCO, Kyuden, Chugoku EP feeding Kansai and Kyushu. Step 4: zoom out — every fuel, every operator, one atlas.</Notes>
         </Slide>
 
         <Slide backgroundColor="var(--color-washi-paper)" padding="0" transition={fadeTransition}>
@@ -71,7 +108,7 @@ export default function Keynote() {
         </Slide>
 
         <Slide backgroundColor={bg} padding="0">
-          <StepBridge count={4}>{step => <div data-testid="grid-pressure-scene" className="relative h-full"><JapanGridAtlas step={step} preset={keynoteAtlasPreset} sceneLayer={{ view: COLD_SNAP_CAMERA_KEYFRAMES[step]?.camera, getLayers: (tripTime) => getJapanMapLayers({ scene: 'cold-snap', coldSnapStage: step, tripTime }) }} /><div className="pointer-events-none absolute inset-0" data-testid="grid-pressure-atlas"><div className="absolute left-8 top-8 max-w-lg"><div className="font-[var(--font-mono)] text-xs tracking-[0.16em] text-[var(--color-primary)]">ACT II / WINTER DEMAND</div><h1 className="my-2 font-[var(--font-heading)] text-4xl font-extrabold text-[var(--color-heading)]">Grid pressure</h1><p className="m-0 text-lg text-[var(--color-text)]">January 2021: a cold snap made demand peak together.</p></div>{step >= 1 && <aside data-testid="act2-jepx-sidecar" className="absolute right-8 top-8 w-72 border border-[var(--color-danger)]/80 bg-[color-mix(in_srgb,var(--color-bg)_90%,transparent)] p-5"><div className="font-[var(--font-mono)] text-xs tracking-[0.14em] text-[var(--color-danger)]">JAN–FEB 2021 · JEPX</div><div className="mt-2 font-[var(--font-heading)] text-3xl font-bold text-[var(--color-heading)]">25× spike</div><div className="mt-1 text-base text-[var(--color-text)]">10 → 251 yen/kWh for 40 days</div><div data-testid="act2-jepx-chart" className="mt-3"><JEPXPriceChart height={150} /></div></aside>}{step >= 2 && <div data-testid="act2-demand-card" className="absolute bottom-8 left-8 w-80 border-l-4 border-[var(--color-danger)] bg-[color-mix(in_srgb,var(--color-bg)_90%,transparent)] p-5 text-base text-[var(--color-text)]"><div className="font-[var(--font-mono)] text-xs tracking-[0.14em] text-[var(--color-danger)]">DEMAND CASCADE ACTIVE</div><div className="mt-2">Regional constraints spread the pressure across the system.</div></div>}{step >= 2 && <div data-testid="act2-cold-snap-route" className="sr-only">Cold-snap grid flow</div>}{step >= 2 && <div data-testid="act2-cold-snap-buildings" className="sr-only">cold-snap-city-buildings</div>}{step >= 4 && <div data-testid="act2-cold-snap-transmission" className="sr-only">cold-snap-regional-transmission</div>}</div></div>}</StepBridge>
+          <StepBridge count={4}>{step => <div data-testid="grid-pressure-scene" className="relative h-full"><JapanGridAtlas step={step} preset={keynoteAtlasPreset} sceneLayer={{ view: COLD_SNAP_CAMERA_KEYFRAMES[step]?.camera, getLayers: (tripTime) => getJapanMapLayers({ scene: 'cold-snap', coldSnapStage: step, tripTime }) }} /><div className="pointer-events-none absolute inset-0" data-testid="grid-pressure-atlas"><SlideTitle eyebrow="ACT II / WINTER DEMAND" title="Grid pressure" subtitle="January 2021: a cold snap made demand peak together." />{step >= 1 && <aside data-testid="act2-jepx-sidecar" className="absolute right-8 top-8 w-72 border border-[var(--color-danger)]/80 bg-[color-mix(in_srgb,var(--color-bg)_90%,transparent)] p-5"><div className="font-[var(--font-mono)] text-xs tracking-[0.14em] text-[var(--color-danger)]">JAN–FEB 2021 · JEPX</div><div className="mt-2 font-[var(--font-heading)] text-3xl font-bold text-[var(--color-heading)]">25× spike</div><div className="mt-1 text-base text-[var(--color-text)]">10 → 251 yen/kWh for 40 days</div><div data-testid="act2-jepx-chart" className="mt-3"><JEPXPriceChart height={150} /></div></aside>}{step >= 2 && <div data-testid="act2-demand-card" className="absolute bottom-8 left-8 w-80 border-l-4 border-[var(--color-danger)] bg-[color-mix(in_srgb,var(--color-bg)_90%,transparent)] p-5 text-base text-[var(--color-text)]"><div className="font-[var(--font-mono)] text-xs tracking-[0.14em] text-[var(--color-danger)]">DEMAND CASCADE ACTIVE</div><div className="mt-2">Regional constraints spread the pressure across the system.</div></div>}{step >= 2 && <div data-testid="act2-cold-snap-route" className="sr-only">Cold-snap grid flow</div>}{step >= 2 && <div data-testid="act2-cold-snap-buildings" className="sr-only">cold-snap-city-buildings</div>}{step >= 4 && <div data-testid="act2-cold-snap-transmission" className="sr-only">cold-snap-regional-transmission</div>}</div></div>}</StepBridge>
           <Notes>In January 2021, a cold snap hit Japan. Heating demand spiked. Wind dropped. LNG supply got delayed. All at once. Spot electricity prices didn't climb — they exploded, going from 10 yen per kWh to 251 yen for 40 days. In March 2022, the grid operator issued Japan's first-ever power supply emergency warning — reserve margin hit 2.5% against a 3% safety threshold. Now add 40+ planned data center projects to a grid that's already fragile. Demand is going from 19 TWh today to 57 TWh by 2034 — a 3x increase — and most projects are delayed because the grid can't support them yet.</Notes>
         </Slide>
 

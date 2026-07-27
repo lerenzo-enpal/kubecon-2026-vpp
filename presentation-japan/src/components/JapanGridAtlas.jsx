@@ -15,7 +15,26 @@ const VIEW = { longitude: 136.7, latitude: 36.3, zoom: 4.65, pitch: 25, bearing:
 const SEAM_VIEW = { longitude: 137.5, latitude: 35.8, zoom: 5.7, pitch: 32, bearing: -5 };
 const ICONS = { mix: '◒', plants: '⚡', areas: '▧', transmission: '╱', demand: '◉', jepx: '¥' };
 const LABELS = { mix: 'Energy mix', plants: 'Power plants', areas: 'Provider areas', transmission: 'Transmission', demand: 'Live demand / supply', jepx: 'Live JEPX price' };
-const PLANT_COLORS = { Nuclear: [167, 139, 250, 225], LNG: [34, 211, 238, 225], Coal: [148, 163, 184, 225], Oil: [251, 146, 60, 225], Hydro: [96, 165, 250, 225], Geothermal: [239, 68, 68, 225], Solar: [250, 204, 21, 225], Wind: [45, 212, 191, 225] };
+export const PLANT_COLORS = { Nuclear: [167, 139, 250, 225], LNG: [34, 211, 238, 225], Coal: [148, 163, 184, 225], Oil: [251, 146, 60, 225], Hydro: [96, 165, 250, 225], Geothermal: [239, 68, 68, 225], Solar: [250, 204, 21, 225], Wind: [45, 212, 191, 225] };
+export const FREQUENCY_COLORS = { '50 Hz': [34, 211, 238, 235], '60 Hz': [255, 194, 23, 235], seam: [255, 163, 95, 245] };
+const FREQ_SEAM_LON = 137.4;
+const classifyTransmission = (d) => {
+  const label = d.label || '';
+  if (label.includes('seam') || label.includes('⇄') || label.includes('HVDC') || label.includes('converter')) return 'seam';
+  const meanLon = d.path.reduce((sum, p) => sum + p[0], 0) / d.path.length;
+  return meanLon < FREQ_SEAM_LON ? '60 Hz' : '50 Hz';
+};
+const parseCapacityGW = (str) => {
+  const n = parseFloat(str);
+  return Number.isFinite(n) ? n : 0.1;
+};
+const plantRadiusForCapacity = (d, base) => base * (0.55 + 0.32 * Math.sqrt(parseCapacityGW(d.capacity)));
+const filterPlants = (mode) => {
+  const all = ATLAS_FEATURES.plants;
+  if (mode === 'east') return all.filter((p) => p.position[0] >= FREQ_SEAM_LON);
+  if (mode === 'west') return all.filter((p) => p.position[0] < FREQ_SEAM_LON);
+  return all;
+};
 const MAP_STYLE = { version: 8, sources: { base: { type: 'raster', tiles: ['https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'], tileSize: 256 } }, layers: [{ id: 'base', type: 'raster', source: 'base', paint: { 'raster-opacity': 0.72 } }] };
 const WASHI_MAP_STYLE = { version: 8, sources: { base: { type: 'raster', tiles: ['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png'], tileSize: 256 } }, layers: [{ id: 'base', type: 'raster', source: 'base', paint: { 'raster-opacity': 0.46 } }] };
 
@@ -75,8 +94,9 @@ export function JapanGridAtlas({ height = '100%', step = 0, preset = () => ({}),
   const atlasLayers = useMemo(() => [
     active.areas && new PolygonLayer({ id: 'atlas-areas', data: ATLAS_FEATURES.areas, getPolygon: (d) => d.polygon, getFillColor: (d) => d.frequency === '50 Hz' ? [34, 211, 238, 24] : [255, 194, 23, 24], getLineColor: (d) => d.frequency === '50 Hz' ? [34, 211, 238, 155] : [255, 194, 23, 155], getLineWidth: 1, lineWidthUnits: 'pixels', pickable: true }),
     active.areas && new TextLayer({ id: 'atlas-area-labels', data: ATLAS_FEATURES.areas, getPosition: (d) => d.position, getText: (d) => `${d.name}\n${d.frequency}`, getSize: 11, getColor: [226, 232, 240, 245], getTextAnchor: 'middle', getAlignmentBaseline: 'center', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700 }),
-    active.transmission && new PathLayer({ id: 'atlas-transmission', data: ATLAS_FEATURES.transmission, getPath: (d) => d.path, getColor: (d) => d.label.includes('seam') || d.label.includes('⇄') ? [255, 163, 95, 245] : [34, 211, 238, 190], getWidth: (d) => d.label.includes('seam') ? 4 : 2, widthUnits: 'pixels', capRounded: true, jointRounded: true }),
-    active.plants && new ScatterplotLayer({ id: 'atlas-plants', data: ATLAS_FEATURES.plants, getPosition: (d) => d.position, getRadius: plantRadius, radiusUnits: 'pixels', getFillColor: (d) => PLANT_COLORS[d.fuel], getLineColor: [237, 233, 254, 255], lineWidthMinPixels: 2, stroked: true, pickable: true }),
+    active.transmission && new PathLayer({ id: 'atlas-transmission', data: ATLAS_FEATURES.transmission, getPath: (d) => d.path, getColor: (d) => FREQUENCY_COLORS[classifyTransmission(d)], getWidth: (d) => classifyTransmission(d) === 'seam' ? 4 : 2, widthUnits: 'pixels', capRounded: true, jointRounded: true }),
+    active.plants && new ScatterplotLayer({ id: 'atlas-plants', data: filterPlants(active.plants), getPosition: (d) => d.position, getRadius: (d) => plantRadiusForCapacity(d, plantRadius), radiusUnits: 'pixels', getFillColor: (d) => PLANT_COLORS[d.fuel], getLineColor: [237, 233, 254, 255], lineWidthMinPixels: 2, stroked: true, pickable: true, updateTriggers: { getRadius: [plantRadius] } }),
+    active.plants && new TextLayer({ id: 'atlas-plant-labels', data: filterPlants(active.plants), getPosition: (d) => d.position, getText: (d) => d.operator ? `${d.name} / ${d.operator}` : d.name, getSize: 10, getColor: [226, 232, 240, 235], getTextAnchor: 'start', getAlignmentBaseline: 'center', getPixelOffset: [10, 0], fontFamily: 'JetBrains Mono, monospace', fontWeight: 600, background: true, getBackgroundColor: [11, 18, 32, 165], backgroundPadding: [3, 1] }),
     active.mix && new TextLayer({ id: 'atlas-mix', data: ATLAS_FEATURES.mix, getPosition: (d) => d.position, getText: (d) => `${d.label}\n${d.values}`, getSize: 12, getColor: [254, 243, 199, 255], getTextAnchor: 'middle', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700 }),
   ].filter(Boolean), [active, plantRadius]);
   const layers = useCallback((progress = 0, time = 0) => [
