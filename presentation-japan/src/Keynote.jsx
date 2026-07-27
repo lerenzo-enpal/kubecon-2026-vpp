@@ -38,7 +38,7 @@ const ATLAS_STEP_COPY = [
 const HORMUZ_ROUTE = [[56.3, 26], [56.5, 23.5], [65, 17], [78, 8], [95, 5], [104, 1.5], [114, 10], [128, 22], [139.7, 35.7]];
 const HORMUZ_VIEW = { longitude: 98, latitude: 22, zoom: 2.6, pitch: 30, bearing: 0 };
 const HORMUZ_FOCUS_VIEW = { longitude: 56.3, latitude: 26.6, zoom: 4.5, pitch: 50, bearing: 18 };
-const JAPAN_VIEW = { longitude: 138.25, latitude: 36.2, zoom: 4.5, pitch: 42, bearing: 12 };
+const JAPAN_VIEW = { longitude: 139.75, latitude: 35.5, zoom: 6.4, pitch: 46, bearing: 14 };
 
 function template({ slideNumber }) {
   const section = SECTIONS[slideNumber - 1] || '';
@@ -99,26 +99,52 @@ export default function Keynote() {
           <Notes>- Generation mix: METI FY2023. - Reveal imported LNG, oil, then coal. - Distance creates structural exposure before the grid story begins.</Notes>
         </Slide>
 
-        <Slide backgroundColor={bg} padding="0" transition={fadeTransition}>
-          <style>{`@keyframes hormuzMapHandoff { to { opacity: 0; } } .hormuz-map-handoff-fade { animation: hormuzMapHandoff 1000ms ease-in-out forwards; }`}</style>
-          <div data-testid="hormuz-scene" className="relative h-full"><JapanGridAtlas preset={allAtlasLayers} sceneLayer={{ view: HORMUZ_FOCUS_VIEW }} routeLayer={{ points: HORMUZ_ROUTE, view: HORMUZ_FOCUS_VIEW, targetView: JAPAN_VIEW, duration: 12000, delay: 1000, followShip: true, ship: { mesh: '/models/cargo-ship.obj' } }} /><div data-testid="hormuz-map-fade" className="pointer-events-none absolute inset-0 bg-[var(--color-bg)] map-fade-out" /><div className="pointer-events-none absolute inset-0" data-testid="hormuz-route"><div className="absolute left-8 top-8 max-w-sm border border-[var(--color-accent)]/50 bg-[color-mix(in_srgb,var(--color-bg)_86%,transparent)] p-5"><div className="font-[var(--font-mono)] text-xs tracking-[0.16em] text-[var(--color-accent)]">ENERGY CORRIDOR</div><h1 className="my-2 font-[var(--font-heading)] text-4xl font-extrabold text-[var(--color-heading)]">Strait of Hormuz</h1><p className="m-0 text-lg text-[var(--color-text)]">One route leads through Hormuz. A physical chokepoint becomes a grid risk.</p></div><div data-testid="hormuz-context" className="absolute right-8 top-8 w-80 border-l-4 border-[var(--color-danger)] bg-[color-mix(in_srgb,var(--color-bg)_86%,transparent)] p-5"><div data-testid="hormuz-context-card"><div className="font-[var(--font-mono)] text-sm tracking-[0.14em] text-[var(--color-danger)]">84.7% IMPORTED</div><div className="mt-2 text-base text-[var(--color-text)]">Japan LNG terminals turn the constrained import route into a grid problem at the coast.</div></div></div><svg data-testid="hormuz-callout-leader" className="absolute inset-0 h-full w-full" aria-hidden="true"><path d="M 390 190 L 520 280" fill="none" stroke="var(--color-accent)" strokeWidth="2" strokeDasharray="6 6" /></svg></div><div data-testid="hormuz-map-handoff-fade" className="pointer-events-none absolute inset-0 bg-[var(--color-bg)] hormuz-map-handoff-fade" /></div>
+        <Slide backgroundColor="var(--color-washi-paper)" padding="0" transition={fadeTransition}>
+          <div data-testid="hormuz-scene" className="relative h-full" style={{ background: 'var(--color-washi-paper)' }}>
+            <div className="absolute inset-0" style={{ filter: 'invert(0.92) hue-rotate(190deg) sepia(0.42) saturate(0.55) brightness(1.04) contrast(0.92)' }}>
+              <JapanGridAtlas preset={allAtlasLayers} sceneLayer={{ view: HORMUZ_FOCUS_VIEW }} routeLayer={{ points: HORMUZ_ROUTE, view: HORMUZ_FOCUS_VIEW, targetView: JAPAN_VIEW, duration: 12000, delay: 1000, followShip: true, ship: { mesh: '/models/cargo-ship.obj' } }} />
+            </div>
+            <div className="pointer-events-none absolute inset-0" style={{ background: 'var(--color-washi-paper)', opacity: 0.18, mixBlendMode: 'multiply' }} />
+            <div className="pointer-events-none absolute inset-0" data-testid="hormuz-route">
+              <div style={{ position: 'absolute', zIndex: 2, top: 44, left: 48, maxWidth: 460 }}>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 12, letterSpacing: '0.16em', color: 'var(--color-washi-solar)' }}>ENERGY CORRIDOR</div>
+                <h1 style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-washi-ink)', margin: '8px 0 0 0' }}>Strait of Hormuz</h1>
+                <p style={{ margin: '10px 0 0 0', color: 'var(--color-washi-ink)', fontFamily: 'var(--font-body, inherit)', fontSize: 18, lineHeight: 1.4 }}>One route leads through Hormuz. A physical chokepoint becomes a grid risk.</p>
+              </div>
+              <div data-testid="hormuz-context" style={{ position: 'absolute', zIndex: 2, right: 32, top: 44, width: 320, borderLeft: '4px solid var(--color-washi-solar)', background: 'color-mix(in srgb, var(--color-washi-paper) 92%, transparent)', padding: 20, boxShadow: '0 6px 24px -12px rgba(23,37,84,0.35)' }}>
+                <div data-testid="hormuz-context-card">
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, letterSpacing: '0.14em', color: 'var(--color-washi-solar)' }}>84.7% IMPORTED</div>
+                  <div style={{ marginTop: 8, fontFamily: 'var(--font-body, inherit)', fontSize: 15, lineHeight: 1.45, color: 'var(--color-washi-ink)' }}>Japan LNG terminals turn the constrained import route into a grid problem at the coast.</div>
+                </div>
+              </div>
+              <svg data-testid="hormuz-callout-leader" className="absolute inset-0 h-full w-full" aria-hidden="true"><path d="M 390 190 L 520 280" fill="none" stroke="var(--color-washi-solar)" strokeWidth="2" strokeDasharray="6 6" /></svg>
+            </div>
+          </div>
           <Notes>- Geographic and energy corridors are schematic. - Reveal the 50/60 Hz seam, LNG routes, then Hormuz. - Keep the consequence grounded in system exposure.</Notes>
         </Slide>
 
-        <Slide backgroundColor={bg} padding="0">
-          <StepBridge count={10}>{step => (
-            <div data-testid="grid-pressure-scene" className="relative h-full">
-              <JapanColdSnapCascade step={step} />
-              <div className="pointer-events-none absolute inset-0 z-20">
-                <SlideTitle
-                  eyebrow="ACT II / MARCH 2022"
-                  title="Quake, then cold"
-                  subtitle="A 60-second sequence that nearly broke Tokyo's grid."
-                />
+        <Slide backgroundColor="var(--color-washi-paper)" padding="0" transition={fadeTransition}>
+          <StepBridge count={10}>{step => {
+            const cascadeActive = step >= 1;
+            return (
+              <div data-testid="grid-pressure-scene" className="relative h-full">
+                <div className="absolute inset-0" style={{ opacity: cascadeActive ? 1 : 0, transition: 'opacity 900ms ease-in-out' }}>
+                  <JapanColdSnapCascade step={step} />
+                </div>
+                <div
+                  className="pointer-events-none absolute inset-0 z-10"
+                  style={{ background: 'var(--color-washi-paper)', opacity: cascadeActive ? 0 : 1, transition: 'opacity 900ms ease-in-out' }}
+                >
+                  <div style={{ position: 'absolute', zIndex: 2, top: 44, left: 48, maxWidth: 640 }}>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: 12, letterSpacing: '0.16em', color: 'var(--color-washi-solar)' }}>ACT II · MARCH 2022</div>
+                    <h1 style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-washi-ink)', margin: '8px 0 0 0' }}>Quake, then cold.</h1>
+                    <p style={{ margin: '10px 0 0 0', color: 'var(--color-washi-ink)', fontFamily: 'var(--font-body, inherit)', fontSize: 18, lineHeight: 1.4 }}>A 60-second sequence that nearly broke Tokyo's grid.</p>
+                  </div>
+                </div>
               </div>
-            </div>
-          )}</StepBridge>
-          <Notes>Step 1: HUD boots — OCCTO grid monitor, dual 50/60 Hz readouts, reserve margin. Step 2 (MAR 16 23:36): M7.4 quake off Fukushima — Onagawa, Higashidori, Hitachinaka, Kashima trip. Step 3 (MAR 17): 6.5 GW east-coast thermal offline, restarts delayed. Step 4 (MAR 21): Arctic front sweeps in from Hokkaido, heating demand jumps 15%. Step 5 (MAR 22 morning): overcast + still air kills wind and solar. Step 6: 50/60 Hz frequency converter maxes out at 2.1 GW — the west can't rescue the east fast enough. Step 7 (MAR 22 11:00): METI issues Japan's first-ever power supply emergency warning — reserve margin 2.5% against a 3% threshold. Step 8: public conservation call goes out, JEPX spot spikes, memory of Jan 2021 (10→251 yen/kWh for 40 days) reopens. Step 9: blackout averted, but every winter now carries this shape — and 40+ planned data centers are lining up behind it.</Notes>
+            );
+          }}</StepBridge>
+          <Notes>Step 0: title card — "Quake, then cold" on washi paper. Advance to drop into the dark grid. Step 1: HUD boots — OCCTO grid monitor, dual 50/60 Hz readouts, reserve margin. Step 2 (MAR 16 23:36): M7.4 quake off Fukushima — Onagawa, Higashidori, Hitachinaka, Kashima trip. Step 3 (MAR 17): 6.5 GW east-coast thermal offline, restarts delayed. Step 4 (MAR 21): Arctic front sweeps in from Hokkaido, heating demand jumps 15%. Step 5 (MAR 22 morning): overcast + still air kills wind and solar. Step 6: 50/60 Hz frequency converter maxes out at 2.1 GW — the west can't rescue the east fast enough. Step 7 (MAR 22 11:00): METI issues Japan's first-ever power supply emergency warning — reserve margin 2.5% against a 3% threshold. Step 8: public conservation call goes out, JEPX spot spikes, memory of Jan 2021 (10→251 yen/kWh for 40 days) reopens. Step 9: blackout averted, but every winter now carries this shape — and 40+ planned data centers are lining up behind it.</Notes>
         </Slide>
 
         <Slide backgroundColor={bg} padding="0">

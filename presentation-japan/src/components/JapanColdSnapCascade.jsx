@@ -21,12 +21,12 @@ const getPlant = (name) => PLANT_BY_NAME.get(name);
 const parseGW = (str) => { const n = parseFloat(str); return Number.isFinite(n) ? n : 0.1; };
 
 const VIEWS = {
-  overview: { longitude: 138.8, latitude: 37.4, zoom: 4.6, pitch: 40, bearing: 6 },
-  tohoku:   { longitude: 141.2, latitude: 38.3, zoom: 5.6, pitch: 45, bearing: -4 },
-  kanto:    { longitude: 140.0, latitude: 35.9, zoom: 5.8, pitch: 48, bearing: 2 },
-  seam:     { longitude: 137.6, latitude: 36.0, zoom: 5.4, pitch: 42, bearing: -6 },
-  hokkaido: { longitude: 141.5, latitude: 42.6, zoom: 4.9, pitch: 42, bearing: 8 },
-  wide:     { longitude: 138.5, latitude: 37.0, zoom: 4.4, pitch: 30, bearing: 4 },
+  overview: { longitude: 138.8, latitude: 37.4, zoom: 5.4, pitch: 40, bearing: 6 },
+  tohoku:   { longitude: 141.2, latitude: 38.3, zoom: 6.4, pitch: 45, bearing: -4 },
+  kanto:    { longitude: 140.0, latitude: 35.9, zoom: 6.6, pitch: 48, bearing: 2 },
+  seam:     { longitude: 137.6, latitude: 36.0, zoom: 6.2, pitch: 42, bearing: -6 },
+  hokkaido: { longitude: 141.5, latitude: 42.6, zoom: 5.6, pitch: 42, bearing: 8 },
+  wide:     { longitude: 138.5, latitude: 37.0, zoom: 5.2, pitch: 30, bearing: 4 },
 };
 
 // Cascade sequence — March 2022 Fukushima-oki quake + cold-snap chain that produced
@@ -361,10 +361,12 @@ export default function JapanColdSnapCascade({ step = 0 }) {
         </div>
       )}
 
-      {/* ── Center dramatic event card ── */}
+      {/* ── Dramatic event card (bottom-anchored to keep center of map clear) ── */}
       {hudVisible && active && (
-        <div style={{ position: 'absolute', top: '38%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 10,
-          textAlign: 'center', pointerEvents: 'none', maxWidth: 620 }}>
+        <div style={{ position: 'absolute', bottom: emergency ? 140 : 70, left: '50%', transform: 'translateX(-50%)', zIndex: 10,
+          textAlign: 'center', pointerEvents: 'none', maxWidth: 720, padding: '10px 24px',
+          background: 'linear-gradient(180deg, rgba(11,18,32,0) 0%, rgba(11,18,32,0.55) 55%, rgba(11,18,32,0.7) 100%)',
+          borderRadius: 6 }}>
           <div style={{ fontSize: 11, fontFamily: 'var(--font-mono)', fontWeight: 700,
             color: active.severity === 'crit' ? '#ef4444' : '#f59e0b',
             textShadow: '0 0 20px rgba(0,0,0,0.9)', letterSpacing: '0.12em', marginBottom: 6 }}>
