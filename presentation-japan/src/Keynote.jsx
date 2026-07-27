@@ -71,7 +71,7 @@ export default function Keynote() {
             <div className="font-[var(--font-mono)] text-sm tracking-[0.16em] text-[var(--color-washi-alert)]">KUBECON + CLOUDNATIVECON JAPAN · YOKOHAMA</div>
             <h1 className="m-0 max-w-5xl font-[var(--font-heading)] text-6xl font-extrabold leading-tight text-[var(--color-washi-ink)]">The energy grid is becoming a cloud-native distributed system.</h1>
           </div>
-          <Notes>- Premise: grid architecture now resembles a cloud-native distributed system. - Japan as the concrete case. - Set up distance, chokepoints, and coordination.</Notes>
+          <Notes>[0:00-0:20 · 20s] One claim, five minutes to defend it. **The energy grid is becoming a cloud-native distributed system** — architecturally, not metaphorically. Same problems you solve daily: fleet coordination, latency budgets, failure domains. Japan is the concrete case. Beat: pause after "not metaphorically." See docs/keynote-speaker-notes.md.</Notes>
         </Slide>
 
         <Slide backgroundColor="var(--color-washi-paper)" padding="0">
@@ -100,12 +100,12 @@ export default function Keynote() {
             </div>
             );
           }}</StepBridge>
-          <Notes>Step 1: whole country, service regions and transmission — reveal the 50/60 Hz split. Step 2: zoom east — nuclear + LNG + coal along the Pacific coast (TEPCO, Tohoku EP, JERA). Step 3: pan west — KEPCO, Kyuden, Chugoku EP feeding Kansai and Kyushu. Step 4: zoom out — every fuel, every operator, one atlas.</Notes>
+          <Notes>[0:20-1:35 · 75s · ~18s/step] Step 1 (0:20): One country, TWO grids. East=50Hz, west=60Hz. Between them 2 frequency converters — 2.1 GW total. That's the whole bridge. Step 2 (0:38): East = TEPCO/Tohoku EP/JERA. Nuclear + LNG on the Pacific coast — the shoreline that took the 2011 tsunami. Step 3 (0:56): West = KEPCO/Kyuden/Chugoku EP. Different frequency, more coal + solar. No fast way to help the east. Step 4 (1:14): One country, ten operators, two frequencies, 40+ data centers on order. LAND: "The coordination problem is the grid." That phrase is the pivot.</Notes>
         </Slide>
 
         <Slide backgroundColor="var(--color-washi-paper)" padding="0" transition={fadeTransition}>
           <JapanEnergyOrigins />
-          <Notes>- Generation mix: METI FY2023. - Reveal imported LNG, oil, then coal. - Distance creates structural exposure before the grid story begins.</Notes>
+          <Notes>[1:35-2:00 · 25s] METI FY2023 mix. **85% imported.** LNG → oil → coal reveal. Every kWh arrives by ship before it hits the wire. Not a market fact — a distributed system with a physical dependency graph. Graphs have chokepoints. Land "chokepoints" — that's the segue to slide 4.</Notes>
         </Slide>
 
         <Slide backgroundColor="var(--color-washi-paper)" padding="0" transition={fadeTransition}>
@@ -118,18 +118,18 @@ export default function Keynote() {
               <div style={{ position: 'absolute', zIndex: 2, top: 44, left: 48, maxWidth: 460 }}>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: 12, letterSpacing: '0.16em', color: 'var(--color-washi-solar)' }}>ENERGY CORRIDOR</div>
                 <h1 style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-washi-ink)', margin: '8px 0 0 0', fontSize: 48, fontWeight: 800, letterSpacing: '-0.01em', lineHeight: 1.05 }}>Strait of Hormuz</h1>
-                <p style={{ margin: '10px 0 0 0', color: 'var(--color-washi-ink)', fontFamily: 'var(--font-heading)', fontSize: 18, lineHeight: 1.4, fontWeight: 500 }}>One route leads through Hormuz. A physical chokepoint becomes a grid risk.</p>
+                <p style={{ margin: '10px 0 0 0', color: 'var(--color-washi-ink)', fontFamily: 'var(--font-heading)', fontSize: 18, lineHeight: 1.4, fontWeight: 500 }}>One route carries Japan's Middle-East crude. A physical chokepoint upstream of the oil-fired thermal reserve that backs the grid.</p>
               </div>
               <div data-testid="hormuz-context" style={{ position: 'absolute', zIndex: 2, right: 32, top: 44, width: 320, borderLeft: '4px solid var(--color-washi-solar)', background: 'color-mix(in srgb, var(--color-washi-paper) 92%, transparent)', padding: 20, boxShadow: '0 6px 24px -12px rgba(23,37,84,0.35)' }}>
                 <div data-testid="hormuz-context-card">
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, letterSpacing: '0.14em', color: 'var(--color-washi-solar)' }}>84.7% IMPORTED</div>
-                  <div style={{ marginTop: 8, fontFamily: 'var(--font-heading)', fontSize: 15, lineHeight: 1.45, color: 'var(--color-washi-ink)', fontWeight: 500 }}>Japan LNG terminals turn the constrained import route into a grid problem at the coast.</div>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, letterSpacing: '0.14em', color: 'var(--color-washi-solar)' }}>+¥15,000 · PER HOUSEHOLD</div>
+                  <div style={{ marginTop: 8, fontFamily: 'var(--font-heading)', fontSize: 15, lineHeight: 1.45, color: 'var(--color-washi-ink)', fontWeight: 500 }}>A six-week Hormuz disruption in 2026 added ¥15,000 to every Japanese household's annual bill. A single chokepoint, priced at the wall socket.</div>
                 </div>
               </div>
               <svg data-testid="hormuz-callout-leader" className="absolute inset-0 h-full w-full" aria-hidden="true"><path d="M 390 190 L 520 280" fill="none" stroke="var(--color-washi-solar)" strokeWidth="2" strokeDasharray="6 6" /></svg>
             </div>
           </div>
-          <Notes>- Geographic and energy corridors are schematic. - Reveal the 50/60 Hz seam, LNG routes, then Hormuz. - Keep the consequence grounded in system exposure.</Notes>
+          <Notes>[2:00-2:25 · 25s] Strait of Hormuz. Single tanker route thousands of km upstream of Japan's oil refineries and the oil-fired thermal reserve that backs the grid. Six-week disruption in 2026 → +¥15,000 on every household's annual bill. You'd never accept this dependency in a system you designed from scratch. **But this is the system we have.** Question: what do you do when a SPOF sits 10,000 km away?</Notes>
         </Slide>
 
         <Slide backgroundColor="var(--color-washi-paper)" padding="0" transition={fadeTransition}>
@@ -156,12 +156,12 @@ export default function Keynote() {
               </div>
             );
           }}</StepBridge>
-          <Notes>Step 0: title card — "Quake, then cold" on washi paper. Advance to drop into the dark grid. Step 1: HUD boots — OCCTO grid monitor, dual 50/60 Hz readouts, reserve margin. Step 2 (MAR 16 23:36): M7.4 quake off Fukushima — Onagawa, Higashidori, Hitachinaka, Kashima trip. Step 3 (MAR 17): 6.5 GW east-coast thermal offline, restarts delayed. Step 4 (MAR 21): Arctic front sweeps in from Hokkaido, heating demand jumps 15%. Step 5 (MAR 22 morning): overcast + still air kills wind and solar. Step 6: 50/60 Hz frequency converter maxes out at 2.1 GW — the west can't rescue the east fast enough. Step 7 (MAR 22 11:00): METI issues Japan's first-ever power supply emergency warning — reserve margin 2.5% against a 3% threshold. Step 8: public conservation call goes out, JEPX spot spikes, memory of Jan 2021 (10→251 yen/kWh for 40 days) reopens. Step 9: blackout averted, but every winter now carries this shape — and 40+ planned data centers are lining up behind it.</Notes>
+          <Notes>[2:25-3:55 · 90s · 10 steps · THE MEAT] Step 0 (2:25): "March 2022. 60 seconds that nearly broke Tokyo's grid." Step 1 (2:33): OCCTO monitor boots — dual 50/60 Hz, reserve margin. Step 2 (2:40): MAR 16 23:36 M7.4 off Fukushima. Onagawa, Higashidori, Hitachinaka, Kashima trip in the same minute. Step 3 (2:49): MAR 17 — 6.5 GW east thermal offline, restarts slow. Step 4 (2:57): MAR 21 — arctic front from Hokkaido, heating demand +15%. Step 5 (3:05): MAR 22 morning — overcast + still, wind/solar → 0. Step 6 (3:13): west has spare power, converter caps at 2.1 GW — rescue can't fit through the bridge. Step 7 (3:22): 11:00 — Japan's FIRST-EVER power supply emergency warning. Reserve margin 2.5% vs 3% threshold. Step 8 (3:31): conservation call, JEPX spikes, memory of Jan 2021 (10→251 yen/kWh × 40 days). Step 9 (3:41): averted — but every winter carries this shape, and 40+ data centers lining up. LAND: "This isn't a one-time incident. It's the operating envelope." HARD PAUSE before slide 6.</Notes>
         </Slide>
 
         <Slide backgroundColor={bg} padding="0">
           <VPPTransformationSequence />
-          <Notes>Pause: the grid is a distributed system. Reveal the graph under uneven load; this is a familiar problem. As it becomes a city, name the lived consequence: a graph is a city, under load. Pull back to Japan: homes, generators, and hubs are the same graph with geography. Add the superpowers: connected devices respond fast, batteries store energy, and coordination uses it smarter. Let the network settle, then advance to the 100K homes closing statement.</Notes>
+          <Notes>[3:55-4:35 · 40s] "So what do you do?" Look at slide 5 — it's a graph. Uneven load, chokepoints, coordination-limited. Familiar. Name the graph: a city. Millions of homes, roofs, cars, batteries — each already connected, each speaks a protocol. LAND: "A graph is a city, under load." Pull back to Japan: same graph with geography. Add three superpowers: **connected devices respond fast · batteries store energy · coordination uses both smarter than a human operator.** Twinkling houses across Japan visible by end of section.</Notes>
         </Slide>
 
         <Slide backgroundColor="#030508" padding="0" transition={fadeTransition}>
@@ -209,7 +209,7 @@ export default function Keynote() {
             </div>
             <div style={{ position: 'absolute', right: 44, bottom: 36, fontFamily: 'JetBrains Mono, monospace', fontSize: 13, letterSpacing: '0.16em', color: '#94a3b8', zIndex: 3 }}>github.com/enpal · whatisavpp.com</div>
           </div>
-          <Notes>No new power plants. No new transmission. No emissions. Just code, Kubernetes, and the distributed system you already know how to build. The grid is becoming cloud-native. Thank you.</Notes>
+          <Notes>[4:35-5:00 · 25s · CLOSER] "100K devices, coordinated by software, is one power plant with zero emissions." Then: "No new plants. No new transmission. No approvals. **Just code, Kubernetes, and the distributed system you already know how to build.** The grid is becoming cloud-native. Thank you." STOP. Do not add anything after "thank you." Silence is fine.</Notes>
         </Slide>
       </Deck>
     </>
