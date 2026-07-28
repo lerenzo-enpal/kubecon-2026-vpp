@@ -19,7 +19,7 @@ import AggregationPyramid from '../../presentation/src/components/AggregationPyr
 import GridFrequencyExplainer from '../../presentation/src/components/GridFrequencyExplainer.jsx';
 import FrequencyWalkthrough from '../../presentation/src/components/FrequencyWalkthrough.jsx';
 
-const coreSlides = 16;
+const coreSlides = 14;
 const mainAtlasPreset = (step) => ({ areas: true, transmission: step >= 1, plants: false, mix: false });
 const page = { padding: '38px 58px', backgroundColor: 'var(--color-washi-paper)' };
 const darkPage = { padding: '38px 58px', backgroundColor: 'var(--color-bg)' };
@@ -72,6 +72,77 @@ function FleetBuildViz({ step = 0 }) {
   );
 }
 
+// Asset-mix + portfolio-capacity viz. Four asset classes fill in over steps;
+// the running stacked bar shows how portfolio energy capacity accumulates as
+// each class joins. Numbers are order-of-magnitude illustrative, not sourced.
+const ASSET_MIX = [
+  { key: 'battery', label: 'HOME BATTERY', spec: '10 kWh × millions', gwh: 10, color: 'var(--color-primary)' },
+  { key: 'ev',      label: 'EV · V2H',      spec: '60 kWh × 500k',    gwh: 30, color: 'var(--color-washi-solar)' },
+  { key: 'hp',      label: 'HEAT PUMP',     spec: 'shift, not store', gwh: 6,  color: 'var(--color-secondary)' },
+  { key: 'hems',    label: 'HEMS',          spec: 'coordination glue',gwh: 0,  color: 'var(--color-washi-alert)' },
+];
+function AssetMixCapacityViz({ step = 0 }) {
+  const phase = Math.min(Math.max(Number.isFinite(step) ? step : 0, 0), ASSET_MIX.length - 1);
+  const visible = ASSET_MIX.slice(0, phase + 1);
+  const totalGwh = visible.reduce((a, b) => a + b.gwh, 0);
+  const maxTotal = ASSET_MIX.reduce((a, b) => a + b.gwh, 0);
+  return (
+    <div style={{ display: 'grid', gridTemplateRows: 'auto auto 1fr auto', gap: 18, height: '100%' }}>
+      <div>
+        <Eyebrow tone="var(--color-secondary)">PROOF 3 · WHAT THE FLEET IS MADE OF · STEP {phase + 1} / 4</Eyebrow>
+        <Title>Use demand smarter, every day</Title>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
+        {ASSET_MIX.map((a, i) => {
+          const on = i <= phase;
+          return (
+            <div key={a.key} style={{
+              padding: '14px 16px',
+              border: `1.5px solid ${on ? a.color : 'color-mix(in srgb, var(--color-washi-ink) 15%, transparent)'}`,
+              background: on ? `color-mix(in srgb, ${a.color} 10%, transparent)` : 'transparent',
+              opacity: on ? 1 : 0.35,
+              transition: 'opacity 400ms, background 400ms, border-color 400ms',
+            }}>
+              <div style={{ fontFamily: 'var(--font-mono)', color: a.color, letterSpacing: '0.12em', fontSize: 12 }}>{a.label}</div>
+              <div style={{ marginTop: 6, fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--color-washi-ink)' }}>{a.spec}</div>
+              <div style={{ marginTop: 8, fontFamily: 'var(--font-mono)', fontSize: 22, color: a.color, fontWeight: 700 }}>
+                {a.gwh > 0 ? `${a.gwh} GWh` : '—'}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div style={{ display: 'grid', gridTemplateRows: 'auto 1fr auto', gap: 8 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--color-washi-ink)', opacity: 0.7, letterSpacing: '0.1em' }}>
+          <span>ILLUSTRATIVE PORTFOLIO ENERGY CAPACITY</span>
+          <span>{totalGwh} GWh · running total</span>
+        </div>
+        <div style={{ position: 'relative', height: 44, border: '1px solid color-mix(in srgb, var(--color-washi-ink) 25%, transparent)', display: 'flex', alignItems: 'stretch', overflow: 'hidden' }}>
+          {ASSET_MIX.filter(a => a.gwh > 0).map((a, i) => {
+            const on = ASSET_MIX.indexOf(a) <= phase;
+            const w = on ? `${(a.gwh / maxTotal) * 100}%` : '0%';
+            return (
+              <div key={a.key} style={{
+                width: w,
+                background: a.color,
+                transition: 'width 600ms ease-out',
+                borderRight: '1px solid color-mix(in srgb, var(--color-washi-paper) 40%, transparent)',
+              }} />
+            );
+          })}
+        </div>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--color-washi-ink)', opacity: 0.55 }}>
+          Bar widths are illustrative order-of-magnitude estimates, not sourced deployment numbers.
+        </div>
+      </div>
+      <div style={{ padding: '14px 18px', borderLeft: '3px solid var(--color-secondary)', background: 'color-mix(in srgb, var(--color-secondary) 6%, transparent)' }}>
+        <div style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-secondary)', letterSpacing: '0.12em', fontSize: 12 }}>ONE CONCRETE EXAMPLE · SHIZEN CONNECT · JANUARY 2024</div>
+        <Small>186 household EVs coordinated through V2H — 90% control accuracy, company-reported. A scoped demonstration of the loop (observe · decide · dispatch · acknowledge · verify). The path forward: more asset classes on the same control plane.</Small>
+      </div>
+    </div>
+  );
+}
+
 export default function MainTalk() {
   const { theme, cycleTheme, spectacleTheme } = useTheme();
   const { locale, setLocale } = useLocale();
@@ -90,32 +161,26 @@ export default function MainTalk() {
     <Slide {...page}><div style={{ height: '100%', display: 'grid', alignContent: 'center' }}><Eyebrow tone="var(--color-washi-solar)">PROOF 1 · MARKET PARTICIPATION</Eyebrow><Title>Bring new players into the market</Title><Body>Batteries, EVs, and homes can become trusted grid resources — when they can be coordinated.</Body></div><Notes>Frame proof 1: distributed assets can participate as coordinated flexibility. The problem we're solving lives on the next slide.</Notes></Slide>
 
     {/* 5 · SOLAR TIMING PROBLEM (replaces old Kyushu curtailment card) */}
-    <Slide padding="0" backgroundColor="var(--color-washi-paper)"><StepBridge count={4}>{step => <SolarTimingProblem step={step} />}</StepBridge><Notes>Step 1: household demand — two peaks. Step 2: solar generation — one bell at noon. The curves do not line up. Step 3: name the two regions — midday surplus (curtailed) and evening deficit (peak). Step 4: a battery is the shift that reconciles them. This is the ENTIRE motivation for what follows.</Notes></Slide>
+    <Slide padding="0" backgroundColor="var(--color-washi-paper)"><StepBridge count={3}>{step => <SolarTimingProblem step={step} />}</StepBridge><Notes>Step 1: household demand — two peaks. Step 2: solar generation — one bell at noon. The curves do not line up. Step 3: name the two regions — midday surplus (curtailed) and evening deficit (peak). Step 4: a battery is the shift that reconciles them. This is the ENTIRE motivation for what follows.</Notes></Slide>
 
     {/* 6 · Tokyo duck curve */}
     <Slide padding="0" backgroundColor="var(--color-bg)"><StepBridge count={3}>{step => <TokyoDuckCurveCaseStudy step={step} />}</StepBridge><Notes>Tokyo-area reported case. Noon curtailment context; illustrative household charging; illustrative dusk support. Do not claim fleet capacity or delivered grid impact.</Notes></Slide>
 
     {/* 7 · Store it for later + CONTROL-PLANE FRAGMENT 1 (homes → cloud → controller) */}
-    <Slide {...page}>
-      <div style={{ display: 'grid', gridTemplateRows: 'auto auto 1fr auto', gap: 22, height: '100%' }}>
+    <Slide {...darkPage}>
+      <div style={{ display: 'grid', gridTemplateRows: 'auto 1fr', gap: 14, height: '100%' }}>
         <div>
-          <Eyebrow>THE SHIFT · HOW SOFTWARE MAKES IT REAL</Eyebrow>
-          <Title>Store it for later</Title>
+          <Eyebrow tone="var(--color-secondary)">THE SHIFT · HOW SOFTWARE MAKES IT REAL</Eyebrow>
+          <Title tone="var(--color-heading)">Store it for later</Title>
+          <Small tone="var(--color-dim)">Batteries hold noon generation. EVs and heat pumps shift into the solar window. Something has to talk to all of it — a distributed system does.</Small>
         </div>
-        <Body>Batteries store noon generation. EVs and heat pumps shift consumption into the solar window. The evening ramp becomes smaller and easier to serve. But something has to talk to all of it — that thing is a distributed system.</Body>
-        <div style={{ display: 'grid', placeItems: 'center' }}>
-          <PipelineRow items={['HOMES', 'MQTT BROKER', 'CLOUD / FLEET MGMT', 'VPP CONTROLLER', 'TRADING GATEWAY']} />
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 24, alignItems: 'center' }}>
-          <Small>Devices publish state. The cloud aggregates. A controller decides. A gateway participates in the market. Familiar shape — Kafka, Kubernetes, actors, GitOps.</Small>
-          <CapabilityMotif variant="store" />
-        </div>
+        <div style={{ minHeight: 0 }}><Lazy><VPPArchitecture /></Lazy></div>
       </div>
       <Notes>First fragment of the control plane. Do not name company vendors. This is the "how" of proof 1: what the software layer looks like end to end. Second fragment lives in proof 3, third fragment in the summary slide.</Notes>
     </Slide>
 
     {/* 8 · PROOF 2 title */}
-    <Slide {...page}><div style={{ height: '100%', display: 'grid', alignContent: 'center', gap: 20 }}><Eyebrow tone="var(--color-primary)">PROOF 2 · FAILURE RESPONSE</Eyebrow><Title>Respond when the system is tight</Title><Body>The grid is a machine that runs at the speed of light and has no buffer. Before we can talk about a VPP responding, we have to say what it is responding TO.</Body></div><Notes>Set up the next three slides: what frequency is, why it matters, how it fails, and the moment-by-moment story of the March 2022 cold-snap emergency — replayed with a VPP running alongside.</Notes></Slide>
+    <Slide {...page}><div style={{ height: '100%', display: 'grid', alignContent: 'center', gap: 20 }}><Eyebrow tone="var(--color-primary)">PROOF 2 · FAILURE RESPONSE</Eyebrow><Title>Respond when the system is tight</Title></div><Notes>Set up the next three slides: what frequency is, why it matters, how it fails, and the moment-by-moment story of the March 2022 cold-snap emergency — replayed with a VPP running alongside.</Notes></Slide>
 
     {/* 9 · GRID FREQUENCY EXPLAINER (Amsterdam re-use) */}
     <Slide backgroundColor="var(--color-bg)" padding="0">
@@ -123,6 +188,7 @@ export default function MainTalk() {
         <div>
           <Eyebrow tone="var(--color-secondary)">FREQUENCY IS AGREEMENT · TWO GRIDS, ONE COUNTRY</Eyebrow>
           <Title tone="var(--color-heading)">50 Hz east. 60 Hz west. What that even means.</Title>
+          <Small tone="var(--color-dim)">Two generators locked in phase = one synchronous grid. Two generators at different frequencies cannot connect directly — protection relays would trip immediately. Japan's east and west stay separate for exactly this reason, bridged only by 2.1 GW of HVDC converters that decouple the two frequencies.</Small>
         </div>
         <StepBridge count={5}>{step => <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Lazy><GridFrequencyExplainer width={1200} height={440} step={Math.max(0, step - 1)} /></Lazy></div>}</StepBridge>
       </div>
@@ -130,13 +196,18 @@ export default function MainTalk() {
     </Slide>
 
     {/* 10 · FREQUENCY BAND / TOOLS FOR BALANCING (Amsterdam re-use) */}
-    <Slide backgroundColor="var(--color-bg)" padding="20px 40px">
-      <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-        <Eyebrow tone="var(--color-primary)">DESIGNED FOR A DIFFERENT WORLD</Eyebrow>
-        <Title tone="var(--color-heading)">2.5 Hz between "fine" and total collapse</Title>
-        <Small tone="var(--color-dim)">The grid was built in the 1950s: one-directional flow from a few large plants to passive consumers. The balancing tools inherit that shape. In Japan, so do the 1890s frequency choices — Tokyo AEG, Osaka GE. Neither of those decisions was made with a VPP in mind.</Small>
-        <StepBridge count={5}>{step => <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}><Lazy><FrequencyWalkthrough step={Math.max(0, step - 1)} mode="scenarios" /></Lazy></div>}</StepBridge>
-      </div>
+    <Slide backgroundColor="var(--color-bg)" padding="0">
+      <StepBridge count={5}>{step => (
+        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <Lazy><FrequencyWalkthrough step={Math.max(0, step - 1)} mode="scenarios" hideClockHud /></Lazy>
+          </div>
+          <div style={{ position: 'absolute', right: 36, bottom: 32, maxWidth: 420, textAlign: 'right', pointerEvents: 'none' }}>
+            <Eyebrow tone="var(--color-primary)">GRID FREQUENCY</Eyebrow>
+            <Title tone="var(--color-heading)" style={{ fontSize: 30, lineHeight: 1.15, marginTop: 4 }}>2.5 Hz between "fine" and total collapse</Title>
+          </div>
+        </div>
+      )}</StepBridge>
       <Notes>49.8-50.2 Hz normal · 49.5 reserves activate · 49.2 peakers fire · 49.0 load shedding begins · 47.5 generators disconnect and the grid collapses. In the Japan context: substitute 60 Hz for the west, but the physics is the same. The point: there are only 2.5 Hz between "fine" and "off." A VPP moves the fleet inside this envelope.</Notes>
     </Slide>
 
@@ -151,49 +222,13 @@ export default function MainTalk() {
       <Notes>Same 10-step timeline as the keynote — March 2022 Fukushima-oki quake + cold-snap chain — but with a "with a VPP · counterfactual" card appearing at each step. Read the cascade first, then read the counterfactual. Do not pretend the counterfactual happened: name it as counterfactual every time. See docs/keynote-speaker-notes.md for the timeline beats. The point lands cumulatively: this is not one heroic dispatch, it is a fleet always inside the operating envelope.</Notes>
     </Slide>
 
-    {/* 12 · PROOF 3 title */}
-    <Slide {...page}><div style={{ height: '100%', display: 'grid', alignContent: 'center' }}><Eyebrow tone="var(--color-secondary)">PROOF 3 · DAILY OPERATION</Eyebrow><Title>Use demand smarter, every day</Title><Body>Not just emergencies. The steady-state control loop — dispatch, acknowledge, verify — is what makes a fleet trustworthy at scale.</Body></div></Slide>
-
-    {/* 13 · SHIZEN CONNECT + CONTROL-PLANE FRAGMENT 2 (ChoreographyLoop) */}
+    {/* 12 · PROOF 3 · ASSET MIX + PORTFOLIO CAPACITY (replaces old 12 title + old 13 Shizen loop) */}
     <Slide {...page}>
-      <StepBridge count={3}>{step => {
-        const phase = Math.min(Math.max(Number.isFinite(step) ? step : 0, 0), 2);
-        const states = [
-          ['186 HOUSEHOLD EVs VIA V2H', 'Documented January 2024 demonstration cohort.'],
-          ['COORDINATED CONTROL REQUEST', 'Control mechanics illustrated; no recorded dispatch data shown.'],
-          ['PORTFOLIO STATE', 'Company-reported accuracy shown as a scoped demonstration result.'],
-        ];
-        const [label, detail] = states[phase];
-        return (
-          <section data-testid="shizen-connect-case" style={{ minHeight: 500 }}>
-            <Eyebrow tone="var(--color-secondary)">ILLUSTRATIVE CONTROL FLOW · STEP {phase + 1} OF 3</Eyebrow>
-            <Title>The steady-state loop</Title>
-            <div style={{ display: 'grid', gridTemplateColumns: '1.05fr .95fr', gap: 28, marginTop: 22, alignItems: 'center' }}>
-              <div>
-                <div style={{ padding: '18px 22px', border: '2px solid var(--color-secondary)', background: 'color-mix(in srgb, var(--color-secondary) 8%, transparent)' }}>
-                  <div style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-secondary)', letterSpacing: '0.1em' }}>{label}</div>
-                  <Small>{detail}</Small>
-                </div>
-                <div style={{ marginTop: 16 }}>
-                  <PipelineRow tone="var(--color-secondary)" items={['OBSERVE', 'DECIDE', 'DISPATCH', 'ACKNOWLEDGE', 'VERIFY']} />
-                </div>
-              </div>
-              <div style={{ height: 320 }}><Lazy><ChoreographyLoop /></Lazy></div>
-            </div>
-            <Source evidence={E.shizenV2H} caseNote={{ title: 'Shizen Connect · January 2024', scope: '186 household EVs controlled through V2H', qualifier: '90% control accuracy · company-reported' }} />
-          </section>
-        );
-      }}</StepBridge>
-      <Notes>Fragment 2 of the control plane: the loop itself. The dispatch/acknowledge/verify cycle is what a fleet needs to be trusted by an operator. This is where the human hands off to software.</Notes>
+      <StepBridge count={3}>{step => <AssetMixCapacityViz step={step} />}</StepBridge>
+      <Notes>Proof 3 · daily operation. The fleet is not "batteries." It is a mix of asset classes — home storage, V2H EVs, heat pumps, and the HEMS layer that coordinates them. Each class contributes different things (energy vs. flex kW). Shizen Connect is the concrete example we lean on: 186 household EVs, V2H, 90% control accuracy — a scoped demonstration, not a national dispatch. Point to it as the seed of what comes next.</Notes>
     </Slide>
 
-    {/* 14 · UNIFIED FLEET BUILD (replaces old 13/14/15) */}
-    <Slide {...page}>
-      <StepBridge count={4}>{step => <FleetBuildViz step={step} />}</StepBridge>
-      <Notes>Four tiers: device → home → neighborhood → portfolio. Callouts drop in the concrete demonstrations at each tier (V2H device, HEMS-controlled home, 186-EV Shizen fleet, aggregated portfolio). Do not overreach: none of these are national dispatch outcomes. They are scaffolding for what becomes possible when the software layer is in place.</Notes>
-    </Slide>
-
-    {/* 15 · CONTROL-PLANE FRAGMENT 3 · What cloud-native teams can build */}
+    {/* 13 · CONTROL-PLANE FRAGMENT 3 · What cloud-native teams can build */}
     <Slide {...darkPage}>
       <Eyebrow tone="var(--color-secondary)">THE VPP IS THE CONTROL PLANE</Eyebrow>
       <Title tone="var(--color-heading)">What cloud-native teams can build</Title>
@@ -213,7 +248,7 @@ export default function MainTalk() {
       <Notes>The three fragments reassemble on one slide. This is the summary of the control plane. Keep it brief — the audience already saw the pieces; this is where they see the whole.</Notes>
     </Slide>
 
-    {/* 16 · Closer */}
+    {/* 14 · Closer */}
     <Slide {...page}>
       <div style={{ height: '100%', display: 'grid', placeItems: 'center', textAlign: 'center' }}>
         <div>
@@ -226,6 +261,24 @@ export default function MainTalk() {
         </div>
       </div>
       <Notes>Land on the through-line. Silence after is fine.</Notes>
+    </Slide>
+
+    {/* ─── APPENDIX (not counted in core pagination) ─── */}
+
+    {/* A1 · Proof 3 title card (moved from core) */}
+    <Slide {...page}>
+      <div style={{ height: '100%', display: 'grid', alignContent: 'center' }}>
+        <Eyebrow tone="var(--color-secondary)">APPENDIX · PROOF 3 · DAILY OPERATION</Eyebrow>
+        <Title>Use demand smarter, every day</Title>
+        <Body>Not just emergencies. The steady-state control loop — dispatch, acknowledge, verify — is what makes a fleet trustworthy at scale.</Body>
+      </div>
+      <Notes>Appendix framing slide. Only surface if the audience wants the daily-operation framing before the asset-mix slide.</Notes>
+    </Slide>
+
+    {/* A2 · Unified fleet build (aggregation pyramid — moved from core) */}
+    <Slide {...page}>
+      <StepBridge count={4}>{step => <FleetBuildViz step={step} />}</StepBridge>
+      <Notes>Appendix aggregation view: device → home → neighborhood → portfolio. Kept as reference for how the pieces roll up. Skipped in the main flow because it duplicated the asset-mix and control-plane slides.</Notes>
     </Slide>
 
   </Deck></>;
