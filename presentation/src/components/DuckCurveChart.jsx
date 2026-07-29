@@ -109,7 +109,7 @@ function lerp(a, b, t) {
   return a + (b - a) * Math.max(0, Math.min(1, t));
 }
 
-export default function DuckCurveChart({ width = 1100, height = 560 }) {
+export default function DuckCurveChart({ width = 1100, height = 560, yearIndex, rightPad = 200 }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const tRef = useRef(0);
@@ -120,8 +120,9 @@ export default function DuckCurveChart({ width = 1100, height = 560 }) {
   const cachedSolarRef = useRef(null);
   const cachedNetDemRef = useRef(null);
 
-  // Arrow forward steps through years; arrow back always navigates
+  // Arrow forward steps through years; arrow back always navigates (uncontrolled mode only)
   useEffect(() => {
+    if (yearIndex !== undefined) return;
     const handler = (e) => {
       if (!slideContext?.isSlideActive) return;
       if (e.key !== 'ArrowRight' && e.key !== 'ArrowDown') return;
@@ -136,7 +137,14 @@ export default function DuckCurveChart({ width = 1100, height = 560 }) {
 
     document.addEventListener('keydown', handler, true);
     return () => document.removeEventListener('keydown', handler, true);
-  }, [slideContext?.isSlideActive]);
+  }, [slideContext?.isSlideActive, yearIndex]);
+
+  // Controlled year index — maps 0..N to YEARS indices stepping by 2
+  useEffect(() => {
+    if (yearIndex !== undefined) {
+      targetPhaseRef.current = Math.min(yearIndex * 2, YEARS.length - 1);
+    }
+  }, [yearIndex]);
 
   // Reset when navigating back to this slide
   useEffect(() => {
@@ -155,7 +163,7 @@ export default function DuckCurveChart({ width = 1100, height = 560 }) {
     ctx.scale(2, 2);
 
     const padLeft = 60;
-    const padRight = 200;
+    const padRight = rightPad;
     const padTop = 100;
     const padBottom = 90;
     const chartW = width - padLeft - padRight;
@@ -237,7 +245,7 @@ export default function DuckCurveChart({ width = 1100, height = 560 }) {
       // Day/night shading
       ctx.fillStyle = 'rgba(10, 14, 23, 0.3)';
       ctx.fillRect(padLeft, padTop, 6 * xScale, chartH);
-      ctx.fillRect(padLeft + 19 * xScale, padTop, 5 * xScale, chartH);
+      ctx.fillRect(padLeft + 19 * xScale, padTop, Math.min(5 * xScale, width - padRight - (padLeft + 19 * xScale)), chartH);
       ctx.fillStyle = `rgba(245, 158, 11, 0.05)`;
       ctx.fillRect(padLeft + 6 * xScale, padTop, 13 * xScale, chartH);
 
@@ -411,7 +419,7 @@ export default function DuckCurveChart({ width = 1100, height = 560 }) {
         ctx.fillText(peakPriceLabel, rampX + 18, (rampY1 + rampY2) / 2 + 14);
         ctx.font = 'bold 12px JetBrains Mono';
         ctx.fillStyle = `rgba(239, 68, 68, ${0.55 * pulse})`;
-        ctx.fillText('avg 19:00 peak (EPEX SPOT)', rampX + 18, (rampY1 + rampY2) / 2 + 32);
+        ctx.fillText('avg 19:00 peak', rampX + 18, (rampY1 + rampY2) / 2 + 32);
       }
 
       // Year indicator (prominent) — positioned in right margin
@@ -531,7 +539,7 @@ export default function DuckCurveChart({ width = 1100, height = 560 }) {
 
     draw();
     return () => cancelAnimationFrame(animRef.current);
-  }, [width, height, slideContext?.isSlideActive]);
+  }, [width, height, rightPad, slideContext?.isSlideActive]);
 
   return (
     <canvas

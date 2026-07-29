@@ -34,6 +34,7 @@ const SCENES = [
   { time: '12:00', title: 'Renewables need somewhere to go', state: 'CURTAILMENT CONTEXT', view: { longitude: 139.72, latitude: 35.67, zoom: 10.1, pitch: 38, bearing: -12 }, color: [255, 163, 95], hour: 12, blend: 0 },
   { time: '12:15', title: 'Flexible homes create demand', state: 'ILLUSTRATIVE CHARGING', view: { longitude: 139.75, latitude: 35.69, zoom: 11.2, pitch: 42, bearing: -12 }, color: [16, 185, 129], hour: 12, blend: 0.72 },
   { time: '17:00', title: 'Stored energy supports dusk', state: '', view: { longitude: 139.72, latitude: 35.67, zoom: 10.1, pitch: 38, bearing: -12 }, color: [99, 102, 241], hour: 17, blend: 1 },
+  { time: 'NIIGATA', title: 'Kashiwazaki-Kariwa Unit 6 restarts', state: 'NUCLEAR + SOLAR CLASH', view: { longitude: 139.1, latitude: 36.55, zoom: 7.8, pitch: 30, bearing: -4 }, color: [167, 139, 250], hour: 12, blend: 0 },
 ];
 
 export function TokyoDuckCurveCaseStudy({ step = 0 }) {
@@ -48,6 +49,7 @@ export function TokyoDuckCurveCaseStudy({ step = 0 }) {
     setViewState(previous => ({ ...previous, ...scene.view, transitionDuration: 900, transitionInterpolator: FLY_TO }));
   }, [scene, isActive]);
 
+  const KK_POSITION = [138.6, 37.4];
   const layers = useMemo(() => [
     new PathLayer({ id: 'tokyo-atlas-transmission', data: ATLAS_FEATURES.transmission, getPath: ({ path }) => path, getColor: [34, 211, 238, 120], getWidth: 2, widthUnits: 'pixels', capRounded: true, jointRounded: true }),
     new ScatterplotLayer({ id: 'tokyo-atlas-plants', data: ATLAS_FEATURES.plants, getPosition: ({ position }) => position, getRadius: 5, radiusUnits: 'pixels', getFillColor: ({ fuel }) => fuel === 'Nuclear' ? [167, 139, 250, 230] : fuel === 'LNG' ? [34, 211, 238, 230] : [148, 163, 184, 220], getLineColor: [241, 245, 249, 220], lineWidthMinPixels: 1, stroked: true }),
@@ -57,7 +59,12 @@ export function TokyoDuckCurveCaseStudy({ step = 0 }) {
     getFillColor: [...scene.color, 205], getLineColor: [...scene.color, 255], lineWidthMinPixels: 1.5,
     stroked: true, filled: true, updateTriggers: { getRadius: sceneIndex, getFillColor: sceneIndex },
     }),
-  ], [sceneIndex, scene]);
+    sceneIndex === 3 && new ScatterplotLayer({
+      id: 'kk-highlight', data: [{ position: KK_POSITION }], getPosition: d => d.position,
+      getRadius: 22, radiusUnits: 'pixels', getFillColor: [167, 139, 250, 40],
+      getLineColor: [167, 139, 250, 255], lineWidthMinPixels: 3, stroked: true, filled: true,
+    }),
+  ].filter(Boolean), [sceneIndex, scene]);
 
   return (
     <section data-testid="tokyo-duck-curve-case" style={{ position: 'relative', height: '100%', minHeight: 610, overflow: 'hidden', background: 'var(--color-bg)', color: 'var(--color-heading)' }}>

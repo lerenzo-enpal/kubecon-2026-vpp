@@ -14,7 +14,7 @@ const DATA = [
   { year: 2025, solar: 16, wind: 30, other: 14, total: 60 },
 ];
 
-export default function RenewableGrowthChart({ width = 850, height = 360 }) {
+export default function RenewableGrowthChart({ width = 850, height = 360, textColor = colors.text, textMutedColor = colors.textMuted, gridColor = colors.textDim }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const progressRef = useRef(0);
@@ -47,7 +47,7 @@ export default function RenewableGrowthChart({ width = 850, height = 360 }) {
       ctx.clearRect(0, 0, width, height);
 
       // Title
-      ctx.fillStyle = colors.text;
+      ctx.fillStyle = textColor;
       ctx.font = 'bold 14px JetBrains Mono';
       ctx.textAlign = 'left';
       ctx.fillText('GERMANY — RENEWABLE SHARE OF ELECTRICITY GENERATION', padLeft, 24);
@@ -57,13 +57,13 @@ export default function RenewableGrowthChart({ width = 850, height = 360 }) {
       ctx.lineWidth = 0.5;
       for (let pct = 0; pct <= 70; pct += 10) {
         const y = padTop + chartH - (pct / 70) * chartH;
-        ctx.strokeStyle = colors.textDim + '20';
+        ctx.strokeStyle = gridColor + '20';
         ctx.beginPath();
         ctx.moveTo(padLeft, y);
         ctx.lineTo(width - padRight, y);
         ctx.stroke();
 
-        ctx.fillStyle = colors.textDim + '60';
+        ctx.fillStyle = gridColor + '60';
         ctx.font = '10px JetBrains Mono';
         ctx.textAlign = 'right';
         ctx.fillText(`${pct}%`, padLeft - 8, y + 3);
@@ -105,14 +105,14 @@ export default function RenewableGrowthChart({ width = 850, height = 360 }) {
         // Percentage label above bar
         if (ease > 0.5) {
           const labelAlpha = Math.min(1, (ease - 0.5) * 2);
-          ctx.fillStyle = colors.text + Math.floor(labelAlpha * 255).toString(16).padStart(2, '0');
+          ctx.fillStyle = textColor + Math.floor(labelAlpha * 255).toString(16).padStart(2, '0');
           ctx.font = 'bold 16px JetBrains Mono';
           ctx.textAlign = 'center';
           ctx.fillText(`${d.total}%`, x + barW / 2, padTop + chartH - animH - 8);
         }
 
         // Year label
-        ctx.fillStyle = colors.textMuted;
+        ctx.fillStyle = textMutedColor;
         ctx.font = '11px JetBrains Mono';
         ctx.textAlign = 'center';
         ctx.fillText(d.year.toString(), x + barW / 2, height - padBottom + 18);
@@ -130,7 +130,7 @@ export default function RenewableGrowthChart({ width = 850, height = 360 }) {
         const lx = padLeft + i * 100;
         ctx.fillStyle = item.color;
         ctx.fillRect(lx, legendY - 4, 10, 10);
-        ctx.fillStyle = colors.textMuted;
+        ctx.fillStyle = textMutedColor;
         ctx.fillText(item.label, lx + 14, legendY + 5);
       });
 
@@ -152,7 +152,7 @@ export default function RenewableGrowthChart({ width = 850, height = 360 }) {
 
     draw();
     return () => cancelAnimationFrame(animRef.current);
-  }, [width, height, slideContext?.isSlideActive]);
+  }, [width, height, textColor, textMutedColor, gridColor, slideContext?.isSlideActive]);
 
   return (
     <canvas

@@ -120,7 +120,7 @@ const LOG_MSGS = [
 const FAILED = [239, 68, 68];
 const AMBER = [217, 119, 6];
 
-export default function JapanColdSnapCascade({ step = 0 }) {
+export default function JapanColdSnapCascade({ step = 0, shiftCard = false }) {
   const hudVisible = step >= 1;
   const cascadeIdx = step >= 2 ? Math.min(step - 2, CASCADE.length - 1) : -1;
   const active = cascadeIdx >= 0 ? CASCADE[cascadeIdx] : null;
@@ -356,7 +356,7 @@ export default function JapanColdSnapCascade({ step = 0 }) {
   const recentLogs = LOG_MSGS.filter((m) => cascadeIdx >= 0 && m.step <= cascadeIdx).slice(-5);
 
   // Leader-line geometry: from active event pin on map to top-center of dramatic card
-  const cardCenterX = containerSize.width * 0.5 + 195;
+  const cardCenterX = shiftCard ? containerSize.width * 0.3 + 170 : containerSize.width * 0.5 + 195;
   const cardTopY = containerSize.height - (emergency ? 140 : 60) - 88; // card height ~88px
   const showLeader = hudVisible && activeScreen && active
     && activeScreen.x >= 0 && activeScreen.x <= containerSize.width
@@ -524,8 +524,11 @@ export default function JapanColdSnapCascade({ step = 0 }) {
       {/* ── Dramatic event card ── */}
       {hudVisible && active && (
         <div style={{ position: 'absolute', bottom: emergency ? 140 : 60,
-          left: 'calc(50% + 195px)', transform: 'translateX(-50%)', zIndex: 10,
-          textAlign: 'center', pointerEvents: 'none', width: 540, padding: '14px 26px',
+          left: shiftCard ? '30%' : 'calc(50% + 195px)',
+          transform: shiftCard ? 'none' : 'translateX(-50%)',
+          zIndex: 10, textAlign: shiftCard ? 'left' : 'center', pointerEvents: 'none',
+          width: shiftCard ? 340 : 540, padding: '14px 26px',
+          transition: 'left 0.45s cubic-bezier(0.4,0,0.2,1), width 0.45s cubic-bezier(0.4,0,0.2,1), transform 0.45s cubic-bezier(0.4,0,0.2,1)',
           background: 'rgba(5, 8, 16, 0.88)',
           border: `1px solid ${active.severity === 'crit' ? 'rgba(239,68,68,0.55)' : 'rgba(245,158,11,0.5)'}`,
           borderRadius: 4, backdropFilter: 'blur(14px)',

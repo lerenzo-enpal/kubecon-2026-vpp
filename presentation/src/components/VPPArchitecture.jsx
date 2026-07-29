@@ -67,13 +67,17 @@ const ALL_NODES = [...NODES, ...HOMES];
 const NODE_MAP = new Map(ALL_NODES.map(n => [n.id, n]));
 function getNode(id) { return NODE_MAP.get(id); }
 
-export default function VPPArchitecture({ highlightStep = 0 }) {
+export default function VPPArchitecture({ highlightStep = 0, showCars = false, chargingActive = false }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const moonCanvasRef = useRef(null);
   const slideContext = useContext(SlideContext);
   const highlightRef = useRef(highlightStep);
   highlightRef.current = highlightStep;
+  const showCarsRef = useRef(showCars);
+  showCarsRef.current = showCars;
+  const chargingActiveRef = useRef(chargingActive);
+  chargingActiveRef.current = chargingActive;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -722,6 +726,30 @@ export default function VPPArchitecture({ highlightStep = 0 }) {
           ctx.closePath();
           ctx.fillStyle = colors.accent + '90';
           ctx.fill();
+        }
+
+        // Small EV parked to the right of the battery
+        if (showCarsRef.current) {
+          const carX = batX + batW + 6;
+          const carCY = cy;
+          const carColor = chargingActiveRef.current ? colors.success : colors.primary;
+          ctx.lineWidth = 1;
+          // Body
+          ctx.fillStyle = colors.surface + 'ee';
+          ctx.strokeStyle = carColor + '90';
+          ctx.beginPath(); ctx.roundRect(carX, carCY - 6, 28, 13, 2); ctx.fill(); ctx.stroke();
+          // Cabin
+          ctx.fillStyle = colors.surface + 'cc';
+          ctx.beginPath(); ctx.roundRect(carX + 3, carCY - 16, 18, 11, [3, 3, 0, 0]); ctx.fill(); ctx.stroke();
+          // Wheels
+          ctx.fillStyle = colors.textDim + '80';
+          ctx.beginPath(); ctx.arc(carX + 5, carCY + 9, 3.5, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(carX + 23, carCY + 9, 3.5, 0, Math.PI * 2); ctx.fill();
+          // Charge bar
+          ctx.globalAlpha = chargingActiveRef.current ? 0.9 : 0.18;
+          ctx.fillStyle = chargingActiveRef.current ? colors.success : carColor;
+          ctx.beginPath(); ctx.roundRect(carX + 5, carCY - 3, 18, 3, 1); ctx.fill();
+          ctx.globalAlpha = 1;
         }
       });
 
