@@ -43,10 +43,13 @@ export default function VppCounterfactualOverlay({ step = 0 }) {
   const entry = COMMENTARY[step];
   if (!entry) return null;
   return (
-    <div
-      data-testid="vpp-counterfactual-overlay"
-      style={{
-        position: 'absolute', right: 32, bottom: 60, width: 440, pointerEvents: 'none',
+    <>
+      <style>{`@keyframes vpp-slide-in{from{transform:translateX(60px);opacity:0}to{transform:translateX(0);opacity:1}}`}</style>
+      <div
+        data-testid="vpp-counterfactual-overlay"
+        style={{
+          position: 'absolute', right: 32, bottom: 60, width: 440, pointerEvents: 'none',
+          animation: 'vpp-slide-in 0.45s cubic-bezier(0.4,0,0.2,1) forwards',
         zIndex: 20,
         padding: '16px 20px',
         background: 'color-mix(in srgb, #0b1220 96%, transparent)',
@@ -66,5 +69,6 @@ export default function VppCounterfactualOverlay({ step = 0 }) {
         {entry.detail}
       </div>
     </div>
+    </>
   );
 }

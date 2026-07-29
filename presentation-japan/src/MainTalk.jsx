@@ -18,9 +18,11 @@ import ResponseTimeline from '../../presentation/src/components/ResponseTimeline
 import AggregationPyramid from '../../presentation/src/components/AggregationPyramid.jsx';
 import GridFrequencyExplainer from '../../presentation/src/components/GridFrequencyExplainer.jsx';
 import FrequencyWalkthrough from '../../presentation/src/components/FrequencyWalkthrough.jsx';
+import DuckCurveChart from '../../presentation/src/components/DuckCurveChart.jsx';
+import RenewableGrowthChart from '../../presentation/src/components/RenewableGrowthChart.jsx';
 
 const coreSlides = 14;
-const mainAtlasPreset = (step) => ({ areas: true, transmission: step >= 1, plants: false, mix: false });
+const mainAtlasPreset = () => ({ areas: true, transmission: true, plants: true, mix: false });
 const page = { padding: '38px 58px', backgroundColor: 'var(--color-washi-paper)' };
 const darkPage = { padding: '38px 58px', backgroundColor: 'var(--color-bg)' };
 function Lazy({ children }) { const c = useContext(SlideContext); return c?.isSlideActive ? children : null; }
@@ -143,6 +145,40 @@ function AssetMixCapacityViz({ step = 0 }) {
   );
 }
 
+function WhatIsVPP({ step = 0 }) {
+  const s = Math.min(Math.max(Number.isFinite(step) ? step : 0, 0), 3);
+  const CARDS = [
+    { label: 'AGGREGATE', title: 'Pool energy from distributed homes', body: '1,000 homes × 10 kWh = 10 MWh — same as a mid-sized gas peaker.', color: 'var(--color-primary)' },
+    { label: 'DISPATCH · SMART CHARGING', title: 'Charge · Discharge · Wait', body: 'Commands reach every device in milliseconds. The fleet responds as one coordinated plant.', color: 'var(--color-washi-solar)' },
+  ];
+  return (
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <div>
+        <Eyebrow>WHAT IS A VIRTUAL POWER PLANT?</Eyebrow>
+        <Title>One controller. Millions of devices.</Title>
+      </div>
+      <div style={{ flex: 1, position: 'relative', minHeight: 0, overflow: 'hidden', borderRadius: 4, background: 'var(--color-bg)' }}>
+        <Lazy><VPPArchitecture highlightStep={s >= 2 ? s - 1 : 0} showCars chargingActive={s >= 3} /></Lazy>
+      </div>
+      <div style={{ flexShrink: 0, display: 'flex', gap: 12 }}>
+        {CARDS.map((card, i) => (
+          <div key={card.label} style={{
+            flex: 1, padding: '12px 16px',
+            border: `1.5px solid ${s >= i + 2 ? card.color : 'color-mix(in srgb, var(--color-washi-ink) 14%, transparent)'}`,
+            background: s >= i + 2 ? `color-mix(in srgb, ${card.color} 7%, transparent)` : 'transparent',
+            opacity: s >= i + 2 ? 1 : 0.3,
+            transition: 'all 500ms ease',
+          }}>
+            <div style={{ fontFamily: 'var(--font-mono)', color: card.color, letterSpacing: '0.13em', fontSize: 11 }}>{card.label}</div>
+            <div style={{ fontFamily: 'var(--font-heading)', fontSize: 18, color: 'var(--color-washi-ink)', marginTop: 4 }}>{card.title}</div>
+            <Small style={{ marginTop: 3 }}>{card.body}</Small>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function MainTalk() {
   const { theme, cycleTheme, spectacleTheme } = useTheme();
   const { locale, setLocale } = useLocale();
@@ -152,31 +188,156 @@ export default function MainTalk() {
     <Slide {...page}><div style={{ height: '100%', display: 'grid', alignContent: 'center' }}><Eyebrow>KUBECON + CLOUDNATIVECON JAPAN</Eyebrow><h1 style={{ maxWidth: 1040, margin: '24px 0 0', color: 'var(--color-washi-ink)', fontFamily: 'var(--font-heading)', fontSize: 66, lineHeight: 1.04 }}>What is a Virtual Power Plant (VPP) ?</h1><div style={{ marginTop: 22, fontFamily: 'var(--font-heading)', color: 'var(--color-washi-solar)', fontSize: 34 }}>Green Tech and the Modernization of the Grid</div><div style={{ marginTop: 28, fontFamily: 'var(--font-mono)', color: 'var(--color-washi-solar)', letterSpacing: '0.12em' }}>BATTERIES · CONNECTIVITY · COORDINATION</div></div><Notes>Open with the program title. The whole talk earns the term "VPP" — do not use it before slide 7.</Notes></Slide>
 
     {/* 2 · Improve the grid */}
-    <Slide {...page}><Eyebrow>GRID MODERNIZATION</Eyebrow><Title>Improve the grid: add batteries + internet</Title><StepBridge count={2}>{step => <CapabilityMotif variant="network" step={step} />}</StepBridge><Source evidence={E.japanEnergy} /><Notes>Step 1: connectivity. Step 2: storage. Both are software surfaces already.</Notes></Slide>
+    <Slide {...page}>
+      <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <Eyebrow>GRID MODERNIZATION</Eyebrow>
+        <Title>Improve the grid: add batteries + internet</Title>
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <StepBridge count={2}>{step => <CapabilityMotif variant="network" step={step} />}</StepBridge>
+        </div>
+        <Source evidence={E.japanEnergy} />
+      </div>
+      <Notes>Step 1: connectivity. Step 2: storage. Both are software surfaces already.</Notes>
+    </Slide>
 
     {/* 3 · Japan atlas + 50/60 Hz history quirk */}
-    <Slide padding="0" backgroundColor="var(--color-washi-paper)"><StepBridge count={2}>{step => <div style={{ height: '100%', position: 'relative', background: 'var(--color-washi-paper)' }}><Lazy><JapanGridAtlas variant="washi" step={step} preset={mainAtlasPreset} /></Lazy><div style={{ position: 'absolute', top: 28, left: 38, maxWidth: 620, padding: '20px 24px', background: 'color-mix(in srgb, var(--color-washi-paper) 90%, transparent)' }}><Eyebrow>1890s · A DECISION THAT NEVER GOT UNDONE</Eyebrow><Title>Two grids, one country</Title><Small>Tokyo bought its first generators from AEG (Germany, 50 Hz). Osaka bought from GE (United States, 60 Hz). A century later, Japan is still two synchronous grids joined by 2.1 GW of HVDC converters.</Small></div></div>}</StepBridge><Notes>Japan is not one grid. It is two — 50 Hz east and 60 Hz west — connected by a controllable but capped HVDC bridge. Why: procurement decisions in the 1890s (Tokyo AEG, Osaka GE) that were never unified. Sources: en.wikipedia.org/wiki/Electricity_sector_in_Japan#Transmission. This quirk is load-bearing — it becomes decisive in the Fukushima cold-snap chain later.</Notes></Slide>
+    <Slide padding="0" backgroundColor="var(--color-washi-paper)">
+      <div style={{ height: '100%', position: 'relative', background: 'var(--color-washi-paper)' }}>
+        <Lazy><JapanGridAtlas variant="washi" step={0} preset={mainAtlasPreset} sceneLayer={{ view: { longitude: 132.8, latitude: 38.0, zoom: 4.1, pitch: 18, bearing: 0 } }} /></Lazy>
+        <div style={{ position: 'absolute', top: 28, left: 38, maxWidth: 640, padding: '20px 24px', background: 'color-mix(in srgb, var(--color-washi-paper) 90%, transparent)' }}>
+          <Eyebrow>1890s · A DECISION THAT NEVER GOT UNDONE</Eyebrow>
+          <Title>Two grids, one country</Title>
+          <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Small>Tokyo bought its first generators from AEG — Germany, 50 Hz.</Small>
+            <Small>Osaka bought from GE — United States, 60 Hz.</Small>
+            <Small>Japan is still two grids — bridged by just 2.1 GW of HVDC.</Small>
+          </div>
+        </div>
+      </div>
+      <Notes>Japan is not one grid. It is two — 50 Hz east and 60 Hz west — connected by a controllable but capped HVDC bridge. Why: procurement decisions in the 1890s (Tokyo AEG, Osaka GE) that were never unified. This quirk is load-bearing — it becomes decisive in the Fukushima cold-snap chain later.</Notes>
+    </Slide>
+
+    {/* 3b · What is a VPP? */}
+    <Slide {...page}>
+      <StepBridge count={4}>{step => <WhatIsVPP step={step} />}</StepBridge>
+      <Notes>Step 0: base diagram — homes, EVs, bus, VPP Controller, Energy Market, Regulators. Step 1: animated arcs show data flowing from devices to controller. Step 2: Aggregate card — pooling energy. Step 3: Dispatch card — smart commands charge/discharge/wait.</Notes>
+    </Slide>
 
     {/* 4 · PROOF 1 title */}
     <Slide {...page}><div style={{ height: '100%', display: 'grid', alignContent: 'center' }}><Eyebrow tone="var(--color-washi-solar)">PROOF 1 · MARKET PARTICIPATION</Eyebrow><Title>Bring new players into the market</Title><Body>Batteries, EVs, and homes can become trusted grid resources — when they can be coordinated.</Body></div><Notes>Frame proof 1: distributed assets can participate as coordinated flexibility. The problem we're solving lives on the next slide.</Notes></Slide>
 
-    {/* 5 · SOLAR TIMING PROBLEM (replaces old Kyushu curtailment card) */}
-    <Slide padding="0" backgroundColor="var(--color-washi-paper)"><StepBridge count={3}>{step => <SolarTimingProblem step={step} />}</StepBridge><Notes>Step 1: household demand — two peaks. Step 2: solar generation — one bell at noon. The curves do not line up. Step 3: name the two regions — midday surplus (curtailed) and evening deficit (peak). Step 4: a battery is the shift that reconciles them. This is the ENTIRE motivation for what follows.</Notes></Slide>
-
-    {/* 6 · Tokyo duck curve */}
-    <Slide padding="0" backgroundColor="var(--color-bg)"><StepBridge count={3}>{step => <TokyoDuckCurveCaseStudy step={step} />}</StepBridge><Notes>Tokyo-area reported case. Noon curtailment context; illustrative household charging; illustrative dusk support. Do not claim fleet capacity or delivered grid impact.</Notes></Slide>
-
-    {/* 7 · Store it for later + CONTROL-PLANE FRAGMENT 1 (homes → cloud → controller) */}
-    <Slide {...darkPage}>
-      <div style={{ display: 'grid', gridTemplateRows: 'auto 1fr', gap: 14, height: '100%' }}>
+    {/* 4b · Renewable Revolution context — foreshadows solar curtailment */}
+    <Slide {...page}>
+      <div style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 14 }}>
         <div>
-          <Eyebrow tone="var(--color-secondary)">THE SHIFT · HOW SOFTWARE MAKES IT REAL</Eyebrow>
-          <Title tone="var(--color-heading)">Store it for later</Title>
-          <Small tone="var(--color-dim)">Batteries hold noon generation. EVs and heat pumps shift into the solar window. Something has to talk to all of it — a distributed system does.</Small>
+          <Eyebrow tone="var(--color-washi-solar)">CONTEXT · THE RENEWABLE SURGE</Eyebrow>
+          <Title>The renewable revolution — and Japan's position</Title>
+          <Small>Solar is the cheapest electricity ever built. Germany shows the trajectory. Japan is at the start of the same curve.</Small>
         </div>
-        <div style={{ minHeight: 0 }}><Lazy><VPPArchitecture /></Lazy></div>
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'flex-start', minHeight: 0 }}>
+          <Lazy><RenewableGrowthChart width={940} height={280} textColor="#0f172a" textMutedColor="#334155" gridColor="#64748b" /></Lazy>
+        </div>
+        <div style={{ padding: '14px 18px', borderLeft: '3px solid var(--color-washi-alert)', background: 'color-mix(in srgb, var(--color-washi-alert) 6%, transparent)', flexShrink: 0 }}>
+          <div style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-washi-alert)', fontSize: 11, letterSpacing: '0.13em' }}>G7 RENEWABLE SHARE · 2023 · JAPAN IS LOWEST</div>
+          <div style={{ display: 'flex', gap: 20, marginTop: 10, alignItems: 'flex-end', flexWrap: 'wrap' }}>
+            {[
+              { c: 'Canada', v: '67%' }, { c: 'Germany', v: '59%' }, { c: 'UK', v: '42%' },
+              { c: 'Italy', v: '35%' }, { c: 'France', v: '30%' }, { c: 'USA', v: '23%' },
+              { c: 'Japan', v: '22%', highlight: true },
+            ].map(g => (
+              <div key={g.c} style={{ textAlign: 'center' }}>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: g.highlight ? 30 : 22, fontWeight: g.highlight ? 700 : 400, color: g.highlight ? 'var(--color-washi-alert)' : 'var(--color-washi-ink)' }}>{g.v}</div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.1em', marginTop: 2, color: g.highlight ? 'var(--color-washi-alert)' : 'var(--color-dim)' }}>{g.c}{g.highlight ? ' ← lowest' : ''}</div>
+              </div>
+            ))}
+          </div>
+          <Small style={{ marginTop: 8 }}>Solar is growing fast in Japan — which is exactly what creates the timing problem we're about to see.</Small>
+        </div>
       </div>
-      <Notes>First fragment of the control plane. Do not name company vendors. This is the "how" of proof 1: what the software layer looks like end to end. Second fragment lives in proof 3, third fragment in the summary slide.</Notes>
+      <Notes>Germany's trajectory shows where Japan is heading — explosive growth in solar share. But Japan starts from the lowest base in the G7. Solar growing fast + grid not designed for it = the curtailment and timing problems on the next slides. This slide foreshadows the duck curve.</Notes>
+    </Slide>
+
+    {/* 5 · Duck Curve (replaces SolarTimingProblem — reuses Amsterdam chart, cleaner narrative) */}
+    <Slide {...page}>
+      <StepBridge count={6}>{yearStep => (
+        <div style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div>
+            <Eyebrow tone="var(--color-washi-solar)">PROOF 1 · THE TIMING PROBLEM</Eyebrow>
+            <Title>The Duck Curve</Title>
+            <Small>Solar floods the grid at noon — prices collapse. At sunset, demand ramps sharply and solar disappears. The belly deepens every year.</Small>
+          </div>
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 0 }}>
+            <Lazy><DuckCurveChart width={1100} height={480} yearIndex={yearStep} rightPad={270} /></Lazy>
+          </div>
+        </div>
+      )}</StepBridge>
+      <Notes>Step through 2015→2025 (6 steps × 2 years). The duck curve: midday solar causes a deep belly in net load. At sunset, demand ramps steeply — the grid needs ramping capacity it doesn't have. This happens in Japan too, and it's getting worse every year as more solar comes online. The Tokyo curtailment case study is exactly this problem made real.</Notes>
+    </Slide>
+
+    {/* 6 · Tokyo duck curve + 2026 curtailment facts */}
+    <Slide padding="0" backgroundColor="var(--color-bg)">
+      <StepBridge count={6}>{step => (
+        <div style={{ position: 'relative', height: '100%' }}>
+          {/* step 4 → scene 3 (Kashiwazaki zoom-out); else clamp to scenes 0-2 */}
+          <TokyoDuckCurveCaseStudy step={step >= 4 ? 3 : Math.min(step, 2)} />
+          {/* Curtailment fact cards — appear at step 3+ */}
+          {step >= 3 && (
+            <div style={{ position: 'absolute', top: 34, right: 44, width: 400, display: 'flex', flexDirection: 'column', gap: 12, pointerEvents: 'none' }}>
+              <div style={{
+                padding: '14px 16px',
+                border: '1px solid color-mix(in srgb, var(--color-washi-alert) 55%, transparent)',
+                background: 'color-mix(in srgb, var(--color-bg) 90%, transparent)',
+                backdropFilter: 'blur(8px)',
+                animation: 'fadeSlideIn 0.45s ease',
+              }}>
+                <div style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-washi-alert)', fontSize: 11, letterSpacing: '0.14em' }}>MARCH 1, 2026 · FIRST-EVER TEPCO CURTAILMENT</div>
+                <div style={{ fontFamily: 'var(--font-heading)', fontSize: 18, marginTop: 6, color: 'var(--color-heading)', lineHeight: 1.2 }}>Solar curtailment reaches Tokyo</div>
+                <div style={{ fontFamily: 'var(--font-body)', fontSize: 14, marginTop: 6, color: 'var(--color-dim)', lineHeight: 1.5 }}>
+                  TEPCO ordered renewable output cuts 11:00–16:00 JST. Tokyo was Japan's last holdout grid. By March 29, peaks hit <span style={{ color: 'var(--color-washi-alert)', fontWeight: 600 }}>3,290 MW</span> — 16.2 GWh of clean energy wasted in late March alone.
+                </div>
+                <div style={{ marginTop: 8, fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--color-dim)', opacity: 0.7 }}>Source: pv-magazine.com · Wood Mackenzie (LinkedIn)</div>
+              </div>
+              {step >= 4 && (
+                <div style={{
+                  padding: '14px 16px',
+                  border: '1px solid color-mix(in srgb, var(--color-secondary) 55%, transparent)',
+                  background: 'color-mix(in srgb, var(--color-bg) 90%, transparent)',
+                  backdropFilter: 'blur(8px)',
+                  animation: 'fadeSlideIn 0.45s ease',
+                }}>
+                  <div style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-secondary)', fontSize: 11, letterSpacing: '0.14em' }}>NUCLEAR + SOLAR CLASH · NIIGATA</div>
+                  <div style={{ fontFamily: 'var(--font-heading)', fontSize: 18, marginTop: 6, color: 'var(--color-heading)', lineHeight: 1.2 }}>Kashiwazaki-Kariwa Unit 6 restart</div>
+                  <div style={{ fontFamily: 'var(--font-body)', fontSize: 14, marginTop: 6, color: 'var(--color-dim)', lineHeight: 1.5 }}>
+                    High daytime solar + low weekend demand + nuclear restart = inflexible oversupply. Transmission lines could not export the excess. Under ANRE rules, FIT solar is curtailed before FIP — small rooftop systems bear the brunt.
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+          {/* Curtailment data graph (step 5) */}
+          {step >= 5 && (
+            <div style={{
+              position: 'absolute', inset: 0, background: 'color-mix(in srgb, var(--color-bg) 94%, transparent)',
+              backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              padding: '24px 44px', gap: 36, animation: 'fadeSlideIn 0.5s ease',
+            }}>
+              <img src="/curtailment-march-2026.jpeg"
+                style={{ maxHeight: 480, maxWidth: 680, objectFit: 'contain', border: '1px solid color-mix(in srgb, var(--color-secondary) 30%, transparent)', borderRadius: 2 }}
+                alt="March 2026 TEPCO curtailment chart — Wood Mackenzie via LinkedIn" />
+              <div style={{ maxWidth: 320, flexShrink: 0 }}>
+                <div style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-secondary)', letterSpacing: '0.14em', fontSize: 11 }}>SOURCE · WOOD MACKENZIE · LINKEDIN</div>
+                <div style={{ fontFamily: 'var(--font-heading)', fontSize: 22, marginTop: 8, color: 'var(--color-heading)', lineHeight: 1.15 }}>March 2026 curtailment: the data</div>
+                <div style={{ fontFamily: 'var(--font-body)', fontSize: 14, marginTop: 10, color: 'var(--color-dim)', lineHeight: 1.55 }}>
+                  Peak curtailment reached <strong style={{ color: 'var(--color-washi-alert)' }}>3,290 MW</strong> on March 29. 16.2 GWh of clean energy wasted in late March alone. Tokyo was the last major grid in Japan to experience curtailment — now none are exempt.
+                </div>
+                <div style={{ marginTop: 12, fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--color-primary)' }}>whatisavpp.com/research/japan-energy-flexibility</div>
+              </div>
+            </div>
+          )}
+          <style>{`@keyframes fadeSlideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }`}</style>
+        </div>
+      )}</StepBridge>
+      <Notes>Steps 0-2: duck curve case study. Step 3: March 1 2026 first-ever TEPCO curtailment card — peaks at 3,290 MW, 16.2 GWh wasted. Step 4: nuclear clash card + map zooms out to Niigata showing Kashiwazaki-Kariwa Unit 6. Step 5: actual curtailment data graph from Wood Mackenzie LinkedIn post.</Notes>
     </Slide>
 
     {/* 8 · PROOF 2 title */}
@@ -212,14 +373,19 @@ export default function MainTalk() {
     </Slide>
 
     {/* 11 · FUKUSHIMA COLD-SNAP CASCADE + VPP COUNTERFACTUAL OVERLAY */}
+    {/* Each cascade event gets two steps: first shows the cascade text, second adds the VPP counterfactual */}
     <Slide padding="0" backgroundColor="var(--color-bg)">
-      <StepBridge count={11}>{step => (
-        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-          <Lazy><JapanColdSnapCascade step={step} /></Lazy>
-          <VppCounterfactualOverlay step={step} />
-        </div>
-      )}</StepBridge>
-      <Notes>Same 10-step timeline as the keynote — March 2022 Fukushima-oki quake + cold-snap chain — but with a "with a VPP · counterfactual" card appearing at each step. Read the cascade first, then read the counterfactual. Do not pretend the counterfactual happened: name it as counterfactual every time. See docs/keynote-speaker-notes.md for the timeline beats. The point lands cumulatively: this is not one heroic dispatch, it is a fleet always inside the operating envelope.</Notes>
+      <StepBridge count={22}>{step => {
+        const cascadeStep = Math.floor(step / 2);
+        const showVPP = step % 2 === 1;
+        return (
+          <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+            <Lazy><JapanColdSnapCascade step={cascadeStep} shiftCard={showVPP} /></Lazy>
+            {showVPP && <VppCounterfactualOverlay step={cascadeStep} />}
+          </div>
+        );
+      }}</StepBridge>
+      <Notes>22 steps (11 cascade events × 2). Odd-numbered steps show the cascade event only. Even-numbered steps add the VPP counterfactual card — read the original text first, then the VPP response. Do not pretend the counterfactual happened. The point lands cumulatively: not one heroic dispatch, a fleet always inside the operating envelope.</Notes>
     </Slide>
 
     {/* 12 · PROOF 3 · ASSET MIX + PORTFOLIO CAPACITY (replaces old 12 title + old 13 Shizen loop) */}
