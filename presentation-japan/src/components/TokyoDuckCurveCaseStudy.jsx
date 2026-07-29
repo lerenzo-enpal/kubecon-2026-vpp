@@ -33,7 +33,7 @@ const HOMES = Array.from({ length: HOME_DEVICE_COUNT }, (_, index) => {
 const SCENES = [
   { time: '12:00', title: 'Renewables need somewhere to go', state: 'CURTAILMENT CONTEXT', view: { longitude: 139.72, latitude: 35.67, zoom: 10.1, pitch: 38, bearing: -12 }, color: [255, 163, 95], hour: 12, blend: 0 },
   { time: '12:15', title: 'Flexible homes create demand', state: 'ILLUSTRATIVE CHARGING', view: { longitude: 139.75, latitude: 35.69, zoom: 11.2, pitch: 42, bearing: -12 }, color: [16, 185, 129], hour: 12, blend: 0.72 },
-  { time: '17:00', title: 'Stored energy supports dusk', state: 'ILLUSTRATIVE DUSK SUPPORT', view: { longitude: 139.72, latitude: 35.67, zoom: 10.1, pitch: 38, bearing: -12 }, color: [99, 102, 241], hour: 17, blend: 1 },
+  { time: '17:00', title: 'Stored energy supports dusk', state: '', view: { longitude: 139.72, latitude: 35.67, zoom: 10.1, pitch: 38, bearing: -12 }, color: [99, 102, 241], hour: 17, blend: 1 },
 ];
 
 export function TokyoDuckCurveCaseStudy({ step = 0 }) {
@@ -68,10 +68,12 @@ export function TokyoDuckCurveCaseStudy({ step = 0 }) {
       <div style={{ position: 'absolute', top: 34, left: 44, maxWidth: 660, pointerEvents: 'none' }}>
         <div style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-secondary)', fontSize: 15, letterSpacing: '0.16em' }}>TOKYO-AREA REPORTED CASE · MARCH 2026</div>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 18, marginTop: 14 }}><span style={{ fontFamily: 'var(--font-mono)', color: `rgb(${scene.color.join(' ')})`, fontSize: 52, fontWeight: 700 }}>{scene.time}</span><h1 style={{ margin: 0, fontFamily: 'var(--font-heading)', fontSize: 38, lineHeight: 1.05 }}>{scene.title}</h1></div>
-        <div data-testid="tokyo-authored-view" style={{ marginTop: 14, display: 'inline-block', padding: '7px 10px', border: '1px solid color-mix(in srgb, var(--color-secondary) 45%, transparent)', background: 'color-mix(in srgb, var(--color-bg) 80%, transparent)', color: `rgb(${scene.color.join(' ')})`, fontFamily: 'var(--font-mono)', fontSize: 13, letterSpacing: '0.1em' }}>{scene.state}</div>
+        {scene.state && (
+          <div data-testid="tokyo-authored-view" style={{ marginTop: 14, display: 'inline-block', padding: '7px 10px', border: '1px solid color-mix(in srgb, var(--color-secondary) 45%, transparent)', background: 'color-mix(in srgb, var(--color-bg) 80%, transparent)', color: `rgb(${scene.color.join(' ')})`, fontFamily: 'var(--font-mono)', fontSize: 13, letterSpacing: '0.1em' }}>{scene.state}</div>
+        )}
         <div style={{ marginTop: 8, color: 'var(--color-muted)', fontFamily: 'var(--font-mono)', fontSize: 12, letterSpacing: '0.08em' }}>ILLUSTRATIVE HOUSEHOLD DEVICES · 320 · SYNTHETIC NEIGHBORHOOD DISTRIBUTION</div>
       </div>
-      <div style={{ position: 'absolute', left: 44, right: 44, bottom: 70, padding: '16px 20px 12px', border: '1px solid color-mix(in srgb, var(--color-secondary) 35%, transparent)', background: 'color-mix(in srgb, var(--color-bg) 88%, transparent)', boxShadow: '0 18px 60px color-mix(in srgb, var(--color-bg) 60%, transparent)' }}>
+      <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', bottom: 70, width: 860, padding: '16px 20px 12px', border: '1px solid color-mix(in srgb, var(--color-secondary) 35%, transparent)', background: 'color-mix(in srgb, var(--color-bg) 88%, transparent)', boxShadow: '0 18px 60px color-mix(in srgb, var(--color-bg) 60%, transparent)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--color-muted)', fontFamily: 'var(--font-mono)', fontSize: 12, letterSpacing: '0.1em' }}><span>ILLUSTRATIVE NET-LOAD RESPONSE</span><span>NOON → DUSK</span></div>
         <div role="img" aria-label="Illustrative duck curve linked to the Tokyo map" style={{ marginTop: 3 }}><DuckCurveHUD width={820} height={220} highlightHour={scene.hour} blend={scene.blend} expanded /></div>
       </div>

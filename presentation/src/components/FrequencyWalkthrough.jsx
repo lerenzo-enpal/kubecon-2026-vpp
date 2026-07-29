@@ -821,7 +821,7 @@ function SupplyDemandScene({ active, step = 1 }) {
 
 // mode="intro": boot → supply/demand → punchline (slide 10)
 // mode="scenarios": grid HUD with degradation steps (slide 11)
-export default function FrequencyWalkthrough({ step = 0, mode = 'intro' }) {
+export default function FrequencyWalkthrough({ step = 0, mode = 'intro', hideClockHud = false }) {
   const slideContext = useContext(SlideContext);
   const isActive = slideContext?.isSlideActive;
 
@@ -978,7 +978,7 @@ export default function FrequencyWalkthrough({ step = 0, mode = 'intro' }) {
       </div>
 
       {/* Bottom HUD: status + mission clock (absolute positioned) */}
-      {showHud && s.status && !showPunchline && !isCollapse && (
+      {showHud && s.status && !showPunchline && !isCollapse && !hideClockHud && (
         <div className="absolute bottom-8 left-0 right-0 z-10" style={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
@@ -1023,9 +1023,11 @@ export default function FrequencyWalkthrough({ step = 0, mode = 'intro' }) {
             <div className="font-mono text-[12px] mt-1" style={{ color: colors.danger + 'aa' }}>
               All generators disconnected — total grid collapse
             </div>
-            <div className="font-mono text-[16px] font-bold mt-2" style={{ color: colors.danger }}>
-              <GridClock targetSec={s.gridTimeSec} />
-            </div>
+            {!hideClockHud && (
+              <div className="font-mono text-[16px] font-bold mt-2" style={{ color: colors.danger }}>
+                <GridClock targetSec={s.gridTimeSec} />
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -63,10 +63,10 @@ export default function SolarTimingProblem({ step = 0 }) {
         <div style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-washi-alert)', letterSpacing: '0.16em', fontSize: 13 }}>PROOF 1 · THE TIMING PROBLEM</div>
         <h1 style={{ margin: '10px 0 0', color: 'var(--color-washi-ink)', fontFamily: 'var(--font-heading)', fontSize: 44, lineHeight: 1.08 }}>Solar generates when we don't need it.</h1>
         <p style={{ margin: '10px 0 0', maxWidth: 780, color: 'var(--color-washi-ink)', fontFamily: 'var(--font-body)', fontSize: 20, lineHeight: 1.42, opacity: 0.82 }}>
-          {step === 0 && 'A household consumes power in two peaks — morning routine and evening.'}
-          {step === 1 && 'Solar generation is a single bell centered at noon. It does not line up with when people are home.'}
-          {step === 2 && 'Midday: rooftops produce more than the neighborhood is using. Evening: demand climbs while the sun is gone.'}
-          {step === 3 && 'A battery bridges the gap. Solar at noon is stored and released into the evening peak.'}
+          {step === 0 && 'Two peaks: morning routine, then evening.'}
+          {step === 1 && 'Solar peaks at noon — when nobody is home.'}
+          {step === 2 && 'Midday surplus. Evening deficit.'}
+          {step === 3 && 'A battery bridges the gap.'}
         </p>
       </div>
 
@@ -118,8 +118,8 @@ export default function SolarTimingProblem({ step = 0 }) {
               fill="var(--color-washi-alert)"
               opacity="0.13"
             />
-            <text x={x(12)} y={PAD.t + 26} textAnchor="middle" fontFamily="var(--font-mono)" fill="var(--color-washi-solar)" fontSize="12" letterSpacing="0.12em">SURPLUS · CURTAILED</text>
-            <text x={x(19)} y={PAD.t + 26} textAnchor="middle" fontFamily="var(--font-mono)" fill="var(--color-washi-alert)" fontSize="12" letterSpacing="0.12em">UNMET · PEAK</text>
+            <text x={x(12)} y={PAD.t + plotH - 12} textAnchor="middle" fontFamily="var(--font-mono)" fill="var(--color-washi-solar)" fontSize="12" letterSpacing="0.12em">SURPLUS · CURTAILED</text>
+            <text x={x(19)} y={PAD.t + plotH - 12} textAnchor="middle" fontFamily="var(--font-mono)" fill="var(--color-washi-alert)" fontSize="12" letterSpacing="0.12em">UNMET · PEAK</text>
           </g>
         )}
 
@@ -128,7 +128,7 @@ export default function SolarTimingProblem({ step = 0 }) {
           <g style={{ opacity: showDemand ? 1 : 0, transition: 'opacity 500ms' }}>
             <path d={areaFor(demand)} fill="url(#demandFill)" />
             <path d={pathFor(demand)} fill="none" stroke="var(--color-primary)" strokeWidth="3.5" strokeLinecap="round" />
-            <text x={x(20.5)} y={y(demand(19)) - 12} fontFamily="var(--font-mono)" fill="var(--color-primary)" fontSize="14" fontWeight="700">HOUSEHOLD DEMAND</text>
+            <text x={x(19)} y={Math.max(PAD.t + 16, y(demand(19)) - 10)} textAnchor="middle" fontFamily="var(--font-mono)" fill="var(--color-primary)" fontSize="14" fontWeight="700">HOUSEHOLD DEMAND</text>
           </g>
         )}
 
@@ -137,7 +137,7 @@ export default function SolarTimingProblem({ step = 0 }) {
           <g style={{ opacity: showSolar ? 1 : 0, transition: 'opacity 500ms' }}>
             <path d={areaFor(solar)} fill="url(#solarFill)" />
             <path d={pathFor(solar)} fill="none" stroke="var(--color-washi-solar)" strokeWidth="3.5" strokeLinecap="round" />
-            <text x={x(12)} y={y(solar(12)) - 14} textAnchor="middle" fontFamily="var(--font-mono)" fill="var(--color-washi-solar)" fontSize="14" fontWeight="700">SOLAR GENERATION</text>
+            <text x={x(9)} y={y(solar(9)) - 10} textAnchor="middle" fontFamily="var(--font-mono)" fill="var(--color-washi-solar)" fontSize="14" fontWeight="700">SOLAR GENERATION</text>
             {/* sun sweep */}
             <circle cx={x(sunH)} cy={y(sunV)} r={7} fill="var(--color-washi-solar)" stroke="var(--color-washi-paper)" strokeWidth="2" />
           </g>
@@ -151,8 +151,8 @@ export default function SolarTimingProblem({ step = 0 }) {
           const toX = x(toH);
           const midX = (fromX + toX) / 2;
           const fromY = y(solar(fromH)) - 10;
-          const toY = y(demand(toH)) - 22;
-          const curveMidY = Math.min(fromY, toY) - 90;
+          const toY = Math.max(PAD.t + 40, y(demand(toH)) - 10);
+          const curveMidY = Math.max(PAD.t + 20, Math.min(fromY, toY) - 60);
           const dashOffset = -80 * arrowPulse;
           return (
             <g>
@@ -176,7 +176,7 @@ export default function SolarTimingProblem({ step = 0 }) {
 
       {/* Stepper hint */}
       <div style={{ position: 'absolute', right: 32, top: 36, fontFamily: 'var(--font-mono)', color: 'var(--color-washi-alert)', letterSpacing: '0.14em', fontSize: 12 }}>
-        STEP {step + 1} · OF 4
+        STEP {Math.min(step + 1, 4)} · OF 4
       </div>
     </section>
   );

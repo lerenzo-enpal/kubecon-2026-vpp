@@ -46,13 +46,14 @@ export default function VppCounterfactualOverlay({ step = 0 }) {
     <div
       data-testid="vpp-counterfactual-overlay"
       style={{
-        position: 'absolute', right: 32, bottom: 32, width: 420, pointerEvents: 'none',
+        position: 'absolute', right: 32, bottom: 60, width: 440, pointerEvents: 'none',
+        zIndex: 20,
         padding: '16px 20px',
-        background: 'color-mix(in srgb, #0b1220 92%, transparent)',
-        border: '1px solid color-mix(in srgb, #22d3ee 45%, transparent)',
+        background: 'color-mix(in srgb, #0b1220 96%, transparent)',
+        border: '1px solid color-mix(in srgb, #22d3ee 55%, transparent)',
         borderLeft: '4px solid #22d3ee',
         color: '#f1f5f9',
-        boxShadow: '0 12px 32px rgba(0,0,0,0.35)',
+        boxShadow: '0 12px 32px rgba(0,0,0,0.55)',
       }}
     >
       <div style={{ fontFamily: 'var(--font-mono)', color: '#22d3ee', letterSpacing: '0.16em', fontSize: 11 }}>
