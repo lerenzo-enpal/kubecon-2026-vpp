@@ -155,25 +155,25 @@ function WhatIsVPP({ step = 0 }) {
   const HX = [150, 400, 700, 950];
   const VPP_CX = 550, VPP_Y = 268, VPP_W = 200, VPP_H = 56;
   const gridX = 1092;
+  const GRID_CABLE_Y = 110;
   const tr = { transition: 'all 500ms ease' };
 
-  // Deterministic star positions — top strip y 1-9
   const hash = (n) => { const x = Math.sin(n) * 43758.5453; return x - Math.floor(x); };
-  const STARS = Array.from({ length: 20 }, (_, i) => ({
+  const STARS = Array.from({ length: 26 }, (_, i) => ({
     cx: hash(i * 127.1 + 311.7) * VW,
-    cy: 1 + hash(i * 269.5 + 183.3) * 8,
-    r:  0.5 + hash(i * 419.2 + 71.9) * 1.1,
+    cy: 4 + hash(i * 269.5 + 183.3) * 30,
+    r:  0.5 + hash(i * 419.2 + 71.9) * 1.2,
     dur: (1.4 + hash(i * 631.2 + 97.1) * 3).toFixed(1),
-    beg: (hash(i * 523.7 + 43.3) * 3).toFixed(1),
+    beg: (hash(i * 523.7 + 43.3) * 4).toFixed(1),
   }));
 
+  // bezier from car bottom to VPP (display path — direction doesn't matter visually)
   const carPath = (cx) => `M ${cx} 174 C ${cx} 230 ${VPP_CX} ${VPP_Y - 32} ${VPP_CX} ${VPP_Y}`;
+  // reversed: commands travel FROM VPP controller DOWN to car
+  const vppToCarPath = (cx) => `M ${VPP_CX} ${VPP_Y} C ${VPP_CX} ${VPP_Y - 32} ${cx} 230 ${cx} 174`;
 
-  // Normalize grid cable particle speed to ~280 svg-units/s
-  const cableDur = (cx) => ((gridX - cx - 30) / 280).toFixed(2);
-
-  // Sun ray positions (static, group rotates via animateTransform)
-  const SUN_X = 1072, SUN_Y = 15;
+  // Sun/moon centered in upper portion of SVG, above houses
+  const SUN_X = 550, SUN_Y = 22;
   const sunRays = Array.from({ length: 8 }, (_, r) => {
     const a = (r / 8) * Math.PI * 2;
     return {
@@ -195,24 +195,33 @@ function WhatIsVPP({ step = 0 }) {
           <defs>
             <mask id="wvpp-moonmask">
               <rect width={VW} height={VH} fill="white"/>
-              <circle cx="1063" cy="12" r="9" fill="black"/>
+              {/* offset cutout creates crescent: shift right+up from moon center */}
+              <circle cx={SUN_X + 8} cy={SUN_Y - 3} r="10" fill="black"/>
             </mask>
           </defs>
 
-          {/* ── SKY: Stars (fade out at sunrise, back at dusk) ── */}
+          {/* ── NIGHT: dark sky overlay (bottom layer, fades in with moon) ── */}
+          <rect width={VW} height={VH} fill="#070d1a" opacity="0">
+            <animate attributeName="opacity"
+              values="0;0;0.82;0.82;0;0"
+              keyTimes="0;0.17;0.21;0.67;0.82;1"
+              dur="24s" repeatCount="indefinite"/>
+          </rect>
+
+          {/* ── SKY: Stars — spread across full top band, fade at daytime ── */}
           <g style={{ animation: 'wvpp-stars 24s ease-in-out infinite' }}>
             {STARS.map((st, i) => (
-              <circle key={`star${i}`} cx={st.cx} cy={st.cy} r={st.r} fill="#e2e8f0" opacity="0.8">
-                <animate attributeName="opacity" values="0.8;0.12;0.8"
+              <circle key={`star${i}`} cx={st.cx} cy={st.cy} r={st.r} fill="#e2e8f0" opacity="0.85">
+                <animate attributeName="opacity" values="0.85;0.1;0.85"
                   dur={`${st.dur}s`} begin={`${st.beg}s`} repeatCount="indefinite"/>
               </circle>
             ))}
           </g>
 
-          {/* ── SKY: Sun with rotating rays ── */}
+          {/* ── SKY: Sun — centered above houses, rotating rays ── */}
           <g style={{ animation: 'wvpp-sun 24s ease-in-out infinite' }}>
-            <circle cx={SUN_X} cy={SUN_Y} r="9" fill="#f59e0b" opacity="0.85"/>
-            <circle cx={SUN_X} cy={SUN_Y} r="16" fill="none" stroke="#f59e0b" strokeWidth="1" opacity="0.2"/>
+            <circle cx={SUN_X} cy={SUN_Y} r="10" fill="#f59e0b" opacity="0.85"/>
+            <circle cx={SUN_X} cy={SUN_Y} r="18" fill="none" stroke="#f59e0b" strokeWidth="1" opacity="0.2"/>
             <g>
               <animateTransform attributeName="transform" type="rotate"
                 from={`0 ${SUN_X} ${SUN_Y}`} to={`360 ${SUN_X} ${SUN_Y}`}
@@ -226,27 +235,28 @@ function WhatIsVPP({ step = 0 }) {
 
           {/* ── SKY: Moon crescent ── */}
           <g style={{ animation: 'wvpp-moon 24s ease-in-out infinite' }}>
-            <circle cx="1056" cy={SUN_Y} r="10" fill="#c8d0db" opacity="0.75" mask="url(#wvpp-moonmask)"/>
+            <circle cx={SUN_X - 2} cy={SUN_Y} r="11" fill="#c8d0db" opacity="0.8" mask="url(#wvpp-moonmask)"/>
           </g>
 
-          {/* ── GRID: vertical line + label ── */}
+          {/* ── GRID: vertical dashed line + ⚡ icon ── */}
           <line x1={gridX} y1="8" x2={gridX} y2="330"
             stroke="var(--color-primary)" strokeWidth="1" strokeDasharray="3,5" opacity="0.2"/>
+          <text x={gridX} y={GRID_CABLE_Y + 6} textAnchor="middle" fontSize="16"
+            fill="var(--color-primary)" opacity="0.55">⚡</text>
           <text x={gridX} y="344" textAnchor="middle" fontSize="7.5"
-            fill="var(--color-primary)" fontFamily="monospace" opacity="0.4" letterSpacing="0.1em">GRID</text>
+            fill="var(--color-primary)" fontFamily="monospace" opacity="0.35" letterSpacing="0.1em">GRID</text>
 
-          {/* ── House → Grid: cables + animated energy particles ── */}
+          {/* ── House → Grid: horizontal cables at y=110 (between house and car) + slow particles ── */}
           {HX.map((cx, i) => {
-            const dur = cableDur(cx);
-            const stagger = (parseFloat(dur) / 3).toFixed(2);
+            const stagger = (3.5 / 3).toFixed(2);
             return (
               <g key={`gc${i}`}>
-                <line x1={cx + 30} y1="58" x2={gridX} y2="58"
+                <line x1={cx} y1={GRID_CABLE_Y} x2={gridX} y2={GRID_CABLE_Y}
                   stroke="var(--color-washi-solar)" strokeWidth="0.8" strokeDasharray="3,4" opacity="0.15"/>
                 {[0, 1, 2].map(j => (
                   <circle key={j} r="2" fill="var(--color-washi-solar)" opacity="0.7">
-                    <animateMotion path={`M ${cx + 30} 58 L ${gridX} 58`}
-                      dur={`${dur}s`} begin={`${(j * stagger).toFixed(2)}s`} repeatCount="indefinite"/>
+                    <animateMotion path={`M ${cx} ${GRID_CABLE_Y} L ${gridX} ${GRID_CABLE_Y}`}
+                      dur="3.5s" begin={`${(j * parseFloat(stagger) + i * 0.28).toFixed(2)}s`} repeatCount="indefinite"/>
                   </circle>
                 ))}
               </g>
@@ -331,14 +341,14 @@ function WhatIsVPP({ step = 0 }) {
               opacity={showLines ? (aggActive ? 0.65 : 0.3) : 0} style={tr}/>
           ))}
 
-          {/* ── Car → VPP: energy particles (appear at step 1) ── */}
+          {/* ── VPP → Car: command/energy particles travel FROM controller DOWN to cars ── */}
           {showLines && HX.map((cx, i) => (
             <g key={`cvp${i}`}>
               {[0, 1, 2].map(j => (
                 <circle key={j} r="2.5"
                   fill={dispActive ? 'var(--color-washi-solar)' : 'var(--color-primary)'}
                   opacity={aggActive ? 0.9 : 0.55} style={tr}>
-                  <animateMotion path={carPath(cx)}
+                  <animateMotion path={vppToCarPath(cx)}
                     dur={dispActive ? '2.2s' : '2.8s'}
                     begin={`${(j * 0.93).toFixed(2)}s`} repeatCount="indefinite"/>
                 </circle>
@@ -402,9 +412,9 @@ function WhatIsVPP({ step = 0 }) {
       <style>{`
         @keyframes whatisvpp-left{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
         @keyframes whatisvpp-right{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
-        @keyframes wvpp-sun{0%{opacity:0}20%{opacity:0.9}65%{opacity:0.9}82%{opacity:0}100%{opacity:0}}
-        @keyframes wvpp-moon{0%{opacity:0.8}15%{opacity:0}68%{opacity:0}86%{opacity:0.8}100%{opacity:0.8}}
-        @keyframes wvpp-stars{0%{opacity:1}18%{opacity:0.07}67%{opacity:0.07}85%{opacity:1}100%{opacity:1}}
+        @keyframes wvpp-sun{0%{opacity:0}20%{opacity:0.92}65%{opacity:0.92}80%{opacity:0}100%{opacity:0}}
+        @keyframes wvpp-moon{0%{opacity:0.85}17%{opacity:0}68%{opacity:0}84%{opacity:0.85}100%{opacity:0.85}}
+        @keyframes wvpp-stars{0%{opacity:1}19%{opacity:0.05}67%{opacity:0.05}83%{opacity:1}100%{opacity:1}}
       `}</style>
     </div>
   );
