@@ -166,9 +166,8 @@ function WhatIsVPP({ step = 0 }) {
   // Car geometry (cabin C_CAB_Y, body C_TOP→C_BOT, wheels at C_WHEEL_Y)
   const C_CAB_Y = 302, C_TOP = 316, C_BOT = 338, C_WHEEL_Y = 348;
 
-  // Grid cable rows — house cables sit between H_BOT and C_CAB_Y; car cables below wheels
+  // Single shared grid cable — houses drop down to it, EVs rise up to it
   const GRID_HOUSE_Y = 258;
-  const GRID_CAR_Y   = 418;
 
   // Sun/moon — upper right corner
   const SUN_X = 1255, SUN_Y = 68;
@@ -209,15 +208,14 @@ function WhatIsVPP({ step = 0 }) {
             <rect width={VW} height={VH} fill="white"/>
             <circle cx={SUN_X + 10} cy={SUN_Y - 5} r="12" fill="black"/>
           </mask>
+          <pattern id="wvpp-sqgrid" width="60" height="60" patternUnits="userSpaceOnUse">
+            <path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(34,211,238,0.06)" strokeWidth="0.5"/>
+          </pattern>
         </defs>
 
-        {/* ── NIGHT OVERLAY — bottom z-layer, shows during moon phase ── */}
-        <rect width={VW} height={VH} fill="#070d1a" opacity="0">
-          <animate attributeName="opacity"
-            values="0;0;0.82;0.82;0;0"
-            keyTimes="0;0.20;0.27;0.70;0.78;1"
-            dur="24s" repeatCount="indefinite"/>
-        </rect>
+        {/* ── PERMANENT DARK BACKGROUND + SUBTLE GRID ── */}
+        <rect width={VW} height={VH} fill="#050810"/>
+        <rect width={VW} height={VH} fill="url(#wvpp-sqgrid)"/>
 
         {/* ── STARS ── */}
         <g style={{ animation: 'wvpp-stars 24s linear infinite' }}>
@@ -254,8 +252,6 @@ function WhatIsVPP({ step = 0 }) {
           stroke="var(--color-primary)" strokeWidth="1" strokeDasharray="3,5" opacity="0.2"/>
         <text x={gridX} y={GRID_HOUSE_Y - 12} textAnchor="middle" fontSize="20"
           fill="var(--color-primary)" opacity="0.6">⚡</text>
-        <text x={gridX} y={GRID_CAR_Y - 12} textAnchor="middle" fontSize="20"
-          fill="var(--color-primary)" opacity="0.6">⚡</text>
         <text x={gridX} y={VH - 60} textAnchor="middle" fontSize="9"
           fill="var(--color-primary)" fontFamily="monospace" opacity="0.35" letterSpacing="0.1em">GRID</text>
 
@@ -269,23 +265,23 @@ function WhatIsVPP({ step = 0 }) {
             {[0, 1, 2].map(j => (
               <circle key={j} r="2.2" fill="var(--color-washi-solar)" opacity="0.7">
                 <animateMotion path={`M ${hx} ${GRID_HOUSE_Y} L ${gridX} ${GRID_HOUSE_Y}`}
-                  dur="3.5s" begin={`${(j * 1.17 + i * 0.28).toFixed(2)}s`} repeatCount="indefinite"/>
+                  dur="6s" begin={`${(j * 1.17 + i * 0.28).toFixed(2)}s`} repeatCount="indefinite"/>
               </circle>
             ))}
           </g>
         ))}
 
-        {/* ── CAR → GRID: horizontal cables + slow particles ── */}
+        {/* ── CAR → GRID: rise up to shared house cable at GRID_HOUSE_Y ── */}
         {CX.map((cx, i) => (
           <g key={`cgc${i}`}>
-            <line x1={cx} y1={C_WHEEL_Y} x2={cx} y2={GRID_CAR_Y}
+            <line x1={cx} y1={C_CAB_Y} x2={cx} y2={GRID_HOUSE_Y}
               stroke="var(--color-washi-solar)" strokeWidth="0.9" opacity="0.25"/>
-            <line x1={cx} y1={GRID_CAR_Y} x2={gridX} y2={GRID_CAR_Y}
+            <line x1={cx} y1={GRID_HOUSE_Y} x2={gridX} y2={GRID_HOUSE_Y}
               stroke="var(--color-washi-solar)" strokeWidth="0.9" strokeDasharray="3,4" opacity="0.18"/>
             {[0, 1, 2].map(j => (
               <circle key={j} r="2.2" fill="var(--color-washi-solar)" opacity="0.7">
-                <animateMotion path={`M ${cx} ${GRID_CAR_Y} L ${gridX} ${GRID_CAR_Y}`}
-                  dur="3.5s" begin={`${(j * 1.17 + i * 0.22 + 0.7).toFixed(2)}s`} repeatCount="indefinite"/>
+                <animateMotion path={`M ${cx} ${GRID_HOUSE_Y} L ${gridX} ${GRID_HOUSE_Y}`}
+                  dur="6s" begin={`${(j * 1.17 + i * 0.22 + 0.7).toFixed(2)}s`} repeatCount="indefinite"/>
               </circle>
             ))}
           </g>
@@ -296,7 +292,7 @@ function WhatIsVPP({ step = 0 }) {
           <g key={`h${i}`}>
             {/* body */}
             <rect x={hx-30} y={H_TOP} width={60} height={H_BOT - H_TOP} rx="2"
-              fill="var(--color-bg)" stroke="var(--color-primary)" strokeWidth="1.5"/>
+              fill="#0a1428" stroke="var(--color-primary)" strokeWidth="1.5"/>
             {/* roof */}
             <polyline points={`${hx-38},${H_TOP+2} ${hx},${H_PEAK} ${hx+38},${H_TOP+2}`}
               fill="none" stroke="var(--color-primary)" strokeWidth="1.5" strokeLinejoin="round"/>
@@ -306,20 +302,20 @@ function WhatIsVPP({ step = 0 }) {
             {/* PV panel on roof slope */}
             <rect x={hx-30} y={H_PEAK+8} width={26} height={14} rx="1"
               fill="var(--color-washi-solar)" opacity="0.9"/>
-            <text x={hx-17} y={H_PEAK+18} fontSize="7" fill="var(--color-bg)"
+            <text x={hx-17} y={H_PEAK+18} fontSize="7" fill="#030508"
               fontFamily="monospace" fontWeight="bold">PV</text>
-            {/* Battery */}
-            <rect x={hx+32} y={H_TOP+5} width={8} height={17} rx="1"
+            {/* Battery — charges during day (0→0.20, 0.78→1), depletes at night (0.27→0.70) */}
+            <rect x={hx+30} y={H_TOP+3} width={11} height={22} rx="1"
               fill="none" stroke="var(--color-primary)" strokeWidth="0.8" opacity="0.45"/>
-            <rect x={hx+34} y={H_TOP+3} width={4} height={2}
+            <rect x={hx+32} y={H_TOP+1} width={7} height={3}
               fill="var(--color-primary)" opacity="0.35"/>
-            <rect x={hx+33} y={H_TOP+19} width={6} height={3} rx="0.5" fill="var(--color-washi-solar)">
-              <animate attributeName="height" values="3;15;15;7;3"
-                keyTimes="0;0.58;0.78;0.93;1" dur="24s" begin={`${i * 0.5}s`} repeatCount="indefinite"/>
-              <animate attributeName="y" values={`${H_TOP+19};${H_TOP+7};${H_TOP+7};${H_TOP+13};${H_TOP+19}`}
-                keyTimes="0;0.58;0.78;0.93;1" dur="24s" begin={`${i * 0.5}s`} repeatCount="indefinite"/>
-              <animate attributeName="opacity" values="0.35;0.9;0.9;0.6;0.35"
-                keyTimes="0;0.58;0.78;0.93;1" dur="24s" begin={`${i * 0.5}s`} repeatCount="indefinite"/>
+            <rect x={hx+31} y={H_TOP+12} width={9} height={11} rx="0.5" fill="var(--color-washi-solar)">
+              <animate attributeName="height" values="11;19;19;2;2;11"
+                keyTimes="0;0.20;0.27;0.70;0.78;1" dur="24s" begin={`${i * 0.5}s`} repeatCount="indefinite"/>
+              <animate attributeName="y" values={`${H_TOP+12};${H_TOP+4};${H_TOP+4};${H_TOP+21};${H_TOP+21};${H_TOP+12}`}
+                keyTimes="0;0.20;0.27;0.70;0.78;1" dur="24s" begin={`${i * 0.5}s`} repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.6;0.95;0.95;0.4;0.4;0.6"
+                keyTimes="0;0.20;0.27;0.70;0.78;1" dur="24s" begin={`${i * 0.5}s`} repeatCount="indefinite"/>
             </rect>
           </g>
         ))}
@@ -329,12 +325,12 @@ function WhatIsVPP({ step = 0 }) {
           <g key={`c${i}`} style={tr}>
             {/* cabin */}
             <rect x={cx-20} y={C_CAB_Y} width={40} height={C_TOP - C_CAB_Y} rx="3"
-              fill="var(--color-bg)"
+              fill="#0a1428"
               stroke={dispActive ? 'var(--color-washi-solar)' : 'var(--color-primary)'}
               strokeWidth="1" style={tr}/>
             {/* body */}
             <rect x={cx-32} y={C_TOP} width={64} height={C_BOT - C_TOP} rx="4"
-              fill="var(--color-bg)"
+              fill="#0a1428"
               stroke={dispActive ? 'var(--color-washi-solar)' : 'var(--color-primary)'}
               strokeWidth="1.5" style={tr}/>
             {/* wheels */}
@@ -399,12 +395,12 @@ function WhatIsVPP({ step = 0 }) {
           <animate attributeName="opacity" values="0.2;0.5;0.2" dur="2s" repeatCount="indefinite"/>
         </rect>
         <rect x={VPP_CX-VPP_W/2} y={VPP_Y} width={VPP_W} height={VPP_H} rx="3"
-          fill="color-mix(in srgb, var(--color-primary) 12%, var(--color-bg))"
+          fill="rgba(5,8,16,0.92)"
           stroke="var(--color-primary)" strokeWidth="2"/>
         <text x={VPP_CX} y={VPP_Y+22} textAnchor="middle" fontSize="9"
           fill="var(--color-primary)" fontFamily="monospace" letterSpacing="0.15em">VPP CONTROLLER</text>
         <text x={VPP_CX} y={VPP_Y+48} textAnchor="middle" fontSize="18"
-          fill="var(--color-washi-ink)" fontFamily="var(--font-heading)">Flexa (Enpal)</text>
+          fill="#e2e8f0" fontFamily="var(--font-heading)">Flexa (Enpal)</text>
 
         {/* ── AGGREGATE callout (step 2) ── */}
         {aggActive && <>
@@ -415,7 +411,7 @@ function WhatIsVPP({ step = 0 }) {
               padding: '10px 14px', height: '100%', boxSizing: 'border-box',
               border: '1.5px solid var(--color-primary)',
               borderLeft: '4px solid var(--color-primary)',
-              background: 'color-mix(in srgb, var(--color-primary) 8%, var(--color-bg))',
+              background: 'rgba(5,8,16,0.92)',
               animation: 'whatisvpp-left 0.4s cubic-bezier(0.4,0,0.2,1) both',
             }}>
               <div style={{ fontFamily: 'monospace', color: 'var(--color-primary)', fontSize: 9, letterSpacing: '0.12em' }}>AGGREGATE</div>
@@ -434,7 +430,7 @@ function WhatIsVPP({ step = 0 }) {
               padding: '10px 14px', height: '100%', boxSizing: 'border-box',
               border: '1.5px solid var(--color-washi-solar)',
               borderLeft: '4px solid var(--color-washi-solar)',
-              background: 'color-mix(in srgb, var(--color-washi-solar) 8%, var(--color-bg))',
+              background: 'rgba(5,8,16,0.92)',
               animation: 'whatisvpp-right 0.4s cubic-bezier(0.4,0,0.2,1) both',
             }}>
               <div style={{ fontFamily: 'monospace', color: 'var(--color-washi-solar)', fontSize: 9, letterSpacing: '0.12em' }}>DISPATCH · SMART CHARGING</div>
@@ -449,7 +445,7 @@ function WhatIsVPP({ step = 0 }) {
       {/* ── Title overlay (above SVG) ── */}
       <div style={{ position: 'absolute', top: 38, left: 58, pointerEvents: 'none', zIndex: 1 }}>
         <Eyebrow>WHAT IS A VIRTUAL POWER PLANT?</Eyebrow>
-        <Title>One controller. Millions of devices.</Title>
+        <Title tone="#e2e8f0">One controller. Millions of devices.</Title>
       </div>
 
       <style>{`
@@ -502,7 +498,7 @@ export default function MainTalk() {
     </Slide>
 
     {/* 3b · What is a VPP? */}
-    <Slide padding="0" backgroundColor="var(--color-washi-paper)">
+    <Slide padding="0" backgroundColor="#050810">
       <StepBridge count={4}>{step => <WhatIsVPP step={step} />}</StepBridge>
       <Notes>Step 0: base diagram — homes, EVs, bus, VPP Controller, Energy Market, Regulators. Step 1: animated arcs show data flowing from devices to controller. Step 2: Aggregate card — pooling energy. Step 3: Dispatch card — smart commands charge/discharge/wait.</Notes>
     </Slide>
