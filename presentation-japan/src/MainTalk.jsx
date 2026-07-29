@@ -147,34 +147,128 @@ function AssetMixCapacityViz({ step = 0 }) {
 
 function WhatIsVPP({ step = 0 }) {
   const s = Math.min(Math.max(Number.isFinite(step) ? step : 0, 0), 3);
-  const CARDS = [
-    { label: 'AGGREGATE', title: 'Pool energy from distributed homes', body: '1,000 homes × 10 kWh = 10 MWh — same as a mid-sized gas peaker.', color: 'var(--color-primary)' },
-    { label: 'DISPATCH · SMART CHARGING', title: 'Charge · Discharge · Wait', body: 'Commands reach every device in milliseconds. The fleet responds as one coordinated plant.', color: 'var(--color-washi-solar)' },
-  ];
+  const showLines = s >= 1;
+  const aggActive = s >= 2;
+  const dispActive = s >= 3;
+
+  const VW = 1100, VH = 380;
+  const HX = [150, 400, 700, 950]; // 4 home x-centers, symmetric around VPP_CX=550
+  const VPP_CX = 550, VPP_Y = 268, VPP_W = 200, VPP_H = 56;
+  const tr = { transition: 'all 500ms ease' };
+
   return (
-    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 10 }}>
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 8 }}>
       <div>
         <Eyebrow>WHAT IS A VIRTUAL POWER PLANT?</Eyebrow>
         <Title>One controller. Millions of devices.</Title>
       </div>
-      <div style={{ flex: 1, position: 'relative', minHeight: 0, overflow: 'hidden', borderRadius: 4, background: 'var(--color-bg)' }}>
-        <Lazy><VPPArchitecture highlightStep={s >= 2 ? s - 1 : 0} showCars chargingActive={s >= 3} /></Lazy>
+      <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
+        <svg viewBox={`0 0 ${VW} ${VH}`} style={{ width: '100%', height: '100%' }} preserveAspectRatio="xMidYMid meet">
+
+          {/* ── HOUSES (top row) ── */}
+          {HX.map((cx, i) => (
+            <g key={`h${i}`}>
+              <rect x={cx-30} y={36} width={60} height={44} rx="2"
+                fill="var(--color-bg)" stroke="var(--color-primary)" strokeWidth="1.5"/>
+              <polyline points={`${cx-38},38 ${cx},12 ${cx+38},38`}
+                fill="none" stroke="var(--color-primary)" strokeWidth="1.5" strokeLinejoin="round"/>
+              <rect x={cx-8} y={56} width={16} height={24} rx="1"
+                fill="var(--color-primary)" opacity="0.2"/>
+              <rect x={cx-30} y={18} width={26} height={14} rx="1"
+                fill="var(--color-washi-solar)" opacity="0.9"/>
+              <text x={cx-17} y={28} fontSize="7" fill="var(--color-bg)" fontFamily="monospace" fontWeight="bold">PV</text>
+            </g>
+          ))}
+
+          {/* ── HOUSE → CAR connectors ── */}
+          {HX.map((cx, i) => (
+            <line key={`hc${i}`} x1={cx} y1={80} x2={cx} y2={140}
+              stroke="var(--color-primary)" strokeWidth="1" opacity="0.2"/>
+          ))}
+
+          {/* ── CARS (middle row) ── */}
+          {HX.map((cx, i) => (
+            <g key={`c${i}`} style={tr}>
+              <rect x={cx-20} y={140} width={40} height={14} rx="3"
+                fill="var(--color-bg)"
+                stroke={dispActive ? 'var(--color-washi-solar)' : 'var(--color-primary)'}
+                strokeWidth="1" style={tr}/>
+              <rect x={cx-32} y={152} width={64} height={22} rx="4"
+                fill="var(--color-bg)"
+                stroke={dispActive ? 'var(--color-washi-solar)' : 'var(--color-primary)'}
+                strokeWidth="1.5" style={tr}/>
+              <circle cx={cx-18} cy={182} r="7"
+                fill={dispActive ? 'var(--color-washi-solar)' : '#475569'}
+                opacity="0.65" style={tr}/>
+              <circle cx={cx+18} cy={182} r="7"
+                fill={dispActive ? 'var(--color-washi-solar)' : '#475569'}
+                opacity="0.65" style={tr}/>
+              <text x={cx} y={165} textAnchor="middle" fontSize="11"
+                fill="var(--color-washi-solar)"
+                opacity={dispActive ? 0.95 : 0} style={tr}>⚡</text>
+            </g>
+          ))}
+
+          {/* ── CAR → VPP converging lines ── */}
+          {HX.map((cx, i) => (
+            <path key={`cv${i}`}
+              d={`M ${cx} 174 C ${cx} 230 ${VPP_CX} ${VPP_Y-32} ${VPP_CX} ${VPP_Y}`}
+              fill="none" stroke="var(--color-primary)" strokeWidth="1.5" strokeDasharray="5,4"
+              opacity={showLines ? (aggActive ? 0.65 : 0.3) : 0} style={tr}/>
+          ))}
+
+          {/* ── VPP CONTROLLER box ── */}
+          <rect x={VPP_CX-VPP_W/2} y={VPP_Y} width={VPP_W} height={VPP_H} rx="3"
+            fill="color-mix(in srgb, var(--color-primary) 12%, var(--color-bg))"
+            stroke="var(--color-primary)" strokeWidth="2"/>
+          <text x={VPP_CX} y={VPP_Y+18} textAnchor="middle" fontSize="8.5"
+            fill="var(--color-primary)" fontFamily="monospace" letterSpacing="0.15em">VPP CONTROLLER</text>
+          <text x={VPP_CX} y={VPP_Y+38} textAnchor="middle" fontSize="15"
+            fill="var(--color-washi-ink)" fontFamily="var(--font-heading)">Flexa (Enpal)</text>
+
+          {/* ── AGGREGATE callout (left) ── */}
+          {aggActive && <>
+            <line x1={VPP_CX-VPP_W/2-26} y1={VPP_Y+VPP_H/2} x2={VPP_CX-VPP_W/2} y2={VPP_Y+VPP_H/2}
+              stroke="var(--color-primary)" strokeWidth="1" strokeDasharray="4,3" opacity="0.55"/>
+            <foreignObject x={VPP_CX-VPP_W/2-26-248} y={VPP_Y-8} width={248} height={80}>
+              <div style={{
+                padding: '10px 14px', height: '100%', boxSizing: 'border-box',
+                border: '1.5px solid var(--color-primary)',
+                borderLeft: '4px solid var(--color-primary)',
+                background: 'color-mix(in srgb, var(--color-primary) 8%, var(--color-bg))',
+                animation: 'whatisvpp-left 0.4s cubic-bezier(0.4,0,0.2,1) both',
+              }}>
+                <div style={{ fontFamily: 'monospace', color: 'var(--color-primary)', fontSize: 9, letterSpacing: '0.12em' }}>AGGREGATE</div>
+                <div style={{ fontFamily: 'var(--font-heading)', fontSize: 13, color: '#e2e8f0', marginTop: 3 }}>Pool energy from distributed homes</div>
+                <div style={{ fontSize: 10, color: '#94a3b8', marginTop: 2 }}>1,000 homes × 10 kWh = 10 MWh</div>
+              </div>
+            </foreignObject>
+          </>}
+
+          {/* ── DISPATCH callout (right) ── */}
+          {dispActive && <>
+            <line x1={VPP_CX+VPP_W/2} y1={VPP_Y+VPP_H/2} x2={VPP_CX+VPP_W/2+26} y2={VPP_Y+VPP_H/2}
+              stroke="var(--color-washi-solar)" strokeWidth="1" strokeDasharray="4,3" opacity="0.55"/>
+            <foreignObject x={VPP_CX+VPP_W/2+26} y={VPP_Y-8} width={248} height={80}>
+              <div style={{
+                padding: '10px 14px', height: '100%', boxSizing: 'border-box',
+                border: '1.5px solid var(--color-washi-solar)',
+                borderLeft: '4px solid var(--color-washi-solar)',
+                background: 'color-mix(in srgb, var(--color-washi-solar) 8%, var(--color-bg))',
+                animation: 'whatisvpp-right 0.4s cubic-bezier(0.4,0,0.2,1) both',
+              }}>
+                <div style={{ fontFamily: 'monospace', color: 'var(--color-washi-solar)', fontSize: 9, letterSpacing: '0.12em' }}>DISPATCH · SMART CHARGING</div>
+                <div style={{ fontFamily: 'var(--font-heading)', fontSize: 13, color: '#e2e8f0', marginTop: 3 }}>Charge · Discharge · Wait</div>
+                <div style={{ fontSize: 10, color: '#94a3b8', marginTop: 2 }}>Commands reach every device in milliseconds</div>
+              </div>
+            </foreignObject>
+          </>}
+        </svg>
       </div>
-      <div style={{ flexShrink: 0, display: 'flex', gap: 12 }}>
-        {CARDS.map((card, i) => (
-          <div key={card.label} style={{
-            flex: 1, padding: '12px 16px',
-            border: `1.5px solid ${s >= i + 2 ? card.color : 'color-mix(in srgb, var(--color-washi-ink) 14%, transparent)'}`,
-            background: s >= i + 2 ? `color-mix(in srgb, ${card.color} 7%, transparent)` : 'transparent',
-            opacity: s >= i + 2 ? 1 : 0.3,
-            transition: 'all 500ms ease',
-          }}>
-            <div style={{ fontFamily: 'var(--font-mono)', color: card.color, letterSpacing: '0.13em', fontSize: 11 }}>{card.label}</div>
-            <div style={{ fontFamily: 'var(--font-heading)', fontSize: 18, color: 'var(--color-washi-ink)', marginTop: 4 }}>{card.title}</div>
-            <Small style={{ marginTop: 3 }}>{card.body}</Small>
-          </div>
-        ))}
-      </div>
+      <style>{`
+        @keyframes whatisvpp-left{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+        @keyframes whatisvpp-right{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
+      `}</style>
     </div>
   );
 }
