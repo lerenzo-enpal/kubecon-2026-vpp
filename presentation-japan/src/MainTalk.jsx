@@ -150,271 +150,310 @@ function WhatIsVPP({ step = 0 }) {
   const showLines = s >= 1;
   const aggActive = s >= 2;
   const dispActive = s >= 3;
-
-  const VW = 1100, VH = 380;
-  const HX = [150, 400, 700, 950];
-  const VPP_CX = 550, VPP_Y = 268, VPP_W = 200, VPP_H = 56;
-  const gridX = 1092;
-  const GRID_CABLE_Y = 110;
   const tr = { transition: 'all 500ms ease' };
 
+  // Full-bleed canvas — matches Spectacle slide dimensions
+  const VW = 1366, VH = 768;
+
+  // Houses and cars at offset x positions so VPP can connect to both independently
+  const HX = [190, 430, 670, 910];   // house centers
+  const CX = [295, 535, 775, 1015];  // car centers (+105 offset)
+  const VPP_CX = 620, VPP_Y = 490, VPP_W = 220, VPP_H = 70;
+  const gridX = 1235;
+
+  // House geometry (roof peak at H_PEAK, body H_TOP→H_BOT)
+  const H_PEAK = 148, H_TOP = 170, H_BOT = 214;  // H_TOP + 44 = H_BOT
+  // Car geometry (cabin C_CAB_Y, body C_TOP→C_BOT, wheels at C_WHEEL_Y)
+  const C_CAB_Y = 302, C_TOP = 316, C_BOT = 338, C_WHEEL_Y = 348;
+
+  // Grid cable rows — house cables sit between H_BOT and C_CAB_Y; car cables below wheels
+  const GRID_HOUSE_Y = 258;
+  const GRID_CAR_Y   = 418;
+
+  // Sun/moon — upper right corner
+  const SUN_X = 1255, SUN_Y = 68;
+
   const hash = (n) => { const x = Math.sin(n) * 43758.5453; return x - Math.floor(x); };
-  const STARS = Array.from({ length: 26 }, (_, i) => ({
+  const STARS = Array.from({ length: 36 }, (_, i) => ({
     cx: hash(i * 127.1 + 311.7) * VW,
-    cy: 4 + hash(i * 269.5 + 183.3) * 30,
-    r:  0.5 + hash(i * 419.2 + 71.9) * 1.2,
+    cy: 8 + hash(i * 269.5 + 183.3) * 88,
+    r:  0.6 + hash(i * 419.2 + 71.9) * 1.5,
     dur: (1.4 + hash(i * 631.2 + 97.1) * 3).toFixed(1),
     beg: (hash(i * 523.7 + 43.3) * 4).toFixed(1),
   }));
 
-  // bezier from car bottom to VPP (display path — direction doesn't matter visually)
-  const carPath = (cx) => `M ${cx} 174 C ${cx} 230 ${VPP_CX} ${VPP_Y - 32} ${VPP_CX} ${VPP_Y}`;
-  // reversed: commands travel FROM VPP controller DOWN to car
-  const vppToCarPath = (cx) => `M ${VPP_CX} ${VPP_Y} C ${VPP_CX} ${VPP_Y - 32} ${cx} 230 ${cx} 174`;
+  // Bezier paths — visual dashed lines (house/car → VPP)
+  const houseToVppLine = (hx) => `M ${hx} ${H_BOT} C ${hx} ${VPP_Y - 140} ${VPP_CX} ${VPP_Y - 60} ${VPP_CX} ${VPP_Y}`;
+  const carToVppLine   = (cx) => `M ${cx} ${C_WHEEL_Y} C ${cx} ${VPP_Y - 80} ${VPP_CX} ${VPP_Y - 35} ${VPP_CX} ${VPP_Y}`;
+  // Reversed paths — command particles travel FROM VPP DOWN to device
+  const vppToHousePath = (hx) => `M ${VPP_CX} ${VPP_Y} C ${VPP_CX} ${VPP_Y - 60} ${hx} ${VPP_Y - 140} ${hx} ${H_BOT}`;
+  const vppToCarPath   = (cx) => `M ${VPP_CX} ${VPP_Y} C ${VPP_CX} ${VPP_Y - 35} ${cx} ${VPP_Y - 80} ${cx} ${C_WHEEL_Y}`;
 
-  // Sun/moon centered in upper portion of SVG, above houses
-  const SUN_X = 550, SUN_Y = 22;
   const sunRays = Array.from({ length: 8 }, (_, r) => {
     const a = (r / 8) * Math.PI * 2;
     return {
-      x1: SUN_X + Math.cos(a) * 12, y1: SUN_Y + Math.sin(a) * 12,
-      x2: SUN_X + Math.cos(a) * (16 + (r % 2) * 4), y2: SUN_Y + Math.sin(a) * (16 + (r % 2) * 4),
+      x1: SUN_X + Math.cos(a) * 13, y1: SUN_Y + Math.sin(a) * 13,
+      x2: SUN_X + Math.cos(a) * (18 + (r % 2) * 4), y2: SUN_Y + Math.sin(a) * (18 + (r % 2) * 4),
     };
   });
 
   return (
-    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 8 }}>
-      <div>
-        <Eyebrow>WHAT IS A VIRTUAL POWER PLANT?</Eyebrow>
-        <Title>One controller. Millions of devices.</Title>
-      </div>
-      <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
-        <svg viewBox={`0 0 ${VW} ${VH}`} style={{ width: '100%', height: '100%' }} preserveAspectRatio="xMidYMid meet">
+    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
 
-          {/* ── DEFS: moon crescent mask ── */}
-          <defs>
-            <mask id="wvpp-moonmask">
-              <rect width={VW} height={VH} fill="white"/>
-              {/* offset cutout creates crescent: shift right+up from moon center */}
-              <circle cx={SUN_X + 8} cy={SUN_Y - 3} r="10" fill="black"/>
-            </mask>
-          </defs>
+      {/* ── Full-bleed SVG ── */}
+      <svg viewBox={`0 0 ${VW} ${VH}`} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} preserveAspectRatio="xMidYMid meet">
 
-          {/* ── NIGHT: dark sky overlay (bottom layer, fades in with moon) ── */}
-          <rect width={VW} height={VH} fill="#070d1a" opacity="0">
-            <animate attributeName="opacity"
-              values="0;0;0.82;0.82;0;0"
-              keyTimes="0;0.17;0.21;0.67;0.82;1"
-              dur="24s" repeatCount="indefinite"/>
-          </rect>
+        {/* ── DEFS: moon crescent mask ── */}
+        <defs>
+          <mask id="wvpp-moonmask">
+            <rect width={VW} height={VH} fill="white"/>
+            <circle cx={SUN_X + 10} cy={SUN_Y - 5} r="12" fill="black"/>
+          </mask>
+        </defs>
 
-          {/* ── SKY: Stars — spread across full top band, fade at daytime ── */}
-          <g style={{ animation: 'wvpp-stars 24s ease-in-out infinite' }}>
-            {STARS.map((st, i) => (
-              <circle key={`star${i}`} cx={st.cx} cy={st.cy} r={st.r} fill="#e2e8f0" opacity="0.85">
-                <animate attributeName="opacity" values="0.85;0.1;0.85"
-                  dur={`${st.dur}s`} begin={`${st.beg}s`} repeatCount="indefinite"/>
+        {/* ── NIGHT OVERLAY — bottom z-layer, shows during moon phase ── */}
+        <rect width={VW} height={VH} fill="#070d1a" opacity="0">
+          <animate attributeName="opacity"
+            values="0.82;0.82;0;0;0.82;0.82"
+            keyTimes="0;0.20;0.27;0.70;0.78;1"
+            dur="24s" repeatCount="indefinite"/>
+        </rect>
+
+        {/* ── STARS ── */}
+        <g style={{ animation: 'wvpp-stars 24s ease-in-out infinite' }}>
+          {STARS.map((st, i) => (
+            <circle key={`star${i}`} cx={st.cx} cy={st.cy} r={st.r} fill="#e2e8f0" opacity="0.85">
+              <animate attributeName="opacity" values="0.85;0.1;0.85"
+                dur={`${st.dur}s`} begin={`${st.beg}s`} repeatCount="indefinite"/>
+            </circle>
+          ))}
+        </g>
+
+        {/* ── SUN (upper right) ── */}
+        <g style={{ animation: 'wvpp-sun 24s ease-in-out infinite' }}>
+          <circle cx={SUN_X} cy={SUN_Y} r="11" fill="#f59e0b" opacity="0.88"/>
+          <circle cx={SUN_X} cy={SUN_Y} r="20" fill="none" stroke="#f59e0b" strokeWidth="1" opacity="0.2"/>
+          <g>
+            <animateTransform attributeName="transform" type="rotate"
+              from={`0 ${SUN_X} ${SUN_Y}`} to={`360 ${SUN_X} ${SUN_Y}`}
+              dur="20s" repeatCount="indefinite"/>
+            {sunRays.map((r, i) => (
+              <line key={i} x1={r.x1} y1={r.y1} x2={r.x2} y2={r.y2}
+                stroke="#f59e0b" strokeWidth="1.5" opacity="0.55"/>
+            ))}
+          </g>
+        </g>
+
+        {/* ── MOON (upper right, crescent) ── */}
+        <g style={{ animation: 'wvpp-moon 24s ease-in-out infinite' }}>
+          <circle cx={SUN_X - 2} cy={SUN_Y} r="13" fill="#c8d0db" opacity="0.88" mask="url(#wvpp-moonmask)"/>
+        </g>
+
+        {/* ── GRID: vertical dashed line + icons ── */}
+        <line x1={gridX} y1="10" x2={gridX} y2={VH - 80}
+          stroke="var(--color-primary)" strokeWidth="1" strokeDasharray="3,5" opacity="0.2"/>
+        <text x={gridX} y={GRID_HOUSE_Y - 12} textAnchor="middle" fontSize="20"
+          fill="var(--color-primary)" opacity="0.6">⚡</text>
+        <text x={gridX} y={GRID_CAR_Y - 12} textAnchor="middle" fontSize="20"
+          fill="var(--color-primary)" opacity="0.6">⚡</text>
+        <text x={gridX} y={VH - 60} textAnchor="middle" fontSize="9"
+          fill="var(--color-primary)" fontFamily="monospace" opacity="0.35" letterSpacing="0.1em">GRID</text>
+
+        {/* ── HOUSE → GRID: horizontal cables + slow particles ── */}
+        {HX.map((hx, i) => (
+          <g key={`hgc${i}`}>
+            <line x1={hx} y1={GRID_HOUSE_Y} x2={gridX} y2={GRID_HOUSE_Y}
+              stroke="var(--color-washi-solar)" strokeWidth="0.9" strokeDasharray="3,4" opacity="0.18"/>
+            {[0, 1, 2].map(j => (
+              <circle key={j} r="2.2" fill="var(--color-washi-solar)" opacity="0.7">
+                <animateMotion path={`M ${hx} ${GRID_HOUSE_Y} L ${gridX} ${GRID_HOUSE_Y}`}
+                  dur="3.5s" begin={`${(j * 1.17 + i * 0.28).toFixed(2)}s`} repeatCount="indefinite"/>
               </circle>
             ))}
           </g>
+        ))}
 
-          {/* ── SKY: Sun — centered above houses, rotating rays ── */}
-          <g style={{ animation: 'wvpp-sun 24s ease-in-out infinite' }}>
-            <circle cx={SUN_X} cy={SUN_Y} r="10" fill="#f59e0b" opacity="0.85"/>
-            <circle cx={SUN_X} cy={SUN_Y} r="18" fill="none" stroke="#f59e0b" strokeWidth="1" opacity="0.2"/>
-            <g>
-              <animateTransform attributeName="transform" type="rotate"
-                from={`0 ${SUN_X} ${SUN_Y}`} to={`360 ${SUN_X} ${SUN_Y}`}
-                dur="20s" repeatCount="indefinite"/>
-              {sunRays.map((r, i) => (
-                <line key={i} x1={r.x1} y1={r.y1} x2={r.x2} y2={r.y2}
-                  stroke="#f59e0b" strokeWidth="1.5" opacity="0.55"/>
-              ))}
-            </g>
+        {/* ── CAR → GRID: horizontal cables + slow particles ── */}
+        {CX.map((cx, i) => (
+          <g key={`cgc${i}`}>
+            <line x1={cx} y1={GRID_CAR_Y} x2={gridX} y2={GRID_CAR_Y}
+              stroke="var(--color-washi-solar)" strokeWidth="0.9" strokeDasharray="3,4" opacity="0.18"/>
+            {[0, 1, 2].map(j => (
+              <circle key={j} r="2.2" fill="var(--color-washi-solar)" opacity="0.7">
+                <animateMotion path={`M ${cx} ${GRID_CAR_Y} L ${gridX} ${GRID_CAR_Y}`}
+                  dur="3.5s" begin={`${(j * 1.17 + i * 0.22 + 0.7).toFixed(2)}s`} repeatCount="indefinite"/>
+              </circle>
+            ))}
           </g>
+        ))}
 
-          {/* ── SKY: Moon crescent ── */}
-          <g style={{ animation: 'wvpp-moon 24s ease-in-out infinite' }}>
-            <circle cx={SUN_X - 2} cy={SUN_Y} r="11" fill="#c8d0db" opacity="0.8" mask="url(#wvpp-moonmask)"/>
+        {/* ── HOUSES ── */}
+        {HX.map((hx, i) => (
+          <g key={`h${i}`}>
+            {/* body */}
+            <rect x={hx-30} y={H_TOP} width={60} height={H_BOT - H_TOP} rx="2"
+              fill="var(--color-bg)" stroke="var(--color-primary)" strokeWidth="1.5"/>
+            {/* roof */}
+            <polyline points={`${hx-38},${H_TOP+2} ${hx},${H_PEAK} ${hx+38},${H_TOP+2}`}
+              fill="none" stroke="var(--color-primary)" strokeWidth="1.5" strokeLinejoin="round"/>
+            {/* door */}
+            <rect x={hx-8} y={H_TOP+20} width={16} height={H_BOT-H_TOP-20} rx="1"
+              fill="var(--color-primary)" opacity="0.2"/>
+            {/* PV panel on roof slope */}
+            <rect x={hx-30} y={H_PEAK+8} width={26} height={14} rx="1"
+              fill="var(--color-washi-solar)" opacity="0.9"/>
+            <text x={hx-17} y={H_PEAK+18} fontSize="7" fill="var(--color-bg)"
+              fontFamily="monospace" fontWeight="bold">PV</text>
+            {/* Battery */}
+            <rect x={hx+32} y={H_TOP+5} width={8} height={17} rx="1"
+              fill="none" stroke="var(--color-primary)" strokeWidth="0.8" opacity="0.45"/>
+            <rect x={hx+34} y={H_TOP+3} width={4} height={2}
+              fill="var(--color-primary)" opacity="0.35"/>
+            <rect x={hx+33} y={H_TOP+19} width={6} height={3} rx="0.5" fill="var(--color-washi-solar)">
+              <animate attributeName="height" values="3;15;15;7;3"
+                keyTimes="0;0.58;0.78;0.93;1" dur="24s" begin={`${i * 0.5}s`} repeatCount="indefinite"/>
+              <animate attributeName="y" values={`${H_TOP+19};${H_TOP+7};${H_TOP+7};${H_TOP+13};${H_TOP+19}`}
+                keyTimes="0;0.58;0.78;0.93;1" dur="24s" begin={`${i * 0.5}s`} repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.35;0.9;0.9;0.6;0.35"
+                keyTimes="0;0.58;0.78;0.93;1" dur="24s" begin={`${i * 0.5}s`} repeatCount="indefinite"/>
+            </rect>
           </g>
+        ))}
 
-          {/* ── GRID: vertical dashed line + ⚡ icon ── */}
-          <line x1={gridX} y1="8" x2={gridX} y2="330"
-            stroke="var(--color-primary)" strokeWidth="1" strokeDasharray="3,5" opacity="0.2"/>
-          <text x={gridX} y={GRID_CABLE_Y + 6} textAnchor="middle" fontSize="16"
-            fill="var(--color-primary)" opacity="0.55">⚡</text>
-          <text x={gridX} y="344" textAnchor="middle" fontSize="7.5"
-            fill="var(--color-primary)" fontFamily="monospace" opacity="0.35" letterSpacing="0.1em">GRID</text>
-
-          {/* ── House → Grid: horizontal cables at y=110 (between house and car) + slow particles ── */}
-          {HX.map((cx, i) => {
-            const stagger = (3.5 / 3).toFixed(2);
-            return (
-              <g key={`gc${i}`}>
-                <line x1={cx} y1={GRID_CABLE_Y} x2={gridX} y2={GRID_CABLE_Y}
-                  stroke="var(--color-washi-solar)" strokeWidth="0.8" strokeDasharray="3,4" opacity="0.15"/>
-                {[0, 1, 2].map(j => (
-                  <circle key={j} r="2" fill="var(--color-washi-solar)" opacity="0.7">
-                    <animateMotion path={`M ${cx} ${GRID_CABLE_Y} L ${gridX} ${GRID_CABLE_Y}`}
-                      dur="3.5s" begin={`${(j * parseFloat(stagger) + i * 0.28).toFixed(2)}s`} repeatCount="indefinite"/>
-                  </circle>
-                ))}
-              </g>
-            );
-          })}
-
-          {/* ── HOUSES (top row) ── */}
-          {HX.map((cx, i) => (
-            <g key={`h${i}`}>
-              <rect x={cx-30} y={36} width={60} height={44} rx="2"
-                fill="var(--color-bg)" stroke="var(--color-primary)" strokeWidth="1.5"/>
-              <polyline points={`${cx-38},38 ${cx},12 ${cx+38},38`}
-                fill="none" stroke="var(--color-primary)" strokeWidth="1.5" strokeLinejoin="round"/>
-              <rect x={cx-8} y={56} width={16} height={24} rx="1"
-                fill="var(--color-primary)" opacity="0.2"/>
-              {/* PV panel */}
-              <rect x={cx-30} y={18} width={26} height={14} rx="1"
-                fill="var(--color-washi-solar)" opacity="0.9"/>
-              <text x={cx-17} y={28} fontSize="7" fill="var(--color-bg)"
-                fontFamily="monospace" fontWeight="bold">PV</text>
-              {/* Battery (right of house) */}
-              <rect x={cx+32} y={43} width={8} height={17} rx="1"
-                fill="none" stroke="var(--color-primary)" strokeWidth="0.8" opacity="0.45"/>
-              <rect x={cx+34} y={41} width={4} height={2}
-                fill="var(--color-primary)" opacity="0.35"/>
-              {/* Battery fill — animated 24 s day cycle */}
-              <rect x={cx+33} y={57} width={6} height={3} rx="0.5" fill="var(--color-washi-solar)">
-                <animate attributeName="height" values="3;15;15;7;3"
-                  keyTimes="0;0.58;0.78;0.93;1" dur="24s" begin={`${i * 0.5}s`} repeatCount="indefinite"/>
-                <animate attributeName="y" values="57;45;45;53;57"
-                  keyTimes="0;0.58;0.78;0.93;1" dur="24s" begin={`${i * 0.5}s`} repeatCount="indefinite"/>
-                <animate attributeName="opacity" values="0.35;0.9;0.9;0.6;0.35"
-                  keyTimes="0;0.58;0.78;0.93;1" dur="24s" begin={`${i * 0.5}s`} repeatCount="indefinite"/>
-              </rect>
-            </g>
-          ))}
-
-          {/* ── House → Car: connectors + particles (always flowing) ── */}
-          {HX.map((cx, i) => (
-            <g key={`hcp${i}`}>
-              <line x1={cx} y1={80} x2={cx} y2={140}
-                stroke="var(--color-primary)" strokeWidth="1" opacity="0.2"/>
-              {[0, 1].map(j => (
-                <circle key={j} r="2" fill="var(--color-primary)" opacity="0.5">
-                  <animateMotion path={`M ${cx} 80 L ${cx} 140`}
-                    dur="1.8s" begin={`${(j * 0.9 + i * 0.15).toFixed(2)}s`} repeatCount="indefinite"/>
-                </circle>
-              ))}
-            </g>
-          ))}
-
-          {/* ── CARS (middle row) ── */}
-          {HX.map((cx, i) => (
-            <g key={`c${i}`} style={tr}>
-              <rect x={cx-20} y={140} width={40} height={14} rx="3"
-                fill="var(--color-bg)"
-                stroke={dispActive ? 'var(--color-washi-solar)' : 'var(--color-primary)'}
-                strokeWidth="1" style={tr}/>
-              <rect x={cx-32} y={152} width={64} height={22} rx="4"
-                fill="var(--color-bg)"
-                stroke={dispActive ? 'var(--color-washi-solar)' : 'var(--color-primary)'}
-                strokeWidth="1.5" style={tr}/>
-              <circle cx={cx-18} cy={182} r="7"
-                fill={dispActive ? 'var(--color-washi-solar)' : '#475569'}
-                opacity="0.65" style={tr}/>
-              <circle cx={cx+18} cy={182} r="7"
-                fill={dispActive ? 'var(--color-washi-solar)' : '#475569'}
-                opacity="0.65" style={tr}/>
-              <text x={cx} y={165} textAnchor="middle" fontSize="11"
-                fill="var(--color-washi-solar)"
-                opacity={dispActive ? 0.95 : 0} style={tr}>⚡</text>
-            </g>
-          ))}
-
-          {/* ── Car → VPP: bezier lines ── */}
-          {HX.map((cx, i) => (
-            <path key={`cv${i}`}
-              d={carPath(cx)}
-              fill="none"
+        {/* ── CARS (offset x from houses) ── */}
+        {CX.map((cx, i) => (
+          <g key={`c${i}`} style={tr}>
+            {/* cabin */}
+            <rect x={cx-20} y={C_CAB_Y} width={40} height={C_TOP - C_CAB_Y} rx="3"
+              fill="var(--color-bg)"
               stroke={dispActive ? 'var(--color-washi-solar)' : 'var(--color-primary)'}
-              strokeWidth="1.5" strokeDasharray="5,4"
-              opacity={showLines ? (aggActive ? 0.65 : 0.3) : 0} style={tr}/>
-          ))}
+              strokeWidth="1" style={tr}/>
+            {/* body */}
+            <rect x={cx-32} y={C_TOP} width={64} height={C_BOT - C_TOP} rx="4"
+              fill="var(--color-bg)"
+              stroke={dispActive ? 'var(--color-washi-solar)' : 'var(--color-primary)'}
+              strokeWidth="1.5" style={tr}/>
+            {/* wheels */}
+            <circle cx={cx-18} cy={C_WHEEL_Y} r="8"
+              fill={dispActive ? 'var(--color-washi-solar)' : '#475569'}
+              opacity="0.65" style={tr}/>
+            <circle cx={cx+18} cy={C_WHEEL_Y} r="8"
+              fill={dispActive ? 'var(--color-washi-solar)' : '#475569'}
+              opacity="0.65" style={tr}/>
+            {/* charging bolt */}
+            <text x={cx} y={C_TOP + 16} textAnchor="middle" fontSize="12"
+              fill="var(--color-washi-solar)"
+              opacity={dispActive ? 0.95 : 0} style={tr}>⚡</text>
+          </g>
+        ))}
 
-          {/* ── VPP → Car: command/energy particles travel FROM controller DOWN to cars ── */}
-          {showLines && HX.map((cx, i) => (
-            <g key={`cvp${i}`}>
-              {[0, 1, 2].map(j => (
-                <circle key={j} r="2.5"
-                  fill={dispActive ? 'var(--color-washi-solar)' : 'var(--color-primary)'}
-                  opacity={aggActive ? 0.9 : 0.55} style={tr}>
-                  <animateMotion path={vppToCarPath(cx)}
-                    dur={dispActive ? '2.2s' : '2.8s'}
-                    begin={`${(j * 0.93).toFixed(2)}s`} repeatCount="indefinite"/>
-                </circle>
-              ))}
-            </g>
-          ))}
+        {/* ── House + Car → VPP: dashed bezier lines (visible from step 1) ── */}
+        {showLines && HX.map((hx, i) => (
+          <path key={`hvl${i}`} d={houseToVppLine(hx)} fill="none"
+            stroke="var(--color-primary)" strokeWidth="1.2" strokeDasharray="5,4"
+            opacity={aggActive ? 0.5 : 0.22} style={tr}/>
+        ))}
+        {showLines && CX.map((cx, i) => (
+          <path key={`cvl${i}`} d={carToVppLine(cx)} fill="none"
+            stroke={dispActive ? 'var(--color-washi-solar)' : 'var(--color-primary)'}
+            strokeWidth="1.2" strokeDasharray="5,4"
+            opacity={aggActive ? 0.5 : 0.22} style={tr}/>
+        ))}
 
-          {/* ── VPP CONTROLLER box: pulse glow + body ── */}
-          <rect x={VPP_CX-VPP_W/2-3} y={VPP_Y-3} width={VPP_W+6} height={VPP_H+6} rx="5"
-            fill="none" stroke="var(--color-primary)" strokeWidth="1.5">
-            <animate attributeName="opacity" values="0.2;0.5;0.2" dur="2s" repeatCount="indefinite"/>
-          </rect>
-          <rect x={VPP_CX-VPP_W/2} y={VPP_Y} width={VPP_W} height={VPP_H} rx="3"
-            fill="color-mix(in srgb, var(--color-primary) 12%, var(--color-bg))"
-            stroke="var(--color-primary)" strokeWidth="2"/>
-          <text x={VPP_CX} y={VPP_Y+18} textAnchor="middle" fontSize="8.5"
-            fill="var(--color-primary)" fontFamily="monospace" letterSpacing="0.15em">VPP CONTROLLER</text>
-          <text x={VPP_CX} y={VPP_Y+38} textAnchor="middle" fontSize="15"
-            fill="var(--color-washi-ink)" fontFamily="var(--font-heading)">Flexa (Enpal)</text>
+        {/* ── VPP → Houses: command particles flow DOWN to houses ── */}
+        {showLines && HX.map((hx, i) => (
+          <g key={`vph${i}`}>
+            {[0, 1, 2].map(j => (
+              <circle key={j} r="2.5" fill="var(--color-primary)"
+                opacity={aggActive ? 0.9 : 0.5}>
+                <animateMotion path={vppToHousePath(hx)}
+                  dur="2.8s"
+                  begin={`${(j * 0.93 + i * 0.18).toFixed(2)}s`} repeatCount="indefinite"/>
+              </circle>
+            ))}
+          </g>
+        ))}
 
-          {/* ── AGGREGATE callout (step 2) ── */}
-          {aggActive && <>
-            <line x1={VPP_CX-VPP_W/2-26} y1={VPP_Y+VPP_H/2} x2={VPP_CX-VPP_W/2} y2={VPP_Y+VPP_H/2}
-              stroke="var(--color-primary)" strokeWidth="1" strokeDasharray="4,3" opacity="0.55"/>
-            <foreignObject x={VPP_CX-VPP_W/2-26-248} y={VPP_Y-8} width={248} height={80}>
-              <div style={{
-                padding: '10px 14px', height: '100%', boxSizing: 'border-box',
-                border: '1.5px solid var(--color-primary)',
-                borderLeft: '4px solid var(--color-primary)',
-                background: 'color-mix(in srgb, var(--color-primary) 8%, var(--color-bg))',
-                animation: 'whatisvpp-left 0.4s cubic-bezier(0.4,0,0.2,1) both',
-              }}>
-                <div style={{ fontFamily: 'monospace', color: 'var(--color-primary)', fontSize: 9, letterSpacing: '0.12em' }}>AGGREGATE</div>
-                <div style={{ fontFamily: 'var(--font-heading)', fontSize: 13, color: '#e2e8f0', marginTop: 3 }}>Pool energy from distributed homes</div>
-                <div style={{ fontSize: 10, color: '#94a3b8', marginTop: 2 }}>1,000 homes × 10 kWh = 10 MWh</div>
-              </div>
-            </foreignObject>
-          </>}
+        {/* ── VPP → Cars: command particles flow DOWN to cars ── */}
+        {showLines && CX.map((cx, i) => (
+          <g key={`vpc${i}`}>
+            {[0, 1, 2].map(j => (
+              <circle key={j} r="2.5"
+                fill={dispActive ? 'var(--color-washi-solar)' : 'var(--color-primary)'}
+                opacity={aggActive ? 0.9 : 0.5} style={tr}>
+                <animateMotion path={vppToCarPath(cx)}
+                  dur={dispActive ? '2.2s' : '2.8s'}
+                  begin={`${(j * 0.93 + i * 0.22).toFixed(2)}s`} repeatCount="indefinite"/>
+              </circle>
+            ))}
+          </g>
+        ))}
 
-          {/* ── DISPATCH callout (step 3) ── */}
-          {dispActive && <>
-            <line x1={VPP_CX+VPP_W/2} y1={VPP_Y+VPP_H/2} x2={VPP_CX+VPP_W/2+26} y2={VPP_Y+VPP_H/2}
-              stroke="var(--color-washi-solar)" strokeWidth="1" strokeDasharray="4,3" opacity="0.55"/>
-            <foreignObject x={VPP_CX+VPP_W/2+26} y={VPP_Y-8} width={248} height={80}>
-              <div style={{
-                padding: '10px 14px', height: '100%', boxSizing: 'border-box',
-                border: '1.5px solid var(--color-washi-solar)',
-                borderLeft: '4px solid var(--color-washi-solar)',
-                background: 'color-mix(in srgb, var(--color-washi-solar) 8%, var(--color-bg))',
-                animation: 'whatisvpp-right 0.4s cubic-bezier(0.4,0,0.2,1) both',
-              }}>
-                <div style={{ fontFamily: 'monospace', color: 'var(--color-washi-solar)', fontSize: 9, letterSpacing: '0.12em' }}>DISPATCH · SMART CHARGING</div>
-                <div style={{ fontFamily: 'var(--font-heading)', fontSize: 13, color: '#e2e8f0', marginTop: 3 }}>Charge · Discharge · Wait</div>
-                <div style={{ fontSize: 10, color: '#94a3b8', marginTop: 2 }}>Commands reach every device in milliseconds</div>
-              </div>
-            </foreignObject>
-          </>}
+        {/* ── VPP CONTROLLER ── */}
+        <rect x={VPP_CX-VPP_W/2-3} y={VPP_Y-3} width={VPP_W+6} height={VPP_H+6} rx="5"
+          fill="none" stroke="var(--color-primary)" strokeWidth="1.5">
+          <animate attributeName="opacity" values="0.2;0.5;0.2" dur="2s" repeatCount="indefinite"/>
+        </rect>
+        <rect x={VPP_CX-VPP_W/2} y={VPP_Y} width={VPP_W} height={VPP_H} rx="3"
+          fill="color-mix(in srgb, var(--color-primary) 12%, var(--color-bg))"
+          stroke="var(--color-primary)" strokeWidth="2"/>
+        <text x={VPP_CX} y={VPP_Y+22} textAnchor="middle" fontSize="9"
+          fill="var(--color-primary)" fontFamily="monospace" letterSpacing="0.15em">VPP CONTROLLER</text>
+        <text x={VPP_CX} y={VPP_Y+48} textAnchor="middle" fontSize="18"
+          fill="var(--color-washi-ink)" fontFamily="var(--font-heading)">Flexa (Enpal)</text>
 
-        </svg>
+        {/* ── AGGREGATE callout (step 2) ── */}
+        {aggActive && <>
+          <line x1={VPP_CX-VPP_W/2-26} y1={VPP_Y+VPP_H/2} x2={VPP_CX-VPP_W/2} y2={VPP_Y+VPP_H/2}
+            stroke="var(--color-primary)" strokeWidth="1" strokeDasharray="4,3" opacity="0.55"/>
+          <foreignObject x={VPP_CX-VPP_W/2-26-248} y={VPP_Y-8} width={248} height={80}>
+            <div style={{
+              padding: '10px 14px', height: '100%', boxSizing: 'border-box',
+              border: '1.5px solid var(--color-primary)',
+              borderLeft: '4px solid var(--color-primary)',
+              background: 'color-mix(in srgb, var(--color-primary) 8%, var(--color-bg))',
+              animation: 'whatisvpp-left 0.4s cubic-bezier(0.4,0,0.2,1) both',
+            }}>
+              <div style={{ fontFamily: 'monospace', color: 'var(--color-primary)', fontSize: 9, letterSpacing: '0.12em' }}>AGGREGATE</div>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: 13, color: '#e2e8f0', marginTop: 3 }}>Pool energy from distributed homes</div>
+              <div style={{ fontSize: 10, color: '#94a3b8', marginTop: 2 }}>1,000 homes × 10 kWh = 10 MWh</div>
+            </div>
+          </foreignObject>
+        </>}
+
+        {/* ── DISPATCH callout (step 3) ── */}
+        {dispActive && <>
+          <line x1={VPP_CX+VPP_W/2} y1={VPP_Y+VPP_H/2} x2={VPP_CX+VPP_W/2+26} y2={VPP_Y+VPP_H/2}
+            stroke="var(--color-washi-solar)" strokeWidth="1" strokeDasharray="4,3" opacity="0.55"/>
+          <foreignObject x={VPP_CX+VPP_W/2+26} y={VPP_Y-8} width={248} height={80}>
+            <div style={{
+              padding: '10px 14px', height: '100%', boxSizing: 'border-box',
+              border: '1.5px solid var(--color-washi-solar)',
+              borderLeft: '4px solid var(--color-washi-solar)',
+              background: 'color-mix(in srgb, var(--color-washi-solar) 8%, var(--color-bg))',
+              animation: 'whatisvpp-right 0.4s cubic-bezier(0.4,0,0.2,1) both',
+            }}>
+              <div style={{ fontFamily: 'monospace', color: 'var(--color-washi-solar)', fontSize: 9, letterSpacing: '0.12em' }}>DISPATCH · SMART CHARGING</div>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: 13, color: '#e2e8f0', marginTop: 3 }}>Charge · Discharge · Wait</div>
+              <div style={{ fontSize: 10, color: '#94a3b8', marginTop: 2 }}>Commands reach every device in milliseconds</div>
+            </div>
+          </foreignObject>
+        </>}
+
+      </svg>
+
+      {/* ── Title overlay (above SVG) ── */}
+      <div style={{ position: 'absolute', top: 38, left: 58, pointerEvents: 'none', zIndex: 1 }}>
+        <Eyebrow>WHAT IS A VIRTUAL POWER PLANT?</Eyebrow>
+        <Title>One controller. Millions of devices.</Title>
       </div>
+
       <style>{`
         @keyframes whatisvpp-left{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
         @keyframes whatisvpp-right{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
-        @keyframes wvpp-sun{0%{opacity:0}20%{opacity:0.92}65%{opacity:0.92}80%{opacity:0}100%{opacity:0}}
-        @keyframes wvpp-moon{0%{opacity:0.85}17%{opacity:0}68%{opacity:0}84%{opacity:0.85}100%{opacity:0.85}}
-        @keyframes wvpp-stars{0%{opacity:1}19%{opacity:0.05}67%{opacity:0.05}83%{opacity:1}100%{opacity:1}}
+        @keyframes wvpp-sun{0%{opacity:0}22%{opacity:0}28%{opacity:0.92}70%{opacity:0.92}78%{opacity:0}100%{opacity:0}}
+        @keyframes wvpp-moon{0%{opacity:0.9}20%{opacity:0.9}27%{opacity:0}70%{opacity:0}78%{opacity:0.9}100%{opacity:0.9}}
+        @keyframes wvpp-stars{0%{opacity:0.9}20%{opacity:0.9}27%{opacity:0.05}70%{opacity:0.05}78%{opacity:0.9}100%{opacity:0.9}}
       `}</style>
     </div>
   );
@@ -459,7 +498,7 @@ export default function MainTalk() {
     </Slide>
 
     {/* 3b · What is a VPP? */}
-    <Slide {...page}>
+    <Slide padding="0" backgroundColor="var(--color-washi-paper)">
       <StepBridge count={4}>{step => <WhatIsVPP step={step} />}</StepBridge>
       <Notes>Step 0: base diagram — homes, EVs, bus, VPP Controller, Energy Market, Regulators. Step 1: animated arcs show data flowing from devices to controller. Step 2: Aggregate card — pooling energy. Step 3: Dispatch card — smart commands charge/discharge/wait.</Notes>
     </Slide>
