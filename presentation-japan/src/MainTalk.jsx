@@ -373,8 +373,8 @@ function WhatIsVPP({ step = 0 }) {
               <circle key={j} r="2.5" fill="var(--color-primary)"
                 opacity={aggActive ? 0.9 : 0.5}>
                 <animateMotion path={vppToHousePath(hx)}
-                  dur="2.8s"
-                  begin={`${(j * 0.933).toFixed(2)}s`} repeatCount="indefinite"/>
+                  dur="5.6s"
+                  begin={`${(j * 1.867).toFixed(2)}s`} repeatCount="indefinite"/>
               </circle>
             ))}
           </g>
@@ -388,8 +388,8 @@ function WhatIsVPP({ step = 0 }) {
                 fill="var(--color-primary)"
                 opacity={aggActive ? 0.9 : 0.5} style={tr}>
                 <animateMotion path={vppToCarPath(cx)}
-                  dur={dispActive ? '2.2s' : '2.8s'}
-                  begin={`${(j * (dispActive ? 0.733 : 0.933)).toFixed(2)}s`} repeatCount="indefinite"/>
+                  dur={dispActive ? '4.4s' : '5.6s'}
+                  begin={`${(j * (dispActive ? 1.467 : 1.867)).toFixed(2)}s`} repeatCount="indefinite"/>
               </circle>
             ))}
           </g>
@@ -443,6 +443,36 @@ function WhatIsVPP({ step = 0 }) {
             </div>
           </foreignObject>
         </>}
+
+        {/* ── Energy Market card (bottom-left of controller) ── */}
+        <line x1={VPP_CX} y1={VPP_Y+VPP_H} x2={340} y2={592}
+          stroke="#475569" strokeWidth="1" strokeDasharray="4,3" opacity="0.5"/>
+        <foreignObject x={245} y={592} width={190} height={68}>
+          <div style={{
+            padding: '8px 12px', height: '100%', boxSizing: 'border-box',
+            border: '1px dashed #475569',
+            background: 'rgba(5,8,16,0.85)',
+          }}>
+            <div style={{ fontFamily: 'monospace', color: '#64748b', fontSize: 8, letterSpacing: '0.12em' }}>ENERGY MARKET</div>
+            <div style={{ fontFamily: 'var(--font-heading)', fontSize: 12, color: '#cbd5e1', marginTop: 3 }}>Prices · Signals · Bids</div>
+            <div style={{ fontSize: 9, color: '#64748b', marginTop: 2 }}>Real-time market data informs dispatch</div>
+          </div>
+        </foreignObject>
+
+        {/* ── Regulators card (bottom-right of controller) ── */}
+        <line x1={VPP_CX} y1={VPP_Y+VPP_H} x2={900} y2={592}
+          stroke="#475569" strokeWidth="1" strokeDasharray="4,3" opacity="0.5"/>
+        <foreignObject x={805} y={592} width={190} height={68}>
+          <div style={{
+            padding: '8px 12px', height: '100%', boxSizing: 'border-box',
+            border: '1px dashed #475569',
+            background: 'rgba(5,8,16,0.85)',
+          }}>
+            <div style={{ fontFamily: 'monospace', color: '#64748b', fontSize: 8, letterSpacing: '0.12em' }}>REGULATORS</div>
+            <div style={{ fontFamily: 'var(--font-heading)', fontSize: 12, color: '#cbd5e1', marginTop: 3 }}>Rules · Limits · Compliance</div>
+            <div style={{ fontSize: 9, color: '#64748b', marginTop: 2 }}>Grid codes define what the fleet can do</div>
+          </div>
+        </foreignObject>
 
       </svg>
 
