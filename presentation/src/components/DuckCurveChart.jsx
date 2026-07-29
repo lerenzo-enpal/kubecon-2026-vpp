@@ -419,7 +419,7 @@ export default function DuckCurveChart({ width = 1100, height = 560, yearIndex, 
         ctx.fillText(peakPriceLabel, rampX + 18, (rampY1 + rampY2) / 2 + 14);
         ctx.font = 'bold 12px JetBrains Mono';
         ctx.fillStyle = `rgba(239, 68, 68, ${0.55 * pulse})`;
-        ctx.fillText('avg 19:00 peak (EPEX SPOT)', rampX + 18, (rampY1 + rampY2) / 2 + 32);
+        ctx.fillText('avg 19:00 peak', rampX + 18, (rampY1 + rampY2) / 2 + 32);
       }
 
       // Year indicator (prominent) — positioned in right margin

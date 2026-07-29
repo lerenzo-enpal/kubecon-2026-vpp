@@ -79,7 +79,7 @@ function FleetBuildViz({ step = 0 }) {
 // each class joins. Numbers are order-of-magnitude illustrative, not sourced.
 const ASSET_MIX = [
   { key: 'battery', label: 'HOME BATTERY', spec: '10 kWh × millions', gwh: 10, color: 'var(--color-primary)' },
-  { key: 'ev',      label: 'EV · V2H',      spec: '60 kWh × 500k',    gwh: 30, color: 'var(--color-washi-solar)' },
+  { key: 'ev',      label: 'EV · V2H',      spec: '60 kWh · 4–6× home battery', gwh: 30, color: 'var(--color-washi-solar)' },
   { key: 'hp',      label: 'HEAT PUMP',     spec: 'shift, not store', gwh: 6,  color: 'var(--color-secondary)' },
   { key: 'hems',    label: 'HEMS',          spec: 'coordination glue',gwh: 0,  color: 'var(--color-washi-alert)' },
 ];
@@ -137,9 +137,15 @@ function AssetMixCapacityViz({ step = 0 }) {
           Bar widths are illustrative order-of-magnitude estimates, not sourced deployment numbers.
         </div>
       </div>
-      <div style={{ padding: '14px 18px', borderLeft: '3px solid var(--color-secondary)', background: 'color-mix(in srgb, var(--color-secondary) 6%, transparent)' }}>
-        <div style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-secondary)', letterSpacing: '0.12em', fontSize: 12 }}>ONE CONCRETE EXAMPLE · SHIZEN CONNECT · JANUARY 2024</div>
-        <Small>186 household EVs coordinated through V2H — 90% control accuracy, company-reported. A scoped demonstration of the loop (observe · decide · dispatch · acknowledge · verify). The path forward: more asset classes on the same control plane.</Small>
+      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: 12 }}>
+        <div style={{ padding: '14px 18px', borderLeft: '3px solid var(--color-secondary)', background: 'color-mix(in srgb, var(--color-secondary) 6%, transparent)' }}>
+          <div style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-secondary)', letterSpacing: '0.12em', fontSize: 12 }}>ONE CONCRETE EXAMPLE · SHIZEN CONNECT · JANUARY 2024</div>
+          <Small>186 household EVs coordinated through V2H — 90% control accuracy, company-reported. A scoped demonstration of the loop (observe · decide · dispatch · acknowledge · verify). The path forward: more asset classes on the same control plane.</Small>
+        </div>
+        <div style={{ padding: '14px 18px', borderLeft: '3px solid var(--color-washi-solar)', background: 'color-mix(in srgb, var(--color-washi-solar) 6%, transparent)' }}>
+          <div style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-washi-solar)', letterSpacing: '0.12em', fontSize: 12 }}>APRIL 2026 · METI DEREGULATION</div>
+          <Small>Household batteries, heat pumps, and EVs are now legally deregulated to participate in Japan's Supply-Demand Balancing Market — the gate that was closed until this year.</Small>
+        </div>
       </div>
     </div>
   );
@@ -368,7 +374,7 @@ function WhatIsVPP({ step = 0 }) {
                 opacity={aggActive ? 0.9 : 0.5}>
                 <animateMotion path={vppToHousePath(hx)}
                   dur="2.8s"
-                  begin={`${(j * 0.93 + i * 0.18).toFixed(2)}s`} repeatCount="indefinite"/>
+                  begin={`${(j * 0.933).toFixed(2)}s`} repeatCount="indefinite"/>
               </circle>
             ))}
           </g>
@@ -383,7 +389,7 @@ function WhatIsVPP({ step = 0 }) {
                 opacity={aggActive ? 0.9 : 0.5} style={tr}>
                 <animateMotion path={vppToCarPath(cx)}
                   dur={dispActive ? '2.2s' : '2.8s'}
-                  begin={`${(j * 0.93 + i * 0.22).toFixed(2)}s`} repeatCount="indefinite"/>
+                  begin={`${(j * (dispActive ? 0.733 : 0.933)).toFixed(2)}s`} repeatCount="indefinite"/>
               </circle>
             ))}
           </g>
@@ -399,8 +405,6 @@ function WhatIsVPP({ step = 0 }) {
           stroke="var(--color-primary)" strokeWidth="2"/>
         <text x={VPP_CX} y={VPP_Y+22} textAnchor="middle" fontSize="9"
           fill="var(--color-primary)" fontFamily="monospace" letterSpacing="0.15em">VPP CONTROLLER</text>
-        <text x={VPP_CX} y={VPP_Y+48} textAnchor="middle" fontSize="18"
-          fill="#e2e8f0" fontFamily="var(--font-heading)">Flexa (Enpal)</text>
 
         {/* ── AGGREGATE callout (step 2) ── */}
         {aggActive && <>
@@ -538,13 +542,13 @@ export default function MainTalk() {
     </Slide>
 
     {/* 5 · Duck Curve (replaces SolarTimingProblem — reuses Amsterdam chart, cleaner narrative) */}
-    <Slide {...page}>
+    <Slide {...darkPage}>
       <StepBridge count={6}>{yearStep => (
         <div style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 12 }}>
           <div>
             <Eyebrow tone="var(--color-washi-solar)">PROOF 1 · THE TIMING PROBLEM</Eyebrow>
-            <Title>The Duck Curve</Title>
-            <Small>Solar floods the grid at noon — prices collapse. At sunset, demand ramps sharply and solar disappears. The belly deepens every year.</Small>
+            <Title tone="#e2e8f0">The Duck Curve</Title>
+            <Small tone="#94a3b8">Solar floods the grid at noon — prices collapse. At sunset, demand ramps sharply and solar disappears. The belly deepens every year.</Small>
           </div>
           <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 0 }}>
             <Lazy><DuckCurveChart width={1100} height={480} yearIndex={yearStep} rightPad={270} /></Lazy>
@@ -674,24 +678,40 @@ export default function MainTalk() {
       <Notes>Proof 3 · daily operation. The fleet is not "batteries." It is a mix of asset classes — home storage, V2H EVs, heat pumps, and the HEMS layer that coordinates them. Each class contributes different things (energy vs. flex kW). Shizen Connect is the concrete example we lean on: 186 household EVs, V2H, 90% control accuracy — a scoped demonstration, not a national dispatch. Point to it as the seed of what comes next.</Notes>
     </Slide>
 
-    {/* 13 · CONTROL-PLANE FRAGMENT 3 · What cloud-native teams can build */}
-    <Slide {...darkPage}>
-      <Eyebrow tone="var(--color-secondary)">THE VPP IS THE CONTROL PLANE</Eyebrow>
-      <Title tone="var(--color-heading)">What cloud-native teams can build</Title>
-      <Small tone="var(--color-dim)">Event streams for telemetry. Actors for fleet state. GitOps for safe change. Traces that make every response explainable. The primitives already exist in this room.</Small>
-      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr .8fr', gridTemplateRows: '250px 190px', gap: 14, marginTop: 16 }}>
-        <div style={{ gridRow: 'span 2' }}><Lazy><VPPArchitecture /></Lazy></div>
-        <div><Lazy><ResponseTimeline /></Lazy></div>
-        <div style={{ padding: 18, border: '1px solid color-mix(in srgb, var(--color-secondary) 45%, transparent)', background: 'color-mix(in srgb, var(--color-bg) 82%, transparent)' }}>
-          <div style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-secondary)', letterSpacing: '0.12em', fontSize: 12 }}>THE WEAVE, REASSEMBLED</div>
-          <ul style={{ margin: '10px 0 0', padding: '0 0 0 18px', color: 'var(--color-heading)', fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.5 }}>
-            <li>Proof 1 — homes → MQTT → cloud → controller → market</li>
-            <li>Proof 3 — observe · decide · dispatch · ack · verify</li>
-            <li>Now — same primitives, one operational picture</li>
-          </ul>
+    {/* 12b · Japan: Regulatory Moment + V2H Opportunity + Market Players */}
+    <Slide {...page}>
+      <div style={{ height: '100%', display: 'grid', gridTemplateRows: 'auto 1fr auto', gap: 14 }}>
+        <div>
+          <Eyebrow tone="var(--color-secondary)">JAPAN · WHAT JUST CHANGED</Eyebrow>
+          <Title>April 2026 opened the low-voltage floor</Title>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div style={{ padding: '18px 20px', border: '1px solid color-mix(in srgb, var(--color-secondary) 40%, transparent)', background: 'color-mix(in srgb, var(--color-secondary) 6%, transparent)' }}>
+            <div style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-secondary)', letterSpacing: '0.12em', fontSize: 11, marginBottom: 10 }}>🏛 DEREGULATION · APRIL 2026 (METI)</div>
+            <Body>Household batteries, heat pumps (EcoCutes), and EVs can now participate in the Supply-Demand Balancing Market as aggregated assets — legally, for the first time.</Body>
+            <Small tone="var(--color-dim)">May 2026: TEPCO + Kansai mandate real-time ramp-rate declarations from aggregators to protect neighbourhood substations. FCR price cap: ¥19.51 → ¥15/delta-kWh — volume and AI, not spread, drive margin.</Small>
+          </div>
+          <div style={{ padding: '18px 20px', border: '1px solid color-mix(in srgb, var(--color-washi-solar) 40%, transparent)', background: 'color-mix(in srgb, var(--color-washi-solar) 6%, transparent)' }}>
+            <div style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-washi-solar)', letterSpacing: '0.12em', fontSize: 11, marginBottom: 10 }}>🚗 EV · V2H · THE CAPACITY RATIO</div>
+            <Body>Average EV battery: <strong>60–80 kWh — 4–6× a residential battery</strong>. V2H makes it bidirectional: charge at near-zero JEPX midday (10–14:00), discharge during the evening peak (17–20:00).</Body>
+            <Small tone="var(--color-dim)">Japan's next-gen smart meter rollout enables per-device telemetry — satisfying METI audit requirements for aggregated dispatch proof.</Small>
+          </div>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+          {[
+            { name: 'Shizen Connect', tag: 'SOFTWARE LAYER · DOMINANT', desc: 'AI EMS for multi-vendor hardware. 186-EV V2H field trial (2024, 90% accuracy). Powers Tokyo Gas campaigns and ITOCHU container batteries.', color: 'var(--color-primary)' },
+            { name: 'Next Kraftwerke × Toshiba', tag: 'MACRO-GRID · METI-BACKED', desc: 'German forecasting + Japanese grid engineering. 17+ renewable companies: ENEOS, Kansai, TEPCO Energy Partner. Bids solar blocks into JEPX.', color: 'var(--color-secondary)' },
+            { name: 'SoftBank · E-Flow · others', tag: 'TELCO + UTILITY LAYER', desc: 'SoftBank: IoT network for low-latency device control. E-Flow (Kansai): fleet V2H for commercial vehicles. Utilities building mega-consortiums.', color: 'var(--color-washi-solar)' },
+          ].map(p => (
+            <div key={p.name} style={{ padding: '12px 14px', border: `1px solid color-mix(in srgb, ${p.color} 35%, transparent)`, background: `color-mix(in srgb, ${p.color} 5%, transparent)` }}>
+              <div style={{ fontFamily: 'var(--font-mono)', color: p.color, letterSpacing: '0.10em', fontSize: 10, marginBottom: 4 }}>{p.tag}</div>
+              <div style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-washi-ink)', fontSize: 14, fontWeight: 700, marginBottom: 5 }}>{p.name}</div>
+              <div style={{ fontFamily: 'var(--font-body)', color: 'var(--color-washi-ink)', fontSize: 12, lineHeight: 1.4, opacity: 0.8 }}>{p.desc}</div>
+            </div>
+          ))}
         </div>
       </div>
-      <Notes>The three fragments reassemble on one slide. This is the summary of the control plane. Keep it brief — the audience already saw the pieces; this is where they see the whole.</Notes>
+      <Notes>Two structural facts: 1) April 2026 deregulation is the gate opening — household resources legally in the balancing market for the first time. 2) EV batteries are 4–6× residential storage — the fleet's bulk energy is in the cars, not the home units. Shizen Connect's 186-EV trial is the proof of concept at Japan scale. Three player boxes show the market is already forming across software, macro-grid, and telco layers.</Notes>
     </Slide>
 
     {/* 14 · Closer */}
@@ -710,16 +730,6 @@ export default function MainTalk() {
     </Slide>
 
     {/* ─── APPENDIX (not counted in core pagination) ─── */}
-
-    {/* A1 · Proof 3 title card (moved from core) */}
-    <Slide {...page}>
-      <div style={{ height: '100%', display: 'grid', alignContent: 'center' }}>
-        <Eyebrow tone="var(--color-secondary)">APPENDIX · PROOF 3 · DAILY OPERATION</Eyebrow>
-        <Title>Use demand smarter, every day</Title>
-        <Body>Not just emergencies. The steady-state control loop — dispatch, acknowledge, verify — is what makes a fleet trustworthy at scale.</Body>
-      </div>
-      <Notes>Appendix framing slide. Only surface if the audience wants the daily-operation framing before the asset-mix slide.</Notes>
-    </Slide>
 
     {/* A2 · Unified fleet build (aggregation pyramid — moved from core) */}
     <Slide {...page}>
