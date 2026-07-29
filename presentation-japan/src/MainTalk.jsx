@@ -214,13 +214,13 @@ function WhatIsVPP({ step = 0 }) {
         {/* ── NIGHT OVERLAY — bottom z-layer, shows during moon phase ── */}
         <rect width={VW} height={VH} fill="#070d1a" opacity="0">
           <animate attributeName="opacity"
-            values="0.82;0.82;0;0;0.82;0.82"
+            values="0;0;0.82;0.82;0;0"
             keyTimes="0;0.20;0.27;0.70;0.78;1"
             dur="24s" repeatCount="indefinite"/>
         </rect>
 
         {/* ── STARS ── */}
-        <g style={{ animation: 'wvpp-stars 24s ease-in-out infinite' }}>
+        <g style={{ animation: 'wvpp-stars 24s linear infinite' }}>
           {STARS.map((st, i) => (
             <circle key={`star${i}`} cx={st.cx} cy={st.cy} r={st.r} fill="#e2e8f0" opacity="0.85">
               <animate attributeName="opacity" values="0.85;0.1;0.85"
@@ -230,7 +230,7 @@ function WhatIsVPP({ step = 0 }) {
         </g>
 
         {/* ── SUN (upper right) ── */}
-        <g style={{ animation: 'wvpp-sun 24s ease-in-out infinite' }}>
+        <g style={{ animation: 'wvpp-sun 24s linear infinite' }}>
           <circle cx={SUN_X} cy={SUN_Y} r="11" fill="#f59e0b" opacity="0.88"/>
           <circle cx={SUN_X} cy={SUN_Y} r="20" fill="none" stroke="#f59e0b" strokeWidth="1" opacity="0.2"/>
           <g>
@@ -245,7 +245,7 @@ function WhatIsVPP({ step = 0 }) {
         </g>
 
         {/* ── MOON (upper right, crescent) ── */}
-        <g style={{ animation: 'wvpp-moon 24s ease-in-out infinite' }}>
+        <g style={{ animation: 'wvpp-moon 24s linear infinite' }}>
           <circle cx={SUN_X - 2} cy={SUN_Y} r="13" fill="#c8d0db" opacity="0.88" mask="url(#wvpp-moonmask)"/>
         </g>
 
@@ -262,6 +262,8 @@ function WhatIsVPP({ step = 0 }) {
         {/* ── HOUSE → GRID: horizontal cables + slow particles ── */}
         {HX.map((hx, i) => (
           <g key={`hgc${i}`}>
+            <line x1={hx} y1={H_BOT} x2={hx} y2={GRID_HOUSE_Y}
+              stroke="var(--color-washi-solar)" strokeWidth="0.9" opacity="0.25"/>
             <line x1={hx} y1={GRID_HOUSE_Y} x2={gridX} y2={GRID_HOUSE_Y}
               stroke="var(--color-washi-solar)" strokeWidth="0.9" strokeDasharray="3,4" opacity="0.18"/>
             {[0, 1, 2].map(j => (
@@ -276,6 +278,8 @@ function WhatIsVPP({ step = 0 }) {
         {/* ── CAR → GRID: horizontal cables + slow particles ── */}
         {CX.map((cx, i) => (
           <g key={`cgc${i}`}>
+            <line x1={cx} y1={C_WHEEL_Y} x2={cx} y2={GRID_CAR_Y}
+              stroke="var(--color-washi-solar)" strokeWidth="0.9" opacity="0.25"/>
             <line x1={cx} y1={GRID_CAR_Y} x2={gridX} y2={GRID_CAR_Y}
               stroke="var(--color-washi-solar)" strokeWidth="0.9" strokeDasharray="3,4" opacity="0.18"/>
             {[0, 1, 2].map(j => (
@@ -355,7 +359,7 @@ function WhatIsVPP({ step = 0 }) {
         ))}
         {showLines && CX.map((cx, i) => (
           <path key={`cvl${i}`} d={carToVppLine(cx)} fill="none"
-            stroke={dispActive ? 'var(--color-washi-solar)' : 'var(--color-primary)'}
+            stroke="var(--color-primary)"
             strokeWidth="1.2" strokeDasharray="5,4"
             opacity={aggActive ? 0.5 : 0.22} style={tr}/>
         ))}
@@ -379,7 +383,7 @@ function WhatIsVPP({ step = 0 }) {
           <g key={`vpc${i}`}>
             {[0, 1, 2].map(j => (
               <circle key={j} r="2.5"
-                fill={dispActive ? 'var(--color-washi-solar)' : 'var(--color-primary)'}
+                fill="var(--color-primary)"
                 opacity={aggActive ? 0.9 : 0.5} style={tr}>
                 <animateMotion path={vppToCarPath(cx)}
                   dur={dispActive ? '2.2s' : '2.8s'}
@@ -451,9 +455,9 @@ function WhatIsVPP({ step = 0 }) {
       <style>{`
         @keyframes whatisvpp-left{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
         @keyframes whatisvpp-right{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
-        @keyframes wvpp-sun{0%{opacity:0}22%{opacity:0}28%{opacity:0.92}70%{opacity:0.92}78%{opacity:0}100%{opacity:0}}
-        @keyframes wvpp-moon{0%{opacity:0.9}20%{opacity:0.9}27%{opacity:0}70%{opacity:0}78%{opacity:0.9}100%{opacity:0.9}}
-        @keyframes wvpp-stars{0%{opacity:0.9}20%{opacity:0.9}27%{opacity:0.05}70%{opacity:0.05}78%{opacity:0.9}100%{opacity:0.9}}
+        @keyframes wvpp-sun{0%{opacity:0.92}20%{opacity:0.92}27%{opacity:0}70%{opacity:0}78%{opacity:0.92}100%{opacity:0.92}}
+        @keyframes wvpp-moon{0%{opacity:0}22%{opacity:0}28%{opacity:0.9}70%{opacity:0.9}78%{opacity:0}100%{opacity:0}}
+        @keyframes wvpp-stars{0%{opacity:0.05}22%{opacity:0.05}28%{opacity:0.9}70%{opacity:0.9}78%{opacity:0.05}100%{opacity:0.05}}
       `}</style>
     </div>
   );
