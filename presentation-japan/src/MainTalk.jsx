@@ -152,9 +152,35 @@ function WhatIsVPP({ step = 0 }) {
   const dispActive = s >= 3;
 
   const VW = 1100, VH = 380;
-  const HX = [150, 400, 700, 950]; // 4 home x-centers, symmetric around VPP_CX=550
+  const HX = [150, 400, 700, 950];
   const VPP_CX = 550, VPP_Y = 268, VPP_W = 200, VPP_H = 56;
+  const gridX = 1092;
   const tr = { transition: 'all 500ms ease' };
+
+  // Deterministic star positions — top strip y 1-9
+  const hash = (n) => { const x = Math.sin(n) * 43758.5453; return x - Math.floor(x); };
+  const STARS = Array.from({ length: 20 }, (_, i) => ({
+    cx: hash(i * 127.1 + 311.7) * VW,
+    cy: 1 + hash(i * 269.5 + 183.3) * 8,
+    r:  0.5 + hash(i * 419.2 + 71.9) * 1.1,
+    dur: (1.4 + hash(i * 631.2 + 97.1) * 3).toFixed(1),
+    beg: (hash(i * 523.7 + 43.3) * 3).toFixed(1),
+  }));
+
+  const carPath = (cx) => `M ${cx} 174 C ${cx} 230 ${VPP_CX} ${VPP_Y - 32} ${VPP_CX} ${VPP_Y}`;
+
+  // Normalize grid cable particle speed to ~280 svg-units/s
+  const cableDur = (cx) => ((gridX - cx - 30) / 280).toFixed(2);
+
+  // Sun ray positions (static, group rotates via animateTransform)
+  const SUN_X = 1072, SUN_Y = 15;
+  const sunRays = Array.from({ length: 8 }, (_, r) => {
+    const a = (r / 8) * Math.PI * 2;
+    return {
+      x1: SUN_X + Math.cos(a) * 12, y1: SUN_Y + Math.sin(a) * 12,
+      x2: SUN_X + Math.cos(a) * (16 + (r % 2) * 4), y2: SUN_Y + Math.sin(a) * (16 + (r % 2) * 4),
+    };
+  });
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -165,6 +191,68 @@ function WhatIsVPP({ step = 0 }) {
       <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
         <svg viewBox={`0 0 ${VW} ${VH}`} style={{ width: '100%', height: '100%' }} preserveAspectRatio="xMidYMid meet">
 
+          {/* ── DEFS: moon crescent mask ── */}
+          <defs>
+            <mask id="wvpp-moonmask">
+              <rect width={VW} height={VH} fill="white"/>
+              <circle cx="1063" cy="12" r="9" fill="black"/>
+            </mask>
+          </defs>
+
+          {/* ── SKY: Stars (fade out at sunrise, back at dusk) ── */}
+          <g style={{ animation: 'wvpp-stars 24s ease-in-out infinite' }}>
+            {STARS.map((st, i) => (
+              <circle key={`star${i}`} cx={st.cx} cy={st.cy} r={st.r} fill="#e2e8f0" opacity="0.8">
+                <animate attributeName="opacity" values="0.8;0.12;0.8"
+                  dur={`${st.dur}s`} begin={`${st.beg}s`} repeatCount="indefinite"/>
+              </circle>
+            ))}
+          </g>
+
+          {/* ── SKY: Sun with rotating rays ── */}
+          <g style={{ animation: 'wvpp-sun 24s ease-in-out infinite' }}>
+            <circle cx={SUN_X} cy={SUN_Y} r="9" fill="#f59e0b" opacity="0.85"/>
+            <circle cx={SUN_X} cy={SUN_Y} r="16" fill="none" stroke="#f59e0b" strokeWidth="1" opacity="0.2"/>
+            <g>
+              <animateTransform attributeName="transform" type="rotate"
+                from={`0 ${SUN_X} ${SUN_Y}`} to={`360 ${SUN_X} ${SUN_Y}`}
+                dur="20s" repeatCount="indefinite"/>
+              {sunRays.map((r, i) => (
+                <line key={i} x1={r.x1} y1={r.y1} x2={r.x2} y2={r.y2}
+                  stroke="#f59e0b" strokeWidth="1.5" opacity="0.55"/>
+              ))}
+            </g>
+          </g>
+
+          {/* ── SKY: Moon crescent ── */}
+          <g style={{ animation: 'wvpp-moon 24s ease-in-out infinite' }}>
+            <circle cx="1056" cy={SUN_Y} r="10" fill="#c8d0db" opacity="0.75" mask="url(#wvpp-moonmask)"/>
+          </g>
+
+          {/* ── GRID: vertical line + label ── */}
+          <line x1={gridX} y1="8" x2={gridX} y2="330"
+            stroke="var(--color-primary)" strokeWidth="1" strokeDasharray="3,5" opacity="0.2"/>
+          <text x={gridX} y="344" textAnchor="middle" fontSize="7.5"
+            fill="var(--color-primary)" fontFamily="monospace" opacity="0.4" letterSpacing="0.1em">GRID</text>
+
+          {/* ── House → Grid: cables + animated energy particles ── */}
+          {HX.map((cx, i) => {
+            const dur = cableDur(cx);
+            const stagger = (parseFloat(dur) / 3).toFixed(2);
+            return (
+              <g key={`gc${i}`}>
+                <line x1={cx + 30} y1="58" x2={gridX} y2="58"
+                  stroke="var(--color-washi-solar)" strokeWidth="0.8" strokeDasharray="3,4" opacity="0.15"/>
+                {[0, 1, 2].map(j => (
+                  <circle key={j} r="2" fill="var(--color-washi-solar)" opacity="0.7">
+                    <animateMotion path={`M ${cx + 30} 58 L ${gridX} 58`}
+                      dur={`${dur}s`} begin={`${(j * stagger).toFixed(2)}s`} repeatCount="indefinite"/>
+                  </circle>
+                ))}
+              </g>
+            );
+          })}
+
           {/* ── HOUSES (top row) ── */}
           {HX.map((cx, i) => (
             <g key={`h${i}`}>
@@ -174,16 +262,40 @@ function WhatIsVPP({ step = 0 }) {
                 fill="none" stroke="var(--color-primary)" strokeWidth="1.5" strokeLinejoin="round"/>
               <rect x={cx-8} y={56} width={16} height={24} rx="1"
                 fill="var(--color-primary)" opacity="0.2"/>
+              {/* PV panel */}
               <rect x={cx-30} y={18} width={26} height={14} rx="1"
                 fill="var(--color-washi-solar)" opacity="0.9"/>
-              <text x={cx-17} y={28} fontSize="7" fill="var(--color-bg)" fontFamily="monospace" fontWeight="bold">PV</text>
+              <text x={cx-17} y={28} fontSize="7" fill="var(--color-bg)"
+                fontFamily="monospace" fontWeight="bold">PV</text>
+              {/* Battery (right of house) */}
+              <rect x={cx+32} y={43} width={8} height={17} rx="1"
+                fill="none" stroke="var(--color-primary)" strokeWidth="0.8" opacity="0.45"/>
+              <rect x={cx+34} y={41} width={4} height={2}
+                fill="var(--color-primary)" opacity="0.35"/>
+              {/* Battery fill — animated 24 s day cycle */}
+              <rect x={cx+33} y={57} width={6} height={3} rx="0.5" fill="var(--color-washi-solar)">
+                <animate attributeName="height" values="3;15;15;7;3"
+                  keyTimes="0;0.58;0.78;0.93;1" dur="24s" begin={`${i * 0.5}s`} repeatCount="indefinite"/>
+                <animate attributeName="y" values="57;45;45;53;57"
+                  keyTimes="0;0.58;0.78;0.93;1" dur="24s" begin={`${i * 0.5}s`} repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.35;0.9;0.9;0.6;0.35"
+                  keyTimes="0;0.58;0.78;0.93;1" dur="24s" begin={`${i * 0.5}s`} repeatCount="indefinite"/>
+              </rect>
             </g>
           ))}
 
-          {/* ── HOUSE → CAR connectors ── */}
+          {/* ── House → Car: connectors + particles (always flowing) ── */}
           {HX.map((cx, i) => (
-            <line key={`hc${i}`} x1={cx} y1={80} x2={cx} y2={140}
-              stroke="var(--color-primary)" strokeWidth="1" opacity="0.2"/>
+            <g key={`hcp${i}`}>
+              <line x1={cx} y1={80} x2={cx} y2={140}
+                stroke="var(--color-primary)" strokeWidth="1" opacity="0.2"/>
+              {[0, 1].map(j => (
+                <circle key={j} r="2" fill="var(--color-primary)" opacity="0.5">
+                  <animateMotion path={`M ${cx} 80 L ${cx} 140`}
+                    dur="1.8s" begin={`${(j * 0.9 + i * 0.15).toFixed(2)}s`} repeatCount="indefinite"/>
+                </circle>
+              ))}
+            </g>
           ))}
 
           {/* ── CARS (middle row) ── */}
@@ -209,15 +321,36 @@ function WhatIsVPP({ step = 0 }) {
             </g>
           ))}
 
-          {/* ── CAR → VPP converging lines ── */}
+          {/* ── Car → VPP: bezier lines ── */}
           {HX.map((cx, i) => (
             <path key={`cv${i}`}
-              d={`M ${cx} 174 C ${cx} 230 ${VPP_CX} ${VPP_Y-32} ${VPP_CX} ${VPP_Y}`}
-              fill="none" stroke="var(--color-primary)" strokeWidth="1.5" strokeDasharray="5,4"
+              d={carPath(cx)}
+              fill="none"
+              stroke={dispActive ? 'var(--color-washi-solar)' : 'var(--color-primary)'}
+              strokeWidth="1.5" strokeDasharray="5,4"
               opacity={showLines ? (aggActive ? 0.65 : 0.3) : 0} style={tr}/>
           ))}
 
-          {/* ── VPP CONTROLLER box ── */}
+          {/* ── Car → VPP: energy particles (appear at step 1) ── */}
+          {showLines && HX.map((cx, i) => (
+            <g key={`cvp${i}`}>
+              {[0, 1, 2].map(j => (
+                <circle key={j} r="2.5"
+                  fill={dispActive ? 'var(--color-washi-solar)' : 'var(--color-primary)'}
+                  opacity={aggActive ? 0.9 : 0.55} style={tr}>
+                  <animateMotion path={carPath(cx)}
+                    dur={dispActive ? '2.2s' : '2.8s'}
+                    begin={`${(j * 0.93).toFixed(2)}s`} repeatCount="indefinite"/>
+                </circle>
+              ))}
+            </g>
+          ))}
+
+          {/* ── VPP CONTROLLER box: pulse glow + body ── */}
+          <rect x={VPP_CX-VPP_W/2-3} y={VPP_Y-3} width={VPP_W+6} height={VPP_H+6} rx="5"
+            fill="none" stroke="var(--color-primary)" strokeWidth="1.5">
+            <animate attributeName="opacity" values="0.2;0.5;0.2" dur="2s" repeatCount="indefinite"/>
+          </rect>
           <rect x={VPP_CX-VPP_W/2} y={VPP_Y} width={VPP_W} height={VPP_H} rx="3"
             fill="color-mix(in srgb, var(--color-primary) 12%, var(--color-bg))"
             stroke="var(--color-primary)" strokeWidth="2"/>
@@ -226,7 +359,7 @@ function WhatIsVPP({ step = 0 }) {
           <text x={VPP_CX} y={VPP_Y+38} textAnchor="middle" fontSize="15"
             fill="var(--color-washi-ink)" fontFamily="var(--font-heading)">Flexa (Enpal)</text>
 
-          {/* ── AGGREGATE callout (left) ── */}
+          {/* ── AGGREGATE callout (step 2) ── */}
           {aggActive && <>
             <line x1={VPP_CX-VPP_W/2-26} y1={VPP_Y+VPP_H/2} x2={VPP_CX-VPP_W/2} y2={VPP_Y+VPP_H/2}
               stroke="var(--color-primary)" strokeWidth="1" strokeDasharray="4,3" opacity="0.55"/>
@@ -245,7 +378,7 @@ function WhatIsVPP({ step = 0 }) {
             </foreignObject>
           </>}
 
-          {/* ── DISPATCH callout (right) ── */}
+          {/* ── DISPATCH callout (step 3) ── */}
           {dispActive && <>
             <line x1={VPP_CX+VPP_W/2} y1={VPP_Y+VPP_H/2} x2={VPP_CX+VPP_W/2+26} y2={VPP_Y+VPP_H/2}
               stroke="var(--color-washi-solar)" strokeWidth="1" strokeDasharray="4,3" opacity="0.55"/>
@@ -263,11 +396,15 @@ function WhatIsVPP({ step = 0 }) {
               </div>
             </foreignObject>
           </>}
+
         </svg>
       </div>
       <style>{`
         @keyframes whatisvpp-left{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
         @keyframes whatisvpp-right{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
+        @keyframes wvpp-sun{0%{opacity:0}20%{opacity:0.9}65%{opacity:0.9}82%{opacity:0}100%{opacity:0}}
+        @keyframes wvpp-moon{0%{opacity:0.8}15%{opacity:0}68%{opacity:0}86%{opacity:0.8}100%{opacity:0.8}}
+        @keyframes wvpp-stars{0%{opacity:1}18%{opacity:0.07}67%{opacity:0.07}85%{opacity:1}100%{opacity:1}}
       `}</style>
     </div>
   );
