@@ -539,7 +539,7 @@ export default function MainTalk() {
           <h1 style={{ margin: 0, fontFamily: 'var(--font-heading)', fontSize: 64, lineHeight: 1.05, color: 'var(--color-washi-ink)' }}>What is a VPP?</h1>
         </div>
         <div style={{ flex: 1, position: 'relative' }}>
-          <img src="hero-fleet.jpg" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', padding: '24px', maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 82%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 82%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)', maskComposite: 'intersect', WebkitMaskComposite: 'source-in' }} alt="" />
+          <img src="hero-fleet.jpg" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', padding: '24px', maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 90%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 90%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%)', maskComposite: 'intersect', WebkitMaskComposite: 'source-in' }} alt="" />
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, #E8E4D4 0%, rgba(232,228,212,0.7) 18%, transparent 50%)' }} />
         </div>
       </div>
@@ -594,7 +594,7 @@ export default function MainTalk() {
           <h1 style={{ margin: 0, fontFamily: 'var(--font-heading)', fontSize: 64, lineHeight: 1.05, color: '#f1f5f9' }}>The Duck Curve</h1>
         </div>
         <div style={{ flex: 1, position: 'relative' }}>
-          <img src="hero-duck-curve.jpg" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 82%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 82%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)', maskComposite: 'intersect', WebkitMaskComposite: 'source-in' }} alt="" />
+          <img src="hero-duck-curve.jpg" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 90%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 90%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%)', maskComposite: 'intersect', WebkitMaskComposite: 'source-in' }} alt="" />
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, #050810 0%, rgba(5,8,16,0.6) 20%, transparent 55%)' }} />
         </div>
       </div>
@@ -692,7 +692,7 @@ export default function MainTalk() {
           <h1 style={{ margin: 0, fontFamily: 'var(--font-heading)', fontSize: 56, lineHeight: 1.08, color: '#f1f5f9' }}>Respond when the system is tight</h1>
         </div>
         <div style={{ flex: 1, position: 'relative' }}>
-          <img src="hero-godzilla.jpg" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 82%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 82%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)', maskComposite: 'intersect', WebkitMaskComposite: 'source-in' }} alt="" />
+          <img src="hero-godzilla.jpg" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 90%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 90%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%)', maskComposite: 'intersect', WebkitMaskComposite: 'source-in' }} alt="" />
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, #050810 0%, rgba(5,8,16,0.6) 20%, transparent 55%)' }} />
         </div>
       </div>
@@ -755,7 +755,7 @@ export default function MainTalk() {
           <h1 style={{ margin: 0, fontFamily: 'var(--font-heading)', fontSize: 64, lineHeight: 1.05, color: '#f1f5f9' }}>Inside the fleet</h1>
         </div>
         <div style={{ flex: 1, position: 'relative' }}>
-          <img src="hero-vpp-intro.jpg" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 82%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 82%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)', maskComposite: 'intersect', WebkitMaskComposite: 'source-in' }} alt="" />
+          <img src="hero-vpp-intro.jpg" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 90%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 90%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%)', maskComposite: 'intersect', WebkitMaskComposite: 'source-in' }} alt="" />
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, #050810 0%, rgba(5,8,16,0.6) 20%, transparent 55%)' }} />
         </div>
       </div>
