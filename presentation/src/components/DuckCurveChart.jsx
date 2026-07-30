@@ -151,7 +151,9 @@ export default function DuckCurveChart({ width = 1100, height = 560, yearIndex, 
     if (slideContext?.isSlideActive) {
       tRef.current = 0;
       phaseRef.current = 0;
-      targetPhaseRef.current = 0;
+      // In controlled mode yearIndex sync (declared above) already set targetPhaseRef;
+      // resetting here would overwrite it since this effect runs after.
+      if (yearIndex === undefined) targetPhaseRef.current = 0;
     }
   }, [slideContext?.isSlideActive]);
 
