@@ -588,14 +588,13 @@ export default function MainTalk() {
 
     {/* Hero: The Duck Curve */}
     <Slide padding="0" backgroundColor="var(--color-bg)" template={() => null}>
-      <div style={{ display: 'flex', height: '100%', overflow: 'hidden', background: 'var(--color-bg)' }}>
+      <div data-variant="dark" style={{ display: 'flex', height: '100%', overflow: 'hidden', background: 'var(--color-bg)' }}>
         <div style={{ width: '38%', padding: '0 32px 0 58px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 16 }}>
           <Eyebrow tone="var(--color-washi-solar)">PROOF 1 · THE TIMING PROBLEM</Eyebrow>
           <h1 style={{ margin: 0, fontFamily: 'var(--font-heading)', fontSize: 64, lineHeight: 1.05, color: '#f1f5f9' }}>The Duck Curve</h1>
         </div>
         <div style={{ flex: 1, position: 'relative' }}>
-          <img src="hero-duck-curve.jpg" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 90%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 90%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%)', maskComposite: 'intersect', WebkitMaskComposite: 'source-in' }} alt="" />
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, #050810 0%, rgba(5,8,16,0.6) 20%, transparent 55%)' }} />
+          <img src="hero-duck-curve.jpg" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', }} alt="" />
         </div>
       </div>
       <Notes>Section hero: The Duck Curve / Proof 1 timing problem. Sumi-e image blends in from the right.</Notes>
@@ -686,14 +685,13 @@ export default function MainTalk() {
 
     {/* Hero: Respond when the system is tight */}
     <Slide padding="0" backgroundColor="var(--color-bg)" template={() => null}>
-      <div style={{ display: 'flex', height: '100%', overflow: 'hidden', background: 'var(--color-bg)' }}>
+      <div data-variant="dark" style={{ display: 'flex', height: '100%', overflow: 'hidden', background: 'var(--color-bg)' }}>
         <div style={{ width: '38%', padding: '0 32px 0 58px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 16 }}>
           <Eyebrow tone="var(--color-primary)">PROOF 2 · GRID RESILIENCE</Eyebrow>
           <h1 style={{ margin: 0, fontFamily: 'var(--font-heading)', fontSize: 56, lineHeight: 1.08, color: '#f1f5f9' }}>Respond when the system is tight</h1>
         </div>
         <div style={{ flex: 1, position: 'relative' }}>
-          <img src="hero-godzilla.jpg" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 90%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 90%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%)', maskComposite: 'intersect', WebkitMaskComposite: 'source-in' }} alt="" />
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, #050810 0%, rgba(5,8,16,0.6) 20%, transparent 55%)' }} />
+          <img src="hero-godzilla.jpg" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', }} alt="" />
         </div>
       </div>
       <Notes>Section hero: Respond when the system is tight. Godzilla image (city lights hold) blends in from the right.</Notes>
@@ -749,7 +747,7 @@ export default function MainTalk() {
 
     {/* Hero: What the fleet is made of */}
     <Slide padding="0" backgroundColor="var(--color-bg)" template={() => null}>
-      <div style={{ display: 'flex', height: '100%', overflow: 'hidden', background: 'var(--color-bg)' }}>
+      <div data-variant="dark" style={{ display: 'flex', height: '100%', overflow: 'hidden', background: 'var(--color-bg)' }}>
         <div style={{ width: '38%', padding: '0 32px 0 58px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 16 }}>
           <Eyebrow tone="var(--color-secondary)">PROOF 3 · ASSET MIX</Eyebrow>
           <h1 style={{ margin: 0, fontFamily: 'var(--font-heading)', fontSize: 64, lineHeight: 1.05, color: '#f1f5f9' }}>Inside the fleet</h1>

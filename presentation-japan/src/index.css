@@ -20,6 +20,10 @@ body:has([data-variant="washi"]) {
   background: var(--color-washi-paper);
 }
 
+body:has([data-variant="dark"]) {
+  background: var(--color-bg, #050810);
+}
+
 .hud-blink {
   animation: hudBlink 0.5s step-end infinite;
 }
