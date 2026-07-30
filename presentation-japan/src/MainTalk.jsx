@@ -21,7 +21,7 @@ import FrequencyWalkthrough from '../../presentation/src/components/FrequencyWal
 import DuckCurveChart from '../../presentation/src/components/DuckCurveChart.jsx';
 import RenewableGrowthChart from '../../presentation/src/components/RenewableGrowthChart.jsx';
 
-const coreSlides = 14;
+const coreSlides = 19;
 const mainAtlasPreset = () => ({ areas: true, transmission: true, plants: true, mix: false });
 const page = { padding: '38px 58px', backgroundColor: 'var(--color-washi-paper)' };
 const darkPage = { padding: '38px 58px', backgroundColor: 'var(--color-bg)' };
@@ -531,6 +531,21 @@ export default function MainTalk() {
       <Notes>Japan is not one grid. It is two — 50 Hz east and 60 Hz west — connected by a controllable but capped HVDC bridge. Why: procurement decisions in the 1890s (Tokyo AEG, Osaka GE) that were never unified. This quirk is load-bearing — it becomes decisive in the Fukushima cold-snap chain later.</Notes>
     </Slide>
 
+    {/* Hero: What is a VPP? */}
+    <Slide padding="0" backgroundColor="var(--color-washi-paper)" template={() => null}>
+      <div style={{ display: 'flex', height: '100%', overflow: 'hidden', background: 'var(--color-washi-paper)' }}>
+        <div style={{ width: '38%', padding: '0 32px 0 58px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 16 }}>
+          <Eyebrow tone="var(--color-secondary)">VIRTUAL POWER PLANTS</Eyebrow>
+          <h1 style={{ margin: 0, fontFamily: 'var(--font-heading)', fontSize: 64, lineHeight: 1.05, color: 'var(--color-washi-ink)' }}>What is a VPP?</h1>
+        </div>
+        <div style={{ flex: 1, position: 'relative' }}>
+          <img src="hero-fleet.jpg" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', padding: '24px', maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 82%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 82%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)', maskComposite: 'intersect', WebkitMaskComposite: 'source-in' }} alt="" />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, #E8E4D4 0%, rgba(232,228,212,0.7) 18%, transparent 50%)' }} />
+        </div>
+      </div>
+      <Notes>Section hero: What is a VPP? Fleet image blends in from the right on washi cream.</Notes>
+    </Slide>
+
     {/* 3b · What is a VPP? */}
     <Slide padding="0" backgroundColor="#050810">
       <StepBridge count={4}>{step => <WhatIsVPP step={step} />}</StepBridge>
@@ -569,6 +584,21 @@ export default function MainTalk() {
         </div>
       </div>
       <Notes>Germany's trajectory shows where Japan is heading — explosive growth in solar share. But Japan starts from the lowest base in the G7. Solar growing fast + grid not designed for it = the curtailment and timing problems on the next slides. This slide foreshadows the duck curve.</Notes>
+    </Slide>
+
+    {/* Hero: The Duck Curve */}
+    <Slide padding="0" backgroundColor="var(--color-bg)" template={() => null}>
+      <div style={{ display: 'flex', height: '100%', overflow: 'hidden', background: 'var(--color-bg)' }}>
+        <div style={{ width: '38%', padding: '0 32px 0 58px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 16 }}>
+          <Eyebrow tone="var(--color-washi-solar)">PROOF 1 · THE TIMING PROBLEM</Eyebrow>
+          <h1 style={{ margin: 0, fontFamily: 'var(--font-heading)', fontSize: 64, lineHeight: 1.05, color: '#f1f5f9' }}>The Duck Curve</h1>
+        </div>
+        <div style={{ flex: 1, position: 'relative' }}>
+          <img src="hero-duck-curve.jpg" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 82%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 82%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)', maskComposite: 'intersect', WebkitMaskComposite: 'source-in' }} alt="" />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, #050810 0%, rgba(5,8,16,0.6) 20%, transparent 55%)' }} />
+        </div>
+      </div>
+      <Notes>Section hero: The Duck Curve / Proof 1 timing problem. Sumi-e image blends in from the right.</Notes>
     </Slide>
 
     {/* 5 · Duck Curve (replaces SolarTimingProblem — reuses Amsterdam chart, cleaner narrative) */}
@@ -635,7 +665,7 @@ export default function MainTalk() {
               backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center',
               padding: '24px 44px', gap: 36, animation: 'fadeSlideIn 0.5s ease',
             }}>
-              <img src="/curtailment-march-2026.jpeg"
+              <img src="curtailment-march-2026.jpeg"
                 style={{ maxHeight: 480, maxWidth: 680, objectFit: 'contain', border: '1px solid color-mix(in srgb, var(--color-secondary) 30%, transparent)', borderRadius: 2 }}
                 alt="March 2026 TEPCO curtailment chart — Wood Mackenzie via LinkedIn" />
               <div style={{ maxWidth: 320, flexShrink: 0 }}>
@@ -652,6 +682,21 @@ export default function MainTalk() {
         </div>
       )}</StepBridge>
       <Notes>Steps 0-2: duck curve case study. Step 3: March 1 2026 first-ever TEPCO curtailment card — peaks at 3,290 MW, 16.2 GWh wasted. Step 4: nuclear clash card + map zooms out to Niigata showing Kashiwazaki-Kariwa Unit 6. Step 5: actual curtailment data graph from Wood Mackenzie LinkedIn post.</Notes>
+    </Slide>
+
+    {/* Hero: Respond when the system is tight */}
+    <Slide padding="0" backgroundColor="var(--color-bg)" template={() => null}>
+      <div style={{ display: 'flex', height: '100%', overflow: 'hidden', background: 'var(--color-bg)' }}>
+        <div style={{ width: '38%', padding: '0 32px 0 58px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 16 }}>
+          <Eyebrow tone="var(--color-primary)">PROOF 2 · GRID RESILIENCE</Eyebrow>
+          <h1 style={{ margin: 0, fontFamily: 'var(--font-heading)', fontSize: 56, lineHeight: 1.08, color: '#f1f5f9' }}>Respond when the system is tight</h1>
+        </div>
+        <div style={{ flex: 1, position: 'relative' }}>
+          <img src="hero-godzilla.jpg" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 82%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 82%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)', maskComposite: 'intersect', WebkitMaskComposite: 'source-in' }} alt="" />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, #050810 0%, rgba(5,8,16,0.6) 20%, transparent 55%)' }} />
+        </div>
+      </div>
+      <Notes>Section hero: Respond when the system is tight. Godzilla image (city lights hold) blends in from the right.</Notes>
     </Slide>
 
     {/* 8 · PROOF 2 title */}
@@ -702,6 +747,21 @@ export default function MainTalk() {
       <Notes>22 steps (11 cascade events × 2). Odd-numbered steps show the cascade event only. Even-numbered steps add the VPP counterfactual card — read the original text first, then the VPP response. Do not pretend the counterfactual happened. The point lands cumulatively: not one heroic dispatch, a fleet always inside the operating envelope.</Notes>
     </Slide>
 
+    {/* Hero: What the fleet is made of */}
+    <Slide padding="0" backgroundColor="var(--color-bg)" template={() => null}>
+      <div style={{ display: 'flex', height: '100%', overflow: 'hidden', background: 'var(--color-bg)' }}>
+        <div style={{ width: '38%', padding: '0 32px 0 58px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 16 }}>
+          <Eyebrow tone="var(--color-secondary)">PROOF 3 · ASSET MIX</Eyebrow>
+          <h1 style={{ margin: 0, fontFamily: 'var(--font-heading)', fontSize: 64, lineHeight: 1.05, color: '#f1f5f9' }}>Inside the fleet</h1>
+        </div>
+        <div style={{ flex: 1, position: 'relative' }}>
+          <img src="hero-vpp-intro.jpg" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 82%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 82%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)', maskComposite: 'intersect', WebkitMaskComposite: 'source-in' }} alt="" />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, #050810 0%, rgba(5,8,16,0.6) 20%, transparent 55%)' }} />
+        </div>
+      </div>
+      <Notes>Section hero: Inside the fleet. Coastal Japan at dawn (p01_title) blends in from the right.</Notes>
+    </Slide>
+
     {/* 12 · PROOF 3 · ASSET MIX + PORTFOLIO CAPACITY (replaces old 12 title + old 13 Shizen loop) */}
     <Slide {...page}>
       <StepBridge count={3}>{step => <AssetMixCapacityViz step={step} />}</StepBridge>
@@ -742,6 +802,12 @@ export default function MainTalk() {
         </div>
       </div>
       <Notes>Two structural facts: 1) April 2026 deregulation is the gate opening — household resources legally in the balancing market for the first time. 2) EV batteries are 4–6× residential storage — the fleet's bulk energy is in the cars, not the home units. Shizen Connect's 186-EV trial is the proof of concept at Japan scale. Three player boxes show the market is already forming across software, macro-grid, and telco layers.</Notes>
+    </Slide>
+
+    {/* Hero: Closing — Japan archipelago at night, interconnected fleet */}
+    <Slide padding="0" backgroundColor="#050810" template={() => null}>
+      <img src="hero-close.jpg" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} alt="" />
+      <Notes>Washi: Japan archipelago at night, city lights as an interconnected fleet, cherry blossoms. Sets the closing tone.</Notes>
     </Slide>
 
     {/* 14 · Closer */}
