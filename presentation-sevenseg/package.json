@@ -1,0 +1,41 @@
+{
+  "name": "presentation-sevenseg",
+  "version": "1.0.0",
+  "description": "KubeCon Amsterdam 2026 — 7-segment display edition",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "export:pdf": "node scripts/export-pdf.mjs",
+    "offline:install-tools": "bash scripts/offline-install-tools.sh",
+    "offline:download-maps": "bash scripts/offline-download-maps.sh",
+    "offline:remove": "rm -rf public/tiles && echo 'Local tiles removed — maps will use CARTO CDN'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@deck.gl/core": "^9.2.11",
+    "@deck.gl/geo-layers": "^9.2.11",
+    "@deck.gl/layers": "^9.2.11",
+    "@deck.gl/react": "^9.2.11",
+    "@fontsource/inter": "^5.2.8",
+    "@fontsource/jetbrains-mono": "^5.2.8",
+    "@protomaps/basemaps": "^5.7.2",
+    "@tailwindcss/vite": "^4.2.1",
+    "@vitejs/plugin-react": "^4.7.0",
+    "deck.gl": "^9.2.11",
+    "maplibre-gl": "^5.20.1",
+    "pmtiles": "^4.4.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-map-gl": "^8.1.0",
+    "spectacle": "^10.2.3",
+    "tailwindcss": "^4.2.1",
+    "vite": "^7.3.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}
