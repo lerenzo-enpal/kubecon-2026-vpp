@@ -1,0 +1,93 @@
+@import "tailwindcss/theme" layer(theme);
+@import "tailwindcss/utilities" layer(utilities);
+
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+/* 7-segment panel substrate. Values are set by useTheme() on :root via the
+   mutable palette in theme.js; these are the static defaults (red). */
+:root {
+  --seg-panel: #080304;
+  --seg-glass: rgba(255, 80, 80, 0.030);
+  --seg-scanline: rgba(255, 60, 60, 0.045);
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #050203;
+}
+
+body {
+  font-family: "Inter", system-ui, sans-serif;
+  overflow: hidden;
+}
+
+/* ── Panel substrate: scanlines + glass reflection + vignette ───────────── */
+
+.seg-panel {
+  position: relative;
+  background: var(--seg-panel);
+}
+
+.seg-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    var(--seg-scanline) 3px,
+    var(--seg-scanline) 4px
+  );
+}
+
+.seg-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+  background:
+    radial-gradient(ellipse 70% 55% at 30% 8%, var(--seg-glass) 0%, transparent 60%),
+    radial-gradient(ellipse 120% 90% at 50% 50%, transparent 45%, rgba(0,0,0,0.55) 100%);
+}
+
+/* Slow scan sweep — the "system is alive" pulse from the style guide. */
+@keyframes segSweep {
+  0%   { transform: translateY(-10%); opacity: 0; }
+  10%  { opacity: 0.5; }
+  90%  { opacity: 0.5; }
+  100% { transform: translateY(1000%); opacity: 0; }
+}
+
+.seg-sweep {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  pointer-events: none;
+  z-index: 7;
+  background: linear-gradient(90deg, transparent, var(--seg-scanline), transparent);
+  animation: segSweep 9s linear infinite;
+}
+
+/* Blink for alarm states — hard cuts, per the style guide. */
+@keyframes segBlink {
+  50% { opacity: 0.15; }
+}
+
+.seg-blink {
+  animation: segBlink 0.6s step-end infinite;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

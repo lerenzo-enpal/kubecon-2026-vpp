@@ -804,7 +804,10 @@ export default function MainTalk() {
 
     {/* Hero: Closing — Japan archipelago at night, interconnected fleet */}
     <Slide padding="0" backgroundColor="#050810" template={() => null}>
-      <img src="hero-close.jpg" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} alt="" />
+      <img src="hero-close.jpg" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }} alt="" />
+      <div style={{ position: 'absolute', bottom: 18, right: 24, fontFamily: 'var(--font-mono)', fontSize: 12, color: 'rgba(241,245,249,0.45)', letterSpacing: '0.08em' }}>
+        whatisavpp.com
+      </div>
       <Notes>Washi: Japan archipelago at night, city lights as an interconnected fleet, cherry blossoms. Sets the closing tone.</Notes>
     </Slide>
 
